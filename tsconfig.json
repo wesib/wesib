@@ -4,6 +4,7 @@
     "module": "umd",
     "target": "es5",
     "strict": true,
+    "experimentalDecorators": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
     "forceConsistentCasingInFileNames": true,
