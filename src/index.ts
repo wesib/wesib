@@ -1,1 +1,2 @@
-export const NAME = 'webcbb';
+export * from './component-type';
+export * from './decorators';
