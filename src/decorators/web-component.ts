@@ -1,7 +1,10 @@
-import { addComponentDesc, ComponentDesc, ComponentType } from '../component-type';
+import { ComponentDesc } from '../component-desc';
+import { addComponentDesc, ComponentType } from '../component-type';
 
-export type WebComponentDecorator<T extends object> = (type: ComponentType<T>) => typeof type;
+export type WebComponentDecorator = (type: ComponentType) => void;
 
-export function WebComponent<T extends object>(desc: ComponentDesc): WebComponentDecorator<T> {
-  return type => addComponentDesc(type, desc);
+export function WebComponent<HTE extends HTMLElement>(desc: ComponentDesc<HTE>): WebComponentDecorator {
+  return type => {
+    addComponentDesc(type, desc);
+  };
 }

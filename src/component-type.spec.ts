@@ -1,14 +1,7 @@
-import { Partial } from '../node_modules/rollup-plugin-typescript2/dist/partial';
-import { addComponentDesc, ComponentDesc, componentDesc, ComponentType, mergeComponentDescs } from './component-type';
+import { ComponentDesc } from './component-desc';
+import { addComponentDesc, componentDesc, ComponentType } from './component-type';
 
 describe('component-type', () => {
-  describe('mergeComponentDescs', () => {
-    it('merges name', () => {
-      expect(mergeComponentDescs({ name: 'name1' }, { name: 'name2' })).toEqual({ name: 'name2' });
-      expect(mergeComponentDescs({ name: 'name1' }, {})).toEqual({ name: 'name1' });
-      expect(mergeComponentDescs({}, { name: 'name2' })).toEqual({ name: 'name2' });
-    });
-  });
   describe('addComponentDesc', () => {
 
     let TestComponent: ComponentType;
