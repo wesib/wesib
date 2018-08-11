@@ -1,4 +1,5 @@
 import { ComponentDesc, mergeComponentDescs } from './component-desc';
+import { Class } from '../types';
 
 export const componentDesc = Symbol('web-component-descriptor');
 
@@ -6,19 +7,20 @@ export interface ElementRef<HTE extends HTMLElement = HTMLElement> {
   readonly element: HTE;
 }
 
-export interface ComponentConstructorType<T extends object = T, HTE extends HTMLElement = HTMLElement> {
-  new(elementRef: ElementRef<HTE>): T;
+export interface ComponentClass<T extends object = object, HTE extends HTMLElement = HTMLElement> extends Function {
+  new (elementRef: ElementRef<HTE>): T;
+  prototype: T;
 }
 
 export type ComponentElementType<T extends object> =
-    T extends ComponentConstructorType<T, infer HTE> ? HTE : any;
+    T extends ComponentClass<T, infer HTE> ? HTE : HTMLElement;
 
-export interface ComponentType<T extends object = T>
-    extends ComponentConstructorType<T, ComponentElementType<T>> {
-  readonly [componentDesc]?: ComponentDesc<ComponentElementType<T>>;
+export interface ComponentType<T extends object = object, HTE extends HTMLElement = ComponentElementType<T>>
+    extends ComponentClass<T, HTE> {
+  readonly [componentDesc]?: ComponentDesc<HTE>;
 }
 
-export function addComponentDesc(type: ComponentType, ...descs: Partial<ComponentDesc>[]): typeof type {
+export function addComponentDesc<T extends Class>(type: T, ...descs: Partial<ComponentDesc>[]): T {
 
   const componentType = type as ComponentType;
   const prevDesc = componentType[componentDesc];

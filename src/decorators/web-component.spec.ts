@@ -1,5 +1,4 @@
-import { ComponentDesc } from '../component-desc';
-import { componentDesc, ComponentType } from '../component-type';
+import { ComponentDesc, componentDesc, ComponentType } from '../component';
 import { WebComponent } from './web-component';
 
 describe('decorators/web-component', () => {

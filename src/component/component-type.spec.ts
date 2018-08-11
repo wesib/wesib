@@ -1,7 +1,7 @@
 import { ComponentDesc } from './component-desc';
 import { addComponentDesc, componentDesc, ComponentType } from './component-type';
 
-describe('component-type', () => {
+describe('component/component-type', () => {
   describe('addComponentDesc', () => {
 
     let TestComponent: ComponentType;

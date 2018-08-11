@@ -1,6 +1,6 @@
 import { mergeComponentDescs } from './component-desc';
 
-describe('component-desc', () => {
+describe('component/component-desc', () => {
   describe('mergeComponentDescs', () => {
     it('merges name', () => {
       expect(mergeComponentDescs({ name: 'name1' }, { name: 'name2' })).toEqual({ name: 'name2' });

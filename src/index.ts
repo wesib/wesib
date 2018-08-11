@@ -1,3 +1,4 @@
-export * from './component-desc';
-export * from './component-type';
+export * from './component';
 export * from './decorators';
+export * from './element';
+export * from './types';
