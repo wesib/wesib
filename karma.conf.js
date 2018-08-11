@@ -19,7 +19,7 @@ module.exports = (config) => {
     ],
     files: [
       { pattern: 'node_modules/tslib/tslib.js', watched: false },
-      { pattern: 'src/**/!(index).ts' },
+      { pattern: 'src/**/*.ts' },
     ],
     preprocessors: {
       'src/**/*.ts': ['karma-typescript'],
@@ -37,15 +37,15 @@ module.exports = (config) => {
           'src/**/*.ts',
         ],
       },
-      exclude: [
-        '**/index.ts',
-      ],
+      remapOptions: {
+        exclude: /index\.ts/
+      },
       bundlerOptions: {
         entrypoints: /\.spec\.ts$/,
       },
       compilerOptions: {
         'moduleResolution': 'node',
-        'target': 'es5',
+        'target': 'es2015',
         'strict': true,
         'noFallthroughCasesInSwitch': true,
         'forceConsistentCasingInFileNames': false,
