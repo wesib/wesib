@@ -7,7 +7,10 @@ describe('decorators/web-component', () => {
 
       const desc: ComponentDesc = {
         name: 'test-component',
-        elementType: HTMLInputElement,
+        extend: {
+          name: 'input',
+          type: HTMLInputElement
+        },
       };
 
       @WebComponent(desc)

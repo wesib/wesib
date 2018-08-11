@@ -8,12 +8,18 @@ describe('component/component-desc', () => {
       expect(mergeComponentDescs({}, { name: 'name2' })).toEqual({ name: 'name2' });
     });
     it('merges type', () => {
-      expect(mergeComponentDescs({ elementType: HTMLElement }, { elementType: HTMLInputElement }))
-          .toEqual({ elementType: HTMLInputElement });
-      expect(mergeComponentDescs({ elementType: HTMLElement }, {}))
-          .toEqual({ elementType: HTMLElement });
-      expect(mergeComponentDescs({}, { elementType: HTMLInputElement }))
-          .toEqual({ elementType: HTMLInputElement });
+      expect(mergeComponentDescs<HTMLElement>(
+          { extend: { name: 'div', type: HTMLDivElement } },
+          { extend: { name: 'input', type: HTMLInputElement } }))
+          .toEqual({ extend: { name: 'input', type: HTMLInputElement } });
+      expect(mergeComponentDescs<HTMLElement>(
+          { extend: { name: 'div', type: HTMLDivElement } },
+          {}))
+          .toEqual({ extend: { name: 'div', type: HTMLDivElement } });
+      expect(mergeComponentDescs<HTMLElement>(
+          { extend: { name: 'div', type: HTMLDivElement } },
+          { extend: { name: 'input', type: HTMLInputElement } }))
+          .toEqual({ extend: { name: 'input', type: HTMLInputElement } });
     });
   });
 });
