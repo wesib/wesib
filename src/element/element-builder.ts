@@ -43,7 +43,7 @@ export class ElementBuilder {
     }
 
     if (desc.properties) {
-      Object.defineProperties(Element.prototype, desc.properties);
+      (this.window as any).Object.defineProperties(Element.prototype, desc.properties);
     }
 
     return Element as ElementClass<any>;

@@ -1,4 +1,4 @@
-import { ComponentDesc, componentDesc } from '../component';
+import { ComponentDesc, componentDesc, ComponentType, describeComponent } from '../component';
 import { ElementBuilder } from './element-builder';
 
 describe('element/element-builder', () => {
@@ -11,29 +11,44 @@ describe('element/element-builder', () => {
     });
 
     describe('buildElement', () => {
-      it('builds HTML element', () => {
 
-        class TestElement {
+      let TestComponent: ComponentType;
+
+      beforeEach(() => {
+        TestComponent = class {
           static [componentDesc]: ComponentDesc = {
-            name: 'test-element',
+            name: 'test-component',
           };
-        }
+        };
+      });
 
-        expect(builder.buildElement(TestElement).prototype instanceof HTMLElement).toBeTruthy();
+      it('builds HTML element', () => {
+        expect(builder.buildElement(TestComponent).prototype).toEqual(jasmine.any(HTMLElement));
       });
       it('extends HTML element', () => {
+        describeComponent(TestComponent, {
+          extend: {
+            name: 'input',
+            type: HTMLInputElement,
+          },
+        });
 
-        class TestElement {
-          static [componentDesc]: ComponentDesc = {
-            name: 'test-element',
-            extend: {
-              name: 'input',
-              type: HTMLInputElement,
+        expect(builder.buildElement(TestComponent).prototype).toEqual(jasmine.any(HTMLInputElement));
+      });
+      it('applies properties', () => {
+        describeComponent(TestComponent, {
+          properties: {
+            testProperty: {
+              value: 'test value',
             },
-          };
-        }
+          },
+        });
 
-        expect(builder.buildElement(TestElement).prototype instanceof HTMLInputElement).toBeTruthy();
+        const element = builder.buildElement(TestComponent);
+
+        expect<any>(element.prototype).toEqual(jasmine.objectContaining({
+          testProperty: 'test value',
+        }));
       });
     });
   });

@@ -2,6 +2,28 @@ import { componentDesc, ComponentDesc } from './component-desc';
 import { ComponentType, describeComponent, descriptorOf } from './component-type';
 
 describe('component/component-type', () => {
+  describe('descriptorOf', () => {
+    it('returns component descriptor', () => {
+
+      const desc: ComponentDesc = {
+        name: 'test-component',
+      };
+
+      class TestComponent {
+        static [componentDesc] = desc;
+      }
+
+      expect(descriptorOf(TestComponent)).toEqual(desc);
+    });
+    it('fails when there is no component descriptor', () => {
+
+      class TestComponent {
+      }
+
+      expect(() => descriptorOf(TestComponent)).toThrow(jasmine.any(TypeError));
+    });
+  });
+
   describe('describeComponent', () => {
 
     let TestComponent: ComponentType;
