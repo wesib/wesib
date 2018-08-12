@@ -1,5 +1,5 @@
-import { ComponentDesc } from './component-desc';
-import { addComponentDesc, componentDesc, ComponentType } from './component-type';
+import { componentDesc, ComponentDesc } from './component-desc';
+import { addComponentDesc, ComponentType, descriptorOf } from './component-type';
 
 describe('component/component-type', () => {
   describe('addComponentDesc', () => {
@@ -16,7 +16,7 @@ describe('component/component-type', () => {
       const desc: ComponentDesc = { name: 'test-component' };
       const componentType = addComponentDesc(TestComponent, desc);
 
-      expect(componentType[componentDesc]).toEqual(desc);
+      expect(descriptorOf(componentType)).toEqual(desc);
     });
     it('updates component descriptor', () => {
 
@@ -34,7 +34,7 @@ describe('component/component-type', () => {
       };
       const componentType = addComponentDesc(TestComponent, desc);
 
-      expect(componentType[componentDesc]).toEqual({ ...initialDesc, ...desc });
+      expect(descriptorOf(componentType)).toEqual({ ...initialDesc, ...desc });
     });
   });
 });

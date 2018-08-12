@@ -20,6 +20,7 @@ module.exports = (config) => {
     files: [
       { pattern: 'node_modules/tslib/tslib.js', watched: false },
       { pattern: 'src/**/*.ts' },
+      { pattern: 'src/spec/*.html', included: false },
     ],
     preprocessors: {
       'src/**/*.ts': ['karma-typescript'],
@@ -58,8 +59,8 @@ module.exports = (config) => {
         'newLine': 'LF'
       },
       coverageOptions: {
-        // Exclude tests and index files.
-        exclude: /(\.spec|[\\\/]index)\.ts$/,
+        // Exclude tests, test utilities, and index files.
+        exclude: /((\.spec|[\\/]index)\.ts$|[\\/]spec[\\/].*)/,
         /*threshold: {
           global: {
             statements: 90,

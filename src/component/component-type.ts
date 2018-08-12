@@ -1,7 +1,5 @@
-import { ComponentDesc, mergeComponentDescs } from './component-desc';
 import { Class } from '../types';
-
-export const componentDesc = Symbol('web-component-descriptor');
+import { componentDesc, ComponentDesc, mergeComponentDescs } from './component-desc';
 
 export interface ElementRef<HTE extends HTMLElement = HTMLElement> {
   readonly element: HTE;
@@ -14,6 +12,19 @@ export interface ComponentClass<T extends object = object, HTE extends HTMLEleme
 
 export type ComponentElementType<T extends object> =
     T extends ComponentClass<T, infer HTE> ? HTE : HTMLElement;
+
+export function descriptorOf<T extends object>(
+    componentType: ComponentType<T>):
+    ComponentDesc<ComponentElementType<T>> {
+
+  const desc = componentType[componentDesc];
+
+  if (!desc) {
+    throw TypeError(`Not a web component: ${componentType.name}`);
+  }
+
+  return desc;
+}
 
 export interface ComponentType<T extends object = object, HTE extends HTMLElement = ComponentElementType<T>>
     extends ComponentClass<T, HTE> {
