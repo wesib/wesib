@@ -1,3 +1,3 @@
 export * from './component';
-export * from './component-desc';
+export * from './component-def';
 export * from './component-type';

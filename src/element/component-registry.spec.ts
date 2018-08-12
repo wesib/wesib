@@ -1,10 +1,10 @@
 import {
-  ComponentDesc,
-  componentDesc,
+  ComponentDef,
+  componentDef,
   componentOf,
   ComponentType,
-  describeComponent,
-  descriptorOf, ElementRef,
+  defineComponent,
+  definitionOf, ElementRef,
 } from '../component';
 import { WebComponent } from '../decorators';
 import { TestComponentRegistry } from '../spec/test-component-registry';
@@ -59,7 +59,7 @@ describe('element/component-registry', () => {
       });
       beforeEach(() => {
         TestComponent = class {
-          static [componentDesc]: ComponentDesc = {
+          static [componentDef]: ComponentDef = {
             name: 'test-component',
           };
         };
@@ -80,7 +80,7 @@ describe('element/component-registry', () => {
           expect(customElementsSpy.define).toHaveBeenCalledWith('test-component', ElementSpy);
         });
         it('defines custom element extending the given one', () => {
-          describeComponent(TestComponent, {
+          defineComponent(TestComponent, {
             extend: {
               name: 'input',
               type: HTMLInputElement,
@@ -113,7 +113,7 @@ describe('element/component-registry', () => {
 
         TestComponent = class {
 
-          static [componentDesc]: ComponentDesc = {
+          static [componentDef]: ComponentDef = {
             name: 'custom-component',
           };
 

@@ -1,9 +1,9 @@
 import {
-  ComponentDesc,
-  componentDesc,
+  ComponentDef,
   ComponentElementType,
   componentRef,
   ComponentType,
+  definitionOf,
   ElementRef,
 } from '../component';
 import { ElementClass } from './element';
@@ -15,16 +15,16 @@ export class ElementBuilder {
   constructor(readonly window: Window = WINDOW) {
   }
 
-  elementType<HTE extends HTMLElement = HTMLElement>(desc: ComponentDesc<HTE>): ElementClass<HTE> {
-    return desc.extend && desc.extend.type || ((this.window as any).HTMLElement as ElementClass<HTE>);
+  elementType<HTE extends HTMLElement = HTMLElement>(def: ComponentDef<HTE>): ElementClass<HTE> {
+    return def.extend && def.extend.type || ((this.window as any).HTMLElement as ElementClass<HTE>);
   }
 
   buildElement<T extends object>(
       componentType: ComponentType<T>):
       ElementClass<ComponentElementType<T>> {
 
-    const desc = componentType[componentDesc] as ComponentDesc<HTMLElement>;
-    const elementType = this.elementType(desc);
+    const def = definitionOf(componentType) as ComponentDef<any>;
+    const elementType = this.elementType(def);
 
     class Element extends elementType {
 
@@ -42,8 +42,8 @@ export class ElementBuilder {
 
     }
 
-    if (desc.properties) {
-      (this.window as any).Object.defineProperties(Element.prototype, desc.properties);
+    if (def.properties) {
+      (this.window as any).Object.defineProperties(Element.prototype, def.properties);
     }
 
     return Element as ElementClass<any>;

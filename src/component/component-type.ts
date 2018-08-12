@@ -1,5 +1,5 @@
 import { Class } from '../types';
-import { componentDesc, ComponentDesc, mergeComponentDescs } from './component-desc';
+import { componentDef, ComponentDef, mergeComponentDefs } from './component-def';
 
 export interface ElementRef<HTE extends HTMLElement = HTMLElement> {
   readonly element: HTE;
@@ -13,43 +13,43 @@ export interface ComponentClass<T extends object = object, HTE extends HTMLEleme
 export type ComponentElementType<T extends object> =
     T extends ComponentClass<T, infer HTE> ? HTE : HTMLElement;
 
-export function descriptorOf<T extends object>(
+export function definitionOf<T extends object>(
     componentType: ComponentType<T>):
-    ComponentDesc<ComponentElementType<T>> {
+    ComponentDef<ComponentElementType<T>> {
 
-  const desc = componentType[componentDesc];
+  const def = componentType[componentDef];
 
-  if (!desc) {
+  if (!def) {
     throw TypeError(`Not a web component: ${componentType.name}`);
   }
 
-  return desc;
+  return def;
 }
 
 export interface ComponentType<T extends object = object, HTE extends HTMLElement = ComponentElementType<T>>
     extends ComponentClass<T, HTE> {
-  readonly [componentDesc]?: ComponentDesc<HTE>;
+  readonly [componentDef]?: ComponentDef<HTE>;
 }
 
-export function describeComponent<T extends Class>(type: T, ...descs: Partial<ComponentDesc>[]): T {
+export function defineComponent<T extends Class>(type: T, ...defs: Partial<ComponentDef>[]): T {
 
   const componentType = type as ComponentType;
-  const prevDesc = componentType[componentDesc];
-  let desc: ComponentDesc;
+  const prevDef = componentType[componentDef];
+  let def: ComponentDef;
 
-  if (prevDesc) {
-    desc = mergeComponentDescs(prevDesc, ...descs) as ComponentDesc;
+  if (prevDef) {
+    def = mergeComponentDefs(prevDef, ...defs) as ComponentDef;
   } else {
-    desc = mergeComponentDescs(...descs) as ComponentDesc;
+    def = mergeComponentDefs(...defs) as ComponentDef;
   }
 
   Object.defineProperty(
       type,
-      componentDesc,
+      componentDef,
       {
         configurable: true,
         enumerable: true,
-        value: desc,
+        value: def,
       });
 
   return type;

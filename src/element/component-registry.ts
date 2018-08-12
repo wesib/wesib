@@ -1,4 +1,4 @@
-import { ComponentElementType, ComponentType, descriptorOf } from '../component';
+import { ComponentElementType, ComponentType, definitionOf } from '../component';
 import { ElementClass } from './element';
 import { ElementBuilder } from './element-builder';
 
@@ -23,26 +23,26 @@ export class ComponentRegistry {
 
   define<T extends object>(componentType: ComponentType<T>): ElementClass<ComponentElementType<T>> {
 
-    const desc = descriptorOf(componentType);
+    const def = definitionOf(componentType);
     const elementClass = this.builder.buildElement(componentType);
-    const ext = desc.extend;
+    const ext = def.extend;
 
     if (ext) {
       this.window.customElements.define(
-          desc.name,
+          def.name,
           elementClass,
           {
             extends: ext.name,
           });
     } else {
-      this.window.customElements.define(desc.name, elementClass);
+      this.window.customElements.define(def.name, elementClass);
     }
 
     return elementClass;
   }
 
   whenDefined(componentType: ComponentType<any, any>): PromiseLike<void> {
-    return this.window.customElements.whenDefined(descriptorOf(componentType).name);
+    return this.window.customElements.whenDefined(definitionOf(componentType).name);
   }
 
 }

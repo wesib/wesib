@@ -1,11 +1,11 @@
-import { ComponentDesc, componentDesc, ComponentType } from '../component';
+import { ComponentDef, componentDef, ComponentType } from '../component';
 import { WebComponent } from './web-component';
 
 describe('decorators/web-component', () => {
   describe('@WebComponent', () => {
-    it('appends component descriptor', () => {
+    it('assigns component definition', () => {
 
-      const desc: ComponentDesc = {
+      const def: ComponentDef = {
         name: 'test-component',
         extend: {
           name: 'input',
@@ -13,13 +13,13 @@ describe('decorators/web-component', () => {
         },
       };
 
-      @WebComponent(desc)
+      @WebComponent(def)
       class TestComponent {
       }
 
       const componentType = TestComponent as ComponentType;
 
-      expect(componentType[componentDesc]).toEqual(desc);
+      expect(componentType[componentDef]).toEqual(def);
     });
   });
 });

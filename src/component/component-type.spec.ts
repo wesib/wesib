@@ -1,30 +1,30 @@
-import { componentDesc, ComponentDesc } from './component-desc';
-import { ComponentType, describeComponent, descriptorOf } from './component-type';
+import { componentDef, ComponentDef } from './component-def';
+import { ComponentType, defineComponent, definitionOf } from './component-type';
 
 describe('component/component-type', () => {
-  describe('descriptorOf', () => {
-    it('returns component descriptor', () => {
+  describe('definitionOf', () => {
+    it('returns component definition', () => {
 
-      const desc: ComponentDesc = {
+      const def: ComponentDef = {
         name: 'test-component',
       };
 
       class TestComponent {
-        static [componentDesc] = desc;
+        static [componentDef] = def;
       }
 
-      expect(descriptorOf(TestComponent)).toEqual(desc);
+      expect(definitionOf(TestComponent)).toEqual(def);
     });
-    it('fails when there is no component descriptor', () => {
+    it('fails when there is no component definition', () => {
 
       class TestComponent {
       }
 
-      expect(() => descriptorOf(TestComponent)).toThrow(jasmine.any(TypeError));
+      expect(() => definitionOf(TestComponent)).toThrow(jasmine.any(TypeError));
     });
   });
 
-  describe('describeComponent', () => {
+  describe('defineComponent', () => {
 
     let TestComponent: ComponentType;
 
@@ -33,30 +33,30 @@ describe('component/component-type', () => {
       };
     });
 
-    it('adds component descriptor', () => {
+    it('assigns component definition', () => {
 
-      const desc: ComponentDesc = { name: 'test-component' };
-      const componentType = describeComponent(TestComponent, desc);
+      const def: ComponentDef = { name: 'test-component' };
+      const componentType = defineComponent(TestComponent, def);
 
-      expect(descriptorOf(componentType)).toEqual(desc);
+      expect(definitionOf(componentType)).toEqual(def);
     });
-    it('updates component descriptor', () => {
+    it('updates component definition', () => {
 
-      const initialDesc = {
+      const initialDef = {
         name: 'test',
       };
-      (TestComponent as any)[componentDesc] = initialDesc;
+      (TestComponent as any)[componentDef] = initialDef;
 
-      const desc: Partial<ComponentDesc> = {
+      const def: Partial<ComponentDef> = {
         properties: {
           test: {
             value: 'some',
           },
         },
       };
-      const componentType = describeComponent(TestComponent, desc);
+      const componentType = defineComponent(TestComponent, def);
 
-      expect(descriptorOf(componentType)).toEqual({ ...initialDesc, ...desc });
+      expect(definitionOf(componentType)).toEqual({ ...initialDef, ...def });
     });
   });
 });

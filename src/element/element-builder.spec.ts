@@ -1,4 +1,4 @@
-import { ComponentDesc, componentDesc, ComponentType, describeComponent } from '../component';
+import { ComponentDef, componentDef, ComponentType, defineComponent } from '../component';
 import { ElementBuilder } from './element-builder';
 
 describe('element/element-builder', () => {
@@ -16,7 +16,7 @@ describe('element/element-builder', () => {
 
       beforeEach(() => {
         TestComponent = class {
-          static [componentDesc]: ComponentDesc = {
+          static [componentDef]: ComponentDef = {
             name: 'test-component',
           };
         };
@@ -26,7 +26,7 @@ describe('element/element-builder', () => {
         expect(builder.buildElement(TestComponent).prototype).toEqual(jasmine.any(HTMLElement));
       });
       it('extends HTML element', () => {
-        describeComponent(TestComponent, {
+        defineComponent(TestComponent, {
           extend: {
             name: 'input',
             type: HTMLInputElement,
@@ -36,7 +36,7 @@ describe('element/element-builder', () => {
         expect(builder.buildElement(TestComponent).prototype).toEqual(jasmine.any(HTMLInputElement));
       });
       it('applies properties', () => {
-        describeComponent(TestComponent, {
+        defineComponent(TestComponent, {
           properties: {
             testProperty: {
               value: 'test value',

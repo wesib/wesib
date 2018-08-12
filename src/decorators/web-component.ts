@@ -1,4 +1,4 @@
-import { describeComponent, ComponentDesc } from '../component';
+import { defineComponent, ComponentDef } from '../component';
 import { Class } from '../types';
 
 export type WebComponentDecorator<T extends Class, I extends InstanceType<T> = InstanceType<T>> =
@@ -6,6 +6,6 @@ export type WebComponentDecorator<T extends Class, I extends InstanceType<T> = I
 
 export function WebComponent<
     T extends Class,
-    HTE extends HTMLElement>(desc: ComponentDesc<HTE>): WebComponentDecorator<T> {
-  return (type: T) => describeComponent(type, desc);
+    HTE extends HTMLElement>(def: ComponentDef<HTE>): WebComponentDecorator<T> {
+  return (type: T) => defineComponent(type, def);
 }
