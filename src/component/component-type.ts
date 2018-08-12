@@ -31,7 +31,7 @@ export interface ComponentType<T extends object = object, HTE extends HTMLElemen
   readonly [componentDesc]?: ComponentDesc<HTE>;
 }
 
-export function addComponentDesc<T extends Class>(type: T, ...descs: Partial<ComponentDesc>[]): T {
+export function describeComponent<T extends Class>(type: T, ...descs: Partial<ComponentDesc>[]): T {
 
   const componentType = type as ComponentType;
   const prevDesc = componentType[componentDesc];

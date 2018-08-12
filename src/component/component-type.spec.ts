@@ -1,8 +1,8 @@
 import { componentDesc, ComponentDesc } from './component-desc';
-import { addComponentDesc, ComponentType, descriptorOf } from './component-type';
+import { ComponentType, describeComponent, descriptorOf } from './component-type';
 
 describe('component/component-type', () => {
-  describe('addComponentDesc', () => {
+  describe('describeComponent', () => {
 
     let TestComponent: ComponentType;
 
@@ -14,7 +14,7 @@ describe('component/component-type', () => {
     it('adds component descriptor', () => {
 
       const desc: ComponentDesc = { name: 'test-component' };
-      const componentType = addComponentDesc(TestComponent, desc);
+      const componentType = describeComponent(TestComponent, desc);
 
       expect(descriptorOf(componentType)).toEqual(desc);
     });
@@ -32,7 +32,7 @@ describe('component/component-type', () => {
           },
         },
       };
-      const componentType = addComponentDesc(TestComponent, desc);
+      const componentType = describeComponent(TestComponent, desc);
 
       expect(descriptorOf(componentType)).toEqual({ ...initialDesc, ...desc });
     });

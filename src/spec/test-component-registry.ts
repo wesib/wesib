@@ -1,4 +1,4 @@
-import { addComponentDesc, ComponentElementType, ComponentType, descriptorOf } from '../component';
+import { ComponentElementType, ComponentType, describeComponent, descriptorOf } from '../component';
 import { ElementClass } from '../element';
 import { ComponentRegistry } from '../element/component-registry';
 import { ElementBuilder } from '../element/element-builder';
@@ -41,7 +41,7 @@ export class TestComponentRegistry {
       connected: (element: ComponentElementType<T>) => void = () => {}):
       Promise<ElementClass<ComponentElementType<T>>> {
 
-    addComponentDesc(componentType, {
+    describeComponent(componentType, {
       properties: {
         connectedCallback: {
           value: function(this: ComponentElementType<T>) {
