@@ -1,4 +1,4 @@
-import { ComponentDef, componentRef, ComponentType, definitionOf, ElementRef } from '../component';
+import { AttributeDefs, ComponentDef, componentRef, ComponentType, definitionOf, ElementRef } from '../component';
 import { ElementClass } from './element';
 
 const WINDOW = window;
@@ -18,11 +18,17 @@ export class ElementBuilder {
       componentType: ComponentType<T, HTE>):
       ElementClass<HTE> {
 
+    const Object = (this.window as any).Object;
     const def = definitionOf(componentType);
     const elementType: ElementClass<HTMLElement> = this.elementType(def);
+    const attrs: AttributeDefs<T> = { ...def.attributes };
 
     class Element extends elementType {
 
+      // noinspection JSUnusedGlobalSymbols
+      static readonly observedAttributes = def.attributes && Object.keys(attrs);
+
+      // Component reference
       [componentRef]: T;
 
       constructor() {
@@ -39,10 +45,15 @@ export class ElementBuilder {
         this[componentRef] = new componentType(elementRef);
       }
 
+      // noinspection JSUnusedGlobalSymbols
+      attributeChangedCallback(name: string, oldValue: string | string, newValue: string) {
+        attrs[name].call(this[componentRef], oldValue, newValue);
+      }
+
     }
 
     if (def.properties) {
-      (this.window as any).Object.defineProperties(Element.prototype, def.properties);
+      Object.defineProperties(Element.prototype, def.properties);
     }
 
     return Element as ElementClass<any>;

@@ -95,51 +95,5 @@ describe('element/component-registry', () => {
         });
       });
     });
-
-    describe('component instantiation', () => {
-
-      let registry: TestComponentRegistry;
-      let TestComponent: ComponentType;
-      let constructorSpy: Spy;
-      let element: HTMLElement;
-
-      beforeEach(async () => {
-        registry = await new TestComponentRegistry().create();
-      });
-      afterEach(() => registry.dispose());
-
-      beforeEach(() => {
-        constructorSpy = jasmine.createSpy('constructor');
-
-        TestComponent = class {
-
-          static [componentDef]: ComponentDef = {
-            name: 'custom-component',
-          };
-
-          constructor(...args: any[]) {
-            constructorSpy(...args);
-          }
-        };
-      });
-      beforeEach(async () => {
-        element = await registry.addElement(TestComponent);
-      });
-
-      it('instantiates custom element', async () => {
-        expect(element).toBeDefined();
-      });
-      it('custom element has component reference', () => {
-        expect(componentOf(element)).toEqual(jasmine.any(TestComponent));
-      });
-      it('passes element reference to component', () => {
-
-        const expectedRef: ElementRef = {
-          element,
-        };
-
-        expect(constructorSpy).toHaveBeenCalledWith(expectedRef);
-      });
-    });
   });
 });
