@@ -1,5 +1,6 @@
 export interface ElementRef<HTE extends HTMLElement = HTMLElement> {
   readonly element: HTE;
+  inherited(name: string): any;
 }
 
 export interface ComponentClass<T extends object = object, HTE extends HTMLElement = HTMLElement> extends Function {

@@ -30,6 +30,10 @@ export class ElementBuilder {
 
         const elementRef: ElementRef<HTE> = {
           element: this as any,
+          inherited: (name: string) => {
+            // @ts-ignore
+            return super[name] as any;
+          }
         };
 
         this[componentRef] = new componentType(elementRef);
