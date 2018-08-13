@@ -6,6 +6,6 @@ export type WebComponentDecorator<T extends Class, I extends InstanceType<T> = I
 
 export function WebComponent<
     T extends Class,
-    HTE extends HTMLElement>(def: ComponentDef<HTE>): WebComponentDecorator<T> {
+    HTE extends HTMLElement>(def: ComponentDef<InstanceType<T>, HTE>): WebComponentDecorator<T> {
   return (type: T) => defineComponent(type, def);
 }

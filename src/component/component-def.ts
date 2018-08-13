@@ -1,24 +1,27 @@
 import { ElementClass } from '../element';
+import { ComponentElementType } from './component';
 
 export const componentDef = Symbol('web-component-def');
 
-export interface ExtendedElement<HTE extends HTMLElement> {
+export interface ComponentDef<T extends object = object, HTE extends HTMLElement = ComponentElementType<T>> {
+  name: string;
+  extend?: ExtendedElementDef<HTE>;
+  properties?: PropertyDescriptorMap;
+}
+
+export interface ExtendedElementDef<HTE extends HTMLElement> {
   type: ElementClass<HTE>;
   name: string;
 }
 
-export interface ComponentDef<HTE extends HTMLElement = HTMLElement> {
-  name: string;
-  extend?: ExtendedElement<HTE>;
-  properties?: PropertyDescriptorMap;
-}
-
-export function mergeComponentDefs<HTE extends HTMLElement = HTMLElement>(...defs: Partial<ComponentDef<HTE>>[]):
-    Partial<ComponentDef> {
+export function mergeComponentDefs<
+    T extends object = object,
+    HTE extends HTMLElement = HTMLElement>(...defs: Partial<ComponentDef<T, HTE>>[]):
+    Partial<ComponentDef<T, HTE>> {
   return defs.reduce(
       (prev, def) => {
 
-        const result: Partial<ComponentDef<HTE>> = {
+        const result: Partial<ComponentDef<T, HTE>> = {
           ...prev,
           ...def,
         };

@@ -1,21 +1,15 @@
 import { Class } from '../types';
+import { ComponentClass, ComponentElementType } from './component';
 import { componentDef, ComponentDef, mergeComponentDefs } from './component-def';
 
-export interface ElementRef<HTE extends HTMLElement = HTMLElement> {
-  readonly element: HTE;
+export interface ComponentType<T extends object = object, HTE extends HTMLElement = ComponentElementType<T>>
+    extends ComponentClass<T, HTE> {
+  readonly [componentDef]?: ComponentDef<T, HTE>;
 }
 
-export interface ComponentClass<T extends object = object, HTE extends HTMLElement = HTMLElement> extends Function {
-  new (elementRef: ElementRef<HTE>): T;
-  prototype: T;
-}
-
-export type ComponentElementType<T extends object> =
-    T extends ComponentClass<T, infer HTE> ? HTE : HTMLElement;
-
-export function definitionOf<T extends object>(
-    componentType: ComponentType<T>):
-    ComponentDef<ComponentElementType<T>> {
+export function definitionOf<T extends object, HTE extends HTMLElement>(
+    componentType: ComponentType<T, HTE>):
+    ComponentDef<T, HTE> {
 
   const def = componentType[componentDef];
 
@@ -26,12 +20,9 @@ export function definitionOf<T extends object>(
   return def;
 }
 
-export interface ComponentType<T extends object = object, HTE extends HTMLElement = ComponentElementType<T>>
-    extends ComponentClass<T, HTE> {
-  readonly [componentDef]?: ComponentDef<HTE>;
-}
-
-export function defineComponent<T extends Class>(type: T, ...defs: Partial<ComponentDef>[]): T {
+export function defineComponent<
+    T extends Class,
+    HTE extends HTMLElement>(type: T, ...defs: Partial<ComponentDef<InstanceType<T>, HTE>>[]): T {
 
   const componentType = type as ComponentType;
   const prevDef = componentType[componentDef];
