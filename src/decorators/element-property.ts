@@ -9,9 +9,8 @@ export interface ElementPropertyDef {
   writable?: boolean;
 }
 
-export function ElementProperty<T extends Class>(def: ElementPropertyDef = {}):
-    ComponentPropertyDecorator<T> {
-  return (target: T['prototype'], propertyKey: string | symbol, propertyDesc?: PropertyDescriptor) => {
+export function ElementProperty<T extends Class>(def: ElementPropertyDef = {}): ComponentPropertyDecorator<T> {
+  return <V>(target: T['prototype'], propertyKey: string | symbol, propertyDesc?: TypedPropertyDescriptor<V>) => {
 
     const name = def.name || propertyKey;
     const desc = elementPropertyDescriptor(propertyKey, propertyDesc, def);
@@ -26,6 +25,8 @@ export function ElementProperty<T extends Class>(def: ElementPropertyDef = {}):
         });
   };
 }
+
+export { ElementProperty as ElementMethod };
 
 function elementPropertyDescriptor<V>(
     propertyKey: string | symbol,

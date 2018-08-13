@@ -1,5 +1,5 @@
 import { componentOf, ComponentType, ElementRef } from '../component';
-import { ElementProperty, WebComponent } from '../decorators';
+import { ElementMethod, ElementProperty, WebComponent } from '../decorators';
 import { TestComponentRegistry } from './test-component-registry';
 import Spy = jasmine.Spy;
 
@@ -52,9 +52,14 @@ describe('component instantiation', () => {
         return propertyValue;
       }
 
-      @ElementProperty({ name: 'otherProperty' })
+      @ElementProperty()
       set writableProperty(value: number) {
         propertyValue = value;
+      }
+
+      @ElementMethod({ name: 'elementMethod' })
+      componentMethod(...args: string[]): string {
+        return `${this.readonlyProperty}: ${args.join(', ')}`;
       }
 
     }
@@ -109,8 +114,11 @@ describe('component instantiation', () => {
     expect((element as any).readonlyProperty).toBe(propertyValue);
   });
   it('writes element property', () => {
-    expect((element as any).otherProperty).toBe(propertyValue);
-    (element as any).otherProperty = 1;
+    expect((element as any).writableProperty).toBe(propertyValue);
+    (element as any).writableProperty = 1;
     expect(propertyValue).toBe(1);
+  });
+  it('calls component method', () => {
+    expect((element as any).elementMethod('1', '2', '3')).toBe(`${propertyValue}: 1, 2, 3`);
   });
 });
