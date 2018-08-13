@@ -1,5 +1,5 @@
 import { componentOf, ComponentType, ElementRef } from '../component';
-import { WebComponent } from '../decorators';
+import { ElementProperty, WebComponent } from '../decorators';
 import { TestComponentRegistry } from './test-component-registry';
 import Spy = jasmine.Spy;
 
@@ -12,6 +12,7 @@ describe('component instantiation', () => {
   let attrChangedSpy: Spy;
   let attr2ChangedSpy: Spy;
   let element: HTMLElement;
+  let propertyValue: number;
 
   beforeEach(async () => {
     registry = await new TestComponentRegistry().create();
@@ -23,6 +24,7 @@ describe('component instantiation', () => {
     constructorSpy = jasmine.createSpy('constructor').and.callFake((ref: ElementRef<HTMLElement>) => elementRef = ref);
     attrChangedSpy = jasmine.createSpy('attrChanged');
     attr2ChangedSpy = jasmine.createSpy('attr2Changed');
+    propertyValue = 0;
 
     @WebComponent({
       name: 'custom-component',
@@ -40,6 +42,21 @@ describe('component instantiation', () => {
       constructor(...args: any[]) {
         constructorSpy(...args);
       }
+
+      @ElementProperty()
+      get readonlyProperty() {
+        return propertyValue;
+      }
+
+      get writableProperty() {
+        return propertyValue;
+      }
+
+      @ElementProperty({ name: 'otherProperty' })
+      set writableProperty(value: number) {
+        propertyValue = value;
+      }
+
     }
 
     TestComponent = Component;
@@ -81,9 +98,19 @@ describe('component instantiation', () => {
     expect(attr2ChangedSpy).not.toHaveBeenCalled();
   });
   it('defines properties', () => {
-    expect(elementRef.element.tagName).toEqual('MODIFIED-CUSTOM-COMPONENT');
+    expect(element.tagName).toEqual('MODIFIED-CUSTOM-COMPONENT');
   });
   it('allows to access inherited properties', () => {
     expect(elementRef.inherited('tagName')).toEqual('CUSTOM-COMPONENT');
+  });
+  it('reads element property', () => {
+    expect((element as any).readonlyProperty).toBe(propertyValue);
+    propertyValue = 1;
+    expect((element as any).readonlyProperty).toBe(propertyValue);
+  });
+  it('writes element property', () => {
+    expect((element as any).otherProperty).toBe(propertyValue);
+    (element as any).otherProperty = 1;
+    expect(propertyValue).toBe(1);
   });
 });
