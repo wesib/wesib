@@ -3,7 +3,7 @@ import { Class } from '../types';
 import { ComponentPropertyDecorator } from './component-decorators';
 
 export interface ElementPropertyDef {
-  name?: string;
+  name?: string | symbol;
   configurable?: boolean;
   enumerable?: boolean;
   writable?: boolean;
@@ -11,10 +11,10 @@ export interface ElementPropertyDef {
 
 export function ElementProperty<T extends Class>(def: ElementPropertyDef = {}):
     ComponentPropertyDecorator<T> {
-  return (target: T['prototype'], propertyName: string, propertyDesc?: PropertyDescriptor) => {
+  return (target: T['prototype'], propertyKey: string | symbol, propertyDesc?: PropertyDescriptor) => {
 
-    const name = def.name || propertyName;
-    const desc = elementPropertyDescriptor(propertyName, propertyDesc, def);
+    const name = def.name || propertyKey;
+    const desc = elementPropertyDescriptor(propertyKey, propertyDesc, def);
     const constructor = target.constructor as T;
 
     defineComponent(
@@ -27,9 +27,9 @@ export function ElementProperty<T extends Class>(def: ElementPropertyDef = {}):
   };
 }
 
-function elementPropertyDescriptor(
-    propertyName: string,
-    propertyDesc: PropertyDescriptor | undefined,
+function elementPropertyDescriptor<V>(
+    propertyKey: string | symbol,
+    propertyDesc: TypedPropertyDescriptor<V> | undefined,
     {
       configurable,
       enumerable,
@@ -63,17 +63,17 @@ function elementPropertyDescriptor(
     }
   }
 
-  const desc: PropertyDescriptor = {
+  const desc: TypedPropertyDescriptor<V> = {
     configurable,
     enumerable,
     get: function (this: HTMLElement) {
-      return (componentOf(this) as any)[propertyName];
+      return (componentOf(this) as any)[propertyKey];
     }
   };
 
   if (writable) {
     desc.set = function (this: HTMLElement, value: any) {
-      (componentOf(this) as any)[propertyName] = value;
+      (componentOf(this) as any)[propertyKey] = value;
     };
   }
 
