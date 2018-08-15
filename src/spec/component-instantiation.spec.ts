@@ -1,11 +1,11 @@
 import { componentOf, ComponentType, ElementRef } from '../component';
 import { ElementMethod, ElementProperty, WebComponent } from '../decorators';
-import { TestComponentRegistry } from './test-component-registry';
+import { TestComponents } from './test-components';
 import Spy = jasmine.Spy;
 
 describe('component instantiation', () => {
 
-  let registry: TestComponentRegistry;
+  let components: TestComponents;
   let TestComponent: ComponentType;
   let constructorSpy: Spy;
   let elementRef: ElementRef<HTMLElement>;
@@ -15,9 +15,9 @@ describe('component instantiation', () => {
   let propertyValue: number;
 
   beforeEach(async () => {
-    registry = await new TestComponentRegistry().create();
+    components = await new TestComponents().create();
   });
-  afterEach(() => registry.dispose());
+  afterEach(() => components.dispose());
 
   beforeEach(() => {
     elementRef = undefined!;
@@ -67,7 +67,7 @@ describe('component instantiation', () => {
     TestComponent = Component;
   });
   beforeEach(async () => {
-    element = await registry.addElement(TestComponent);
+    element = await components.addElement(TestComponent);
   });
 
   it('instantiates custom element', async () => {

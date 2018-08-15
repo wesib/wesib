@@ -1,30 +1,20 @@
-import {
-  ComponentDef,
-  componentDef,
-  componentOf,
-  ComponentType,
-  defineComponent,
-  definitionOf, ElementRef,
-} from '../component';
-import { WebComponent } from '../decorators';
-import { TestComponentRegistry } from '../spec/test-component-registry';
+import { ComponentDef, componentDef, ComponentType, defineComponent } from '../component';
 import { ComponentRegistry } from './component-registry';
 import { ElementBuilder } from './element-builder';
 import SpyObj = jasmine.SpyObj;
-import Spy = jasmine.Spy;
 
 describe('element/component-registry', () => {
   describe('ComponentRegistry', () => {
 
     it('uses current window by default', () => {
 
-      const registry = new ComponentRegistry();
+      const registry = ComponentRegistry.create();
 
       expect(registry.window).toBe(window);
     });
     it('constructs element builder by default', () => {
 
-      const registry = new ComponentRegistry();
+      const registry = ComponentRegistry.create();
 
       expect(registry.builder).toEqual(jasmine.any(ElementBuilder));
       expect(registry.builder.window).toBe(registry.window);
@@ -32,7 +22,7 @@ describe('element/component-registry', () => {
     it('constructed element builder uses the same window instance', () => {
 
       const window: Window = { name: 'window' } as any;
-      const registry = new ComponentRegistry({ window });
+      const registry = ComponentRegistry.create({ window });
 
       expect(registry.window).toBe(registry.builder.window);
     });
@@ -55,7 +45,7 @@ describe('element/component-registry', () => {
         builderSpy = jasmine.createSpyObj('builder', ['buildElement']);
       });
       beforeEach(() => {
-        registry = new ComponentRegistry({ window: windowSpy, builder: builderSpy });
+        registry = ComponentRegistry.create({ window: windowSpy, builder: builderSpy });
       });
       beforeEach(() => {
         TestComponent = class {

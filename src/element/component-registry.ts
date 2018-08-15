@@ -4,12 +4,22 @@ import { ElementBuilder } from './element-builder';
 
 const WINDOW = window;
 
+/**
+ * @internal
+ */
 export class ComponentRegistry {
 
   readonly window: Window;
   readonly builder: ElementBuilder;
 
-  constructor(
+  static create(opts?: {
+    window?: Window,
+    builder?: ElementBuilder
+  }): ComponentRegistry {
+    return new ComponentRegistry(opts);
+  }
+
+  private constructor(
       {
         window = WINDOW,
         builder = new ElementBuilder(window),

@@ -3,6 +3,9 @@ import { ElementClass } from './element';
 
 const WINDOW = window;
 
+/**
+ * @internal
+ */
 export class ElementBuilder {
 
   constructor(readonly window: Window = WINDOW) {

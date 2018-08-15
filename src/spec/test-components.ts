@@ -1,25 +1,18 @@
+import { Components, createComponents } from '../api';
 import { ComponentElementType, ComponentType, defineComponent, definitionOf } from '../component';
 import { ElementClass } from '../element';
-import { ComponentRegistry } from '../element/component-registry';
-import { ElementBuilder } from '../element/element-builder';
 import { TestIframe } from './test-iframe';
 
-export class TestComponentRegistry {
+export class TestComponents {
 
   readonly iframe = new TestIframe();
-  private readonly _builder?: ElementBuilder;
-  private _registry!: ComponentRegistry;
+  private _components!: Components;
 
-  constructor({ builder }: { builder?: ElementBuilder } = {}) {
-    this._builder = builder;
+  constructor() {
   }
 
-  get registry(): ComponentRegistry {
-    return this._registry;
-  }
-
-  get builder(): ElementBuilder {
-    return this.registry.builder;
+  get components(): Components {
+    return this._components;
   }
 
   get window(): Window {
@@ -32,7 +25,7 @@ export class TestComponentRegistry {
 
   async create(): Promise<this> {
     await this.iframe.create();
-    this._registry = new ComponentRegistry({ window: this.window, builder: this._builder });
+    this._components = createComponents({ window: this.window });
     return this;
   }
 
@@ -51,9 +44,9 @@ export class TestComponentRegistry {
       }
     });
 
-    const elementType = this.registry.define(componentType);
+    const elementType = this.components.define(componentType);
 
-    await this.registry.whenDefined(componentType);
+    await this.components.whenDefined(componentType);
 
     return elementType;
   }
