@@ -2,13 +2,57 @@ import { componentOf, defineComponent } from '../component';
 import { Class } from '../types';
 import { ComponentPropertyDecorator } from './component-decorators';
 
+/**
+ * Custom HTML element property definition.
+ *
+ * This is an parameter to `@ElementProperty` decorator applied to web component property.
+ */
 export interface ElementPropertyDef {
+
+  /**
+   * Property name.
+   *
+   * Decorated property name is used by default.
+   */
   name?: string | symbol;
+
+  /**
+   * Whether the declared property should be configurable.
+   *
+   * Defaults to `configurable` attribute of decorated property.
+   */
   configurable?: boolean;
+
+  /**
+   * Whether the declared property should be enumerable.
+   *
+   * Defaults to `enumerable` attribute of decorated property.
+   */
   enumerable?: boolean;
+
+  /**
+   * Whether the declared property should accept new values.
+   *
+   * The property can not be writable if the decorated property is not writable.
+   *
+   * Defaults to `writable` attribute of decorated property.
+   */
   writable?: boolean;
+
 }
 
+/**
+ * Web component property decorator that declares a property to add to custom HTML element created for this web
+ * component.
+ *
+ * The value of declared HTML element's property will be read from and written to decorated one.
+ *
+ * This decorator cane be applied both to plain properties, and to property accessors.
+ *
+ * @param def Property definition.
+ *
+ * @returns Web component property decorator.
+ */
 export function ElementProperty<T extends Class>(def: ElementPropertyDef = {}): ComponentPropertyDecorator<T> {
   return <V>(target: T['prototype'], propertyKey: string | symbol, propertyDesc?: TypedPropertyDescriptor<V>) => {
 
@@ -26,6 +70,11 @@ export function ElementProperty<T extends Class>(def: ElementPropertyDef = {}): 
   };
 }
 
+/**
+ * Web component method decorator that declares a method to add to custom HTML element created for this web component.
+ *
+ * This is just an alias of `@ElementProperty` decorator.
+ */
 export { ElementProperty as ElementMethod };
 
 function elementPropertyDescriptor<V>(
