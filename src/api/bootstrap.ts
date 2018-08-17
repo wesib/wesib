@@ -35,6 +35,9 @@ export function bootstrapComponents(config: ComponentsConfig = {}): Components {
     },
     whenDefined(componentType) {
       return registry.whenDefined(componentType);
+    },
+    onComponentDefinition(listener) {
+      return registry.onComponentDefinition(listener);
     }
   };
 }

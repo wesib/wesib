@@ -1,7 +1,9 @@
 import { ComponentDef, componentDef, ComponentType, defineComponent } from '../component';
+import { Disposable } from '../types';
 import { ComponentRegistry } from './component-registry';
 import { ElementBuilder } from './element-builder';
 import SpyObj = jasmine.SpyObj;
+import Spy = jasmine.Spy;
 
 describe('element/component-registry', () => {
   describe('ComponentRegistry', () => {
@@ -82,6 +84,58 @@ describe('element/component-registry', () => {
           expect(customElementsSpy.define).toHaveBeenCalledWith('test-component', ElementSpy, {
             extends: 'input',
           });
+        });
+      });
+      describe('whenDefined', () => {
+        it('awaits for component definition', () => {
+
+          const promise = Promise.resolve<any>('defined');
+
+          customElementsSpy.whenDefined.and.returnValue(promise);
+
+          expect(registry.whenDefined(TestComponent)).toBe(promise);
+          expect(customElementsSpy.whenDefined).toHaveBeenCalledWith('test-component');
+        });
+      });
+      describe('onComponentDefinition listener', () => {
+
+        let listenerSpy: Spy;
+        let handle: Disposable;
+
+        beforeEach(() => {
+          listenerSpy = jasmine.createSpy('listener');
+          handle = registry.onComponentDefinition(listenerSpy);
+        });
+
+        it('notifies on component definition', () => {
+          registry.define(TestComponent);
+
+          expect(listenerSpy).toHaveBeenCalledWith(TestComponent);
+          expect(builderSpy.buildElement).toHaveBeenCalledWith(TestComponent);
+        });
+        it('replaces component with another one', () => {
+
+          class ReplacementComponent {
+            static [componentDef]: ComponentDef = {
+              name: 'replacement-component',
+            };
+          }
+
+          listenerSpy.and.returnValue(ReplacementComponent);
+
+          registry.define(TestComponent);
+
+          expect(listenerSpy).toHaveBeenCalledWith(TestComponent);
+          expect(builderSpy.buildElement).toHaveBeenCalledWith(ReplacementComponent);
+          expect(builderSpy.buildElement).not.toHaveBeenCalledWith(TestComponent);
+        });
+        it('is removed on handle disposal', () => {
+          handle.dispose();
+          handle.dispose();
+
+          registry.define(TestComponent);
+
+          expect(listenerSpy).not.toHaveBeenCalled();
         });
       });
     });

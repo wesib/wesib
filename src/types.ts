@@ -7,3 +7,17 @@ export interface Class<T extends object = object> extends Function {
   new(...args: any[]): T;
   prototype: T;
 }
+
+/**
+ * Disposable entity.
+ */
+export interface Disposable {
+
+  /**
+   * Disposes the entity.
+   *
+   * Has no effect when called the second time.
+   */
+  dispose(): void;
+
+}

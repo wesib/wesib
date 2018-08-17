@@ -14,7 +14,7 @@ describe('api/bootstrap', () => {
 
   beforeEach(() => {
     opts = { window: 'components window' as any };
-    registrySpy = jasmine.createSpyObj('componentRegistry', ['define', 'whenDefined']);
+    registrySpy = jasmine.createSpyObj('componentRegistry', ['define', 'whenDefined', 'onComponentDefinition']);
     createRegistrySpy = spyOn(ComponentRegistry, 'create').and.returnValue(registrySpy);
     comps = bootstrapComponents(opts);
   });
@@ -45,6 +45,13 @@ describe('api/bootstrap', () => {
 
       expect(comps.whenDefined(TestComponent)).toBe(promise);
       expect(registrySpy.whenDefined).toHaveBeenCalledWith(TestComponent);
+    });
+    it('proxies onComponentDefinition() method', () => {
+
+      const listener = () => {};
+
+      comps.onComponentDefinition(listener);
+      expect(registrySpy.onComponentDefinition).toHaveBeenCalledWith(listener);
     });
   });
 });
