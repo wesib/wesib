@@ -1,12 +1,13 @@
 import { WebComponent } from '../decorators';
 import { ComponentRegistry } from '../element/component-registry';
-import { Components, ComponentsOpts, createComponents } from './components';
+import { bootstrapComponents, ComponentsConfig } from './bootstrap';
+import { Components } from './components';
 import Spy = jasmine.Spy;
 import SpyObj = jasmine.SpyObj;
 
-describe('api/components', () => {
+describe('api/bootstrap', () => {
 
-  let opts: ComponentsOpts;
+  let opts: ComponentsConfig;
   let createRegistrySpy: Spy;
   let registrySpy: SpyObj<ComponentRegistry>;
   let comps: Components;
@@ -15,10 +16,10 @@ describe('api/components', () => {
     opts = { window: 'components window' as any };
     registrySpy = jasmine.createSpyObj('componentRegistry', ['define', 'whenDefined']);
     createRegistrySpy = spyOn(ComponentRegistry, 'create').and.returnValue(registrySpy);
-    comps = createComponents(opts);
+    comps = bootstrapComponents(opts);
   });
 
-  describe('createComponent', () => {
+  describe('bootstrapComponent', () => {
     it('constructs component registry', () => {
       expect(createRegistrySpy).toHaveBeenCalledWith(opts);
     });

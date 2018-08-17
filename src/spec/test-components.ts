@@ -1,4 +1,4 @@
-import { Components, createComponents } from '../api';
+import { Components, bootstrapComponents } from '../api';
 import { ComponentElementType, ComponentType, defineComponent, definitionOf } from '../component';
 import { ElementClass } from '../element';
 import { TestIframe } from './test-iframe';
@@ -25,7 +25,7 @@ export class TestComponents {
 
   async create(): Promise<this> {
     await this.iframe.create();
-    this._components = createComponents({ window: this.window });
+    this._components = bootstrapComponents({ window: this.window });
     return this;
   }
 

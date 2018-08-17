@@ -1,12 +1,10 @@
 import { ComponentElementType, ComponentType } from '../component';
 import { ElementClass } from '../element';
-import { ComponentRegistry } from '../element/component-registry';
 
 /**
  * Web components definition API.
  *
- * It is typically available as `components` constant. But it also can be constructed with `createComponents()` function
- * when needs to be customized.
+ * An instance of the API can be constructed with `createComponents()` function.
  */
 export interface Components {
 
@@ -39,48 +37,3 @@ export interface Components {
   whenDefined(componentType: ComponentType<any, any>): PromiseLike<void>;
 
 }
-
-/**
- * Web components definition API options.
- *
- * This can be passed to `createComponents()` method in order to customize the API.
- */
-export interface ComponentsOpts {
-
-  /**
-   * A window instance custom components are registered for.
-   *
-   * This instance is used to access `window.customElements` and HTML element classes.
-   *
-   * Current window instance is used if when this option is omitted.
-   */
-  window?: Window;
-}
-
-/**
- * Creates a new, customized instance of web components definition API.
- *
- * @param opts Custom API options.
- *
- * @return New web components definition API instance customized in accordance to the given options.
- */
-export function createComponents(opts: ComponentsOpts = {}): Components {
-
-  const registry = ComponentRegistry.create({ window: opts.window });
-
-  return {
-    define(componentType) {
-      return registry.define(componentType);
-    },
-    whenDefined(componentType) {
-      return registry.whenDefined(componentType);
-    }
-  };
-}
-
-/**
- * Default web components definition API instance.
- *
- * This should be normally used to define web components, unless non-standard options required.
- */
-export const components = createComponents();
