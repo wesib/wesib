@@ -1,4 +1,4 @@
-import { ComponentDefinitionListener } from '../api';
+import { ComponentDefinitionListener, ElementDefinitionListener } from '../api';
 import { ComponentElementType, ComponentType, definitionOf } from '../component';
 import { Disposable } from '../types';
 import { ElementClass } from './element';
@@ -14,6 +14,7 @@ export class ComponentRegistry {
   readonly window: Window;
   readonly builder: ElementBuilder;
   private readonly _componentDefinitionListeners: ComponentDefinitionListener[] = [];
+  private readonly _elementDefinitionListeners: ElementDefinitionListener[] = [];
 
   static create(opts?: {
     window?: Window,
@@ -38,7 +39,7 @@ export class ComponentRegistry {
     componentType = this._componentDefined(componentType);
 
     const def = definitionOf(componentType);
-    const elementClass = this.builder.buildElement(componentType);
+    const elementClass = this._elementDefined(this.builder.buildElement(componentType), componentType);
     const ext = def.extend;
 
     if (ext) {
@@ -53,10 +54,6 @@ export class ComponentRegistry {
     }
 
     return elementClass;
-  }
-
-  private _componentDefined<T extends object>(componentType: ComponentType<T>): ComponentType<T> {
-    return this._componentDefinitionListeners.reduce((type, listener) => listener(type) || type, componentType);
   }
 
   whenDefined(componentType: ComponentType<any, any>): PromiseLike<void> {
@@ -75,6 +72,34 @@ export class ComponentRegistry {
         }
       }
     };
+  }
+
+  private _componentDefined<T extends object>(componentType: ComponentType<T>): ComponentType<T> {
+    return this._componentDefinitionListeners.reduce(
+        (type, listener) => listener(type) || type,
+        componentType);
+  }
+
+  onElementDefinition(listener: ElementDefinitionListener): Disposable {
+    this._elementDefinitionListeners.push(listener);
+    return {
+      dispose: () => {
+
+        const idx = this._elementDefinitionListeners.indexOf(listener);
+
+        if (idx >= 0) {
+          this._elementDefinitionListeners.splice(idx, 1);
+        }
+      }
+    };
+  }
+
+  private _elementDefined<T extends object, HTE extends HTMLElement>(
+      elementType: ElementClass<HTE>,
+      componentType: ComponentType<T, HTE>): ElementClass<HTE> {
+    return this._elementDefinitionListeners.reduce(
+        (type, listener) => listener(type, componentType) || type,
+        elementType);
   }
 
 }

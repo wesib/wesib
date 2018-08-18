@@ -38,6 +38,9 @@ export function bootstrapComponents(config: ComponentsConfig = {}): Components {
     },
     onComponentDefinition(listener) {
       return registry.onComponentDefinition(listener);
-    }
+    },
+    onElementDefinition(listener) {
+      return registry.onElementDefinition(listener);
+    },
   };
 }
