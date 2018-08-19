@@ -1,4 +1,4 @@
-import { componentOf, ComponentType, ElementRef } from '../component';
+import { componentOf, ComponentType, ComponentContext } from '../component';
 import { ElementMethod, ElementProperty, WebComponent } from '../decorators';
 import { TestComponents } from './test-components';
 import Spy = jasmine.Spy;
@@ -8,7 +8,7 @@ describe('component instantiation', () => {
   let components: TestComponents;
   let TestComponent: ComponentType;
   let constructorSpy: Spy;
-  let elementRef: ElementRef<HTMLElement>;
+  let context: ComponentContext<HTMLElement>;
   let attrChangedSpy: Spy;
   let attr2ChangedSpy: Spy;
   let element: HTMLElement;
@@ -20,8 +20,9 @@ describe('component instantiation', () => {
   afterEach(() => components.dispose());
 
   beforeEach(() => {
-    elementRef = undefined!;
-    constructorSpy = jasmine.createSpy('constructor').and.callFake((ref: ElementRef<HTMLElement>) => elementRef = ref);
+    context = undefined!;
+    constructorSpy = jasmine.createSpy('constructor')
+        .and.callFake((ctx: ComponentContext<HTMLElement>) => context = ctx);
     attrChangedSpy = jasmine.createSpy('attrChanged');
     attr2ChangedSpy = jasmine.createSpy('attr2Changed');
     propertyValue = 0;
@@ -76,9 +77,9 @@ describe('component instantiation', () => {
   it('assigns component reference to custom element', () => {
     expect(componentOf(element)).toEqual(jasmine.any(TestComponent));
   });
-  it('passes element reference to component', () => {
+  it('passes context to component', () => {
 
-    const expectedRef: Partial<ElementRef> = {
+    const expectedRef: Partial<ComponentContext> = {
       element,
     };
 
@@ -105,8 +106,8 @@ describe('component instantiation', () => {
   it('defines properties', () => {
     expect(element.tagName).toEqual('MODIFIED-CUSTOM-COMPONENT');
   });
-  it('allows to access inherited properties', () => {
-    expect(elementRef.inherited('tagName')).toEqual('CUSTOM-COMPONENT');
+  it('allows to access inherited element properties', () => {
+    expect(context.elementSuper('tagName')).toEqual('CUSTOM-COMPONENT');
   });
   it('reads element property', () => {
     expect((element as any).readonlyProperty).toBe(propertyValue);

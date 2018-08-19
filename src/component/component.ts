@@ -1,29 +1,38 @@
 import { Class } from '../types';
 
 /**
- * Custom element reference.
+ * Web component context.
  *
- * Represents an element created for web component in accordance to its definition.
- *
- * Such reference is passed to component constructor as its only parameter.
+ * Passed to component constructor as its only parameter.
  *
  * @param <E> A type of HTML element.
  */
-export interface ElementRef<E extends HTMLElement = HTMLElement> {
+export interface ComponentContext<E extends HTMLElement = HTMLElement> {
+
+  /**
+   * Custom HTML element constructed for the component according to its type.
+   */
   readonly element: E;
-  inherited(name: string): any;
+
+  /**
+   * Returns a `super` property value inherited from custom HTML element parent.
+   *
+   * @param name Target property name.
+   */
+  elementSuper(name: string): any;
+
 }
 
 /**
  * Web component class constructor.
  *
- * Constructor may accept a custom HTML element reference as the only parameter.
+ * Constructor may accept a component context instance as the only parameter.
  *
  * @param <T> A type of web component.
  * @param <E> A type of compatible custom HTML element.
  */
 export interface ComponentClass<T extends object = object, E extends HTMLElement = HTMLElement> extends Function {
-  new (elementRef: ElementRef<E>): T;
+  new (context: ComponentContext<E>): T;
   prototype: T;
 }
 

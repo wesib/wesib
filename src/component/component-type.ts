@@ -5,7 +5,7 @@ import { componentDef, ComponentDef, mergeComponentDefs } from './component-def'
 /**
  * Web component type.
  *
- * This is a web component class constructor that may accept a custom HTML element reference as the only parameter.
+ * This is a web component class constructor that may accept a component context instance as the only parameter.
  *
  * Web component type should contain a property with `componentDef` symbol as its key containing a web component
  * definition. This is the only requirement for the web component classes.

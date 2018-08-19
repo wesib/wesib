@@ -1,4 +1,4 @@
-import { AttributeDefs, ComponentDef, componentRef, ComponentType, definitionOf, ElementRef } from '../component';
+import { AttributeDefs, ComponentDef, componentRef, ComponentType, definitionOf, ComponentContext } from '../component';
 import { ElementClass } from './element';
 
 const WINDOW = window;
@@ -37,15 +37,15 @@ export class ElementBuilder {
       constructor() {
         super();
 
-        const elementRef: ElementRef<E> = {
+        const context: ComponentContext<E> = {
           element: this as any,
-          inherited: (name: string) => {
+          elementSuper: (name: string) => {
             // @ts-ignore
             return super[name] as any;
           }
         };
 
-        this[componentRef] = new componentType(elementRef);
+        this[componentRef] = new componentType(context);
       }
 
       // noinspection JSUnusedGlobalSymbols
