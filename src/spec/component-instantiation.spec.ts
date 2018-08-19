@@ -1,4 +1,4 @@
-import { ComponentContext, ComponentType } from '../component';
+import { ComponentContext, ComponentType, ComponentValueKey } from '../component';
 import { ElementMethod, ElementProperty, WebComponent } from '../decorators';
 import { componentOf } from '../element';
 import { TestComponents } from './test-components';
@@ -6,6 +6,7 @@ import Spy = jasmine.Spy;
 
 describe('component instantiation', () => {
 
+  const valueKey = new ComponentValueKey<string>('provided-value-key');
   let components: TestComponents;
   let TestComponent: ComponentType;
   let constructorSpy: Spy;
@@ -122,5 +123,56 @@ describe('component instantiation', () => {
   });
   it('calls component method', () => {
     expect((element as any).elementMethod('1', '2', '3')).toBe(`${propertyValue}: 1, 2, 3`);
+  });
+
+  describe('component value', () => {
+
+    let providerSpy: Spy;
+
+    beforeEach(() => {
+      providerSpy = jasmine.createSpy('valueProvider');
+    });
+    it('is available', () => {
+
+      const value = 'test value';
+
+      components.components.provide(valueKey, providerSpy);
+      providerSpy.and.returnValue(value);
+
+      expect(context.get(valueKey)).toEqual(value);
+    });
+    it('throws when no value provided', () => {
+      expect(() => context.get(valueKey)).toThrow(jasmine.any(Error));
+    });
+    it('is default value when provided', () => {
+      const defaultValue = 'default value';
+      expect(context.get(valueKey, defaultValue)).toBe(defaultValue);
+    });
+    it('is null when default value is null', () => {
+      expect(context.get(valueKey, null)).toBeNull();
+    });
+    it('is undefined when default value is undefined', () => {
+      expect(context.get(valueKey, undefined)).toBeUndefined();
+    });
+    it('is cached', () => {
+
+      const value = 'test value 1';
+
+      components.components.provide(valueKey, providerSpy);
+      providerSpy.and.returnValue(value);
+      expect(context.get(valueKey)).toEqual(value);
+
+      providerSpy.and.returnValue('test value 2');
+      expect(context.get(valueKey)).toEqual(value);
+    });
+    it('is not cached when there is no value provided', () => {
+      components.components.provide(valueKey, providerSpy);
+      context.get(valueKey, 'default value');
+
+      const value = 'test value 2';
+
+      providerSpy.and.returnValue('test value 2');
+      expect(context.get(valueKey)).toEqual(value);
+    });
   });
 });

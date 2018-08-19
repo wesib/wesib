@@ -1,5 +1,8 @@
+import { ComponentValueKey } from '../component';
 import { WebComponent } from '../decorators';
 import { ComponentRegistry } from '../element/component-registry';
+import { ElementBuilder } from '../element/element-builder';
+import { ProviderRegistry } from '../element/provider-registry';
 import { bootstrapComponents, ComponentsConfig } from './bootstrap';
 import { Components } from './components';
 import Spy = jasmine.Spy;
@@ -8,13 +11,33 @@ import SpyObj = jasmine.SpyObj;
 describe('api/bootstrap', () => {
 
   let opts: ComponentsConfig;
-  let createRegistrySpy: Spy;
-  let registrySpy: SpyObj<ComponentRegistry>;
+  let createProviderRegistrySpy: Spy;
+  let providerRegistrySpy: SpyObj<ProviderRegistry>;
+  let createElementBuilderSpy: Spy;
+  let elementBuilderSpy: SpyObj<ElementBuilder>;
+  let createComponentRegistrySpy: Spy;
+  let componentRegistrySpy: SpyObj<ComponentRegistry>;
   let comps: Components;
 
   beforeEach(() => {
     opts = { window: 'components window' as any };
-    registrySpy = jasmine.createSpyObj(
+
+    providerRegistrySpy = jasmine.createSpyObj(
+        'providerRegistry',
+        [
+          'provide',
+          'get',
+        ]);
+    createProviderRegistrySpy = spyOn(ProviderRegistry, 'create').and.returnValue(providerRegistrySpy);
+
+    elementBuilderSpy = jasmine.createSpyObj(
+        'elementBuilder',
+        [
+            'buildElement',
+        ]);
+    createElementBuilderSpy = spyOn(ElementBuilder, 'create').and.returnValue(elementBuilderSpy);
+
+    componentRegistrySpy = jasmine.createSpyObj(
         'componentRegistry',
         [
           'define',
@@ -22,50 +45,70 @@ describe('api/bootstrap', () => {
           'onComponentDefinition',
           'onElementDefinition',
         ]);
-    createRegistrySpy = spyOn(ComponentRegistry, 'create').and.returnValue(registrySpy);
+    createComponentRegistrySpy = spyOn(ComponentRegistry, 'create').and.returnValue(componentRegistrySpy);
     comps = bootstrapComponents(opts);
   });
 
   describe('bootstrapComponent', () => {
+    it('constructs provider registry', () => {
+      expect(createProviderRegistrySpy).toHaveBeenCalledWith();
+    });
+    it('constructs element builder', () => {
+      expect(createElementBuilderSpy).toHaveBeenCalledWith({
+        window: opts.window,
+        providerRegistry: providerRegistrySpy,
+      });
+    });
     it('constructs component registry', () => {
-      expect(createRegistrySpy).toHaveBeenCalledWith(opts);
+      expect(createComponentRegistrySpy).toHaveBeenCalledWith({
+        builder: elementBuilderSpy,
+      });
     });
   });
   describe('Components', () => {
     it('proxies define() method', () => {
-      registrySpy.define.and.returnValue(HTMLDivElement);
+      componentRegistrySpy.define.and.returnValue(HTMLDivElement);
 
       @WebComponent({ name: 'test-component', extend: { name: 'div', type: HTMLDivElement } })
       class TestComponent {}
 
       expect(comps.define(TestComponent)).toBe(HTMLDivElement);
-      expect(registrySpy.define).toHaveBeenCalledWith(TestComponent);
+      expect(componentRegistrySpy.define).toHaveBeenCalledWith(TestComponent);
     });
     it('proxies whenDefined() method', () => {
 
       const promise = Promise.resolve<any>('abc');
 
-      registrySpy.whenDefined.and.returnValue(promise);
+      componentRegistrySpy.whenDefined.and.returnValue(promise);
 
       @WebComponent({ name: 'test-component', extend: { name: 'div', type: HTMLDivElement } })
       class TestComponent {}
 
       expect(comps.whenDefined(TestComponent)).toBe(promise);
-      expect(registrySpy.whenDefined).toHaveBeenCalledWith(TestComponent);
+      expect(componentRegistrySpy.whenDefined).toHaveBeenCalledWith(TestComponent);
+    });
+    it('proxies provide() method', () => {
+
+      const key = new ComponentValueKey<string>('test-value-key');
+      const provider = () => 'test-value';
+
+      comps.provide(key, provider);
+
+      expect(providerRegistrySpy.provide).toHaveBeenCalledWith(key, provider);
     });
     it('proxies onComponentDefinition() method', () => {
 
       const listener = () => {};
 
       comps.onComponentDefinition(listener);
-      expect(registrySpy.onComponentDefinition).toHaveBeenCalledWith(listener);
+      expect(componentRegistrySpy.onComponentDefinition).toHaveBeenCalledWith(listener);
     });
     it('proxies onElementDefinition() method', () => {
 
       const listener = () => {};
 
       comps.onElementDefinition(listener);
-      expect(registrySpy.onElementDefinition).toHaveBeenCalledWith(listener);
+      expect(componentRegistrySpy.onElementDefinition).toHaveBeenCalledWith(listener);
     });
   });
 });

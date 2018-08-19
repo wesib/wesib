@@ -1,4 +1,4 @@
-import { ComponentElementType, ComponentType } from '../component';
+import { ComponentElementType, ComponentType, ComponentValueKey, ComponentValueProvider } from '../component';
 import { ElementClass } from '../element';
 import { Disposable } from '../types';
 
@@ -36,6 +36,17 @@ export interface Components {
    * @throws TypeError if `componentType` does not contain a web component definition.
    */
   whenDefined(componentType: ComponentType<any, any>): PromiseLike<void>;
+
+  /**
+   * Registers provider for the given key.
+   *
+   * Multiple providers may be registered for the same key. They will be requested in order of registration, until one
+   * of them return a value.
+   *
+   * @param key Component value key the provider should associate the value with.
+   * @param provider Component value provider to register.
+   */
+  provide<V>(key: ComponentValueKey<V>, provider: ComponentValueProvider<V>): void;
 
   /**
    * Registers web component definition listener.

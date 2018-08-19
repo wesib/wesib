@@ -1,13 +1,16 @@
 import { ComponentDef, componentDef, ComponentType, defineComponent } from '../component';
 import { ElementBuilder } from './element-builder';
+import { ProviderRegistry } from './provider-registry';
 
 describe('element/element-builder', () => {
   describe('ElementBuilder', () => {
 
+    let providerRegistry: ProviderRegistry;
     let builder: ElementBuilder;
 
     beforeEach(() => {
-      builder = new ElementBuilder();
+      providerRegistry = ProviderRegistry.create();
+      builder = ElementBuilder.create({ providerRegistry });
     });
 
     describe('buildElement', () => {

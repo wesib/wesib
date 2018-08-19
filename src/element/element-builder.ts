@@ -1,5 +1,13 @@
-import { AttributeDefs, ComponentContext, ComponentDef, ComponentType, definitionOf } from '../component';
+import {
+  AttributeDefs,
+  ComponentContext,
+  ComponentDef,
+  ComponentType,
+  ComponentValueKey,
+  definitionOf,
+} from '../component';
 import { componentRef, ElementClass } from './element';
+import { ProviderRegistry } from './provider-registry';
 
 const WINDOW = window;
 
@@ -8,7 +16,23 @@ const WINDOW = window;
  */
 export class ElementBuilder {
 
-  constructor(readonly window: Window = WINDOW) {
+  readonly window: Window;
+  readonly providerRegistry: ProviderRegistry;
+
+  static create(opts: { window?: Window, providerRegistry: ProviderRegistry }): ElementBuilder {
+    return new ElementBuilder(opts);
+  }
+
+  private constructor(
+      {
+        window = WINDOW,
+        providerRegistry,
+      }: {
+        window?: Window,
+        providerRegistry: ProviderRegistry,
+      }) {
+    this.window = window;
+    this.providerRegistry = providerRegistry;
   }
 
   elementType<T extends object = object, E extends HTMLElement = HTMLElement>(
@@ -25,6 +49,7 @@ export class ElementBuilder {
     const def = definitionOf(componentType);
     const elementType: ElementClass<HTMLElement> = this.elementType(def);
     const attrs: AttributeDefs<T> = { ...def.attributes };
+    const providerRegistry = this.providerRegistry;
 
     class Element extends elementType {
 
@@ -37,15 +62,42 @@ export class ElementBuilder {
       constructor() {
         super();
 
-        const context: ComponentContext<E> = {
-          element: this as any,
-          elementSuper: (name: string) => {
-            // @ts-ignore
-            return super[name] as any;
-          }
-        };
+        const element: E = this as any;
+        // @ts-ignore
+        const elementSuper = (name: string) => super[name] as any;
+        const values = new Map<ComponentValueKey<any>, any>();
 
-        this[componentRef] = new componentType(context);
+        class Context implements ComponentContext<E> {
+
+          readonly element = element;
+          readonly elementSuper = elementSuper;
+
+          get<V>(key: ComponentValueKey<V>, defaultValue: V | null | undefined): V | null | undefined {
+
+            const cached: V | undefined = values.get(key);
+
+            if (cached != null) {
+              return cached;
+            }
+
+            const constructed = providerRegistry.get(key, this);
+
+            if (constructed != null) {
+              values.set(key, constructed);
+              return constructed;
+            }
+
+            if (arguments.length < 2) {
+              throw new Error(`There is no value of the key ${key}`);
+            }
+
+            return defaultValue;
+          }
+        }
+
+        Object.defineProperty(this, componentRef, {
+          value: new componentType(new Context()),
+        });
       }
 
       // noinspection JSUnusedGlobalSymbols

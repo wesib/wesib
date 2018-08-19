@@ -4,35 +4,32 @@ import { Disposable } from '../types';
 import { ElementClass } from './element';
 import { ElementBuilder } from './element-builder';
 
-const WINDOW = window;
-
 /**
  * @internal
  */
 export class ComponentRegistry {
 
-  readonly window: Window;
   readonly builder: ElementBuilder;
   private readonly _componentDefinitionListeners: ComponentDefinitionListener[] = [];
   private readonly _elementDefinitionListeners: ElementDefinitionListener[] = [];
 
-  static create(opts?: {
-    window?: Window,
-    builder?: ElementBuilder
+  static create(opts: {
+    builder: ElementBuilder
   }): ComponentRegistry {
     return new ComponentRegistry(opts);
   }
 
   private constructor(
       {
-        window = WINDOW,
-        builder = new ElementBuilder(window),
+        builder,
       }: {
-        window?: Window,
-        builder?: ElementBuilder
-      } = {}) {
-    this.window = window;
+        builder: ElementBuilder
+      }) {
     this.builder = builder;
+  }
+
+  get window(): Window {
+    return this.builder.window;
   }
 
   define<T extends object>(componentType: ComponentType<T>): ElementClass<ComponentElementType<T>> {

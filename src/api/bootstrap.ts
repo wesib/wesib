@@ -1,4 +1,7 @@
+import { ComponentValueKey, ComponentValueProvider } from '../component';
 import { ComponentRegistry } from '../element/component-registry';
+import { ElementBuilder } from '../element/element-builder';
+import { ProviderRegistry } from '../element/provider-registry';
 import { Components } from './components';
 
 /**
@@ -27,20 +30,26 @@ export interface ComponentsConfig {
  */
 export function bootstrapComponents(config: ComponentsConfig = {}): Components {
 
-  const registry = ComponentRegistry.create({ window: config.window });
+  const providerRegistry = ProviderRegistry.create();
+  const componentRegistry = ComponentRegistry.create({
+    builder: ElementBuilder.create({ window: config.window, providerRegistry }),
+  });
 
   return {
     define(componentType) {
-      return registry.define(componentType);
+      return componentRegistry.define(componentType);
     },
     whenDefined(componentType) {
-      return registry.whenDefined(componentType);
+      return componentRegistry.whenDefined(componentType);
+    },
+    provide<V>(key: ComponentValueKey<V>, provider: ComponentValueProvider<V>): void {
+      providerRegistry.provide(key, provider);
     },
     onComponentDefinition(listener) {
-      return registry.onComponentDefinition(listener);
+      return componentRegistry.onComponentDefinition(listener);
     },
     onElementDefinition(listener) {
-      return registry.onElementDefinition(listener);
-    },
+      return componentRegistry.onElementDefinition(listener);
+    }
   };
 }
