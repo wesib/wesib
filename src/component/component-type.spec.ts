@@ -5,15 +5,13 @@ describe('component/component-type', () => {
   describe('definitionOf', () => {
     it('returns component definition', () => {
 
-      const def: ComponentDef = {
-        name: 'test-component',
-      };
-
       class TestComponent {
-        static [componentDef] = def;
+        static [componentDef] = {
+          name: 'test-component',
+        };
       }
 
-      expect(definitionOf(TestComponent)).toEqual(def);
+      expect(definitionOf(TestComponent)).toEqual(TestComponent[componentDef]);
     });
     it('fails when there is no component definition', () => {
 

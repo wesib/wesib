@@ -1,3 +1,5 @@
+import { Class } from '../types';
+
 /**
  * Custom element reference.
  *
@@ -5,10 +7,10 @@
  *
  * Such reference is passed to component constructor as its only parameter.
  *
- * @param <T> A type of HTML element.
+ * @param <E> A type of HTML element.
  */
-export interface ElementRef<HTE extends HTMLElement = HTMLElement> {
-  readonly element: HTE;
+export interface ElementRef<E extends HTMLElement = HTMLElement> {
+  readonly element: E;
   inherited(name: string): any;
 }
 
@@ -18,10 +20,10 @@ export interface ElementRef<HTE extends HTMLElement = HTMLElement> {
  * Constructor may accept a custom HTML element reference as the only parameter.
  *
  * @param <T> A type of web component.
- * @param <HTE> A type of compatible custom HTML element.
+ * @param <E> A type of compatible custom HTML element.
  */
-export interface ComponentClass<T extends object = object, HTE extends HTMLElement = HTMLElement> extends Function {
-  new (elementRef: ElementRef<HTE>): T;
+export interface ComponentClass<T extends object = object, E extends HTMLElement = HTMLElement> extends Function {
+  new (elementRef: ElementRef<E>): T;
   prototype: T;
 }
 
@@ -30,8 +32,7 @@ export interface ComponentClass<T extends object = object, HTE extends HTMLEleme
  *
  * @param <T> A type of web component.
  */
-export type ComponentElementType<T extends object> =
-    T extends ComponentClass<T, infer HTE> ? HTE : HTMLElement;
+export type ComponentElementType<T extends object> = Class<T> extends ComponentClass<T, infer E> ? E : HTMLElement;
 
 /**
  * A symbol that is used as a key for custom HTML element property holding a reference to web component instance.

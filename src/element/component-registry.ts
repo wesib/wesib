@@ -94,9 +94,9 @@ export class ComponentRegistry {
     };
   }
 
-  private _elementDefined<T extends object, HTE extends HTMLElement>(
-      elementType: ElementClass<HTE>,
-      componentType: ComponentType<T, HTE>): ElementClass<HTE> {
+  private _elementDefined<T extends object, E extends HTMLElement>(
+      elementType: ElementClass<E>,
+      componentType: ComponentType<T, E>): ElementClass<E> {
     return this._elementDefinitionListeners.reduce(
         (type, listener) => listener(type, componentType) || type,
         elementType);

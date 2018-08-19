@@ -11,15 +11,15 @@ export class ElementBuilder {
   constructor(readonly window: Window = WINDOW) {
   }
 
-  elementType<T extends object = object, HTE extends HTMLElement = HTMLElement>(
-      def: ComponentDef<T, HTE>):
-      ElementClass<HTE> {
-    return def.extend && def.extend.type || ((this.window as any).HTMLElement as ElementClass<HTE>);
+  elementType<T extends object = object, E extends HTMLElement = HTMLElement>(
+      def: ComponentDef<T, E>):
+      ElementClass<E> {
+    return def.extend && def.extend.type || ((this.window as any).HTMLElement as ElementClass<E>);
   }
 
-  buildElement<T extends object, HTE extends HTMLElement>(
-      componentType: ComponentType<T, HTE>):
-      ElementClass<HTE> {
+  buildElement<T extends object, E extends HTMLElement>(
+      componentType: ComponentType<T, E>):
+      ElementClass<E> {
 
     const Object = (this.window as any).Object;
     const def = definitionOf(componentType);
@@ -37,7 +37,7 @@ export class ElementBuilder {
       constructor() {
         super();
 
-        const elementRef: ElementRef<HTE> = {
+        const elementRef: ElementRef<E> = {
           element: this as any,
           inherited: (name: string) => {
             // @ts-ignore

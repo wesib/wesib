@@ -11,27 +11,27 @@ import { componentDef, ComponentDef, mergeComponentDefs } from './component-def'
  * definition. This is the only requirement for the web component classes.
  *
  * @param <T> A type of web component.
- * @param <HTE> A type of HTML element this web component extends.
+ * @param <E> A type of HTML element this web component extends.
  */
-export interface ComponentType<T extends object = object, HTE extends HTMLElement = ComponentElementType<T>>
-    extends ComponentClass<T, HTE> {
-  readonly [componentDef]?: ComponentDef<T, HTE>;
+export interface ComponentType<T extends object = object, E extends HTMLElement = ComponentElementType<T>>
+    extends ComponentClass<T, E> {
+  readonly [componentDef]?: ComponentDef<T, E>;
 }
 
 /**
  * Extracts a web component definition from its type.
  *
  * @param <T> A type of web component.
- * @param <HTE> A type of HTML element this web component extends.
+ * @param <E> A type of HTML element this web component extends.
  * @param componentType Target component type.
  *
  * @returns Web component definition.
  *
  * @throws TypeError if target `componentType` does not contain web component definition.
  */
-export function definitionOf<T extends object, HTE extends HTMLElement>(
-    componentType: ComponentType<T, HTE>):
-    ComponentDef<T, HTE> {
+export function definitionOf<T extends object, E extends HTMLElement>(
+    componentType: ComponentType<T, E>):
+    ComponentDef<T, E> {
 
   const def = componentType[componentDef];
 
@@ -48,13 +48,13 @@ export function definitionOf<T extends object, HTE extends HTMLElement>(
  * Either assigns new or extends an existing component definition and stores it under `componentDef` key.
  *
  * @param <T> A type of web component.
- * @param <HTE> A type of HTML element this web component extends.
+ * @param <E> A type of HTML element this web component extends.
  * @param type Web component class constructor.
  * @param defs Web component definitions.
  */
 export function defineComponent<
     T extends Class,
-    HTE extends HTMLElement>(type: T, ...defs: Partial<ComponentDef<InstanceType<T>, HTE>>[]): T {
+    E extends HTMLElement>(type: T, ...defs: Partial<ComponentDef<InstanceType<T>, E>>[]): T {
 
   const componentType = type as ComponentType;
   const prevDef = componentType[componentDef];

@@ -12,9 +12,9 @@ export const componentDef = Symbol('web-component-def');
  * A custom HTML element class will be created for each registered web component in accordance to this definition.
  *
  * @param <T> A type of web component.
- * @param <HTE> A type of HTML element this web component extends.
+ * @param <E> A type of HTML element this web component extends.
  */
-export interface ComponentDef<T extends object = object, HTE extends HTMLElement = ComponentElementType<T>> {
+export interface ComponentDef<T extends object = object, E extends HTMLElement = ComponentElementType<T>> {
 
   /**
    * Custom HTML element name.
@@ -24,7 +24,7 @@ export interface ComponentDef<T extends object = object, HTE extends HTMLElement
   /**
    * Standard HTML element the component extends.
    */
-  extend?: ExtendedElementDef<HTE>;
+  extend?: ExtendedElementDef<E>;
 
   /**
    * Custom HTML element properties definitions.
@@ -45,12 +45,12 @@ export interface ComponentDef<T extends object = object, HTE extends HTMLElement
 /**
  * Standard HTML element to extend by custom HTML element.
  */
-export interface ExtendedElementDef<HTE extends HTMLElement> {
+export interface ExtendedElementDef<E extends HTMLElement> {
 
   /**
    * HTML element class constructor to extend.
    */
-  type: ElementClass<HTE>;
+  type: ElementClass<E>;
 
   /**
    * HTML element name to extend.
@@ -84,17 +84,17 @@ export type AttributeDef<T extends object = object> = (this: T, oldValue: string
  * Merges multiple web component (partial) definitions.
  *
  * @param <T> A type of web component.
- * @param <HTE> A type of HTML element this web component extends.
+ * @param <E> A type of HTML element this web component extends.
  * @param defs Partial web component definitions to merge.
  */
 export function mergeComponentDefs<
     T extends object = object,
-    HTE extends HTMLElement = HTMLElement>(...defs: Partial<ComponentDef<T, HTE>>[]):
-    Partial<ComponentDef<T, HTE>> {
+    E extends HTMLElement = HTMLElement>(...defs: Partial<ComponentDef<T, E>>[]):
+    Partial<ComponentDef<T, E>> {
   return defs.reduce(
       (prev, def) => {
 
-        const result: Partial<ComponentDef<T, HTE>> = {
+        const result: Partial<ComponentDef<T, E>> = {
           ...prev,
           ...def,
         };

@@ -92,6 +92,6 @@ export type ComponentDefinitionListener = <T extends object>(
  *
  * @return Either none, or HTML element class constructor to use instead of `elementType`.
  */
-export type ElementDefinitionListener = <T extends object, HTE extends HTMLElement>(
-    elementType: ElementClass<HTE>,
-    componentType: ComponentType<T, HTE>) => ElementClass<HTE> | void;
+export type ElementDefinitionListener = <T extends object, E extends HTMLElement>(
+    elementType: ElementClass<E>,
+    componentType: ComponentType<T, E>) => ElementClass<E> | void;
