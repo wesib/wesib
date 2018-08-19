@@ -1,5 +1,5 @@
-import { componentDef, ComponentDef } from './component-def';
-import { ComponentType, defineComponent, definitionOf } from './component-type';
+import { ComponentDef } from './component-def';
+import { componentDef, ComponentType, defineComponent, definitionOf } from './component-type';
 
 describe('component/component-type', () => {
   describe('definitionOf', () => {

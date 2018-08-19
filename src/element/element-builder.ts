@@ -1,5 +1,5 @@
-import { AttributeDefs, ComponentDef, componentRef, ComponentType, definitionOf, ComponentContext } from '../component';
-import { ElementClass } from './element';
+import { AttributeDefs, ComponentContext, ComponentDef, ComponentType, definitionOf } from '../component';
+import { componentRef, ElementClass } from './element';
 
 const WINDOW = window;
 

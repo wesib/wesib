@@ -1,4 +1,5 @@
-import { componentOf, defineComponent } from '../component';
+import { defineComponent } from '../component';
+import { componentOf } from '../element';
 import { Class } from '../types';
 import { ComponentPropertyDecorator } from './component-decorators';
 

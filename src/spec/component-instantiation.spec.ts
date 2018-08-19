@@ -1,5 +1,6 @@
-import { componentOf, ComponentType, ComponentContext } from '../component';
+import { ComponentContext, ComponentType } from '../component';
 import { ElementMethod, ElementProperty, WebComponent } from '../decorators';
+import { componentOf } from '../element';
 import { TestComponents } from './test-components';
 import Spy = jasmine.Spy;
 
@@ -79,11 +80,11 @@ describe('component instantiation', () => {
   });
   it('passes context to component', () => {
 
-    const expectedRef: Partial<ComponentContext> = {
+    const expectedContext: Partial<ComponentContext<HTMLElement>> = {
       element,
     };
 
-    expect(constructorSpy).toHaveBeenCalledWith(jasmine.objectContaining(expectedRef));
+    expect(constructorSpy).toHaveBeenCalledWith(jasmine.objectContaining(expectedContext));
   });
   it('notifies on attribute change', () => {
     element.setAttribute('custom-attribute', 'value1');

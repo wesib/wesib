@@ -1,10 +1,5 @@
 import { ElementClass } from '../element';
-import { ComponentElementType } from './component';
-
-/**
- * A symbol that is used as a key for a property holding a web component definition within its class constructor.
- */
-export const componentDef = Symbol('web-component-def');
+import { ComponentElementType } from './component-class';
 
 /**
  * Web component definition.
