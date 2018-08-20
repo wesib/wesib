@@ -1,4 +1,4 @@
-import { ComponentDef, ComponentType, defineComponent } from '../component';
+import { ComponentDef, ComponentType } from '../component';
 import { Disposable } from '../types';
 import { ComponentRegistry } from './component-registry';
 import { ElementBuilder } from './element-builder';
@@ -64,7 +64,7 @@ describe('element/component-registry', () => {
           expect(customElementsSpy.define).toHaveBeenCalledWith('test-component', ElementSpy);
         });
         it('defines custom element extending the given one', () => {
-          defineComponent(TestComponent, {
+          ComponentType.define(TestComponent, {
             extend: {
               name: 'input',
               type: HTMLInputElement,

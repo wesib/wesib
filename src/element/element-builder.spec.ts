@@ -1,4 +1,4 @@
-import { ComponentDef, ComponentType, defineComponent } from '../component';
+import { ComponentDef, ComponentType } from '../component';
 import { ElementBuilder } from './element-builder';
 import { ProviderRegistry } from './provider-registry';
 
@@ -29,7 +29,7 @@ describe('element/element-builder', () => {
         expect(builder.buildElement(TestComponent).prototype).toEqual(jasmine.any(HTMLElement));
       });
       it('extends HTML element', () => {
-        defineComponent(TestComponent, {
+        ComponentType.define(TestComponent, {
           extend: {
             name: 'input',
             type: HTMLInputElement,
@@ -39,7 +39,7 @@ describe('element/element-builder', () => {
         expect(builder.buildElement(TestComponent).prototype).toEqual(jasmine.any(HTMLInputElement));
       });
       it('applies properties', () => {
-        defineComponent(TestComponent, {
+        ComponentType.define(TestComponent, {
           properties: {
             testProperty: {
               value: 'test value',

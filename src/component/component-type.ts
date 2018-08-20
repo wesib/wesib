@@ -54,37 +54,41 @@ ComponentDef.of = function of<T extends object, E extends HTMLElement>(
   return def;
 };
 
-/**
- * Defines a web component.
- *
- * Either assigns new or extends an existing component definition and stores it under `ComponentDef.symbol` key.
- *
- * @param <T> A type of web component.
- * @param <E> A type of HTML element this web component extends.
- * @param type Web component class constructor.
- * @param defs Web component definitions.
- */
-export function defineComponent<
-    T extends Class,
-    E extends HTMLElement>(type: T, ...defs: Partial<ComponentDef<InstanceType<T>, E>>[]): T {
+export namespace ComponentType {
 
-  const componentType = type as ComponentType;
-  const prevDef = componentType[ComponentDef.symbol];
-  let def: ComponentDef;
+  /**
+   * Defines a web component.
+   *
+   * Either assigns new or extends an existing component definition and stores it under `ComponentDef.symbol` key.
+   *
+   * @param <T> A type of web component.
+   * @param <E> A type of HTML element this web component extends.
+   * @param type Web component class constructor.
+   * @param defs Web component definitions.
+   */
+  export function define<
+      T extends Class,
+      E extends HTMLElement>(type: T, ...defs: Partial<ComponentDef<InstanceType<T>, E>>[]): T {
 
-  if (prevDef) {
-    def = ComponentDef.merge(prevDef, ...defs) as ComponentDef;
-  } else {
-    def = ComponentDef.merge(...defs) as ComponentDef;
+    const componentType = type as ComponentType;
+    const prevDef = componentType[ComponentDef.symbol];
+    let def: ComponentDef;
+
+    if (prevDef) {
+      def = ComponentDef.merge(prevDef, ...defs) as ComponentDef;
+    } else {
+      def = ComponentDef.merge(...defs) as ComponentDef;
+    }
+
+    Object.defineProperty(
+        type,
+        ComponentDef.symbol,
+        {
+          configurable: true,
+          value: def,
+        });
+
+    return type;
   }
 
-  Object.defineProperty(
-      type,
-      ComponentDef.symbol,
-      {
-        configurable: true,
-        value: def,
-      });
-
-  return type;
 }

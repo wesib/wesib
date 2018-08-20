@@ -1,5 +1,5 @@
 import { bootstrapComponents, Components } from '../api';
-import { ComponentDef, ComponentElementType, ComponentType, defineComponent } from '../component';
+import { ComponentDef, ComponentElementType, ComponentType } from '../component';
 import { ElementClass } from '../element';
 import { TestIframe } from './test-iframe';
 
@@ -34,7 +34,7 @@ export class TestComponents {
       connected: (element: ComponentElementType<T>) => void = () => {}):
       Promise<ElementClass<ComponentElementType<T>>> {
 
-    defineComponent(componentType, {
+    ComponentType.define(componentType, {
       properties: {
         connectedCallback: {
           value: function(this: ComponentElementType<T>) {

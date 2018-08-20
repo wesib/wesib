@@ -1,5 +1,5 @@
 import { ComponentDef } from './component-def';
-import { ComponentType, defineComponent } from './component-type';
+import { ComponentType } from './component-type';
 
 describe('component/component-type', () => {
   describe('ComponentDef', () => {
@@ -36,7 +36,7 @@ describe('component/component-type', () => {
     it('assigns component definition', () => {
 
       const def: ComponentDef = { name: 'test-component' };
-      const componentType = defineComponent(TestComponent, def);
+      const componentType = ComponentType.define(TestComponent, def);
 
       expect(ComponentDef.of(componentType)).toEqual(def);
     });
@@ -46,7 +46,7 @@ describe('component/component-type', () => {
         name: 'test',
       };
 
-      defineComponent(TestComponent, initialDef);
+      ComponentType.define(TestComponent, initialDef);
 
       const def: Partial<ComponentDef> = {
         properties: {
@@ -55,7 +55,7 @@ describe('component/component-type', () => {
           },
         },
       };
-      const componentType = defineComponent(TestComponent, def);
+      const componentType = ComponentType.define(TestComponent, def);
 
       expect(ComponentDef.of(componentType)).toEqual({ ...initialDef, ...def });
     });
