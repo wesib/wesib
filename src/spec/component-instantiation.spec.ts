@@ -1,6 +1,5 @@
-import { ComponentContext, ComponentType, ComponentValueKey } from '../component';
+import { Component, ComponentContext, ComponentType, ComponentValueKey } from '../component';
 import { ElementMethod, ElementProperty, WebComponent } from '../decorators';
-import { componentOf } from '../element';
 import { TestComponents } from './test-components';
 import Spy = jasmine.Spy;
 
@@ -8,7 +7,7 @@ describe('component instantiation', () => {
 
   const valueKey = new ComponentValueKey<string>('provided-value-key');
   let components: TestComponents;
-  let TestComponent: ComponentType;
+  let testComponent: ComponentType;
   let constructorSpy: Spy;
   let context: ComponentContext<HTMLElement>;
   let attrChangedSpy: Spy;
@@ -41,7 +40,8 @@ describe('component instantiation', () => {
         }
       },
     })
-    class Component {
+    class TestComponent {
+
       constructor(...args: any[]) {
         constructorSpy(...args);
       }
@@ -67,17 +67,17 @@ describe('component instantiation', () => {
 
     }
 
-    TestComponent = Component;
+    testComponent = TestComponent;
   });
   beforeEach(async () => {
-    element = await components.addElement(TestComponent);
+    element = await components.addElement(testComponent);
   });
 
   it('instantiates custom element', async () => {
     expect(element).toBeDefined();
   });
   it('assigns component reference to custom element', () => {
-    expect(componentOf(element)).toEqual(jasmine.any(TestComponent));
+    expect(Component.of(element)).toEqual(jasmine.any(testComponent));
   });
   it('passes context to component', () => {
 

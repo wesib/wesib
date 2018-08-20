@@ -1,3 +1,4 @@
+export * from './component';
 export * from './component-class';
 export * from './component-context';
 export * from './component-def';

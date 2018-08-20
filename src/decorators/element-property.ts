@@ -1,5 +1,4 @@
-import { ComponentType } from '../component';
-import { componentOf } from '../element';
+import { Component, ComponentType } from '../component';
 import { Class } from '../types';
 import { ComponentPropertyDecorator } from './component-decorators';
 
@@ -118,13 +117,13 @@ function elementPropertyDescriptor<V>(
     configurable,
     enumerable,
     get: function (this: HTMLElement) {
-      return (componentOf(this) as any)[propertyKey];
+      return (Component.of(this) as any)[propertyKey];
     }
   };
 
   if (writable) {
     desc.set = function (this: HTMLElement, value: any) {
-      (componentOf(this) as any)[propertyKey] = value;
+      (Component.of(this) as any)[propertyKey] = value;
     };
   }
 

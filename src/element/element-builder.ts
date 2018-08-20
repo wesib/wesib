@@ -1,5 +1,12 @@
-import { AttributeDefs, ComponentContext, ComponentDef, ComponentType, ComponentValueKey } from '../component';
-import { componentRef, ElementClass } from './element';
+import {
+  AttributeDefs,
+  Component,
+  ComponentContext,
+  ComponentDef,
+  ComponentType,
+  ComponentValueKey,
+} from '../component';
+import { ElementClass } from './element';
 import { ProviderRegistry } from './provider-registry';
 
 const WINDOW = window;
@@ -50,7 +57,7 @@ export class ElementBuilder {
       static readonly observedAttributes = def.attributes && Object.keys(attrs);
 
       // Component reference
-      [componentRef]: T;
+      [Component.symbol]: T;
 
       constructor() {
         super();
@@ -88,14 +95,14 @@ export class ElementBuilder {
           }
         }
 
-        Object.defineProperty(this, componentRef, {
+        Object.defineProperty(this, Component.symbol, {
           value: new componentType(new Context()),
         });
       }
 
       // noinspection JSUnusedGlobalSymbols
       attributeChangedCallback(name: string, oldValue: string | string, newValue: string) {
-        attrs[name].call(this[componentRef], oldValue, newValue);
+        attrs[name].call(this[Component.symbol], oldValue, newValue);
       }
 
     }

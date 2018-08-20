@@ -81,7 +81,7 @@ export interface Components {
  * The listener may alter the component class or even replace it with another one. For the latter it should return
  * the replacement class. Be careful however. If the replacement definition element name differs from original one,
  * then the original component can not be passed to `Components.whenDefined()` method, as the latter relies on element
- * name. Consider to use a `componentOf()` function in that case.
+ * name. Consider to use a `Component.of()` function in that case.
  *
  * @param componentType Web component class constructor.
  *
