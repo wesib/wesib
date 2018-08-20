@@ -136,20 +136,6 @@ describe('component instantiation', () => {
     it('is notified on new element instantiation', () => {
       expect(elementListenerSpy).toHaveBeenCalledWith(element, context);
     });
-    it('is not notified when removed', async () => {
-      elementListenerSpy.calls.reset();
-
-      elementListenerHandle.dispose();
-      elementListenerHandle.dispose();
-
-      @WebComponent({ name: 'another-component' })
-      class AnotherComponent {
-      }
-
-      await components.addElement(AnotherComponent);
-
-      expect(elementListenerSpy).not.toHaveBeenCalled();
-    });
   });
 
   describe('component value', () => {

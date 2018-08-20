@@ -121,14 +121,6 @@ describe('element/component-registry', () => {
           expect(builderSpy.buildElement).toHaveBeenCalledWith(ReplacementComponent);
           expect(builderSpy.buildElement).not.toHaveBeenCalledWith(TestComponent);
         });
-        it('is removed on handle disposal', () => {
-          handle.dispose();
-          handle.dispose();
-
-          registry.define(TestComponent);
-
-          expect(listenerSpy).not.toHaveBeenCalled();
-        });
       });
       describe('onElementDefinition listener', () => {
 
@@ -161,14 +153,6 @@ describe('element/component-registry', () => {
           expect(listenerSpy).toHaveBeenCalledWith(ElementSpy, TestComponent);
           expect(customElementsSpy.define).toHaveBeenCalledWith('test-component', ReplacementElement);
           expect(customElementsSpy.define).not.toHaveBeenCalledWith('test-component', ElementSpy);
-        });
-        it('is removed on handle disposal', () => {
-          handle.dispose();
-          handle.dispose();
-
-          registry.define(TestComponent);
-
-          expect(listenerSpy).not.toHaveBeenCalled();
         });
       });
     });

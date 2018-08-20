@@ -1,6 +1,7 @@
 import { ComponentDefinitionListener, ElementDefinitionListener } from '../api';
 import { ComponentDef, ComponentElementType, ComponentType } from '../component';
 import { Disposable } from '../types';
+import { Listeners } from '../util';
 import { ElementClass } from './element';
 import { ElementBuilder } from './element-builder';
 
@@ -10,8 +11,8 @@ import { ElementBuilder } from './element-builder';
 export class ComponentRegistry {
 
   readonly builder: ElementBuilder;
-  private readonly _componentDefinitionListeners: ComponentDefinitionListener[] = [];
-  private readonly _elementDefinitionListeners: ElementDefinitionListener[] = [];
+  private readonly _componentDefinitionListeners = new Listeners<ComponentDefinitionListener>();
+  private readonly _elementDefinitionListeners = new Listeners<ElementDefinitionListener>();
 
   static create(opts: {
     builder: ElementBuilder
@@ -58,45 +59,28 @@ export class ComponentRegistry {
   }
 
   onComponentDefinition(listener: ComponentDefinitionListener): Disposable {
-    this._componentDefinitionListeners.push(listener);
-    return {
-      dispose: () => {
-
-        const idx = this._componentDefinitionListeners.indexOf(listener);
-
-        if (idx >= 0) {
-          this._componentDefinitionListeners.splice(idx, 1);
-        }
-      }
-    };
+    return this._componentDefinitionListeners.register(listener);
   }
 
   private _componentDefined<T extends object>(componentType: ComponentType<T>): ComponentType<T> {
-    return this._componentDefinitionListeners.reduce(
-        (type, listener) => listener(type) || type,
-        componentType);
+    this._componentDefinitionListeners.forEach(
+        listener => {
+          componentType = listener(componentType) || componentType;
+        });
+    return componentType;
   }
 
   onElementDefinition(listener: ElementDefinitionListener): Disposable {
-    this._elementDefinitionListeners.push(listener);
-    return {
-      dispose: () => {
-
-        const idx = this._elementDefinitionListeners.indexOf(listener);
-
-        if (idx >= 0) {
-          this._elementDefinitionListeners.splice(idx, 1);
-        }
-      }
-    };
+    return this._elementDefinitionListeners.register(listener);
   }
 
   private _elementDefined<T extends object, E extends HTMLElement>(
       elementType: ElementClass<E>,
       componentType: ComponentType<T, E>): ElementClass<E> {
-    return this._elementDefinitionListeners.reduce(
-        (type, listener) => listener(type, componentType) || type,
-        elementType);
+    this._elementDefinitionListeners.forEach(listener => {
+      elementType = listener(elementType, componentType) || elementType;
+    });
+    return elementType;
   }
 
 }
