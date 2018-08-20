@@ -1,5 +1,5 @@
 import { ComponentDefinitionListener, ElementDefinitionListener } from '../api';
-import { ComponentElementType, ComponentType, definitionOf } from '../component';
+import { ComponentDef, ComponentElementType, ComponentType } from '../component';
 import { Disposable } from '../types';
 import { ElementClass } from './element';
 import { ElementBuilder } from './element-builder';
@@ -35,7 +35,7 @@ export class ComponentRegistry {
   define<T extends object>(componentType: ComponentType<T>): ElementClass<ComponentElementType<T>> {
     componentType = this._componentDefined(componentType);
 
-    const def = definitionOf(componentType);
+    const def = ComponentDef.of(componentType);
     const elementClass = this._elementDefined(this.builder.buildElement(componentType), componentType);
     const ext = def.extend;
 
@@ -54,7 +54,7 @@ export class ComponentRegistry {
   }
 
   whenDefined(componentType: ComponentType<any, any>): PromiseLike<void> {
-    return this.window.customElements.whenDefined(definitionOf(componentType).name);
+    return this.window.customElements.whenDefined(ComponentDef.of(componentType).name);
   }
 
   onComponentDefinition(listener: ComponentDefinitionListener): Disposable {

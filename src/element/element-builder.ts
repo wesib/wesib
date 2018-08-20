@@ -1,11 +1,4 @@
-import {
-  AttributeDefs,
-  ComponentContext,
-  ComponentDef,
-  ComponentType,
-  ComponentValueKey,
-  definitionOf,
-} from '../component';
+import { AttributeDefs, ComponentContext, ComponentDef, ComponentType, ComponentValueKey } from '../component';
 import { componentRef, ElementClass } from './element';
 import { ProviderRegistry } from './provider-registry';
 
@@ -46,7 +39,7 @@ export class ElementBuilder {
       ElementClass<E> {
 
     const Object = (this.window as any).Object;
-    const def = definitionOf(componentType);
+    const def = ComponentDef.of(componentType);
     const elementType: ElementClass<HTMLElement> = this.elementType(def);
     const attrs: AttributeDefs<T> = { ...def.attributes };
     const providerRegistry = this.providerRegistry;

@@ -1,5 +1,5 @@
-import { Components, bootstrapComponents } from '../api';
-import { ComponentElementType, ComponentType, defineComponent, definitionOf } from '../component';
+import { bootstrapComponents, Components } from '../api';
+import { ComponentDef, ComponentElementType, ComponentType, defineComponent } from '../component';
 import { ElementClass } from '../element';
 import { TestIframe } from './test-iframe';
 
@@ -57,7 +57,7 @@ export class TestComponents {
       await this.define(componentType, resolve);
     });
 
-    const elementName = definitionOf(componentType).name;
+    const elementName = ComponentDef.of(componentType).name;
 
     this.document.body.appendChild(this.document.createElement(elementName));
 

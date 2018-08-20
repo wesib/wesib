@@ -1,4 +1,4 @@
-import { ComponentDef, componentDef, ComponentType } from '../component';
+import { ComponentDef, ComponentType } from '../component';
 import { WebComponent } from './web-component';
 
 describe('decorators/web-component', () => {
@@ -19,7 +19,7 @@ describe('decorators/web-component', () => {
 
       const componentType = TestComponent as ComponentType;
 
-      expect(componentType[componentDef]).toEqual(def);
+      expect(componentType[ComponentDef.symbol]).toEqual(def);
     });
   });
 });

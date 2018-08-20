@@ -1,4 +1,4 @@
-import { definitionOf } from '../component';
+import { ComponentDef } from '../component';
 import { ElementProperty } from './element-property';
 import { WebComponent } from './web-component';
 
@@ -12,7 +12,7 @@ describe('decorators/element-property', () => {
         customProperty = 'value';
       }
 
-      const def = definitionOf(TestComponent);
+      const def = ComponentDef.of(TestComponent);
 
       expect<any>(def.properties).toEqual(jasmine.objectContaining({ customProperty: jasmine.anything() }));
     });
@@ -24,7 +24,7 @@ describe('decorators/element-property', () => {
         customProperty = 'value';
       }
 
-      const def = definitionOf(TestComponent);
+      const def = ComponentDef.of(TestComponent);
 
       expect<any>(def.properties).not.toEqual(jasmine.objectContaining({ customProperty: jasmine.anything() }));
       expect<any>(def.properties).toEqual(jasmine.objectContaining({ otherProperty: jasmine.anything() }));
@@ -39,7 +39,7 @@ describe('decorators/element-property', () => {
           customProperty = 'value';
         }
 
-        const def = definitionOf(TestComponent);
+        const def = ComponentDef.of(TestComponent);
         const expectedDesc: PropertyDescriptor = {
           configurable: true,
           enumerable: true,
@@ -63,7 +63,7 @@ describe('decorators/element-property', () => {
           customProperty = 'value';
         }
 
-        const def = definitionOf(TestComponent);
+        const def = ComponentDef.of(TestComponent);
         const expectedDesc: PropertyDescriptor = {
           configurable: false,
           enumerable: false,
@@ -86,7 +86,7 @@ describe('decorators/element-property', () => {
           }
         }
 
-        const def = definitionOf(TestComponent);
+        const def = ComponentDef.of(TestComponent);
         const expectedDesc: PropertyDescriptor = {
           configurable: true,
           enumerable: false,
@@ -111,7 +111,7 @@ describe('decorators/element-property', () => {
           }
         }
 
-        const def = definitionOf(TestComponent);
+        const def = ComponentDef.of(TestComponent);
         const expectedDesc: PropertyDescriptor = {
           configurable: false,
           enumerable: true,
@@ -140,7 +140,7 @@ describe('decorators/element-property', () => {
 
         }
 
-        const def = definitionOf(TestComponent);
+        const def = ComponentDef.of(TestComponent);
         const expectedDesc: PropertyDescriptor = {
           configurable: true,
           enumerable: false,
@@ -174,7 +174,7 @@ describe('decorators/element-property', () => {
 
         }
 
-        const def = definitionOf(TestComponent);
+        const def = ComponentDef.of(TestComponent);
         const expectedDesc: PropertyDescriptor = {
           configurable: false,
           enumerable: true,

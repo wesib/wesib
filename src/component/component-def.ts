@@ -38,6 +38,15 @@ export interface ComponentDef<T extends object = object, E extends HTMLElement =
 }
 
 /**
+ * Partial component definition.
+ *
+ * @param <T> A type of web component.
+ * @param <E> A type of HTML element this web component extends.
+ */
+export type PartialComponentDef<T extends object = object, E extends HTMLElement = ComponentElementType<T>> =
+    Partial<ComponentDef<T, E>>;
+
+/**
  * Standard HTML element to extend by custom HTML element.
  */
 export interface ExtendedElementDef<E extends HTMLElement> {
@@ -75,39 +84,48 @@ export interface AttributeDefs<T extends object = object> {
  */
 export type AttributeDef<T extends object = object> = (this: T, oldValue: string, newValue: string) => void;
 
-/**
- * Merges multiple web component (partial) definitions.
- *
- * @param <T> A type of web component.
- * @param <E> A type of HTML element this web component extends.
- * @param defs Partial web component definitions to merge.
- */
-export function mergeComponentDefs<
-    T extends object = object,
-    E extends HTMLElement = HTMLElement>(...defs: Partial<ComponentDef<T, E>>[]):
-    Partial<ComponentDef<T, E>> {
-  return defs.reduce(
-      (prev, def) => {
+export namespace ComponentDef {
 
-        const result: Partial<ComponentDef<T, E>> = {
-          ...prev,
-          ...def,
-        };
+  /**
+   * A key of a property holding a web component definition within its class constructor.
+   */
+  export const symbol = Symbol('web-component-def');
 
-        if (prev.properties || def.properties) {
-          result.properties = {
-            ...prev.properties,
-            ...def.properties,
+  /**
+   * Merges multiple web component (partial) definitions.
+   *
+   * @param <T> A type of web component.
+   * @param <E> A type of HTML element this web component extends.
+   * @param defs Partial web component definitions to merge.
+   */
+  export function merge<
+      T extends object = object,
+      E extends HTMLElement = HTMLElement>(...defs: PartialComponentDef<T, E>[]):
+      PartialComponentDef<T, E> {
+    return defs.reduce(
+        (prev, def) => {
+
+          const result: Partial<ComponentDef<T, E>> = {
+            ...prev,
+            ...def,
           };
-        }
-        if (prev.attributes || def.attributes) {
-          result.attributes = {
-            ...prev.attributes,
-            ...def.attributes,
-          };
-        }
 
-        return result;
-      },
-      {});
+          if (prev.properties || def.properties) {
+            result.properties = {
+              ...prev.properties,
+              ...def.properties,
+            };
+          }
+          if (prev.attributes || def.attributes) {
+            result.attributes = {
+              ...prev.attributes,
+              ...def.attributes,
+            };
+          }
+
+          return result;
+        },
+        {});
+  }
+
 }

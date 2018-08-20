@@ -1,4 +1,4 @@
-import { ComponentDef, componentDef, ComponentType, defineComponent } from '../component';
+import { ComponentDef, ComponentType, defineComponent } from '../component';
 import { Disposable } from '../types';
 import { ComponentRegistry } from './component-registry';
 import { ElementBuilder } from './element-builder';
@@ -43,7 +43,7 @@ describe('element/component-registry', () => {
       });
       beforeEach(() => {
         TestComponent = class {
-          static [componentDef]: ComponentDef = {
+          static [ComponentDef.symbol]: ComponentDef = {
             name: 'test-component',
           };
         };
@@ -108,7 +108,7 @@ describe('element/component-registry', () => {
         it('replaces component with another one', () => {
 
           class ReplacementComponent {
-            static [componentDef]: ComponentDef = {
+            static [ComponentDef.symbol]: ComponentDef = {
               name: 'replacement-component',
             };
           }

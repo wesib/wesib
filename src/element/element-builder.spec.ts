@@ -1,4 +1,4 @@
-import { ComponentDef, componentDef, ComponentType, defineComponent } from '../component';
+import { ComponentDef, ComponentType, defineComponent } from '../component';
 import { ElementBuilder } from './element-builder';
 import { ProviderRegistry } from './provider-registry';
 
@@ -19,7 +19,7 @@ describe('element/element-builder', () => {
 
       beforeEach(() => {
         TestComponent = class {
-          static [componentDef]: ComponentDef = {
+          static [ComponentDef.symbol]: ComponentDef = {
             name: 'test-component',
           };
         };
