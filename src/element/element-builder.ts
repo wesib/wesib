@@ -7,6 +7,8 @@ import {
   ComponentType,
   ComponentValueKey,
 } from '../component';
+import { Disposable } from '../types';
+import { Listeners } from '../util';
 import { ElementClass } from './element';
 import { ProviderRegistry } from './provider-registry';
 
@@ -19,7 +21,7 @@ export class ElementBuilder {
 
   readonly window: Window;
   readonly providerRegistry: ProviderRegistry;
-  private readonly _elementListeners: ElementListener[] = [];
+  private readonly _elementListeners = new Listeners<ElementListener>();
 
   static create(opts: { window?: Window, providerRegistry: ProviderRegistry }): ElementBuilder {
     return new ElementBuilder(opts);
@@ -62,6 +64,12 @@ export class ElementBuilder {
       // Component reference
       [Component.symbol]: T;
 
+      // Component context reference
+      [ComponentContext.symbol]: ComponentContext<E>;
+
+      private readonly _connectedCallback!: () => void;
+      private readonly _disconnectedCallback!: () => void;
+
       constructor() {
         super();
 
@@ -69,6 +77,9 @@ export class ElementBuilder {
         // @ts-ignore
         const elementSuper = (name: string) => super[name] as any;
         const values = new Map<ComponentValueKey<any>, any>();
+        const componentListeners = new Listeners<(this: Context) => void>();
+        const connectListeners = new Listeners<(this: Context) => void>();
+        const disconnectListeners = new Listeners<(this: Context) => void>();
 
         class Context implements ComponentContext<E> {
 
@@ -96,21 +107,55 @@ export class ElementBuilder {
 
             return defaultValue;
           }
+
+          onComponent(listener: (this: Context) => void): Disposable {
+            return componentListeners.register(listener);
+          }
+
+          onConnect(listener: (this: Context) => void): Disposable {
+            return connectListeners.register(listener);
+          }
+
+          onDisconnect(listener: (this: Context) => void): Disposable {
+            return disconnectListeners.register(listener);
+          }
+
         }
 
         const context = new Context();
+
+        Object.defineProperty(this, ComponentContext.symbol, { value: context });
+        Object.defineProperty(this, '_connectedCallback', {
+          value: () => connectListeners.forEach(listener => listener.call(context)),
+        });
+        Object.defineProperty(this, '_disconnectedCallback', {
+          value: () => disconnectListeners.forEach(listener => listener.call(context)),
+        });
 
         builder._elementCreated(element, context);
 
         const component = new componentType(context);
 
         Object.defineProperty(this, Component.symbol, { value: component });
+
+        componentListeners.forEach(listener => listener.call(context));
       }
 
       // noinspection JSUnusedGlobalSymbols
       attributeChangedCallback(name: string, oldValue: string | string, newValue: string) {
         attrs[name].call(this[Component.symbol], oldValue, newValue);
       }
+
+      // noinspection JSUnusedGlobalSymbols
+      connectedCallback() {
+        this._connectedCallback();
+      }
+
+      // noinspection JSUnusedGlobalSymbols
+      disconnectedCallback() {
+        this._disconnectedCallback();
+      }
+
     }
 
     if (def.properties) {
@@ -121,17 +166,7 @@ export class ElementBuilder {
   }
 
   onElement(listener: ElementListener) {
-    this._elementListeners.push(listener);
-    return {
-      dispose: () => {
-
-        const idx = this._elementListeners.indexOf(listener);
-
-        if (idx >= 0) {
-          this._elementListeners.splice(idx, 1);
-        }
-      }
-    };
+    return this._elementListeners.register(listener);
   }
 
   private _elementCreated<E extends HTMLElement>(element: E, context: ComponentContext<E>) {

@@ -34,14 +34,10 @@ export class TestComponents {
       connected: (element: ComponentElementType<T>) => void = () => {}):
       Promise<ElementClass<ComponentElementType<T>>> {
 
-    ComponentType.define(componentType, {
-      properties: {
-        connectedCallback: {
-          value: function(this: ComponentElementType<T>) {
-            connected(this);
-          }
-        }
-      }
+    this.components.onElement((element, context) => {
+      context.onConnect(() => {
+        connected(context.element);
+      });
     });
 
     const elementType = this.components.define(componentType);

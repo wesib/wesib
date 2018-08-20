@@ -86,6 +86,9 @@ describe('component instantiation', () => {
   it('assigns component reference to custom element', () => {
     expect(Component.of(element)).toEqual(jasmine.any(testComponent));
   });
+  it('assigns component context reference to custom element', () => {
+    expect(ComponentContext.of(element)).toBe(context);
+  });
   it('passes context to component', () => {
 
     const expectedContext: Partial<ComponentContext<HTMLElement>> = {
@@ -135,6 +138,68 @@ describe('component instantiation', () => {
   describe('onElement listener', () => {
     it('is notified on new element instantiation', () => {
       expect(elementListenerSpy).toHaveBeenCalledWith(element, context);
+    });
+  });
+
+  describe('context callbacks', () => {
+
+    let componentType: ComponentType;
+
+    beforeEach(() => {
+      @WebComponent({ name: 'another-component' })
+      class AnotherComponent {
+      }
+
+      componentType = AnotherComponent;
+    });
+
+    describe('onComponent listener', () => {
+      it('is notified on component instantiation', async () => {
+
+        const listenerSpy = jasmine.createSpy('onElement');
+
+        components.components.onElement((_el, ctx) => {
+          ctx.onComponent(listenerSpy);
+        });
+
+        await components.addElement(componentType);
+
+        expect(listenerSpy).toHaveBeenCalled();
+      });
+    });
+
+    describe('onConnect listener', () => {
+      it('is notified on when custom element connected', async () => {
+
+        const listenerSpy = jasmine.createSpy('onConnect');
+
+        components.components.onElement((_el, ctx) => {
+          ctx.onComponent(listenerSpy);
+        });
+
+        await components.addElement(componentType);
+
+        expect(listenerSpy).toHaveBeenCalled();
+      });
+    });
+
+    describe('onDisconnect listener', () => {
+      it('is notified on when custom element disconnected', async () => {
+
+        const listenerSpy = jasmine.createSpy('onDisconnect');
+
+        components.components.onElement((_el, ctx) => {
+          ctx.onDisconnect(listenerSpy);
+        });
+
+        const el = await components.addElement(componentType);
+
+        expect(listenerSpy).not.toHaveBeenCalled();
+
+        el.remove();
+
+        expect(listenerSpy).toHaveBeenCalled();
+      });
     });
   });
 

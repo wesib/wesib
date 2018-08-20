@@ -1,3 +1,5 @@
+import { Disposable } from '../types';
+
 /**
  * Web component context.
  *
@@ -40,6 +42,34 @@ export interface ComponentContext<E extends HTMLElement = HTMLElement> {
    * @throws Error If there is no value associated with the given key and the default key is not provided.
    */
   get<V>(key: ComponentValueKey<V>, defaultValue: V | null | undefined): V | null | undefined;
+
+  /**
+   * Registers web component instantiation listener.
+   *
+   * This listener will be called when component this context is created for is instantiated.
+   *
+   * @param listener A listener to notify on component instantiation.
+   */
+  onComponent(listener: (this: this) => void): Disposable;
+
+  /**
+   * Registers custom HTML element connection listener.
+   *
+   * This listener will be called when custom element is connected, i.e. its `connectedCallback()` method is called.
+   *
+   * @param listener A listener to notify on element connection.
+   */
+  onConnect(listener: (this: this) => void): Disposable;
+
+  /**
+   * Registers custom HTML element disconnection listener.
+   *
+   * This listener will be called when custom element is disconnected, i.e. its `disconnectedCallback()` method is
+   * called.
+   *
+   * @param listener A listener to notify on element disconnection.
+   */
+  onDisconnect(listener: (this: this) => void): Disposable;
 
 }
 
@@ -88,3 +118,32 @@ export class ComponentValueKey<V> {
  * @return Either constructed value, or `null`/`undefined` if the value can not be constructed.
  */
 export type ComponentValueProvider<V> = <E extends HTMLElement>(context: ComponentContext<E>) => V | null | undefined;
+
+export namespace ComponentContext {
+
+  /**
+   * A key of a custom HTML element property containing reference to web component context.
+   */
+  export const symbol = Symbol('web-component-context');
+
+  /**
+   * Extracts component context from its custom HTML element.
+   *
+   * @param element Custom HTML element instance created for web component.
+   *
+   * @return Web component context reference stored under `ComponentContext.symbol` key.
+   *
+   * @throws TypeError When the given `element` does not contain component context reference.
+   */
+  export function of<E extends HTMLElement>(element: E): ComponentContext<E> {
+
+    const context: ComponentContext<E> | undefined = (element as any)[symbol];
+
+    if (!context) {
+      throw TypeError(`No component context found in ${element}`);
+    }
+
+    return context;
+  }
+
+}
