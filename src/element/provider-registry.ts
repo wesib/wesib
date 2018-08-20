@@ -1,5 +1,8 @@
 import { ComponentContext, ComponentValueKey, ComponentValueProvider } from '../component';
 
+/**
+ * @internal
+ */
 export class ProviderRegistry {
 
   private readonly _providers = new Map<ComponentValueKey<any>, ComponentValueProvider<any>>();
