@@ -4,31 +4,42 @@ import { ElementBuilder } from '../element/element-builder';
 import { ProviderRegistry } from '../element/provider-registry';
 import { Components } from './components';
 
-/**
- * Web components definition API configuration.
- *
- * This can be passed to `createComponents()` method in order to customize the API.
- */
-export interface ComponentsConfig {
+declare module './components' {
 
-  /**
-   * A window instance custom components are registered for.
-   *
-   * This instance is used to access `window.customElements` and HTML element classes.
-   *
-   * Current window instance is used if when this option is omitted.
-   */
-  window?: Window;
+  export namespace Components {
+
+    /**
+     * Web components definition API configuration.
+     *
+     * This can be passed to `Components.bootstrap()` method in order to customize the API.
+     */
+    export interface Config {
+
+      /**
+       * A window instance custom components are registered for.
+       *
+       * This instance is used to access `window.customElements` and HTML element classes.
+       *
+       * Current window instance is used if when this option is omitted.
+       */
+      window?: Window;
+
+    }
+
+    /**
+     * Bootstraps web components definition API.
+     *
+     * @param config Custom configuration.
+     *
+     * @return New web components definition API instance customized in accordance to the given configuration.
+     */
+    export function bootstrap(config?: Config): Components;
+
+  }
+
 }
 
-/**
- * Bootstraps web components definition API.
- *
- * @param config Custom configuration.
- *
- * @return New web components definition API instance customized in accordance to the given configuration.
- */
-export function bootstrapComponents(config: ComponentsConfig = {}): Components {
+Components.bootstrap = function bootstrap(config: Components.Config = {}): Components {
 
   const providerRegistry = ProviderRegistry.create();
   const componentRegistry = ComponentRegistry.create({
@@ -52,4 +63,4 @@ export function bootstrapComponents(config: ComponentsConfig = {}): Components {
       return componentRegistry.onElementDefinition(listener);
     }
   };
-}
+};

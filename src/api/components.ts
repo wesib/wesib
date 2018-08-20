@@ -106,3 +106,7 @@ export type ComponentDefinitionListener = <T extends object>(
 export type ElementDefinitionListener = <T extends object, E extends HTMLElement>(
     elementType: ElementClass<E>,
     componentType: ComponentType<T, E>) => ElementClass<E> | void;
+
+export namespace Components {
+  const symbol = Symbol('components');
+}

@@ -3,14 +3,14 @@ import { WebComponent } from '../decorators';
 import { ComponentRegistry } from '../element/component-registry';
 import { ElementBuilder } from '../element/element-builder';
 import { ProviderRegistry } from '../element/provider-registry';
-import { bootstrapComponents, ComponentsConfig } from './bootstrap';
 import { Components } from './components';
+import './components-bootstrap';
 import Spy = jasmine.Spy;
 import SpyObj = jasmine.SpyObj;
 
 describe('api/bootstrap', () => {
 
-  let opts: ComponentsConfig;
+  let opts: Components.Config;
   let createProviderRegistrySpy: Spy;
   let providerRegistrySpy: SpyObj<ProviderRegistry>;
   let createElementBuilderSpy: Spy;
@@ -46,26 +46,27 @@ describe('api/bootstrap', () => {
           'onElementDefinition',
         ]);
     createComponentRegistrySpy = spyOn(ComponentRegistry, 'create').and.returnValue(componentRegistrySpy);
-    comps = bootstrapComponents(opts);
+    comps = Components.bootstrap(opts);
   });
 
-  describe('bootstrapComponent', () => {
-    it('constructs provider registry', () => {
-      expect(createProviderRegistrySpy).toHaveBeenCalledWith();
-    });
-    it('constructs element builder', () => {
-      expect(createElementBuilderSpy).toHaveBeenCalledWith({
-        window: opts.window,
-        providerRegistry: providerRegistrySpy,
-      });
-    });
-    it('constructs component registry', () => {
-      expect(createComponentRegistrySpy).toHaveBeenCalledWith({
-        builder: elementBuilderSpy,
-      });
-    });
-  });
   describe('Components', () => {
+    describe('bootstrap', () => {
+      it('constructs provider registry', () => {
+        expect(createProviderRegistrySpy).toHaveBeenCalledWith();
+      });
+      it('constructs element builder', () => {
+        expect(createElementBuilderSpy).toHaveBeenCalledWith({
+          window: opts.window,
+          providerRegistry: providerRegistrySpy,
+        });
+      });
+      it('constructs component registry', () => {
+        expect(createComponentRegistrySpy).toHaveBeenCalledWith({
+          builder: elementBuilderSpy,
+        });
+      });
+    });
+
     it('proxies define() method', () => {
       componentRegistrySpy.define.and.returnValue(HTMLDivElement);
 
