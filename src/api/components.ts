@@ -1,4 +1,10 @@
-import { ComponentElementType, ComponentType, ComponentValueKey, ComponentValueProvider } from '../component';
+import {
+  ComponentContext,
+  ComponentElementType,
+  ComponentType,
+  ComponentValueKey,
+  ComponentValueProvider,
+} from '../component';
 import { ElementClass } from '../element';
 import { Disposable } from '../types';
 
@@ -51,7 +57,7 @@ export interface Components {
   /**
    * Registers web component definition listener.
    *
-   * This listener will be called when new component is defined, but before its element created.
+   * This listener will be called when new component class is defined, but before its element class created.
    *
    * @param listener A listener to notify on each web component definition.
    *
@@ -62,14 +68,24 @@ export interface Components {
   /**
    * Registers custom HTML element definition listener.
    *
-   * This listener will be called when new HTML element class is create, bu before it is registered as custom element.
-   *
+   * This listener will be called when new HTML element class is created, but before it is registered as custom element.
    *
    * @param listener A listener to notify on each custom HTML element definition.
    *
    * @return A disposable instance that unregisters the listener when disposed.
    */
   onElementDefinition(listener: ElementDefinitionListener): Disposable;
+
+  /**
+   * Registers custom HTML element instantiation listener.
+   *
+   * This listener will be called when new custom HTML instance created, but before its component instance is created.
+   *
+   * @param listener A listener to notify on each custom HTML element instance.
+   *
+   * @return A disposable instance that unregisters the listener when disposed.
+   */
+  onElement(listener: ElementListener): Disposable;
 
 }
 
@@ -106,6 +122,18 @@ export type ComponentDefinitionListener = <T extends object>(
 export type ElementDefinitionListener = <T extends object, E extends HTMLElement>(
     elementType: ElementClass<E>,
     componentType: ComponentType<T, E>) => ElementClass<E> | void;
+
+/**
+ * Custom HTML element instantiation listener.
+ *
+ * It is notified on new custom HTML element instance creation when registered with `Components.onElement()` method.
+ *
+ * @param element Custom HTML element instance.
+ * @param context Web component context.
+ */
+export type ElementListener = <E extends HTMLElement>(
+    element: E,
+    context: ComponentContext<E>) => void;
 
 export namespace Components {
   const symbol = Symbol('components');

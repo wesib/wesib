@@ -1,5 +1,6 @@
 import { Component, ComponentContext, ComponentType, ComponentValueKey } from '../component';
 import { ElementMethod, ElementProperty, WebComponent } from '../decorators';
+import { Disposable } from '../types';
 import { TestComponents } from './test-components';
 import Spy = jasmine.Spy;
 
@@ -10,6 +11,8 @@ describe('component instantiation', () => {
   let testComponent: ComponentType;
   let constructorSpy: Spy;
   let context: ComponentContext<HTMLElement>;
+  let elementListenerSpy: Spy;
+  let elementListenerHandle: Disposable;
   let attrChangedSpy: Spy;
   let attr2ChangedSpy: Spy;
   let element: HTMLElement;
@@ -20,6 +23,10 @@ describe('component instantiation', () => {
   });
   afterEach(() => components.dispose());
 
+  beforeEach(() => {
+    elementListenerSpy = jasmine.createSpy('elementListener');
+    elementListenerHandle = components.components.onElement(elementListenerSpy);
+  });
   beforeEach(() => {
     context = undefined!;
     constructorSpy = jasmine.createSpy('constructor')
@@ -123,6 +130,26 @@ describe('component instantiation', () => {
   });
   it('calls component method', () => {
     expect((element as any).elementMethod('1', '2', '3')).toBe(`${propertyValue}: 1, 2, 3`);
+  });
+
+  describe('onElement listener', () => {
+    it('is notified on new element instantiation', () => {
+      expect(elementListenerSpy).toHaveBeenCalledWith(element, context);
+    });
+    it('is not notified when removed', async () => {
+      elementListenerSpy.calls.reset();
+
+      elementListenerHandle.dispose();
+      elementListenerHandle.dispose();
+
+      @WebComponent({ name: 'another-component' })
+      class AnotherComponent {
+      }
+
+      await components.addElement(AnotherComponent);
+
+      expect(elementListenerSpy).not.toHaveBeenCalled();
+    });
   });
 
   describe('component value', () => {

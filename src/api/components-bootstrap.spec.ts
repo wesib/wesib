@@ -34,6 +34,7 @@ describe('api/bootstrap', () => {
         'elementBuilder',
         [
             'buildElement',
+            'onElement',
         ]);
     createElementBuilderSpy = spyOn(ElementBuilder, 'create').and.returnValue(elementBuilderSpy);
 
@@ -110,6 +111,13 @@ describe('api/bootstrap', () => {
 
       comps.onElementDefinition(listener);
       expect(componentRegistrySpy.onElementDefinition).toHaveBeenCalledWith(listener);
+    });
+    it('proxies onElement() method', () => {
+
+      const listener = () => {};
+
+      comps.onElement(listener);
+      expect(elementBuilderSpy.onElement).toHaveBeenCalledWith(listener);
     });
   });
 });

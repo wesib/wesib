@@ -1,3 +1,4 @@
+import { ElementListener } from '../api';
 import {
   AttributeDefs,
   Component,
@@ -18,6 +19,7 @@ export class ElementBuilder {
 
   readonly window: Window;
   readonly providerRegistry: ProviderRegistry;
+  private readonly _elementListeners: ElementListener[] = [];
 
   static create(opts: { window?: Window, providerRegistry: ProviderRegistry }): ElementBuilder {
     return new ElementBuilder(opts);
@@ -45,6 +47,7 @@ export class ElementBuilder {
       componentType: ComponentType<T, E>):
       ElementClass<E> {
 
+    const builder = this;
     const Object = (this.window as any).Object;
     const def = ComponentDef.of(componentType);
     const elementType: ElementClass<HTMLElement> = this.elementType(def);
@@ -95,16 +98,19 @@ export class ElementBuilder {
           }
         }
 
-        Object.defineProperty(this, Component.symbol, {
-          value: new componentType(new Context()),
-        });
+        const context = new Context();
+
+        builder._elementCreated(element, context);
+
+        const component = new componentType(context);
+
+        Object.defineProperty(this, Component.symbol, { value: component });
       }
 
       // noinspection JSUnusedGlobalSymbols
       attributeChangedCallback(name: string, oldValue: string | string, newValue: string) {
         attrs[name].call(this[Component.symbol], oldValue, newValue);
       }
-
     }
 
     if (def.properties) {
@@ -112,6 +118,24 @@ export class ElementBuilder {
     }
 
     return Element as ElementClass<any>;
+  }
+
+  onElement(listener: ElementListener) {
+    this._elementListeners.push(listener);
+    return {
+      dispose: () => {
+
+        const idx = this._elementListeners.indexOf(listener);
+
+        if (idx >= 0) {
+          this._elementListeners.splice(idx, 1);
+        }
+      }
+    };
+  }
+
+  private _elementCreated<E extends HTMLElement>(element: E, context: ComponentContext<E>) {
+    return this._elementListeners.forEach(listener => listener(element, context));
   }
 
 }

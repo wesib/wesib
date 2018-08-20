@@ -42,9 +42,8 @@ declare module './components' {
 Components.bootstrap = function bootstrap(config: Components.Config = {}): Components {
 
   const providerRegistry = ProviderRegistry.create();
-  const componentRegistry = ComponentRegistry.create({
-    builder: ElementBuilder.create({ window: config.window, providerRegistry }),
-  });
+  const elementBuilder = ElementBuilder.create({ window: config.window, providerRegistry });
+  const componentRegistry = ComponentRegistry.create({ builder: elementBuilder });
 
   return {
     define(componentType) {
@@ -61,6 +60,9 @@ Components.bootstrap = function bootstrap(config: Components.Config = {}): Compo
     },
     onElementDefinition(listener) {
       return componentRegistry.onElementDefinition(listener);
+    },
+    onElement(listener) {
+      return elementBuilder.onElement(listener);
     }
   };
 };
