@@ -13,10 +13,10 @@ import { ComponentDecorator } from './component-decorators';
  * }
  * ```
  *
- * Such component can be registered with `components.define()`
- * method prior in order to be recognized by HTML document.
+ * Such component can be registered with `BootstrapContext.define()` method, or used as a feature, e.g. passed to
+ * `bootstrapComponents()` method, or added to `FeatureDef.requires` property of another feature.
  *
- * This is an alternative to direct call to `defineComponent()` method.
+ * This is an alternative to direct call to `ComponentType.define()` method.
  *
  * @param <T> A type of web component.
  * @param <E> A type of HTML element this web component extends.

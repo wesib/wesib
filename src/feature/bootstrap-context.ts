@@ -21,6 +21,8 @@ export interface BootstrapContext {
    * Creates a custom HTML element according to component definition, and registers it with
    * `window.customElements.define()` method.
    *
+   * Note that custom element registration will happen only after all features initialization.
+   *
    * @param <T> A type of web component.
    * @param componentType Web component type.
    *

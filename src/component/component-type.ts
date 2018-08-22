@@ -62,6 +62,9 @@ export namespace ComponentType {
    *
    * Either assigns new or extends an existing component definition and stores it under `ComponentDef.symbol` key.
    *
+   * Note that each ComponentType is also a web components feature able to register itself, so it can be passed
+   * directly to `bootstrapComponents()` function or added as a requirement of other web components feature.
+   *
    * @param <T> A type of web component.
    * @param <E> A type of HTML element this web component extends.
    * @param type Web component class constructor.
