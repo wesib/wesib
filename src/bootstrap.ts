@@ -10,7 +10,7 @@ import {
   ElementListener,
   FeatureType,
 } from './feature';
-import { FeatureSet } from './feature/feature-set';
+import { FeatureRegistry } from './feature/feature-registry';
 import { Disposable } from './types';
 
 /**
@@ -52,13 +52,13 @@ export function bootstrapComponents(config?: BootstrapConfig | FeatureType, ...f
     config = {};
   }
 
-  const featureSet = FeatureSet.create();
+  const featureRegistry = FeatureRegistry.create();
 
-  features.forEach(feature => featureSet.add(feature));
+  features.forEach(feature => featureRegistry.add(feature));
 
   const { componentRegistry, bootstrapContext } = initBootstrap(config);
 
-  featureSet.configure(bootstrapContext);
+  featureRegistry.configure(bootstrapContext);
 
   componentRegistry.complete();
 }

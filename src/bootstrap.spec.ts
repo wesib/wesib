@@ -5,11 +5,11 @@ import { ComponentRegistry } from './element/component-registry';
 import { ElementBuilder } from './element/element-builder';
 import { ProviderRegistry } from './element/provider-registry';
 import { BootstrapContext, FeatureType } from './feature';
-import { FeatureSet } from './feature/feature-set';
+import { FeatureRegistry } from './feature/feature-registry';
 import Spy = jasmine.Spy;
 import SpyObj = jasmine.SpyObj;
 
-describe('feature/bootstrap-components', () => {
+describe('bootstrap', () => {
 
   let config: BootstrapConfig;
   let createProviderRegistrySpy: Spy;
@@ -76,20 +76,20 @@ describe('feature/bootstrap-components', () => {
       });
     });
 
-    describe('FeatureSet', () => {
+    describe('FeatureRegistry', () => {
 
-      let featureSetSpy: SpyObj<FeatureSet>;
-      let createFeatureSetSpy: Spy;
+      let featureRegistrySpy: SpyObj<FeatureRegistry>;
+      let createFeatureRegistrySpy: Spy;
 
       beforeEach(() => {
-        featureSetSpy = jasmine.createSpyObj<FeatureSet>('featureSet', ['add', 'configure']);
-        createFeatureSetSpy = spyOn(FeatureSet, 'create').and.returnValue(featureSetSpy);
+        featureRegistrySpy = jasmine.createSpyObj<FeatureRegistry>('featureRegistry', ['add', 'configure']);
+        createFeatureRegistrySpy = spyOn(FeatureRegistry, 'create').and.returnValue(featureRegistrySpy);
       });
 
-      it('creates feature set', () => {
+      it('creates feature registry', () => {
         bootstrapComponents();
 
-        expect(createFeatureSetSpy).toHaveBeenCalledWith();
+        expect(createFeatureRegistrySpy).toHaveBeenCalledWith();
       });
       it('receives feature', () => {
 
@@ -97,7 +97,7 @@ describe('feature/bootstrap-components', () => {
 
         bootstrapComponents(config, TestFeature);
 
-        expect(featureSetSpy.add).toHaveBeenCalledWith(TestFeature);
+        expect(featureRegistrySpy.add).toHaveBeenCalledWith(TestFeature);
       });
       it('receives feature and applies default config', () => {
 
@@ -105,7 +105,7 @@ describe('feature/bootstrap-components', () => {
 
         bootstrapComponents(TestFeature);
 
-        expect(featureSetSpy.add).toHaveBeenCalledWith(TestFeature);
+        expect(featureRegistrySpy.add).toHaveBeenCalledWith(TestFeature);
       });
     });
 

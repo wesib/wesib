@@ -5,12 +5,12 @@ import { FeatureDef, FeatureType } from './feature';
 /**
  * @internal
  */
-export class FeatureSet {
+export class FeatureRegistry {
 
   readonly _features = new Map<FeatureType, FeatureType>();
 
-  static create(): FeatureSet {
-    return new FeatureSet();
+  static create(): FeatureRegistry {
+    return new FeatureRegistry();
   }
 
   private constructor() {
