@@ -1,6 +1,6 @@
 import { Class } from '../types';
 import { ComponentClass, ComponentElementType } from './component-class';
-import { ComponentDef } from './component-def';
+import { ComponentDef, PartialComponentDef } from './component-def';
 
 /**
  * Web component type.
@@ -65,10 +65,12 @@ export namespace ComponentType {
    * @param <E> A type of HTML element this web component extends.
    * @param type Web component class constructor.
    * @param defs Web component definitions.
+   *
+   * @returns The `type` instance.
    */
   export function define<
       T extends Class,
-      E extends HTMLElement>(type: T, ...defs: Partial<ComponentDef<InstanceType<T>, E>>[]): T {
+      E extends HTMLElement>(type: T, ...defs: PartialComponentDef<InstanceType<T>, E>[]): T {
 
     const componentType = type as ComponentType;
     const prevDef = componentType[ComponentDef.symbol];

@@ -1,4 +1,4 @@
-import { ComponentDef } from './component-def';
+import { ComponentDef, PartialComponentDef } from './component-def';
 import { ComponentType } from './component-type';
 
 describe('component/component-type', () => {
@@ -24,40 +24,42 @@ describe('component/component-type', () => {
     });
   });
 
-  describe('defineComponent', () => {
+  describe('ComponentType', () => {
+    describe('define', () => {
 
-    let TestComponent: ComponentType;
+      let TestComponent: ComponentType;
 
-    beforeEach(() => {
-      TestComponent = class {
-      };
-    });
+      beforeEach(() => {
+        TestComponent = class {
+        };
+      });
 
-    it('assigns component definition', () => {
+      it('assigns component definition', () => {
 
-      const def: ComponentDef = { name: 'test-component' };
-      const componentType = ComponentType.define(TestComponent, def);
+        const def: ComponentDef = { name: 'test-component' };
+        const componentType = ComponentType.define(TestComponent, def);
 
-      expect(ComponentDef.of(componentType)).toEqual(def);
-    });
-    it('updates component definition', () => {
+        expect(ComponentDef.of(componentType)).toEqual(def);
+      });
+      it('updates component definition', () => {
 
-      const initialDef = {
-        name: 'test',
-      };
+        const initialDef: ComponentDef = {
+          name: 'test',
+        };
 
-      ComponentType.define(TestComponent, initialDef);
+        ComponentType.define(TestComponent, initialDef);
 
-      const def: Partial<ComponentDef> = {
-        properties: {
-          test: {
-            value: 'some',
+        const def: PartialComponentDef = {
+          properties: {
+            test: {
+              value: 'some',
+            },
           },
-        },
-      };
-      const componentType = ComponentType.define(TestComponent, def);
+        };
+        const componentType = ComponentType.define(TestComponent, def);
 
-      expect(ComponentDef.of(componentType)).toEqual({ ...initialDef, ...def });
+        expect<PartialComponentDef>(ComponentDef.of(componentType)).toEqual(ComponentDef.merge(initialDef, def));
+      });
     });
   });
 });

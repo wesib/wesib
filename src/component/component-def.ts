@@ -97,6 +97,8 @@ export namespace ComponentDef {
    * @param <T> A type of web component.
    * @param <E> A type of HTML element this web component extends.
    * @param defs Partial web component definitions to merge.
+   *
+   * @returns Merged component definition.
    */
   export function merge<
       T extends object = object,
@@ -105,7 +107,7 @@ export namespace ComponentDef {
     return defs.reduce(
         (prev, def) => {
 
-          const result: Partial<ComponentDef<T, E>> = {
+          const result: PartialComponentDef<T, E> = {
             ...prev,
             ...def,
           };
