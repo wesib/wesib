@@ -1,3 +1,4 @@
+import { FeatureDef } from '../feature';
 import { ComponentDef, PartialComponentDef } from './component-def';
 import { ComponentType } from './component-type';
 
@@ -30,8 +31,7 @@ describe('component/component-type', () => {
       let TestComponent: ComponentType;
 
       beforeEach(() => {
-        TestComponent = class {
-        };
+        TestComponent = class {};
       });
 
       it('assigns component definition', () => {
@@ -59,6 +59,23 @@ describe('component/component-type', () => {
         const componentType = ComponentType.define(TestComponent, def);
 
         expect<PartialComponentDef>(ComponentDef.of(componentType)).toEqual(ComponentDef.merge(initialDef, def));
+      });
+      it('creates feature', () => {
+
+        const componentType = ComponentType.define(TestComponent, { name: 'test-component' });
+        const featureDef = FeatureDef.of(componentType)!;
+
+        expect(featureDef).toBeDefined();
+
+        const configure = featureDef.configure!;
+
+        expect(configure).toBeDefined();
+
+        const featureContextSpy = jasmine.createSpyObj('bootstrapContext', ['define']);
+
+        configure(featureContextSpy);
+
+        expect(featureContextSpy.define).toHaveBeenCalledWith(componentType);
       });
     });
   });

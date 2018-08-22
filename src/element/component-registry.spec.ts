@@ -55,11 +55,13 @@ describe('element/component-registry', () => {
       describe('define', () => {
         it('builds custom element', () => {
           registry.define(TestComponent);
+          registry.complete();
 
           expect(builderSpy.buildElement).toHaveBeenCalledWith(TestComponent);
         });
         it('defines custom element', () => {
           registry.define(TestComponent);
+          registry.complete();
 
           expect(customElementsSpy.define).toHaveBeenCalledWith('test-component', ElementSpy);
         });
@@ -72,6 +74,7 @@ describe('element/component-registry', () => {
           });
 
           registry.define(TestComponent);
+          registry.complete();
 
           expect(customElementsSpy.define).toHaveBeenCalledWith('test-component', ElementSpy, {
             extends: 'input',
@@ -101,6 +104,7 @@ describe('element/component-registry', () => {
 
         it('is notified on component definition', () => {
           registry.define(TestComponent);
+          registry.complete();
 
           expect(listenerSpy).toHaveBeenCalledWith(TestComponent);
           expect(builderSpy.buildElement).toHaveBeenCalledWith(TestComponent);
@@ -116,6 +120,7 @@ describe('element/component-registry', () => {
           listenerSpy.and.returnValue(ReplacementComponent);
 
           registry.define(TestComponent);
+          registry.complete();
 
           expect(listenerSpy).toHaveBeenCalledWith(TestComponent);
           expect(builderSpy.buildElement).toHaveBeenCalledWith(ReplacementComponent);
@@ -134,6 +139,7 @@ describe('element/component-registry', () => {
 
         it('is notified on element definition', () => {
           registry.define(TestComponent);
+          registry.complete();
 
           expect(listenerSpy).toHaveBeenCalledWith(ElementSpy, TestComponent);
           expect(customElementsSpy.define).toHaveBeenCalledWith('test-component', ElementSpy);
@@ -149,6 +155,7 @@ describe('element/component-registry', () => {
           listenerSpy.and.returnValue(ReplacementElement);
 
           registry.define(TestComponent);
+          registry.complete();
 
           expect(listenerSpy).toHaveBeenCalledWith(ElementSpy, TestComponent);
           expect(customElementsSpy.define).toHaveBeenCalledWith('test-component', ReplacementElement);

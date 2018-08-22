@@ -9,11 +9,11 @@ import { ElementClass } from '../element';
 import { Disposable } from '../types';
 
 /**
- * Web components definition API.
+ * Web components bootstrap context.
  *
- * An instance of the API can be constructed with `createComponents()` function.
+ * An instance of this class is passed to `FeatureDef.configure()` method so that the feature can configure itself.
  */
-export interface Components {
+export interface BootstrapContext {
 
   /**
    * Defines a web component.
@@ -134,7 +134,3 @@ export type ElementDefinitionListener = <T extends object, E extends HTMLElement
 export type ElementListener = <E extends HTMLElement>(
     element: E,
     context: ComponentContext<E>) => void;
-
-export namespace Components {
-  const symbol = Symbol('components');
-}

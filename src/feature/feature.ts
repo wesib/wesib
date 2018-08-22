@@ -1,6 +1,6 @@
 import { Class } from '../types';
 import { mergeFunctions, mergeLists } from '../util';
-import { FeatureContext } from './feature-context';
+import { BootstrapContext } from './bootstrap-context';
 
 /**
  * Web components feature definition.
@@ -25,9 +25,9 @@ export interface FeatureDef {
   /**
    * Configures this feature by calling the given configuration context methods.
    *
-   * @param context Feature configuration context.
+   * @param context Components bootstrap context.
    */
-  configure?: (context: FeatureContext) => void;
+  configure?: (context: BootstrapContext) => void;
 
 }
 

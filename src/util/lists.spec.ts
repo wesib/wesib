@@ -1,4 +1,4 @@
-import { mergeLists } from './lists';
+import { list2set, mergeLists } from './lists';
 
 describe('util/lists', () => {
   describe('mergeLists', () => {
@@ -30,6 +30,25 @@ describe('util/lists', () => {
       const second = 2;
 
       expect(mergeLists(first, second)).toEqual([first, second]);
+    });
+  });
+  describe('list2set', () => {
+    it('returns empty set when list is absent', () => {
+      expect(list2set(undefined).size).toBe(0);
+    });
+    it('returns a set containing single element', () => {
+
+      const set = list2set('abc');
+
+      expect(set.size).toBe(1);
+      expect(set).toContain('abc');
+    });
+    it('returns a set containing all elements', () => {
+
+      const set = list2set(['abc', 'def']);
+
+      expect(set.size).toBe(2);
+      expect(set).toContain('abc', 'def');
     });
   });
 });

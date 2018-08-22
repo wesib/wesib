@@ -1,13 +1,13 @@
 import { Component, ComponentContext, ComponentType, ComponentValueKey } from '../component';
 import { ElementMethod, ElementProperty, WebComponent } from '../decorators';
 import { Disposable } from '../types';
-import { TestComponents } from './test-components';
+import { TestBootstrap } from './test-bootstrap';
 import Spy = jasmine.Spy;
 
 describe('component instantiation', () => {
 
   const valueKey = new ComponentValueKey<string>('provided-value-key');
-  let components: TestComponents;
+  let bootstrap: TestBootstrap;
   let testComponent: ComponentType;
   let constructorSpy: Spy;
   let context: ComponentContext<HTMLElement>;
@@ -19,13 +19,13 @@ describe('component instantiation', () => {
   let propertyValue: number;
 
   beforeEach(async () => {
-    components = await new TestComponents().create();
+    bootstrap = await new TestBootstrap().create();
   });
-  afterEach(() => components.dispose());
+  afterEach(() => bootstrap.dispose());
 
   beforeEach(() => {
     elementListenerSpy = jasmine.createSpy('elementListener');
-    elementListenerHandle = components.components.onElement(elementListenerSpy);
+    elementListenerHandle = bootstrap.context.onElement(elementListenerSpy);
   });
   beforeEach(() => {
     context = undefined!;
@@ -77,7 +77,7 @@ describe('component instantiation', () => {
     testComponent = TestComponent;
   });
   beforeEach(async () => {
-    element = await components.addElement(testComponent);
+    element = await bootstrap.addElement(testComponent);
   });
 
   it('instantiates custom element', async () => {
@@ -158,11 +158,11 @@ describe('component instantiation', () => {
 
         const listenerSpy = jasmine.createSpy('onElement');
 
-        components.components.onElement((_el, ctx) => {
+        bootstrap.context.onElement((_el, ctx) => {
           ctx.onComponent(listenerSpy);
         });
 
-        await components.addElement(componentType);
+        await bootstrap.addElement(componentType);
 
         expect(listenerSpy).toHaveBeenCalled();
       });
@@ -173,11 +173,11 @@ describe('component instantiation', () => {
 
         const listenerSpy = jasmine.createSpy('onConnect');
 
-        components.components.onElement((_el, ctx) => {
+        bootstrap.context.onElement((_el, ctx) => {
           ctx.onComponent(listenerSpy);
         });
 
-        await components.addElement(componentType);
+        await bootstrap.addElement(componentType);
 
         expect(listenerSpy).toHaveBeenCalled();
       });
@@ -188,11 +188,11 @@ describe('component instantiation', () => {
 
         const listenerSpy = jasmine.createSpy('onDisconnect');
 
-        components.components.onElement((_el, ctx) => {
+        bootstrap.context.onElement((_el, ctx) => {
           ctx.onDisconnect(listenerSpy);
         });
 
-        const el = await components.addElement(componentType);
+        const el = await bootstrap.addElement(componentType);
 
         expect(listenerSpy).not.toHaveBeenCalled();
 
@@ -214,7 +214,7 @@ describe('component instantiation', () => {
 
       const value = 'test value';
 
-      components.components.provide(valueKey, providerSpy);
+      bootstrap.context.provide(valueKey, providerSpy);
       providerSpy.and.returnValue(value);
 
       expect(context.get(valueKey)).toEqual(value);
@@ -236,7 +236,7 @@ describe('component instantiation', () => {
 
       const value = 'test value 1';
 
-      components.components.provide(valueKey, providerSpy);
+      bootstrap.context.provide(valueKey, providerSpy);
       providerSpy.and.returnValue(value);
       expect(context.get(valueKey)).toEqual(value);
 
@@ -244,7 +244,7 @@ describe('component instantiation', () => {
       expect(context.get(valueKey)).toEqual(value);
     });
     it('is not cached when there is no value provided', () => {
-      components.components.provide(valueKey, providerSpy);
+      bootstrap.context.provide(valueKey, providerSpy);
       context.get(valueKey, 'default value');
 
       const value = 'test value 2';

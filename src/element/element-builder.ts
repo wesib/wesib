@@ -1,4 +1,3 @@
-import { ElementListener } from '../api';
 import {
   AttributeDefs,
   Component,
@@ -7,6 +6,7 @@ import {
   ComponentType,
   ComponentValueKey,
 } from '../component';
+import { ElementListener } from '../feature';
 import { Disposable } from '../types';
 import { Listeners } from '../util';
 import { ElementClass } from './element';

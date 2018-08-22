@@ -1,6 +1,6 @@
 import { noop } from '../util';
+import { BootstrapContext } from './bootstrap-context';
 import { FeatureDef, FeatureType } from './feature';
-import { FeatureContext } from './feature-context';
 import Spy = jasmine.Spy;
 
 describe('feature/feature', () => {
@@ -47,7 +47,7 @@ describe('feature/feature', () => {
         const merged = FeatureDef.merge(
             { configure: configure1spy },
             { configure: configure2spy }).configure || noop;
-        const context: FeatureContext = { name: 'feature context' } as any;
+        const context: BootstrapContext = { name: 'bootstrap context' } as any;
 
         merged(context);
 

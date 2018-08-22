@@ -1,3 +1,4 @@
+import { FeatureDef, FeatureType } from '../feature';
 import { Class } from '../types';
 import { ComponentClass, ComponentElementType } from './component-class';
 import { ComponentDef, PartialComponentDef } from './component-def';
@@ -90,7 +91,13 @@ export namespace ComponentType {
           value: def,
         });
 
-    return type;
+    return FeatureType.define(
+        type,
+        {
+          configure(context) {
+            context.define(type);
+          },
+        });
   }
 
 }

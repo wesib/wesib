@@ -34,3 +34,13 @@ export function mergeLists<T>(first: T | T[] | undefined, second: T | T[] | unde
   }
   return [first, second ];
 }
+
+export function list2set<T>(list: T | T[] | undefined): Set<T> {
+  if (Array.isArray(list)) {
+    return new Set(list);
+  }
+  if (list === undefined) {
+    return new Set();
+  }
+  return new Set([list]);
+}

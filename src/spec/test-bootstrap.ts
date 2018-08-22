@@ -1,18 +1,19 @@
-import { Components } from '../api';
 import { ComponentDef, ComponentElementType, ComponentType } from '../component';
 import { ElementClass } from '../element';
+import { BootstrapContext, FeatureType } from '../feature';
+import { bootstrapComponents } from '../feature';
 import { TestIframe } from './test-iframe';
 
-export class TestComponents {
+export class TestBootstrap {
 
   readonly iframe = new TestIframe();
-  private _components!: Components;
+  private _context!: BootstrapContext;
 
   constructor() {
   }
 
-  get components(): Components {
-    return this._components;
+  get context(): BootstrapContext {
+    return this._context;
   }
 
   get window(): Window {
@@ -25,7 +26,13 @@ export class TestComponents {
 
   async create(): Promise<this> {
     await this.iframe.create();
-    this._components = Components.bootstrap({ window: this.window });
+
+    class TestFeature {}
+
+    FeatureType.define(TestFeature, { configure: ctx => this._context = ctx });
+
+    bootstrapComponents({ window: this.window }, TestFeature);
+
     return this;
   }
 
@@ -34,15 +41,15 @@ export class TestComponents {
       connected: (element: ComponentElementType<T>) => void = () => {}):
       Promise<ElementClass<ComponentElementType<T>>> {
 
-    this.components.onElement((element, context) => {
+    this.context.onElement((element, context) => {
       context.onConnect(() => {
         connected(context.element);
       });
     });
 
-    const elementType = this.components.define(componentType);
+    const elementType = this.context.define(componentType);
 
-    await this.components.whenDefined(componentType);
+    await this.context.whenDefined(componentType);
 
     return elementType;
   }

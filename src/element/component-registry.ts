@@ -1,5 +1,5 @@
-import { ComponentDefinitionListener, ElementDefinitionListener } from '../api';
 import { ComponentDef, ComponentElementType, ComponentType } from '../component';
+import { ComponentDefinitionListener, ElementDefinitionListener } from '../feature';
 import { Disposable } from '../types';
 import { Listeners } from '../util';
 import { ElementClass } from './element';
@@ -13,6 +13,7 @@ export class ComponentRegistry {
   readonly builder: ElementBuilder;
   private readonly _componentDefinitionListeners = new Listeners<ComponentDefinitionListener>();
   private readonly _elementDefinitionListeners = new Listeners<ElementDefinitionListener>();
+  private _definitions?: (() => void)[] = [];
 
   static create(opts: {
     builder: ElementBuilder
@@ -41,17 +42,34 @@ export class ComponentRegistry {
     const ext = def.extend;
 
     if (ext) {
-      this.window.customElements.define(
+      this._define(() => this.window.customElements.define(
           def.name,
           elementClass,
           {
             extends: ext.name,
-          });
+          }));
     } else {
-      this.window.customElements.define(def.name, elementClass);
+      this._define(() => this.window.customElements.define(def.name, elementClass));
     }
 
     return elementClass;
+  }
+
+  private _define(definition: () => void) {
+    if (!this._definitions) {
+      definition();
+    } else {
+      this._definitions.push(definition);
+    }
+  }
+
+  complete() {
+
+    const definitions = this._definitions!;
+
+    delete this._definitions;
+
+    definitions.forEach(definition => definition());
   }
 
   whenDefined(componentType: ComponentType<any, any>): PromiseLike<void> {
