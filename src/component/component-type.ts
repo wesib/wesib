@@ -1,4 +1,4 @@
-import { FeatureDef, FeatureType } from '../feature';
+import { FeatureType } from '../feature';
 import { Class } from '../types';
 import { ComponentClass, ComponentElementType } from './component-class';
 import { ComponentDef, PartialComponentDef } from './component-def';

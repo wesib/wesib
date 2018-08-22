@@ -1,17 +1,17 @@
-import { ComponentElementType, ComponentType, ComponentValueKey, ComponentValueProvider } from '../component';
-import { ElementClass } from '../element';
-import { ComponentRegistry } from '../element/component-registry';
-import { ElementBuilder } from '../element/element-builder';
-import { ProviderRegistry } from '../element/provider-registry';
-import { Disposable } from '../types';
+import { ComponentElementType, ComponentType, ComponentValueKey, ComponentValueProvider } from './component';
+import { ElementClass } from './element';
+import { ComponentRegistry } from './element/component-registry';
+import { ElementBuilder } from './element/element-builder';
+import { ProviderRegistry } from './element/provider-registry';
 import {
   BootstrapContext,
   ComponentDefinitionListener,
   ElementDefinitionListener,
   ElementListener,
-} from './bootstrap-context';
-import { FeatureType } from './feature';
-import { FeatureSet } from './feature-set';
+  FeatureType,
+} from './feature';
+import { FeatureSet } from './feature/feature-set';
+import { Disposable } from './types';
 
 /**
  * Web components bootstrap configuration.

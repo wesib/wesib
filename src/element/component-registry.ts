@@ -1,5 +1,5 @@
-import { ComponentDef, ComponentElementType, ComponentType } from '../component';
 import { ComponentDefinitionListener, ElementDefinitionListener } from '../feature';
+import { ComponentDef, ComponentElementType, ComponentType } from '../component';
 import { Disposable } from '../types';
 import { Listeners } from '../util';
 import { ElementClass } from './element';

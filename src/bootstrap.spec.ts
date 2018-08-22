@@ -1,12 +1,11 @@
-import { ComponentValueKey } from '../component';
-import { WebComponent } from '../decorators';
-import { ComponentRegistry } from '../element/component-registry';
-import { ElementBuilder } from '../element/element-builder';
-import { ProviderRegistry } from '../element/provider-registry';
-import { bootstrapComponents, BootstrapConfig } from './bootstrap-components';
-import { BootstrapContext } from './bootstrap-context';
-import { FeatureType } from './feature';
-import { FeatureSet } from './feature-set';
+import { bootstrapComponents, BootstrapConfig } from './bootstrap';
+import { ComponentValueKey } from './component';
+import { WebComponent } from './decorators';
+import { ComponentRegistry } from './element/component-registry';
+import { ElementBuilder } from './element/element-builder';
+import { ProviderRegistry } from './element/provider-registry';
+import { BootstrapContext, FeatureType } from './feature';
+import { FeatureSet } from './feature/feature-set';
 import Spy = jasmine.Spy;
 import SpyObj = jasmine.SpyObj;
 
