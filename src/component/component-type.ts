@@ -101,7 +101,9 @@ export namespace ComponentType {
         type,
         {
           configure(context) {
-            context.define(type);
+            if (this === componentType) {
+              context.define(type);
+            }
           },
         });
   }

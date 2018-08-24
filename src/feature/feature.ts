@@ -28,7 +28,7 @@ export interface FeatureDef {
    *
    * @param context Components bootstrap context.
    */
-  configure?: (context: BootstrapContext) => void;
+  configure?: (this: FeatureType, context: BootstrapContext) => void;
 
 }
 
@@ -74,7 +74,7 @@ export namespace FeatureDef {
           const result: FeatureDef = {};
           const requires = mergeLists(prev.requires, def.requires);
           const provides = mergeLists(prev.provides, def.provides);
-          const configure = mergeFunctions(prev.configure, def.configure);
+          const configure = mergeFunctions<FeatureType, [BootstrapContext], void>(prev.configure, def.configure);
 
           if (requires !== undefined) {
             result.requires = requires;

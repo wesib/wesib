@@ -77,10 +77,14 @@ describe('feature/feature', () => {
             { configure: configure2spy }).configure || noop;
         const context: BootstrapContext = { name: 'bootstrap context' } as any;
 
-        merged(context);
+        class Feature {}
+
+        merged.call(Feature, context);
 
         expect(configure1spy).toHaveBeenCalledWith(context);
+        expect(configure1spy.calls.first().object).toBe(Feature);
         expect(configure2spy).toHaveBeenCalledWith(context);
+        expect(configure2spy.calls.first().object).toBe(Feature);
       });
       it('does not merge empty definitions', () => {
         expect(FeatureDef.merge({}, {})).toEqual({});

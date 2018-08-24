@@ -43,7 +43,7 @@ export class FeatureRegistry {
         const configure = FeatureDef.of(feature).configure;
 
         if (configure) {
-          configure(context);
+          configure.call(feature, context);
         }
       }
     });

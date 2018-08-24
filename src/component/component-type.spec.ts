@@ -94,22 +94,46 @@ describe('component/component-type', () => {
 
         expect<PartialComponentDef>(ComponentDef.of(componentType)).toEqual(ComponentDef.merge(initialDef, def));
       });
-      it('creates feature', () => {
+      describe('created component feature', () => {
+        it('registers the component', () => {
 
-        const componentType = ComponentType.define(TestComponent, { name: 'test-component' });
-        const featureDef = FeatureDef.of(componentType)!;
+          const componentType = ComponentType.define(TestComponent, { name: 'test-component' });
+          const featureDef = FeatureDef.of(componentType)!;
 
-        expect(featureDef).toBeDefined();
+          expect(featureDef).toBeDefined();
 
-        const configure = featureDef.configure!;
+          const configure = featureDef.configure!;
 
-        expect(configure).toBeDefined();
+          expect(configure).toBeDefined();
 
-        const featureContextSpy = jasmine.createSpyObj('bootstrapContext', ['define']);
+          const featureContextSpy = jasmine.createSpyObj('bootstrapContext', ['define']);
 
-        configure(featureContextSpy);
+          configure.call(componentType, featureContextSpy);
 
-        expect(featureContextSpy.define).toHaveBeenCalledWith(componentType);
+          expect(featureContextSpy.define).toHaveBeenCalledWith(componentType);
+        });
+        it('does not register the base component', () => {
+
+          const baseType = ComponentType.define(TestComponent, { name: 'test-component' });
+
+          class ExtComponent extends TestComponent {}
+
+          const extType = ComponentType.define(ExtComponent, { name: 'ext-component' });
+          const featureDef = FeatureDef.of(extType)!;
+
+          expect(featureDef).toBeDefined();
+
+          const configure = featureDef.configure!;
+
+          expect(configure).toBeDefined();
+
+          const featureContextSpy = jasmine.createSpyObj('bootstrapContext', ['define']);
+
+          configure.call(extType, featureContextSpy);
+
+          expect(featureContextSpy.define).toHaveBeenCalledWith(extType);
+          expect(featureContextSpy.define).not.toHaveBeenCalledWith(baseType);
+        });
       });
     });
   });
