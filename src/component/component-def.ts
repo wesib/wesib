@@ -1,4 +1,5 @@
 import { ElementClass } from '../element';
+import { mergeFunctions } from '../util/functions';
 import { ComponentElementType } from './component-class';
 
 /**
@@ -118,11 +119,11 @@ export namespace ComponentDef {
               ...def.properties,
             };
           }
-          if (prev.attributes || def.attributes) {
-            result.attributes = {
-              ...prev.attributes,
-              ...def.attributes,
-            };
+
+          const attributes = mergeAttributes(prev.attributes, def.attributes);
+
+          if (attributes) {
+            result.attributes = attributes;
           }
 
           return result;
@@ -130,4 +131,22 @@ export namespace ComponentDef {
         {});
   }
 
+}
+
+function mergeAttributes<T extends object>(
+    attributes1: AttributeDefs<T> | undefined,
+    attributes2: AttributeDefs<T> | undefined): AttributeDefs<T> | undefined {
+  if (!attributes1 && !attributes2) {
+    return;
+  }
+
+  const result: AttributeDefs<T> = { ...attributes1 };
+
+  if (attributes2) {
+    Object.keys(attributes2).forEach(key => {
+      result[key] = mergeFunctions<T, [string, string], void>(result[key], attributes2[key]);
+    });
+  }
+
+  return result;
 }
