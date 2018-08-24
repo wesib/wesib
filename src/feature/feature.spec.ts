@@ -1,3 +1,4 @@
+import { ComponentDef } from '../component';
 import { noop } from '../util';
 import { BootstrapContext } from './bootstrap-context';
 import { FeatureDef, FeatureType } from './feature';
@@ -23,6 +24,33 @@ describe('feature/feature', () => {
         class TestFeature {}
 
         expect(FeatureDef.of(TestFeature)).toEqual({});
+      });
+      it('requests inherited definition', () => {
+
+        class A {
+          static [FeatureDef.symbol]: FeatureDef = {
+            requires: Feature1,
+          };
+        }
+        class B extends A {}
+
+        expect(FeatureDef.of(B)).toEqual(A[FeatureDef.symbol]);
+      });
+      it('merges with inherited definition', () => {
+
+        class A {
+          static [FeatureDef.symbol]: FeatureDef = {
+            requires: Feature1,
+          };
+        }
+        class B extends A {
+          static [FeatureDef.symbol]: FeatureDef = {
+            requires: Feature2,
+          };
+        }
+
+        expect<any>(FeatureDef.of(B))
+            .toEqual(FeatureDef.merge(A[FeatureDef.symbol], B[FeatureDef.symbol]));
       });
     });
     describe('merge', () => {

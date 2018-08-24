@@ -1,4 +1,5 @@
 import { FeatureDef } from '../feature';
+import { noop } from '../util';
 import { ComponentDef, PartialComponentDef } from './component-def';
 import { ComponentType } from './component-type';
 
@@ -8,7 +9,7 @@ describe('component/component-type', () => {
       it('returns component definition', () => {
 
         class TestComponent {
-          static [ComponentDef.symbol] = {
+          static [ComponentDef.symbol]: ComponentDef = {
             name: 'test-component',
           };
         }
@@ -21,6 +22,39 @@ describe('component/component-type', () => {
         }
 
         expect(() => ComponentDef.of(TestComponent)).toThrow(jasmine.any(TypeError));
+      });
+      it('requests inherited definition', () => {
+
+        class A {
+          static [ComponentDef.symbol]: ComponentDef = {
+            name: 'test-component',
+          };
+        }
+        class B extends A {}
+
+        expect(ComponentDef.of(B)).toEqual(A[ComponentDef.symbol]);
+      });
+      it('merges with inherited definition', () => {
+
+        class A {
+          static [ComponentDef.symbol]: ComponentDef = {
+            name: 'component-a',
+            attributes: {
+              attr1: noop,
+            },
+          };
+        }
+        class B extends A {
+          static [ComponentDef.symbol]: ComponentDef = {
+            name: 'component-b',
+            attributes: {
+              attr2: noop,
+            },
+          };
+        }
+
+        expect<any>(ComponentDef.of(B))
+            .toEqual(ComponentDef.merge(A[ComponentDef.symbol], B[ComponentDef.symbol]));
       });
     });
   });
