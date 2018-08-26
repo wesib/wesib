@@ -2,7 +2,7 @@ import { WebComponent } from '../../decorators';
 import { FeatureDef } from '../../feature';
 import { AttributeChanged } from './attribute-changed';
 import { AttributesDef } from './attributes-def';
-import { AttributesSupportFeature } from './attributes-support.feature';
+import { AttributesSupport } from './attributes-support.feature';
 
 describe('features/attributes/attribute-changed', () => {
   describe('@AttributeChanged', () => {
@@ -16,7 +16,7 @@ describe('features/attributes/attribute-changed', () => {
         attr = attr;
       }
 
-      expect(FeatureDef.of(TestComponent).requires).toContain(AttributesSupportFeature);
+      expect(FeatureDef.of(TestComponent).requires).toContain(AttributesSupport);
     });
     it('declares attribute change callback', () => {
 

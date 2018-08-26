@@ -2,7 +2,7 @@ import { ComponentPropertyDecorator } from '../../decorators';
 import { FeatureType } from '../../feature';
 import { Class } from '../../types';
 import { AttributesDef, ComponentWithAttributesType } from './attributes-def';
-import { AttributesSupportFeature } from './attributes-support.feature';
+import { AttributesSupport } from './attributes-support.feature';
 
 /**
  * Creates a web component decorator for custom HTML element attribute change callback.
@@ -25,10 +25,10 @@ import { AttributesSupportFeature } from './attributes-support.feature';
  * }
  * ```
  *
- * This decorator automatically enables `AttributesSupportFeature`.
+ * This decorator automatically enables `AttributesSupport` feature.
  *
  * @param name Attribute name. This is required if annotated method's key is not a string (i.e. a symbol). Otherwise,
- * the attribute name is equal to method name by default.
+ * the attribute name is equal to the method name by default.
  *
  * @return Web component method decorator.
  */
@@ -45,7 +45,7 @@ export function AttributeChanged<T extends Class>(name?: string): ComponentPrope
 
     const componentType = target.constructor as ComponentWithAttributesType<InstanceType<T>>;
 
-    FeatureType.define(componentType, { requires: [AttributesSupportFeature] });
+    FeatureType.define(componentType, { requires: [AttributesSupport] });
 
     componentType[AttributesDef.symbol] = AttributesDef.merge(
         AttributesDef.of(componentType),

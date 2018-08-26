@@ -12,7 +12,7 @@ import { AttributesDef, ComponentWithAttributesType } from './attributes-def';
 @WebFeature({
   configure: enableAttributesSupport,
 })
-export class AttributesSupportFeature {
+export class AttributesSupport {
 }
 
 function enableAttributesSupport(context: BootstrapContext) {
