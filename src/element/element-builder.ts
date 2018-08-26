@@ -98,15 +98,15 @@ export class ElementBuilder {
           }
 
           onComponent(listener: (this: Context) => void): Disposable {
-            return componentListeners.register(listener);
+            return componentListeners.add(listener);
           }
 
           onConnect(listener: (this: Context) => void): Disposable {
-            return connectListeners.register(listener);
+            return connectListeners.add(listener);
           }
 
           onDisconnect(listener: (this: Context) => void): Disposable {
-            return disconnectListeners.register(listener);
+            return disconnectListeners.add(listener);
           }
 
         }
@@ -150,7 +150,7 @@ export class ElementBuilder {
   }
 
   onElement(listener: ElementListener) {
-    return this._elementListeners.register(listener);
+    return this._elementListeners.add(listener);
   }
 
   private _elementCreated<E extends HTMLElement>(element: E, context: ComponentContext<E>) {

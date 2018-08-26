@@ -69,7 +69,7 @@ export class ComponentRegistry {
   }
 
   onComponentDefinition(listener: ComponentDefinitionListener): Disposable {
-    return this._componentDefinitionListeners.register(listener);
+    return this._componentDefinitionListeners.add(listener);
   }
 
   private _componentDefined<T extends object>(componentType: ComponentType<T>): ComponentType<T> {
@@ -81,7 +81,7 @@ export class ComponentRegistry {
   }
 
   onElementDefinition(listener: ElementDefinitionListener): Disposable {
-    return this._elementDefinitionListeners.register(listener);
+    return this._elementDefinitionListeners.add(listener);
   }
 
   private _elementDefined<T extends object, E extends HTMLElement>(

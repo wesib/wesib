@@ -13,18 +13,18 @@ describe('util/listeners', () => {
 
       const listener = () => {};
 
-      listeners.register(listener);
+      listeners.add(listener);
 
-      expect(listeners).toContain(listener);
+      expect(listeners.all).toContain(listener);
     });
     it('unregisters listener on handle disposal', () => {
 
       const listener = () => {};
-      const handle = listeners.register(listener);
+      const handle = listeners.add(listener);
 
       handle.dispose();
 
-      expect(listeners).not.toContain(listener);
+      expect(listeners.all).not.toContain(listener);
     });
   });
 });
