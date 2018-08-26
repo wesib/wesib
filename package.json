@@ -1,17 +1,18 @@
 {
   "name": "@webcbb/webcbb",
   "version": "1.0.0",
-  "license": "MIT",
   "description": "Web components building blocks",
   "keywords": [
-    "web-components"
+    "web-components",
+    "library"
   ],
   "homepage": "https://github.com/webcbb/webcbb",
-  "author": "Ruslan Lopatin<ruslan.lopatin@gmail.com>",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/webcbb/webcbb.git"
   },
+  "license": "MIT",
+  "author": "Ruslan Lopatin<ruslan.lopatin@gmail.com>",
   "bugs": {
     "url": "https://github.com/webcbb/webcbb/issues"
   },
