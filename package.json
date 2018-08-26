@@ -6,6 +6,8 @@
   "keywords": [
     "web-components"
   ],
+  "homepage": "https://github.com/webcbb/webcbb",
+  "author": "Ruslan Lopatin<ruslan.lopatin@gmail.com>",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/webcbb/webcbb.git"
@@ -13,7 +15,6 @@
   "bugs": {
     "url": "https://github.com/webcbb/webcbb/issues"
   },
-  "homepage": "https://github.com/webcbb/webcbb",
   "main": "./dist/webcbb.umd.js",
   "module": "./dist/webcbb.esm5.js",
   "es2015": "./dist/webcbb.esm2015.js",
