@@ -1,8 +1,7 @@
 import { bootstrapComponents } from '../bootstrap';
-import { ComponentDef, ComponentElementType, ComponentType } from '../component';
+import { Component, ComponentDef, ComponentElementType, ComponentType } from '../component';
 import { WebFeature } from '../decorators';
-import { ElementClass } from '../element';
-import { BootstrapContext } from '../feature';
+import { BootstrapContext, FeatureType } from '../feature';
 import { TestIframe } from './test-iframe';
 
 export class TestBootstrap {
@@ -25,7 +24,7 @@ export class TestBootstrap {
     return this.iframe.document;
   }
 
-  async create(): Promise<this> {
+  async create(...features: FeatureType[]): Promise<this> {
     await this.iframe.create();
 
     @WebFeature({
@@ -33,33 +32,15 @@ export class TestBootstrap {
     })
     class TestFeature {}
 
-    bootstrapComponents({ window: this.window }, TestFeature);
+    bootstrapComponents({ window: this.window }, TestFeature, ...features);
 
     return this;
   }
 
-  async define<T extends object>(
-      componentType: ComponentType<T>,
-      connected: (element: ComponentElementType<T>) => void = () => {}):
-      Promise<ElementClass<ComponentElementType<T>>> {
-
-    this.context.onElement((element, context) => {
-      context.onConnect(() => {
-        connected(context.element);
-      });
-    });
-
-    const elementType = this.context.define(componentType);
-
-    await this.context.whenDefined(componentType);
-
-    return elementType;
-  }
-
   async addElement<T extends object>(componentType: ComponentType<T>): Promise<ComponentElementType<T>> {
 
-    const elementType = new Promise<ComponentElementType<T>>(async resolve => {
-      await this.define(componentType, resolve);
+    const elementType = new Promise<HTMLElement>(async resolve => {
+      await this._define(componentType, resolve);
     });
 
     const elementName = ComponentDef.of(componentType).name;
@@ -67,6 +48,20 @@ export class TestBootstrap {
     this.document.body.appendChild(this.document.createElement(elementName));
 
     return elementType;
+  }
+
+  private async _define<T extends object>(
+      componentType: ComponentType<T>,
+      connected: (element: ComponentElementType<T>) => void = () => {}) {
+    this.context.onElement((element, context) => {
+      context.onConnect(() => {
+        if (Component.of(element) instanceof componentType) {
+          connected(context.element);
+        }
+      });
+    });
+
+    await this.context.whenDefined(componentType);
   }
 
   dispose() {

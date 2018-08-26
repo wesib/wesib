@@ -1,5 +1,4 @@
 import { ElementClass } from '../element';
-import { mergeFunctions } from '../util/functions';
 import { ComponentElementType } from './component-class';
 
 /**
@@ -29,13 +28,6 @@ export interface ComponentDef<T extends object = object, E extends HTMLElement =
    */
   properties?: PropertyDescriptorMap;
 
-  /**
-   * Custom HTML element attributes.
-   *
-   * These attributes will be supported by the custom HTML element.
-   */
-  attributes?: AttributeDefs<T>;
-
 }
 
 /**
@@ -63,27 +55,6 @@ export interface ExtendedElementDef<E extends HTMLElement> {
   name: string;
 
 }
-
-/**
- * Custom HTML element attributes definitions.
- *
- * This is a map containing attribute names as keys and their definitions as values.
- */
-export interface AttributeDefs<T extends object = object> {
-  [name: string]: AttributeDef<T>;
-}
-
-/**
- * Custom HTML element attribute definition.
- *
- * This is a function that will be called whenever a new attribute value assigned.
- *
- * @param <T> A type of web component.
- * @param this Web component instance.
- * @param oldValue Previous attribute value, or `null` if there were no value assigned.
- * @param newValue New attribute value.
- */
-export type AttributeDef<T extends object = object> = (this: T, oldValue: string, newValue: string) => void;
 
 export namespace ComponentDef {
 
@@ -120,33 +91,9 @@ export namespace ComponentDef {
             };
           }
 
-          const attributes = mergeAttributes(prev.attributes, def.attributes);
-
-          if (attributes) {
-            result.attributes = attributes;
-          }
-
           return result;
         },
         {});
   }
 
-}
-
-function mergeAttributes<T extends object>(
-    attributes1: AttributeDefs<T> | undefined,
-    attributes2: AttributeDefs<T> | undefined): AttributeDefs<T> | undefined {
-  if (!attributes1 && !attributes2) {
-    return;
-  }
-
-  const result: AttributeDefs<T> = { ...attributes1 };
-
-  if (attributes2) {
-    Object.keys(attributes2).forEach(key => {
-      result[key] = mergeFunctions<T, [string, string], void>(result[key], attributes2[key]);
-    });
-  }
-
-  return result;
 }

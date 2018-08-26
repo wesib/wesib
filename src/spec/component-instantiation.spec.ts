@@ -5,153 +5,130 @@ import { TestBootstrap } from './test-bootstrap';
 import Spy = jasmine.Spy;
 
 describe('component instantiation', () => {
+  describe('Life cycle', () => {
 
-  const valueKey = new ComponentValueKey<string>('provided-value-key');
-  let bootstrap: TestBootstrap;
-  let testComponent: ComponentType;
-  let constructorSpy: Spy;
-  let context: ComponentContext<HTMLElement>;
-  let elementListenerSpy: Spy;
-  let elementListenerHandle: Disposable;
-  let attrChangedSpy: Spy;
-  let attr2ChangedSpy: Spy;
-  let element: HTMLElement;
-  let propertyValue: number;
+    let bootstrap: TestBootstrap;
+    let testComponent: ComponentType;
+    let constructorSpy: Spy;
+    let context: ComponentContext;
+    let elementListenerSpy: Spy;
+    let elementListenerHandle: Disposable;
+    let element: HTMLElement;
+    let propertyValue: number;
 
-  beforeEach(async () => {
-    bootstrap = await new TestBootstrap().create();
-  });
-  afterEach(() => bootstrap.dispose());
+    beforeEach(() => {
+      context = undefined!;
+      constructorSpy = jasmine.createSpy('constructor')
+          .and.callFake((ctx: ComponentContext<HTMLElement>) => context = ctx);
+      propertyValue = 0;
 
-  beforeEach(() => {
-    elementListenerSpy = jasmine.createSpy('elementListener');
-    elementListenerHandle = bootstrap.context.onElement(elementListenerSpy);
-  });
-  beforeEach(() => {
-    context = undefined!;
-    constructorSpy = jasmine.createSpy('constructor')
-        .and.callFake((ctx: ComponentContext<HTMLElement>) => context = ctx);
-    attrChangedSpy = jasmine.createSpy('attrChanged');
-    attr2ChangedSpy = jasmine.createSpy('attr2Changed');
-    propertyValue = 0;
+      @WebComponent({
+        name: 'test-component',
+        properties: {
+          tagName: {
+            value: 'MODIFIED-CUSTOM-COMPONENT',
+          }
+        },
+      })
+      class TestComponent {
 
-    @WebComponent({
-      name: 'custom-component',
-      attributes: {
-        'custom-attribute': attrChangedSpy,
-        'custom-attribute-2': attr2ChangedSpy,
-      },
-      properties: {
-        tagName: {
-          value: 'MODIFIED-CUSTOM-COMPONENT',
+        constructor(...args: any[]) {
+          constructorSpy(...args);
         }
-      },
-    })
-    class TestComponent {
 
-      constructor(...args: any[]) {
-        constructorSpy(...args);
+        @ElementProperty()
+        get readonlyProperty() {
+          return propertyValue;
+        }
+
+        get writableProperty() {
+          return propertyValue;
+        }
+
+        @ElementProperty()
+        set writableProperty(value: number) {
+          propertyValue = value;
+        }
+
+        @ElementMethod({ name: 'elementMethod' })
+        componentMethod(...args: string[]): string {
+          return `${this.readonlyProperty}: ${args.join(', ')}`;
+        }
+
       }
 
-      @ElementProperty()
-      get readonlyProperty() {
-        return propertyValue;
-      }
+      testComponent = TestComponent;
+    });
+    beforeEach(async () => {
+      bootstrap = await new TestBootstrap().create(testComponent);
+      elementListenerSpy = jasmine.createSpy('elementListener');
+      elementListenerHandle = bootstrap.context.onElement(elementListenerSpy);
+      element = await bootstrap.addElement(testComponent);
+    });
+    afterEach(() => bootstrap.dispose());
 
-      get writableProperty() {
-        return propertyValue;
-      }
+    it('instantiates custom element', async () => {
+      expect(element).toBeDefined();
+    });
+    it('assigns component reference to custom element', () => {
+      expect(Component.of(element)).toEqual(jasmine.any(testComponent));
+    });
+    it('assigns component context reference to custom element', () => {
+      expect(ComponentContext.of(element)).toBe(context);
+    });
+    it('passes context to component', () => {
 
-      @ElementProperty()
-      set writableProperty(value: number) {
-        propertyValue = value;
-      }
+      const expectedContext: Partial<ComponentContext<HTMLElement>> = {
+        element,
+      };
 
-      @ElementMethod({ name: 'elementMethod' })
-      componentMethod(...args: string[]): string {
-        return `${this.readonlyProperty}: ${args.join(', ')}`;
-      }
+      expect(constructorSpy).toHaveBeenCalledWith(jasmine.objectContaining(expectedContext));
+    });
+    it('defines properties', () => {
+      expect(element.tagName).toEqual('MODIFIED-CUSTOM-COMPONENT');
+    });
+    it('allows to access inherited element properties', () => {
+      expect(context.elementSuper('tagName')).toEqual('TEST-COMPONENT');
+    });
+    it('reads element property', () => {
+      expect((element as any).readonlyProperty).toBe(propertyValue);
+      propertyValue = 1;
+      expect((element as any).readonlyProperty).toBe(propertyValue);
+    });
+    it('writes element property', () => {
+      expect((element as any).writableProperty).toBe(propertyValue);
+      (element as any).writableProperty = 1;
+      expect(propertyValue).toBe(1);
+    });
+    it('calls component method', () => {
+      expect((element as any).elementMethod('1', '2', '3')).toBe(`${propertyValue}: 1, 2, 3`);
+    });
 
-    }
-
-    testComponent = TestComponent;
-  });
-  beforeEach(async () => {
-    element = await bootstrap.addElement(testComponent);
-  });
-
-  it('instantiates custom element', async () => {
-    expect(element).toBeDefined();
-  });
-  it('assigns component reference to custom element', () => {
-    expect(Component.of(element)).toEqual(jasmine.any(testComponent));
-  });
-  it('assigns component context reference to custom element', () => {
-    expect(ComponentContext.of(element)).toBe(context);
-  });
-  it('passes context to component', () => {
-
-    const expectedContext: Partial<ComponentContext<HTMLElement>> = {
-      element,
-    };
-
-    expect(constructorSpy).toHaveBeenCalledWith(jasmine.objectContaining(expectedContext));
-  });
-  it('notifies on attribute change', () => {
-    element.setAttribute('custom-attribute', 'value1');
-    expect(attrChangedSpy).toHaveBeenCalledWith(null, 'value1');
-
-    attrChangedSpy.calls.reset();
-    element.setAttribute('custom-attribute', 'value2');
-    expect(attrChangedSpy).toHaveBeenCalledWith('value1', 'value2');
-  });
-  it('does not notify on other attribute change', () => {
-    element.setAttribute('custom-attribute-2', 'value');
-    expect(attrChangedSpy).not.toHaveBeenCalled();
-    expect(attr2ChangedSpy).toHaveBeenCalled();
-  });
-  it('does not notify on non-declared attribute change', () => {
-    element.setAttribute('title', 'test title');
-    expect(attrChangedSpy).not.toHaveBeenCalled();
-    expect(attr2ChangedSpy).not.toHaveBeenCalled();
-  });
-  it('defines properties', () => {
-    expect(element.tagName).toEqual('MODIFIED-CUSTOM-COMPONENT');
-  });
-  it('allows to access inherited element properties', () => {
-    expect(context.elementSuper('tagName')).toEqual('CUSTOM-COMPONENT');
-  });
-  it('reads element property', () => {
-    expect((element as any).readonlyProperty).toBe(propertyValue);
-    propertyValue = 1;
-    expect((element as any).readonlyProperty).toBe(propertyValue);
-  });
-  it('writes element property', () => {
-    expect((element as any).writableProperty).toBe(propertyValue);
-    (element as any).writableProperty = 1;
-    expect(propertyValue).toBe(1);
-  });
-  it('calls component method', () => {
-    expect((element as any).elementMethod('1', '2', '3')).toBe(`${propertyValue}: 1, 2, 3`);
-  });
-
-  describe('onElement listener', () => {
-    it('is notified on new element instantiation', () => {
-      expect(elementListenerSpy).toHaveBeenCalledWith(element, context);
+    describe('onElement listener', () => {
+      it('is notified on new element instantiation', () => {
+        expect(elementListenerSpy).toHaveBeenCalledWith(element, context);
+      });
     });
   });
 
   describe('context callbacks', () => {
 
-    let componentType: ComponentType;
+    let bootstrap: TestBootstrap;
+    let testComponent: ComponentType;
 
     beforeEach(() => {
-      @WebComponent({ name: 'another-component' })
-      class AnotherComponent {
+
+      @WebComponent({ name: 'test-component' })
+      class TestComponent {
       }
 
-      componentType = AnotherComponent;
+      testComponent = TestComponent;
     });
+    beforeEach(async () => {
+      bootstrap = await new TestBootstrap().create(testComponent);
+      await bootstrap.addElement(testComponent);
+    });
+    afterEach(() => bootstrap.dispose());
 
     describe('onComponent listener', () => {
       it('is notified on component instantiation', async () => {
@@ -162,7 +139,7 @@ describe('component instantiation', () => {
           ctx.onComponent(listenerSpy);
         });
 
-        await bootstrap.addElement(componentType);
+        await bootstrap.addElement(testComponent);
 
         expect(listenerSpy).toHaveBeenCalled();
       });
@@ -177,7 +154,7 @@ describe('component instantiation', () => {
           ctx.onComponent(listenerSpy);
         });
 
-        await bootstrap.addElement(componentType);
+        await bootstrap.addElement(testComponent);
 
         expect(listenerSpy).toHaveBeenCalled();
       });
@@ -192,7 +169,7 @@ describe('component instantiation', () => {
           ctx.onDisconnect(listenerSpy);
         });
 
-        const el = await bootstrap.addElement(componentType);
+        const el = await bootstrap.addElement(testComponent);
 
         expect(listenerSpy).not.toHaveBeenCalled();
 
@@ -205,8 +182,28 @@ describe('component instantiation', () => {
 
   describe('component value', () => {
 
+    const valueKey = new ComponentValueKey<string>('provided-value-key');
+    let bootstrap: TestBootstrap;
+    let context: ComponentContext;
+    let testComponent: ComponentType;
     let providerSpy: Spy;
 
+    beforeEach(() => {
+
+      @WebComponent({ name: 'test-component' })
+      class TestComponent {
+        constructor(ctx: ComponentContext) {
+          context = ctx;
+        }
+      }
+
+      testComponent = TestComponent;
+    });
+    beforeEach(async () => {
+      bootstrap = await new TestBootstrap().create(testComponent);
+      await bootstrap.addElement(testComponent);
+    });
+    afterEach(() => bootstrap.dispose());
     beforeEach(() => {
       providerSpy = jasmine.createSpy('valueProvider');
     });

@@ -30,7 +30,7 @@ export interface BootstrapContext {
    *
    * @throws TypeError if `componentType` does not contain a web component definition.
    */
-  define<T extends object>(componentType: ComponentType<T>): ElementClass<ComponentElementType<T>>;
+  define<T extends object>(componentType: ComponentType<T>): void;
 
   /**
    * Allows to wait for web component definition complete.

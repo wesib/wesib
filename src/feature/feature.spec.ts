@@ -1,4 +1,3 @@
-import { ComponentDef } from '../component';
 import { noop } from '../util';
 import { BootstrapContext } from './bootstrap-context';
 import { FeatureDef, FeatureType } from './feature';

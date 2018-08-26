@@ -9,7 +9,7 @@ import { ComponentDef, PartialComponentDef } from './component-def';
  *
  * This is a web component class constructor that may accept a component context instance as the only parameter.
  *
- * Web component type should contain a property with `ComponentDef.symbol` symbol as its key containing a web component
+ * Web component type should contain a property with `ComponentDef.symbol` as its key containing a web component
  * definition. This is the only requirement for the web component classes.
  *
  * @param <T> A type of web component.
@@ -97,13 +97,15 @@ export namespace ComponentType {
           value: def,
         });
 
+    if (prevDef) {
+      return type; // Define component only once.
+    }
+
     return FeatureType.define(
         type,
         {
-          configure(context) {
-            if (this === componentType) {
-              context.define(type);
-            }
+          configure: function(context) {
+            context.define(this);
           },
         });
   }

@@ -137,4 +137,5 @@ export namespace FeatureType {
 
     return type;
   }
+
 }

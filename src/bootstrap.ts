@@ -71,8 +71,8 @@ function initBootstrap(config: BootstrapConfig) {
 
   class Context implements BootstrapContext {
 
-    define<T extends object>(componentType: ComponentType<T>): ElementClass<ComponentElementType<T>> {
-      return componentRegistry.define(componentType);
+    define<T extends object>(componentType: ComponentType<T>) {
+      componentRegistry.define(componentType);
     }
 
     whenDefined(componentType: ComponentType<any, any>): PromiseLike<void> {

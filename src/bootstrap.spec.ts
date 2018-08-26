@@ -129,12 +129,11 @@ describe('bootstrap', () => {
       });
 
       it('proxies define() method', () => {
-        componentRegistrySpy.define.and.returnValue(HTMLDivElement);
 
         @WebComponent({ name: 'test-component', extend: { name: 'div', type: HTMLDivElement } })
         class TestComponent {}
 
-        expect(featureContext.define(TestComponent)).toBe(HTMLDivElement);
+        featureContext.define(TestComponent);
         expect(componentRegistrySpy.define).toHaveBeenCalledWith(TestComponent);
       });
       it('proxies whenDefined() method', () => {

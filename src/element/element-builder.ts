@@ -1,12 +1,5 @@
+import { Component, ComponentContext, ComponentDef, ComponentType, ComponentValueKey } from '../component';
 import { ElementListener } from '../feature';
-import {
-  AttributeDefs,
-  Component,
-  ComponentContext,
-  ComponentDef,
-  ComponentType,
-  ComponentValueKey,
-} from '../component';
 import { Disposable } from '../types';
 import { Listeners } from '../util';
 import { ElementClass } from './element';
@@ -53,13 +46,9 @@ export class ElementBuilder {
     const Object = (this.window as any).Object;
     const def = ComponentDef.of(componentType);
     const elementType: ElementClass<HTMLElement> = this.elementType(def);
-    const attrs: AttributeDefs<T> = { ...def.attributes };
     const providerRegistry = this.providerRegistry;
 
     class Element extends elementType {
-
-      // noinspection JSUnusedGlobalSymbols
-      static readonly observedAttributes = def.attributes && Object.keys(attrs);
 
       // Component reference
       [Component.symbol]: T;
@@ -139,11 +128,6 @@ export class ElementBuilder {
         Object.defineProperty(this, Component.symbol, { value: component });
 
         componentListeners.forEach(listener => listener.call(context));
-      }
-
-      // noinspection JSUnusedGlobalSymbols
-      attributeChangedCallback(name: string, oldValue: string | string, newValue: string) {
-        attrs[name].call(this[Component.symbol], oldValue, newValue);
       }
 
       // noinspection JSUnusedGlobalSymbols

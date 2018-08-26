@@ -1,5 +1,5 @@
+import { ComponentDef, ComponentType } from '../component';
 import { ComponentDefinitionListener, ElementDefinitionListener } from '../feature';
-import { ComponentDef, ComponentElementType, ComponentType } from '../component';
 import { Disposable } from '../types';
 import { Listeners } from '../util';
 import { ElementClass } from './element';
@@ -13,7 +13,7 @@ export class ComponentRegistry {
   readonly builder: ElementBuilder;
   private readonly _componentDefinitionListeners = new Listeners<ComponentDefinitionListener>();
   private readonly _elementDefinitionListeners = new Listeners<ElementDefinitionListener>();
-  private _definitions?: (() => void)[] = [];
+  private _definitions: (() => void)[] = [];
 
   static create(opts: {
     builder: ElementBuilder
@@ -34,42 +34,34 @@ export class ComponentRegistry {
     return this.builder.window;
   }
 
-  define<T extends object>(componentType: ComponentType<T>): ElementClass<ComponentElementType<T>> {
-    componentType = this._componentDefined(componentType);
+  define<T extends object>(componentType: ComponentType<T>) {
+    this._define(() => {
+      componentType = this._componentDefined(componentType);
 
-    const def = ComponentDef.of(componentType);
-    const elementClass = this._elementDefined(this.builder.buildElement(componentType), componentType);
-    const ext = def.extend;
+      const def = ComponentDef.of(componentType);
+      const elementClass = this._elementDefined(this.builder.buildElement(componentType), componentType);
+      const ext = def.extend;
 
-    if (ext) {
-      this._define(() => this.window.customElements.define(
-          def.name,
-          elementClass,
-          {
-            extends: ext.name,
-          }));
-    } else {
-      this._define(() => this.window.customElements.define(def.name, elementClass));
-    }
-
-    return elementClass;
+      if (ext) {
+        this.window.customElements.define(
+            def.name,
+            elementClass,
+            {
+              extends: ext.name,
+            });
+      } else {
+        this.window.customElements.define(def.name, elementClass);
+      }
+    });
   }
 
   private _define(definition: () => void) {
-    if (!this._definitions) {
-      definition();
-    } else {
-      this._definitions.push(definition);
-    }
+    this._definitions.push(definition);
   }
 
   complete() {
-
-    const definitions = this._definitions!;
-
+    this._definitions.forEach(definition => definition());
     delete this._definitions;
-
-    definitions.forEach(definition => definition());
   }
 
   whenDefined(componentType: ComponentType<any, any>): PromiseLike<void> {

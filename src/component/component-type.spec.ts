@@ -1,5 +1,4 @@
 import { FeatureDef } from '../feature';
-import { noop } from '../util';
 import { ComponentDef, PartialComponentDef } from './component-def';
 import { ComponentType } from './component-type';
 
@@ -39,16 +38,20 @@ describe('component/component-type', () => {
         class A {
           static [ComponentDef.symbol]: ComponentDef = {
             name: 'component-a',
-            attributes: {
-              attr1: noop,
+            properties: {
+              prop1: {
+                value: 1,
+              },
             },
           };
         }
         class B extends A {
           static [ComponentDef.symbol]: ComponentDef = {
             name: 'component-b',
-            attributes: {
-              attr2: noop,
+            properties: {
+              prop2: {
+                value: 2,
+              },
             },
           };
         }
@@ -133,6 +136,28 @@ describe('component/component-type', () => {
 
           expect(featureContextSpy.define).toHaveBeenCalledWith(extType);
           expect(featureContextSpy.define).not.toHaveBeenCalledWith(baseType);
+        });
+        it('registers component only once', () => {
+
+          const componentType = ComponentType.define(
+              ComponentType.define(
+                  TestComponent,
+                  {}),
+              { name: 'test-component' });
+          const featureDef = FeatureDef.of(componentType)!;
+
+          expect(featureDef).toBeDefined();
+
+          const configure = featureDef.configure!;
+
+          expect(configure).toBeDefined();
+
+          const featureContextSpy = jasmine.createSpyObj('bootstrapContext', ['define']);
+
+          configure.call(componentType, featureContextSpy);
+
+          expect(featureContextSpy.define).toHaveBeenCalledWith(componentType);
+          expect(featureContextSpy.define).toHaveBeenCalledTimes(1);
         });
       });
     });
