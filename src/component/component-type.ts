@@ -1,6 +1,6 @@
 import { FeatureType } from '../feature';
 import { Class } from '../types';
-import { superClass } from '../util';
+import { superClassOf } from '../common';
 import { ComponentClass, ComponentElementType } from './component-class';
 import { ComponentDef, PartialComponentDef } from './component-def';
 
@@ -48,7 +48,7 @@ ComponentDef.of = function of<T extends object, E extends HTMLElement>(
     ComponentDef<T, E> {
 
   const def = componentType[ComponentDef.symbol];
-  const superType = superClass(componentType, st => ComponentDef.symbol in st) as ComponentType<any, any>;
+  const superType = superClassOf(componentType, st => ComponentDef.symbol in st) as ComponentType<any, any>;
   const superDef = superType && ComponentDef.of(superType);
 
   if (!def) {

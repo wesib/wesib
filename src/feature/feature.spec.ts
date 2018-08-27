@@ -1,4 +1,4 @@
-import { noop } from '../util';
+import { noop } from '../common';
 import { BootstrapContext } from './bootstrap-context';
 import { FeatureDef, FeatureType } from './feature';
 import Spy = jasmine.Spy;

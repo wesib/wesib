@@ -1,5 +1,5 @@
 import { FeatureDef } from '../feature';
-import { noop } from '../util';
+import { noop } from '../common';
 import { WebFeature } from './web-feature';
 
 describe('decorators/web-feature', () => {

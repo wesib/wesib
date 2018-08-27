@@ -1,6 +1,7 @@
+import { mergeFunctions, superClassOf } from '../common';
 import { ComponentType } from '../component';
 import { Class } from '../types';
-import { mergeFunctions, mergeLists, superClass } from '../util';
+import { mergeLists } from '../util';
 import { BootstrapContext } from './bootstrap-context';
 
 /**
@@ -50,7 +51,7 @@ export namespace FeatureDef {
   export function of(featureType: FeatureType): FeatureDef {
 
     const def = featureType[FeatureDef.symbol];
-    const superType = superClass(featureType, st => FeatureDef.symbol in st) as ComponentType<any, any>;
+    const superType = superClassOf(featureType, st => FeatureDef.symbol in st) as ComponentType<any, any>;
     const superDef = superType && FeatureDef.of(superType);
 
     if (!def) {

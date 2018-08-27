@@ -1,4 +1,4 @@
-import { noop } from '../util';
+import { noop } from '../common';
 import { EventInterest } from './event-producer';
 
 describe('events/event-producer', () => {

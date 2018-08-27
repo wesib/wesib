@@ -1,4 +1,4 @@
-import { noop } from '../util';
+import { noop } from '../common';
 
 /**
  * Event producer.

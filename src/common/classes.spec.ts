@@ -1,15 +1,15 @@
-import { superClass } from './classes';
+import { superClassOf } from './classes';
 
 describe('util/classes', () => {
-  describe('superClass', () => {
+  describe('superClassOf', () => {
     it('finds object super class', () => {
 
       class TestClass {}
 
-      expect(superClass(TestClass)).toBe(Object);
+      expect(superClassOf(TestClass)).toBe(Object);
     });
     it('does not find Objects super class', () => {
-      expect(superClass(Object)).toBeUndefined();
+      expect(superClassOf(Object)).toBeUndefined();
     });
     it('finds super class', () => {
 
@@ -17,7 +17,7 @@ describe('util/classes', () => {
       class B extends A {}
       class C extends B {}
 
-      expect(superClass(C)).toBe(B);
+      expect(superClassOf(C)).toBe(B);
     });
     it('finds super class satisfying the given criteria', () => {
 
@@ -25,7 +25,7 @@ describe('util/classes', () => {
       class B extends A {}
       class C extends B {}
 
-      expect(superClass(C, type => type.name === 'A')).toBe(A);
+      expect(superClassOf(C, type => type.name === 'A')).toBe(A);
     });
   });
 });

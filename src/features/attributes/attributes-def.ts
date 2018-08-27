@@ -1,5 +1,5 @@
+import { mergeFunctions, superClassOf } from '../../common';
 import { ComponentElementType, ComponentType } from '../../component';
-import { mergeFunctions, superClass } from '../../util';
 
 /**
  * Custom HTML element attributes definition.
@@ -56,7 +56,7 @@ export namespace AttributesDef {
       componentType: ComponentWithAttributesType<T, E>): AttributesDef<T> {
 
     const def = componentType[AttributesDef.symbol];
-    const superType = superClass(componentType, st => AttributesDef.symbol in st) as ComponentType<any, any>;
+    const superType = superClassOf(componentType, st => AttributesDef.symbol in st) as ComponentType<any, any>;
     const superDef = superType && AttributesDef.of(superType);
 
     if (!def) {
