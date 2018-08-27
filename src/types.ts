@@ -21,3 +21,10 @@ export interface Disposable {
   dispose(): void;
 
 }
+
+/**
+ * Function argument types.
+ *
+ * @param <F> Function type.
+ */
+export type ArgumentTypes<F extends (...args: any[]) => any> = F extends (...args: infer A) => any ? A : never;
