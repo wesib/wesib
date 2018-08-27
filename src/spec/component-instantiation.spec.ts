@@ -115,11 +115,16 @@ describe('component instantiation', () => {
 
     let bootstrap: TestBootstrap;
     let testComponent: ComponentType;
+    let constructorSpy: Spy;
 
     beforeEach(() => {
+      constructorSpy = jasmine.createSpy('constructor');
 
       @WebComponent({ name: 'test-component' })
       class TestComponent {
+        constructor() {
+          constructorSpy();
+        }
       }
 
       testComponent = TestComponent;
@@ -130,18 +135,33 @@ describe('component instantiation', () => {
     });
     afterEach(() => bootstrap.dispose());
 
-    describe('onComponent listener', () => {
-      it('is notified on component instantiation', async () => {
+    describe('component', () => {
+      it('is resolved on component instantiation', async () => {
 
-        const listenerSpy = jasmine.createSpy('onElement');
-
-        bootstrap.context.onElement((_el, ctx) => {
-          ctx.onComponent(listenerSpy);
+        const promise = new Promise((resolve, reject) => {
+          bootstrap.context.onElement((_el, ctx) => {
+            ctx.component.then(resolve, reject);
+          });
         });
 
         await bootstrap.addElement(testComponent);
 
-        expect(listenerSpy).toHaveBeenCalled();
+        expect(await promise).toEqual(jasmine.any(testComponent));
+      });
+      it('is rejected on component construction failure', async () => {
+
+        const error = new Error('Not constructed');
+
+        constructorSpy.and.callFake(() => { throw error; });
+
+        const promise = new Promise((resolve, reject) => {
+          bootstrap.context.onElement((_el, ctx) => {
+            ctx.component.then(resolve, reject);
+          });
+        });
+
+        bootstrap.addElement(testComponent);
+        expect(await promise.catch(err => err)).toBe(error);
       });
     });
 
@@ -151,7 +171,7 @@ describe('component instantiation', () => {
         const listenerSpy = jasmine.createSpy('onConnect');
 
         bootstrap.context.onElement((_el, ctx) => {
-          ctx.onComponent(listenerSpy);
+          ctx.onConnect(listenerSpy);
         });
 
         await bootstrap.addElement(testComponent);

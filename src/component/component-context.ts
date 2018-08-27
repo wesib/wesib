@@ -15,15 +15,12 @@ export interface ComponentContext<T extends object = object, E extends HTMLEleme
   readonly element: E;
 
   /**
-   * Registers web component instantiation listener.
+   * A promise resolved to component.
    *
-   * This listener will be called when component this context is created for is instantiated.
-   *
-   * @param listener A listener to notify on component instantiation.
-   *
-   * @return An event interest instance.
+   * The component is constructed shortly after the HTML element. So the component may not exist when requested
+   * e.g. inside component constructor, or inside `ElementListener`.
    */
-  readonly onComponent: EventProducer<(this: this) => void>;
+  readonly component: Promise<T>;
 
   /**
    * Registers custom HTML element connection listener.

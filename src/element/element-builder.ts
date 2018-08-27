@@ -1,6 +1,7 @@
 import { Component, ComponentContext, ComponentDef, ComponentType, ComponentValueKey } from '../component';
 import { EventEmitter } from '../events';
 import { ElementListener } from '../feature';
+import { PromiseResolver } from '../util';
 import { ElementClass } from './element';
 import { ProviderRegistry } from './provider-registry';
 
@@ -61,63 +62,70 @@ export class ElementBuilder {
       constructor() {
         super();
 
-        const element: E = this as any;
-        // @ts-ignore
-        const elementSuper = (name: string) => super[name] as any;
-        const values = new Map<ComponentValueKey<any>, any>();
-        const componentListeners = new EventEmitter<(this: Context) => void>();
-        const connectListeners = new EventEmitter<(this: Context) => void>();
-        const disconnectListeners = new EventEmitter<(this: Context) => void>();
+        const componentResolver = new PromiseResolver<T>();
 
-        class Context implements ComponentContext<T, E> {
+        try {
 
-          readonly element = element;
-          readonly elementSuper = elementSuper;
-          readonly onComponent = componentListeners.on;
-          readonly onConnect = connectListeners.on;
-          readonly onDisconnect = disconnectListeners.on;
+          const element: E = this as any;
+          // @ts-ignore
+          const elementSuper = (name: string) => super[name] as any;
+          const values = new Map<ComponentValueKey<any>, any>();
+          const connectEvents = new EventEmitter<(this: Context) => void>();
+          const disconnectEvents = new EventEmitter<(this: Context) => void>();
 
-          get<V>(key: ComponentValueKey<V>, defaultValue: V | null | undefined): V | null | undefined {
+          class Context implements ComponentContext<T, E> {
 
-            const cached: V | undefined = values.get(key);
+            readonly element = element;
+            readonly component = componentResolver.promise;
+            readonly elementSuper = elementSuper;
+            readonly onConnect = connectEvents.on;
+            readonly onDisconnect = disconnectEvents.on;
 
-            if (cached != null) {
-              return cached;
+            get<V>(key: ComponentValueKey<V>, defaultValue: V | null | undefined): V | null | undefined {
+
+              const cached: V | undefined = values.get(key);
+
+              if (cached != null) {
+                return cached;
+              }
+
+              const constructed = providerRegistry.get(key, this);
+
+              if (constructed != null) {
+                values.set(key, constructed);
+                return constructed;
+              }
+
+              if (arguments.length < 2) {
+                throw new Error(`There is no value of the key ${key}`);
+              }
+
+              return defaultValue;
             }
 
-            const constructed = providerRegistry.get(key, this);
-
-            if (constructed != null) {
-              values.set(key, constructed);
-              return constructed;
-            }
-
-            if (arguments.length < 2) {
-              throw new Error(`There is no value of the key ${key}`);
-            }
-
-            return defaultValue;
           }
 
+          const context = new Context();
+
+          Object.defineProperty(this, ComponentContext.symbol, { value: context });
+          Object.defineProperty(this, '_connectedCallback', {
+            value: () => connectEvents.forEach(listener => listener.call(context)),
+          });
+          Object.defineProperty(this, '_disconnectedCallback', {
+            value: () => disconnectEvents.forEach(listener => listener.call(context)),
+          });
+
+          builder.elements.notify(element, context);
+
+          const component = new componentType(context);
+
+          Object.defineProperty(this, Component.symbol, { value: component });
+
+          componentResolver.resolve(component);
+        } catch (error) {
+          componentResolver.reject(error);
+          throw error;
         }
-
-        const context = new Context();
-
-        Object.defineProperty(this, ComponentContext.symbol, { value: context });
-        Object.defineProperty(this, '_connectedCallback', {
-          value: () => connectListeners.forEach(listener => listener.call(context)),
-        });
-        Object.defineProperty(this, '_disconnectedCallback', {
-          value: () => disconnectListeners.forEach(listener => listener.call(context)),
-        });
-
-        builder.elements.notify(element, context);
-
-        const component = new componentType(context);
-
-        Object.defineProperty(this, Component.symbol, { value: component });
-
-        componentListeners.forEach(listener => listener.call(context));
       }
 
       // noinspection JSUnusedGlobalSymbols

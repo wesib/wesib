@@ -39,10 +39,7 @@ export class TestBootstrap {
 
   async addElement<T extends object>(componentType: ComponentType<T>): Promise<ComponentElementType<T>> {
 
-    const elementType = new Promise<HTMLElement>(async resolve => {
-      await this._define(componentType, resolve);
-    });
-
+    const elementType = this._waitForConnect(componentType);
     const elementName = ComponentDef.of(componentType).name;
 
     this.document.body.appendChild(this.document.createElement(elementName));
@@ -50,18 +47,21 @@ export class TestBootstrap {
     return elementType;
   }
 
-  private async _define<T extends object>(
-      componentType: ComponentType<T>,
-      connected: (element: ComponentElementType<T>) => void = () => {}) {
-    this.context.onElement((element, context) => {
-      context.onConnect(() => {
-        if (Component.of(element) instanceof componentType) {
-          connected(context.element);
-        }
+  private async _waitForConnect<T extends object>(componentType: ComponentType<T>): Promise<ComponentElementType<T>> {
+
+    const result = new Promise<ComponentElementType<T>>(resolve => {
+      this.context.onElement((element, context) => {
+        context.onConnect(() => {
+          if (Component.of(element) instanceof componentType) {
+            resolve(context.element);
+          }
+        });
       });
     });
 
     await this.context.whenDefined(componentType);
+
+    return result;
   }
 
   dispose() {
