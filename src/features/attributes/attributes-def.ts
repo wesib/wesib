@@ -1,5 +1,6 @@
-import { mergeFunctions, superClassOf } from '../../common';
-import { ComponentElementType, ComponentType } from '../../component';
+import { mergeFunctions, MetaAccessor } from '../../common';
+import { ComponentType } from '../../component';
+import { Class } from '../../types';
 
 /**
  * Custom HTML element attributes definition.
@@ -22,26 +23,37 @@ export interface AttributesDef<T extends object = object> {
  */
 export type AttributeChangedCallback<T extends object = object> = (this: T, oldValue: string, newValue: string) => void;
 
-/**
- * Web component type supporting attributes.
- *
- * It may contain a property with `AttributesDef.symbol` as its key containing attributes definition.
- *
- * @param <T> A type of web component.
- * @param <E> A type of HTML element this web component extends.
- */
-export interface ComponentWithAttributesType<
-    T extends object = object,
-    E extends HTMLElement = ComponentElementType<T>> extends ComponentType<T, E> {
-  [AttributesDef.symbol]?: AttributesDef<T>;
-}
-
 export namespace AttributesDef {
 
   /**
    * A key of a property holding a attributes definition within web component's class constructor.
    */
   export const symbol = Symbol('web-component-attributes');
+
+  class AttributesMeta extends MetaAccessor<AttributesDef<any>> {
+
+    constructor() {
+      super(AttributesDef.symbol);
+    }
+
+    merge<T extends object = object>(...defs: AttributesDef<T>[]): AttributesDef<T> {
+      return defs.reduce(
+          (prev, def) => {
+
+            const result: AttributesDef<T> = { ...prev };
+
+            Object.keys(def).forEach(key => {
+              result[key] = mergeFunctions<T, [string, string], void>(result[key], def[key]);
+            });
+
+            return result;
+          },
+          {});
+    }
+
+  }
+
+  const meta = new AttributesMeta();
 
   /**
    * Extracts attributes definition definition from web component type.
@@ -52,18 +64,8 @@ export namespace AttributesDef {
    * @returns Web component attributes definition. May be empty when there is no feature definition found in the given
    * `componentType`.
    */
-  export function of<T extends object, E extends HTMLElement>(
-      componentType: ComponentWithAttributesType<T, E>): AttributesDef<T> {
-
-    const def = componentType[AttributesDef.symbol];
-    const superType = superClassOf(componentType, st => AttributesDef.symbol in st) as ComponentType<any, any>;
-    const superDef = superType && AttributesDef.of(superType);
-
-    if (!def) {
-      return {};
-    }
-
-    return superDef && superDef !== def ? AttributesDef.merge(superDef, def) : def;
+  export function of<T extends object>(componentType: ComponentType<T>): AttributesDef<T> {
+    return (meta.of(componentType) || {}) as AttributesDef<T>;
   }
 
   /**
@@ -75,18 +77,23 @@ export namespace AttributesDef {
    * @returns Merged component definition.
    */
   export function merge<T extends object = object>(...defs: AttributesDef<T>[]): AttributesDef<T> {
-    return defs.reduce(
-        (prev, def) => {
+    return meta.merge(...defs);
+  }
 
-          const result: AttributesDef<T> = { ...prev };
-
-          Object.keys(def).forEach(key => {
-            result[key] = mergeFunctions<T, [string, string], void>(result[key], def[key]);
-          });
-
-          return result;
-        },
-        {});
+  /**
+   * Defines a web component attributes.
+   *
+   * Either assigns new or extends an existing component attributes definition and stores it under
+   * `AttributesDef.symbol` key.
+   *
+   * @param <T> A type of web component.
+   * @param type Web component class constructor.
+   * @param defs Web component definitions.
+   *
+   * @returns The `type` instance.
+   */
+  export function define<T extends ComponentType>(type: T, ...defs: AttributesDef<InstanceType<T>>[]): T {
+    return meta.define(type, ...defs) as T;
   }
 
 }

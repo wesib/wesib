@@ -1,8 +1,8 @@
-import { Component } from '../../component';
+import { Component, ComponentElementType, ComponentType } from '../../component';
 import { WebFeature } from '../../decorators';
 import { ElementClass } from '../../element';
 import { BootstrapContext } from '../../feature';
-import { AttributesDef, ComponentWithAttributesType } from './attributes-def';
+import { AttributesDef } from './attributes-def';
 
 /**
  * Web components feature adding support for custom HTML element's attributes changes notifications.
@@ -19,9 +19,9 @@ function enableAttributesSupport(context: BootstrapContext) {
   context.onElementDefinition(addAttributesSupport);
 }
 
-function addAttributesSupport<T extends object, E extends HTMLElement>(
-    elementType: ElementClass<E>,
-    componentType: ComponentWithAttributesType<T, E>) {
+function addAttributesSupport<T extends object>(
+    elementType: ElementClass<ComponentElementType<T>>,
+    componentType: ComponentType<T>) {
 
   const attrs = AttributesDef.of(componentType);
   const observedAttributes = Object.keys(attrs);
@@ -39,7 +39,7 @@ function addAttributesSupport<T extends object, E extends HTMLElement>(
   Object.defineProperty(elementType.prototype, 'attributeChangedCallback', {
     configurable: true,
     enumerable: true,
-    value: function (this: E, name: string, oldValue: string | null, newValue: string) {
+    value: function (this: ComponentElementType<T>, name: string, oldValue: string | null, newValue: string) {
       attrs[name].call(Component.of(this), oldValue, newValue);
     },
   });

@@ -10,7 +10,7 @@ import {
   ComponentDefinitionListener,
   ElementDefinitionListener,
   ElementListener,
-  FeatureType,
+  FeatureDef,
 } from './feature';
 import { FeatureRegistry } from './feature/feature-registry';
 import Spy = jasmine.Spy;
@@ -129,7 +129,7 @@ describe('bootstrap', () => {
 
         bootstrapComponents(
             config,
-            FeatureType.define(
+            FeatureDef.define(
                 TestFeature,
                 {
                   configure(ctx) {

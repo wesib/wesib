@@ -29,7 +29,7 @@ describe('element/element-builder', () => {
         expect(builder.buildElement(TestComponent).prototype).toEqual(jasmine.any(HTMLElement));
       });
       it('extends HTML element', () => {
-        ComponentType.define(TestComponent, {
+        ComponentDef.define(TestComponent, {
           extend: {
             name: 'input',
             type: HTMLInputElement,
@@ -39,7 +39,7 @@ describe('element/element-builder', () => {
         expect(builder.buildElement(TestComponent).prototype).toEqual(jasmine.any(HTMLInputElement));
       });
       it('applies properties', () => {
-        ComponentType.define(TestComponent, {
+        ComponentDef.define(TestComponent, {
           properties: {
             testProperty: {
               value: 'test value',

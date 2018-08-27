@@ -1,4 +1,4 @@
-import { Component, ComponentType } from '../component';
+import { Component, ComponentDef } from '../component';
 import { Class } from '../types';
 import { ComponentPropertyDecorator } from './component-decorators';
 
@@ -60,7 +60,7 @@ export function ElementProperty<T extends Class>(def: ElementPropertyDef = {}): 
     const desc = elementPropertyDescriptor(propertyKey, propertyDesc, def);
     const constructor = target.constructor as T;
 
-    ComponentType.define(
+    ComponentDef.define(
         constructor,
         {
           properties: {

@@ -1,7 +1,8 @@
+import { ComponentType } from '../../component';
 import { ComponentPropertyDecorator } from '../../decorators';
-import { FeatureType } from '../../feature';
+import { FeatureDef } from '../../feature';
 import { Class } from '../../types';
-import { AttributesDef, ComponentWithAttributesType } from './attributes-def';
+import { AttributesDef } from './attributes-def';
 import { AttributesSupport } from './attributes-support.feature';
 
 /**
@@ -43,12 +44,11 @@ export function AttributeChanged<T extends Class>(name?: string): ComponentPrope
       name = propertyKey;
     }
 
-    const componentType = target.constructor as ComponentWithAttributesType<InstanceType<T>>;
+    const componentType = target.constructor as ComponentType<InstanceType<T>>;
 
-    FeatureType.define(componentType, { requires: [AttributesSupport] });
-
-    componentType[AttributesDef.symbol] = AttributesDef.merge(
-        AttributesDef.of(componentType),
+    FeatureDef.define(componentType, { requires: [AttributesSupport] });
+    AttributesDef.define(
+        componentType,
         {
           [name]: function (this: InstanceType<T>, oldValue: string | null, newValue: string) {
             (this as any)[propertyKey](oldValue, newValue);

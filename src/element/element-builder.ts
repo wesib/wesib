@@ -1,4 +1,11 @@
-import { Component, ComponentContext, ComponentDef, ComponentType, ComponentValueKey } from '../component';
+import {
+  Component,
+  ComponentContext,
+  ComponentDef,
+  ComponentElementType,
+  ComponentType,
+  ComponentValueKey,
+} from '../component';
 import { EventEmitter } from '../events';
 import { ElementListener } from '../feature';
 import { PromiseResolver } from '../util';
@@ -32,15 +39,13 @@ export class ElementBuilder {
     this.providerRegistry = providerRegistry;
   }
 
-  elementType<T extends object = object, E extends HTMLElement = HTMLElement>(
-      def: ComponentDef<T, E>):
-      ElementClass<E> {
-    return def.extend && def.extend.type || ((this.window as any).HTMLElement as ElementClass<E>);
+  elementType<T extends object>(def: ComponentDef<T>): ElementClass<ComponentElementType<T>> {
+    return def.extend && def.extend.type || ((this.window as any).HTMLElement as ElementClass<ComponentElementType<T>>);
   }
 
-  buildElement<T extends object, E extends HTMLElement>(
-      componentType: ComponentType<T, E>):
-      ElementClass<E> {
+  buildElement<T extends object>(
+      componentType: ComponentType<T>):
+      ElementClass<ComponentElementType<T>> {
 
     const builder = this;
     const Object = (this.window as any).Object;
@@ -54,7 +59,7 @@ export class ElementBuilder {
       [Component.symbol]: T;
 
       // Component context reference
-      [ComponentContext.symbol]: ComponentContext<T, E>;
+      [ComponentContext.symbol]: ComponentContext<T, ComponentElementType<T>>;
 
       private readonly _connectedCallback!: () => void;
       private readonly _disconnectedCallback!: () => void;
@@ -66,14 +71,14 @@ export class ElementBuilder {
 
         try {
 
-          const element: E = this as any;
+          const element: ComponentElementType<T> = this;
           // @ts-ignore
           const elementSuper = (name: string) => super[name] as any;
           const values = new Map<ComponentValueKey<any>, any>();
           const connectEvents = new EventEmitter<(this: Context) => void>();
           const disconnectEvents = new EventEmitter<(this: Context) => void>();
 
-          class Context implements ComponentContext<T, E> {
+          class Context implements ComponentContext<T, ComponentElementType<T>> {
 
             readonly element = element;
             readonly component = componentResolver.promise;

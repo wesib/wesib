@@ -66,7 +66,7 @@ describe('element/component-registry', () => {
           expect(customElementsSpy.define).toHaveBeenCalledWith('test-component', ElementSpy);
         });
         it('defines custom element extending the given one', () => {
-          ComponentType.define(TestComponent, {
+          ComponentDef.define(TestComponent, {
             extend: {
               name: 'input',
               type: HTMLInputElement,

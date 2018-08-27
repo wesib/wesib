@@ -1,5 +1,5 @@
 import { ElementClass } from '../element';
-import { ComponentElementType } from './component-class';
+import { ComponentElementType } from './component-type';
 
 /**
  * Web component definition.
@@ -62,38 +62,5 @@ export namespace ComponentDef {
    * A key of a property holding a web component definition within its class constructor.
    */
   export const symbol = Symbol('web-component-def');
-
-  /**
-   * Merges multiple web component (partial) definitions.
-   *
-   * @param <T> A type of web component.
-   * @param <E> A type of HTML element this web component extends.
-   * @param defs Partial web component definitions to merge.
-   *
-   * @returns Merged component definition.
-   */
-  export function merge<
-      T extends object = object,
-      E extends HTMLElement = HTMLElement>(...defs: PartialComponentDef<T, E>[]):
-      PartialComponentDef<T, E> {
-    return defs.reduce(
-        (prev, def) => {
-
-          const result: PartialComponentDef<T, E> = {
-            ...prev,
-            ...def,
-          };
-
-          if (prev.properties || def.properties) {
-            result.properties = {
-              ...prev.properties,
-              ...def.properties,
-            };
-          }
-
-          return result;
-        },
-        {});
-  }
 
 }

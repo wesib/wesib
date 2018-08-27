@@ -1,5 +1,4 @@
-import { mergeFunctions, superClassOf } from '../common';
-import { ComponentType } from '../component';
+import { mergeFunctions, MetaAccessor } from '../common';
 import { Class } from '../types';
 import { mergeLists } from '../util';
 import { BootstrapContext } from './bootstrap-context';
@@ -33,12 +32,54 @@ export interface FeatureDef {
 
 }
 
+/**
+ * Web components feature type.
+ *
+ * It is used as an identifier of the feature.
+ */
+export interface FeatureType<T extends object = object> extends Class<T> {
+}
+
 export namespace FeatureDef {
 
   /**
    * A key of a property holding a web components feature definition within its class constructor.
    */
   export const symbol = Symbol('web-feature-def');
+
+  class FeatureMeta extends MetaAccessor<FeatureDef> {
+
+    constructor() {
+      super(FeatureDef.symbol);
+    }
+
+    merge(...defs: FeatureDef[]): FeatureDef {
+      return defs.reduce(
+          (prev, def) => {
+
+            const result: FeatureDef = {};
+            const requires = mergeLists(prev.requires, def.requires);
+            const provides = mergeLists(prev.provides, def.provides);
+            const configure = mergeFunctions<FeatureType, [BootstrapContext], void>(prev.configure, def.configure);
+
+            if (requires !== undefined) {
+              result.requires = requires;
+            }
+            if (provides !== undefined) {
+              result.provides = provides;
+            }
+            if (configure) {
+              result.configure = configure;
+            }
+
+            return result;
+          },
+          {});
+    }
+
+  }
+
+  const meta = new FeatureMeta();
 
   /**
    * Extracts a web components feature definition from its type.
@@ -49,16 +90,7 @@ export namespace FeatureDef {
    * `featureType`.
    */
   export function of(featureType: FeatureType): FeatureDef {
-
-    const def = featureType[FeatureDef.symbol];
-    const superType = superClassOf(featureType, st => FeatureDef.symbol in st) as ComponentType<any, any>;
-    const superDef = superType && FeatureDef.of(superType);
-
-    if (!def) {
-      return {};
-    }
-
-    return superDef && superDef !== def ? FeatureDef.merge(superDef, def) : def;
+    return meta.of(featureType) || {};
   }
 
   /**
@@ -69,41 +101,8 @@ export namespace FeatureDef {
    * @returns Merged feature definition.
    */
   export function merge(...defs: FeatureDef[]): FeatureDef {
-    return defs.reduce(
-        (prev, def) => {
-
-          const result: FeatureDef = {};
-          const requires = mergeLists(prev.requires, def.requires);
-          const provides = mergeLists(prev.provides, def.provides);
-          const configure = mergeFunctions<FeatureType, [BootstrapContext], void>(prev.configure, def.configure);
-
-          if (requires !== undefined) {
-            result.requires = requires;
-          }
-          if (provides !== undefined) {
-            result.provides = provides;
-          }
-          if (configure) {
-            result.configure = configure;
-          }
-
-          return result;
-        },
-        {});
+    return meta.merge(...defs);
   }
-
-}
-
-/**
- * Web components feature type.
- *
- * It is used as an identifier of the feature.
- */
-export interface FeatureType<T extends object = object> extends Class<T> {
-  [FeatureDef.symbol]?: FeatureDef;
-}
-
-export namespace FeatureType {
 
   /**
    * Defines a web components feature.
@@ -116,27 +115,8 @@ export namespace FeatureType {
    *
    * @returns The `type` instance.
    */
-  export function define<T extends Class>(type: T, ...defs: FeatureDef[]): T {
-
-    const componentType = type as FeatureType;
-    const prevDef = componentType[FeatureDef.symbol];
-    let def: FeatureDef;
-
-    if (prevDef) {
-      def = FeatureDef.merge(prevDef, ...defs);
-    } else {
-      def = FeatureDef.merge(...defs);
-    }
-
-    Object.defineProperty(
-        type,
-        FeatureDef.symbol,
-        {
-          configurable: true,
-          value: def,
-        });
-
-    return type;
+  export function define<T extends FeatureType>(type: T, ...defs: FeatureDef[]): T {
+    return meta.define(type, ...defs) as T;
   }
 
 }

@@ -89,8 +89,6 @@ describe('feature/feature', () => {
         expect(FeatureDef.merge({}, {})).toEqual({});
       });
     });
-  });
-  describe('FeatureType', () => {
     describe('define', () => {
 
       let TestFeature: FeatureType;
@@ -103,7 +101,7 @@ describe('feature/feature', () => {
       it('assigns feature definition', () => {
 
         const def: FeatureDef = { requires: [Feature1] };
-        const componentType = FeatureType.define(TestFeature, def);
+        const componentType = FeatureDef.define(TestFeature, def);
 
         expect(FeatureDef.of(componentType)).toEqual(def);
       });
@@ -113,12 +111,12 @@ describe('feature/feature', () => {
           requires: Feature1,
         };
 
-        FeatureType.define(TestFeature, initialDef);
+        FeatureDef.define(TestFeature, initialDef);
 
         const def: FeatureDef = {
           requires: Feature2,
         };
-        const featureType = FeatureType.define(TestFeature, def);
+        const featureType = FeatureDef.define(TestFeature, def);
 
         expect(FeatureDef.of(featureType)).toEqual(FeatureDef.merge(initialDef, def));
       });

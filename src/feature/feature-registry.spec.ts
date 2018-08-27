@@ -1,5 +1,5 @@
 import { BootstrapContext } from './bootstrap-context';
-import { FeatureType } from './feature';
+import { FeatureDef, FeatureType } from './feature';
 import { FeatureRegistry } from './feature-registry';
 import Spy = jasmine.Spy;
 import SpyObj = jasmine.SpyObj;
@@ -17,11 +17,11 @@ describe('feature/feature-registry', () => {
 
     beforeEach(() => {
       configure1spy = jasmine.createSpy('configure1');
-      feature1 = FeatureType.define(class Feature1 {}, {
+      feature1 = FeatureDef.define(class Feature1 {}, {
         configure: configure1spy,
       });
       configure2spy = jasmine.createSpy('configure2');
-      feature2 = FeatureType.define(class Feature2 {}, {
+      feature2 = FeatureDef.define(class Feature2 {}, {
         configure: configure2spy,
       });
     });
@@ -36,7 +36,7 @@ describe('feature/feature-registry', () => {
       class Feature {}
       const configureSpy = jasmine.createSpy('configure');
 
-      registry.add(FeatureType.define(FeatureType.define(Feature, { configure: configureSpy })));
+      registry.add(FeatureDef.define(FeatureDef.define(Feature, { configure: configureSpy })));
       registry.configure(contextSpy);
 
       expect(configureSpy).toHaveBeenCalledWith(contextSpy);
@@ -45,7 +45,7 @@ describe('feature/feature-registry', () => {
 
       class Feature {}
 
-      registry.add(FeatureType.define(FeatureType.define(Feature, {
+      registry.add(FeatureDef.define(FeatureDef.define(Feature, {
         requires: [feature1, feature2],
       })));
 
@@ -56,7 +56,7 @@ describe('feature/feature-registry', () => {
 
       class Feature {}
 
-      registry.add(FeatureType.define(FeatureType.define(Feature, {
+      registry.add(FeatureDef.define(FeatureDef.define(Feature, {
         provides: [feature1, feature2],
       })));
 
