@@ -1,6 +1,6 @@
 import { Component, ComponentContext, ComponentType, ComponentValueKey } from '../component';
 import { ElementMethod, ElementProperty, WebComponent } from '../decorators';
-import { Disposable } from '../types';
+import { EventInterest } from '../events';
 import { TestBootstrap } from './test-bootstrap';
 import Spy = jasmine.Spy;
 
@@ -12,7 +12,7 @@ describe('component instantiation', () => {
     let constructorSpy: Spy;
     let context: ComponentContext;
     let elementListenerSpy: Spy;
-    let elementListenerHandle: Disposable;
+    let elementListenerInterest: EventInterest;
     let element: HTMLElement;
     let propertyValue: number;
 
@@ -62,7 +62,7 @@ describe('component instantiation', () => {
     beforeEach(async () => {
       bootstrap = await new TestBootstrap().create(testComponent);
       elementListenerSpy = jasmine.createSpy('elementListener');
-      elementListenerHandle = bootstrap.context.onElement(elementListenerSpy);
+      elementListenerInterest = bootstrap.context.onElement(elementListenerSpy);
       element = await bootstrap.addElement(testComponent);
     });
     afterEach(() => bootstrap.dispose());

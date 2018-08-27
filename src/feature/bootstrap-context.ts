@@ -1,12 +1,6 @@
-import {
-  ComponentContext,
-  ComponentElementType,
-  ComponentType,
-  ComponentValueKey,
-  ComponentValueProvider,
-} from '../component';
+import { ComponentContext, ComponentType, ComponentValueKey, ComponentValueProvider } from '../component';
 import { ElementClass } from '../element';
-import { Disposable } from '../types';
+import { EventProducer } from '../events';
 
 /**
  * Web components bootstrap context.
@@ -14,6 +8,39 @@ import { Disposable } from '../types';
  * An instance of this class is passed to `FeatureDef.configure()` method so that the feature can configure itself.
  */
 export interface BootstrapContext {
+
+  /**
+   * Registers web component definition listener.
+   *
+   * This listener will be called when new component class is defined, but before its element class created.
+   *
+   * @param listener A listener to notify on each web component definition.
+   *
+   * @return An event interest instance.
+   */
+  readonly onComponentDefinition: EventProducer<ComponentDefinitionListener>;
+
+  /**
+   * Registers custom HTML element definition listener.
+   *
+   * This listener will be called when new HTML element class is created, but before it is registered as custom element.
+   *
+   * @param listener A listener to notify on each custom HTML element definition.
+   *
+   * @return An event interest instance.
+   */
+  readonly onElementDefinition: EventProducer<ElementDefinitionListener>;
+
+  /**
+   * Registers custom HTML element instantiation listener.
+   *
+   * This listener will be called when new custom HTML instance created, but before its component instance is created.
+   *
+   * @param listener A listener to notify on each custom HTML element instance.
+   *
+   * @return An event interest instance.
+   */
+  readonly onElement: EventProducer<ElementListener>;
 
   /**
    * Defines a web component.
@@ -55,39 +82,6 @@ export interface BootstrapContext {
    * @param provider Component value provider to register.
    */
   provide<V>(key: ComponentValueKey<V>, provider: ComponentValueProvider<V>): void;
-
-  /**
-   * Registers web component definition listener.
-   *
-   * This listener will be called when new component class is defined, but before its element class created.
-   *
-   * @param listener A listener to notify on each web component definition.
-   *
-   * @return A disposable instance that unregisters the listener when disposed.
-   */
-  onComponentDefinition(listener: ComponentDefinitionListener): Disposable;
-
-  /**
-   * Registers custom HTML element definition listener.
-   *
-   * This listener will be called when new HTML element class is created, but before it is registered as custom element.
-   *
-   * @param listener A listener to notify on each custom HTML element definition.
-   *
-   * @return A disposable instance that unregisters the listener when disposed.
-   */
-  onElementDefinition(listener: ElementDefinitionListener): Disposable;
-
-  /**
-   * Registers custom HTML element instantiation listener.
-   *
-   * This listener will be called when new custom HTML instance created, but before its component instance is created.
-   *
-   * @param listener A listener to notify on each custom HTML element instance.
-   *
-   * @return A disposable instance that unregisters the listener when disposed.
-   */
-  onElement(listener: ElementListener): Disposable;
 
 }
 

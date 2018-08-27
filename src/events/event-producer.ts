@@ -28,7 +28,7 @@ export type EventProducer<C extends EventConsumer<any[], any>> = (this: void, co
  *
  * @return Event processing result.
  */
-export type EventConsumer<E extends any[], R = void> = (this: void, ...event: E) => R;
+export type EventConsumer<E extends any[], R = void> = (...event: E) => R;
 
 /**
  * An interest for the events.

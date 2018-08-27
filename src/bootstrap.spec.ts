@@ -4,7 +4,14 @@ import { WebComponent } from './decorators';
 import { ComponentRegistry } from './element/component-registry';
 import { ElementBuilder } from './element/element-builder';
 import { ProviderRegistry } from './element/provider-registry';
-import { BootstrapContext, FeatureType } from './feature';
+import { EventEmitter } from './events';
+import {
+  BootstrapContext,
+  ComponentDefinitionListener,
+  ElementDefinitionListener,
+  ElementListener,
+  FeatureType,
+} from './feature';
 import { FeatureRegistry } from './feature/feature-registry';
 import Spy = jasmine.Spy;
 import SpyObj = jasmine.SpyObj;
@@ -34,8 +41,9 @@ describe('bootstrap', () => {
         'elementBuilder',
         [
             'buildElement',
-            'onElement',
         ]);
+    (elementBuilderSpy as any).elements =
+        jasmine.createSpyObj<EventEmitter<ElementListener>>('elements', ['on']);
     createElementBuilderSpy = spyOn(ElementBuilder, 'create').and.returnValue(elementBuilderSpy);
 
     componentRegistrySpy = jasmine.createSpyObj(
@@ -44,9 +52,11 @@ describe('bootstrap', () => {
           'define',
           'complete',
           'whenDefined',
-          'onComponentDefinition',
-          'onElementDefinition',
         ]);
+    (componentRegistrySpy as any).componentDefinitions =
+        jasmine.createSpyObj<EventEmitter<ComponentDefinitionListener>>('componentDefinitions', ['on']);
+    (componentRegistrySpy as any).elementDefinitions =
+        jasmine.createSpyObj<EventEmitter<ElementDefinitionListener>>('elementDefinitions', ['on']);
     createComponentRegistrySpy = spyOn(ComponentRegistry, 'create').and.returnValue(componentRegistrySpy);
   });
 
@@ -158,25 +168,13 @@ describe('bootstrap', () => {
         expect(providerRegistrySpy.provide).toHaveBeenCalledWith(key, provider);
       });
       it('proxies onComponentDefinition() method', () => {
-
-        const listener = () => {};
-
-        featureContext.onComponentDefinition(listener);
-        expect(componentRegistrySpy.onComponentDefinition).toHaveBeenCalledWith(listener);
+        expect(featureContext.onComponentDefinition).toBe(componentRegistrySpy.componentDefinitions.on);
       });
       it('proxies onElementDefinition() method', () => {
-
-        const listener = () => {};
-
-        featureContext.onElementDefinition(listener);
-        expect(componentRegistrySpy.onElementDefinition).toHaveBeenCalledWith(listener);
+        expect(featureContext.onElementDefinition).toBe(componentRegistrySpy.elementDefinitions.on);
       });
       it('proxies onElement() method', () => {
-
-        const listener = () => {};
-
-        featureContext.onElement(listener);
-        expect(elementBuilderSpy.onElement).toHaveBeenCalledWith(listener);
+        expect(featureContext.onElement).toBe(elementBuilderSpy.elements.on);
       });
     });
   });

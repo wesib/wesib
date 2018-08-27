@@ -1,17 +1,9 @@
-import { ComponentElementType, ComponentType, ComponentValueKey, ComponentValueProvider } from './component';
-import { ElementClass } from './element';
+import { ComponentType, ComponentValueKey, ComponentValueProvider } from './component';
 import { ComponentRegistry } from './element/component-registry';
 import { ElementBuilder } from './element/element-builder';
 import { ProviderRegistry } from './element/provider-registry';
-import {
-  BootstrapContext,
-  ComponentDefinitionListener,
-  ElementDefinitionListener,
-  ElementListener,
-  FeatureType,
-} from './feature';
+import { BootstrapContext, FeatureType } from './feature';
 import { FeatureRegistry } from './feature/feature-registry';
-import { Disposable } from './types';
 
 /**
  * Web components bootstrap configuration.
@@ -71,6 +63,10 @@ function initBootstrap(config: BootstrapConfig) {
 
   class Context implements BootstrapContext {
 
+    readonly onComponentDefinition = componentRegistry.componentDefinitions.on;
+    readonly onElementDefinition = componentRegistry.elementDefinitions.on;
+    readonly onElement = elementBuilder.elements.on;
+
     define<T extends object>(componentType: ComponentType<T>) {
       componentRegistry.define(componentType);
     }
@@ -81,18 +77,6 @@ function initBootstrap(config: BootstrapConfig) {
 
     provide<V>(key: ComponentValueKey<V>, provider: ComponentValueProvider<V>): void {
       providerRegistry.provide(key, provider);
-    }
-
-    onComponentDefinition(listener: ComponentDefinitionListener): Disposable {
-      return componentRegistry.onComponentDefinition(listener);
-    }
-
-    onElementDefinition(listener: ElementDefinitionListener): Disposable {
-      return componentRegistry.onElementDefinition(listener);
-    }
-
-    onElement(listener: ElementListener): Disposable {
-      return elementBuilder.onElement(listener);
     }
 
   }

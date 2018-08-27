@@ -1,4 +1,4 @@
-import { Disposable } from '../types';
+import { EventProducer } from '../events';
 
 /**
  * Web component context.
@@ -13,6 +13,40 @@ export interface ComponentContext<E extends HTMLElement = HTMLElement> {
    * Custom HTML element constructed for the component according to its type.
    */
   readonly element: E;
+
+  /**
+   * Registers web component instantiation listener.
+   *
+   * This listener will be called when component this context is created for is instantiated.
+   *
+   * @param listener A listener to notify on component instantiation.
+   *
+   * @return An event interest instance.
+   */
+  readonly onComponent: EventProducer<(this: this) => void>;
+
+  /**
+   * Registers custom HTML element connection listener.
+   *
+   * This listener will be called when custom element is connected, i.e. its `connectedCallback()` method is called.
+   *
+   * @param listener A listener to notify on element connection.
+   *
+   * @return An event interest instance.
+   */
+  readonly onConnect: EventProducer<(this: this) => void>;
+
+  /**
+   * Registers custom HTML element disconnection listener.
+   *
+   * This listener will be called when custom element is disconnected, i.e. its `disconnectedCallback()` method is
+   * called.
+   *
+   * @param listener A listener to notify on element disconnection.
+   *
+   * @return An event interest instance.
+   */
+  readonly onDisconnect: EventProducer<(this: this) => void>;
 
   /**
    * Returns a `super` property value inherited from custom HTML element parent.
@@ -42,34 +76,6 @@ export interface ComponentContext<E extends HTMLElement = HTMLElement> {
    * @throws Error If there is no value associated with the given key and the default key is not provided.
    */
   get<V>(key: ComponentValueKey<V>, defaultValue: V | null | undefined): V | null | undefined;
-
-  /**
-   * Registers web component instantiation listener.
-   *
-   * This listener will be called when component this context is created for is instantiated.
-   *
-   * @param listener A listener to notify on component instantiation.
-   */
-  onComponent(listener: (this: this) => void): Disposable;
-
-  /**
-   * Registers custom HTML element connection listener.
-   *
-   * This listener will be called when custom element is connected, i.e. its `connectedCallback()` method is called.
-   *
-   * @param listener A listener to notify on element connection.
-   */
-  onConnect(listener: (this: this) => void): Disposable;
-
-  /**
-   * Registers custom HTML element disconnection listener.
-   *
-   * This listener will be called when custom element is disconnected, i.e. its `disconnectedCallback()` method is
-   * called.
-   *
-   * @param listener A listener to notify on element disconnection.
-   */
-  onDisconnect(listener: (this: this) => void): Disposable;
 
 }
 

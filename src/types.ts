@@ -9,20 +9,6 @@ export interface Class<T extends object = object> extends Function {
 }
 
 /**
- * Disposable entity.
- */
-export interface Disposable {
-
-  /**
-   * Disposes the entity.
-   *
-   * Has no effect when called the second time.
-   */
-  dispose(): void;
-
-}
-
-/**
  * Function argument types.
  *
  * @param <F> Function type.

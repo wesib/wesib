@@ -1,7 +1,6 @@
 import { Component, ComponentContext, ComponentDef, ComponentType, ComponentValueKey } from '../component';
+import { EventEmitter } from '../events';
 import { ElementListener } from '../feature';
-import { Disposable } from '../types';
-import { Listeners } from '../util';
 import { ElementClass } from './element';
 import { ProviderRegistry } from './provider-registry';
 
@@ -14,7 +13,7 @@ export class ElementBuilder {
 
   readonly window: Window;
   readonly providerRegistry: ProviderRegistry;
-  private readonly _elementListeners = new Listeners<ElementListener>();
+  readonly elements = new EventEmitter<ElementListener>();
 
   static create(opts: { window?: Window, providerRegistry: ProviderRegistry }): ElementBuilder {
     return new ElementBuilder(opts);
@@ -66,14 +65,17 @@ export class ElementBuilder {
         // @ts-ignore
         const elementSuper = (name: string) => super[name] as any;
         const values = new Map<ComponentValueKey<any>, any>();
-        const componentListeners = new Listeners<(this: Context) => void>();
-        const connectListeners = new Listeners<(this: Context) => void>();
-        const disconnectListeners = new Listeners<(this: Context) => void>();
+        const componentListeners = new EventEmitter<(this: Context) => void>();
+        const connectListeners = new EventEmitter<(this: Context) => void>();
+        const disconnectListeners = new EventEmitter<(this: Context) => void>();
 
         class Context implements ComponentContext<E> {
 
           readonly element = element;
           readonly elementSuper = elementSuper;
+          readonly onComponent = componentListeners.on;
+          readonly onConnect = connectListeners.on;
+          readonly onDisconnect = disconnectListeners.on;
 
           get<V>(key: ComponentValueKey<V>, defaultValue: V | null | undefined): V | null | undefined {
 
@@ -97,18 +99,6 @@ export class ElementBuilder {
             return defaultValue;
           }
 
-          onComponent(listener: (this: Context) => void): Disposable {
-            return componentListeners.add(listener);
-          }
-
-          onConnect(listener: (this: Context) => void): Disposable {
-            return connectListeners.add(listener);
-          }
-
-          onDisconnect(listener: (this: Context) => void): Disposable {
-            return disconnectListeners.add(listener);
-          }
-
         }
 
         const context = new Context();
@@ -121,7 +111,7 @@ export class ElementBuilder {
           value: () => disconnectListeners.forEach(listener => listener.call(context)),
         });
 
-        builder._elementCreated(element, context);
+        builder.elements.notify(element, context);
 
         const component = new componentType(context);
 
@@ -147,14 +137,6 @@ export class ElementBuilder {
     }
 
     return Element as ElementClass<any>;
-  }
-
-  onElement(listener: ElementListener) {
-    return this._elementListeners.add(listener);
-  }
-
-  private _elementCreated<E extends HTMLElement>(element: E, context: ComponentContext<E>) {
-    return this._elementListeners.forEach(listener => listener(element, context));
   }
 
 }

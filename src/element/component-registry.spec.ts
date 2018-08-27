@@ -1,10 +1,10 @@
 import { ComponentDef, ComponentType } from '../component';
-import { Disposable } from '../types';
+import { EventInterest } from '../events';
 import { ComponentRegistry } from './component-registry';
 import { ElementBuilder } from './element-builder';
 import { ProviderRegistry } from './provider-registry';
-import SpyObj = jasmine.SpyObj;
 import Spy = jasmine.Spy;
+import SpyObj = jasmine.SpyObj;
 
 describe('element/component-registry', () => {
   describe('ComponentRegistry', () => {
@@ -92,14 +92,14 @@ describe('element/component-registry', () => {
           expect(customElementsSpy.whenDefined).toHaveBeenCalledWith('test-component');
         });
       });
-      describe('onComponentDefinition listener', () => {
+      describe('component definition listener', () => {
 
         let listenerSpy: Spy;
-        let handle: Disposable;
+        let interest: EventInterest;
 
         beforeEach(() => {
           listenerSpy = jasmine.createSpy('listener');
-          handle = registry.onComponentDefinition(listenerSpy);
+          interest = registry.componentDefinitions.on(listenerSpy);
         });
 
         it('is notified on component definition', () => {
@@ -127,14 +127,14 @@ describe('element/component-registry', () => {
           expect(builderSpy.buildElement).not.toHaveBeenCalledWith(TestComponent);
         });
       });
-      describe('onElementDefinition listener', () => {
+      describe('element definition listener', () => {
 
         let listenerSpy: Spy;
-        let handle: Disposable;
+        let interest: EventInterest;
 
         beforeEach(() => {
           listenerSpy = jasmine.createSpy('listener');
-          handle = registry.onElementDefinition(listenerSpy);
+          interest = registry.elementDefinitions.on(listenerSpy);
         });
 
         it('is notified on element definition', () => {

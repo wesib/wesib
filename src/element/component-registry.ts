@@ -1,7 +1,6 @@
 import { ComponentDef, ComponentType } from '../component';
+import { EventEmitter } from '../events';
 import { ComponentDefinitionListener, ElementDefinitionListener } from '../feature';
-import { Disposable } from '../types';
-import { Listeners } from '../util';
 import { ElementClass } from './element';
 import { ElementBuilder } from './element-builder';
 
@@ -11,8 +10,8 @@ import { ElementBuilder } from './element-builder';
 export class ComponentRegistry {
 
   readonly builder: ElementBuilder;
-  private readonly _componentDefinitionListeners = new Listeners<ComponentDefinitionListener>();
-  private readonly _elementDefinitionListeners = new Listeners<ElementDefinitionListener>();
+  readonly componentDefinitions = new EventEmitter<ComponentDefinitionListener>();
+  readonly elementDefinitions = new EventEmitter<ElementDefinitionListener>();
   private _definitions: (() => void)[] = [];
 
   static create(opts: {
@@ -68,29 +67,18 @@ export class ComponentRegistry {
     return this.window.customElements.whenDefined(ComponentDef.of(componentType).name);
   }
 
-  onComponentDefinition(listener: ComponentDefinitionListener): Disposable {
-    return this._componentDefinitionListeners.add(listener);
-  }
-
   private _componentDefined<T extends object>(componentType: ComponentType<T>): ComponentType<T> {
-    this._componentDefinitionListeners.forEach(
-        listener => {
-          componentType = listener(componentType) || componentType;
-        });
-    return componentType;
-  }
-
-  onElementDefinition(listener: ElementDefinitionListener): Disposable {
-    return this._elementDefinitionListeners.add(listener);
+    return this.componentDefinitions.reduce(
+        (type, listener) => listener(componentType) || type,
+        componentType);
   }
 
   private _elementDefined<T extends object, E extends HTMLElement>(
       elementType: ElementClass<E>,
       componentType: ComponentType<T, E>): ElementClass<E> {
-    this._elementDefinitionListeners.forEach(listener => {
-      elementType = listener(elementType, componentType) || elementType;
-    });
-    return elementType;
+    return this.elementDefinitions.reduce(
+        (type, listener) => listener(elementType, componentType) || type,
+        elementType);
   }
 
 }
