@@ -1,4 +1,10 @@
-import { ComponentContext, ComponentType, ComponentValueKey, ComponentValueProvider } from '../component';
+import {
+  ComponentContext,
+  ComponentElementType,
+  ComponentType,
+  ComponentValueKey,
+  ComponentValueProvider,
+} from '../component';
 import { ElementClass } from '../element';
 import { EventProducer } from '../events';
 
@@ -115,9 +121,9 @@ export type ComponentDefinitionListener = <T extends object>(
  *
  * @return Either none, or HTML element class constructor to use instead of `elementType`.
  */
-export type ElementDefinitionListener = <T extends object, E extends HTMLElement>(
-    elementType: ElementClass<E>,
-    componentType: ComponentType<T, E>) => ElementClass<E> | void;
+export type ElementDefinitionListener = <T extends object>(
+    elementType: ElementClass<ComponentElementType<T>>,
+    componentType: ComponentType<T>) => ElementClass<ComponentElementType<T>> | void;
 
 /**
  * Custom HTML element instantiation listener.
@@ -127,6 +133,6 @@ export type ElementDefinitionListener = <T extends object, E extends HTMLElement
  * @param element Custom HTML element instance.
  * @param context Web component context.
  */
-export type ElementListener = <E extends HTMLElement>(
-    element: E,
-    context: ComponentContext<E>) => void;
+export type ElementListener = <T extends object>(
+    element: ComponentElementType<T>,
+    context: ComponentContext<T, ComponentElementType<T>>) => void;

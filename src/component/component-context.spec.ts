@@ -5,7 +5,7 @@ describe('component/component-context', () => {
     describe('of', () => {
 
       let element: HTMLDivElement;
-      let context: ComponentContext<HTMLDivElement>;
+      let context: ComponentContext<object, HTMLDivElement>;
 
       beforeEach(() => {
         element = { name: 'HTML element' } as any;

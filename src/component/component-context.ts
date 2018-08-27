@@ -7,7 +7,7 @@ import { EventProducer } from '../events';
  *
  * @param <E> A type of HTML element.
  */
-export interface ComponentContext<E extends HTMLElement = HTMLElement> {
+export interface ComponentContext<T extends object = object, E extends HTMLElement = HTMLElement> {
 
   /**
    * Custom HTML element constructed for the component according to its type.
@@ -123,7 +123,8 @@ export class ComponentValueKey<V> {
  *
  * @return Either constructed value, or `null`/`undefined` if the value can not be constructed.
  */
-export type ComponentValueProvider<V> = <E extends HTMLElement>(context: ComponentContext<E>) => V | null | undefined;
+export type ComponentValueProvider<V> =
+    <T extends object, E extends HTMLElement>(context: ComponentContext<T, E>) => V | null | undefined;
 
 export namespace ComponentContext {
 
@@ -141,9 +142,9 @@ export namespace ComponentContext {
    *
    * @throws TypeError When the given `element` does not contain component context reference.
    */
-  export function of<E extends HTMLElement>(element: E): ComponentContext<E> {
+  export function of<T extends object, E extends HTMLElement>(element: E): ComponentContext<T, E> {
 
-    const context: ComponentContext<E> | undefined = (element as any)[symbol];
+    const context: ComponentContext<T, E> | undefined = (element as any)[symbol];
 
     if (!context) {
       throw TypeError(`No component context found in ${element}`);

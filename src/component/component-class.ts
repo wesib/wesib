@@ -10,7 +10,7 @@ import { ComponentContext } from './component-context';
  * @param <E> A type of compatible custom HTML element.
  */
 export interface ComponentClass<T extends object = object, E extends HTMLElement = HTMLElement> extends Function {
-  new (context: ComponentContext<E>): T;
+  new (context: ComponentContext<T, E>): T;
   prototype: T;
 }
 

@@ -19,7 +19,7 @@ describe('component instantiation', () => {
     beforeEach(() => {
       context = undefined!;
       constructorSpy = jasmine.createSpy('constructor')
-          .and.callFake((ctx: ComponentContext<HTMLElement>) => context = ctx);
+          .and.callFake((ctx: ComponentContext) => context = ctx);
       propertyValue = 0;
 
       @WebComponent({
@@ -78,7 +78,7 @@ describe('component instantiation', () => {
     });
     it('passes context to component', () => {
 
-      const expectedContext: Partial<ComponentContext<HTMLElement>> = {
+      const expectedContext: Partial<ComponentContext> = {
         element,
       };
 

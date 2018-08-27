@@ -53,7 +53,7 @@ export class ElementBuilder {
       [Component.symbol]: T;
 
       // Component context reference
-      [ComponentContext.symbol]: ComponentContext<E>;
+      [ComponentContext.symbol]: ComponentContext<T, E>;
 
       private readonly _connectedCallback!: () => void;
       private readonly _disconnectedCallback!: () => void;
@@ -69,7 +69,7 @@ export class ElementBuilder {
         const connectListeners = new EventEmitter<(this: Context) => void>();
         const disconnectListeners = new EventEmitter<(this: Context) => void>();
 
-        class Context implements ComponentContext<E> {
+        class Context implements ComponentContext<T, E> {
 
           readonly element = element;
           readonly elementSuper = elementSuper;

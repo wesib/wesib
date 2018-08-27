@@ -30,7 +30,9 @@ export class ProviderRegistry {
     }
   }
 
-  get<E extends HTMLElement, V>(key: ComponentValueKey<V>, context: ComponentContext<E>): V | null | undefined {
+  get<T extends object, E extends HTMLElement, V>(
+      key: ComponentValueKey<V>,
+      context: ComponentContext<T, E>): V | null | undefined {
 
     const provider: ComponentValueProvider<V> | undefined = this._providers.get(key);
 

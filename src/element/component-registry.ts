@@ -1,4 +1,4 @@
-import { ComponentDef, ComponentType } from '../component';
+import { ComponentDef, ComponentElementType, ComponentType } from '../component';
 import { EventEmitter } from '../events';
 import { ComponentDefinitionListener, ElementDefinitionListener } from '../feature';
 import { ElementClass } from './element';
@@ -73,9 +73,9 @@ export class ComponentRegistry {
         componentType);
   }
 
-  private _elementDefined<T extends object, E extends HTMLElement>(
-      elementType: ElementClass<E>,
-      componentType: ComponentType<T, E>): ElementClass<E> {
+  private _elementDefined<T extends object>(
+      elementType: ElementClass<ComponentElementType<T>>,
+      componentType: ComponentType<T>): ElementClass<ComponentElementType<T>> {
     return this.elementDefinitions.reduce(
         (type, listener) => listener(elementType, componentType) || type,
         elementType);
