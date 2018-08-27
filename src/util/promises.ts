@@ -1,3 +1,6 @@
+/**
+ * @internal
+ */
 export class PromiseResolver<T = any> {
 
   readonly promise: Promise<T>;
