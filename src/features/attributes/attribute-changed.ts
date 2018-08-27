@@ -33,7 +33,7 @@ import { AttributesSupport } from './attributes-support.feature';
  *
  * @return Web component method decorator.
  */
-export function AttributeChanged<T extends Class>(name?: string): ComponentPropertyDecorator<T> {
+export function AttributeChanged<T extends ComponentType>(name?: string): ComponentPropertyDecorator<T> {
   return <V>(target: T['prototype'], propertyKey: string | symbol) => {
     if (!name) {
       if (typeof propertyKey !== 'string') {
@@ -44,7 +44,7 @@ export function AttributeChanged<T extends Class>(name?: string): ComponentPrope
       name = propertyKey;
     }
 
-    const componentType = target.constructor as ComponentType<InstanceType<T>>;
+    const componentType = target.constructor as T;
 
     FeatureDef.define(componentType, { requires: [AttributesSupport] });
     AttributesDef.define(

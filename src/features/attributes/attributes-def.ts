@@ -1,6 +1,5 @@
 import { mergeFunctions, MetaAccessor } from '../../common';
 import { ComponentType } from '../../component';
-import { Class } from '../../types';
 
 /**
  * Custom HTML element attributes definition.
