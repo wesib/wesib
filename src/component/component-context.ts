@@ -1,4 +1,4 @@
-import { EventProducer } from '../events';
+import { EventConsumer, EventProducer } from '../events';
 
 /**
  * Web component context.
@@ -84,6 +84,16 @@ export interface ComponentContext<T extends object = object, E extends HTMLEleme
  * @param <V> The type of associated value.
  */
 export class ComponentValueKey<V> {
+
+  /**
+   * Component value key containing a component state refresh function.
+   *
+   * Features are calling this function by default when component state changes, e.g. attribute value or DOM property
+   * change.
+   *
+   * Note that this value is not provided, unless a `StateSupport` feature is enabled.
+   */
+  static readonly stateRefresh: ComponentValueKey<(this: void) => void> = new ComponentValueKey('state-refresh');
 
   /**
    * Human-readable key name.
