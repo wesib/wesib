@@ -3,6 +3,17 @@ import { WebFeature } from '../../decorators';
 import { EventEmitter, EventProducer } from '../../events';
 import { BootstrapContext } from '../../feature';
 
+/**
+ * Component state support feature.
+ *
+ * When enabled, it registers context values for each component with the following keys:
+ *
+ * - `ComponentValueKey.stateRefresh` that allows to inform that component state changed, and
+ * - `StateSupport.stateUpdates` that allows to listen for the above notifications.
+ *
+ * Other features would use this to notify when the state changes. E.g. `DomPropertiesSupport` and `AttributesSupport`
+ * features issue state refresh when needed.
+ */
 @WebFeature({
   configure: enableStateSupport,
 })
