@@ -1,6 +1,7 @@
 import { WebComponent } from '../../decorators';
 import { FeatureDef } from '../../feature';
 import { AttributesDef } from './attributes-def';
+import './attributes-def.ns';
 import { AttributesSupport } from './attributes-support.feature';
 import Spy = jasmine.Spy;
 

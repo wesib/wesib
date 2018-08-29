@@ -2,7 +2,7 @@ import { WebComponent } from '../../decorators';
 import { FeatureDef } from '../../feature';
 import { DomPropertiesDef } from './dom-properties-def';
 import { DomPropertiesSupport } from './dom-properties-support';
-import Spy = jasmine.Spy;
+import './dom-properties-def.ns';
 
 describe('features/dom-properties/dom-properties-def', () => {
   describe('DomPropertiesDef', () => {

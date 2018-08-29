@@ -1,9 +1,7 @@
 import { ComponentType } from '../../component';
 import { ComponentPropertyDecorator } from '../../decorators';
-import { FeatureDef } from '../../feature';
-import { Class } from '../../types';
 import { AttributesDef } from './attributes-def';
-import { AttributesSupport } from './attributes-support.feature';
+import './attributes-def.ns';
 
 /**
  * Creates a web component decorator for custom HTML element attribute change callback.

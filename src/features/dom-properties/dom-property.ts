@@ -1,6 +1,7 @@
 import { Component, ComponentType } from '../../component';
 import { ComponentPropertyDecorator } from '../../decorators';
 import { DomPropertiesDef } from './dom-properties-def';
+import './dom-properties-def.ns';
 
 /**
  * Custom HTML element property definition.
