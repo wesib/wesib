@@ -2,7 +2,7 @@ import { MetaAccessor } from '../../common';
 import { ComponentType } from '../../component';
 import { FeatureDef } from '../../feature';
 import { DomPropertiesDef } from './dom-properties-def';
-import { DomPropertiesSupport } from './dom-properties-support';
+import { DomPropertiesSupport } from './dom-properties-support.feature';
 
 declare module './dom-properties-def' {
 
