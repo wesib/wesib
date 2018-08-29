@@ -1,5 +1,5 @@
 import { Class } from '../common';
-import { ComponentDef } from '../component';
+import { ComponentDef, ComponentType } from '../component';
 import { ComponentDecorator } from './component-decorators';
 
 /**
@@ -25,7 +25,7 @@ import { ComponentDecorator } from './component-decorators';
  * @returns A web component class decorator.
  */
 export function WebComponent<
-    T extends Class = Class<any>,
+    T extends ComponentType = any,
     E extends HTMLElement = HTMLElement>(def: ComponentDef<InstanceType<T>, E> | string): ComponentDecorator<T> {
   return (type: T) => ComponentDef.define(type, typeof def === 'string' ? { name: def } : def);
 }
