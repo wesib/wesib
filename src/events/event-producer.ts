@@ -14,7 +14,7 @@ import { noop } from '../common';
  * @return An event interest. The event producer will notify the consumer on events, until the `off()` method
  * of returned event interest instance is called.
  */
-export type EventProducer<C extends EventConsumer<any[], any>> = (this: void, consumer: C) => EventInterest;
+export type EventProducer<C extends EventConsumer<any[], any, any>> = (this: void, consumer: C) => EventInterest;
 
 /**
  * Event consumer.
@@ -60,5 +60,14 @@ export namespace EventInterest {
   export const none: EventInterest = {
     off: noop,
   };
+
+}
+
+export namespace EventProducer {
+
+  /**
+   * An event producer that never produces any events.
+   */
+  export const never: EventProducer<(...event: any[]) => any> = () => EventInterest.none;
 
 }
