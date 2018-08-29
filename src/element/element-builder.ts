@@ -145,10 +145,6 @@ export class ElementBuilder {
 
     }
 
-    if (def.properties) {
-      Object.defineProperties(Element.prototype, def.properties);
-    }
-
     return Element as ElementClass<any>;
   }
 

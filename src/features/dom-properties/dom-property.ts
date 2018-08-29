@@ -1,13 +1,13 @@
-import { Component, ComponentDef } from '../component';
-import { Class } from '../types';
-import { ComponentPropertyDecorator } from './component-decorators';
+import { ComponentPropertyDecorator } from '../../../d.ts/decorators';
+import { Component, ComponentType } from '../../component';
+import { DomPropertiesDef } from './dom-properties-def';
 
 /**
  * Custom HTML element property definition.
  *
  * This is an parameter to `@ElementProperty` decorator applied to web component property.
  */
-export interface ElementPropertyDef {
+export interface DomPropertyDef {
 
   /**
    * Property name.
@@ -53,38 +53,32 @@ export interface ElementPropertyDef {
  *
  * @returns Web component property decorator.
  */
-export function ElementProperty<T extends Class>(def: ElementPropertyDef = {}): ComponentPropertyDecorator<T> {
+export function DomProperty<T extends ComponentType>(def: DomPropertyDef = {}): ComponentPropertyDecorator<T> {
   return <V>(target: T['prototype'], propertyKey: string | symbol, propertyDesc?: TypedPropertyDescriptor<V>) => {
 
     const name = def.name || propertyKey;
-    const desc = elementPropertyDescriptor(propertyKey, propertyDesc, def);
+    const desc = domPropertyDescriptor(propertyKey, propertyDesc, def);
     const constructor = target.constructor as T;
 
-    ComponentDef.define(
-        constructor,
-        {
-          properties: {
-            [name]: desc,
-          }
-        });
+    DomPropertiesDef.define(constructor, { [name]: desc });
   };
 }
 
 /**
  * Web component method decorator that declares a method to add to custom HTML element created for this web component.
  *
- * This is just an alias of `@ElementProperty` decorator.
+ * This is just an alias of `@DomProperty` decorator.
  */
-export { ElementProperty as ElementMethod };
+export { DomProperty as DomMethod };
 
-function elementPropertyDescriptor<V>(
+function domPropertyDescriptor<V>(
     propertyKey: string | symbol,
     propertyDesc: TypedPropertyDescriptor<V> | undefined,
     {
       configurable,
       enumerable,
       writable,
-    }: ElementPropertyDef): PropertyDescriptor {
+    }: DomPropertyDef): PropertyDescriptor {
   if (!propertyDesc) {
     // Component object property
     if (enumerable == null) {

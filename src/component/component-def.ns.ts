@@ -58,24 +58,7 @@ class ComponentMeta extends MetaAccessor<PartialComponentDef<any, any>> {
   }
 
   merge<T extends object>(...defs: PartialComponentDef<T>[]): PartialComponentDef<T> {
-    return defs.reduce(
-        (prev, def) => {
-
-          const result: PartialComponentDef<T> = {
-            ...prev,
-            ...def,
-          };
-
-          if (prev.properties || def.properties) {
-            result.properties = {
-              ...prev.properties,
-              ...def.properties,
-            };
-          }
-
-          return result;
-        },
-        {});
+    return Object.assign({}, ...defs);
   }
 
 }

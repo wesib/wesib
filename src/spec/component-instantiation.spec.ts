@@ -1,5 +1,5 @@
 import { Component, ComponentContext, ComponentType, ComponentValueKey } from '../component';
-import { ElementMethod, ElementProperty, WebComponent } from '../decorators';
+import { WebComponent } from '../decorators';
 import { EventInterest } from '../events';
 import { TestBootstrap } from './test-bootstrap';
 import Spy = jasmine.Spy;
@@ -14,45 +14,17 @@ describe('component instantiation', () => {
     let elementListenerSpy: Spy;
     let elementListenerInterest: EventInterest;
     let element: HTMLElement;
-    let propertyValue: number;
 
     beforeEach(() => {
       context = undefined!;
       constructorSpy = jasmine.createSpy('constructor')
           .and.callFake((ctx: ComponentContext) => context = ctx);
-      propertyValue = 0;
 
-      @WebComponent({
-        name: 'test-component',
-        properties: {
-          tagName: {
-            value: 'MODIFIED-CUSTOM-COMPONENT',
-          }
-        },
-      })
+      @WebComponent({ name: 'test-component' })
       class TestComponent {
 
         constructor(...args: any[]) {
           constructorSpy(...args);
-        }
-
-        @ElementProperty()
-        get readonlyProperty() {
-          return propertyValue;
-        }
-
-        get writableProperty() {
-          return propertyValue;
-        }
-
-        @ElementProperty()
-        set writableProperty(value: number) {
-          propertyValue = value;
-        }
-
-        @ElementMethod({ name: 'elementMethod' })
-        componentMethod(...args: string[]): string {
-          return `${this.readonlyProperty}: ${args.join(', ')}`;
         }
 
       }
@@ -84,24 +56,8 @@ describe('component instantiation', () => {
 
       expect(constructorSpy).toHaveBeenCalledWith(jasmine.objectContaining(expectedContext));
     });
-    it('defines properties', () => {
-      expect(element.tagName).toEqual('MODIFIED-CUSTOM-COMPONENT');
-    });
     it('allows to access inherited element properties', () => {
       expect(context.elementSuper('tagName')).toEqual('TEST-COMPONENT');
-    });
-    it('reads element property', () => {
-      expect((element as any).readonlyProperty).toBe(propertyValue);
-      propertyValue = 1;
-      expect((element as any).readonlyProperty).toBe(propertyValue);
-    });
-    it('writes element property', () => {
-      expect((element as any).writableProperty).toBe(propertyValue);
-      (element as any).writableProperty = 1;
-      expect(propertyValue).toBe(1);
-    });
-    it('calls component method', () => {
-      expect((element as any).elementMethod('1', '2', '3')).toBe(`${propertyValue}: 1, 2, 3`);
     });
 
     describe('onElement listener', () => {

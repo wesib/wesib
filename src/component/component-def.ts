@@ -21,13 +21,6 @@ export interface ComponentDef<T extends object = object, E extends HTMLElement =
    */
   extend?: ExtendedElementDef<E>;
 
-  /**
-   * Custom HTML element properties definitions.
-   *
-   * These properties will be defined in custom HTML element class prototype.
-   */
-  properties?: PropertyDescriptorMap;
-
 }
 
 /**

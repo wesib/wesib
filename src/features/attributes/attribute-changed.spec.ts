@@ -1,23 +1,9 @@
 import { WebComponent } from '../../decorators';
-import { FeatureDef } from '../../feature';
 import { AttributeChanged } from './attribute-changed';
 import { AttributesDef } from './attributes-def';
-import { AttributesSupport } from './attributes-support.feature';
 
 describe('features/attributes/attribute-changed', () => {
   describe('@AttributeChanged', () => {
-    it('enables attributes support', () => {
-
-      const attr = jasmine.createSpy('attrChanged');
-
-      @WebComponent({ name: 'test-component' })
-      class TestComponent {
-        @AttributeChanged()
-        attr = attr;
-      }
-
-      expect(FeatureDef.of(TestComponent).requires).toContain(AttributesSupport);
-    });
     it('declares attribute change callback', () => {
 
       const attr = jasmine.createSpy('attrChanged');

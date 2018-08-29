@@ -1,4 +1,7 @@
+import { WebComponent } from '../../decorators';
+import { FeatureDef } from '../../feature';
 import { AttributesDef } from './attributes-def';
+import { AttributesSupport } from './attributes-support.feature';
 import Spy = jasmine.Spy;
 
 describe('features/attributes/attributes-def', () => {
@@ -14,7 +17,7 @@ describe('features/attributes/attributes-def', () => {
 
         expect(AttributesDef.of(TestComponent)).toBe(TestComponent[AttributesDef.symbol]);
       });
-      it('builds empty feature definition if it is absent', () => {
+      it('builds empty attributes definition if it is absent', () => {
 
         class TestComponent {}
 
@@ -78,6 +81,19 @@ describe('features/attributes/attributes-def', () => {
         expect(attr1.calls.first().object).toBe(self);
         expect(attr2).toHaveBeenCalledWith(oldValue, newValue);
         expect(attr2.calls.first().object).toBe(self);
+      });
+    });
+
+    describe('define', () => {
+      it('enables attributes support', () => {
+
+        @WebComponent({ name: 'test-component' })
+        class TestComponent {
+        }
+
+        AttributesDef.define(TestComponent);
+
+        expect(FeatureDef.of(TestComponent).requires).toContain(AttributesSupport);
       });
     });
   });

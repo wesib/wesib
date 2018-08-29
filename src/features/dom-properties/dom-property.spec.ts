@@ -1,33 +1,33 @@
-import { ComponentDef } from '../component';
-import { ElementProperty } from './element-property';
-import { WebComponent } from './web-component';
+import { WebComponent } from '../../decorators';
+import { DomPropertiesDef } from './dom-properties-def';
+import { DomProperty } from './dom-property';
 
-describe('decorators/element-property', () => {
-  describe('@ElementProperty', () => {
-    it('declares element property', () => {
+describe('features/dom-properties/dom-property', () => {
+  describe('@DomProperty', () => {
+    it('declares DOM property', () => {
 
       @WebComponent({ name: 'test-component' })
       class TestComponent {
-        @ElementProperty()
+        @DomProperty()
         customProperty = 'value';
       }
 
-      const def = ComponentDef.of(TestComponent);
+      const def = DomPropertiesDef.of(TestComponent);
 
-      expect<any>(def.properties).toEqual(jasmine.objectContaining({ customProperty: jasmine.anything() }));
+      expect<any>(def).toEqual(jasmine.objectContaining({ customProperty: jasmine.anything() }));
     });
-    it('declares element property with specified name', () => {
+    it('declares DOM property with specified name', () => {
 
       @WebComponent({ name: 'test-component' })
       class TestComponent {
-        @ElementProperty({ name: 'otherProperty' })
+        @DomProperty({ name: 'otherProperty' })
         customProperty = 'value';
       }
 
-      const def = ComponentDef.of(TestComponent);
+      const def = DomPropertiesDef.of(TestComponent);
 
-      expect<any>(def.properties).not.toEqual(jasmine.objectContaining({ customProperty: jasmine.anything() }));
-      expect<any>(def.properties).toEqual(jasmine.objectContaining({ otherProperty: jasmine.anything() }));
+      expect<any>(def).not.toEqual(jasmine.objectContaining({ customProperty: jasmine.anything() }));
+      expect<any>(def).toEqual(jasmine.objectContaining({ otherProperty: jasmine.anything() }));
     });
 
     describe('for object property', () => {
@@ -35,11 +35,11 @@ describe('decorators/element-property', () => {
 
         @WebComponent({ name: 'test-component' })
         class TestComponent {
-          @ElementProperty()
+          @DomProperty()
           customProperty = 'value';
         }
 
-        const def = ComponentDef.of(TestComponent);
+        const def = DomPropertiesDef.of(TestComponent);
         const expectedDesc: PropertyDescriptor = {
           configurable: true,
           enumerable: true,
@@ -47,7 +47,7 @@ describe('decorators/element-property', () => {
           set: jasmine.any(Function),
         };
 
-        expect<any>(def.properties).toEqual(jasmine.objectContaining({
+        expect<any>(def).toEqual(jasmine.objectContaining({
           customProperty: expectedDesc,
         }));
       });
@@ -55,7 +55,7 @@ describe('decorators/element-property', () => {
 
         @WebComponent({ name: 'test-component' })
         class TestComponent {
-          @ElementProperty({
+          @DomProperty({
             configurable: false,
             enumerable: false,
             writable: false,
@@ -63,14 +63,14 @@ describe('decorators/element-property', () => {
           customProperty = 'value';
         }
 
-        const def = ComponentDef.of(TestComponent);
+        const def = DomPropertiesDef.of(TestComponent);
         const expectedDesc: PropertyDescriptor = {
           configurable: false,
           enumerable: false,
           get: jasmine.any(Function),
         };
 
-        expect<any>(def.properties).toEqual(jasmine.objectContaining({
+        expect<any>(def).toEqual(jasmine.objectContaining({
           customProperty: expectedDesc,
         }));
       });
@@ -80,20 +80,20 @@ describe('decorators/element-property', () => {
 
         @WebComponent({ name: 'test-component' })
         class TestComponent {
-          @ElementProperty()
+          @DomProperty()
           get customProperty() {
             return 'value';
           }
         }
 
-        const def = ComponentDef.of(TestComponent);
+        const def = DomPropertiesDef.of(TestComponent);
         const expectedDesc: PropertyDescriptor = {
           configurable: true,
           enumerable: false,
           get: jasmine.any(Function),
         };
 
-        expect<any>(def.properties).toEqual(jasmine.objectContaining({
+        expect<any>(def).toEqual(jasmine.objectContaining({
           customProperty: expectedDesc,
         }));
       });
@@ -101,7 +101,7 @@ describe('decorators/element-property', () => {
 
         @WebComponent({ name: 'test-component' })
         class TestComponent {
-          @ElementProperty({
+          @DomProperty({
             configurable: false,
             enumerable: true,
             writable: false,
@@ -111,14 +111,14 @@ describe('decorators/element-property', () => {
           }
         }
 
-        const def = ComponentDef.of(TestComponent);
+        const def = DomPropertiesDef.of(TestComponent);
         const expectedDesc: PropertyDescriptor = {
           configurable: false,
           enumerable: true,
           get: jasmine.any(Function),
         };
 
-        expect<any>(def.properties).toEqual(jasmine.objectContaining({
+        expect<any>(def).toEqual(jasmine.objectContaining({
           customProperty: expectedDesc,
         }));
       });
@@ -133,14 +133,14 @@ describe('decorators/element-property', () => {
             return this._value;
           }
 
-          @ElementProperty()
+          @DomProperty()
           set customProperty(value: string) {
             this._value = value;
           }
 
         }
 
-        const def = ComponentDef.of(TestComponent);
+        const def = DomPropertiesDef.of(TestComponent);
         const expectedDesc: PropertyDescriptor = {
           configurable: true,
           enumerable: false,
@@ -148,7 +148,7 @@ describe('decorators/element-property', () => {
           set: jasmine.any(Function),
         };
 
-        expect<any>(def.properties).toEqual(jasmine.objectContaining({
+        expect<any>(def).toEqual(jasmine.objectContaining({
           customProperty: expectedDesc,
         }));
       });
@@ -163,7 +163,7 @@ describe('decorators/element-property', () => {
             return this._value;
           }
 
-          @ElementProperty({
+          @DomProperty({
             configurable: false,
             enumerable: true,
             writable: false,
@@ -174,14 +174,14 @@ describe('decorators/element-property', () => {
 
         }
 
-        const def = ComponentDef.of(TestComponent);
+        const def = DomPropertiesDef.of(TestComponent);
         const expectedDesc: PropertyDescriptor = {
           configurable: false,
           enumerable: true,
           get: jasmine.any(Function),
         };
 
-        expect<any>(def.properties).toEqual(jasmine.objectContaining({
+        expect<any>(def).toEqual(jasmine.objectContaining({
           customProperty: expectedDesc,
         }));
       });

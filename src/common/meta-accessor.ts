@@ -1,7 +1,7 @@
 import { Class } from '../types';
 import { superClassOf } from './classes';
 
-export abstract class MetaAccessor<M, C extends Class = Class> {
+export abstract class MetaAccessor<M> {
 
   readonly symbol: symbol;
 
@@ -9,10 +9,10 @@ export abstract class MetaAccessor<M, C extends Class = Class> {
     this.symbol = symbol;
   }
 
-  of(type: C): M | undefined {
+  of(type: Class): M | undefined {
 
     const def = (type as any)[this.symbol];
-    const superType = superClassOf(type, st => this.symbol in st) as C;
+    const superType = superClassOf(type, st => this.symbol in st);
     const superDef = superType && this.of(superType);
 
     if (!def) {
@@ -22,7 +22,7 @@ export abstract class MetaAccessor<M, C extends Class = Class> {
     return superDef && superDef !== def ? this.merge(superDef, def) : def;
   }
 
-  define(type: C, ...defs: M[]): C {
+  define<C extends Class>(type: C, ...defs: M[]): C {
 
     const prevDef = this.of(type);
     let def: M;

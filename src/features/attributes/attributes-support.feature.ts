@@ -16,10 +16,10 @@ export class AttributesSupport {
 }
 
 function enableAttributesSupport(context: BootstrapContext) {
-  context.onElementDefinition(addAttributesSupport);
+  context.onElementDefinition(defineAttributes);
 }
 
-function addAttributesSupport<T extends object>(
+function defineAttributes<T extends object>(
     elementType: ElementClass<ComponentElementType<T>>,
     componentType: ComponentType<T>) {
 

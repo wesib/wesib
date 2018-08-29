@@ -1,8 +1,10 @@
 import { mergeFunctions, MetaAccessor } from '../../common';
 import { ComponentType } from '../../component';
+import { FeatureDef } from '../../feature';
+import { AttributesSupport } from './attributes-support.feature';
 
 /**
- * Custom HTML element attributes definition.
+ * Custom HTML element (DOM) attributes definition.
  *
  * This is a map containing attribute names as keys and their change callbacks as values.
  *
@@ -57,44 +59,45 @@ export namespace AttributesDef {
   const meta = new AttributesMeta();
 
   /**
-   * Extracts attributes definition definition from web component type.
+   * Extracts attributes definition from web component type.
    *
    * @param <T> A type of web component.
    * @param componentType Target component type.
    *
-   * @returns Web component attributes definition. May be empty when there is no feature definition found in the given
-   * `componentType`.
+   * @returns Attributes definition. May be empty when there is no definition found in the given `componentType`.
    */
   export function of<T extends object>(componentType: ComponentType<T>): AttributesDef<T> {
     return (meta.of(componentType) || {}) as AttributesDef<T>;
   }
 
   /**
-   * Merges multiple web component attributes definitions.
+   * Merges multiple attributes definitions.
    *
    * @param <T> A type of web component.
-   * @param defs Partial web component definitions to merge.
+   * @param defs Attributes definitions to merge.
    *
-   * @returns Merged component definition.
+   * @returns Merged attributes definition.
    */
   export function merge<T extends object = object>(...defs: AttributesDef<T>[]): AttributesDef<T> {
     return meta.merge(...defs);
   }
 
   /**
-   * Defines a web component attributes.
+   * Defines a custom HTML element attributes.
    *
-   * Either assigns new or extends an existing component attributes definition and stores it under
-   * `AttributesDef.symbol` key.
+   * Either assigns new or extends an existing attributes definition and stores it under `AttributesDef.symbol` key.
+   *
+   * Automatically enables `AttributesSupport` feature.
    *
    * @param <T> A type of web component.
-   * @param type Web component class constructor.
-   * @param defs Web component definitions.
+   * @param type Target web component type.
+   * @param defs Attributes definitions to apply.
    *
    * @returns The `type` instance.
    */
   export function define<T extends ComponentType>(type: T, ...defs: AttributesDef<InstanceType<T>>[]): T {
-    return meta.define(type, ...defs) as T;
+    FeatureDef.define(type, { requires: [AttributesSupport] });
+    return meta.define(type, ...defs);
   }
 
 }

@@ -116,7 +116,7 @@ export namespace FeatureDef {
    * @returns The `type` instance.
    */
   export function define<T extends FeatureType>(type: T, ...defs: FeatureDef[]): T {
-    return meta.define(type, ...defs) as T;
+    return meta.define(type, ...defs);
   }
 
 }

@@ -39,20 +39,18 @@ describe('component/component-def', () => {
         class A {
           static [ComponentDef.symbol]: ComponentDef = {
             name: 'component-a',
-            properties: {
-              prop1: {
-                value: 1,
-              },
+            extend: {
+              name: 'div',
+              type: HTMLDivElement,
             },
           };
         }
         class B extends A {
           static [ComponentDef.symbol]: ComponentDef = {
             name: 'component-b',
-            properties: {
-              prop2: {
-                value: 2,
-              },
+            extend: {
+              name: 'span',
+              type: HTMLSpanElement,
             },
           };
         }
@@ -81,21 +79,6 @@ describe('component/component-def', () => {
             { extend: { name: 'input', type: HTMLInputElement } }))
             .toEqual({ extend: { name: 'input', type: HTMLInputElement } });
       });
-      it('merges properties', () => {
-        expect(ComponentDef.merge(
-            { properties: { prop1: { value: 'value1' } } },
-            { properties: { prop2: { value: 'value2' } } }))
-            .toEqual({
-              properties: {
-                prop1: { value: 'value1' },
-                prop2: { value: 'value2' },
-              }
-            });
-        expect(ComponentDef.merge(
-            { properties: { prop1: { value: 'value1' } } },
-            { properties: { prop1: { value: 'value2' } } }))
-            .toEqual({ properties: { prop1: { value: 'value2' } } });
-      });
     });
     describe('define', () => {
 
@@ -121,10 +104,9 @@ describe('component/component-def', () => {
         ComponentDef.define(TestComponent, initialDef);
 
         const def: PartialComponentDef = {
-          properties: {
-            test: {
-              value: 'some',
-            },
+          extend: {
+            name: 'span',
+            type: HTMLSpanElement,
           },
         };
         const componentType = ComponentDef.define(TestComponent, def);

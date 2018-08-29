@@ -38,21 +38,6 @@ describe('element/element-builder', () => {
 
         expect(builder.buildElement(TestComponent).prototype).toEqual(jasmine.any(HTMLInputElement));
       });
-      it('applies properties', () => {
-        ComponentDef.define(TestComponent, {
-          properties: {
-            testProperty: {
-              value: 'test value',
-            },
-          },
-        });
-
-        const element = builder.buildElement(TestComponent);
-
-        expect<any>(element.prototype).toEqual(jasmine.objectContaining({
-          testProperty: 'test value',
-        }));
-      });
     });
   });
 });

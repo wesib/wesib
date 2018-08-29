@@ -46,7 +46,6 @@ export function AttributeChanged<T extends ComponentType>(name?: string): Compon
 
     const componentType = target.constructor as T;
 
-    FeatureDef.define(componentType, { requires: [AttributesSupport] });
     AttributesDef.define(
         componentType,
         {
