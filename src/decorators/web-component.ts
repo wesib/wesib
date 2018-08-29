@@ -20,12 +20,12 @@ import { ComponentDecorator } from './component-decorators';
  *
  * @param <T> A type of web component.
  * @param <E> A type of HTML element this web component extends.
- * @param def Web component definition.
+ * @param def Web component definition or just custom HTML element name.
  *
  * @returns A web component class decorator.
  */
 export function WebComponent<
     T extends Class = Class<any>,
-    E extends HTMLElement = HTMLElement>(def: ComponentDef<InstanceType<T>, E>): ComponentDecorator<T> {
-  return (type: T) => ComponentDef.define(type, def);
+    E extends HTMLElement = HTMLElement>(def: ComponentDef<InstanceType<T>, E> | string): ComponentDecorator<T> {
+  return (type: T) => ComponentDef.define(type, typeof def === 'string' ? { name: def } : def);
 }

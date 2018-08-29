@@ -5,9 +5,7 @@ Example:
 ```TypeScript
 import { AttributeChanged, bootstrapComponents, ComponentContext, WebComponent } from '@webcbb/webcbb';
 
-@WebComponent({
-  name: 'greet-text'
-})
+@WebComponent('greet-text')
 export class GreetTextComponent {
 
   constructor(private readonly _context: ComponentContext) {

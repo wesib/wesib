@@ -18,5 +18,12 @@ describe('decorators/web-component', () => {
 
       expect(ComponentDef.of(TestComponent)).toEqual(def);
     });
+    it('allows shorthand definition', () => {
+
+      @WebComponent('test-component')
+      class TestComponent {}
+
+      expect(ComponentDef.of(TestComponent)).toEqual({ name: 'test-component' });
+    });
   });
 });
