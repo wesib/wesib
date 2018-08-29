@@ -1,5 +1,5 @@
-import { ComponentPropertyDecorator } from '../../../d.ts/decorators';
 import { Component, ComponentType } from '../../component';
+import { ComponentPropertyDecorator } from '../../decorators';
 import { DomPropertiesDef } from './dom-properties-def';
 
 /**
