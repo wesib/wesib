@@ -5,6 +5,8 @@ import { ComponentType } from '../../component';
  * Custom HTML element attributes definition.
  *
  * This is a map containing attribute names as keys and their change callbacks as values.
+ *
+ * @param <T> A type of web component.
  */
 export interface AttributesDef<T extends object = object> {
   [name: string]: AttributeChangedCallback<T>;

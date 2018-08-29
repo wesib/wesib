@@ -15,7 +15,7 @@ import { ComponentDecorator } from './component-decorators';
  *
  * Such feature can be passed to `bootstrapComponents()` function or referenced by other features.
  *
- * This is an alternative to direct call to `FeatureType.define()` method.
+ * This is an alternative to direct call to `FeatureDef.define()` method.
  *
  * @param <T> A type of web components feature.
  * @param def Web components feature definition.
