@@ -6,4 +6,3 @@ export * from './element';
 export * from './events';
 export * from './feature';
 export * from './features';
-export * from './types';

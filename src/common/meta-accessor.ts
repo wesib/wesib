@@ -1,5 +1,4 @@
-import { Class } from '../types';
-import { superClassOf } from './classes';
+import { Class, superClassOf } from './classes';
 
 export abstract class MetaAccessor<M> {
 

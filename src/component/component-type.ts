@@ -1,4 +1,4 @@
-import { Class } from '../types';
+import { Class } from '../common';
 import { ComponentContext } from './component-context';
 
 /**

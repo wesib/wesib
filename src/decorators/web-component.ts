@@ -1,5 +1,5 @@
+import { Class } from '../common';
 import { ComponentDef } from '../component';
-import { Class } from '../types';
 import { ComponentDecorator } from './component-decorators';
 
 /**

@@ -1,5 +1,4 @@
-import { mergeFunctions, MetaAccessor } from '../common';
-import { Class } from '../types';
+import { Class, mergeFunctions, MetaAccessor } from '../common';
 import { mergeLists } from '../util';
 import { BootstrapContext } from './bootstrap-context';
 

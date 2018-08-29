@@ -1,4 +1,4 @@
-import { ArgumentTypes } from '../types';
+import { ArgumentTypes } from '../common';
 import { EventConsumer, EventInterest, EventProducer } from './event-producer';
 
 /**
