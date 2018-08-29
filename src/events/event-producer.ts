@@ -24,11 +24,12 @@ export type EventProducer<C extends EventConsumer<any[], any>> = (this: void, co
  *
  * @param <E> An event type. This is a list of event consumer parameter types.
  * @param <R> Event processing result. This is a type of event consumer result.
+ * @param <T> A `this` value type expected by event consumer.
  * @param event An event represented by function call arguments.
  *
  * @return Event processing result.
  */
-export type EventConsumer<E extends any[], R = void> = (...event: E) => R;
+export type EventConsumer<E extends any[], R = void, T = any> = (this: T, ...event: E) => R;
 
 /**
  * An interest for the events.
