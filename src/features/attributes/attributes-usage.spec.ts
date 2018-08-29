@@ -1,4 +1,4 @@
-import { ComponentType } from '../../component';
+import { ComponentContext, ComponentType } from '../../component';
 import { WebComponent } from '../../decorators';
 import { TestBootstrap } from '../../spec/test-bootstrap';
 import { AttributeChanged } from './attribute-changed';
@@ -9,17 +9,23 @@ describe('features/attributes', () => {
 
     let bootstrap: TestBootstrap;
     let testComponent: ComponentType;
+    let context: ComponentContext;
     let noAttrComponent: ComponentType;
     let element: HTMLElement;
     let attrChangedSpy: Spy;
     let attr2ChangedSpy: Spy;
 
     beforeEach(() => {
+      context = undefined!;
       attrChangedSpy = jasmine.createSpy('attrChanged');
       attr2ChangedSpy = jasmine.createSpy('attr2Changed');
 
       @WebComponent({ name: 'test-component' })
       class TestComponent {
+
+        constructor(ctx: ComponentContext) {
+          context = ctx;
+        }
 
         @AttributeChanged('custom-attribute')
         attr1 = attrChangedSpy;
@@ -49,11 +55,11 @@ describe('features/attributes', () => {
 
     it('notifies on attribute change', () => {
       element.setAttribute('custom-attribute', 'value1');
-      expect(attrChangedSpy).toHaveBeenCalledWith(null, 'value1');
+      expect(attrChangedSpy).toHaveBeenCalledWith(null, 'value1', context);
 
       attrChangedSpy.calls.reset();
       element.setAttribute('custom-attribute', 'value2');
-      expect(attrChangedSpy).toHaveBeenCalledWith('value1', 'value2');
+      expect(attrChangedSpy).toHaveBeenCalledWith('value1', 'value2', context);
     });
     it('does not notify on other attribute change', () => {
       element.setAttribute('custom-attribute-2', 'value');

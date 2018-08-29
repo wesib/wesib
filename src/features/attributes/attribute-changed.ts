@@ -1,6 +1,7 @@
-import { ComponentType } from '../../component';
+import { noop } from '../../common';
+import { ComponentContext, ComponentType, ComponentValueKey } from '../../component';
 import { ComponentPropertyDecorator } from '../../decorators';
-import { AttributesDef } from './attributes-def';
+import { AttributeChangedCallback, AttributesDef } from './attributes-def';
 import './attributes-def.ns';
 
 /**
@@ -26,13 +27,25 @@ import './attributes-def.ns';
  *
  * This decorator automatically enables `AttributesSupport` feature.
  *
- * @param name Attribute name. This is required if annotated method's key is not a string (i.e. a symbol). Otherwise,
- * the attribute name is equal to the method name by default.
+ * @param opts Attribute changes tracking options, or just attribute name
  *
  * @return Web component method decorator.
  */
-export function AttributeChanged<T extends ComponentType>(name?: string): ComponentPropertyDecorator<T> {
+export function AttributeChanged<T extends ComponentType>(opts?: AttributeChanged.Opts<T> | string):
+    ComponentPropertyDecorator<T> {
   return <V>(target: T['prototype'], propertyKey: string | symbol) => {
+
+    let name: string | undefined;
+    let refreshState = true;
+
+    if (typeof opts === 'string') {
+      name = opts;
+    } else if (opts != null) {
+      name = opts.name;
+      if (opts.refreshState === false) {
+        refreshState = false;
+      }
+    }
     if (!name) {
       if (typeof propertyKey !== 'string') {
         throw new TypeError(
@@ -47,10 +60,47 @@ export function AttributeChanged<T extends ComponentType>(name?: string): Compon
     AttributesDef.define(
         componentType,
         {
-          [name]: function (this: InstanceType<T>, oldValue: string | null, newValue: string) {
-            (this as any)[propertyKey](oldValue, newValue);
+          [name]: function (
+              this: InstanceType<T>,
+              oldValue: string | null,
+              newValue: string,
+              context: ComponentContext<T>) {
+            (this as any)[propertyKey](oldValue, newValue, context);
+            if (refreshState) {
+              context.get(ComponentValueKey.stateRefresh, noop)()
+            }
           }
         });
 
   };
+}
+
+export namespace AttributeChanged {
+
+  /**
+   * Attribute changes tracking options.
+   *
+   * This is passed to `@AttributeChanged` decorator.
+   */
+  export interface Opts<T extends object> {
+
+    /**
+     * Attribute name.
+     *
+     * This is required if annotated method's key is not a string (i.e. a symbol). Otherwise,
+     * the attribute name is equal to the method name by default.
+     */
+    name?: string;
+
+    /**
+     * Whether to refresh the state after callback.
+     *
+     * When not `false` the component state will be refreshed.
+     *
+     * `true` by default.
+     */
+    refreshState?: boolean;
+
+  }
+
 }

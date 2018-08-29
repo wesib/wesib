@@ -1,4 +1,4 @@
-import { Component, ComponentElementType, ComponentType } from '../../component';
+import { Component, ComponentContext, ComponentElementType, ComponentType } from '../../component';
 import { WebFeature } from '../../decorators';
 import { ElementClass } from '../../element';
 import { BootstrapContext } from '../../feature';
@@ -40,7 +40,7 @@ function defineAttributes<T extends object>(
     configurable: true,
     enumerable: true,
     value: function (this: ComponentElementType<T>, name: string, oldValue: string | null, newValue: string) {
-      attrs[name].call(Component.of(this), oldValue, newValue);
+      attrs[name].call(Component.of(this), oldValue, newValue, ComponentContext.of(this));
     },
   });
 }
