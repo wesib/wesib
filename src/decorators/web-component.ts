@@ -1,4 +1,3 @@
-import { Class } from '../common';
 import { ComponentDef, ComponentType } from '../component';
 import { ComponentDecorator } from './component-decorators';
 
