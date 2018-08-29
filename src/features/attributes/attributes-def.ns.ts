@@ -60,7 +60,7 @@ class AttributesMeta extends MetaAccessor<AttributesDef<any>> {
           const result: AttributesDef<T> = { ...prev };
 
           Object.keys(def).forEach(key => {
-            result[key] = mergeFunctions<T, [string, string], void>(result[key], def[key]);
+            result[key] = mergeFunctions<[string, string], void, T>(result[key], def[key]);
           });
 
           return result;

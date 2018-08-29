@@ -59,7 +59,7 @@ export namespace FeatureDef {
             const result: FeatureDef = {};
             const requires = mergeLists(prev.requires, def.requires);
             const provides = mergeLists(prev.provides, def.provides);
-            const configure = mergeFunctions<FeatureType, [BootstrapContext], void>(prev.configure, def.configure);
+            const configure = mergeFunctions<[BootstrapContext], void, FeatureType>(prev.configure, def.configure);
 
             if (requires !== undefined) {
               result.requires = requires;
