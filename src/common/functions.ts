@@ -5,15 +5,6 @@ export function noop(): void {
 }
 
 /**
- * A function type.
- *
- * @param <P> Function parameter types as tuple.
- * @param <R> A type of function result.
- * @param <T> A type if `this` object expected by function.
- */
-export type Fn<P extends any[], R, T = any> = (this: T, ...args: P) => R;
-
-/**
  * Function argument types.
  *
  * @param <F> Function type.
@@ -21,19 +12,19 @@ export type Fn<P extends any[], R, T = any> = (this: T, ...args: P) => R;
 export type ArgumentTypes<F extends (...args: any[]) => any> = F extends (...args: infer A) => any ? A : never;
 
 export function mergeFunctions<P extends any[], R, T>(
-    first: Fn<P, R, T>,
-    second: Fn<P, R, T> | undefined,
-    merge: (first: R, second: R) => R): Fn<P, R, T>;
+    first: (this: T, ...args: P) => R,
+    second: ((this: T, ...args: P) => R) | undefined,
+    merge: (first: R, second: R) => R): (this: T, ...args: P) => R;
 
 export function mergeFunctions<P extends any[], R, T>(
-    first: Fn<P, R, T> | undefined,
-    second: Fn<P, R, T>,
-    merge?: (first: R, second: R) => R): Fn<P, R, T>;
+    first: ((this: T, ...args: P) => R) | undefined,
+    second: (this: T, ...args: P) => R,
+    merge?: (first: R, second: R) => R): (this: T, ...args: P) => R;
 
 export function mergeFunctions<P extends any[], R, T>(
-    first: Fn<P, R, T> | undefined,
-    second: Fn<P, R, T> | undefined,
-    merge?: (first: R, second: R) => R): Fn<P, R, T> | undefined;
+    first: ((this: T, ...args: P) => R) | undefined,
+    second: ((this: T, ...args: P) => R) | undefined,
+    merge?: (first: R, second: R) => R): ((this: T, ...args: P) => R) | undefined;
 
 /**
  * Merges two functions by calling one after another.
@@ -52,9 +43,9 @@ export function mergeFunctions<P extends any[], R, T>(
  * then just returns another one. If both are absent, then returns `undefined`.
  */
 export function mergeFunctions<P extends any[], R, T>(
-    first: Fn<P, R, T> | undefined,
-    second: Fn<P, R, T> | undefined,
-    merge: (first: R, second: R) => R = (f, s) => s): Fn<P, R, T> | undefined {
+    first: ((this: T, ...args: P) => R) | undefined,
+    second: ((this: T, ...args: P) => R) | undefined,
+    merge: (first: R, second: R) => R = (f, s) => s): ((this: T, ...args: P) => R) | undefined {
   if (!first) {
     return second;
   }
