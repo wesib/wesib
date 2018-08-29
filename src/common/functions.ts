@@ -53,7 +53,7 @@ export function mergeFunctions<T, P extends any[], R>(
   }
   return function(this: T, ...args: P) {
     return merge(
-      first.call(this, ...args),
-      second.call(this, ...args));
+      first.apply(this, args),
+      second.apply(this, args));
   };
 }

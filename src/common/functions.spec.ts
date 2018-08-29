@@ -26,7 +26,7 @@ describe('util/functions', () => {
       const self = { name: 'this' };
       const args = ['foo', 'bar'];
 
-      expect(merged.call(self, ...args)).toBe(3);
+      expect(merged.apply(self, args)).toBe(3);
 
       expect(firstSpy).toHaveBeenCalledTimes(1);
       expect(firstSpy).toHaveBeenCalledWith(...args);
@@ -45,7 +45,7 @@ describe('util/functions', () => {
       const self = { name: 'this' };
       const args = ['foo', 'bar'];
 
-      expect(merged.call(self, ...args)).toBe(2);
+      expect(merged.apply(self, args)).toBe(2);
 
       expect(firstSpy).toHaveBeenCalledTimes(1);
       expect(firstSpy).toHaveBeenCalledWith(...args);
