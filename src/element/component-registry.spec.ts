@@ -65,7 +65,26 @@ describe('element/component-registry', () => {
 
           expect(customElementsSpy.define).toHaveBeenCalledWith('test-component', ElementSpy);
         });
-        it('defines custom element extending the given one', () => {
+        it('defines custom element extending another one', () => {
+
+          class BaseElement extends HTMLElement {
+            constructor() {
+              super();
+            }
+          }
+
+          ComponentDef.define(TestComponent, {
+            extend: {
+              type: BaseElement,
+            }
+          });
+
+          registry.define(TestComponent);
+          registry.complete();
+
+          expect(customElementsSpy.define).toHaveBeenCalledWith('test-component', ElementSpy);
+        });
+        it('defines custom element extending standard one', () => {
           ComponentDef.define(TestComponent, {
             extend: {
               name: 'input',

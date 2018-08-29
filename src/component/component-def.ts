@@ -38,14 +38,16 @@ export type PartialComponentDef<T extends object = object, E extends HTMLElement
 export interface ExtendedElementDef<E extends HTMLElement> {
 
   /**
-   * HTML element class constructor to extend.
+   * The class constructor of HTML element to extend.
    */
   type: ElementClass<E>;
 
   /**
-   * HTML element name to extend.
+   * The name of HTML element to extend.
+   *
+   * This is to support `as` attribute of standard HTML element. Note that this is not supported by polyfills.
    */
-  name: string;
+  name?: string;
 
 }
 

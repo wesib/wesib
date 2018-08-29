@@ -41,7 +41,7 @@ export class ComponentRegistry {
       const elementClass = this._elementDefined(this.builder.buildElement(componentType), componentType);
       const ext = def.extend;
 
-      if (ext) {
+      if (ext && ext.name) {
         this.window.customElements.define(
             def.name,
             elementClass,
