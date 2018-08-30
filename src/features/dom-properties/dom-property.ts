@@ -4,45 +4,6 @@ import { DomPropertiesDef } from './dom-properties-def';
 import './dom-properties-def.ns';
 
 /**
- * Custom HTML element property definition.
- *
- * This is an parameter to `@ElementProperty` decorator applied to web component property.
- */
-export interface DomPropertyDef {
-
-  /**
-   * Property name.
-   *
-   * Decorated property name is used by default.
-   */
-  name?: string | symbol;
-
-  /**
-   * Whether the declared property should be configurable.
-   *
-   * Defaults to `configurable` attribute of decorated property.
-   */
-  configurable?: boolean;
-
-  /**
-   * Whether the declared property should be enumerable.
-   *
-   * Defaults to `enumerable` attribute of decorated property.
-   */
-  enumerable?: boolean;
-
-  /**
-   * Whether the declared property should accept new values.
-   *
-   * The property can not be writable if the decorated property is not writable.
-   *
-   * Defaults to `writable` attribute of decorated property.
-   */
-  writable?: boolean;
-
-}
-
-/**
  * Web component property decorator that declares a property to add to custom HTML element created for this web
  * component.
  *
@@ -50,15 +11,15 @@ export interface DomPropertyDef {
  *
  * This decorator cane be applied both to plain properties, and to property accessors.
  *
- * @param def Property definition.
+ * @param opts Property definition.
  *
  * @returns Web component property decorator.
  */
-export function DomProperty<T extends ComponentType>(def: DomPropertyDef = {}): ComponentPropertyDecorator<T> {
+export function DomProperty<T extends ComponentType>(opts: DomProperty.Opts = {}): ComponentPropertyDecorator<T> {
   return <V>(target: T['prototype'], propertyKey: string | symbol, propertyDesc?: TypedPropertyDescriptor<V>) => {
 
-    const name = def.name || propertyKey;
-    const desc = domPropertyDescriptor(propertyKey, propertyDesc, def);
+    const name = opts.name || propertyKey;
+    const desc = domPropertyDescriptor(propertyKey, propertyDesc, opts);
     const constructor = target.constructor as T;
 
     DomPropertiesDef.define(constructor, { [name]: desc });
@@ -72,6 +33,49 @@ export function DomProperty<T extends ComponentType>(def: DomPropertyDef = {}): 
  */
 export { DomProperty as DomMethod };
 
+export namespace DomProperty {
+
+  /**
+   * Custom HTML element property options.
+   *
+   * This is an parameter to `@DomProperty` decorator applied to web component property.
+   */
+  export interface Opts {
+
+    /**
+     * Property name.
+     *
+     * Decorated property name is used by default.
+     */
+    name?: string | symbol;
+
+    /**
+     * Whether the declared property should be configurable.
+     *
+     * Defaults to `configurable` attribute of decorated property.
+     */
+    configurable?: boolean;
+
+    /**
+     * Whether the declared property should be enumerable.
+     *
+     * Defaults to `enumerable` attribute of decorated property.
+     */
+    enumerable?: boolean;
+
+    /**
+     * Whether the declared property should accept new values.
+     *
+     * The property can not be writable if the decorated property is not writable.
+     *
+     * Defaults to `writable` attribute of decorated property.
+     */
+    writable?: boolean;
+
+  }
+
+}
+
 function domPropertyDescriptor<V>(
     propertyKey: string | symbol,
     propertyDesc: TypedPropertyDescriptor<V> | undefined,
@@ -79,7 +83,7 @@ function domPropertyDescriptor<V>(
       configurable,
       enumerable,
       writable,
-    }: DomPropertyDef): PropertyDescriptor {
+    }: DomProperty.Opts): PropertyDescriptor {
   if (!propertyDesc) {
     // Component object property
     if (enumerable == null) {
