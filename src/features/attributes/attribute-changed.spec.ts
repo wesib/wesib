@@ -12,7 +12,12 @@ describe('features/attributes/attribute-changed', () => {
 
     beforeEach(() => {
       contextSpy = jasmine.createSpyObj('componentContext', ['get']);
-      contextSpy.get.and.callFake((key: ComponentValueKey<any>, defaultValue: any) => defaultValue);
+      contextSpy.get.and.callFake((key: ComponentValueKey<any>, defaultValue: any) => {
+        if (key.defaultValue !== undefined) {
+          return key.defaultValue;
+        }
+        return defaultValue;
+      });
     });
 
     it('declares attribute change callback', () => {

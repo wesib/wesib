@@ -1,3 +1,4 @@
+import { noop } from '../common';
 import { EventConsumer, EventProducer } from '../events';
 
 /**
@@ -70,7 +71,8 @@ export interface ComponentContext<T extends object = object, E extends HTMLEleme
    *
    * @returns Associated value.
    *
-   * @throws Error If there is no value associated with the given key and the default key is not provided.
+   * @throws Error If there is no value associated with the given key and the default key is not provided neither
+   * as function argument, nor as `ComponentValueKey.defaultValue` property.
    */
   get<V>(key: ComponentValueKey<V>, defaultValue: V | null | undefined): V | null | undefined;
 
@@ -93,7 +95,8 @@ export class ComponentValueKey<V> {
    *
    * Note that this value is not provided, unless a `StateSupport` feature is enabled.
    */
-  static readonly stateRefresh: ComponentValueKey<(this: void) => void> = new ComponentValueKey('state-refresh');
+  static readonly stateRefresh: ComponentValueKey<(this: void) => void> =
+      new ComponentValueKey('state-refresh', noop);
 
   /**
    * Human-readable key name.
@@ -103,12 +106,21 @@ export class ComponentValueKey<V> {
   readonly name: string;
 
   /**
+   * The value used when there is no value associated with this key.
+   *
+   * If `undefined`, then there is no default value.
+   */
+  readonly defaultValue: V | undefined;
+
+  /**
    * Constructs component context key.
    *
    * @param name Human-readable key name.
+   * @param defaultValue Optional default value. If unspecified or `undefined` the key has no default value.
    */
-  constructor(name: string) {
+  constructor(name: string, defaultValue?: V) {
     this.name = name;
+    this.defaultValue = defaultValue;
   }
 
   toString(): string {

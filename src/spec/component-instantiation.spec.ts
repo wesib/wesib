@@ -180,9 +180,11 @@ describe('component instantiation', () => {
       await bootstrap.addElement(testComponent);
     });
     afterEach(() => bootstrap.dispose());
+
     beforeEach(() => {
       providerSpy = jasmine.createSpy('valueProvider');
     });
+
     it('is available', () => {
 
       const value = 'test value';
@@ -194,6 +196,13 @@ describe('component instantiation', () => {
     });
     it('throws when no value provided', () => {
       expect(() => context.get(valueKey)).toThrow(jasmine.any(Error));
+    });
+    it('provides the default value from the key', () => {
+
+      const defaultValue = 'default value';
+      const valueKeyWithDefaults = new ComponentValueKey<string>('value-key-with-defaults', defaultValue);
+
+      expect(context.get(valueKeyWithDefaults)).toBe(defaultValue);
     });
     it('is default value when provided', () => {
       const defaultValue = 'default value';

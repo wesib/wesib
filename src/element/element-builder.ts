@@ -100,12 +100,14 @@ export class ElementBuilder {
                 values.set(key, constructed);
                 return constructed;
               }
-
-              if (arguments.length < 2) {
-                throw new Error(`There is no value of the key ${key}`);
+              if (arguments.length > 1) {
+                return defaultValue;
+              }
+              if (key.defaultValue !== undefined) {
+                return key.defaultValue;
               }
 
-              return defaultValue;
+              throw new Error(`There is no value with the key ${key}`);
             }
 
           }

@@ -67,7 +67,7 @@ export function AttributeChanged<T extends ComponentType>(opts?: AttributeChange
               context: ComponentContext<T>) {
             (this as any)[propertyKey](oldValue, newValue, context);
             if (refreshState) {
-              context.get(ComponentValueKey.stateRefresh, noop)()
+              context.get(ComponentValueKey.stateRefresh)();
             }
           }
         });
