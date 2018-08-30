@@ -123,7 +123,7 @@ export class ComponentValueKey<V> {
   }
 
   toString(): string {
-    return this.name;
+    return `ComponentValueKey(${this.name})`;
   }
 
 }
