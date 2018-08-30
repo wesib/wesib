@@ -1,8 +1,8 @@
 import { ComponentContext, ComponentType, ComponentValueKey } from '../../component';
 import { WebComponent, WebFeature } from '../../decorators';
-import { EventProducer } from '../../events';
 import { TestBootstrap } from '../../spec/test-bootstrap';
 import { StateSupport } from './state-support.feature';
+import { StateTracker } from './state-tracker';
 
 describe('features/state', () => {
   describe('State usage', () => {
@@ -10,18 +10,18 @@ describe('features/state', () => {
     let bootstrap: TestBootstrap;
     let testComponent: ComponentType;
     let refreshState: () => void;
-    let stateUpdates: EventProducer<(this: void) => void>;
+    let stateTracker: StateTracker;
 
     beforeEach(() => {
       refreshState = undefined!;
-      stateUpdates = undefined!;
+      stateTracker = undefined!;
 
       @WebComponent('test-component')
       @WebFeature({ requires: StateSupport })
       class TestComponent {
         constructor(ctx: ComponentContext) {
           refreshState = ctx.get(ComponentValueKey.stateRefresh);
-          stateUpdates = ctx.get(StateSupport.stateUpdates);
+          stateTracker = ctx.get(StateTracker.key);
         }
       }
 
@@ -41,12 +41,12 @@ describe('features/state', () => {
       expect(refreshState).toEqual(jasmine.any(Function));
     });
     it('provides state updates', () => {
-      expect(stateUpdates).toEqual(jasmine.any(Function));
+      expect(stateTracker).toEqual(jasmine.any(Object));
     });
     it('notifies on state refresh', () => {
 
       const listenerSpy = jasmine.createSpy('stateListener');
-      const interest = stateUpdates(listenerSpy);
+      const interest = stateTracker.onStateUpdate(listenerSpy);
 
       refreshState();
 
