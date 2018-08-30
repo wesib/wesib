@@ -33,7 +33,7 @@ describe('features/dom-properties/dom-property', () => {
     describe('for object property', () => {
       it('applies defaults', () => {
 
-        @WebComponent({ name: 'test-component' })
+        @WebComponent('test-component')
         class TestComponent {
           @DomProperty()
           customProperty = 'value';
@@ -51,9 +51,29 @@ describe('features/dom-properties/dom-property', () => {
           customProperty: expectedDesc,
         }));
       });
+      it('applies defaults to non-refreshing field', () => {
+
+        @WebComponent('test-component')
+        class TestComponent {
+          @DomProperty({ refreshState: false })
+          customProperty = 'value';
+        }
+
+        const def = DomPropertiesDef.of(TestComponent);
+        const expectedDesc: PropertyDescriptor = {
+          configurable: true,
+          enumerable: true,
+          get: jasmine.any(Function),
+          set: jasmine.any(Function),
+        };
+
+        expect<any>(def).toEqual(jasmine.objectContaining({
+          customProperty: expectedDesc,
+        }));
+      });
       it('applies custom property attributes', () => {
 
-        @WebComponent({ name: 'test-component' })
+        @WebComponent('test-component')
         class TestComponent {
           @DomProperty({
             configurable: false,
@@ -74,11 +94,35 @@ describe('features/dom-properties/dom-property', () => {
           customProperty: expectedDesc,
         }));
       });
+      it('applies custom property attributes to non-refreshing field', () => {
+
+        @WebComponent('test-component')
+        class TestComponent {
+          @DomProperty({
+            configurable: false,
+            enumerable: false,
+            writable: false,
+            refreshState: false,
+          })
+          customProperty = 'value';
+        }
+
+        const def = DomPropertiesDef.of(TestComponent);
+        const expectedDesc: PropertyDescriptor = {
+          configurable: false,
+          enumerable: false,
+          get: jasmine.any(Function),
+        };
+
+        expect<any>(def).toEqual(jasmine.objectContaining({
+          customProperty: expectedDesc,
+        }));
+      });
     });
     describe('for property accessor', () => {
       it('applies read-only property defaults', () => {
 
-        @WebComponent({ name: 'test-component' })
+        @WebComponent('test-component')
         class TestComponent {
           @DomProperty()
           get customProperty() {
@@ -99,7 +143,7 @@ describe('features/dom-properties/dom-property', () => {
       });
       it('applies custom read-only property attributes', () => {
 
-        @WebComponent({ name: 'test-component' })
+        @WebComponent('test-component')
         class TestComponent {
           @DomProperty({
             configurable: false,
@@ -124,7 +168,7 @@ describe('features/dom-properties/dom-property', () => {
       });
       it('applies writable property defaults', () => {
 
-        @WebComponent({ name: 'test-component' })
+        @WebComponent('test-component')
         class TestComponent {
 
           private _value = 'value';
@@ -154,7 +198,7 @@ describe('features/dom-properties/dom-property', () => {
       });
       it('applies custom writable property attributes', () => {
 
-        @WebComponent({ name: 'test-component' })
+        @WebComponent('test-component')
         class TestComponent {
 
           private _value = 'value';

@@ -1,4 +1,5 @@
-import { Component, ComponentType } from '../../component';
+import { field2accessor } from '../../common';
+import { Component, ComponentContext, ComponentType, ComponentValueKey } from '../../component';
 import { ComponentPropertyDecorator } from '../../decorators';
 import { DomPropertiesDef } from './dom-properties-def';
 import './dom-properties-def.ns';
@@ -11,18 +12,57 @@ import './dom-properties-def.ns';
  *
  * This decorator cane be applied both to plain properties, and to property accessors.
  *
- * @param opts Property definition.
+ * @param opts Custom HTML element property options.
  *
  * @returns Web component property decorator.
  */
 export function DomProperty<T extends ComponentType>(opts: DomProperty.Opts = {}): ComponentPropertyDecorator<T> {
   return <V>(target: T['prototype'], propertyKey: string | symbol, propertyDesc?: TypedPropertyDescriptor<V>) => {
 
+    let result: TypedPropertyDescriptor<V> | undefined;
+
+    if (opts.refreshState !== false) {
+
+      const isField = !propertyDesc;
+
+      if (!propertyDesc) {
+        propertyDesc = field2accessor(target as any, propertyKey);
+      }
+
+      const setter = propertyDesc.set;
+
+      if (setter) {
+
+        const notifyingDesc: TypedPropertyDescriptor<V> = {
+          ...propertyDesc,
+          set: function (this: InstanceType<T>, newValue: V) {
+            setter.call(this, newValue);
+
+            const context = ComponentContext.find(this);
+
+            // When called inside constructor the context is not set yet.
+            // No need to refresh the state in that case.
+            if (context) {
+              context.get(ComponentValueKey.stateRefresh)(); // Refresh the state.
+            }
+          },
+        };
+
+        if (isField) {
+          Object.defineProperty(target, propertyKey, notifyingDesc);
+        } else {
+          result = notifyingDesc;
+        }
+      }
+    }
+
     const name = opts.name || propertyKey;
     const desc = domPropertyDescriptor(propertyKey, propertyDesc, opts);
     const constructor = target.constructor as T;
 
     DomPropertiesDef.define(constructor, { [name]: desc });
+
+    return result;
   };
 }
 
@@ -71,6 +111,17 @@ export namespace DomProperty {
      * Defaults to `writable` attribute of decorated property.
      */
     writable?: boolean;
+
+    /**
+     * Whether to refresh the component state after this property changed.
+     *
+     * When not `false` the component state will be refreshed.
+     *
+     * `true` by default.
+     *
+     * This is ignored for methods.
+     */
+    refreshState?: boolean;
 
   }
 
