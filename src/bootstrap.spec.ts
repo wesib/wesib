@@ -1,10 +1,10 @@
 import { bootstrapComponents, BootstrapConfig } from './bootstrap';
+import { EventEmitter } from './common';
 import { ComponentValueKey } from './component';
 import { WebComponent } from './decorators';
 import { ComponentRegistry } from './element/component-registry';
 import { ElementBuilder } from './element/element-builder';
 import { ProviderRegistry } from './element/provider-registry';
-import { EventEmitter } from './events';
 import {
   BootstrapContext,
   ComponentDefinitionListener,

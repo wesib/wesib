@@ -2,7 +2,7 @@ import { EventEmitter } from './event-emitter';
 import { EventInterest } from './event-producer';
 import Spy = jasmine.Spy;
 
-describe('events/event-emitter', () => {
+describe('common/events/event-emitter', () => {
   describe('EventEmitter', () => {
 
     let emitter: EventEmitter<(event: string) => string>;

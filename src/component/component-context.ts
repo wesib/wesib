@@ -1,5 +1,4 @@
-import { noop } from '../common';
-import { EventConsumer, EventProducer } from '../events';
+import { EventProducer, noop } from '../common';
 
 /**
  * Web component context.

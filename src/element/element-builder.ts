@@ -1,3 +1,4 @@
+import { EventEmitter } from '../common';
 import {
   Component,
   ComponentContext,
@@ -6,7 +7,6 @@ import {
   ComponentType,
   ComponentValueKey,
 } from '../component';
-import { EventEmitter } from '../events';
 import { ElementListener } from '../feature';
 import { PromiseResolver } from '../util';
 import { ElementClass } from './element';

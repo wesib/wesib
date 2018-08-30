@@ -1,5 +1,5 @@
+import { EventEmitter } from '../common';
 import { ComponentDef, ComponentElementType, ComponentType } from '../component';
-import { EventEmitter } from '../events';
 import { ComponentDefinitionListener, ElementDefinitionListener } from '../feature';
 import { ElementClass } from './element';
 import { ElementBuilder } from './element-builder';

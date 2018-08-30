@@ -1,5 +1,5 @@
+import { EventProducer } from '../../common';
 import { ComponentValueKey } from '../../component';
-import { EventProducer } from '../../events';
 
 /**
  * Web component state tracker.

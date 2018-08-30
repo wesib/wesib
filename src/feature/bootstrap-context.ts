@@ -1,3 +1,4 @@
+import { EventProducer } from '../common';
 import {
   ComponentContext,
   ComponentElementType,
@@ -6,7 +7,6 @@ import {
   ComponentValueProvider,
 } from '../component';
 import { ElementClass } from '../element';
-import { EventProducer } from '../events';
 
 /**
  * Web components bootstrap context.

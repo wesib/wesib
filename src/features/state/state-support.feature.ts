@@ -1,6 +1,6 @@
+import { EventEmitter } from '../../common';
 import { ComponentValueKey } from '../../component';
 import { WebFeature } from '../../decorators';
-import { EventEmitter } from '../../events';
 import { BootstrapContext } from '../../feature';
 import { StateTracker } from './state-tracker';
 
@@ -22,9 +22,9 @@ export class StateSupport {
 }
 
 function enableStateSupport(context: BootstrapContext) {
-  context.provide(StateTracker.key, ctx => {
+  context.provide(StateTracker.key, () => {
 
-    const emitter = new EventEmitter<() => void>()
+    const emitter = new EventEmitter<() => void>();
 
     class Tracker implements StateTracker {
 

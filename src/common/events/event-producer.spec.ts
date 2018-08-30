@@ -1,8 +1,8 @@
-import { noop } from '../common';
+import { noop } from '../functions';
 import { EventInterest, EventProducer } from './event-producer';
 import Spy = jasmine.Spy;
 
-describe('events/event-producer', () => {
+describe('common/events/event-producer', () => {
   describe('EventProducer', () => {
     describe('never', () => {
 

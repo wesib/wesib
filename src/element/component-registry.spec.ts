@@ -1,5 +1,5 @@
+import { EventInterest } from '../common';
 import { ComponentDef, ComponentType } from '../component';
-import { EventInterest } from '../events';
 import { ComponentRegistry } from './component-registry';
 import { ElementBuilder } from './element-builder';
 import { ProviderRegistry } from './provider-registry';
