@@ -48,6 +48,9 @@ describe('component instantiation', () => {
     it('assigns component context reference to custom element', () => {
       expect(ComponentContext.of(element)).toBe(context);
     });
+    it('assigns component context reference to component', () => {
+      expect(ComponentContext.of(Component.of(element) as object)).toBe(context);
+    });
     it('passes context to component', () => {
 
       const expectedContext: Partial<ComponentContext> = {

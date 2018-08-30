@@ -147,28 +147,41 @@ export type ComponentValueProvider<V> =
 export namespace ComponentContext {
 
   /**
-   * A key of a custom HTML element property containing reference to web component context.
+   * A key of a custom HTML element property and web component containing a reference to web component context.
    */
   export const symbol = Symbol('web-component-context');
 
   /**
-   * Extracts component context from its custom HTML element.
+   * Extracts component context from its custom HTML element or from component instance.
    *
-   * @param element Custom HTML element instance created for web component.
+   * @param element Custom HTML element instance created for web component, or the web component itself.
    *
    * @return Web component context reference stored under `ComponentContext.symbol` key.
    *
    * @throws TypeError When the given `element` does not contain component context reference.
    */
-  export function of<T extends object, E extends HTMLElement>(element: E): ComponentContext<T, E> {
+  export function of<T extends object, E extends HTMLElement>(element: E | T): ComponentContext<T, E> {
 
-    const context: ComponentContext<T, E> | undefined = (element as any)[symbol];
+    const context = ComponentContext.find<T, E>(element);
 
     if (!context) {
       throw TypeError(`No component context found in ${element}`);
     }
 
     return context;
+  }
+
+  /**
+   * Extracts component context from its custom HTML element or from component instance.
+   *
+   * @param element Custom HTML element instance created for web component, or the web component itself.
+   *
+   * @return Web component context reference stored under `ComponentContext.symbol` key.
+   *
+   * @throws TypeError When the given `element` does not contain component context reference.
+   */
+  export function find<T extends object, E extends HTMLElement>(element: E | T): ComponentContext<T, E> | undefined {
+    return (element as any)[symbol];
   }
 
 }
