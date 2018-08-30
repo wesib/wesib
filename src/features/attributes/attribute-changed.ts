@@ -1,7 +1,6 @@
-import { noop } from '../../common';
 import { ComponentContext, ComponentType, ComponentValueKey } from '../../component';
 import { ComponentPropertyDecorator } from '../../decorators';
-import { AttributeChangedCallback, AttributesDef } from './attributes-def';
+import { AttributesDef } from './attributes-def';
 import './attributes-def.ns';
 
 /**
@@ -93,7 +92,7 @@ export namespace AttributeChanged {
     name?: string;
 
     /**
-     * Whether to refresh the state after callback.
+     * Whether to refresh the component state after callback.
      *
      * When not `false` the component state will be refreshed.
      *
