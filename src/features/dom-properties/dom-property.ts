@@ -43,7 +43,7 @@ export function DomProperty<T extends ComponentType>(opts: DomProperty.Opts = {}
             // When called inside constructor the context is not set yet.
             // No need to refresh the state in that case.
             if (context) {
-              context.get(ComponentValueKey.stateRefresh)(); // Refresh the state.
+              context.refreshState(); // Refresh the state.
             }
           },
         };

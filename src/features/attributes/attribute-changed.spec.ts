@@ -1,5 +1,5 @@
 import { noop } from '../../common';
-import { ComponentContext, ComponentValueKey } from '../../component';
+import { ComponentContext } from '../../component';
 import { WebComponent } from '../../decorators';
 import { AttributeChanged } from './attribute-changed';
 import { AttributesDef } from './attributes-def';
@@ -11,13 +11,7 @@ describe('features/attributes/attribute-changed', () => {
     let contextSpy: SpyObj<ComponentContext>;
 
     beforeEach(() => {
-      contextSpy = jasmine.createSpyObj('componentContext', ['get']);
-      contextSpy.get.and.callFake((key: ComponentValueKey<any>, defaultValue: any) => {
-        if (key.defaultValue !== undefined) {
-          return key.defaultValue;
-        }
-        return defaultValue;
-      });
+      contextSpy = jasmine.createSpyObj('componentContext', ['refreshState']);
     });
 
     it('declares attribute change callback', () => {
@@ -43,15 +37,6 @@ describe('features/attributes/attribute-changed', () => {
     });
     it('refreshes the state', () => {
 
-      const refreshSpy = jasmine.createSpy('refreshState');
-
-      contextSpy.get.and.callFake((key: ComponentValueKey<any>, defaultValue: any) => {
-        if (key === ComponentValueKey.stateRefresh) {
-          return refreshSpy;
-        }
-        return defaultValue;
-      });
-
       @WebComponent({ name: 'test-component' })
       class TestComponent {
         @AttributeChanged({})
@@ -66,7 +51,7 @@ describe('features/attributes/attribute-changed', () => {
 
       attrs.attr.call(self, 'old', 'new', contextSpy);
 
-      expect(refreshSpy).toHaveBeenCalledWith();
+      expect(contextSpy.refreshState).toHaveBeenCalledWith();
     });
     it('disables state refresh', () => {
 

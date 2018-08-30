@@ -9,10 +9,12 @@ describe('features/state', () => {
 
     let bootstrap: TestBootstrap;
     let testComponent: ComponentType;
+    let context: ComponentContext;
     let refreshState: () => void;
     let stateTracker: StateTracker;
 
     beforeEach(() => {
+      context = undefined!;
       refreshState = undefined!;
       stateTracker = undefined!;
 
@@ -20,6 +22,7 @@ describe('features/state', () => {
       @WebFeature({ requires: StateSupport })
       class TestComponent {
         constructor(ctx: ComponentContext) {
+          context = ctx;
           refreshState = ctx.get(ComponentValueKey.stateRefresh);
           stateTracker = ctx.get(StateTracker.key);
         }
@@ -49,6 +52,21 @@ describe('features/state', () => {
       const interest = stateTracker.onStateUpdate(listenerSpy);
 
       refreshState();
+
+      expect(listenerSpy).toHaveBeenCalledWith();
+
+      interest.off();
+      listenerSpy.calls.reset();
+      refreshState();
+
+      expect(listenerSpy).not.toHaveBeenCalled();
+    });
+    it('notifies on state refresh with `stateRefresh()` method' , () => {
+
+      const listenerSpy = jasmine.createSpy('stateListener');
+      const interest = stateTracker.onStateUpdate(listenerSpy);
+
+      context.refreshState();
 
       expect(listenerSpy).toHaveBeenCalledWith();
 

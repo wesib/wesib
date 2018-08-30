@@ -75,6 +75,16 @@ export interface ComponentContext<T extends object = object, E extends HTMLEleme
    */
   get<V>(key: ComponentValueKey<V>, defaultValue: V | null | undefined): V | null | undefined;
 
+  /**
+   * Refreshes the state of web component.
+   *
+   * It is a shorthand for invoking a component state refresh function available under `ComponentValueKey.stateRefresh`
+   * key.
+   *
+   * Note that state refresh has no effect, unless `StateSupport` feature is enabled.
+   */
+  refreshState(): void;
+
 }
 
 /**

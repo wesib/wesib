@@ -1,8 +1,7 @@
-import { ComponentContext, ComponentType, ComponentValueKey } from '../../component';
+import { ComponentContext, ComponentType } from '../../component';
 import { WebComponent } from '../../decorators';
 import { TestBootstrap } from '../../spec/test-bootstrap';
 import { DomMethod, DomProperty } from './dom-property';
-import Spy = jasmine.Spy;
 
 describe('features/dom-properties', () => {
   describe('DOM properties usage', () => {
@@ -72,24 +71,9 @@ describe('features/dom-properties', () => {
       expect(propertyValue).toBe(1);
     });
 
-    function spyOnStateRefresh(): Spy {
-
-      const refreshSpy = jasmine.createSpy('refreshState');
-      const actualGet = context.get;
-
-      spyOn(context, 'get').and.callFake(function (this: any, key: ComponentValueKey<any>) {
-        if (key === ComponentValueKey.stateRefresh) {
-          return refreshSpy;
-        }
-        return actualGet.apply(this, Function.arguments);
-      });
-
-      return refreshSpy;
-    }
-
     it('refreshes the component state on property update', () => {
 
-      const refreshSpy = spyOnStateRefresh();
+      const refreshSpy = spyOn(context, 'refreshState');
 
       (element as any).writableProperty = 1;
 
@@ -104,7 +88,7 @@ describe('features/dom-properties', () => {
     });
     it('refreshes the component state on field update', () => {
 
-      const refreshSpy = spyOnStateRefresh();
+      const refreshSpy = spyOn(context, 'refreshState');
 
       (element as any).field = 1;
 
@@ -112,7 +96,7 @@ describe('features/dom-properties', () => {
     });
     it('does not refresh the component state on field update with `refreshState: false`', () => {
 
-      const refreshSpy = spyOnStateRefresh();
+      const refreshSpy = spyOn(context, 'refreshState');
 
       (element as any).nonRefreshingField = [1, 2];
 
@@ -124,7 +108,7 @@ describe('features/dom-properties', () => {
     });
     it('does not refresh the component state on method call', () => {
 
-      const refreshSpy = spyOnStateRefresh();
+      const refreshSpy = spyOn(context, 'refreshState');
 
       (element as any).elementMethod('1', '2', '3');
 

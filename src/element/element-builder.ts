@@ -86,7 +86,9 @@ export class ElementBuilder {
             readonly onConnect = connectEvents.on;
             readonly onDisconnect = disconnectEvents.on;
 
-            get<V>(key: ComponentValueKey<V>, defaultValue: V | null | undefined): V | null | undefined {
+            get<V>(key: ComponentValueKey<V>): V;
+
+            get<V>(key: ComponentValueKey<V>, defaultValue?: V | null | undefined): V | null | undefined {
 
               const cached: V | undefined = values.get(key);
 
@@ -108,6 +110,10 @@ export class ElementBuilder {
               }
 
               throw new Error(`There is no value with the key ${key}`);
+            }
+
+            refreshState() {
+              this.get(ComponentValueKey.stateRefresh)();
             }
 
           }
