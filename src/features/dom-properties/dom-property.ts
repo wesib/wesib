@@ -1,5 +1,5 @@
-import { field2accessor } from '../../common';
-import { Component, ComponentContext, ComponentType, ComponentValueKey } from '../../component';
+import { decoratePropertyAccessor } from '../../common';
+import { Component, ComponentContext, ComponentType } from '../../component';
 import { ComponentPropertyDecorator } from '../../decorators';
 import { DomPropertiesDef } from './dom-properties-def';
 import './dom-properties-def.ns';
@@ -17,43 +17,35 @@ import './dom-properties-def.ns';
  * @returns Web component property decorator.
  */
 export function DomProperty<T extends ComponentType>(opts: DomProperty.Opts = {}): ComponentPropertyDecorator<T> {
+
   return <V>(target: T['prototype'], propertyKey: string | symbol, propertyDesc?: TypedPropertyDescriptor<V>) => {
 
     let result: TypedPropertyDescriptor<V> | undefined;
 
     if (opts.refreshState !== false) {
+      result = decoratePropertyAccessor(target, propertyKey, propertyDesc, dsc => {
 
-      const isField = !propertyDesc;
+        const setter = dsc.set;
 
-      if (!propertyDesc) {
-        propertyDesc = field2accessor(target as any, propertyKey);
-      }
-
-      const setter = propertyDesc.set;
-
-      if (setter) {
-
-        const notifyingDesc: TypedPropertyDescriptor<V> = {
-          ...propertyDesc,
-          set: function (this: InstanceType<T>, newValue: V) {
-            setter.call(this, newValue);
-
-            const context = ComponentContext.find(this);
-
-            // When called inside constructor the context is not set yet.
-            // No need to refresh the state in that case.
-            if (context) {
-              context.refreshState(); // Refresh the state.
-            }
-          },
-        };
-
-        if (isField) {
-          Object.defineProperty(target, propertyKey, notifyingDesc);
-        } else {
-          result = notifyingDesc;
+        if (!setter) {
+          return;
         }
-      }
+
+        return {
+            ...dsc,
+            set: function (this: InstanceType<T>, newValue: V) {
+              setter.call(this, newValue);
+
+              const context = ComponentContext.find(this);
+
+              // When called inside constructor the context is not set yet.
+              // No need to refresh the state in that case.
+              if (context) {
+                context.refreshState(); // Refresh the state.
+              }
+            },
+          };
+      });
     }
 
     const name = opts.name || propertyKey;
