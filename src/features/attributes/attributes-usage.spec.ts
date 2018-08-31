@@ -55,11 +55,11 @@ describe('features/attributes', () => {
 
     it('notifies on attribute change', () => {
       element.setAttribute('custom-attribute', 'value1');
-      expect(attrChangedSpy).toHaveBeenCalledWith(null, 'value1', context);
+      expect(attrChangedSpy).toHaveBeenCalledWith('value1', null);
 
       attrChangedSpy.calls.reset();
       element.setAttribute('custom-attribute', 'value2');
-      expect(attrChangedSpy).toHaveBeenCalledWith('value1', 'value2', context);
+      expect(attrChangedSpy).toHaveBeenCalledWith('value2', 'value1');
     });
     it('does not notify on other attribute change', () => {
       element.setAttribute('custom-attribute-2', 'value');

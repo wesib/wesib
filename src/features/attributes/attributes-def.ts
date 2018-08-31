@@ -1,5 +1,3 @@
-import { ComponentContext } from '../../component';
-
 /**
  * Custom HTML element (DOM) attributes definition.
  *
@@ -18,12 +16,11 @@ export interface AttributesDef<T extends object = object> {
  *
  * @param <T> A type of web component.
  * @param this Web component instance.
- * @param oldValue Previous attribute value, or `null` if there were no value assigned.
  * @param newValue New attribute value.
- * @param context Web component context.
+ * @param oldValue Previous attribute value, or `null` if there were no value assigned.
  */
 export type AttributeChangedCallback<T extends object = object> =
-    (this: T, oldValue: string, newValue: string, context: ComponentContext<T>) => void;
+    (this: T, newValue: string, oldValue: string | null) => void;
 
 export namespace AttributesDef {
 

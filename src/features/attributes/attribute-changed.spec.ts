@@ -20,36 +20,52 @@ describe('features/attributes/attribute-changed', () => {
 
       @WebComponent({ name: 'test-component' })
       class TestComponent {
+
+        readonly [ComponentContext.symbol]: ComponentContext;
+
         @AttributeChanged()
         attr = attrSpy;
+
+        constructor(context: ComponentContext) {
+          this[ComponentContext.symbol] = context;
+        }
+
       }
 
       const attrs = AttributesDef.of(TestComponent);
 
       expect(attrs.attr).toBeDefined();
 
-      const self = new TestComponent();
+      const self = new TestComponent(contextSpy);
 
-      attrs.attr.call(self, 'old', 'new', contextSpy);
+      attrs.attr.call(self, 'new', 'old');
 
-      expect(attrSpy).toHaveBeenCalledWith('old', 'new', contextSpy);
+      expect(attrSpy).toHaveBeenCalledWith('new', 'old');
       expect(attrSpy.calls.first().object).toBe(self);
     });
     it('refreshes the state', () => {
 
       @WebComponent({ name: 'test-component' })
       class TestComponent {
+
+        readonly [ComponentContext.symbol]: ComponentContext;
+
         @AttributeChanged({})
         attr = noop;
+
+        constructor(context: ComponentContext) {
+          this[ComponentContext.symbol] = context;
+        }
+
       }
 
       const attrs = AttributesDef.of(TestComponent);
 
       expect(attrs.attr).toBeDefined();
 
-      const self = new TestComponent();
+      const self = new TestComponent(contextSpy);
 
-      attrs.attr.call(self, 'old', 'new', contextSpy);
+      attrs.attr.call(self, 'new', 'old');
 
       expect(contextSpy.refreshState).toHaveBeenCalledWith();
     });
@@ -60,19 +76,27 @@ describe('features/attributes/attribute-changed', () => {
 
       @WebComponent({ name: 'test-component' })
       class TestComponent {
+
+        readonly [ComponentContext.symbol]: ComponentContext;
+
         @AttributeChanged({ refreshState: false })
         attr = attrSpy;
+
+        constructor(context: ComponentContext) {
+          this[ComponentContext.symbol] = context;
+        }
+
       }
 
       const attrs = AttributesDef.of(TestComponent);
 
       expect(attrs.attr).toBeDefined();
 
-      const self = new TestComponent();
+      const self = new TestComponent(contextSpy);
 
-      attrs.attr.call(self, 'old', 'new', contextSpy);
+      attrs.attr.call(self, 'new', 'old');
 
-      expect(attrSpy).toHaveBeenCalledWith('old', 'new', contextSpy);
+      expect(attrSpy).toHaveBeenCalledWith('new', 'old');
       expect(attrSpy.calls.first().object).toBe(self);
       expect(notifySpy).not.toHaveBeenCalled();
     });
@@ -82,19 +106,27 @@ describe('features/attributes/attribute-changed', () => {
 
       @WebComponent({ name: 'test-component' })
       class TestComponent {
+
+        readonly [ComponentContext.symbol]: ComponentContext;
+
         @AttributeChanged('my-attr')
         attr = attrSpy;
+
+        constructor(context: ComponentContext) {
+          this[ComponentContext.symbol] = context;
+        }
+
       }
 
       const attrs = AttributesDef.of(TestComponent);
 
       expect(attrs['my-attr']).toBeDefined();
 
-      const self = new TestComponent();
+      const self = new TestComponent(contextSpy);
 
-      attrs['my-attr'].call(self, 'old', 'new', contextSpy);
+      attrs['my-attr'].call(self, 'new', 'old');
 
-      expect(attrSpy).toHaveBeenCalledWith('old', 'new', contextSpy);
+      expect(attrSpy).toHaveBeenCalledWith('new', 'old');
       expect(attrSpy.calls.first().object).toBe(self);
     });
     it('fails when attribute name is absent and property key is symbol', () => {

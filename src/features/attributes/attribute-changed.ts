@@ -1,6 +1,6 @@
-import { ComponentContext, ComponentType, ComponentValueKey } from '../../component';
+import { ComponentContext, ComponentType } from '../../component';
 import { ComponentPropertyDecorator } from '../../decorators';
-import { AttributesDef } from './attributes-def';
+import { AttributeChangedCallback, AttributesDef } from './attributes-def';
 import './attributes-def.ns';
 
 /**
@@ -61,12 +61,15 @@ export function AttributeChanged<T extends ComponentType>(opts?: AttributeChange
         {
           [name]: function (
               this: InstanceType<T>,
-              oldValue: string | null,
               newValue: string,
-              context: ComponentContext<T>) {
-            (this as any)[propertyKey](oldValue, newValue, context);
+              oldValue: string | null) {
+
+            const callback: AttributeChangedCallback<InstanceType<T>> = (this as any)[propertyKey];
+
+            callback.call(this, newValue, oldValue);
+
             if (refreshState) {
-              context.refreshState();
+              ComponentContext.of(this).refreshState();
             }
           }
         });
