@@ -96,7 +96,7 @@ describe('features/attributes/attribute-changed', () => {
       attrs.attr.call(self, 'new', 'old');
 
       expect(contextSpy.refreshState).not.toHaveBeenCalled();
-      expect(refreshSpy).toHaveBeenCalledWith('new', 'old');
+      expect(refreshSpy).toHaveBeenCalledWith('attr', 'new', 'old');
       expect(refreshSpy.calls.first().object).toBe(self);
     });
     it('disables state refresh', () => {

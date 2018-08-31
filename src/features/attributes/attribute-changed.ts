@@ -36,7 +36,7 @@ export function AttributeChanged<T extends ComponentType>(opts?: AttributeChange
   return <V>(target: InstanceType<T>, propertyKey: string | symbol) => {
 
     let name: string | undefined;
-    let refreshState: AttributeChangedCallback<InstanceType<T>> = defaultRefresh;
+    let refreshState: AttributeRefreshCallback<InstanceType<T>> = defaultRefresh;
 
     if (typeof opts === 'string') {
       name = opts;
@@ -70,14 +70,14 @@ export function AttributeChanged<T extends ComponentType>(opts?: AttributeChange
             const callback: AttributeChangedCallback<InstanceType<T>> = (this as any)[propertyKey];
 
             callback.call(this, newValue, oldValue);
-            refreshState.call(this, newValue, oldValue);
+            refreshState.call(this, name, newValue, oldValue);
           }
         });
 
   };
 }
 
-function defaultRefresh<T extends object>(this: T, newValue: string, oldValue: string | null) {
+function defaultRefresh<T extends object>(this: T, attribute: string, newValue: string, oldValue: string | null) {
   ComponentContext.of(this).refreshState();
 }
 
@@ -106,8 +106,23 @@ export namespace AttributeChanged {
      * - when `true` (the default value), then the component state will be refreshed with `attr:<ATTRIBUTE NAME>`
      * as changed value key.
      */
-    refreshState?: boolean | AttributeChangedCallback<T>;
+    refreshState?: boolean | AttributeRefreshCallback<T>;
 
   }
 
 }
+
+/**
+ * Attribute refresh callback function invoked after custom HTML element attribute change.
+ *
+ * @param <T> A type of web component.
+ * @param this Web component instance.
+ * @param attribute The changed attribute name.
+ * @param newValue New attribute value.
+ * @param oldValue Previous attribute value, or `null` if there were no value assigned.
+ */
+export type AttributeRefreshCallback<T extends object> = (
+    this: T,
+    attribute: string,
+    newValue: string,
+    oldValue: string | null) => void;
