@@ -1,4 +1,4 @@
-import { ComponentContext, ComponentType, ComponentValueKey } from '../../component';
+import { ComponentContext, ComponentType, ComponentValueKey, StateRefreshFn } from '../../component';
 import { WebComponent, WebFeature } from '../../decorators';
 import { TestBootstrap } from '../../spec/test-bootstrap';
 import { StateSupport } from './state-support.feature';
@@ -10,7 +10,7 @@ describe('features/state', () => {
     let bootstrap: TestBootstrap;
     let testComponent: ComponentType;
     let context: ComponentContext;
-    let refreshState: () => void;
+    let refreshState: StateRefreshFn;
     let stateTracker: StateTracker;
 
     beforeEach(() => {
@@ -51,13 +51,13 @@ describe('features/state', () => {
       const listenerSpy = jasmine.createSpy('stateListener');
       const interest = stateTracker.onStateUpdate(listenerSpy);
 
-      refreshState();
+      refreshState('key', 'new', 'old');
 
-      expect(listenerSpy).toHaveBeenCalledWith();
+      expect(listenerSpy).toHaveBeenCalledWith('key', 'new', 'old');
 
       interest.off();
       listenerSpy.calls.reset();
-      refreshState();
+      refreshState('kew', 'new', 'old');
 
       expect(listenerSpy).not.toHaveBeenCalled();
     });
@@ -66,13 +66,13 @@ describe('features/state', () => {
       const listenerSpy = jasmine.createSpy('stateListener');
       const interest = stateTracker.onStateUpdate(listenerSpy);
 
-      context.refreshState();
+      context.refreshState('key', 'new', 'old');
 
-      expect(listenerSpy).toHaveBeenCalledWith();
+      expect(listenerSpy).toHaveBeenCalledWith('key', 'new', 'old');
 
       interest.off();
       listenerSpy.calls.reset();
-      refreshState();
+      refreshState('key', 'new', 'old');
 
       expect(listenerSpy).not.toHaveBeenCalled();
     });

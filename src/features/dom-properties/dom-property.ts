@@ -65,8 +65,8 @@ export function DomProperty<T extends ComponentType>(opts: DomProperty.Opts<T> =
   };
 }
 
-function defaultRefresh<T extends object, K extends keyof T>(this: T, property: K, oldValue: T[K], newValue: T[K]) {
-  ComponentContext.of(this).refreshState();
+function defaultRefresh<T extends object, K extends keyof T>(this: T, property: K, newValue: T[K], oldValue: T[K]) {
+  ComponentContext.of(this).refreshState(property, newValue, oldValue);
 }
 
 /**

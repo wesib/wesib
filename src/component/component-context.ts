@@ -82,8 +82,13 @@ export interface ComponentContext<T extends object = object, E extends HTMLEleme
    * key.
    *
    * Note that state refresh has no effect, unless `StateSupport` feature is enabled.
+   *
+   * @param <V> A type of changed value.
+   * @param key Changed value key.
+   * @param newValue New value.
+   * @param oldValue Previous value.
    */
-  refreshState(): void;
+  refreshState<V>(key: PropertyKey, newValue: V, oldValue: V): void;
 
 }
 
@@ -100,11 +105,11 @@ export class ComponentValueKey<V> {
    * Component value key containing a component state refresh function.
    *
    * Features are calling this function by default when component state changes, e.g. attribute value or DOM property
-   * change.
+   * modified.
    *
-   * Note that this value is not provided, unless a `StateSupport` feature is enabled.
+   * Note that this value is not provided, unless the `StateSupport` feature is enabled.
    */
-  static readonly stateRefresh: ComponentValueKey<(this: void) => void> =
+  static readonly stateRefresh: ComponentValueKey<StateRefreshFn> =
       new ComponentValueKey('state-refresh', noop);
 
   /**
@@ -137,6 +142,18 @@ export class ComponentValueKey<V> {
   }
 
 }
+
+/**
+ * State refreshing function type.
+ *
+ * It is called when the value with the given `key` changes.
+ *
+ * @param <V> A type of changed value.
+ * @param key Changed value key.
+ * @param newValue New value.
+ * @param oldValue Previous value.
+ */
+export type StateRefreshFn = <V>(this: void, key: PropertyKey, newValue: V, oldValue: V) => void;
 
 /**
  * Component value provider.

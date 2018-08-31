@@ -83,7 +83,7 @@ describe('features/dom-properties', () => {
 
       (element as any).writableProperty = 1;
 
-      expect(refreshSpy).toHaveBeenCalledWith();
+      expect(refreshSpy).toHaveBeenCalledWith('writableProperty', 1, 11);
     });
     it('reads component field', () => {
       expect((element as any).field).toBe('initial');
@@ -96,9 +96,9 @@ describe('features/dom-properties', () => {
 
       const refreshSpy = spyOn(context, 'refreshState');
 
-      (element as any).field = 1;
+      (element as any).field = 'new';
 
-      expect(refreshSpy).toHaveBeenCalledWith();
+      expect(refreshSpy).toHaveBeenCalledWith('field', 'new', 'initial');
     });
     it('does not refresh the component state when disabled', () => {
 

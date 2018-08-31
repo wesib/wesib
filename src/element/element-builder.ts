@@ -112,8 +112,8 @@ export class ElementBuilder {
               throw new Error(`There is no value with the key ${key}`);
             }
 
-            refreshState() {
-              this.get(ComponentValueKey.stateRefresh)();
+            refreshState<V>(key: PropertyKey, newValue: V, oldValue: V) {
+              this.get(ComponentValueKey.stateRefresh)(key, newValue, oldValue);
             }
 
           }

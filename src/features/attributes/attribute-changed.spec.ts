@@ -67,7 +67,7 @@ describe('features/attributes/attribute-changed', () => {
 
       attrs.attr.call(self, 'new', 'old');
 
-      expect(contextSpy.refreshState).toHaveBeenCalledWith();
+      expect(contextSpy.refreshState).toHaveBeenCalledWith('attr:attr', 'new', 'old');
     });
     it('refreshes the state with custom state refresh function', () => {
 

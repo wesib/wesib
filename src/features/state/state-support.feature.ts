@@ -1,5 +1,5 @@
 import { EventEmitter } from '../../common';
-import { ComponentValueKey } from '../../component';
+import { ComponentValueKey, StateRefreshFn } from '../../component';
 import { WebFeature } from '../../decorators';
 import { BootstrapContext } from '../../feature';
 import { StateTracker } from './state-tracker';
@@ -24,14 +24,14 @@ export class StateSupport {
 function enableStateSupport(context: BootstrapContext) {
   context.provide(StateTracker.key, () => {
 
-    const emitter = new EventEmitter<() => void>();
+    const emitter = new EventEmitter<StateRefreshFn>();
 
     class Tracker implements StateTracker {
 
       readonly onStateUpdate = emitter.on;
 
-      refreshState() {
-        emitter.notify();
+      refreshState<V>(key: PropertyKey, newValue: V, oldValue: V) {
+        emitter.notify(key, newValue, oldValue);
       }
 
     }
@@ -42,6 +42,6 @@ function enableStateSupport(context: BootstrapContext) {
 
     const stateTracker = ctx.get(StateTracker.key);
 
-    return () => stateTracker.refreshState();
+    return <V>(key: PropertyKey, newValue: V, oldValue: V) => stateTracker.refreshState(key, newValue, oldValue);
   });
 }

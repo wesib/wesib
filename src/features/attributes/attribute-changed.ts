@@ -78,7 +78,7 @@ export function AttributeChanged<T extends ComponentType>(opts?: AttributeChange
 }
 
 function defaultRefresh<T extends object>(this: T, attribute: string, newValue: string, oldValue: string | null) {
-  ComponentContext.of(this).refreshState();
+  ComponentContext.of(this).refreshState(`attr:${attribute}`, newValue, oldValue);
 }
 
 export namespace AttributeChanged {
