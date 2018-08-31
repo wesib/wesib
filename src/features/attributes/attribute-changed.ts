@@ -99,10 +99,10 @@ export namespace AttributeChanged {
     name?: string;
 
     /**
-     * Whether to refresh the component state after callback.
+     * Whether to refresh the component state after attribute change.
      *
-     * Either a callback to call, or boolean value:
-     * - when `false` the component state will be refreshed.
+     * Either a refresh callback function to call, or boolean value:
+     * - when `false` the component state will not be refreshed.
      * - when `true` (the default value), then the component state will be refreshed with `attr:<ATTRIBUTE NAME>`
      * as changed value key.
      */

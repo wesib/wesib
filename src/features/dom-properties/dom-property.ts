@@ -16,13 +16,17 @@ import './dom-properties-def.ns';
  *
  * @returns Web component property decorator.
  */
-export function DomProperty<T extends ComponentType>(opts: DomProperty.Opts = {}): ComponentPropertyDecorator<T> {
+export function DomProperty<T extends ComponentType>(opts: DomProperty.Opts<T> = {}): ComponentPropertyDecorator<T> {
 
   return <V>(target: InstanceType<T>, propertyKey: string | symbol, propertyDesc?: TypedPropertyDescriptor<V>) => {
 
     let result: TypedPropertyDescriptor<V> | undefined;
 
     if (opts.refreshState !== false) {
+
+      const refreshState: DomPropertyRefreshCallback<T> =
+          typeof opts.refreshState === 'function' ? opts.refreshState : defaultRefresh;
+
       result = decoratePropertyAccessor(target, propertyKey, propertyDesc, dsc => {
 
         const setter = dsc.set;
@@ -34,6 +38,9 @@ export function DomProperty<T extends ComponentType>(opts: DomProperty.Opts = {}
         return {
             ...dsc,
             set: function (this: InstanceType<T>, newValue: V) {
+
+              const oldValue = (this as any)[propertyKey];
+
               setter.call(this, newValue);
 
               const context = ComponentContext.find(this);
@@ -41,7 +48,7 @@ export function DomProperty<T extends ComponentType>(opts: DomProperty.Opts = {}
               // When called inside constructor the context is not set yet.
               // No need to refresh the state in that case.
               if (context) {
-                context.refreshState(); // Refresh the state.
+                refreshState.call(this, propertyKey, newValue, oldValue); // Refresh the state.
               }
             },
           };
@@ -58,6 +65,10 @@ export function DomProperty<T extends ComponentType>(opts: DomProperty.Opts = {}
   };
 }
 
+function defaultRefresh<T extends object, K extends keyof T>(this: T, property: K, oldValue: T[K], newValue: T[K]) {
+  ComponentContext.of(this).refreshState();
+}
+
 /**
  * Web component method decorator that declares a method to add to custom HTML element created for this web component.
  *
@@ -72,7 +83,7 @@ export namespace DomProperty {
    *
    * This is an parameter to `@DomProperty` decorator applied to web component property.
    */
-  export interface Opts {
+  export interface Opts<T extends object> {
 
     /**
      * Property name.
@@ -107,17 +118,32 @@ export namespace DomProperty {
     /**
      * Whether to refresh the component state after this property changed.
      *
-     * When not `false` the component state will be refreshed.
-     *
-     * `true` by default.
-     *
-     * This is ignored for methods.
+     * Either a refresh callback function to call, or boolean value:
+     * - when `false` the component state will not be refreshed.
+     * - when `true` (the default value), then the component state will be refreshed with property name
+     * as changed value key.
      */
-    refreshState?: boolean;
+    refreshState?: boolean | DomPropertyRefreshCallback<T>;
 
   }
 
 }
+
+/**
+ * DOM property refresh callback function invoked after custom HTML element property change.
+ *
+ * @param <T> A type of web component.
+ * @param <K> A type of web component property keys.
+ * @param this Web component instance.
+ * @param property The changed property name.
+ * @param newValue New property value.
+ * @param oldValue Previous property value.
+ */
+export type DomPropertyRefreshCallback<T extends object> = <K extends keyof T>(
+    this: T,
+    attribute: K,
+    newValue: T[K],
+    oldValue: T[K]) => void;
 
 function domPropertyDescriptor<V>(
     propertyKey: string | symbol,
@@ -126,7 +152,7 @@ function domPropertyDescriptor<V>(
       configurable,
       enumerable,
       writable,
-    }: DomProperty.Opts): PropertyDescriptor {
+    }: DomProperty.Opts<any>): PropertyDescriptor {
   if (!propertyDesc) {
     // Component object property
     if (enumerable == null) {
