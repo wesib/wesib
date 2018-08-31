@@ -32,7 +32,7 @@ import './attributes-def.ns';
  */
 export function AttributeChanged<T extends ComponentType>(opts?: AttributeChanged.Opts<T> | string):
     ComponentPropertyDecorator<T> {
-  return <V>(target: T['prototype'], propertyKey: string | symbol) => {
+  return <V>(target: InstanceType<T>, propertyKey: string | symbol) => {
 
     let name: string | undefined;
     let refreshState = true;

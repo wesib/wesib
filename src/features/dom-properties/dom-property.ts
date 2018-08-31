@@ -18,7 +18,7 @@ import './dom-properties-def.ns';
  */
 export function DomProperty<T extends ComponentType>(opts: DomProperty.Opts = {}): ComponentPropertyDecorator<T> {
 
-  return <V>(target: T['prototype'], propertyKey: string | symbol, propertyDesc?: TypedPropertyDescriptor<V>) => {
+  return <V>(target: InstanceType<T>, propertyKey: string | symbol, propertyDesc?: TypedPropertyDescriptor<V>) => {
 
     let result: TypedPropertyDescriptor<V> | undefined;
 
