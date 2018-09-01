@@ -2,12 +2,72 @@ import { list2set } from '../util';
 import { BootstrapContext } from './bootstrap-context';
 import { FeatureDef, FeatureType } from './feature';
 
+class FeatureProviders {
+
+  readonly providers = new Set<FeatureType>();
+
+  constructor(readonly feature: FeatureType) {
+    this.add(feature);
+  }
+
+  add(provider: FeatureType) {
+    this.providers.add(provider);
+  }
+
+  provider(
+      allProviders: Map<FeatureType, FeatureProviders>,
+      dependencies: Set<FeatureType> = new Set()): FeatureType {
+    if (dependencies.has(this.feature)) {
+      throw Error(
+          'Circular dependency: '
+          + [...dependencies.values()].map(feature => feature.name).join(' -> ')
+          + ` -> ${this.feature.name}`);
+    }
+
+    if (this.providers.size > 1) {
+      // Remove self if there are other providers
+      this.providers.delete(this.feature);
+    } else if (this.providers.has(this.feature)) {
+      return this.feature; // The feature is provided only by itself.
+    }
+
+    // Replace providers that in turn provided by others
+    this.providers.forEach(provider => {
+
+      const transientProviders = allProviders.get(provider);
+
+      if (!transientProviders) {
+        return;
+      }
+
+      const transientProvider = transientProviders.provider(
+          allProviders,
+          new Set([...dependencies, this.feature]));
+
+      if (transientProvider === provider) {
+        return;
+      }
+      this.providers.delete(provider);
+      this.providers.add(transientProvider);
+    });
+
+    if (this.providers.size !== 1) {
+      throw Error(
+          `Feature \`${this.feature.name}\` is provided by multiple providers: `
+          + [...this.providers.values()].map(feature => feature.name).join(', '));
+    }
+
+    return [...this.providers.values()][0];
+  }
+
+}
+
 /**
  * @internal
  */
 export class FeatureRegistry {
 
-  readonly _features = new Map<FeatureType, FeatureType>();
+  readonly _providers = new Map<FeatureType, FeatureProviders>();
 
   static create(): FeatureRegistry {
     return new FeatureRegistry();
@@ -18,17 +78,13 @@ export class FeatureRegistry {
 
   add(feature: FeatureType, provider: FeatureType = feature) {
 
-    const existing = this._features.get(feature);
+    let providers = this._providers.get(feature);
 
-    if (existing) {
-      // The feature is provided already
-      provider = selectProvider(feature, existing, provider);
-      if (existing === provider) {
-        return; // ...by the same provider. No need to register it again.
-      }
+    if (!providers) {
+      providers = new FeatureProviders(feature);
+      this._providers.set(feature, providers);
     }
-
-    this._features.set(feature, provider);
+    providers.add(provider);
 
     const def = FeatureDef.of(feature);
 
@@ -37,8 +93,8 @@ export class FeatureRegistry {
   }
 
   configure(context: BootstrapContext) {
-    this._features.forEach((provider, feature) => {
-      if (feature === provider) {
+    this._providers.forEach((providers, feature) => {
+      if (feature === providers.provider(this._providers)) {
 
         const configure = FeatureDef.of(feature).configure;
 
@@ -49,18 +105,4 @@ export class FeatureRegistry {
     });
   }
 
-}
-
-function selectProvider(feature: FeatureType, provider1: FeatureType, provider2: FeatureType): FeatureType {
-  // The feature itself as its own provider has lower precedence that any other one.
-  if (provider2 === feature) {
-    return provider1;
-  }
-  if (provider1 === feature) {
-    return provider2;
-  }
-  if (provider1 !== provider2) {
-    throw Error(`${feature.name} is provided by both ${provider1.name} and ${provider2.name}`);
-  }
-  return provider1;
 }

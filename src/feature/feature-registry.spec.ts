@@ -20,6 +20,7 @@ describe('feature/feature-registry', () => {
       feature1 = FeatureDef.define(class Feature1 {}, {
         configure: configure1spy,
       });
+
       configure2spy = jasmine.createSpy('configure2');
       feature2 = FeatureDef.define(class Feature2 {}, {
         configure: configure2spy,
@@ -84,14 +85,57 @@ describe('feature/feature-registry', () => {
       class Feature {}
 
       registry.add(Feature, feature1);
-      expect(() => registry.add(Feature, feature2)).toThrowError();
+      registry.add(Feature, feature2);
+
+      expect(() => registry.configure(contextSpy)).toThrow(jasmine.stringMatching(/multiple providers/));
     });
-    it('does not fails when feature provided by the same provider', () => {
+    it('does not fail when feature provided by the same provider', () => {
       registry.add(feature1, feature2);
       registry.add(feature1, feature2);
       registry.configure(contextSpy);
 
       expect(configure1spy).not.toHaveBeenCalled();
+    });
+    it('selects super-provider', () => {
+
+      class Feature {}
+
+      registry.add(feature1);
+      registry.add(feature2, feature1);
+      registry.add(Feature, feature2);
+      registry.configure(contextSpy);
+
+      expect(configure1spy).toHaveBeenCalledWith(contextSpy);
+      expect(configure2spy).not.toHaveBeenCalled();
+    });
+    it('allows to depend on both provider and super-provider', () => {
+
+      class Feature {}
+
+      registry.add(feature1);
+      registry.add(feature2, feature1);
+      registry.add(Feature, feature1);
+      registry.add(Feature, feature2);
+      registry.configure(contextSpy);
+
+      expect(configure1spy).toHaveBeenCalledWith(contextSpy);
+      expect(configure2spy).not.toHaveBeenCalled();
+    });
+    it('fails on circular dependency', () => {
+      registry.add(feature1, feature2);
+      registry.add(feature2, feature1);
+
+      expect(() => registry.configure(contextSpy)).toThrow(jasmine.stringMatching(/Circular dependency/));
+    });
+    it('fails on deep circular dependency', () => {
+
+      class Feature {}
+
+      registry.add(Feature, feature1);
+      registry.add(feature1, feature2);
+      registry.add(feature2, Feature);
+
+      expect(() => registry.configure(contextSpy)).toThrow(jasmine.stringMatching(/Circular dependency/));
     });
   });
 });
