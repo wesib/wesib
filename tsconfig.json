@@ -8,6 +8,7 @@
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
     "forceConsistentCasingInFileNames": true,
+    "downlevelIteration": true,
     "importHelpers": true,
     "noEmitHelpers": true,
     "lib": [
