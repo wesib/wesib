@@ -20,6 +20,7 @@ export function DomProperty<T extends ComponentType>(opts: DomProperty.Opts<T> =
 
   return <V>(target: InstanceType<T>, propertyKey: string | symbol, propertyDesc?: TypedPropertyDescriptor<V>) => {
 
+    const valueKey = [StateValueKey.property, propertyKey];
     let result: TypedPropertyDescriptor<V> | undefined;
 
     if (opts.updateState !== false) {
@@ -48,7 +49,7 @@ export function DomProperty<T extends ComponentType>(opts: DomProperty.Opts<T> =
               // When called inside constructor the context is not set yet.
               // No need to update the state in that case.
               if (context) {
-                updateState.call(this, propertyKey, newValue, oldValue); // Update the state.
+                updateState.call(this, valueKey, newValue, oldValue); // Update the state.
               }
             },
           };
@@ -65,8 +66,12 @@ export function DomProperty<T extends ComponentType>(opts: DomProperty.Opts<T> =
   };
 }
 
-function defaultUpdateState<T extends object, K extends keyof T>(this: T, property: K, newValue: T[K], oldValue: T[K]) {
-  ComponentContext.of(this).updateState([StateValueKey.property, property], newValue, oldValue);
+function defaultUpdateState<T extends object, K extends keyof T>(
+    this: T,
+    key: [typeof StateValueKey.property, K],
+    newValue: T[K],
+    oldValue: T[K]) {
+  ComponentContext.of(this).updateState(key, newValue, oldValue);
 }
 
 /**
@@ -120,8 +125,7 @@ export namespace DomProperty {
      *
      * Either a DOM property updates consumer to call, or boolean value:
      * - when `false` the component state will not be updated.
-     * - when `true` (the default value), then the component state will be updated with
-     *   `[StateValueKey.property, propertyKey] as changed value key.
+     * - when `true` (the default value), then the component state will be updated with changed property key.
      */
     updateState?: boolean | DomPropertyUpdateConsumer<T>;
 
@@ -135,13 +139,13 @@ export namespace DomProperty {
  * @param <T> A type of web component.
  * @param <K> A type of web component property keys.
  * @param this Web component instance.
- * @param property The changed property name.
+ * @param key The changed property key in the form of `[StateValueKey.property, propertyKey]`.
  * @param newValue New property value.
  * @param oldValue Previous property value.
  */
 export type DomPropertyUpdateConsumer<T extends object> = <K extends keyof T>(
     this: T,
-    attribute: K,
+    key: [typeof StateValueKey.property, K],
     newValue: T[K],
     oldValue: T[K]) => void;
 

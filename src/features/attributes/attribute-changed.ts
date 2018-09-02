@@ -57,6 +57,7 @@ export function AttributeChanged<T extends ComponentType>(opts?: AttributeChange
       name = propertyKey;
     }
 
+    const valueKey = [StateValueKey.attribute, name];
     const componentType = target.constructor as T;
 
     AttributesDef.define(
@@ -70,15 +71,19 @@ export function AttributeChanged<T extends ComponentType>(opts?: AttributeChange
             const callback: AttributeChangedCallback<InstanceType<T>> = (this as any)[propertyKey];
 
             callback.call(this, newValue, oldValue);
-            updateState.call(this, name, newValue, oldValue);
+            updateState.call(this, valueKey, newValue, oldValue);
           }
         });
 
   };
 }
 
-function defaultUpdateState<T extends object>(this: T, attribute: string, newValue: string, oldValue: string | null) {
-  ComponentContext.of(this).updateState([StateValueKey.attribute, attribute], newValue, oldValue);
+function defaultUpdateState<T extends object>(
+    this: T,
+    key: [typeof StateValueKey.attribute, string],
+    newValue: string,
+    oldValue: string | null) {
+  ComponentContext.of(this).updateState(key, newValue, oldValue);
 }
 
 export namespace AttributeChanged {
@@ -103,8 +108,7 @@ export namespace AttributeChanged {
      *
      * Either an attribute updates consumer to call, or boolean value:
      * - when `false` the component state will not be updated.
-     * - when `true` (the default value), then the component state will be updated with
-     *   `[StateValueKey.attribute, attributeName]` as changed value key.
+     * - when `true` (the default value), then the component state will be updated with changed attribute key.
      */
     updateState?: boolean | AttributeUpdateConsumer<T>;
 
@@ -117,12 +121,12 @@ export namespace AttributeChanged {
  *
  * @param <T> A type of web component.
  * @param this Web component instance.
- * @param attribute The changed attribute name.
+ * @param key The changed attribute key in the form of `[StateValueKey.attribute, attributeName]`.
  * @param newValue New attribute value.
  * @param oldValue Previous attribute value, or `null` if there were no value assigned.
  */
 export type AttributeUpdateConsumer<T extends object> = (
     this: T,
-    attribute: string,
+    key: [typeof StateValueKey.attribute, string],
     newValue: string,
     oldValue: string | null) => void;

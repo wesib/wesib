@@ -118,7 +118,7 @@ describe('features/dom-properties', () => {
 
       expect((element as any).customStateUpdatingField).toEqual(19);
       expect(updateStateSpy).not.toHaveBeenCalled();
-      expect(customUpdateStateSpy).toHaveBeenCalledWith('customStateUpdatingField', 19, 91);
+      expect(customUpdateStateSpy).toHaveBeenCalledWith([StateValueKey.property, 'customStateUpdatingField'], 19, 91);
       expect(customUpdateStateSpy.calls.first().object).toBe(Component.of(element));
     });
     it('calls component method', () => {
