@@ -13,11 +13,18 @@ export type StateUpdateConsumer = <V>(this: void, key: StateValueKey, newValue: 
 /**
  * A key of the state value.
  *
- * May consist of one or more key elements.
+ * May consist of one or more property keys.
  *
- * An array consisting of the only one key element is the same as this key element.
+ * An array consisting of the only one property key is the same as this property key.
  */
-export type StateValueKey = PropertyKey | [PropertyKey, ...PropertyKey[]];
+export type StateValueKey = PropertyKey | NormalizedStateValueKey;
+
+/**
+ * Normalized state value key.
+ *
+ * This is always a tuple of property keys.
+ */
+export type NormalizedStateValueKey = PropertyKey[];
 
 export namespace StateValueKey {
 
@@ -34,5 +41,23 @@ export namespace StateValueKey {
    * Thus, an attribute key is always something like `[StateValueKey.attribute, 'attribute-name']`.
    */
   export const attribute = Symbol('attribute');
+
+  export function normalize<K extends PropertyKey>(key: K): [K];
+
+  export function normalize(key: NormalizedStateValueKey): NormalizedStateValueKey;
+
+  /**
+   * Normalizes state value key. I.e. converts it to tuple.
+   *
+   * @param key Arbitrary state value key.
+   *
+   * @return Normalized state value key.
+   */
+  export function normalize(key: StateValueKey): NormalizedStateValueKey {
+    if (Array.isArray(key)) {
+      return key;
+    }
+    return [key];
+  }
 
 }
