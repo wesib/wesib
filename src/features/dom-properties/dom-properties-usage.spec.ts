@@ -1,3 +1,4 @@
+import { StateValueKey } from '../../common/events';
 import { Component, ComponentContext, ComponentType } from '../../component';
 import { WebComponent } from '../../decorators';
 import { TestBootstrap } from '../../spec/test-bootstrap';
@@ -12,12 +13,12 @@ describe('features/dom-properties', () => {
     let context: ComponentContext;
     let element: HTMLElement;
     let propertyValue: number;
-    let customRefreshSpy: Spy;
+    let customUpdateStateSpy: Spy;
 
     beforeEach(() => {
       context = undefined!;
       propertyValue = 0;
-      customRefreshSpy = jasmine.createSpy('customRefresh');
+      customUpdateStateSpy = jasmine.createSpy('customUpdateState');
 
       @WebComponent({ name: 'test-component' })
       class TestComponent {
@@ -26,10 +27,10 @@ describe('features/dom-properties', () => {
         field = 'initial';
 
         @DomProperty({ updateState: false })
-        nonRefreshingField = [0];
+        nonStateUpdating = [0];
 
-        @DomProperty({ updateState: customRefreshSpy })
-        customRefreshingField = 91;
+        @DomProperty({ updateState: customUpdateStateSpy })
+        customStateUpdatingField = 91;
 
         constructor(ctx: ComponentContext) {
           context = ctx;
@@ -77,13 +78,13 @@ describe('features/dom-properties', () => {
       expect(propertyValue).toBe(1);
     });
 
-    it('refreshes the component state on property update', () => {
+    it('updates the component state on property update', () => {
 
-      const refreshSpy = spyOn(context, 'updateState');
+      const updateStateSpy = spyOn(context, 'updateState');
 
       (element as any).writableProperty = 1;
 
-      expect(refreshSpy).toHaveBeenCalledWith('writableProperty', 1, 11);
+      expect(updateStateSpy).toHaveBeenCalledWith([StateValueKey.property, 'writableProperty'], 1, 11);
     });
     it('reads component field', () => {
       expect((element as any).field).toBe('initial');
@@ -92,44 +93,44 @@ describe('features/dom-properties', () => {
       (element as any).field = 'new';
       expect((element as any).field).toBe('new');
     });
-    it('refreshes the component state on field update', () => {
+    it('updates the component state on field update', () => {
 
-      const refreshSpy = spyOn(context, 'updateState');
+      const updateStateSpy = spyOn(context, 'updateState');
 
       (element as any).field = 'new';
 
-      expect(refreshSpy).toHaveBeenCalledWith('field', 'new', 'initial');
+      expect(updateStateSpy).toHaveBeenCalledWith([StateValueKey.property, 'field'], 'new', 'initial');
     });
-    it('does not refresh the component state when disabled', () => {
+    it('does not update the component state when disabled', () => {
 
-      const refreshSpy = spyOn(context, 'updateState');
+      const updateStateSpy = spyOn(context, 'updateState');
 
-      (element as any).nonRefreshingField = [1, 2];
+      (element as any).nonStateUpdating = [1, 2];
 
-      expect((element as any).nonRefreshingField).toEqual([1, 2]);
-      expect(refreshSpy).not.toHaveBeenCalled();
+      expect((element as any).nonStateUpdating).toEqual([1, 2]);
+      expect(updateStateSpy).not.toHaveBeenCalled();
     });
-    it('refresh the component state with custom refresh callback', () => {
+    it('updates the component state with custom function', () => {
 
-      const refreshSpy = spyOn(context, 'updateState');
+      const updateStateSpy = spyOn(context, 'updateState');
 
-      (element as any).customRefreshingField = 19;
+      (element as any).customStateUpdatingField = 19;
 
-      expect((element as any).customRefreshingField).toEqual(19);
-      expect(refreshSpy).not.toHaveBeenCalled();
-      expect(customRefreshSpy).toHaveBeenCalledWith('customRefreshingField', 19, 91);
-      expect(customRefreshSpy.calls.first().object).toBe(Component.of(element));
+      expect((element as any).customStateUpdatingField).toEqual(19);
+      expect(updateStateSpy).not.toHaveBeenCalled();
+      expect(customUpdateStateSpy).toHaveBeenCalledWith('customStateUpdatingField', 19, 91);
+      expect(customUpdateStateSpy.calls.first().object).toBe(Component.of(element));
     });
     it('calls component method', () => {
       expect((element as any).elementMethod('1', '2', '3')).toBe(`${propertyValue}: 1, 2, 3`);
     });
-    it('does not refresh the component state on method call', () => {
+    it('does not update the component state on method call', () => {
 
-      const refreshSpy = spyOn(context, 'updateState');
+      const updateStateSpy = spyOn(context, 'updateState');
 
       (element as any).elementMethod('1', '2', '3');
 
-      expect(refreshSpy).not.toHaveBeenCalled();
+      expect(updateStateSpy).not.toHaveBeenCalled();
     });
   });
 });

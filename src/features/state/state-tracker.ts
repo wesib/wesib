@@ -1,5 +1,5 @@
-import { EventProducer } from '../../common';
-import { ComponentValueKey, StateUpdateConsumer } from '../../component';
+import { EventProducer, StateUpdateConsumer, StateValueKey } from '../../common';
+import { ComponentValueKey } from '../../component';
 
 /**
  * Web component state tracker.
@@ -32,7 +32,7 @@ export interface StateTracker {
    * @param newValue New value.
    * @param oldValue Previous value.
    */
-  updateState<V>(key: PropertyKey, newValue: V, oldValue: V): void;
+  updateState<V>(key: StateValueKey, newValue: V, oldValue: V): void;
 
 }
 

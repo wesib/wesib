@@ -1,5 +1,5 @@
-import { EventEmitter } from '../../common';
-import { ComponentValueKey, StateUpdateConsumer } from '../../component';
+import { EventEmitter, StateUpdateConsumer, StateValueKey } from '../../common';
+import { ComponentValueKey } from '../../component';
 import { WebFeature } from '../../decorators';
 import { BootstrapContext } from '../../feature';
 import { StateTracker } from './state-tracker';
@@ -9,11 +9,11 @@ import { StateTracker } from './state-tracker';
  *
  * When enabled, it registers context values for each component with the following keys:
  *
- * - `ComponentValueKey.stateUpdate` that allows to refresh the component state, and
+ * - `ComponentValueKey.stateUpdate` that allows to update the component state, and
  * - `StateTracker.key` containing a `StateTracker` instance to track the state changes.
  *
  * Other features would use this to notify when the state changes. E.g. `DomPropertiesSupport` and `AttributesSupport`
- * features issue state refresh when needed.
+ * features issue state updates when needed.
  */
 @WebFeature({
   configure: enableStateSupport,
@@ -42,6 +42,6 @@ function enableStateSupport(context: BootstrapContext) {
 
     const stateTracker = ctx.get(StateTracker.key);
 
-    return <V>(key: PropertyKey, newValue: V, oldValue: V) => stateTracker.updateState(key, newValue, oldValue);
+    return <V>(key: StateValueKey, newValue: V, oldValue: V) => stateTracker.updateState(key, newValue, oldValue);
   });
 }

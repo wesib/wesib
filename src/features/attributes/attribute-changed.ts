@@ -1,4 +1,4 @@
-import { noop } from '../../common';
+import { noop, StateValueKey } from '../../common';
 import { ComponentContext, ComponentType } from '../../component';
 import { ComponentPropertyDecorator } from '../../decorators';
 import { AttributeChangedCallback, AttributesDef } from './attributes-def';
@@ -78,7 +78,7 @@ export function AttributeChanged<T extends ComponentType>(opts?: AttributeChange
 }
 
 function defaultUpdateState<T extends object>(this: T, attribute: string, newValue: string, oldValue: string | null) {
-  ComponentContext.of(this).updateState(`@${attribute}`, newValue, oldValue);
+  ComponentContext.of(this).updateState([StateValueKey.attribute, attribute], newValue, oldValue);
 }
 
 export namespace AttributeChanged {
@@ -99,12 +99,12 @@ export namespace AttributeChanged {
     name?: string;
 
     /**
-     * Whether to refresh the component state after attribute change.
+     * Whether to update the component state after attribute change.
      *
      * Either an attribute updates consumer to call, or boolean value:
-     * - when `false` the component state will not be refreshed.
-     * - when `true` (the default value), then the component state will be refreshed with `@<ATTRIBUTE NAME>`
-     * as changed value key.
+     * - when `false` the component state will not be updated.
+     * - when `true` (the default value), then the component state will be updated with
+     *   `[StateValueKey.attribute, attributeName]` as changed value key.
      */
     updateState?: boolean | AttributeUpdateConsumer<T>;
 

@@ -1,4 +1,5 @@
-import { ComponentContext, ComponentType, ComponentValueKey, StateUpdateConsumer } from '../../component';
+import { StateUpdateConsumer } from '../../common/events';
+import { ComponentContext, ComponentType, ComponentValueKey } from '../../component';
 import { WebComponent, WebFeature } from '../../decorators';
 import { TestBootstrap } from '../../spec/test-bootstrap';
 import { StateSupport } from './state-support.feature';

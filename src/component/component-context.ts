@@ -1,4 +1,4 @@
-import { EventProducer, noop } from '../common';
+import { EventProducer, noop, StateUpdateConsumer, StateValueKey } from '../common';
 
 /**
  * Web component context.
@@ -81,14 +81,14 @@ export interface ComponentContext<T extends object = object, E extends HTMLEleme
    * It is a shorthand for invoking a component state update function available under `ComponentValueKey.stateUpdate`
    * key.
    *
-   * Note that state refresh has no effect, unless `StateSupport` feature is enabled.
+   * Note that state update has no effect, unless `StateSupport` feature is enabled.
    *
    * @param <V> A type of changed value.
    * @param key Changed value key.
    * @param newValue New value.
    * @param oldValue Previous value.
    */
-  updateState<V>(key: PropertyKey, newValue: V, oldValue: V): void;
+  updateState<V>(key: StateValueKey, newValue: V, oldValue: V): void;
 
 }
 
@@ -142,18 +142,6 @@ export class ComponentValueKey<V> {
   }
 
 }
-
-/**
- * A consumer of state updates.
- *
- * It is called when the value with the given `key` changes.
- *
- * @param <V> A type of changed value.
- * @param key Changed value key.
- * @param newValue New value.
- * @param oldValue Previous value.
- */
-export type StateUpdateConsumer = <V>(this: void, key: PropertyKey, newValue: V, oldValue: V) => void;
 
 /**
  * Component value provider.

@@ -1,4 +1,4 @@
-import { noop } from '../../common';
+import { noop, StateValueKey } from '../../common';
 import { ComponentContext } from '../../component';
 import { WebComponent } from '../../decorators';
 import { AttributeChanged } from './attribute-changed';
@@ -43,7 +43,7 @@ describe('features/attributes/attribute-changed', () => {
       expect(attrSpy).toHaveBeenCalledWith('new', 'old');
       expect(attrSpy.calls.first().object).toBe(self);
     });
-    it('refreshes the state', () => {
+    it('updates the state', () => {
 
       @WebComponent({ name: 'test-component' })
       class TestComponent {
@@ -67,9 +67,9 @@ describe('features/attributes/attribute-changed', () => {
 
       attrs.attr.call(self, 'new', 'old');
 
-      expect(contextSpy.updateState).toHaveBeenCalledWith('@attr', 'new', 'old');
+      expect(contextSpy.updateState).toHaveBeenCalledWith([StateValueKey.attribute, 'attr'], 'new', 'old');
     });
-    it('refreshes the state with custom state refresh function', () => {
+    it('updates the state with custom function', () => {
 
       const updateSpy = jasmine.createSpy('updateState');
 
@@ -99,7 +99,7 @@ describe('features/attributes/attribute-changed', () => {
       expect(updateSpy).toHaveBeenCalledWith('attr', 'new', 'old');
       expect(updateSpy.calls.first().object).toBe(self);
     });
-    it('disables state refresh', () => {
+    it('disables state update', () => {
 
       const notifySpy = jasmine.createSpy('notify');
       const attrSpy = jasmine.createSpy('attrChanged');

@@ -1,4 +1,4 @@
-import { decoratePropertyAccessor } from '../../common';
+import { decoratePropertyAccessor, StateValueKey } from '../../common';
 import { Component, ComponentContext, ComponentType } from '../../component';
 import { ComponentPropertyDecorator } from '../../decorators';
 import { DomPropertiesDef } from './dom-properties-def';
@@ -46,9 +46,9 @@ export function DomProperty<T extends ComponentType>(opts: DomProperty.Opts<T> =
               const context = ComponentContext.find(this);
 
               // When called inside constructor the context is not set yet.
-              // No need to refresh the state in that case.
+              // No need to update the state in that case.
               if (context) {
-                updateState.call(this, propertyKey, newValue, oldValue); // Refresh the state.
+                updateState.call(this, propertyKey, newValue, oldValue); // Update the state.
               }
             },
           };
@@ -66,7 +66,7 @@ export function DomProperty<T extends ComponentType>(opts: DomProperty.Opts<T> =
 }
 
 function defaultUpdateState<T extends object, K extends keyof T>(this: T, property: K, newValue: T[K], oldValue: T[K]) {
-  ComponentContext.of(this).updateState(property, newValue, oldValue);
+  ComponentContext.of(this).updateState([StateValueKey.property, property], newValue, oldValue);
 }
 
 /**
@@ -119,9 +119,9 @@ export namespace DomProperty {
      * Whether to update the component state after this property changed.
      *
      * Either a DOM property updates consumer to call, or boolean value:
-     * - when `false` the component state will not be refreshed.
-     * - when `true` (the default value), then the component state will be refreshed with property name
-     * as changed value key.
+     * - when `false` the component state will not be updated.
+     * - when `true` (the default value), then the component state will be updated with
+     *   `[StateValueKey.property, propertyKey] as changed value key.
      */
     updateState?: boolean | DomPropertyUpdateConsumer<T>;
 

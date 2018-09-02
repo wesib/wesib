@@ -51,7 +51,7 @@ describe('features/dom-properties/dom-property', () => {
           customProperty: expectedDesc,
         }));
       });
-      it('applies defaults to non-refreshing field', () => {
+      it('applies defaults to non-state-updating field', () => {
 
         @WebComponent('test-component')
         class TestComponent {
@@ -94,7 +94,7 @@ describe('features/dom-properties/dom-property', () => {
           customProperty: expectedDesc,
         }));
       });
-      it('applies custom property attributes to non-refreshing field', () => {
+      it('applies custom property attributes to non-state-updating field', () => {
 
         @WebComponent('test-component')
         class TestComponent {
