@@ -55,7 +55,7 @@ describe('features/dom-properties/dom-property', () => {
 
         @WebComponent('test-component')
         class TestComponent {
-          @DomProperty({ refreshState: false })
+          @DomProperty({ updateState: false })
           customProperty = 'value';
         }
 
@@ -102,7 +102,7 @@ describe('features/dom-properties/dom-property', () => {
             configurable: false,
             enumerable: false,
             writable: false,
-            refreshState: false,
+            updateState: false,
           })
           customProperty = 'value';
         }

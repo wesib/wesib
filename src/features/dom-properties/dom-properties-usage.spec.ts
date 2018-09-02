@@ -25,10 +25,10 @@ describe('features/dom-properties', () => {
         @DomProperty()
         field = 'initial';
 
-        @DomProperty({ refreshState: false })
+        @DomProperty({ updateState: false })
         nonRefreshingField = [0];
 
-        @DomProperty({ refreshState: customRefreshSpy })
+        @DomProperty({ updateState: customRefreshSpy })
         customRefreshingField = 91;
 
         constructor(ctx: ComponentContext) {
@@ -79,7 +79,7 @@ describe('features/dom-properties', () => {
 
     it('refreshes the component state on property update', () => {
 
-      const refreshSpy = spyOn(context, 'refreshState');
+      const refreshSpy = spyOn(context, 'updateState');
 
       (element as any).writableProperty = 1;
 
@@ -94,7 +94,7 @@ describe('features/dom-properties', () => {
     });
     it('refreshes the component state on field update', () => {
 
-      const refreshSpy = spyOn(context, 'refreshState');
+      const refreshSpy = spyOn(context, 'updateState');
 
       (element as any).field = 'new';
 
@@ -102,7 +102,7 @@ describe('features/dom-properties', () => {
     });
     it('does not refresh the component state when disabled', () => {
 
-      const refreshSpy = spyOn(context, 'refreshState');
+      const refreshSpy = spyOn(context, 'updateState');
 
       (element as any).nonRefreshingField = [1, 2];
 
@@ -111,7 +111,7 @@ describe('features/dom-properties', () => {
     });
     it('refresh the component state with custom refresh callback', () => {
 
-      const refreshSpy = spyOn(context, 'refreshState');
+      const refreshSpy = spyOn(context, 'updateState');
 
       (element as any).customRefreshingField = 19;
 
@@ -125,7 +125,7 @@ describe('features/dom-properties', () => {
     });
     it('does not refresh the component state on method call', () => {
 
-      const refreshSpy = spyOn(context, 'refreshState');
+      const refreshSpy = spyOn(context, 'updateState');
 
       (element as any).elementMethod('1', '2', '3');
 

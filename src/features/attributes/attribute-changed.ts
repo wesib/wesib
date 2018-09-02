@@ -36,16 +36,16 @@ export function AttributeChanged<T extends ComponentType>(opts?: AttributeChange
   return <V>(target: InstanceType<T>, propertyKey: string | symbol) => {
 
     let name: string | undefined;
-    let refreshState: AttributeRefreshCallback<InstanceType<T>> = defaultRefresh;
+    let updateState: AttributeUpdateConsumer<InstanceType<T>> = defaultUpdateState;
 
     if (typeof opts === 'string') {
       name = opts;
     } else if (opts != null) {
       name = opts.name;
-      if (opts.refreshState === false) {
-        refreshState = noop;
-      } else if (typeof opts.refreshState === 'function') {
-        refreshState = opts.refreshState;
+      if (opts.updateState === false) {
+        updateState = noop;
+      } else if (typeof opts.updateState === 'function') {
+        updateState = opts.updateState;
       }
     }
     if (!name) {
@@ -70,15 +70,15 @@ export function AttributeChanged<T extends ComponentType>(opts?: AttributeChange
             const callback: AttributeChangedCallback<InstanceType<T>> = (this as any)[propertyKey];
 
             callback.call(this, newValue, oldValue);
-            refreshState.call(this, name, newValue, oldValue);
+            updateState.call(this, name, newValue, oldValue);
           }
         });
 
   };
 }
 
-function defaultRefresh<T extends object>(this: T, attribute: string, newValue: string, oldValue: string | null) {
-  ComponentContext.of(this).refreshState(`attr:${attribute}`, newValue, oldValue);
+function defaultUpdateState<T extends object>(this: T, attribute: string, newValue: string, oldValue: string | null) {
+  ComponentContext.of(this).updateState(`attr:${attribute}`, newValue, oldValue);
 }
 
 export namespace AttributeChanged {
@@ -101,19 +101,19 @@ export namespace AttributeChanged {
     /**
      * Whether to refresh the component state after attribute change.
      *
-     * Either a refresh callback function to call, or boolean value:
+     * Either an attribute updates consumer to call, or boolean value:
      * - when `false` the component state will not be refreshed.
      * - when `true` (the default value), then the component state will be refreshed with `attr:<ATTRIBUTE NAME>`
      * as changed value key.
      */
-    refreshState?: boolean | AttributeRefreshCallback<T>;
+    updateState?: boolean | AttributeUpdateConsumer<T>;
 
   }
 
 }
 
 /**
- * Attribute refresh callback function invoked after custom HTML element attribute change.
+ * Attribute updates consumer invoked after custom HTML element attribute change.
  *
  * @param <T> A type of web component.
  * @param this Web component instance.
@@ -121,7 +121,7 @@ export namespace AttributeChanged {
  * @param newValue New attribute value.
  * @param oldValue Previous attribute value, or `null` if there were no value assigned.
  */
-export type AttributeRefreshCallback<T extends object> = (
+export type AttributeUpdateConsumer<T extends object> = (
     this: T,
     attribute: string,
     newValue: string,

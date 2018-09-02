@@ -11,7 +11,7 @@ describe('features/attributes/attribute-changed', () => {
     let contextSpy: SpyObj<ComponentContext>;
 
     beforeEach(() => {
-      contextSpy = jasmine.createSpyObj('componentContext', ['refreshState']);
+      contextSpy = jasmine.createSpyObj('componentContext', ['updateState']);
     });
 
     it('declares attribute change callback', () => {
@@ -67,18 +67,18 @@ describe('features/attributes/attribute-changed', () => {
 
       attrs.attr.call(self, 'new', 'old');
 
-      expect(contextSpy.refreshState).toHaveBeenCalledWith('attr:attr', 'new', 'old');
+      expect(contextSpy.updateState).toHaveBeenCalledWith('attr:attr', 'new', 'old');
     });
     it('refreshes the state with custom state refresh function', () => {
 
-      const refreshSpy = jasmine.createSpy('refresh');
+      const updateSpy = jasmine.createSpy('updateState');
 
       @WebComponent({ name: 'test-component' })
       class TestComponent {
 
         readonly [ComponentContext.symbol]: ComponentContext;
 
-        @AttributeChanged({ refreshState: refreshSpy })
+        @AttributeChanged({ updateState: updateSpy })
         attr = noop;
 
         constructor(context: ComponentContext) {
@@ -95,9 +95,9 @@ describe('features/attributes/attribute-changed', () => {
 
       attrs.attr.call(self, 'new', 'old');
 
-      expect(contextSpy.refreshState).not.toHaveBeenCalled();
-      expect(refreshSpy).toHaveBeenCalledWith('attr', 'new', 'old');
-      expect(refreshSpy.calls.first().object).toBe(self);
+      expect(contextSpy.updateState).not.toHaveBeenCalled();
+      expect(updateSpy).toHaveBeenCalledWith('attr', 'new', 'old');
+      expect(updateSpy.calls.first().object).toBe(self);
     });
     it('disables state refresh', () => {
 
@@ -109,7 +109,7 @@ describe('features/attributes/attribute-changed', () => {
 
         readonly [ComponentContext.symbol]: ComponentContext;
 
-        @AttributeChanged({ refreshState: false })
+        @AttributeChanged({ updateState: false })
         attr = attrSpy;
 
         constructor(context: ComponentContext) {

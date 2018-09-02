@@ -1,5 +1,5 @@
 import { EventProducer } from '../../common';
-import { ComponentValueKey, StateRefreshFn } from '../../component';
+import { ComponentValueKey, StateUpdateConsumer } from '../../component';
 
 /**
  * Web component state tracker.
@@ -11,20 +11,20 @@ export interface StateTracker {
   /**
    * Registers component state updates listener.
    *
-   * This listener will be called when `refreshState()` is called.
+   * This listener will be notified when `updateState()` is called.
    *
    * @param listener A listener to notify on state updates.
    *
    * @return An event interest instance.
    */
-  readonly onStateUpdate: EventProducer<StateRefreshFn>;
+  readonly onStateUpdate: EventProducer<StateUpdateConsumer>;
 
   /**
-   * Refreshes the component state.
+   * Updates the component state.
    *
-   * All listeners registered with `onStatusUpdate()` will be notified on this update.
+   * All listeners registered with `onStateUpdate()` will be notified on this update.
    *
-   * This method is also called by the function available under `ComponentValueKey.stateRefresh` key. This is
+   * This method is also called by the function available under `ComponentValueKey.stateUpdate` key. The latter is
    * preferred way to call it, as the caller won't depend on `StateSupport` feature then.
    *
    * @param <V> A type of changed value.
@@ -32,7 +32,7 @@ export interface StateTracker {
    * @param newValue New value.
    * @param oldValue Previous value.
    */
-  refreshState<V>(key: PropertyKey, newValue: V, oldValue: V): void;
+  updateState<V>(key: PropertyKey, newValue: V, oldValue: V): void;
 
 }
 

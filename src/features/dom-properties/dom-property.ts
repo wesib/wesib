@@ -22,10 +22,10 @@ export function DomProperty<T extends ComponentType>(opts: DomProperty.Opts<T> =
 
     let result: TypedPropertyDescriptor<V> | undefined;
 
-    if (opts.refreshState !== false) {
+    if (opts.updateState !== false) {
 
-      const refreshState: DomPropertyRefreshCallback<T> =
-          typeof opts.refreshState === 'function' ? opts.refreshState : defaultRefresh;
+      const updateState: DomPropertyUpdateConsumer<T> =
+          typeof opts.updateState === 'function' ? opts.updateState : defaultUpdateState;
 
       result = decoratePropertyAccessor(target, propertyKey, propertyDesc, dsc => {
 
@@ -48,7 +48,7 @@ export function DomProperty<T extends ComponentType>(opts: DomProperty.Opts<T> =
               // When called inside constructor the context is not set yet.
               // No need to refresh the state in that case.
               if (context) {
-                refreshState.call(this, propertyKey, newValue, oldValue); // Refresh the state.
+                updateState.call(this, propertyKey, newValue, oldValue); // Refresh the state.
               }
             },
           };
@@ -65,8 +65,8 @@ export function DomProperty<T extends ComponentType>(opts: DomProperty.Opts<T> =
   };
 }
 
-function defaultRefresh<T extends object, K extends keyof T>(this: T, property: K, newValue: T[K], oldValue: T[K]) {
-  ComponentContext.of(this).refreshState(property, newValue, oldValue);
+function defaultUpdateState<T extends object, K extends keyof T>(this: T, property: K, newValue: T[K], oldValue: T[K]) {
+  ComponentContext.of(this).updateState(property, newValue, oldValue);
 }
 
 /**
@@ -116,21 +116,21 @@ export namespace DomProperty {
     writable?: boolean;
 
     /**
-     * Whether to refresh the component state after this property changed.
+     * Whether to update the component state after this property changed.
      *
-     * Either a refresh callback function to call, or boolean value:
+     * Either a DOM property updates consumer to call, or boolean value:
      * - when `false` the component state will not be refreshed.
      * - when `true` (the default value), then the component state will be refreshed with property name
      * as changed value key.
      */
-    refreshState?: boolean | DomPropertyRefreshCallback<T>;
+    updateState?: boolean | DomPropertyUpdateConsumer<T>;
 
   }
 
 }
 
 /**
- * DOM property refresh callback function invoked after custom HTML element property change.
+ * DOM property updates consumer invoked after custom HTML element property change.
  *
  * @param <T> A type of web component.
  * @param <K> A type of web component property keys.
@@ -139,7 +139,7 @@ export namespace DomProperty {
  * @param newValue New property value.
  * @param oldValue Previous property value.
  */
-export type DomPropertyRefreshCallback<T extends object> = <K extends keyof T>(
+export type DomPropertyUpdateConsumer<T extends object> = <K extends keyof T>(
     this: T,
     attribute: K,
     newValue: T[K],

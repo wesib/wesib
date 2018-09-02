@@ -76,9 +76,9 @@ export interface ComponentContext<T extends object = object, E extends HTMLEleme
   get<V>(key: ComponentValueKey<V>, defaultValue: V | null | undefined): V | null | undefined;
 
   /**
-   * Refreshes the state of web component.
+   * Updates the state of web component.
    *
-   * It is a shorthand for invoking a component state refresh function available under `ComponentValueKey.stateRefresh`
+   * It is a shorthand for invoking a component state update function available under `ComponentValueKey.stateUpdate`
    * key.
    *
    * Note that state refresh has no effect, unless `StateSupport` feature is enabled.
@@ -88,7 +88,7 @@ export interface ComponentContext<T extends object = object, E extends HTMLEleme
    * @param newValue New value.
    * @param oldValue Previous value.
    */
-  refreshState<V>(key: PropertyKey, newValue: V, oldValue: V): void;
+  updateState<V>(key: PropertyKey, newValue: V, oldValue: V): void;
 
 }
 
@@ -102,15 +102,15 @@ export interface ComponentContext<T extends object = object, E extends HTMLEleme
 export class ComponentValueKey<V> {
 
   /**
-   * Component value key containing a component state refresh function.
+   * Component value key containing a component state update function.
    *
    * Features are calling this function by default when component state changes, e.g. attribute value or DOM property
    * modified.
    *
    * Note that this value is not provided, unless the `StateSupport` feature is enabled.
    */
-  static readonly stateRefresh: ComponentValueKey<StateRefreshFn> =
-      new ComponentValueKey('state-refresh', noop);
+  static readonly stateUpdate: ComponentValueKey<StateUpdateConsumer> =
+      new ComponentValueKey('state-update', noop);
 
   /**
    * Human-readable key name.
@@ -144,7 +144,7 @@ export class ComponentValueKey<V> {
 }
 
 /**
- * State refreshing function type.
+ * A consumer of state updates.
  *
  * It is called when the value with the given `key` changes.
  *
@@ -153,7 +153,7 @@ export class ComponentValueKey<V> {
  * @param newValue New value.
  * @param oldValue Previous value.
  */
-export type StateRefreshFn = <V>(this: void, key: PropertyKey, newValue: V, oldValue: V) => void;
+export type StateUpdateConsumer = <V>(this: void, key: PropertyKey, newValue: V, oldValue: V) => void;
 
 /**
  * Component value provider.

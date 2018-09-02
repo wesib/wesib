@@ -1,4 +1,4 @@
-import { ComponentContext, ComponentType, ComponentValueKey, StateRefreshFn } from '../../component';
+import { ComponentContext, ComponentType, ComponentValueKey, StateUpdateConsumer } from '../../component';
 import { WebComponent, WebFeature } from '../../decorators';
 import { TestBootstrap } from '../../spec/test-bootstrap';
 import { StateSupport } from './state-support.feature';
@@ -10,12 +10,12 @@ describe('features/state', () => {
     let bootstrap: TestBootstrap;
     let testComponent: ComponentType;
     let context: ComponentContext;
-    let refreshState: StateRefreshFn;
+    let updateState: StateUpdateConsumer;
     let stateTracker: StateTracker;
 
     beforeEach(() => {
       context = undefined!;
-      refreshState = undefined!;
+      updateState = undefined!;
       stateTracker = undefined!;
 
       @WebComponent('test-component')
@@ -23,7 +23,7 @@ describe('features/state', () => {
       class TestComponent {
         constructor(ctx: ComponentContext) {
           context = ctx;
-          refreshState = ctx.get(ComponentValueKey.stateRefresh);
+          updateState = ctx.get(ComponentValueKey.stateUpdate);
           stateTracker = ctx.get(StateTracker.key);
         }
       }
@@ -40,39 +40,39 @@ describe('features/state', () => {
       await bootstrap.addElement(testComponent);
     });
 
-    it('provides state refresh', () => {
-      expect(refreshState).toEqual(jasmine.any(Function));
+    it('provides state update', () => {
+      expect(updateState).toEqual(jasmine.any(Function));
     });
-    it('provides state updates', () => {
+    it('provides state tracker', () => {
       expect(stateTracker).toEqual(jasmine.any(Object));
     });
-    it('notifies on state refresh', () => {
+    it('notifies on state update', () => {
 
       const listenerSpy = jasmine.createSpy('stateListener');
       const interest = stateTracker.onStateUpdate(listenerSpy);
 
-      refreshState('key', 'new', 'old');
+      updateState('key', 'new', 'old');
 
       expect(listenerSpy).toHaveBeenCalledWith('key', 'new', 'old');
 
       interest.off();
       listenerSpy.calls.reset();
-      refreshState('kew', 'new', 'old');
+      updateState('kew', 'new', 'old');
 
       expect(listenerSpy).not.toHaveBeenCalled();
     });
-    it('notifies on state refresh with `stateRefresh()` method' , () => {
+    it('notifies on state update with `updateState()` method' , () => {
 
       const listenerSpy = jasmine.createSpy('stateListener');
       const interest = stateTracker.onStateUpdate(listenerSpy);
 
-      context.refreshState('key', 'new', 'old');
+      context.updateState('key', 'new', 'old');
 
       expect(listenerSpy).toHaveBeenCalledWith('key', 'new', 'old');
 
       interest.off();
       listenerSpy.calls.reset();
-      refreshState('key', 'new', 'old');
+      updateState('key', 'new', 'old');
 
       expect(listenerSpy).not.toHaveBeenCalled();
     });
