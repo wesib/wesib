@@ -78,7 +78,7 @@ export function AttributeChanged<T extends ComponentType>(opts?: AttributeChange
 }
 
 function defaultUpdateState<T extends object>(this: T, attribute: string, newValue: string, oldValue: string | null) {
-  ComponentContext.of(this).updateState(`attr:${attribute}`, newValue, oldValue);
+  ComponentContext.of(this).updateState(`@${attribute}`, newValue, oldValue);
 }
 
 export namespace AttributeChanged {
@@ -103,7 +103,7 @@ export namespace AttributeChanged {
      *
      * Either an attribute updates consumer to call, or boolean value:
      * - when `false` the component state will not be refreshed.
-     * - when `true` (the default value), then the component state will be refreshed with `attr:<ATTRIBUTE NAME>`
+     * - when `true` (the default value), then the component state will be refreshed with `@<ATTRIBUTE NAME>`
      * as changed value key.
      */
     updateState?: boolean | AttributeUpdateConsumer<T>;
