@@ -30,7 +30,7 @@ function enableStateSupport(context: BootstrapContext) {
 
       readonly onStateUpdate = emitter.on;
 
-      updateState<V>(key: PropertyKey, newValue: V, oldValue: V) {
+      readonly updateState: StateUpdateConsumer = <V>(key: StateValueKey, newValue: V, oldValue: V) => {
         emitter.notify(key, newValue, oldValue);
       }
 
@@ -38,10 +38,5 @@ function enableStateSupport(context: BootstrapContext) {
 
     return new Tracker();
   });
-  context.provide(ComponentValueKey.stateUpdate, ctx => {
-
-    const stateTracker = ctx.get(StateTracker.key);
-
-    return <V>(key: StateValueKey, newValue: V, oldValue: V) => stateTracker.updateState(key, newValue, oldValue);
-  });
+  context.provide(ComponentValueKey.stateUpdate, ctx => ctx.get(StateTracker.key).updateState);
 }

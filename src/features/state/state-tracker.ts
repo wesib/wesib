@@ -1,4 +1,4 @@
-import { EventProducer, StateUpdateConsumer, StateValueKey } from '../../common';
+import { EventProducer, StateUpdateConsumer } from '../../common';
 import { ComponentValueKey } from '../../component';
 
 /**
@@ -32,7 +32,7 @@ export interface StateTracker {
    * @param newValue New value.
    * @param oldValue Previous value.
    */
-  updateState<V>(key: StateValueKey, newValue: V, oldValue: V): void;
+  readonly updateState: StateUpdateConsumer;
 
 }
 
