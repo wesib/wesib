@@ -1,6 +1,7 @@
-import { noop, StateValueKey } from '../../common';
-import { ComponentContext, ComponentType } from '../../component';
+import { StateValueKey } from '../../common';
+import { ComponentType } from '../../component';
 import { ComponentDecorator } from '../../decorators';
+import { attributeStateUpdate } from './attribute-state-update';
 import { AttributesDef, AttributeUpdateConsumer } from './attributes-def';
 import './attributes-def.ns';
 
@@ -20,37 +21,10 @@ export function Attributes<
   const def: AttributesDef<T> = {};
 
   Object.keys(opts).forEach(name => {
-
-    const attr = opts[name];
-
-    if (attr === false) {
-      def[name] = noop;
-      return;
-    }
-    if (attr === true || typeof attr === 'function') {
-
-      const key = [StateValueKey.attribute, name];
-      const updateState: AttributeUpdateConsumer<T> = attr === true ? defaultUpdateState : attr;
-
-      def[name] = function (this: T, newValue, oldValue) {
-        updateState.call(this, key, newValue, oldValue);
-      };
-      return;
-    }
-    def[name] = function (this: T, newValue, oldValue) {
-      ComponentContext.of(this).updateState(attr, newValue, oldValue);
-    };
+    def[name] = attributeStateUpdate(name, opts[name]);
   });
 
   return (type: T) => AttributesDef.define(type, def);
-}
-
-function defaultUpdateState<T extends object>(
-    this: T,
-    key: [typeof StateValueKey.attribute, string],
-    newValue: string,
-    oldValue: string | null) {
-  ComponentContext.of(this).updateState(key, newValue, oldValue);
 }
 
 export namespace Attributes {

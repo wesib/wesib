@@ -1,7 +1,6 @@
 import { StateValueKey } from '../../common/events';
 import { ComponentContext } from '../../component';
 import { WebComponent } from '../../decorators';
-import { AttributeChanged } from './attribute-changed';
 import { Attributes } from './attributes';
 import { AttributesDef } from './attributes-def';
 import SpyObj = jasmine.SpyObj;

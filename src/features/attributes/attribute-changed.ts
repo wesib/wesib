@@ -1,6 +1,7 @@
-import { noop, StateValueKey } from '../../common';
-import { ComponentContext, ComponentType } from '../../component';
+import { StateValueKey } from '../../common';
+import { ComponentType } from '../../component';
 import { ComponentPropertyDecorator } from '../../decorators';
+import { attributeStateUpdate } from './attribute-state-update';
 import { AttributeChangedCallback, AttributesDef, AttributeUpdateConsumer } from './attributes-def';
 import './attributes-def.ns';
 
@@ -35,29 +36,26 @@ export function AttributeChanged<T extends ComponentType>(opts?: AttributeChange
     ComponentPropertyDecorator<T> {
   return <V>(target: InstanceType<T>, propertyKey: string | symbol) => {
 
-    let name: string | undefined;
-    let updateState: AttributeUpdateConsumer<InstanceType<T>> = defaultUpdateState;
+    let name: string;
+    let updateState: AttributeChangedCallback<InstanceType<T>>;
 
     if (typeof opts === 'string') {
       name = opts;
-    } else if (opts != null) {
-      name = opts.name;
-      if (opts.updateState === false) {
-        updateState = noop;
-      } else if (typeof opts.updateState === 'function') {
-        updateState = opts.updateState;
-      }
-    }
-    if (!name) {
-      if (typeof propertyKey !== 'string') {
+      updateState = attributeStateUpdate(name);
+    } else {
+      if (opts && opts.name) {
+        name = opts.name;
+      } else if (typeof propertyKey !== 'string') {
         throw new TypeError(
             'Attribute name is required, as property key is not a string: ' +
             `${target.constructor.name}.${propertyKey.toString()}`);
+      } else {
+        name = propertyKey;
       }
-      name = propertyKey;
+
+      updateState = attributeStateUpdate(name, opts && opts.updateState);
     }
 
-    const valueKey = [StateValueKey.attribute, name];
     const componentType = target.constructor as T;
 
     AttributesDef.define(
@@ -71,19 +69,11 @@ export function AttributeChanged<T extends ComponentType>(opts?: AttributeChange
             const callback: AttributeChangedCallback<InstanceType<T>> = (this as any)[propertyKey];
 
             callback.call(this, newValue, oldValue);
-            updateState.call(this, valueKey, newValue, oldValue);
+            updateState.call(this, newValue, oldValue);
           }
         });
 
   };
-}
-
-function defaultUpdateState<T extends object>(
-    this: T,
-    key: [typeof StateValueKey.attribute, string],
-    newValue: string,
-    oldValue: string | null) {
-  ComponentContext.of(this).updateState(key, newValue, oldValue);
 }
 
 export namespace AttributeChanged {
@@ -106,11 +96,13 @@ export namespace AttributeChanged {
     /**
      * Whether to update the component state after attribute change.
      *
-     * Either an attribute updates consumer to call, or boolean value:
-     * - when `false` the component state will not be updated.
-     * - when `true` (the default value), then the component state will be updated with changed attribute key.
+     * Can be one of:
+     * - `false` to not update the component state,
+     * - `true` (the default value) to update the component state with changed attribute key,
+     * - a state value key to update, or
+     * - an attribute update consumer function with custom state update logic.
      */
-    updateState?: boolean | AttributeUpdateConsumer<T>;
+    updateState?: boolean | StateValueKey | AttributeUpdateConsumer<T>;
 
   }
 
