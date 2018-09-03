@@ -76,7 +76,7 @@ function initBootstrap(config: BootstrapConfig) {
       return componentRegistry.whenDefined(componentType);
     }
 
-    provide<V>(key: ContextValueKey<V>, provider: ComponentValueProvider<V>): void {
+    provide<S>(key: ContextValueKey<any, S>, provider: ComponentValueProvider<S>): void {
       providerRegistry.provide(key, provider);
     }
 

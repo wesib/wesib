@@ -1,4 +1,4 @@
-import { ContextValueKey, EventProducer, StateUpdateConsumer } from '../../common';
+import { ContextValueKey, EventProducer, SingleValueKey, StateUpdateConsumer } from '../../common';
 
 /**
  * Web component state tracker.
@@ -40,6 +40,6 @@ export namespace StateTracker {
   /**
    * A `StateTracker` component context value key.
    */
-  export const key = new ContextValueKey<StateTracker>('state-tracker');
+  export const key: ContextValueKey<StateTracker> = new SingleValueKey('state-tracker');
 
 }

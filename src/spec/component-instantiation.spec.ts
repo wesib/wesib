@@ -1,4 +1,4 @@
-import { ContextValueKey, EventInterest } from '../common';
+import { EventInterest, SingleValueKey } from '../common';
 import { Component, ComponentContext, ComponentType } from '../component';
 import { WebComponent } from '../decorators';
 import { TestBootstrap } from './test-bootstrap';
@@ -161,7 +161,7 @@ describe('component instantiation', () => {
 
   describe('component context value', () => {
 
-    const valueKey = new ContextValueKey<string>('provided-value-key');
+    const valueKey = new SingleValueKey<string>('provided-value-key');
     let bootstrap: TestBootstrap;
     let context: ComponentContext;
     let testComponent: ComponentType;
@@ -203,7 +203,7 @@ describe('component instantiation', () => {
     it('provides the default value from the key', () => {
 
       const defaultValue = 'default value';
-      const valueKeyWithDefaults = new ContextValueKey('value-key-with-defaults', defaultValue);
+      const valueKeyWithDefaults = new SingleValueKey('value-key-with-defaults', defaultValue);
 
       expect(context.get(valueKeyWithDefaults)).toBe(defaultValue);
     });

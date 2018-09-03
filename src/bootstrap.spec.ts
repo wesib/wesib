@@ -1,5 +1,5 @@
 import { bootstrapComponents, BootstrapConfig } from './bootstrap';
-import { ContextValueKey, EventEmitter } from './common';
+import { EventEmitter, SingleValueKey } from './common';
 import { WebComponent } from './decorators';
 import { ComponentRegistry } from './element/component-registry';
 import { ElementBuilder } from './element/element-builder';
@@ -159,7 +159,7 @@ describe('bootstrap', () => {
       });
       it('proxies provide() method', () => {
 
-        const key = new ContextValueKey<string>('test-value-key');
+        const key = new SingleValueKey<string>('test-value-key');
         const provider = () => 'test-value';
 
         featureContext.provide(key, provider);

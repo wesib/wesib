@@ -1,4 +1,4 @@
-import { ContextValueKey, ContextValues, EventProducer, noop, StateUpdateConsumer } from '../common';
+import { ContextValueKey, ContextValues, EventProducer, noop, SingleValueKey, StateUpdateConsumer } from '../common';
 
 /**
  * Web component context.
@@ -81,13 +81,13 @@ export interface ComponentContext<T extends object = object, E extends HTMLEleme
  * This function is called at most once per component, unless it returns `null`/`undefined`. In the latter case
  * it may be called again later.
  *
- * @param <V> The type of associated value.
+ * @param <S> The type of source value.
  * @param context Target component context.
  *
  * @return Either constructed value, or `null`/`undefined` if the value can not be constructed.
  */
-export type ComponentValueProvider<V> =
-    <T extends object, E extends HTMLElement>(context: ComponentContext<T, E>) => V | null | undefined;
+export type ComponentValueProvider<S> =
+    <T extends object, E extends HTMLElement>(this: void, context: ComponentContext<T, E>) => S | null | undefined;
 
 export namespace ComponentContext {
 
@@ -99,7 +99,8 @@ export namespace ComponentContext {
    *
    * Note that this value is not provided, unless the `StateSupport` feature is enabled.
    */
-  export const stateUpdateKey = new ContextValueKey<StateUpdateConsumer>('state-update', noop);
+  export const stateUpdateKey: ContextValueKey<StateUpdateConsumer> =
+      new SingleValueKey<StateUpdateConsumer>('state-update', noop);
 
   /**
    * A key of a custom HTML element property and web component containing a reference to web component context.

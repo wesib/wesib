@@ -75,13 +75,11 @@ export interface BootstrapContext {
   /**
    * Registers provider for the given key.
    *
-   * Multiple providers may be registered for the same key. They will be requested in order of registration, until one
-   * of them return a value.
-   *
+   * @param <S> The type of source value.
    * @param key Component context value key the provider should associate the value with.
    * @param provider Component context value provider to register.
    */
-  provide<V>(key: ContextValueKey<V>, provider: ComponentValueProvider<V>): void;
+  provide<S>(key: ContextValueKey<any, S>, provider: ComponentValueProvider<S>): void;
 
 }
 
