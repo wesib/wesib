@@ -1,11 +1,11 @@
 import { noop, StateValueKey } from '../../common';
 import { ComponentContext, ComponentType } from '../../component';
 import { ComponentPropertyDecorator } from '../../decorators';
-import { AttributeChangedCallback, AttributesDef } from './attributes-def';
+import { AttributeChangedCallback, AttributesDef, AttributeUpdateConsumer } from './attributes-def';
 import './attributes-def.ns';
 
 /**
- * Creates a web component decorator for custom HTML element attribute change callback.
+ * Creates a web component method decorator for custom HTML element attribute change callback.
  *
  * The decorated method should have up to two parameters:
  *
@@ -115,18 +115,3 @@ export namespace AttributeChanged {
   }
 
 }
-
-/**
- * Attribute updates consumer invoked after custom HTML element attribute change.
- *
- * @param <T> A type of web component.
- * @param this Web component instance.
- * @param key The changed attribute key in the form of `[StateValueKey.attribute, attributeName]`.
- * @param newValue New attribute value.
- * @param oldValue Previous attribute value, or `null` if there were no value assigned.
- */
-export type AttributeUpdateConsumer<T extends object> = (
-    this: T,
-    key: [typeof StateValueKey.attribute, string],
-    newValue: string,
-    oldValue: string | null) => void;

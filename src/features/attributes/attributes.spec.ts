@@ -1,12 +1,13 @@
-import { noop, StateValueKey } from '../../common';
+import { StateValueKey } from '../../common/events';
 import { ComponentContext } from '../../component';
 import { WebComponent } from '../../decorators';
 import { AttributeChanged } from './attribute-changed';
+import { Attributes } from './attributes';
 import { AttributesDef } from './attributes-def';
 import SpyObj = jasmine.SpyObj;
 
-describe('features/attributes/attribute-changed', () => {
-  describe('@AttributeChanged', () => {
+describe('features/attributes/attributes', () => {
+  describe('@Attributes', () => {
 
     let contextSpy: SpyObj<ComponentContext>;
 
@@ -14,44 +15,15 @@ describe('features/attributes/attribute-changed', () => {
       contextSpy = jasmine.createSpyObj('componentContext', ['updateState']);
     });
 
-    it('declares attribute change callback', () => {
-
-      const attrSpy = jasmine.createSpy('attrChanged');
-
-      @WebComponent({ name: 'test-component' })
-      class TestComponent {
-
-        readonly [ComponentContext.symbol]: ComponentContext;
-
-        @AttributeChanged()
-        attr = attrSpy;
-
-        constructor(context: ComponentContext) {
-          this[ComponentContext.symbol] = context;
-        }
-
-      }
-
-      const attrs = AttributesDef.of(TestComponent);
-
-      expect(attrs.attr).toBeDefined();
-
-      const self = new TestComponent(contextSpy);
-
-      attrs.attr.call(self, 'new', 'old');
-
-      expect(attrSpy).toHaveBeenCalledWith('new', 'old');
-      expect(attrSpy.calls.first().object).toBe(self);
-    });
     it('updates the state', () => {
 
       @WebComponent({ name: 'test-component' })
+      @Attributes({
+        attr: true,
+      })
       class TestComponent {
 
         readonly [ComponentContext.symbol]: ComponentContext;
-
-        @AttributeChanged({})
-        attr = noop;
 
         constructor(context: ComponentContext) {
           this[ComponentContext.symbol] = context;
@@ -74,12 +46,12 @@ describe('features/attributes/attribute-changed', () => {
       const updateSpy = jasmine.createSpy('updateState');
 
       @WebComponent({ name: 'test-component' })
+      @Attributes({
+        attr: updateSpy,
+      })
       class TestComponent {
 
         readonly [ComponentContext.symbol]: ComponentContext;
-
-        @AttributeChanged({ updateState: updateSpy })
-        attr = noop;
 
         constructor(context: ComponentContext) {
           this[ComponentContext.symbol] = context;
@@ -99,17 +71,17 @@ describe('features/attributes/attribute-changed', () => {
       expect(updateSpy).toHaveBeenCalledWith([StateValueKey.attribute, 'attr'], 'new', 'old');
       expect(updateSpy.calls.first().object).toBe(self);
     });
-    it('disables state update', () => {
+    it('updates the state with custom key', () => {
 
-      const attrSpy = jasmine.createSpy('attrChanged');
+      const key = ['custom-key'];
 
       @WebComponent({ name: 'test-component' })
+      @Attributes({
+        attr: key,
+      })
       class TestComponent {
 
         readonly [ComponentContext.symbol]: ComponentContext;
-
-        @AttributeChanged({ updateState: false })
-        attr = attrSpy;
 
         constructor(context: ComponentContext) {
           this[ComponentContext.symbol] = context;
@@ -125,21 +97,17 @@ describe('features/attributes/attribute-changed', () => {
 
       attrs.attr.call(self, 'new', 'old');
 
-      expect(attrSpy).toHaveBeenCalledWith('new', 'old');
-      expect(attrSpy.calls.first().object).toBe(self);
-      expect(contextSpy.updateState).not.toHaveBeenCalled();
+      expect(contextSpy.updateState).toHaveBeenCalledWith(key, 'new', 'old');
     });
-    it('declares attribute with custom attribute name', () => {
-
-      const attrSpy = jasmine.createSpy('attrChanged');
+    it('disables state update', () => {
 
       @WebComponent({ name: 'test-component' })
+      @Attributes({
+        attr: false,
+      })
       class TestComponent {
 
         readonly [ComponentContext.symbol]: ComponentContext;
-
-        @AttributeChanged('my-attr')
-        attr = attrSpy;
 
         constructor(context: ComponentContext) {
           this[ComponentContext.symbol] = context;
@@ -149,27 +117,13 @@ describe('features/attributes/attribute-changed', () => {
 
       const attrs = AttributesDef.of(TestComponent);
 
-      expect(attrs['my-attr']).toBeDefined();
+      expect(attrs.attr).toBeDefined();
 
       const self = new TestComponent(contextSpy);
 
-      attrs['my-attr'].call(self, 'new', 'old');
+      attrs.attr.call(self, 'new', 'old');
 
-      expect(attrSpy).toHaveBeenCalledWith('new', 'old');
-      expect(attrSpy.calls.first().object).toBe(self);
-    });
-    it('fails when attribute name is absent and property key is symbol', () => {
-
-      const key = Symbol('test');
-      const attrSpy = jasmine.createSpy('attrChanged');
-
-      expect(() => {
-        @WebComponent({ name: 'test-component' })
-        class TestComponent {
-          @AttributeChanged()
-          [key] = attrSpy;
-        }
-      }).toThrowError(TypeError);
+      expect(contextSpy.updateState).not.toHaveBeenCalled();
     });
   });
 });
