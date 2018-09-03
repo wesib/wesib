@@ -1,11 +1,5 @@
-import { EventProducer } from '../common';
-import {
-  ComponentContext,
-  ComponentElementType,
-  ComponentType,
-  ComponentValueKey,
-  ComponentValueProvider,
-} from '../component';
+import { ContextValueKey, EventProducer } from '../common';
+import { ComponentContext, ComponentElementType, ComponentType, ComponentValueProvider } from '../component';
 import { ElementClass } from '../element';
 
 /**
@@ -84,17 +78,17 @@ export interface BootstrapContext {
    * Multiple providers may be registered for the same key. They will be requested in order of registration, until one
    * of them return a value.
    *
-   * @param key Component value key the provider should associate the value with.
-   * @param provider Component value provider to register.
+   * @param key Component context value key the provider should associate the value with.
+   * @param provider Component context value provider to register.
    */
-  provide<V>(key: ComponentValueKey<V>, provider: ComponentValueProvider<V>): void;
+  provide<V>(key: ContextValueKey<V>, provider: ComponentValueProvider<V>): void;
 
 }
 
 /**
  * Web component definition listener.
  *
- * It is notified on new component definitions when registered with `Components.onComponentDefinition()` method.
+ * It is notified on new component definitions when registered with `BootstrapContext.onComponentDefinition()` method.
  *
  * The listener may alter the component class or even replace it with another one. For the latter it should return
  * the replacement class. Be careful however. If the replacement definition element name differs from original one,
@@ -111,7 +105,8 @@ export type ComponentDefinitionListener = <T extends object>(
 /**
  * Element definition listener.
  *
- * It is notified on new custom HTML element definitions when registered with `Components.onElementDefinition()` method.
+ * It is notified on new custom HTML element definitions when registered with `BootstrapContext.onElementDefinition()`
+ * method.
  *
  * The listener may alter the custom HTML element class or even replace it with another one. For the latter it should
  * return the replacement class.
@@ -128,7 +123,8 @@ export type ElementDefinitionListener = <T extends object>(
 /**
  * Custom HTML element instantiation listener.
  *
- * It is notified on new custom HTML element instance creation when registered with `Components.onElement()` method.
+ * It is notified on new custom HTML element instance creation when registered with `BootstrapContext.onElement()`
+ * method.
  *
  * @param element Custom HTML element instance.
  * @param context Web component context.

@@ -1,4 +1,5 @@
-import { ComponentType, ComponentValueKey, ComponentValueProvider } from './component';
+import { ContextValueKey } from './common';
+import { ComponentType, ComponentValueProvider } from './component';
 import { ComponentRegistry } from './element/component-registry';
 import { ElementBuilder } from './element/element-builder';
 import { ProviderRegistry } from './element/provider-registry';
@@ -75,7 +76,7 @@ function initBootstrap(config: BootstrapConfig) {
       return componentRegistry.whenDefined(componentType);
     }
 
-    provide<V>(key: ComponentValueKey<V>, provider: ComponentValueProvider<V>): void {
+    provide<V>(key: ContextValueKey<V>, provider: ComponentValueProvider<V>): void {
       providerRegistry.provide(key, provider);
     }
 

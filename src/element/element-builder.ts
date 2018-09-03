@@ -1,12 +1,5 @@
-import { EventEmitter, StateUpdateConsumer, StateValueKey } from '../common';
-import {
-  Component,
-  ComponentContext,
-  ComponentDef,
-  ComponentElementType,
-  ComponentType,
-  ComponentValueKey,
-} from '../component';
+import { ContextValueKey, EventEmitter, StateUpdateConsumer, StateValueKey } from '../common';
+import { Component, ComponentContext, ComponentDef, ComponentElementType, ComponentType } from '../component';
 import { ElementListener } from '../feature';
 import { PromiseResolver } from '../util';
 import { ElementClass } from './element';
@@ -74,7 +67,7 @@ export class ElementBuilder {
           const element: ComponentElementType<T> = this;
           // @ts-ignore
           const elementSuper = (name: string) => super[name] as any;
-          const values = new Map<ComponentValueKey<any>, any>();
+          const values = new Map<ContextValueKey<any>, any>();
           const connectEvents = new EventEmitter<(this: Context) => void>();
           const disconnectEvents = new EventEmitter<(this: Context) => void>();
 
@@ -86,12 +79,12 @@ export class ElementBuilder {
             readonly onConnect = connectEvents.on;
             readonly onDisconnect = disconnectEvents.on;
             readonly updateState: StateUpdateConsumer = (<V>(key: StateValueKey, newValue: V, oldValue: V) => {
-              this.get(ComponentValueKey.stateUpdate)(key, newValue, oldValue);
+              this.get(ComponentContext.stateUpdateKey)(key, newValue, oldValue);
             });
 
-            get<V>(key: ComponentValueKey<V>): V;
+            get<V>(key: ContextValueKey<V>): V;
 
-            get<V>(key: ComponentValueKey<V>, defaultValue?: V | null | undefined): V | null | undefined {
+            get<V>(key: ContextValueKey<V>, defaultValue?: V | null | undefined): V | null | undefined {
 
               const cached: V | undefined = values.get(key);
 

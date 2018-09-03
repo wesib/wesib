@@ -1,5 +1,5 @@
-import { StateUpdateConsumer } from '../../common/events';
-import { ComponentContext, ComponentType, ComponentValueKey } from '../../component';
+import { ContextValueKey, StateUpdateConsumer } from '../../common';
+import { ComponentContext, ComponentType } from '../../component';
 import { WebComponent, WebFeature } from '../../decorators';
 import { TestBootstrap } from '../../spec/test-bootstrap';
 import { StateSupport } from './state-support.feature';
@@ -24,7 +24,7 @@ describe('features/state', () => {
       class TestComponent {
         constructor(ctx: ComponentContext) {
           context = ctx;
-          updateState = ctx.get(ComponentValueKey.stateUpdate);
+          updateState = ctx.get(ComponentContext.stateUpdateKey);
           stateTracker = ctx.get(StateTracker.key);
         }
       }

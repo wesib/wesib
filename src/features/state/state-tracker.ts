@@ -1,5 +1,4 @@
-import { EventProducer, StateUpdateConsumer } from '../../common';
-import { ComponentValueKey } from '../../component';
+import { ContextValueKey, EventProducer, StateUpdateConsumer } from '../../common';
 
 /**
  * Web component state tracker.
@@ -24,7 +23,7 @@ export interface StateTracker {
    *
    * All listeners registered with `onStateUpdate()` will be notified on this update.
    *
-   * This method is also called by the function available under `ComponentValueKey.stateUpdate` key. The latter is
+   * This method is also called by the function available under `ComponentContext.stateUpdateKey` key. The latter is
    * preferred way to call it, as the caller won't depend on `StateSupport` feature then.
    *
    * @param <V> A type of changed value.
@@ -39,8 +38,8 @@ export interface StateTracker {
 export namespace StateTracker {
 
   /**
-   * A `StateTracker` component value key.
+   * A `StateTracker` component context value key.
    */
-  export const key = new ComponentValueKey<StateTracker>('state-tracker');
+  export const key = new ContextValueKey<StateTracker>('state-tracker');
 
 }

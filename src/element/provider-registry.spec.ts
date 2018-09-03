@@ -1,11 +1,12 @@
-import { ComponentContext, ComponentValueKey } from '../component';
+import { ContextValueKey } from '../common';
+import { ComponentContext } from '../component';
 import { ProviderRegistry } from './provider-registry';
 import Spy = jasmine.Spy;
 
 describe('element/provider-registry', () => {
   describe('ProviderRegistry', () => {
 
-    const key = new ComponentValueKey<string>('test-key');
+    const key = new ContextValueKey<string>('test-key');
     let registry: ProviderRegistry;
     let providerSpy: Spy;
     let context: ComponentContext;
@@ -18,7 +19,7 @@ describe('element/provider-registry', () => {
     });
 
     it('does not provide any value if there is no provider', () => {
-      expect(registry.get(new ComponentValueKey(key.name), context)).toBeUndefined();
+      expect(registry.get(new ContextValueKey(key.name), context)).toBeUndefined();
     });
     it('does not provide any value if provider did not provide any value', () => {
       expect(registry.get(key, context)).toBeUndefined();

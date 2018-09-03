@@ -1,5 +1,5 @@
-import { EventInterest } from '../common';
-import { Component, ComponentContext, ComponentType, ComponentValueKey } from '../component';
+import { ContextValueKey, EventInterest } from '../common';
+import { Component, ComponentContext, ComponentType } from '../component';
 import { WebComponent } from '../decorators';
 import { TestBootstrap } from './test-bootstrap';
 import Spy = jasmine.Spy;
@@ -159,9 +159,9 @@ describe('component instantiation', () => {
     });
   });
 
-  describe('component value', () => {
+  describe('component context value', () => {
 
-    const valueKey = new ComponentValueKey<string>('provided-value-key');
+    const valueKey = new ContextValueKey<string>('provided-value-key');
     let bootstrap: TestBootstrap;
     let context: ComponentContext;
     let testComponent: ComponentType;
@@ -203,7 +203,7 @@ describe('component instantiation', () => {
     it('provides the default value from the key', () => {
 
       const defaultValue = 'default value';
-      const valueKeyWithDefaults = new ComponentValueKey<string>('value-key-with-defaults', defaultValue);
+      const valueKeyWithDefaults = new ContextValueKey('value-key-with-defaults', defaultValue);
 
       expect(context.get(valueKeyWithDefaults)).toBe(defaultValue);
     });

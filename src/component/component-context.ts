@@ -1,13 +1,17 @@
-import { EventProducer, noop, StateUpdateConsumer, StateValueKey } from '../common';
+import { ContextValueKey, ContextValues, EventProducer, noop, StateUpdateConsumer } from '../common';
 
 /**
  * Web component context.
  *
  * Passed to component constructor as its only parameter.
  *
+ * Extends `ContextValues` interface. The values are provided by corresponding providers registered with
+ * `BootstrapContext.provide()` method.
+ *
  * @param <E> A type of HTML element.
  */
-export interface ComponentContext<T extends object = object, E extends HTMLElement = HTMLElement> {
+export interface ComponentContext<T extends object = object, E extends HTMLElement = HTMLElement>
+    extends ContextValues {
 
   /**
    * Custom HTML element constructed for the component according to its type.
@@ -48,7 +52,7 @@ export interface ComponentContext<T extends object = object, E extends HTMLEleme
   /**
    * Updates the state of web component.
    *
-   * It is a shorthand for invoking a component state update function available under `ComponentValueKey.stateUpdate`
+   * It is a shorthand for invoking a component state update function available under `ComponentContext.stateUpdateKey`
    * key.
    *
    * Note that state update has no effect, unless `StateSupport` feature is enabled.
@@ -67,84 +71,10 @@ export interface ComponentContext<T extends object = object, E extends HTMLEleme
    */
   elementSuper(name: string): any;
 
-  get<V>(key: ComponentValueKey<V>, defaultValue?: V): V;
-
-  get<V>(key: ComponentValueKey<V>, defaultValue: V | null): V | null;
-
-  get<V>(key: ComponentValueKey<V>, defaultValue: V | undefined): V | undefined;
-
-  /**
-   * Returns a value associated with the given key.
-   *
-   * Values are provided by corresponding providers registered with `Components.provide()` method.
-   *
-   * @param <V> The type of associated value.
-   * @param key Target key.
-   * @param defaultValue Default value to return if there is no value associated with the given key. Can be `null`
-   * or `undefined` too.
-   *
-   * @returns Associated value.
-   *
-   * @throws Error If there is no value associated with the given key and the default key is not provided neither
-   * as function argument, nor as `ComponentValueKey.defaultValue` property.
-   */
-  get<V>(key: ComponentValueKey<V>, defaultValue: V | null | undefined): V | null | undefined;
-
 }
 
 /**
- * Component value key.
- *
- * Every key should be an unique instance of this class.
- *
- * @param <V> The type of associated value.
- */
-export class ComponentValueKey<V> {
-
-  /**
-   * Component value key containing a component state update function.
-   *
-   * Features are calling this function by default when component state changes, e.g. attribute value or DOM property
-   * modified.
-   *
-   * Note that this value is not provided, unless the `StateSupport` feature is enabled.
-   */
-  static readonly stateUpdate: ComponentValueKey<StateUpdateConsumer> =
-      new ComponentValueKey('state-update', noop);
-
-  /**
-   * Human-readable key name.
-   *
-   * This is not necessary unique.
-   */
-  readonly name: string;
-
-  /**
-   * The value used when there is no value associated with this key.
-   *
-   * If `undefined`, then there is no default value.
-   */
-  readonly defaultValue: V | undefined;
-
-  /**
-   * Constructs component context key.
-   *
-   * @param name Human-readable key name.
-   * @param defaultValue Optional default value. If unspecified or `undefined` the key has no default value.
-   */
-  constructor(name: string, defaultValue?: V) {
-    this.name = name;
-    this.defaultValue = defaultValue;
-  }
-
-  toString(): string {
-    return `ComponentValueKey(${this.name})`;
-  }
-
-}
-
-/**
- * Component value provider.
+ * Component context value provider.
  *
  * It is responsible for constructing the values associated with particular key for each component.
  *
@@ -160,6 +90,16 @@ export type ComponentValueProvider<V> =
     <T extends object, E extends HTMLElement>(context: ComponentContext<T, E>) => V | null | undefined;
 
 export namespace ComponentContext {
+
+  /**
+   * Context value key containing a component state update function.
+   *
+   * Features are calling this function by default when component state changes, e.g. attribute value or DOM property
+   * modified.
+   *
+   * Note that this value is not provided, unless the `StateSupport` feature is enabled.
+   */
+  export const stateUpdateKey = new ContextValueKey<StateUpdateConsumer>('state-update', noop);
 
   /**
    * A key of a custom HTML element property and web component containing a reference to web component context.

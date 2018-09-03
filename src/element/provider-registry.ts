@@ -1,11 +1,12 @@
-import { ComponentContext, ComponentValueKey, ComponentValueProvider } from '../component';
+import { ContextValueKey } from '../common';
+import { ComponentContext, ComponentValueProvider } from '../component';
 
 /**
  * @internal
  */
 export class ProviderRegistry {
 
-  private readonly _providers = new Map<ComponentValueKey<any>, ComponentValueProvider<any>>();
+  private readonly _providers = new Map<ContextValueKey<any>, ComponentValueProvider<any>>();
 
   static create(): ProviderRegistry {
     return new ProviderRegistry();
@@ -14,7 +15,7 @@ export class ProviderRegistry {
   private constructor() {
   }
 
-  provide<V>(key: ComponentValueKey<V>, provider: ComponentValueProvider<V>): void {
+  provide<V>(key: ContextValueKey<V>, provider: ComponentValueProvider<V>): void {
 
     const existing: ComponentValueProvider<V> | undefined = this._providers.get(key);
 
@@ -31,7 +32,7 @@ export class ProviderRegistry {
   }
 
   get<T extends object, E extends HTMLElement, V>(
-      key: ComponentValueKey<V>,
+      key: ContextValueKey<V>,
       context: ComponentContext<T, E>): V | null | undefined {
 
     const provider: ComponentValueProvider<V> | undefined = this._providers.get(key);
