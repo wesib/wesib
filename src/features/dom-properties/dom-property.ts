@@ -3,6 +3,7 @@ import { Component, ComponentContext, ComponentType } from '../../component';
 import { ComponentPropertyDecorator } from '../../decorators';
 import { DomPropertiesDef } from './dom-properties-def';
 import './dom-properties-def.ns';
+import { DomPropertyUpdateCallback, propertyStateUpdate } from './property-state-update';
 
 /**
  * Web component property decorator that declares a property to add to custom HTML element created for this web
@@ -20,13 +21,11 @@ export function DomProperty<T extends ComponentType>(opts: DomProperty.Opts<T> =
 
   return <V>(target: InstanceType<T>, propertyKey: string | symbol, propertyDesc?: TypedPropertyDescriptor<V>) => {
 
-    const valueKey = [StateValueKey.property, propertyKey];
     let result: TypedPropertyDescriptor<V> | undefined;
 
     if (opts.updateState !== false) {
 
-      const updateState: DomPropertyUpdateConsumer<T> =
-          typeof opts.updateState === 'function' ? opts.updateState : defaultUpdateState;
+      const updateState: DomPropertyUpdateCallback<T> = propertyStateUpdate(propertyKey, opts.updateState);
 
       result = decoratePropertyAccessor(target, propertyKey, propertyDesc, dsc => {
 
@@ -49,7 +48,7 @@ export function DomProperty<T extends ComponentType>(opts: DomProperty.Opts<T> =
               // When called inside constructor the context is not set yet.
               // No need to update the state in that case.
               if (context) {
-                updateState.call(this, valueKey, newValue, oldValue); // Update the state.
+                updateState.call(this, newValue, oldValue); // Update the state.
               }
             },
           };
@@ -64,14 +63,6 @@ export function DomProperty<T extends ComponentType>(opts: DomProperty.Opts<T> =
 
     return result;
   };
-}
-
-function defaultUpdateState<T extends object, K extends keyof T>(
-    this: T,
-    key: [typeof StateValueKey.property, K],
-    newValue: T[K],
-    oldValue: T[K]) {
-  ComponentContext.of(this).updateState(key, newValue, oldValue);
 }
 
 /**
@@ -127,7 +118,7 @@ export namespace DomProperty {
      * - when `false` the component state will not be updated.
      * - when `true` (the default value), then the component state will be updated with changed property key.
      */
-    updateState?: boolean | DomPropertyUpdateConsumer<T>;
+    updateState?: boolean | StateValueKey | DomPropertyUpdateConsumer<T>;
 
   }
 

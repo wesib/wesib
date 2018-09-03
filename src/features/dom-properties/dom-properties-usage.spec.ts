@@ -14,11 +14,13 @@ describe('features/dom-properties', () => {
     let element: HTMLElement;
     let propertyValue: number;
     let customUpdateStateSpy: Spy;
+    let customUpdateStateKey: StateValueKey;
 
     beforeEach(() => {
       context = undefined!;
       propertyValue = 0;
       customUpdateStateSpy = jasmine.createSpy('customUpdateState');
+      customUpdateStateKey = ['custom', 'key']
 
       @WebComponent({ name: 'test-component' })
       class TestComponent {
@@ -31,6 +33,9 @@ describe('features/dom-properties', () => {
 
         @DomProperty({ updateState: customUpdateStateSpy })
         customStateUpdatingField = 91;
+
+        @DomProperty({ updateState: customUpdateStateKey })
+        customStateKeyField = 911;
 
         constructor(ctx: ComponentContext) {
           context = ctx;
@@ -120,6 +125,15 @@ describe('features/dom-properties', () => {
       expect(updateStateSpy).not.toHaveBeenCalled();
       expect(customUpdateStateSpy).toHaveBeenCalledWith([StateValueKey.property, 'customStateUpdatingField'], 19, 91);
       expect(customUpdateStateSpy.calls.first().object).toBe(Component.of(element));
+    });
+    it('updates the component state with custom key', () => {
+
+      const updateStateSpy = spyOn(context, 'updateState');
+
+      (element as any).customStateKeyField = 119;
+
+      expect((element as any).customStateKeyField).toEqual(119);
+      expect(updateStateSpy).toHaveBeenCalledWith(customUpdateStateKey, 119, 911);
     });
     it('calls component method', () => {
       expect((element as any).elementMethod('1', '2', '3')).toBe(`${propertyValue}: 1, 2, 3`);
