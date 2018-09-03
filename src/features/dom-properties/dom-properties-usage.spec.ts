@@ -20,7 +20,7 @@ describe('features/dom-properties', () => {
       context = undefined!;
       propertyValue = 0;
       customUpdateStateSpy = jasmine.createSpy('customUpdateState');
-      customUpdateStateKey = ['custom', 'key']
+      customUpdateStateKey = ['custom', 'key'];
 
       @WebComponent({ name: 'test-component' })
       class TestComponent {
