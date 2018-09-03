@@ -101,9 +101,6 @@ export class ElementBuilder {
               if (arguments.length > 1) {
                 return defaultValue;
               }
-              if (key.defaultValue !== undefined) {
-                return key.defaultValue;
-              }
 
               throw new Error(`There is no value with the key ${key}`);
             }

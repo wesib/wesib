@@ -55,7 +55,7 @@ export class ContextProviderRegistry<C> {
     const providers: ContextProvider<C, S>[] | undefined = this._providers.get(key);
 
     if (!providers) {
-      return;
+      return key.defaultValue;
     }
 
     return key.merge((function* () {

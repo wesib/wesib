@@ -43,7 +43,7 @@ export abstract class ContextValueKey<V, S = V> {
    *
    * @returns Single context value.
    */
-  abstract merge(sourceValues: Iterator<S>): V | undefined;
+  abstract merge(sourceValues: IterableIterator<S>): V | undefined;
 
   toString(): string {
     return `ContextValueKey(${this.name})`;
@@ -54,7 +54,7 @@ export abstract class ContextValueKey<V, S = V> {
 /**
  * Single context value key.
  *
- * This context value key treats the first source value as context one and ignores the rest of them.
+ * Treats the first source value as context one and ignores the rest of them.
  *
  * @param <V> The type of associated value.
  * @param <S> The type of source values.
@@ -65,17 +65,36 @@ export class SingleValueKey<V> extends ContextValueKey<V> {
     super(name, defaultValue);
   }
 
-  /**
-   * Merges multiple source values into one context value.
-   *
-   * @param sourceValues Source values to merge.
-   *
-   * @returns Single source value.
-   *
-   * @throws Error If more than one source value provided.
-   */
-  merge(sourceValues: Iterator<V>): V | undefined {
-    return sourceValues.next().value;
+  merge(sourceValues: IterableIterator<V>): V | undefined {
+
+    const value = sourceValues.next().value;
+
+    return value != null ? value : this.defaultValue;
+  }
+
+}
+
+/**
+ * Multiple context values key.
+ *
+ * Represents context value as array of source values.
+ *
+ * Associated with empty array by default.
+ *
+ * @param <V> The type of associated value.
+ * @param <S> The type of source values.
+ */
+export class MultiValueKey<V> extends ContextValueKey<V[], V> {
+
+  constructor(name: string, defaultValue: V[] | undefined = []) {
+    super(name, defaultValue);
+  }
+
+  merge(sourceValues: IterableIterator<V>): V[] | undefined {
+
+    const result = [...sourceValues];
+
+    return result.length ? result : this.defaultValue;
   }
 
 }
