@@ -46,6 +46,21 @@ export interface ComponentContext<T extends object = object, E extends HTMLEleme
   readonly onDisconnect: EventProducer<(this: this) => void>;
 
   /**
+   * Updates the state of web component.
+   *
+   * It is a shorthand for invoking a component state update function available under `ComponentValueKey.stateUpdate`
+   * key.
+   *
+   * Note that state update has no effect, unless `StateSupport` feature is enabled.
+   *
+   * @param <V> A type of changed value.
+   * @param key Changed value key.
+   * @param newValue New value.
+   * @param oldValue Previous value.
+   */
+  readonly updateState: StateUpdateConsumer;
+
+  /**
    * Returns a `super` property value inherited from custom HTML element parent.
    *
    * @param name Target property name.
@@ -74,21 +89,6 @@ export interface ComponentContext<T extends object = object, E extends HTMLEleme
    * as function argument, nor as `ComponentValueKey.defaultValue` property.
    */
   get<V>(key: ComponentValueKey<V>, defaultValue: V | null | undefined): V | null | undefined;
-
-  /**
-   * Updates the state of web component.
-   *
-   * It is a shorthand for invoking a component state update function available under `ComponentValueKey.stateUpdate`
-   * key.
-   *
-   * Note that state update has no effect, unless `StateSupport` feature is enabled.
-   *
-   * @param <V> A type of changed value.
-   * @param key Changed value key.
-   * @param newValue New value.
-   * @param oldValue Previous value.
-   */
-  updateState<V>(key: StateValueKey, newValue: V, oldValue: V): void;
 
 }
 

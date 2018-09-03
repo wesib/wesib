@@ -1,4 +1,4 @@
-import { EventEmitter } from '../common';
+import { EventEmitter, StateUpdateConsumer, StateValueKey } from '../common';
 import {
   Component,
   ComponentContext,
@@ -85,6 +85,9 @@ export class ElementBuilder {
             readonly elementSuper = elementSuper;
             readonly onConnect = connectEvents.on;
             readonly onDisconnect = disconnectEvents.on;
+            readonly updateState: StateUpdateConsumer = (<V>(key: StateValueKey, newValue: V, oldValue: V) => {
+              this.get(ComponentValueKey.stateUpdate)(key, newValue, oldValue);
+            });
 
             get<V>(key: ComponentValueKey<V>): V;
 
@@ -110,10 +113,6 @@ export class ElementBuilder {
               }
 
               throw new Error(`There is no value with the key ${key}`);
-            }
-
-            updateState<V>(key: PropertyKey, newValue: V, oldValue: V) {
-              this.get(ComponentValueKey.stateUpdate)(key, newValue, oldValue);
             }
 
           }
