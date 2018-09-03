@@ -52,9 +52,6 @@ function baseConfig(tsconfig) {
         jsnext: true,
         main: false,
         preferBuiltins: false,
-        customResolveOptions: {
-          moduleDirectory: ["node_modules.dev", "node_modules"]
-        },
       }),
       sourcemaps(),
     ],
