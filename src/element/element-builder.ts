@@ -47,6 +47,9 @@ export class ElementBuilder {
     const providerRegistry = this.providerRegistry;
     let connected = false;
 
+    const connectedCallback = Symbol('connectedCallback');
+    const disconnectedCallback = Symbol('disconnectedCallback');
+
     class Element extends elementType {
 
       // Component reference
@@ -55,8 +58,8 @@ export class ElementBuilder {
       // Component context reference
       [ComponentContext.symbol]: ComponentContext<T, ComponentElementType<T>>;
 
-      private readonly _connectedCallback!: () => void;
-      private readonly _disconnectedCallback!: () => void;
+      private readonly [connectedCallback]!: () => void;
+      private readonly [disconnectedCallback]!: () => void;
 
       constructor() {
         super();
@@ -115,10 +118,10 @@ export class ElementBuilder {
           const context = new Context();
 
           Object.defineProperty(this, ComponentContext.symbol, { value: context });
-          Object.defineProperty(this, '_connectedCallback', {
+          Object.defineProperty(this, connectedCallback, {
             value: () => connectEvents.forEach(listener => listener.call(context)),
           });
-          Object.defineProperty(this, '_disconnectedCallback', {
+          Object.defineProperty(this, disconnectedCallback, {
             value: () => disconnectEvents.forEach(listener => listener.call(context)),
           });
 
@@ -138,13 +141,13 @@ export class ElementBuilder {
       // noinspection JSUnusedGlobalSymbols
       connectedCallback() {
         connected = true;
-        this._connectedCallback();
+        this[connectedCallback]();
       }
 
       // noinspection JSUnusedGlobalSymbols
       disconnectedCallback() {
         connected = false;
-        this._disconnectedCallback();
+        this[disconnectedCallback]();
       }
 
     }
