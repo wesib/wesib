@@ -31,8 +31,8 @@ declare module './dom-properties-def' {
     /**
      * Defines a custom HTML element attributes.
      *
-     * Either assigns new or extends an existing DOM properties definition and stores it under `DomPropertiesDef.symbol`
-     * key.
+     * Either assigns new or extends an existing DOM properties definition and stores it under
+     * `[DomPropertiesDef.symbol]` key.
      *
      * @param <T> A type of web component.
      * @param type Target web component type.

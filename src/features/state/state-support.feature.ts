@@ -8,8 +8,8 @@ import { StateTracker } from './state-tracker';
  *
  * When enabled, it registers context values for each component with the following keys:
  *
- * - `ComponentContext.stateUpdateKey` that allows to update the component state, and
- * - `StateTracker.key` containing a `StateTracker` instance to track the state changes.
+ * - `[ComponentContext.stateUpdateKey]` that allows to update the component state, and
+ * - `[StateTracker.key]` containing a `StateTracker` instance to track the state changes.
  *
  * Other features would use this to notify when the state changes. E.g. `DomPropertiesSupport` and `AttributesSupport`
  * features issue state updates when needed.

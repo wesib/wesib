@@ -52,8 +52,8 @@ export interface ComponentContext<T extends object = object, E extends HTMLEleme
   /**
    * Updates the state of web component.
    *
-   * It is a shorthand for invoking a component state update function available under `ComponentContext.stateUpdateKey`
-   * key.
+   * It is a shorthand for invoking a component state update function available under
+   * `[ComponentContext.stateUpdateKey]` key.
    *
    * Note that state update has no effect, unless `StateSupport` feature is enabled.
    *
@@ -108,36 +108,23 @@ export namespace ComponentContext {
   export const symbol = Symbol('web-component-context');
 
   /**
-   * Extracts component context from its custom HTML element or from component instance.
+   * Extracts component context from its custom HTML element or from component itself.
    *
-   * @param element Custom HTML element instance created for web component, or the web component itself.
+   * @param element Custom HTML element instance created for web component or the web component itself.
    *
-   * @return Web component context reference stored under `ComponentContext.symbol` key.
+   * @return Web component context reference stored under `[ComponentContext.symbol]` key.
    *
    * @throws TypeError When the given `element` does not contain component context reference.
    */
   export function of<T extends object, E extends HTMLElement>(element: E | T): ComponentContext<T, E> {
 
-    const context = ComponentContext.find<T, E>(element);
+    const context = (element as any)[symbol];
 
     if (!context) {
       throw TypeError(`No component context found in ${element}`);
     }
 
     return context;
-  }
-
-  /**
-   * Extracts component context from its custom HTML element or from component instance.
-   *
-   * @param element Custom HTML element instance created for web component, or the web component itself.
-   *
-   * @return Web component context reference stored under `ComponentContext.symbol` key.
-   *
-   * @throws TypeError When the given `element` does not contain component context reference.
-   */
-  export function find<T extends object, E extends HTMLElement>(element: E | T): ComponentContext<T, E> | undefined {
-    return (element as any)[symbol];
   }
 
 }

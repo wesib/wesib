@@ -1,5 +1,5 @@
 import { decoratePropertyAccessor, StateValueKey, TypedPropertyDecorator } from '../../common';
-import { Component, ComponentContext, ComponentType } from '../../component';
+import { Component, ComponentType } from '../../component';
 import { DomPropertiesDef } from './dom-properties-def';
 import './dom-properties-def.ns';
 import { DomPropertyUpdateCallback, propertyStateUpdate } from './property-state-update';
@@ -41,14 +41,7 @@ export function DomProperty<T extends ComponentType>(opts: DomProperty.Opts<T> =
               const oldValue = (this as any)[propertyKey];
 
               setter.call(this, newValue);
-
-              const context = ComponentContext.find(this);
-
-              // When called inside constructor the context is not set yet.
-              // No need to update the state in that case.
-              if (context) {
-                updateState.call(this, newValue, oldValue); // Update the state.
-              }
+              updateState.call(this, newValue, oldValue);
             },
           };
       });

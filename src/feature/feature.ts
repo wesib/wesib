@@ -106,7 +106,7 @@ export namespace FeatureDef {
   /**
    * Defines a web components feature.
    *
-   * Either assigns new or extends an existing components feature definition and stores it under `FeatureDef.symbol`
+   * Either assigns new or extends an existing components feature definition and stores it under `[FeatureDef.symbol]`
    * key.
    *
    * @param type Web component class constructor.

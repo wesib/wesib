@@ -32,7 +32,7 @@ declare module './component-def' {
     /**
      * Defines a web component.
      *
-     * Either assigns new or extends an existing component definition and stores it under `ComponentDef.symbol` key.
+     * Either assigns new or extends an existing component definition and stores it under `[ComponentDef.symbol]` key.
      *
      * Note that each ComponentType is also a web components feature able to register itself, so it can be passed
      * directly to `bootstrapComponents()` function or added as a requirement of other web components feature.

@@ -119,9 +119,8 @@ export class ElementBuilder {
 
           builder.elements.notify(element, context);
 
-          const component = new componentType(context);
+          const component = Component.create(componentType, context);
 
-          Object.defineProperty(component, ComponentContext.symbol, { value: context });
           Object.defineProperty(this, Component.symbol, { value: component });
 
           componentResolver.resolve(component);

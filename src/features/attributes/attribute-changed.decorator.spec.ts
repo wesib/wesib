@@ -1,5 +1,5 @@
 import { noop, StateValueKey } from '../../common';
-import { ComponentContext, WebComponent } from '../../component';
+import { Component, ComponentContext, WebComponent } from '../../component';
 import { AttributeChanged } from './attribute-changed.decorator';
 import { AttributesDef } from './attributes-def';
 import SpyObj = jasmine.SpyObj;
@@ -20,14 +20,8 @@ describe('features/attributes/attribute-changed', () => {
       @WebComponent({ name: 'test-component' })
       class TestComponent {
 
-        readonly [ComponentContext.symbol]: ComponentContext;
-
         @AttributeChanged()
         attr = attrSpy;
-
-        constructor(context: ComponentContext) {
-          this[ComponentContext.symbol] = context;
-        }
 
       }
 
@@ -35,26 +29,20 @@ describe('features/attributes/attribute-changed', () => {
 
       expect(attrs.attr).toBeDefined();
 
-      const self = new TestComponent(contextSpy);
+      const component = Component.create(TestComponent, contextSpy);
 
-      attrs.attr.call(self, 'new', 'old');
+      attrs.attr.call(component, 'new', 'old');
 
       expect(attrSpy).toHaveBeenCalledWith('new', 'old');
-      expect(attrSpy.calls.first().object).toBe(self);
+      expect(attrSpy.calls.first().object).toBe(component);
     });
     it('updates the state', () => {
 
       @WebComponent({ name: 'test-component' })
       class TestComponent {
 
-        readonly [ComponentContext.symbol]: ComponentContext;
-
         @AttributeChanged({})
         attr = noop;
-
-        constructor(context: ComponentContext) {
-          this[ComponentContext.symbol] = context;
-        }
 
       }
 
@@ -62,7 +50,7 @@ describe('features/attributes/attribute-changed', () => {
 
       expect(attrs.attr).toBeDefined();
 
-      const self = new TestComponent(contextSpy);
+      const self = Component.create(TestComponent, contextSpy);
 
       attrs.attr.call(self, 'new', 'old');
 
@@ -75,14 +63,8 @@ describe('features/attributes/attribute-changed', () => {
       @WebComponent({ name: 'test-component' })
       class TestComponent {
 
-        readonly [ComponentContext.symbol]: ComponentContext;
-
         @AttributeChanged({ updateState: updateSpy })
         attr = noop;
-
-        constructor(context: ComponentContext) {
-          this[ComponentContext.symbol] = context;
-        }
 
       }
 
@@ -90,7 +72,7 @@ describe('features/attributes/attribute-changed', () => {
 
       expect(attrs.attr).toBeDefined();
 
-      const self = new TestComponent(contextSpy);
+      const self = Component.create(TestComponent, contextSpy);
 
       attrs.attr.call(self, 'new', 'old');
 
@@ -105,14 +87,8 @@ describe('features/attributes/attribute-changed', () => {
       @WebComponent({ name: 'test-component' })
       class TestComponent {
 
-        readonly [ComponentContext.symbol]: ComponentContext;
-
         @AttributeChanged({ name: 'my-attr', updateState: key })
         attr = noop;
-
-        constructor(context: ComponentContext) {
-          this[ComponentContext.symbol] = context;
-        }
 
       }
 
@@ -120,7 +96,7 @@ describe('features/attributes/attribute-changed', () => {
 
       expect(attrs['my-attr']).toBeDefined();
 
-      const self = new TestComponent(contextSpy);
+      const self = Component.create(TestComponent, contextSpy);
 
       attrs['my-attr'].call(self, 'new', 'old');
 
@@ -133,14 +109,8 @@ describe('features/attributes/attribute-changed', () => {
       @WebComponent({ name: 'test-component' })
       class TestComponent {
 
-        readonly [ComponentContext.symbol]: ComponentContext;
-
         @AttributeChanged({ updateState: false })
         attr = attrSpy;
-
-        constructor(context: ComponentContext) {
-          this[ComponentContext.symbol] = context;
-        }
 
       }
 
@@ -148,7 +118,7 @@ describe('features/attributes/attribute-changed', () => {
 
       expect(attrs.attr).toBeDefined();
 
-      const self = new TestComponent(contextSpy);
+      const self = Component.create(TestComponent, contextSpy);
 
       attrs.attr.call(self, 'new', 'old');
 
@@ -163,14 +133,8 @@ describe('features/attributes/attribute-changed', () => {
       @WebComponent({ name: 'test-component' })
       class TestComponent {
 
-        readonly [ComponentContext.symbol]: ComponentContext;
-
         @AttributeChanged('my-attr')
         attr = attrSpy;
-
-        constructor(context: ComponentContext) {
-          this[ComponentContext.symbol] = context;
-        }
 
       }
 
@@ -178,7 +142,7 @@ describe('features/attributes/attribute-changed', () => {
 
       expect(attrs['my-attr']).toBeDefined();
 
-      const self = new TestComponent(contextSpy);
+      const self = Component.create(TestComponent, contextSpy);
 
       attrs['my-attr'].call(self, 'new', 'old');
 

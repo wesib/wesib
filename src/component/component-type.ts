@@ -26,7 +26,7 @@ export type ComponentElementType<T extends object> = Class<T> extends ComponentC
  *
  * This is a web component class constructor that may accept a component context instance as the only parameter.
  *
- * Web component type should contain a property with `ComponentDef.symbol` as its key containing a web component
+ * Web component type should contain a property with `[ComponentDef.symbol]` as its key containing a web component
  * definition. This is the only requirement for the web component classes.
  *
  * @param <T> A type of web component.

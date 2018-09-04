@@ -3,7 +3,7 @@ import { ContextValueKey, EventProducer, SingleValueKey, StateUpdateConsumer } f
 /**
  * Web component state tracker.
  *
- * It is available in component context under `StateTracker.key` value key when `StateSupport` feature is enabled.
+ * It is available in component context under `[StateTracker.key]` value key when `StateSupport` feature is enabled.
  */
 export interface StateTracker {
 
@@ -23,8 +23,8 @@ export interface StateTracker {
    *
    * All listeners registered with `onStateUpdate()` will be notified on this update.
    *
-   * This method is also called by the function available under `ComponentContext.stateUpdateKey` key. The latter is
-   * preferred way to call it, as the caller won't depend on `StateSupport` feature then.
+   * This method is also called by the function available under `[ComponentContext.stateUpdateKey]` key.
+   * The latter is preferred way to call it, as the caller won't depend on `StateSupport` feature then.
    *
    * @param <V> A type of changed value.
    * @param key Changed value key.

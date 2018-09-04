@@ -31,7 +31,7 @@ declare module './attributes-def' {
     /**
      * Defines a custom HTML element attributes.
      *
-     * Either assigns new or extends an existing attributes definition and stores it under `AttributesDef.symbol` key.
+     * Either assigns new or extends an existing attributes definition and stores it under `[AttributesDef.symbol]` key.
      *
      * Automatically enables `AttributesSupport` feature.
      *
