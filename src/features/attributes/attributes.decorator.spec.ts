@@ -1,5 +1,5 @@
 import { StateValueKey } from '../../common';
-import { ComponentContext, WebComponent } from '../../component';
+import { Component, ComponentContext, WebComponent } from '../../component';
 import { AttributesDef } from './attributes-def';
 import { Attributes } from './attributes.decorator';
 import SpyObj = jasmine.SpyObj;
@@ -20,20 +20,13 @@ describe('features/attributes/attributes', () => {
         attr: true,
       })
       class TestComponent {
-
-        readonly [ComponentContext.symbol]: ComponentContext;
-
-        constructor(context: ComponentContext) {
-          this[ComponentContext.symbol] = context;
-        }
-
       }
 
       const attrs = AttributesDef.of(TestComponent);
 
       expect(attrs.attr).toBeDefined();
 
-      const self = new TestComponent(contextSpy);
+      const self = Component.create(TestComponent, contextSpy);
 
       attrs.attr.call(self, 'new', 'old');
 
@@ -48,20 +41,13 @@ describe('features/attributes/attributes', () => {
         attr: updateSpy,
       })
       class TestComponent {
-
-        readonly [ComponentContext.symbol]: ComponentContext;
-
-        constructor(context: ComponentContext) {
-          this[ComponentContext.symbol] = context;
-        }
-
       }
 
       const attrs = AttributesDef.of(TestComponent);
 
       expect(attrs.attr).toBeDefined();
 
-      const self = new TestComponent(contextSpy);
+      const self = Component.create(TestComponent, contextSpy);
 
       attrs.attr.call(self, 'new', 'old');
 
@@ -78,20 +64,13 @@ describe('features/attributes/attributes', () => {
         attr: key,
       })
       class TestComponent {
-
-        readonly [ComponentContext.symbol]: ComponentContext;
-
-        constructor(context: ComponentContext) {
-          this[ComponentContext.symbol] = context;
-        }
-
       }
 
       const attrs = AttributesDef.of(TestComponent);
 
       expect(attrs.attr).toBeDefined();
 
-      const self = new TestComponent(contextSpy);
+      const self = Component.create(TestComponent, contextSpy);
 
       attrs.attr.call(self, 'new', 'old');
 
@@ -104,20 +83,13 @@ describe('features/attributes/attributes', () => {
         attr: false,
       })
       class TestComponent {
-
-        readonly [ComponentContext.symbol]: ComponentContext;
-
-        constructor(context: ComponentContext) {
-          this[ComponentContext.symbol] = context;
-        }
-
       }
 
       const attrs = AttributesDef.of(TestComponent);
 
       expect(attrs.attr).toBeDefined();
 
-      const self = new TestComponent(contextSpy);
+      const self = Component.create(TestComponent, contextSpy);
 
       attrs.attr.call(self, 'new', 'old');
 
