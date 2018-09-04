@@ -45,6 +45,7 @@ export class ElementBuilder {
     const def = ComponentDef.of(componentType);
     const elementType: ElementClass<HTMLElement> = this.elementType(def);
     const providerRegistry = this.providerRegistry;
+    let connected = false;
 
     class Element extends elementType {
 
@@ -81,6 +82,10 @@ export class ElementBuilder {
             readonly updateState: StateUpdateConsumer = (<V>(key: StateValueKey, newValue: V, oldValue: V) => {
               this.get(ComponentContext.stateUpdateKey)(key, newValue, oldValue);
             });
+
+            get connected() {
+              return connected;
+            }
 
             get<V>(key: ContextValueKey<V>): V;
 
@@ -132,11 +137,13 @@ export class ElementBuilder {
 
       // noinspection JSUnusedGlobalSymbols
       connectedCallback() {
+        connected = true;
         this._connectedCallback();
       }
 
       // noinspection JSUnusedGlobalSymbols
       disconnectedCallback() {
+        connected = false;
         this._disconnectedCallback();
       }
 

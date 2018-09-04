@@ -19,6 +19,13 @@ export interface ComponentContext<T extends object = object, E extends HTMLEleme
   readonly element: E;
 
   /**
+   * Whether the custom HTML element is connected.
+   *
+   * This becomes `true` right before `onConnect` is called, and becomes false right before `onDisconnect` is called.
+   */
+  readonly connected: boolean;
+
+  /**
    * A promise resolved to component.
    *
    * The component is constructed shortly after the HTML element. So the component may not exist when requested

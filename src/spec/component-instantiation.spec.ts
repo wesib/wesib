@@ -130,6 +130,7 @@ describe('component instantiation', () => {
 
         bootstrap.context.onElement((_el, ctx) => {
           ctx.onConnect(listenerSpy);
+          ctx.onConnect(() => expect(ctx.connected).toBe(true));
         });
 
         await bootstrap.addElement(testComponent);
@@ -145,6 +146,7 @@ describe('component instantiation', () => {
 
         bootstrap.context.onElement((_el, ctx) => {
           ctx.onDisconnect(listenerSpy);
+          ctx.onDisconnect(() => expect(ctx.connected).toBe(false));
         });
 
         const el = await bootstrap.addElement(testComponent);
