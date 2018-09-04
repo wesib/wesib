@@ -1,7 +1,6 @@
 import { Component, ComponentElementType, ComponentType } from '../../component';
-import { WebFeature } from '../../decorators';
 import { ElementClass } from '../../element';
-import { BootstrapContext } from '../../feature';
+import { BootstrapContext, WebFeature } from '../../feature';
 import { AttributesDef } from './attributes-def';
 
 /**

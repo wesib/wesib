@@ -1,4 +1,4 @@
-import { WebComponent } from '../../decorators';
+import { WebComponent } from '../../component';
 import { FeatureDef } from '../../feature';
 import { AttributesDef } from './attributes-def';
 import './attributes-def.ns';

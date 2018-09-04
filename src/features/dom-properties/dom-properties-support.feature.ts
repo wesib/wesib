@@ -1,7 +1,6 @@
 import { ComponentElementType, ComponentType } from '../../component';
-import { WebFeature } from '../../decorators';
 import { ElementClass } from '../../element';
-import { BootstrapContext, FeatureType } from '../../feature';
+import { BootstrapContext, FeatureType, WebFeature } from '../../feature';
 import { DomPropertiesDef } from './dom-properties-def';
 
 @WebFeature({

@@ -1,7 +1,6 @@
 import { bootstrapComponents } from '../bootstrap';
 import { Component, ComponentDef, ComponentElementType, ComponentType } from '../component';
-import { WebFeature } from '../decorators';
-import { BootstrapContext, FeatureType } from '../feature';
+import { BootstrapContext, FeatureType, WebFeature } from '../feature';
 import { TestIframe } from './test-iframe';
 
 export class TestBootstrap {

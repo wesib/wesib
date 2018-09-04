@@ -1,5 +1,5 @@
-import { FeatureDef, FeatureType } from '../feature';
-import { ComponentDecorator } from './component-decorators';
+import { TypedClassDecorator } from '../common';
+import { FeatureDef, FeatureType } from './feature';
 
 /**
  * Web components feature class decorator.
@@ -21,6 +21,6 @@ import { ComponentDecorator } from './component-decorators';
  *
  * @returns A web components feature class decorator.
  */
-export function WebFeature<T extends FeatureType = any>(def: FeatureDef): ComponentDecorator<T> {
+export function WebFeature<T extends FeatureType = any>(def: FeatureDef): TypedClassDecorator<T> {
   return (type: T) => FeatureDef.define(type, def);
 }

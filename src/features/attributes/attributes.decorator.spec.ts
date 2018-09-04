@@ -1,8 +1,7 @@
-import { StateValueKey } from '../../common/events';
-import { ComponentContext } from '../../component';
-import { WebComponent } from '../../decorators';
-import { Attributes } from './attributes';
+import { StateValueKey } from '../../common';
+import { ComponentContext, WebComponent } from '../../component';
 import { AttributesDef } from './attributes-def';
+import { Attributes } from './attributes.decorator';
 import SpyObj = jasmine.SpyObj;
 
 describe('features/attributes/attributes', () => {

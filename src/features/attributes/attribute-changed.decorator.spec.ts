@@ -1,7 +1,6 @@
 import { noop, StateValueKey } from '../../common';
-import { ComponentContext } from '../../component';
-import { WebComponent } from '../../decorators';
-import { AttributeChanged } from './attribute-changed';
+import { ComponentContext, WebComponent } from '../../component';
+import { AttributeChanged } from './attribute-changed.decorator';
 import { AttributesDef } from './attributes-def';
 import SpyObj = jasmine.SpyObj;
 

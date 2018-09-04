@@ -1,6 +1,5 @@
-import { StateValueKey } from '../../common';
+import { StateValueKey, TypedPropertyDecorator } from '../../common';
 import { ComponentType } from '../../component';
-import { ComponentPropertyDecorator } from '../../decorators';
 import { attributeStateUpdate } from './attribute-state-update';
 import { AttributeChangedCallback, AttributesDef, AttributeUpdateConsumer } from './attributes-def';
 import './attributes-def.ns';
@@ -33,7 +32,7 @@ import './attributes-def.ns';
  * @return Web component method decorator.
  */
 export function AttributeChanged<T extends ComponentType>(opts?: AttributeChanged.Opts<T> | string):
-    ComponentPropertyDecorator<T> {
+    TypedPropertyDecorator<T> {
   return <V>(target: InstanceType<T>, propertyKey: string | symbol) => {
 
     let name: string;

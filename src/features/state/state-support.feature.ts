@@ -1,7 +1,6 @@
 import { EventEmitter, StateUpdateConsumer, StateValueKey } from '../../common';
 import { ComponentContext } from '../../component';
-import { WebFeature } from '../../decorators';
-import { BootstrapContext } from '../../feature';
+import { BootstrapContext, WebFeature } from '../../feature';
 import { StateTracker } from './state-tracker';
 
 /**

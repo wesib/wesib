@@ -1,6 +1,6 @@
 import { bootstrapComponents, BootstrapConfig } from './bootstrap';
 import { EventEmitter, SingleValueKey } from './common';
-import { WebComponent } from './decorators';
+import { WebComponent } from './component';
 import { ComponentRegistry } from './element/component-registry';
 import { ElementBuilder } from './element/element-builder';
 import { ProviderRegistry } from './element/provider-registry';

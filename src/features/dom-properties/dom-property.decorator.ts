@@ -1,6 +1,5 @@
-import { decoratePropertyAccessor, StateValueKey } from '../../common';
+import { decoratePropertyAccessor, StateValueKey, TypedPropertyDecorator } from '../../common';
 import { Component, ComponentContext, ComponentType } from '../../component';
-import { ComponentPropertyDecorator } from '../../decorators';
 import { DomPropertiesDef } from './dom-properties-def';
 import './dom-properties-def.ns';
 import { DomPropertyUpdateCallback, propertyStateUpdate } from './property-state-update';
@@ -17,7 +16,7 @@ import { DomPropertyUpdateCallback, propertyStateUpdate } from './property-state
  *
  * @returns Web component property decorator.
  */
-export function DomProperty<T extends ComponentType>(opts: DomProperty.Opts<T> = {}): ComponentPropertyDecorator<T> {
+export function DomProperty<T extends ComponentType>(opts: DomProperty.Opts<T> = {}): TypedPropertyDecorator<T> {
 
   return <V>(target: InstanceType<T>, propertyKey: string | symbol, propertyDesc?: TypedPropertyDescriptor<V>) => {
 

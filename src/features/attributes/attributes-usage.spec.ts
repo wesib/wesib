@@ -1,7 +1,6 @@
-import { ComponentContext, ComponentType } from '../../component';
-import { WebComponent } from '../../decorators';
+import { ComponentContext, ComponentType, WebComponent } from '../../component';
 import { TestBootstrap } from '../../spec/test-bootstrap';
-import { AttributeChanged } from './attribute-changed';
+import { AttributeChanged } from './attribute-changed.decorator';
 import Spy = jasmine.Spy;
 
 describe('features/attributes', () => {

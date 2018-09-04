@@ -1,6 +1,6 @@
-import { ContextValueKey, StateUpdateConsumer } from '../../common';
-import { ComponentContext, ComponentType } from '../../component';
-import { WebComponent, WebFeature } from '../../decorators';
+import { StateUpdateConsumer } from '../../common';
+import { ComponentContext, ComponentType, WebComponent } from '../../component';
+import { WebFeature } from '../../feature';
 import { TestBootstrap } from '../../spec/test-bootstrap';
 import { StateSupport } from './state-support.feature';
 import { StateTracker } from './state-tracker';

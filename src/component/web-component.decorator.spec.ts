@@ -1,5 +1,5 @@
-import { ComponentDef } from '../component';
-import { WebComponent } from './web-component';
+import { ComponentDef } from './component-def';
+import { WebComponent } from './web-component.decorator';
 
 describe('decorators/web-component', () => {
   describe('@WebComponent', () => {

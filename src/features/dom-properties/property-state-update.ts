@@ -1,6 +1,6 @@
 import { StateValueKey } from '../../common';
 import { ComponentContext } from '../../component';
-import { DomPropertyUpdateConsumer } from './dom-property';
+import { DomPropertyUpdateConsumer } from './dom-property.decorator';
 
 /**
  * @internal

@@ -1,6 +1,5 @@
-import { StateValueKey } from '../../common';
+import { StateValueKey, TypedClassDecorator } from '../../common';
 import { ComponentType } from '../../component';
-import { ComponentDecorator } from '../../decorators';
 import { attributeStateUpdate } from './attribute-state-update';
 import { AttributesDef, AttributeUpdateConsumer } from './attributes-def';
 import './attributes-def.ns';
@@ -16,7 +15,7 @@ import './attributes-def.ns';
  */
 export function Attributes<
     T extends ComponentType = any,
-    E extends HTMLElement = HTMLElement>(opts: Attributes.Opts<T>): ComponentDecorator<T> {
+    E extends HTMLElement = HTMLElement>(opts: Attributes.Opts<T>): TypedClassDecorator<T> {
 
   const def: AttributesDef<T> = {};
 

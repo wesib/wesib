@@ -1,8 +1,7 @@
-import { StateValueKey } from '../../common/events';
-import { Component, ComponentContext, ComponentType } from '../../component';
-import { WebComponent } from '../../decorators';
+import { StateValueKey } from '../../common';
+import { Component, ComponentContext, ComponentType, WebComponent } from '../../component';
 import { TestBootstrap } from '../../spec/test-bootstrap';
-import { DomMethod, DomProperty } from './dom-property';
+import { DomMethod, DomProperty } from './dom-property.decorator';
 import Spy = jasmine.Spy;
 
 describe('features/dom-properties', () => {

@@ -1,6 +1,5 @@
 import { EventInterest, SingleValueKey } from '../common';
-import { Component, ComponentContext, ComponentType } from '../component';
-import { WebComponent } from '../decorators';
+import { Component, ComponentContext, ComponentType, WebComponent } from '../component';
 import { TestBootstrap } from './test-bootstrap';
 import Spy = jasmine.Spy;
 

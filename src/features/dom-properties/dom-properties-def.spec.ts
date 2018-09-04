@@ -1,8 +1,8 @@
-import { WebComponent } from '../../decorators';
+import { WebComponent } from '../../component';
 import { FeatureDef } from '../../feature';
 import { DomPropertiesDef } from './dom-properties-def';
-import { DomPropertiesSupport } from './dom-properties-support.feature';
 import './dom-properties-def.ns';
+import { DomPropertiesSupport } from './dom-properties-support.feature';
 
 describe('features/dom-properties/dom-properties-def', () => {
   describe('DomPropertiesDef', () => {
