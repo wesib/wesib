@@ -3,7 +3,7 @@ Web components building blocks
 
 Example:
 ```TypeScript
-import { AttributeChanged, bootstrapComponents, ComponentContext, WebComponent } from '@webcbb/webcbb';
+import { AttributeChanged, bootstrapComponents, ComponentContext, WebComponent } from '@wesib/wesib';
 
 @WebComponent('greet-text')
 export class GreetTextComponent {

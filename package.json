@@ -1,25 +1,25 @@
 {
-  "name": "@webcbb/webcbb",
+  "name": "@wesib/wesib",
   "version": "1.0.0",
   "description": "Web components building blocks",
   "keywords": [
     "web-components",
     "library"
   ],
-  "homepage": "https://github.com/webcbb/webcbb",
+  "homepage": "https://github.com/wesib/wesib",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/webcbb/webcbb.git"
+    "url": "git+https://github.com/wesib/wesib.git"
   },
   "license": "MIT",
   "author": "Ruslan Lopatin<ruslan.lopatin@gmail.com>",
   "bugs": {
-    "url": "https://github.com/webcbb/webcbb/issues"
+    "url": "https://github.com/wesib/wesib/issues"
   },
-  "main": "./dist/webcbb.umd.js",
-  "module": "./dist/webcbb.esm5.js",
-  "es2015": "./dist/webcbb.esm2015.js",
-  "typings": "./index.d.ts",
+  "main": "dist/wesib.umd.js",
+  "module": "dist/wesib.esm5.js",
+  "es2015": "dist/wesib.esm2015.js",
+  "typings": "index.d.ts",
   "dependencies": {
     "tslib": "^1.9.0"
   },
