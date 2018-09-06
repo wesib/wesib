@@ -1,5 +1,5 @@
 import { StateValueKey } from '../../common';
-import { Component, ComponentContext, WebComponent } from '../../component';
+import { Component, ComponentContext, WesComponent } from '../../component';
 import { AttributesDef } from './attributes-def';
 import { Attributes } from './attributes.decorator';
 import SpyObj = jasmine.SpyObj;
@@ -15,7 +15,7 @@ describe('features/attributes/attributes', () => {
 
     it('updates the state', () => {
 
-      @WebComponent({ name: 'test-component' })
+      @WesComponent({ name: 'test-component' })
       @Attributes({
         attr: true,
       })
@@ -36,7 +36,7 @@ describe('features/attributes/attributes', () => {
 
       const updateSpy = jasmine.createSpy('updateState');
 
-      @WebComponent({ name: 'test-component' })
+      @WesComponent({ name: 'test-component' })
       @Attributes({
         attr: updateSpy,
       })
@@ -59,7 +59,7 @@ describe('features/attributes/attributes', () => {
 
       const key = ['custom-key'];
 
-      @WebComponent({ name: 'test-component' })
+      @WesComponent({ name: 'test-component' })
       @Attributes({
         attr: key,
       })
@@ -78,7 +78,7 @@ describe('features/attributes/attributes', () => {
     });
     it('disables state update', () => {
 
-      @WebComponent({ name: 'test-component' })
+      @WesComponent({ name: 'test-component' })
       @Attributes({
         attr: false,
       })

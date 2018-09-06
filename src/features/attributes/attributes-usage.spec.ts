@@ -1,4 +1,4 @@
-import { ComponentContext, ComponentType, WebComponent } from '../../component';
+import { ComponentContext, ComponentType, WesComponent } from '../../component';
 import { TestBootstrap } from '../../spec/test-bootstrap';
 import { AttributeChanged } from './attribute-changed.decorator';
 import Spy = jasmine.Spy;
@@ -19,7 +19,7 @@ describe('features/attributes', () => {
       attrChangedSpy = jasmine.createSpy('attrChanged');
       attr2ChangedSpy = jasmine.createSpy('attr2Changed');
 
-      @WebComponent({ name: 'test-component' })
+      @WesComponent({ name: 'test-component' })
       class TestComponent {
 
         constructor(ctx: ComponentContext) {
@@ -40,7 +40,7 @@ describe('features/attributes', () => {
       attrChangedSpy = jasmine.createSpy('attrChanged');
       attr2ChangedSpy = jasmine.createSpy('attr2Changed');
 
-      @WebComponent({ name: 'no-attr-component' })
+      @WesComponent({ name: 'no-attr-component' })
       class NoAttrComponent {
       }
 

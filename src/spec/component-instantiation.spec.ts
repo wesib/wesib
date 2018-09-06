@@ -1,5 +1,5 @@
 import { EventInterest, SingleValueKey } from '../common';
-import { Component, ComponentContext, ComponentType, WebComponent } from '../component';
+import { Component, ComponentContext, ComponentType, WesComponent } from '../component';
 import { TestBootstrap } from './test-bootstrap';
 import Spy = jasmine.Spy;
 
@@ -19,7 +19,7 @@ describe('component instantiation', () => {
       constructorSpy = jasmine.createSpy('constructor')
           .and.callFake((ctx: ComponentContext) => context = ctx);
 
-      @WebComponent({ name: 'test-component' })
+      @WesComponent({ name: 'test-component' })
       class TestComponent {
 
         constructor(...args: any[]) {
@@ -78,7 +78,7 @@ describe('component instantiation', () => {
     beforeEach(() => {
       constructorSpy = jasmine.createSpy('constructor');
 
-      @WebComponent({ name: 'test-component' })
+      @WesComponent({ name: 'test-component' })
       class TestComponent {
         constructor() {
           constructorSpy();
@@ -170,7 +170,7 @@ describe('component instantiation', () => {
 
     beforeEach(() => {
 
-      @WebComponent({ name: 'test-component' })
+      @WesComponent({ name: 'test-component' })
       class TestComponent {
         constructor(ctx: ComponentContext) {
           context = ctx;

@@ -1,4 +1,4 @@
-import { WebComponent } from '../../component';
+import { WesComponent } from '../../component';
 import { FeatureDef } from '../../feature';
 import { DomPropertiesDef } from './dom-properties-def';
 import './dom-properties-def.ns';
@@ -78,7 +78,7 @@ describe('features/dom-properties/dom-properties-def', () => {
     describe('define', () => {
       it('enables DOM properties support', () => {
 
-        @WebComponent({ name: 'test-component' })
+        @WesComponent({ name: 'test-component' })
         class TestComponent {
         }
 

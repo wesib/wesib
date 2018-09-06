@@ -1,4 +1,4 @@
-import { WebComponent } from '../../component';
+import { WesComponent } from '../../component';
 import { FeatureDef } from '../../feature';
 import { AttributesDef } from './attributes-def';
 import './attributes-def.ns';
@@ -88,7 +88,7 @@ describe('features/attributes/attributes-def', () => {
     describe('define', () => {
       it('enables attributes support', () => {
 
-        @WebComponent({ name: 'test-component' })
+        @WesComponent({ name: 'test-component' })
         class TestComponent {
         }
 

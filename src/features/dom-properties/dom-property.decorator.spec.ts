@@ -1,4 +1,4 @@
-import { WebComponent } from '../../component';
+import { WesComponent } from '../../component';
 import { DomPropertiesDef } from './dom-properties-def';
 import { DomProperty } from './dom-property.decorator';
 
@@ -6,7 +6,7 @@ describe('features/dom-properties/dom-property', () => {
   describe('@DomProperty', () => {
     it('declares DOM property', () => {
 
-      @WebComponent({ name: 'test-component' })
+      @WesComponent({ name: 'test-component' })
       class TestComponent {
         @DomProperty()
         customProperty = 'value';
@@ -18,7 +18,7 @@ describe('features/dom-properties/dom-property', () => {
     });
     it('declares DOM property with specified name', () => {
 
-      @WebComponent({ name: 'test-component' })
+      @WesComponent({ name: 'test-component' })
       class TestComponent {
         @DomProperty({ name: 'otherProperty' })
         customProperty = 'value';
@@ -33,7 +33,7 @@ describe('features/dom-properties/dom-property', () => {
     describe('for object property', () => {
       it('applies defaults', () => {
 
-        @WebComponent('test-component')
+        @WesComponent('test-component')
         class TestComponent {
           @DomProperty()
           customProperty = 'value';
@@ -53,7 +53,7 @@ describe('features/dom-properties/dom-property', () => {
       });
       it('applies defaults to non-state-updating field', () => {
 
-        @WebComponent('test-component')
+        @WesComponent('test-component')
         class TestComponent {
           @DomProperty({ updateState: false })
           customProperty = 'value';
@@ -73,7 +73,7 @@ describe('features/dom-properties/dom-property', () => {
       });
       it('applies custom property attributes', () => {
 
-        @WebComponent('test-component')
+        @WesComponent('test-component')
         class TestComponent {
           @DomProperty({
             configurable: false,
@@ -96,7 +96,7 @@ describe('features/dom-properties/dom-property', () => {
       });
       it('applies custom property attributes to non-state-updating field', () => {
 
-        @WebComponent('test-component')
+        @WesComponent('test-component')
         class TestComponent {
           @DomProperty({
             configurable: false,
@@ -122,7 +122,7 @@ describe('features/dom-properties/dom-property', () => {
     describe('for property accessor', () => {
       it('applies read-only property defaults', () => {
 
-        @WebComponent('test-component')
+        @WesComponent('test-component')
         class TestComponent {
           @DomProperty()
           get customProperty() {
@@ -143,7 +143,7 @@ describe('features/dom-properties/dom-property', () => {
       });
       it('applies custom read-only property attributes', () => {
 
-        @WebComponent('test-component')
+        @WesComponent('test-component')
         class TestComponent {
           @DomProperty({
             configurable: false,
@@ -168,7 +168,7 @@ describe('features/dom-properties/dom-property', () => {
       });
       it('applies writable property defaults', () => {
 
-        @WebComponent('test-component')
+        @WesComponent('test-component')
         class TestComponent {
 
           private _value = 'value';
@@ -198,7 +198,7 @@ describe('features/dom-properties/dom-property', () => {
       });
       it('applies custom writable property attributes', () => {
 
-        @WebComponent('test-component')
+        @WesComponent('test-component')
         class TestComponent {
 
           private _value = 'value';

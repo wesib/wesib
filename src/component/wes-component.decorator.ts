@@ -7,7 +7,7 @@ import { ComponentType } from './component-type';
  *
  * Decorate a class with it to define it as a web component like this:
  * ```TypeScript
- * @WebComponent({ name: 'my-element' })
+ * @WesComponent({ name: 'my-element' })
  * class MyComponent {
  *   // ...
  * }
@@ -24,7 +24,7 @@ import { ComponentType } from './component-type';
  *
  * @returns A web component class decorator.
  */
-export function WebComponent<
+export function WesComponent<
     T extends ComponentType = any,
     E extends HTMLElement = HTMLElement>(def: ComponentDef<InstanceType<T>, E> | string): TypedClassDecorator<T> {
   return (type: T) => ComponentDef.define(type, typeof def === 'string' ? { name: def } : def);

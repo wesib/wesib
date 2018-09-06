@@ -14,7 +14,7 @@ import './attributes-def.ns';
  *
  * Example:
  * ```TypeScript
- * @WebComponent({ name: 'my-component' })
+ * @WesComponent({ name: 'my-component' })
  * class MyComponent {
  *
  *   @AttributeChanged('my-attribute')

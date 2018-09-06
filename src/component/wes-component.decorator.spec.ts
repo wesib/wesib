@@ -1,8 +1,8 @@
 import { ComponentDef } from './component-def';
-import { WebComponent } from './web-component.decorator';
+import { WesComponent } from './wes-component.decorator';
 
-describe('decorators/web-component', () => {
-  describe('@WebComponent', () => {
+describe('decorators/wes-component', () => {
+  describe('@WesComponent', () => {
     it('assigns component definition', () => {
 
       const def: ComponentDef = {
@@ -13,14 +13,14 @@ describe('decorators/web-component', () => {
         },
       };
 
-      @WebComponent(def)
+      @WesComponent(def)
       class TestComponent {}
 
       expect(ComponentDef.of(TestComponent)).toEqual(def);
     });
     it('allows shorthand definition', () => {
 
-      @WebComponent('test-component')
+      @WesComponent('test-component')
       class TestComponent {}
 
       expect(ComponentDef.of(TestComponent)).toEqual({ name: 'test-component' });

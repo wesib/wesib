@@ -1,5 +1,5 @@
 import { StateValueKey } from '../../common';
-import { Component, ComponentContext, ComponentType, WebComponent } from '../../component';
+import { Component, ComponentContext, ComponentType, WesComponent } from '../../component';
 import { TestBootstrap } from '../../spec/test-bootstrap';
 import { DomMethod, DomProperty } from './dom-property.decorator';
 import Spy = jasmine.Spy;
@@ -21,7 +21,7 @@ describe('features/dom-properties', () => {
       customUpdateStateSpy = jasmine.createSpy('customUpdateState');
       customUpdateStateKey = ['custom', 'key'];
 
-      @WebComponent({ name: 'test-component' })
+      @WesComponent({ name: 'test-component' })
       class TestComponent {
 
         @DomProperty()

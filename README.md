@@ -3,9 +3,9 @@ Web components building blocks
 
 Example:
 ```TypeScript
-import { AttributeChanged, bootstrapComponents, ComponentContext, WebComponent } from '@wesib/wesib';
+import { AttributeChanged, bootstrapComponents, ComponentContext, WesComponent } from '@wesib/wesib';
 
-@WebComponent('greet-text')
+@WesComponent('greet-text')
 export class GreetTextComponent {
 
   constructor(private readonly _context: ComponentContext) {

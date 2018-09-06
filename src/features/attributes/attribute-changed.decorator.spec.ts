@@ -1,5 +1,5 @@
 import { noop, StateValueKey } from '../../common';
-import { Component, ComponentContext, WebComponent } from '../../component';
+import { Component, ComponentContext, WesComponent } from '../../component';
 import { AttributeChanged } from './attribute-changed.decorator';
 import { AttributesDef } from './attributes-def';
 import SpyObj = jasmine.SpyObj;
@@ -17,7 +17,7 @@ describe('features/attributes/attribute-changed', () => {
 
       const attrSpy = jasmine.createSpy('attrChanged');
 
-      @WebComponent({ name: 'test-component' })
+      @WesComponent({ name: 'test-component' })
       class TestComponent {
 
         @AttributeChanged()
@@ -38,7 +38,7 @@ describe('features/attributes/attribute-changed', () => {
     });
     it('updates the state', () => {
 
-      @WebComponent({ name: 'test-component' })
+      @WesComponent({ name: 'test-component' })
       class TestComponent {
 
         @AttributeChanged({})
@@ -60,7 +60,7 @@ describe('features/attributes/attribute-changed', () => {
 
       const updateSpy = jasmine.createSpy('updateState');
 
-      @WebComponent({ name: 'test-component' })
+      @WesComponent({ name: 'test-component' })
       class TestComponent {
 
         @AttributeChanged({ updateState: updateSpy })
@@ -84,7 +84,7 @@ describe('features/attributes/attribute-changed', () => {
 
       const key = ['attr-key'];
 
-      @WebComponent({ name: 'test-component' })
+      @WesComponent({ name: 'test-component' })
       class TestComponent {
 
         @AttributeChanged({ name: 'my-attr', updateState: key })
@@ -106,7 +106,7 @@ describe('features/attributes/attribute-changed', () => {
 
       const attrSpy = jasmine.createSpy('attrChanged');
 
-      @WebComponent({ name: 'test-component' })
+      @WesComponent({ name: 'test-component' })
       class TestComponent {
 
         @AttributeChanged({ updateState: false })
@@ -130,7 +130,7 @@ describe('features/attributes/attribute-changed', () => {
 
       const attrSpy = jasmine.createSpy('attrChanged');
 
-      @WebComponent({ name: 'test-component' })
+      @WesComponent({ name: 'test-component' })
       class TestComponent {
 
         @AttributeChanged('my-attr')
@@ -155,7 +155,7 @@ describe('features/attributes/attribute-changed', () => {
       const attrSpy = jasmine.createSpy('attrChanged');
 
       expect(() => {
-        @WebComponent({ name: 'test-component' })
+        @WesComponent({ name: 'test-component' })
         class TestComponent {
           @AttributeChanged()
           [key] = attrSpy;
