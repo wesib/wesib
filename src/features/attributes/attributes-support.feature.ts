@@ -1,6 +1,6 @@
 import { Component, ComponentElementType, ComponentType } from '../../component';
 import { ElementClass } from '../../element';
-import { BootstrapContext, WebFeature } from '../../feature';
+import { BootstrapContext, WesFeature } from '../../feature';
 import { AttributesDef } from './attributes-def';
 
 /**
@@ -8,7 +8,7 @@ import { AttributesDef } from './attributes-def';
  *
  * This feature is enabled automatically whenever an `@AttributeChanged` decorator applied to web component.
  */
-@WebFeature({
+@WesFeature({
   configure: enableAttributesSupport,
 })
 export class AttributesSupport {

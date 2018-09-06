@@ -1,6 +1,6 @@
 import { StateUpdateConsumer } from '../../common';
 import { ComponentContext, ComponentType, WesComponent } from '../../component';
-import { WebFeature } from '../../feature';
+import { WesFeature } from '../../feature';
 import { TestBootstrap } from '../../spec/test-bootstrap';
 import { StateSupport } from './state-support.feature';
 import { StateTracker } from './state-tracker';
@@ -20,7 +20,7 @@ describe('features/state', () => {
       stateTracker = undefined!;
 
       @WesComponent('test-component')
-      @WebFeature({ requires: StateSupport })
+      @WesFeature({ requires: StateSupport })
       class TestComponent {
         constructor(ctx: ComponentContext) {
           context = ctx;

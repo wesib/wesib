@@ -1,9 +1,9 @@
 import { ComponentElementType, ComponentType } from '../../component';
 import { ElementClass } from '../../element';
-import { BootstrapContext, FeatureType, WebFeature } from '../../feature';
+import { BootstrapContext, FeatureType, WesFeature } from '../../feature';
 import { DomPropertiesDef } from './dom-properties-def';
 
-@WebFeature({
+@WesFeature({
   configure: enableDomProperties,
 })
 export class DomPropertiesSupport {

@@ -1,16 +1,16 @@
 import { noop } from '../common';
 import { FeatureDef } from './feature';
-import { WebFeature } from './web-feature.decorator';
+import { WesFeature } from './wes-feature.decorator';
 
-describe('decorators/web-feature', () => {
-  describe('@WebFeature', () => {
+describe('decorators/wes-feature', () => {
+  describe('@WesFeature', () => {
     it('assigns feature definition', () => {
 
       const def: FeatureDef = {
         configure: noop,
       };
 
-      @WebFeature(def)
+      @WesFeature(def)
       class TestFeature {}
 
       expect(FeatureDef.of(TestFeature)).toEqual(def);

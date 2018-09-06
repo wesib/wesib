@@ -6,7 +6,7 @@ import { FeatureDef, FeatureType } from './feature';
  *
  * Decorate a class with it to define it as a web components feature like this:
  * ```TypeScript
- * @WebFeature({ requires: [OtherFeature, MyComponent] })
+ * @WesFeature({ requires: [OtherFeature, MyComponent] })
  * class MyFeature {
  *   // ...
  * }
@@ -21,6 +21,6 @@ import { FeatureDef, FeatureType } from './feature';
  *
  * @returns A web components feature class decorator.
  */
-export function WebFeature<T extends FeatureType = any>(def: FeatureDef): TypedClassDecorator<T> {
+export function WesFeature<T extends FeatureType = any>(def: FeatureDef): TypedClassDecorator<T> {
   return (type: T) => FeatureDef.define(type, def);
 }
