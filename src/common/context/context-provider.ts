@@ -58,16 +58,25 @@ export class ContextProviderRegistry<C> {
       return key.defaultValue;
     }
 
-    return key.merge((function* () {
-      for (const provider of providers) {
-
-        const sourceValue = provider(context);
-
-        if (sourceValue != null) {
-          yield sourceValue;
-        }
+    return key.merge({
+      [Symbol.iterator]: provideValues(context, providers),
+      reverse() {
+        return provideValues(context, providers.reverse())();
       }
-    })());
+    });
   }
 
+}
+
+function provideValues<C, S>(context: C, providers: Iterable<ContextProvider<C, S>>) {
+  return function*() {
+    for (const provider of providers) {
+
+      const sourceValue = provider(context);
+
+      if (sourceValue != null) {
+        yield sourceValue;
+      }
+    }
+  };
 }

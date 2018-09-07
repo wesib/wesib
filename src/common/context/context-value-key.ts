@@ -9,7 +9,16 @@
  * @param <V> The type of associated value.
  * @param <S> The type of source values.
  */
+import { ReverseableIterable } from '../iteration';
+
 export abstract class ContextValueKey<V, S = V> {
+
+  /**
+   * The value used when there is no value associated with this key.
+   *
+   * If `undefined`, then there is no default value.
+   */
+  abstract readonly defaultValue?: V;
 
   /**
    * Human-readable key name.
@@ -19,31 +28,22 @@ export abstract class ContextValueKey<V, S = V> {
   readonly name: string;
 
   /**
-   * The value used when there is no value associated with this key.
-   *
-   * If `undefined`, then there is no default value.
-   */
-  readonly defaultValue: V | undefined;
-
-  /**
-   * Constructs component context key.
+   * Constructs context key.
    *
    * @param name Human-readable key name.
-   * @param defaultValue Optional default value. If unspecified or `undefined` the key has no default value.
    */
-  protected constructor(name: string, defaultValue?: V) {
+  protected constructor(name: string) {
     this.name = name;
-    this.defaultValue = defaultValue;
   }
 
   /**
    * Merges multiple source values into one context value.
    *
-   * @param sourceValues An iterator of source values to merge.
+   * @param sourceValues An iterable of source values to merge.
    *
    * @returns Single context value.
    */
-  abstract merge(sourceValues: IterableIterator<S>): V | undefined;
+  abstract merge(sourceValues: ReverseableIterable<S>): V | undefined;
 
   toString(): string {
     return `ContextValueKey(${this.name})`;
@@ -54,20 +54,26 @@ export abstract class ContextValueKey<V, S = V> {
 /**
  * Single context value key.
  *
- * Treats the first source value as context one and ignores the rest of them.
+ * Treats the last source value as context one and ignores the rest of them.
  *
  * @param <V> The type of associated value.
  * @param <S> The type of source values.
  */
 export class SingleValueKey<V> extends ContextValueKey<V> {
 
-  constructor(name: string, defaultValue?: V) {
-    super(name, defaultValue);
+  /**
+   * Constructs single context value key.
+   *
+   * @param name Human-readable key name.
+   * @param defaultValue Optional default value. If unspecified or `undefined` the key has no default value.
+   */
+  constructor(name: string, readonly defaultValue?: V) {
+    super(name);
   }
 
-  merge(sourceValues: IterableIterator<V>): V | undefined {
+  merge(sourceValues: ReverseableIterable<V>): V | undefined {
 
-    const value = sourceValues.next().value;
+    const value = sourceValues.reverse()[Symbol.iterator]().next().value;
 
     return value != null ? value : this.defaultValue;
   }
@@ -86,11 +92,17 @@ export class SingleValueKey<V> extends ContextValueKey<V> {
  */
 export class MultiValueKey<V> extends ContextValueKey<V[], V> {
 
-  constructor(name: string, defaultValue: V[] | undefined = []) {
-    super(name, defaultValue);
+  /**
+   * Constructs multiple context values key.
+   *
+   * @param name Human-readable key name.
+   * @param defaultValue Optional default value. If unspecified or `undefined` the key has no default value.
+   */
+  constructor(name: string, readonly defaultValue: V[] | undefined = []) {
+    super(name);
   }
 
-  merge(sourceValues: IterableIterator<V>): V[] | undefined {
+  merge(sourceValues: ReverseableIterable<V>): V[] | undefined {
 
     const result = [...sourceValues];
 

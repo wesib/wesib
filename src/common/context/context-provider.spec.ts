@@ -58,22 +58,22 @@ describe('common/context/context-provider', () => {
         registry.provide(key, provider2Spy);
       });
 
-      it('provides the first constructed value', () => {
+      it('provides the last constructed value', () => {
         providerSpy.and.returnValue('value1');
         provider2Spy.and.returnValue('value2');
 
+        expect(registry.get(key, context)).toBe('value2');
+      });
+      it('provides the first constructed value if the second one is undefined', () => {
+        providerSpy.and.returnValue('value1');
+
         expect(registry.get(key, context)).toBe('value1');
       });
-      it('provides the second constructed value if the first one is undefined', () => {
-        provider2Spy.and.returnValue('value2');
+      it('provides the first constructed value if the second one is null', () => {
+        providerSpy.and.returnValue('value1');
+        provider2Spy.and.returnValue(null);
 
-        expect(registry.get(key, context)).toBe('value2');
-      });
-      it('provides the second constructed value if the first one is null', () => {
-        providerSpy.and.returnValue(null);
-        provider2Spy.and.returnValue('value2');
-
-        expect(registry.get(key, context)).toBe('value2');
+        expect(registry.get(key, context)).toBe('value1');
       });
     });
     describe('multi-value', () => {
