@@ -1,6 +1,7 @@
 import { Class, mergeFunctions, MetaAccessor } from '../common';
 import { mergeLists } from '../util';
 import { BootstrapContext } from './bootstrap-context';
+import { BootstrapValue } from './bootstrap-values';
 
 /**
  * Web components feature definition.
@@ -20,7 +21,7 @@ export interface FeatureDef {
    *
    * The feature always provides itself.
    */
-  provides?: FeatureType | FeatureType[];
+  provides?: FeatureType | BootstrapValue<any, any> | (FeatureType | BootstrapValue<any, any>)[];
 
   /**
    * Configures this feature by calling the given configuration context methods.

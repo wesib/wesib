@@ -38,12 +38,19 @@ export function mergeLists<T>(first: T | T[] | undefined, second: T | T[] | unde
 /**
  * @internal
  */
-export function list2set<T>(list: T | T[] | undefined): Set<T> {
+export function list2array<T>(list: T | T[] | undefined): T[] {
   if (Array.isArray(list)) {
-    return new Set(list);
+    return list;
   }
   if (list === undefined) {
-    return new Set();
+    return [];
   }
-  return new Set([list]);
+  return [list];
+}
+
+/**
+ * @internal
+ */
+export function list2set<T>(list: T | T[] | undefined): Set<T> {
+  return new Set(list2array(list));
 }

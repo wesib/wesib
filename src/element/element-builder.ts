@@ -1,9 +1,9 @@
-import { ContextValueKey, EventEmitter, StateUpdateConsumer, StateValueKey } from '../common';
+import { EventEmitter, StateUpdateConsumer, StateValueKey } from '../common';
 import { Component, ComponentContext, ComponentDef, ComponentElementType, ComponentType } from '../component';
 import { ElementListener } from '../feature';
 import { PromiseResolver } from '../util';
+import { ComponentValueRegistry } from './component-value-registry';
 import { ElementClass } from './element';
-import { ProviderRegistry } from './provider-registry';
 
 const WINDOW = window;
 
@@ -13,23 +13,23 @@ const WINDOW = window;
 export class ElementBuilder {
 
   readonly window: Window;
-  readonly providerRegistry: ProviderRegistry;
+  readonly valueRegistry: ComponentValueRegistry;
   readonly elements = new EventEmitter<ElementListener>();
 
-  static create(opts: { window?: Window, providerRegistry: ProviderRegistry }): ElementBuilder {
+  static create(opts: { window?: Window, valueRegistry: ComponentValueRegistry }): ElementBuilder {
     return new ElementBuilder(opts);
   }
 
   private constructor(
       {
         window = WINDOW,
-        providerRegistry,
+        valueRegistry,
       }: {
         window?: Window,
-        providerRegistry: ProviderRegistry,
+        valueRegistry: ComponentValueRegistry,
       }) {
     this.window = window;
-    this.providerRegistry = providerRegistry;
+    this.valueRegistry = valueRegistry;
   }
 
   elementType<T extends object>(def: ComponentDef<T>): ElementClass<ComponentElementType<T>> {
@@ -44,7 +44,6 @@ export class ElementBuilder {
     const Object = (this.window as any).Object;
     const def = ComponentDef.of(componentType);
     const elementType: ElementClass<HTMLElement> = this.elementType(def);
-    const providerRegistry = this.providerRegistry;
     let connected = false;
 
     const connectedCallback = Symbol('connectedCallback');
@@ -71,7 +70,7 @@ export class ElementBuilder {
           const element: ComponentElementType<T> = this;
           // @ts-ignore
           const elementSuper = (name: string) => super[name] as any;
-          const values = new Map<ContextValueKey<any>, any>();
+          const values = builder.valueRegistry.newValues();
           const connectEvents = new EventEmitter<(this: Context) => void>();
           const disconnectEvents = new EventEmitter<(this: Context) => void>();
 
@@ -80,6 +79,7 @@ export class ElementBuilder {
             readonly element = element;
             readonly component = componentResolver.promise;
             readonly elementSuper = elementSuper;
+            readonly get = values.get;
             readonly onConnect = connectEvents.on;
             readonly onDisconnect = disconnectEvents.on;
             readonly updateState: StateUpdateConsumer = (<V>(key: StateValueKey, newValue: V, oldValue: V) => {
@@ -88,29 +88,6 @@ export class ElementBuilder {
 
             get connected() {
               return connected;
-            }
-
-            get<V>(key: ContextValueKey<V>): V;
-
-            get<V>(key: ContextValueKey<V>, defaultValue?: V | null | undefined): V | null | undefined {
-
-              const cached: V | undefined = values.get(key);
-
-              if (cached != null) {
-                return cached;
-              }
-
-              const constructed = providerRegistry.get(key, this);
-
-              if (constructed != null) {
-                values.set(key, constructed);
-                return constructed;
-              }
-              if (arguments.length > 1) {
-                return defaultValue;
-              }
-
-              throw new Error(`There is no value with the key ${key}`);
             }
 
           }

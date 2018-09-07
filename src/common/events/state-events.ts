@@ -8,6 +8,8 @@
  * @param newValue New value.
  * @param oldValue Previous value.
  */
+import { list2array } from '../../util';
+
 export type StateUpdateConsumer = <V>(this: void, key: StateValueKey, newValue: V, oldValue: V) => void;
 
 /**
@@ -54,10 +56,7 @@ export namespace StateValueKey {
    * @return Normalized state value key.
    */
   export function normalize(key: StateValueKey): NormalizedStateValueKey {
-    if (Array.isArray(key)) {
-      return key;
-    }
-    return [key];
+    return list2array(key);
   }
 
 }

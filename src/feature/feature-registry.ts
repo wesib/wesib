@@ -1,5 +1,6 @@
-import { list2set } from '../util';
+import { list2array, list2set } from '../util';
 import { BootstrapContext } from './bootstrap-context';
+import { BootstrapValueRegistry } from './bootstrap-value-registry';
 import { FeatureDef, FeatureType } from './feature';
 
 class FeatureProviders {
@@ -67,13 +68,20 @@ class FeatureProviders {
  */
 export class FeatureRegistry {
 
-  readonly _providers = new Map<FeatureType, FeatureProviders>();
+  private readonly _providers = new Map<FeatureType, FeatureProviders>();
+  private readonly _valueRegistry: BootstrapValueRegistry;
 
-  static create(): FeatureRegistry {
-    return new FeatureRegistry();
+  static create(opts: { valueRegistry: BootstrapValueRegistry }): FeatureRegistry {
+    return new FeatureRegistry(opts);
   }
 
-  private constructor() {
+  private constructor(
+      {
+        valueRegistry,
+      }: {
+        valueRegistry: BootstrapValueRegistry;
+      }) {
+    this._valueRegistry = valueRegistry;
   }
 
   add(feature: FeatureType, provider: FeatureType = feature) {
@@ -96,10 +104,33 @@ export class FeatureRegistry {
     }
 
     // Add provided features after the feature itself.
-    list2set(def.provides).forEach(provided => this.add(provided, feature));
+    list2set(def.provides).forEach(provided => {
+      if (typeof provided === 'function') {
+        // This is a feature.
+        this.add(provided, feature);
+      }
+    });
   }
 
   configure(context: BootstrapContext) {
+    this._provideValues();
+    this._configureFeatures(context);
+  }
+
+  private _provideValues() {
+    this._providers.forEach((providers, feature) => {
+      if (feature === providers.provider(this._providers)) {
+        list2array(FeatureDef.of(feature).provides).forEach(provided => {
+          if (typeof provided !== 'function') {
+            // This is a bootstrap value provider.
+            this._valueRegistry.provide(provided.key, provided.provider);
+          }
+        });
+      }
+    });
+  }
+
+  private _configureFeatures(context: BootstrapContext) {
     this._providers.forEach((providers, feature) => {
       if (feature === providers.provider(this._providers)) {
 

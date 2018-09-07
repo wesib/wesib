@@ -2,15 +2,17 @@ import { bootstrapComponents, BootstrapConfig } from './bootstrap';
 import { EventEmitter, SingleValueKey } from './common';
 import { WesComponent } from './component';
 import { ComponentRegistry } from './element/component-registry';
+import { ComponentValueRegistry } from './element/component-value-registry';
 import { ElementBuilder } from './element/element-builder';
-import { ProviderRegistry } from './element/provider-registry';
 import {
   BootstrapContext,
+  BootstrapValues,
   ComponentDefinitionListener,
   ElementDefinitionListener,
   ElementListener,
   FeatureDef,
 } from './feature';
+import { BootstrapValueRegistry } from './feature/bootstrap-value-registry';
 import { FeatureRegistry } from './feature/feature-registry';
 import Spy = jasmine.Spy;
 import SpyObj = jasmine.SpyObj;
@@ -18,8 +20,11 @@ import SpyObj = jasmine.SpyObj;
 describe('bootstrap', () => {
 
   let config: BootstrapConfig;
-  let createProviderRegistrySpy: Spy;
-  let providerRegistrySpy: SpyObj<ProviderRegistry>;
+  let createBootstrapValueRegistrySpy: Spy;
+  let bootstrapValueRegistrySpy: SpyObj<BootstrapValueRegistry>;
+  let bootstrapValuesSpy: SpyObj<BootstrapValues>;
+  let createComponentValueRegistrySpy: Spy;
+  let componentValueRegistrySpy: SpyObj<ComponentValueRegistry>;
   let createElementBuilderSpy: Spy;
   let elementBuilderSpy: SpyObj<ElementBuilder>;
   let createComponentRegistrySpy: Spy;
@@ -28,13 +33,27 @@ describe('bootstrap', () => {
   beforeEach(() => {
     config = { window: 'components window' as any };
 
-    providerRegistrySpy = jasmine.createSpyObj(
-        'providerRegistry',
+    bootstrapValueRegistrySpy = jasmine.createSpyObj(
+        'bootstrapValueRegistry',
+        [
+          'provide',
+          'get',
+          'newValues',
+        ]);
+    createBootstrapValueRegistrySpy = spyOn(BootstrapValueRegistry, 'create')
+        .and.returnValue(bootstrapValueRegistrySpy);
+
+    bootstrapValuesSpy = jasmine.createSpyObj('bootstrapValues', ['get']);
+    (bootstrapValueRegistrySpy as any).values = bootstrapValuesSpy;
+
+    componentValueRegistrySpy = jasmine.createSpyObj(
+        'componentValueRegistry',
         [
           'provide',
           'get',
         ]);
-    createProviderRegistrySpy = spyOn(ProviderRegistry, 'create').and.returnValue(providerRegistrySpy);
+    createComponentValueRegistrySpy = spyOn(ComponentValueRegistry, 'create')
+        .and.returnValue(componentValueRegistrySpy);
 
     elementBuilderSpy = jasmine.createSpyObj(
         'elementBuilder',
@@ -60,15 +79,19 @@ describe('bootstrap', () => {
   });
 
   describe('bootstrapComponents', () => {
-    it('constructs provider registry', () => {
+    it('constructs bootstrap value registry', () => {
       bootstrapComponents(config);
-      expect(createProviderRegistrySpy).toHaveBeenCalledWith();
+      expect(createBootstrapValueRegistrySpy).toHaveBeenCalledWith();
+    });
+    it('constructs component value registry', () => {
+      bootstrapComponents(config);
+      expect(createComponentValueRegistrySpy).toHaveBeenCalledWith();
     });
     it('constructs element builder', () => {
       bootstrapComponents(config);
       expect(createElementBuilderSpy).toHaveBeenCalledWith({
         window: config.window,
-        providerRegistry: providerRegistrySpy,
+        valueRegistry: componentValueRegistrySpy,
       });
     });
     it('constructs component registry', () => {
@@ -81,7 +104,7 @@ describe('bootstrap', () => {
       bootstrapComponents();
       expect(createElementBuilderSpy).toHaveBeenCalledWith({
         window: undefined,
-        providerRegistry: providerRegistrySpy,
+        valueRegistry: componentValueRegistrySpy,
       });
     });
 
@@ -98,7 +121,7 @@ describe('bootstrap', () => {
       it('creates feature registry', () => {
         bootstrapComponents();
 
-        expect(createFeatureRegistrySpy).toHaveBeenCalledWith();
+        expect(createFeatureRegistrySpy).toHaveBeenCalledWith({ valueRegistry: bootstrapValueRegistrySpy });
       });
       it('receives feature', () => {
 
@@ -164,7 +187,7 @@ describe('bootstrap', () => {
 
         featureContext.provide(key, provider);
 
-        expect(providerRegistrySpy.provide).toHaveBeenCalledWith(key, provider);
+        expect(componentValueRegistrySpy.provide).toHaveBeenCalledWith(key, provider);
       });
       it('proxies onComponentDefinition() method', () => {
         expect(featureContext.onComponentDefinition).toBe(componentRegistrySpy.componentDefinitions.on);
@@ -174,6 +197,9 @@ describe('bootstrap', () => {
       });
       it('proxies onElement() method', () => {
         expect(featureContext.onElement).toBe(elementBuilderSpy.elements.on);
+      });
+      it('proxies get() method', () => {
+        expect(featureContext.get).toBe(bootstrapValuesSpy.get);
       });
     });
   });

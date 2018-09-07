@@ -2,7 +2,7 @@ import { EventInterest } from '../common';
 import { ComponentDef, ComponentType } from '../component';
 import { ComponentRegistry } from './component-registry';
 import { ElementBuilder } from './element-builder';
-import { ProviderRegistry } from './provider-registry';
+import { ComponentValueRegistry } from './component-value-registry';
 import Spy = jasmine.Spy;
 import SpyObj = jasmine.SpyObj;
 
@@ -13,7 +13,7 @@ describe('element/component-registry', () => {
 
       const registry = ComponentRegistry.create({
         builder: ElementBuilder.create({
-          providerRegistry: ProviderRegistry.create(),
+          valueRegistry: ComponentValueRegistry.create(),
         }),
       });
 

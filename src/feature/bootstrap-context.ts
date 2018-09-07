@@ -1,13 +1,17 @@
 import { ContextValueKey, EventProducer } from '../common';
 import { ComponentContext, ComponentElementType, ComponentType, ComponentValueProvider } from '../component';
 import { ElementClass } from '../element';
+import { BootstrapValues } from './bootstrap-values';
 
 /**
  * Web components bootstrap context.
  *
  * An instance of this class is passed to `FeatureDef.configure()` method so that the feature can configure itself.
+ *
+ * Extends `BootstrapValues` interface. The values are provided by corresponding bootstrap value providers provided
+ * by features. I.e. configured in their definitions as `FeatureDef.provided`.
  */
-export interface BootstrapContext {
+export interface BootstrapContext extends BootstrapValues {
 
   /**
    * Registers web component definition listener.

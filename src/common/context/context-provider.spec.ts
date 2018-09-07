@@ -1,18 +1,18 @@
 import Spy = jasmine.Spy;
 import { noop } from '../functions';
-import { ContextProviderRegistry } from './context-provider';
+import { ContextValueRegistry } from './context-provider';
 import { MultiValueKey, SingleValueKey } from './context-value-key';
 
 describe('common/context/context-provider', () => {
-  describe('ContextProviderRegistry', () => {
+  describe('ContextValueRegistry', () => {
 
     const key = new SingleValueKey<string>('test-key');
-    let registry: ContextProviderRegistry<object>;
+    let registry: ContextValueRegistry<object>;
     let providerSpy: Spy;
     let context: object;
 
     beforeEach(() => {
-      registry = new ContextProviderRegistry();
+      registry = new ContextValueRegistry();
       providerSpy = jasmine.createSpy('provider');
       registry.provide(key, providerSpy);
       context = { name: 'context' } as any;

@@ -1,4 +1,5 @@
 import { ContextValueKey } from './context-value-key';
+import { ContextValues } from './context-values';
 
 /**
  * Context value provider.
@@ -8,7 +9,7 @@ import { ContextValueKey } from './context-value-key';
  *
  * @param <C> The type of context.
  * @param <S> The type of source value.
- * @param context Target component context.
+ * @param context Target context.
  *
  * @return Either constructed value, or `null`/`undefined` if the value can not be constructed.
  */
@@ -19,7 +20,7 @@ export type ContextProvider<C, S> = <T extends C>(this: void, context: T) => S |
  *
  * @param C The type of context.
  */
-export class ContextProviderRegistry<C> {
+export class ContextValueRegistry<C> {
 
   private readonly _providers = new Map<ContextValueKey<any>, ContextProvider<C, any>[]>();
 
@@ -64,6 +65,46 @@ export class ContextProviderRegistry<C> {
         return provideValues(context, providers.reverse())();
       }
     });
+  }
+
+  /**
+   * Creates new context values instance consulting this registry for value providers.
+   *
+   * @returns New context values instance which methods treat `this` instance as target context the values
+   * provided for.
+   */
+  newValues(): ContextValues & ThisType<C> {
+
+    const values = new Map<ContextValueKey<any>, any>();
+    const providerRegistry = this;
+
+    class Values implements ContextValues {
+
+      get<V>(this: C, key: ContextValueKey<V>): V;
+
+      get<V>(this: C, key: ContextValueKey<V>, defaultValue?: V | null | undefined): V | null | undefined {
+
+        const cached: V | undefined = values.get(key);
+
+        if (cached != null) {
+          return cached;
+        }
+
+        const constructed = providerRegistry.get(key, this);
+
+        if (constructed != null) {
+          values.set(key, constructed);
+          return constructed;
+        }
+        if (arguments.length > 1) {
+          return defaultValue;
+        }
+
+        throw new Error(`There is no value with the key ${key}`);
+      }
+    }
+
+    return new Values();
   }
 
 }

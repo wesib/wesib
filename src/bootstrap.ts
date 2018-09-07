@@ -1,9 +1,10 @@
 import { ContextValueKey } from './common';
 import { ComponentType, ComponentValueProvider } from './component';
 import { ComponentRegistry } from './element/component-registry';
+import { ComponentValueRegistry } from './element/component-value-registry';
 import { ElementBuilder } from './element/element-builder';
-import { ProviderRegistry } from './element/provider-registry';
 import { BootstrapContext, FeatureType } from './feature';
+import { BootstrapValueRegistry } from './feature/bootstrap-value-registry';
 import { FeatureRegistry } from './feature/feature-registry';
 
 /**
@@ -45,21 +46,22 @@ export function bootstrapComponents(config?: BootstrapConfig | FeatureType, ...f
     config = {};
   }
 
-  const featureRegistry = FeatureRegistry.create();
+  const valueRegistry = BootstrapValueRegistry.create();
+  const featureRegistry = FeatureRegistry.create({ valueRegistry });
 
   features.forEach(feature => featureRegistry.add(feature));
 
-  const { componentRegistry, bootstrapContext } = initBootstrap(config);
+  const { componentRegistry, bootstrapContext } = initBootstrap(valueRegistry, config);
 
   featureRegistry.configure(bootstrapContext);
 
   componentRegistry.complete();
 }
 
-function initBootstrap(config: BootstrapConfig) {
+function initBootstrap(valueRegistry: BootstrapValueRegistry, config: BootstrapConfig) {
 
-  const providerRegistry = ProviderRegistry.create();
-  const elementBuilder = ElementBuilder.create({ window: config.window, providerRegistry });
+  const componentValueRegistry = ComponentValueRegistry.create();
+  const elementBuilder = ElementBuilder.create({ window: config.window, valueRegistry: componentValueRegistry });
   const componentRegistry = ComponentRegistry.create({ builder: elementBuilder });
 
   class Context implements BootstrapContext {
@@ -67,6 +69,7 @@ function initBootstrap(config: BootstrapConfig) {
     readonly onComponentDefinition = componentRegistry.componentDefinitions.on;
     readonly onElementDefinition = componentRegistry.elementDefinitions.on;
     readonly onElement = elementBuilder.elements.on;
+    readonly get = valueRegistry.values.get;
 
     define<T extends object>(componentType: ComponentType<T>) {
       componentRegistry.define(componentType);
@@ -77,7 +80,7 @@ function initBootstrap(config: BootstrapConfig) {
     }
 
     provide<S>(key: ContextValueKey<any, S>, provider: ComponentValueProvider<S>): void {
-      providerRegistry.provide(key, provider);
+      componentValueRegistry.provide(key, provider);
     }
 
   }

@@ -1,4 +1,6 @@
+import { SingleValueKey } from '../common/context';
 import { BootstrapContext } from './bootstrap-context';
+import { BootstrapValueRegistry } from './bootstrap-value-registry';
 import { FeatureDef, FeatureType } from './feature';
 import { FeatureRegistry } from './feature-registry';
 import Spy = jasmine.Spy;
@@ -11,6 +13,7 @@ describe('feature/feature-registry', () => {
     let configure1spy: Spy;
     let feature2: FeatureType;
     let configure2spy: Spy;
+    let valueRegistrySpy: SpyObj<BootstrapValueRegistry>;
     let registry: FeatureRegistry;
     let contextSpy: SpyObj<BootstrapContext>;
     let addSpy: Spy;
@@ -27,7 +30,8 @@ describe('feature/feature-registry', () => {
       });
     });
     beforeEach(() => {
-      registry = FeatureRegistry.create();
+      valueRegistrySpy = jasmine.createSpyObj('valueRegistry', ['provide']);
+      registry = FeatureRegistry.create({ valueRegistry: valueRegistrySpy });
       contextSpy = jasmine.createSpyObj('bootstrapContext', ['define']);
       addSpy = spyOn(registry, 'add').and.callThrough();
     });
@@ -136,6 +140,19 @@ describe('feature/feature-registry', () => {
       registry.add(feature2, Feature);
 
       expect(() => registry.configure(contextSpy)).toThrow(jasmine.stringMatching(/Circular dependency/));
+    });
+    it('registers value providers', () => {
+
+      const key = new SingleValueKey('test-key');
+      const provider = jasmine.createSpy('testValueProvider');
+      class Feature {}
+
+      FeatureDef.define(Feature, { provides: { key, provider } });
+
+      registry.add(Feature);
+      registry.configure(contextSpy);
+
+      expect(valueRegistrySpy.provide).toHaveBeenCalledWith(key, provider);
     });
   });
 });
