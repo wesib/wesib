@@ -1,7 +1,7 @@
-import { StateValueKey, TypedPropertyDecorator } from '../../common';
+import { TypedPropertyDecorator } from '../../common';
 import { ComponentType } from '../../component';
-import { attributeStateUpdate } from './attribute-state-update';
-import { AttributeChangedCallback, AttributesDef, AttributeUpdateConsumer } from './attributes-def';
+import { Attribute, parseAttributeOpts } from './attribute.decorator';
+import { AttributeChangedCallback, AttributesDef } from './attributes-def';
 import './attributes-def.ns';
 
 /**
@@ -14,7 +14,7 @@ import './attributes-def.ns';
  *
  * Example:
  * ```TypeScript
- * @WesComponent({ name: 'my-component' })
+ * @WesComponent('my-component')
  * class MyComponent {
  *
  *   @AttributeChanged('my-attribute')
@@ -27,34 +27,15 @@ import './attributes-def.ns';
  *
  * This decorator automatically enables `AttributesSupport` feature.
  *
- * @param opts Attribute changes tracking options, or just attribute name
+ * @param opts Attribute definition options, or just an attribute name.
  *
  * @return Web component method decorator.
  */
-export function AttributeChanged<T extends ComponentType>(opts?: AttributeChanged.Opts<T> | string):
+export function AttributeChanged<T extends ComponentType>(opts?: Attribute.Opts<T> | string):
     TypedPropertyDecorator<T> {
   return <V>(target: InstanceType<T>, propertyKey: string | symbol) => {
 
-    let name: string;
-    let updateState: AttributeChangedCallback<InstanceType<T>>;
-
-    if (typeof opts === 'string') {
-      name = opts;
-      updateState = attributeStateUpdate(name);
-    } else {
-      if (opts && opts.name) {
-        name = opts.name;
-      } else if (typeof propertyKey !== 'string') {
-        throw new TypeError(
-            'Attribute name is required, as property key is not a string: ' +
-            `${target.constructor.name}.${propertyKey.toString()}`);
-      } else {
-        name = propertyKey;
-      }
-
-      updateState = attributeStateUpdate(name, opts && opts.updateState);
-    }
-
+    const { name, updateState } = parseAttributeOpts(target, propertyKey, opts);
     const componentType = target.constructor as T;
 
     AttributesDef.define(
@@ -71,38 +52,5 @@ export function AttributeChanged<T extends ComponentType>(opts?: AttributeChange
             updateState.call(this, newValue, oldValue);
           }
         });
-
   };
-}
-
-export namespace AttributeChanged {
-
-  /**
-   * Attribute changes tracking options.
-   *
-   * This is passed to `@AttributeChanged` decorator.
-   */
-  export interface Opts<T extends object> {
-
-    /**
-     * Attribute name.
-     *
-     * This is required if annotated method's key is not a string (i.e. a symbol). Otherwise,
-     * the attribute name is equal to the method name by default.
-     */
-    name?: string;
-
-    /**
-     * Whether to update the component state after attribute change.
-     *
-     * Can be one of:
-     * - `false` to not update the component state,
-     * - `true` (the default value) to update the component state with changed attribute key,
-     * - a state value key to update, or
-     * - an attribute update consumer function with custom state update logic.
-     */
-    updateState?: boolean | StateValueKey | AttributeUpdateConsumer<T>;
-
-  }
-
 }

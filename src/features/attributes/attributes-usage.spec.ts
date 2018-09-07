@@ -1,6 +1,8 @@
-import { ComponentContext, ComponentType, WesComponent } from '../../component';
+import { StateValueKey } from '../../common/events';
+import { Component, ComponentContext, ComponentType, WesComponent } from '../../component';
 import { TestBootstrap } from '../../spec/test-bootstrap';
 import { AttributeChanged } from './attribute-changed.decorator';
+import { Attribute } from './attribute.decorator';
 import Spy = jasmine.Spy;
 
 describe('features/attributes', () => {
@@ -31,6 +33,9 @@ describe('features/attributes', () => {
 
         @AttributeChanged('custom-attribute-2')
         attr2 = attr2ChangedSpy;
+
+        @Attribute()
+        attr3!: string;
 
       }
 
@@ -80,6 +85,31 @@ describe('features/attributes', () => {
       expect<any>(noAttrElement).not.toEqual(jasmine.objectContaining({
         attributeChangedCallback: jasmine.anything(),
       }));
+    });
+    it('accesses attribute value', () => {
+
+      const value = 'new value';
+
+      element.setAttribute('attr3', value);
+
+      expect((Component.of(element) as any).attr3).toBe(value);
+    });
+    it('updates attribute value', () => {
+
+      const value = 'new value';
+
+      (Component.of(element) as any).attr3 = value;
+
+      expect(element.getAttribute('attr3')).toBe(value);
+    });
+    it('notifies on attribute update', () => {
+
+      const updateStateSpy = spyOn(context, 'updateState');
+      const value = 'new value';
+
+      (Component.of(element) as any).attr3 = value;
+
+      expect(updateStateSpy).toHaveBeenCalledWith([StateValueKey.attribute, 'attr3'], value, null);
     });
   });
 });
