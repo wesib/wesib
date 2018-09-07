@@ -1,3 +1,5 @@
+import { list2array } from '../../util';
+
 /**
  * A consumer of state updates.
  *
@@ -8,8 +10,6 @@
  * @param newValue New value.
  * @param oldValue Previous value.
  */
-import { list2array } from '../../util';
-
 export type StateUpdateConsumer = <V>(this: void, key: StateValueKey, newValue: V, oldValue: V) => void;
 
 /**
