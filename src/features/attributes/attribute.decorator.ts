@@ -1,5 +1,4 @@
-import { TypedPropertyDecorator } from '../../common';
-import { StateValueKey } from '../../common/events';
+import { StateValueKey, TypedPropertyDecorator } from '../../common';
 import { ComponentContext, ComponentType } from '../../component';
 import { attributeStateUpdate } from './attribute-state-update';
 import { AttributeChangedCallback, AttributesDef, AttributeUpdateConsumer } from './attributes-def';

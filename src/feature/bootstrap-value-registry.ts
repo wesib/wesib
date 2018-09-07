@@ -1,4 +1,4 @@
-import { ContextValueRegistry } from '../common/context';
+import { ContextValueRegistry } from '../common';
 import { BootstrapValues } from './bootstrap-values';
 
 /**

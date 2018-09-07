@@ -1,5 +1,4 @@
 import Spy = jasmine.Spy;
-import { noop } from '../functions';
 import { ContextValueRegistry } from './context-provider';
 import { MultiValueKey, SingleValueKey } from './context-value-key';
 
@@ -49,7 +48,7 @@ describe('common/context/context-provider', () => {
       expect(registry.get(keyWithDefaults, context)).toBe(defaultValue);
     });
 
-    describe('providers combination', () => {
+    describe('Providers combination', () => {
 
       let provider2Spy: Spy;
 
@@ -76,7 +75,43 @@ describe('common/context/context-provider', () => {
         expect(registry.get(key, context)).toBe('value1');
       });
     });
-    describe('multi-value', () => {
+
+    describe('Chained registry', () => {
+
+      let chained: ContextValueRegistry<object>;
+      let provider2Spy: Spy;
+
+      beforeEach(() => {
+        chained = new ContextValueRegistry(registry.bindSources(context));
+        provider2Spy = jasmine.createSpy('provider2');
+      });
+
+      it('prefers explicit value', () => {
+
+        const value1 = 'initial value';
+        const value2 = 'actual value';
+
+        providerSpy.and.returnValue(value1);
+
+        chained.provide(key, provider2Spy);
+        provider2Spy.and.returnValue(value2);
+
+        expect(chained.get(key, context)).toBe(value2);
+      });
+      it('falls back to initial value', () => {
+
+        const value1 = 'initial value';
+
+        providerSpy.and.returnValue(value1);
+
+        chained.provide(key, provider2Spy);
+        provider2Spy.and.returnValue(null);
+
+        expect(chained.get(key, context)).toBe(value1);
+      });
+    });
+
+    describe('Multi-value', () => {
 
       let multiKey: MultiValueKey<string>;
 

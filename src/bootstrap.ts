@@ -1,9 +1,15 @@
-import { ContextValueKey } from './common';
+import { ContextValueKey, EventProducer } from './common';
 import { ComponentType, ComponentValueProvider } from './component';
 import { ComponentRegistry } from './element/component-registry';
 import { ComponentValueRegistry } from './element/component-value-registry';
 import { ElementBuilder } from './element/element-builder';
-import { BootstrapContext, FeatureType } from './feature';
+import {
+  BootstrapContext,
+  ComponentDefinitionListener,
+  ElementDefinitionListener,
+  ElementListener,
+  FeatureType,
+} from './feature';
 import { BootstrapValueRegistry } from './feature/bootstrap-value-registry';
 import { FeatureRegistry } from './feature/feature-registry';
 
@@ -60,16 +66,25 @@ export function bootstrapComponents(config?: BootstrapConfig | FeatureType, ...f
 
 function initBootstrap(valueRegistry: BootstrapValueRegistry, config: BootstrapConfig) {
 
-  const componentValueRegistry = ComponentValueRegistry.create();
-  const elementBuilder = ElementBuilder.create({ window: config.window, valueRegistry: componentValueRegistry });
-  const componentRegistry = ComponentRegistry.create({ builder: elementBuilder });
+  let componentValueRegistry: ComponentValueRegistry;
+  let elementBuilder: ElementBuilder;
+  let componentRegistry: ComponentRegistry;
 
   class Context implements BootstrapContext {
 
-    readonly onComponentDefinition = componentRegistry.componentDefinitions.on;
-    readonly onElementDefinition = componentRegistry.elementDefinitions.on;
-    readonly onElement = elementBuilder.elements.on;
+    readonly onComponentDefinition: EventProducer<ComponentDefinitionListener>;
+    readonly onElementDefinition: EventProducer<ElementDefinitionListener>;
+    readonly onElement: EventProducer<ElementListener>;
     readonly get = valueRegistry.values.get;
+
+    constructor() {
+      componentValueRegistry = ComponentValueRegistry.create(valueRegistry.bindSources(this));
+      elementBuilder = ElementBuilder.create({ window: config.window, valueRegistry: componentValueRegistry });
+      componentRegistry = ComponentRegistry.create({ builder: elementBuilder });
+      this.onComponentDefinition = componentRegistry.componentDefinitions.on;
+      this.onElementDefinition = componentRegistry.elementDefinitions.on;
+      this.onElement = elementBuilder.elements.on;
+    }
 
     define<T extends object>(componentType: ComponentType<T>) {
       componentRegistry.define(componentType);
@@ -85,5 +100,11 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry, config: BootstrapC
 
   }
 
-  return { componentRegistry, bootstrapContext: new Context() };
+  const bootstrapContext = new Context();
+
+  return {
+    // @ts-ignore
+    componentRegistry,
+    bootstrapContext,
+  };
 }

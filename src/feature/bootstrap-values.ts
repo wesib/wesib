@@ -1,4 +1,4 @@
-import { ContextValueKey, ContextValues } from '../common/context';
+import { ContextValueKey, ContextValues } from '../common';
 
 /**
  * Bootstrap context value provider.

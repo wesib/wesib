@@ -1,4 +1,4 @@
-import { SingleValueKey } from '../common/context';
+import { SingleValueKey } from '../common';
 import { BootstrapContext } from './bootstrap-context';
 import { BootstrapValueRegistry } from './bootstrap-value-registry';
 import { FeatureDef, FeatureType } from './feature';

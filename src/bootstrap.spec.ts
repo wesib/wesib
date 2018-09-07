@@ -23,6 +23,7 @@ describe('bootstrap', () => {
   let createBootstrapValueRegistrySpy: Spy;
   let bootstrapValueRegistrySpy: SpyObj<BootstrapValueRegistry>;
   let bootstrapValuesSpy: SpyObj<BootstrapValues>;
+  let bootstrapSourcesSpy: Spy;
   let createComponentValueRegistrySpy: Spy;
   let componentValueRegistrySpy: SpyObj<ComponentValueRegistry>;
   let createElementBuilderSpy: Spy;
@@ -39,9 +40,13 @@ describe('bootstrap', () => {
           'provide',
           'get',
           'newValues',
+          'bindSources',
         ]);
     createBootstrapValueRegistrySpy = spyOn(BootstrapValueRegistry, 'create')
         .and.returnValue(bootstrapValueRegistrySpy);
+
+    bootstrapSourcesSpy = jasmine.createSpy('bootstrapSources');
+    bootstrapValueRegistrySpy.bindSources.and.returnValue(bootstrapSourcesSpy);
 
     bootstrapValuesSpy = jasmine.createSpyObj('bootstrapValues', ['get']);
     (bootstrapValueRegistrySpy as any).values = bootstrapValuesSpy;
@@ -85,7 +90,7 @@ describe('bootstrap', () => {
     });
     it('constructs component value registry', () => {
       bootstrapComponents(config);
-      expect(createComponentValueRegistrySpy).toHaveBeenCalledWith();
+      expect(createComponentValueRegistrySpy).toHaveBeenCalledWith(bootstrapSourcesSpy);
     });
     it('constructs element builder', () => {
       bootstrapComponents(config);

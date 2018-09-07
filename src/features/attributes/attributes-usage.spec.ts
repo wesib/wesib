@@ -1,4 +1,4 @@
-import { StateValueKey } from '../../common/events';
+import { StateValueKey } from '../../common';
 import { Component, ComponentContext, ComponentType, WesComponent } from '../../component';
 import { TestBootstrap } from '../../spec/test-bootstrap';
 import { AttributeChanged } from './attribute-changed.decorator';

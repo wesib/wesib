@@ -9,7 +9,7 @@
  * @param <V> The type of associated value.
  * @param <S> The type of source values.
  */
-import { ReverseableIterable } from '../iteration';
+import { RevertibleIterable } from '../iteration';
 
 export abstract class ContextValueKey<V, S = V> {
 
@@ -43,7 +43,7 @@ export abstract class ContextValueKey<V, S = V> {
    *
    * @returns Single context value.
    */
-  abstract merge(sourceValues: ReverseableIterable<S>): V | undefined;
+  abstract merge(sourceValues: RevertibleIterable<S>): V | undefined;
 
   toString(): string {
     return `ContextValueKey(${this.name})`;
@@ -71,7 +71,7 @@ export class SingleValueKey<V> extends ContextValueKey<V> {
     super(name);
   }
 
-  merge(sourceValues: ReverseableIterable<V>): V | undefined {
+  merge(sourceValues: RevertibleIterable<V>): V | undefined {
 
     const value = sourceValues.reverse()[Symbol.iterator]().next().value;
 
@@ -102,7 +102,7 @@ export class MultiValueKey<V> extends ContextValueKey<V[], V> {
     super(name);
   }
 
-  merge(sourceValues: ReverseableIterable<V>): V[] | undefined {
+  merge(sourceValues: RevertibleIterable<V>): V[] | undefined {
 
     const result = [...sourceValues];
 
