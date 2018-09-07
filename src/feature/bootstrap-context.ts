@@ -1,4 +1,4 @@
-import { ContextValueKey, EventProducer } from '../common';
+import { ContextValueKey, EventProducer, SingleValueKey } from '../common';
 import { ComponentContext, ComponentElementType, ComponentType, ComponentValueProvider } from '../component';
 import { ElementClass } from '../element';
 import { BootstrapValues } from './bootstrap-values';
@@ -134,3 +134,16 @@ export type ElementDefinitionListener = <T extends object>(
 export type ElementListener = <T extends object>(
     element: ComponentElementType<T>,
     context: ComponentContext<T, ComponentElementType<T>>) => void;
+
+export namespace BootstrapContext {
+
+  /**
+   * A key of context value containing a window instance the bootstrap is performed against.
+   *
+   * Target value defaults to current window.
+   *
+   * Use `componentsWindow()` feature to customize this value.
+   */
+  export const windowKey = new SingleValueKey<Window>('window', window);
+
+}

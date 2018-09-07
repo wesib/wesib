@@ -1,1 +1,1 @@
-export * from './window-config';
+export * from './components-window';

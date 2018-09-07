@@ -1,7 +1,6 @@
 import { EventEmitter, StateUpdateConsumer, StateValueKey } from '../common';
 import { Component, ComponentContext, ComponentDef, ComponentElementType, ComponentType } from '../component';
 import { BootstrapContext, ElementListener } from '../feature';
-import { WindowConfig } from '../features';
 import { PromiseResolver } from '../util';
 import { ComponentValueRegistry } from './component-value-registry';
 import { ElementClass } from './element';
@@ -35,7 +34,7 @@ export class ElementBuilder {
   }
 
   get window(): Window {
-    return this.bootstrapContext.get(WindowConfig.key).window;
+    return this.bootstrapContext.get(BootstrapContext.windowKey);
   }
 
   elementType<T extends object>(def: ComponentDef<T>): ElementClass<ComponentElementType<T>> {
