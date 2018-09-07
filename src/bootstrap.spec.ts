@@ -1,4 +1,4 @@
-import { bootstrapComponents, BootstrapConfig } from './bootstrap';
+import { bootstrapComponents } from './bootstrap';
 import { EventEmitter, SingleValueKey } from './common';
 import { WesComponent } from './component';
 import { ComponentRegistry } from './element/component-registry';
@@ -19,7 +19,6 @@ import SpyObj = jasmine.SpyObj;
 
 describe('bootstrap', () => {
 
-  let config: BootstrapConfig;
   let createBootstrapValueRegistrySpy: Spy;
   let bootstrapValueRegistrySpy: SpyObj<BootstrapValueRegistry>;
   let bootstrapValuesSpy: SpyObj<BootstrapValues>;
@@ -32,7 +31,6 @@ describe('bootstrap', () => {
   let componentRegistrySpy: SpyObj<ComponentRegistry>;
 
   beforeEach(() => {
-    config = { window: 'components window' as any };
 
     bootstrapValueRegistrySpy = jasmine.createSpyObj(
         'bootstrapValueRegistry',
@@ -52,7 +50,7 @@ describe('bootstrap', () => {
     (bootstrapValueRegistrySpy as any).values = bootstrapValuesSpy;
 
     componentValueRegistrySpy = jasmine.createSpyObj(
-        'componentValueRegistry',
+        'valueRegistry',
         [
           'provide',
           'get',
@@ -85,31 +83,24 @@ describe('bootstrap', () => {
 
   describe('bootstrapComponents', () => {
     it('constructs bootstrap value registry', () => {
-      bootstrapComponents(config);
+      bootstrapComponents();
       expect(createBootstrapValueRegistrySpy).toHaveBeenCalledWith();
     });
     it('constructs component value registry', () => {
-      bootstrapComponents(config);
+      bootstrapComponents();
       expect(createComponentValueRegistrySpy).toHaveBeenCalledWith(bootstrapSourcesSpy);
     });
     it('constructs element builder', () => {
-      bootstrapComponents(config);
+      bootstrapComponents();
       expect(createElementBuilderSpy).toHaveBeenCalledWith({
-        window: config.window,
+        bootstrapContext: jasmine.anything(),
         valueRegistry: componentValueRegistrySpy,
       });
     });
     it('constructs component registry', () => {
-      bootstrapComponents(config);
+      bootstrapComponents();
       expect(createComponentRegistrySpy).toHaveBeenCalledWith({
         builder: elementBuilderSpy,
-      });
-    });
-    it('applies default config', () => {
-      bootstrapComponents();
-      expect(createElementBuilderSpy).toHaveBeenCalledWith({
-        window: undefined,
-        valueRegistry: componentValueRegistrySpy,
       });
     });
 
@@ -132,7 +123,7 @@ describe('bootstrap', () => {
 
         class TestFeature {}
 
-        bootstrapComponents(config, TestFeature);
+        bootstrapComponents(TestFeature);
 
         expect(featureRegistrySpy.add).toHaveBeenCalledWith(TestFeature);
       });
@@ -155,7 +146,6 @@ describe('bootstrap', () => {
         class TestFeature {}
 
         bootstrapComponents(
-            config,
             FeatureDef.define(
                 TestFeature,
                 {

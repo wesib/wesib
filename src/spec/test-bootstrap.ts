@@ -1,6 +1,7 @@
 import { bootstrapComponents } from '../bootstrap';
 import { Component, ComponentDef, ComponentElementType, ComponentType } from '../component';
 import { BootstrapContext, FeatureType, WesFeature } from '../feature';
+import { WindowConfig } from '../features/config';
 import { TestIframe } from './test-iframe';
 
 export class TestBootstrap {
@@ -31,7 +32,11 @@ export class TestBootstrap {
     })
     class TestFeature {}
 
-    bootstrapComponents({ window: this.window }, TestFeature, ...features);
+    bootstrapComponents(
+        WindowConfig.configure({ window: this.window }),
+        TestFeature,
+        ...features,
+    );
 
     return this;
   }

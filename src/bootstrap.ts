@@ -14,57 +14,28 @@ import { BootstrapValueRegistry } from './feature/bootstrap-value-registry';
 import { FeatureRegistry } from './feature/feature-registry';
 
 /**
- * Web components bootstrap configuration.
- *
- * This can be passed to `bootstrapComponents()` function in order to customize components bootstrap.
- */
-export interface BootstrapConfig {
-
-  /**
-   * A window instance custom components are registered for.
-   *
-   * This instance is used to access `window.customElements` and HTML element classes.
-   *
-   * Current window instance is used if when this option is omitted.
-   */
-  window?: Window;
-
-}
-
-export function bootstrapComponents(...features: FeatureType[]): void;
-
-export function bootstrapComponents(config: BootstrapConfig, ...features: FeatureType[]): void;
-
-/**
  * Bootstraps web components.
  *
  * Note that both features and components can be passed as parameters to this function, as components are features too.
  * Components would be defined only when all features enabled.
  *
- * @param config Custom bootstrap configuration.
- * @param features Web features and components to enable.
+ * @param features Features and components to enable.
  */
-export function bootstrapComponents(config?: BootstrapConfig | FeatureType, ...features: FeatureType[]): void {
-  if (!config) {
-    config = {};
-  } else if (typeof config === 'function') {
-    features = [ config, ...features ];
-    config = {};
-  }
+export function bootstrapComponents(...features: FeatureType[]): void {
 
   const valueRegistry = BootstrapValueRegistry.create();
   const featureRegistry = FeatureRegistry.create({ valueRegistry });
 
   features.forEach(feature => featureRegistry.add(feature));
 
-  const { componentRegistry, bootstrapContext } = initBootstrap(valueRegistry, config);
+  const { componentRegistry, bootstrapContext } = initBootstrap(valueRegistry);
 
   featureRegistry.configure(bootstrapContext);
 
   componentRegistry.complete();
 }
 
-function initBootstrap(valueRegistry: BootstrapValueRegistry, config: BootstrapConfig) {
+function initBootstrap(valueRegistry: BootstrapValueRegistry) {
 
   let componentValueRegistry: ComponentValueRegistry;
   let elementBuilder: ElementBuilder;
@@ -79,7 +50,7 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry, config: BootstrapC
 
     constructor() {
       componentValueRegistry = ComponentValueRegistry.create(valueRegistry.bindSources(this));
-      elementBuilder = ElementBuilder.create({ window: config.window, valueRegistry: componentValueRegistry });
+      elementBuilder = ElementBuilder.create({ bootstrapContext: this, valueRegistry: componentValueRegistry });
       componentRegistry = ComponentRegistry.create({ builder: elementBuilder });
       this.onComponentDefinition = componentRegistry.componentDefinitions.on;
       this.onElementDefinition = componentRegistry.elementDefinitions.on;

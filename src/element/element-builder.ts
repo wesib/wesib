@@ -1,39 +1,45 @@
 import { EventEmitter, StateUpdateConsumer, StateValueKey } from '../common';
 import { Component, ComponentContext, ComponentDef, ComponentElementType, ComponentType } from '../component';
-import { ElementListener } from '../feature';
+import { BootstrapContext, ElementListener } from '../feature';
+import { WindowConfig } from '../features';
 import { PromiseResolver } from '../util';
 import { ComponentValueRegistry } from './component-value-registry';
 import { ElementClass } from './element';
-
-const WINDOW = window;
 
 /**
  * @internal
  */
 export class ElementBuilder {
 
-  readonly window: Window;
-  readonly valueRegistry: ComponentValueRegistry;
+  readonly bootstrapContext: BootstrapContext;
+  readonly componentValueRegistry: ComponentValueRegistry;
   readonly elements = new EventEmitter<ElementListener>();
 
-  static create(opts: { window?: Window, valueRegistry: ComponentValueRegistry }): ElementBuilder {
+  static create(opts: {
+    bootstrapContext: BootstrapContext,
+    valueRegistry: ComponentValueRegistry;
+  }): ElementBuilder {
     return new ElementBuilder(opts);
   }
 
   private constructor(
       {
-        window = WINDOW,
+        bootstrapContext,
         valueRegistry,
       }: {
-        window?: Window,
+        bootstrapContext: BootstrapContext,
         valueRegistry: ComponentValueRegistry,
       }) {
-    this.window = window;
-    this.valueRegistry = valueRegistry;
+    this.bootstrapContext = bootstrapContext;
+    this.componentValueRegistry = valueRegistry;
+  }
+
+  get window(): Window {
+    return this.bootstrapContext.get(WindowConfig.key).window;
   }
 
   elementType<T extends object>(def: ComponentDef<T>): ElementClass<ComponentElementType<T>> {
-    return def.extend && def.extend.type || ((this.window as any).HTMLElement as ElementClass<ComponentElementType<T>>);
+    return def.extend && def.extend.type || (this.window as any).HTMLElement;
   }
 
   buildElement<T extends object>(
@@ -41,7 +47,6 @@ export class ElementBuilder {
       ElementClass<ComponentElementType<T>> {
 
     const builder = this;
-    const Object = (this.window as any).Object;
     const def = ComponentDef.of(componentType);
     const elementType: ElementClass<HTMLElement> = this.elementType(def);
     let connected = false;
@@ -70,11 +75,11 @@ export class ElementBuilder {
           const element: ComponentElementType<T> = this;
           // @ts-ignore
           const elementSuper = (name: string) => super[name] as any;
-          const values = builder.valueRegistry.newValues();
-          const connectEvents = new EventEmitter<(this: Context) => void>();
-          const disconnectEvents = new EventEmitter<(this: Context) => void>();
+          const values = builder.componentValueRegistry.newValues();
+          const connectEvents = new EventEmitter<(this: ElementContext) => void>();
+          const disconnectEvents = new EventEmitter<(this: ElementContext) => void>();
 
-          class Context implements ComponentContext<T, ComponentElementType<T>> {
+          class ElementContext implements ComponentContext<T, ComponentElementType<T>> {
 
             readonly element = element;
             readonly component = componentResolver.promise;
@@ -92,7 +97,7 @@ export class ElementBuilder {
 
           }
 
-          const context = new Context();
+          const context = new ElementContext();
 
           Object.defineProperty(this, ComponentContext.symbol, { value: context });
           Object.defineProperty(this, connectedCallback, {
