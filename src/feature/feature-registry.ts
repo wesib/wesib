@@ -78,17 +78,24 @@ export class FeatureRegistry {
 
   add(feature: FeatureType, provider: FeatureType = feature) {
 
-    let providers = this._providers.get(feature);
+    const existing = this._providers.get(feature);
+    let providers = existing;
 
     if (!providers) {
       providers = new FeatureProviders(feature);
-      this._providers.set(feature, providers);
     }
     providers.add(provider);
 
     const def = FeatureDef.of(feature);
 
+    // Add requirements before the feature itself.
     list2set(def.requires).forEach(required => this.add(required));
+
+    if (!existing) {
+      this._providers.set(feature, providers);
+    }
+
+    // Add provided features after the feature itself.
     list2set(def.provides).forEach(provided => this.add(provided, feature));
   }
 
