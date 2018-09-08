@@ -1,4 +1,6 @@
 import { RevertibleIterable } from '../iteration';
+import { ContextValueProvider } from './context-value-provider';
+import { ContextValues } from './context-values';
 
 /**
  * Context value key.
@@ -8,17 +10,10 @@ import { RevertibleIterable } from '../iteration';
  * Multiple source values can be provided internally per value key. Then they are merged with `ContextValueKey.merge()`
  * method into single context value.
  *
- * @param <V> The type of associated value.
- * @param <S> The type of source values.
+ * @param <V> A type of associated value.
+ * @param <S> A type of source values.
  */
 export abstract class ContextValueKey<V, S = V> {
-
-  /**
-   * The value used when there is no value associated with this key.
-   *
-   * If `undefined`, then there is no default value.
-   */
-  abstract readonly defaultValue?: V;
 
   /**
    * Human-readable key name.
@@ -39,17 +34,40 @@ export abstract class ContextValueKey<V, S = V> {
   /**
    * Merges multiple source values into one context value.
    *
+   * @param context Context values.
    * @param sourceValues An iterable of source values to merge.
+   * @param handleDefault Default value handler. The default values should be passed through it.
    *
-   * @returns Single context value.
+   * @returns Single context value, or `undefined` if there is no default value.
    */
-  abstract merge(sourceValues: RevertibleIterable<S>): V | undefined;
+  abstract merge(
+      context: ContextValues,
+      sourceValues: RevertibleIterable<S>,
+      handleDefault: ContextValueDefaultHandler<V>): V | null | undefined;
 
   toString(): string {
     return `ContextValueKey(${this.name})`;
   }
 
 }
+
+/**
+ * Default context value handler.
+ *
+ * It is called from `ContextValueKey.merge()` operation to handle default values.
+ *
+ * It is responsible for default value selection. As explicitly specified default value should always take precedence
+ * over the one specified in the value key.
+ *
+ * @param <V> A type of context value key.
+ * @param defaultProvider Default value provider. It is called only when the default value is not provided explicitly.
+ * If it returns a non-null/non-undefined value, then it will be associated with context key.
+ *
+ * @return Default value to return.
+ *
+ * @throws Error If there is no explicitly specified default value, and `defaultProvider` did not provide any value.
+ */
+export type ContextValueDefaultHandler<V> = (defaultProvider: () => V | null | undefined) => V | null | undefined;
 
 /**
  * Single context value key.
@@ -62,20 +80,35 @@ export abstract class ContextValueKey<V, S = V> {
 export class SingleValueKey<V> extends ContextValueKey<V> {
 
   /**
+   * A provider of context value used when there is no value associated with this key.
+   *
+   * If `undefined`, then there is no default value.
+   */
+  readonly defaultProvider: (context: ContextValues) => V | null | undefined;
+
+  /**
    * Constructs single context value key.
    *
    * @param name Human-readable key name.
-   * @param defaultValue Optional default value. If unspecified or `undefined` the key has no default value.
+   * @param defaultProvider Optional default value provider. If unspecified or `undefined` the key has no default value.
    */
-  constructor(name: string, readonly defaultValue?: V) {
+  constructor(name: string, defaultProvider: (context: ContextValues) => V | null | undefined = () => undefined) {
     super(name);
+    this.defaultProvider = defaultProvider;
   }
 
-  merge(sourceValues: RevertibleIterable<V>): V | undefined {
+  merge(
+      context: ContextValues,
+      sourceValues: RevertibleIterable<V>,
+      handleDefault: ContextValueDefaultHandler<V>): V | null | undefined {
 
     const value = sourceValues.reverse()[Symbol.iterator]().next().value;
 
-    return value != null ? value : this.defaultValue;
+    if (value != null) {
+      return value;
+    }
+
+    return handleDefault(() => this.defaultProvider(context));
   }
 
 }
@@ -93,20 +126,42 @@ export class SingleValueKey<V> extends ContextValueKey<V> {
 export class MultiValueKey<V> extends ContextValueKey<V[], V> {
 
   /**
+   * A provider of context value used when there is no value associated with this key.
+   */
+  readonly defaultProvider: ContextValueProvider<ContextValues, V[]>;
+
+  /**
    * Constructs multiple context values key.
    *
    * @param name Human-readable key name.
-   * @param defaultValue Optional default value. If unspecified or `undefined` the key has no default value.
+   * @param defaultProvider Optional default value provider. If unspecified then the default value is empty array.
    */
-  constructor(name: string, readonly defaultValue: V[] | undefined = []) {
+  constructor(name: string, defaultProvider: ContextValueProvider<ContextValues, V[]> = () => []) {
     super(name);
+    this.defaultProvider = defaultProvider;
   }
 
-  merge(sourceValues: RevertibleIterable<V>): V[] | undefined {
+  merge(
+      context: ContextValues,
+      sourceValues: RevertibleIterable<V>,
+      handleDefault: ContextValueDefaultHandler<V[]>): V[] | null | undefined {
 
     const result = [...sourceValues];
 
-    return result.length ? result : this.defaultValue;
+    if (result.length) {
+      return result;
+    }
+
+    return handleDefault(() => {
+
+      const defaultSources = this.defaultProvider(context);
+
+      if (defaultSources) {
+        return [...defaultSources];
+      }
+
+      return;
+    });
   }
 
 }

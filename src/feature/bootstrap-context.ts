@@ -144,6 +144,6 @@ export namespace BootstrapContext {
    *
    * Use `componentsWindow()` feature to customize this value.
    */
-  export const windowKey = new SingleValueKey<Window>('window', window);
+  export const windowKey = new SingleValueKey<Window>('window', () => window);
 
 }

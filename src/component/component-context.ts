@@ -107,7 +107,7 @@ export namespace ComponentContext {
    * Note that this value is not provided, unless the `StateSupport` feature is enabled.
    */
   export const stateUpdateKey: ContextValueKey<StateUpdateConsumer> =
-      new SingleValueKey<StateUpdateConsumer>('state-update', noop);
+      new SingleValueKey<StateUpdateConsumer>('state-update', () => noop);
 
   /**
    * A key of a custom HTML element property and web component containing a reference to web component context.

@@ -14,7 +14,10 @@ describe('element/element-builder', () => {
 
     beforeEach(() => {
       bootstrapContextSpy = jasmine.createSpyObj('bootstrapContext', ['get']);
-      bootstrapContextSpy.get.and.callFake((key: ContextValueKey<any>) => key.defaultValue);
+      bootstrapContextSpy.get.and.callFake((key: ContextValueKey<any>) => key.merge(
+          bootstrapContextSpy,
+          [],
+          defaultProvider => defaultProvider()));
 
       valueRegistry = ComponentValueRegistry.create();
       builder = ElementBuilder.create({ bootstrapContext: bootstrapContextSpy, valueRegistry });

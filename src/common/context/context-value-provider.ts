@@ -1,5 +1,5 @@
 import { RevertibleIterable } from '../iteration';
-import { ContextValueKey } from './context-value-key';
+import { ContextValueDefaultHandler, ContextValueKey } from './context-value-key';
 import { ContextValues } from './context-values';
 
 /**
@@ -14,7 +14,8 @@ import { ContextValues } from './context-values';
  *
  * @return Either constructed value, or `null`/`undefined` if the value can not be constructed.
  */
-export type ContextValueProvider<C, S> = <T extends C>(this: void, context: T) => S | null | undefined;
+export type ContextValueProvider<C extends ContextValues, S> =
+    <T extends C>(this: void, context: T) => S | null | undefined;
 
 /**
  * The source of context values.
@@ -25,7 +26,7 @@ export type ContextValueProvider<C, S> = <T extends C>(this: void, context: T) =
  *
  * @returns Revertible iterable of context value sources associated with the given key provided for the given context.
  */
-export type ContextValueSource<C> =
+export type ContextValueSource<C extends ContextValues> =
     <V, S>(this: void, key: ContextValueKey<V, S>, context: C) => RevertibleIterable<S>;
 
 /**
@@ -33,7 +34,7 @@ export type ContextValueSource<C> =
  *
  * @param <C> A type of context.
  */
-export class ContextValueRegistry<C> {
+export class ContextValueRegistry<C extends ContextValues> {
 
   private readonly _providers = new Map<ContextValueKey<any>, ContextValueProvider<C, any>[]>();
   private readonly _initial: ContextValueSource<C>;
@@ -72,11 +73,12 @@ export class ContextValueRegistry<C> {
    *
    * @param key Context value key.
    * @param context Context to provide value for.
+   * @param handleDefault Default value handler.
    *
    * @returns Either constructed value, or `null`/`undefined` if the value can not be constructed.
    */
-  get<V, S>(key: ContextValueKey<V, S>, context: C): V | null | undefined {
-    return key.merge(this.bindSources(context)(key));
+  get<V, S>(key: ContextValueKey<V, S>, context: C, handleDefault: ContextValueDefaultHandler<V>): V | null | undefined {
+    return key.merge(context, this.bindSources(context)(key), handleDefault);
   }
 
   /**
@@ -118,9 +120,7 @@ export class ContextValueRegistry<C> {
 
     class Values implements ContextValues {
 
-      get<V>(this: C, key: ContextValueKey<V>): V;
-
-      get<V>(this: C, key: ContextValueKey<V>, defaultValue?: V | null | undefined): V | null | undefined {
+      get<V, S>(this: C, key: ContextValueKey<V, S>, defaultValue?: V | null | undefined): V | null | undefined {
 
         const cached: V | undefined = values.get(key);
 
@@ -128,18 +128,24 @@ export class ContextValueRegistry<C> {
           return cached;
         }
 
-        const constructed = providerRegistry.get(key, this);
+        const handleDefault: ContextValueDefaultHandler<V> = arguments.length > 1 ? () => defaultValue : defaultProvider => {
 
-        if (constructed != null) {
-          values.set(key, constructed);
-          return constructed;
-        }
-        if (arguments.length > 1) {
-          return defaultValue;
-        }
+          const providedDefault = defaultProvider();
 
-        throw new Error(`There is no value with the key ${key}`);
+          if (providedDefault == null) {
+            throw new Error(`There is no value with the key ${key}`);
+          }
+
+          return providedDefault;
+        };
+
+        const constructed = providerRegistry.get(key, this, handleDefault);
+
+        values.set(key, constructed);
+
+        return constructed;
       }
+
     }
 
     return new Values();
@@ -147,7 +153,9 @@ export class ContextValueRegistry<C> {
 
 }
 
-function* valueSources<C, S>(context: C, providers: Iterable<ContextValueProvider<C, S>>): Iterable<S> {
+function* valueSources<C extends ContextValues, S>(
+    context: C,
+    providers: Iterable<ContextValueProvider<C, S>>): Iterable<S> {
   for (const provider of providers) {
 
     const sourceValue = provider(context);
