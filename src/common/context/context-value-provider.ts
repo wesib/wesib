@@ -77,7 +77,10 @@ export class ContextValueRegistry<C extends ContextValues> {
    *
    * @returns Either constructed value, or `null`/`undefined` if the value can not be constructed.
    */
-  get<V, S>(key: ContextValueKey<V, S>, context: C, handleDefault: ContextValueDefaultHandler<V>): V | null | undefined {
+  get<V, S>(
+      key: ContextValueKey<V, S>,
+      context: C,
+      handleDefault: ContextValueDefaultHandler<V>): V | null | undefined {
     return key.merge(context, this.bindSources(context)(key), handleDefault);
   }
 
@@ -128,16 +131,17 @@ export class ContextValueRegistry<C extends ContextValues> {
           return cached;
         }
 
-        const handleDefault: ContextValueDefaultHandler<V> = arguments.length > 1 ? () => defaultValue : defaultProvider => {
+        const handleDefault: ContextValueDefaultHandler<V> =
+            arguments.length > 1 ? () => defaultValue : defaultProvider => {
 
-          const providedDefault = defaultProvider();
+              const providedDefault = defaultProvider();
 
-          if (providedDefault == null) {
-            throw new Error(`There is no value with the key ${key}`);
-          }
+              if (providedDefault == null) {
+                throw new Error(`There is no value with the key ${key}`);
+              }
 
-          return providedDefault;
-        };
+              return providedDefault;
+            };
 
         const constructed = providerRegistry.get(key, this, handleDefault);
 
