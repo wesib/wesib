@@ -1,3 +1,5 @@
+import { RevertibleIterable } from '../iteration';
+
 /**
  * Context value key.
  *
@@ -9,8 +11,6 @@
  * @param <V> The type of associated value.
  * @param <S> The type of source values.
  */
-import { RevertibleIterable } from '../iteration';
-
 export abstract class ContextValueKey<V, S = V> {
 
   /**

@@ -14,34 +14,37 @@ import { ContextValues } from './context-values';
  *
  * @return Either constructed value, or `null`/`undefined` if the value can not be constructed.
  */
-export type ContextProvider<C, S> = <T extends C>(this: void, context: T) => S | null | undefined;
+export type ContextValueProvider<C, S> = <T extends C>(this: void, context: T) => S | null | undefined;
 
 /**
- * Context value sources bound to their context.
+ * The source of context values.
  *
+ * @param <C> A type of context.
  * @param key Context value key.
+ * @param context Target context.
  *
- * @returns Revertible iterable instance.
+ * @returns Revertible iterable of context value sources associated with the given key provided for the given context.
  */
-export type ContextValueSources = <V, S>(this: void, key: ContextValueKey<V, S>) => RevertibleIterable<S>;
+export type ContextValueSource<C> =
+    <V, S>(this: void, key: ContextValueKey<V, S>, context: C) => RevertibleIterable<S>;
 
 /**
  * A registry of context value providers.
  *
- * @param C The type of context.
+ * @param <C> A type of context.
  */
 export class ContextValueRegistry<C> {
 
-  private readonly _providers = new Map<ContextValueKey<any>, ContextProvider<C, any>[]>();
-  private readonly _initial: ContextValueSources;
+  private readonly _providers = new Map<ContextValueKey<any>, ContextValueProvider<C, any>[]>();
+  private readonly _initial: ContextValueSource<C>;
 
   /**
    * Constructs a registry for context value providers.
    *
-   * @param initial An optional provider of initially known context value sources. This is useful e.g. for chaining
+   * @param initial An optional source of initially known context values. This is useful e.g. for chaining
    * registries.
    */
-  constructor(initial: ContextValueSources = () => []) {
+  constructor(initial: ContextValueSource<C> = () => []) {
     this._initial = initial;
   }
 
@@ -52,9 +55,9 @@ export class ContextValueRegistry<C> {
    * @param key Context value key.
    * @param provider Context value provider.
    */
-  provide<S>(key: ContextValueKey<any, S>, provider: ContextProvider<C, S>): void {
+  provide<S>(key: ContextValueKey<any, S>, provider: ContextValueProvider<C, S>): void {
 
-    let providers: ContextProvider<C, S>[] | undefined = this._providers.get(key);
+    let providers: ContextValueProvider<C, S>[] | undefined = this._providers.get(key);
 
     if (providers == null) {
       providers = [provider];
@@ -83,11 +86,11 @@ export class ContextValueRegistry<C> {
    *
    * @returns A provider of context value sources bound to the given context.
    */
-  bindSources(context: C): ContextValueSources {
+  bindSources(context: C): <V, S>(this: void, key: ContextValueKey<V, S>) => RevertibleIterable<S> {
     return <V, S>(key: ContextValueKey<V, S>) => {
 
-      const sources = this._initial(key);
-      const providers: ContextProvider<C, S>[] = this._providers.get(key) || [];
+      const sources = this._initial(key, context);
+      const providers: ContextValueProvider<C, S>[] = this._providers.get(key) || [];
 
       return {
         [Symbol.iterator]: function* () {
@@ -144,7 +147,7 @@ export class ContextValueRegistry<C> {
 
 }
 
-function* valueSources<C, S>(context: C, providers: Iterable<ContextProvider<C, S>>): Iterable<S> {
+function* valueSources<C, S>(context: C, providers: Iterable<ContextValueProvider<C, S>>): Iterable<S> {
   for (const provider of providers) {
 
     const sourceValue = provider(context);

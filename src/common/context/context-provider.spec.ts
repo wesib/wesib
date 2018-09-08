@@ -1,6 +1,6 @@
-import Spy = jasmine.Spy;
-import { ContextValueRegistry } from './context-provider';
 import { MultiValueKey, SingleValueKey } from './context-value-key';
+import { ContextValueRegistry } from './context-value-provider';
+import Spy = jasmine.Spy;
 
 describe('common/context/context-provider', () => {
   describe('ContextValueRegistry', () => {

@@ -1,4 +1,4 @@
-import { ContextValueRegistry, ContextValueSources } from '../common';
+import { ContextValueRegistry, ContextValueSource } from '../common';
 import { ComponentContext } from '../component';
 
 /**
@@ -6,11 +6,11 @@ import { ComponentContext } from '../component';
  */
 export class ComponentValueRegistry extends ContextValueRegistry<ComponentContext<any, any>> {
 
-  static create(initial?: ContextValueSources): ComponentValueRegistry {
+  static create(initial?: ContextValueSource<ComponentContext<any, any>>): ComponentValueRegistry {
     return new ComponentValueRegistry(initial);
   }
 
-  private constructor(initial?: ContextValueSources) {
+  private constructor(initial?: ContextValueSource<ComponentContext<any, any>>) {
     super(initial);
   }
 
