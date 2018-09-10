@@ -9,7 +9,6 @@ import SpyObj = jasmine.SpyObj;
 describe('element/component-registry', () => {
   describe('ComponentRegistry', () => {
 
-    let windowSpy: SpyObj<Window>;
     let customElementsSpy: SpyObj<CustomElementRegistry>;
     let bootstrapContextSpy: SpyObj<BootstrapContext>;
     let builderSpy: SpyObj<ElementBuilder>;
@@ -18,8 +17,6 @@ describe('element/component-registry', () => {
     let ElementSpy: SpyObj<HTMLElement>;
 
     beforeEach(() => {
-      windowSpy = jasmine.createSpyObj('window', ['addEventListener']);
-      customElementsSpy = jasmine.createSpyObj('customElements', ['define', 'whenDefined']);
       bootstrapContextSpy = jasmine.createSpyObj('bootstrapContext', ['get']);
       bootstrapContextSpy.get.and.callFake((key: ContextValueKey<any>) => {
         if (key === BootstrapContext.customElementsKey) {
@@ -27,10 +24,10 @@ describe('element/component-registry', () => {
         }
         return;
       });
+      customElementsSpy = jasmine.createSpyObj('customElements', ['define', 'whenDefined']);
     });
     beforeEach(() => {
       builderSpy = jasmine.createSpyObj('builder', ['buildElement']);
-      (builderSpy as any).window = windowSpy;
       (builderSpy as any).bootstrapContext = bootstrapContextSpy;
     });
     beforeEach(() => {
