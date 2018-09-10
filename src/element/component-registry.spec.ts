@@ -1,5 +1,6 @@
-import { EventInterest } from '../common';
+import { ContextValueKey, EventInterest } from '../common';
 import { ComponentDef, ComponentType } from '../component';
+import { BootstrapContext } from '../feature';
 import { ComponentRegistry } from './component-registry';
 import { ElementBuilder } from './element-builder';
 import Spy = jasmine.Spy;
@@ -10,6 +11,7 @@ describe('element/component-registry', () => {
 
     let windowSpy: SpyObj<Window>;
     let customElementsSpy: SpyObj<CustomElementRegistry>;
+    let bootstrapContextSpy: SpyObj<BootstrapContext>;
     let builderSpy: SpyObj<ElementBuilder>;
     let registry: ComponentRegistry;
     let TestComponent: ComponentType;
@@ -18,11 +20,18 @@ describe('element/component-registry', () => {
     beforeEach(() => {
       windowSpy = jasmine.createSpyObj('window', ['addEventListener']);
       customElementsSpy = jasmine.createSpyObj('customElements', ['define', 'whenDefined']);
-      (windowSpy as any).customElements = customElementsSpy;
+      bootstrapContextSpy = jasmine.createSpyObj('bootstrapContext', ['get']);
+      bootstrapContextSpy.get.and.callFake((key: ContextValueKey<any>) => {
+        if (key === BootstrapContext.customElementsKey) {
+          return customElementsSpy;
+        }
+        return;
+      });
     });
     beforeEach(() => {
       builderSpy = jasmine.createSpyObj('builder', ['buildElement']);
       (builderSpy as any).window = windowSpy;
+      (builderSpy as any).bootstrapContext = bootstrapContextSpy;
     });
     beforeEach(() => {
       registry = ComponentRegistry.create({ builder: builderSpy });

@@ -33,12 +33,8 @@ export class ElementBuilder {
     this.componentValueRegistry = valueRegistry;
   }
 
-  get window(): Window {
-    return this.bootstrapContext.get(BootstrapContext.windowKey);
-  }
-
   elementType<T extends object>(def: ComponentDef<T>): ElementClass<ComponentElementType<T>> {
-    return def.extend && def.extend.type || (this.window as any).HTMLElement;
+    return def.extend && def.extend.type || this.bootstrapContext.get(BootstrapContext.baseElementKey);
   }
 
   buildElement<T extends object>(

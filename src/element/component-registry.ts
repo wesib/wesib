@@ -29,8 +29,8 @@ export class ComponentRegistry {
     this.builder = builder;
   }
 
-  get window(): Window {
-    return this.builder.window;
+  get customElements(): CustomElementRegistry {
+    return this.builder.bootstrapContext.get(BootstrapContext.customElementsKey);
   }
 
   define<T extends object>(componentType: ComponentType<T>) {
@@ -42,14 +42,14 @@ export class ComponentRegistry {
       const ext = def.extend;
 
       if (ext && ext.name) {
-        this.window.customElements.define(
+        this.customElements.define(
             def.name,
             elementClass,
             {
               extends: ext.name,
             });
       } else {
-        this.window.customElements.define(def.name, elementClass);
+        this.customElements.define(def.name, elementClass);
       }
     });
   }
@@ -64,7 +64,7 @@ export class ComponentRegistry {
   }
 
   whenDefined(componentType: ComponentType<any, any>): PromiseLike<void> {
-    return this.window.customElements.whenDefined(ComponentDef.of(componentType).name);
+    return this.customElements.whenDefined(ComponentDef.of(componentType).name);
   }
 
   private _componentDefined<T extends object>(componentType: ComponentType<T>): ComponentType<T> {

@@ -1,4 +1,4 @@
-import { ContextValueKey, EventProducer, SingleValueKey } from '../common';
+import { Class, ContextValueKey, EventProducer, SingleValueKey } from '../common';
 import { ComponentContext, ComponentElementType, ComponentType, ComponentValueProvider } from '../component';
 import { ElementClass } from '../element';
 import { BootstrapValues } from './bootstrap-values';
@@ -145,5 +145,26 @@ export namespace BootstrapContext {
    * Target value defaults to current window.
    */
   export const windowKey = new SingleValueKey<Window>('window', () => window);
+
+  /**
+   * A key of context value containing a base HTML element class constructor.
+   *
+   * This value is the class the custom HTML elements are inherited from unless `ComponentDef.extends.type`
+   * is specified.
+   *
+   * Target value defaults to `HTMLElement` from the window provided under `windowKey`.
+   */
+  export const baseElementKey = new SingleValueKey<Class<HTMLElement>>(
+      'base-element',
+      values => (values.get(windowKey) as any).HTMLElement);
+
+  /**
+   * A key of context value containing a `CustomElementRegistry` instance used to register custom elements.
+   *
+   * Target value defaults to `window.customElements` from the window provided under `windowKey`.
+   */
+  export const customElementsKey = new SingleValueKey<CustomElementRegistry>(
+      'custom-elements',
+      values => values.get(windowKey).customElements);
 
 }
