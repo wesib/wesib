@@ -96,30 +96,31 @@ describe('component instantiation', () => {
     describe('component', () => {
       it('is resolved on component instantiation', async () => {
 
-        const promise = new Promise((resolve, reject) => {
+        let context: ComponentContext = { name: 'component context' } as any;
+
+        const promise = new Promise(resolve => {
           bootstrap.context.onElement((_el, ctx) => {
-            ctx.component.then(resolve, reject);
+            context = ctx;
+            expect(() => context.component).toThrowError(/not constructed yet/);
+            ctx.whenConstructed(comp => resolve(comp));
           });
         });
 
         await bootstrap.addElement(testComponent);
 
-        expect(await promise).toEqual(jasmine.any(testComponent));
-      });
-      it('is rejected on component construction failure', async () => {
+        const component = await promise;
 
-        const error = new Error('Not constructed');
+        expect(component).toEqual(jasmine.any(testComponent));
+        expect(context.component).toBe(component);
 
-        constructorSpy.and.callFake(() => { throw error; });
+        let callbackInvoked = false;
 
-        const promise = new Promise((resolve, reject) => {
-          bootstrap.context.onElement((_el, ctx) => {
-            ctx.component.then(resolve, reject);
-          });
+        context.whenConstructed(comp => {
+          callbackInvoked = true;
+          expect(comp).toBe(component);
         });
 
-        bootstrap.addElement(testComponent);
-        expect(await promise.catch(err => err)).toBe(error);
+        expect(callbackInvoked).toBe(true);
       });
     });
 

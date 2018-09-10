@@ -1,4 +1,5 @@
-import { EventEmitter, StateUpdateConsumer, StateValueKey } from '../common';
+import { EventEmitter, noop, StateUpdateConsumer, StateValueKey } from '../common';
+import { mergeFunctions } from '../common/functions';
 import { Component, ComponentContext, ComponentDef, ComponentElementType, ComponentType } from '../component';
 import { BootstrapContext, ElementListener } from '../feature';
 import { PromiseResolver } from '../util';
@@ -63,56 +64,67 @@ export class ElementBuilder {
       constructor() {
         super();
 
-        const componentResolver = new PromiseResolver<T>();
+        const element: ComponentElementType<T> = this;
+        // @ts-ignore
+        const elementSuper = (name: string) => super[name] as any;
+        const values = builder.componentValueRegistry.newValues();
+        let whenConstructed: (this: ElementContext, component: T) => void = noop;
+        const connectEvents = new EventEmitter<(this: ElementContext) => void>();
+        const disconnectEvents = new EventEmitter<(this: ElementContext) => void>();
 
-        try {
+        class ElementContext implements ComponentContext<T, ComponentElementType<T>> {
 
-          const element: ComponentElementType<T> = this;
-          // @ts-ignore
-          const elementSuper = (name: string) => super[name] as any;
-          const values = builder.componentValueRegistry.newValues();
-          const connectEvents = new EventEmitter<(this: ElementContext) => void>();
-          const disconnectEvents = new EventEmitter<(this: ElementContext) => void>();
+          readonly element = element;
+          readonly elementSuper = elementSuper;
+          readonly get = values.get;
+          readonly onConnect = connectEvents.on;
+          readonly onDisconnect = disconnectEvents.on;
+          readonly updateState: StateUpdateConsumer = (<V>(key: StateValueKey, newValue: V, oldValue: V) => {
+            this.get(ComponentContext.stateUpdateKey)(key, newValue, oldValue);
+          });
 
-          class ElementContext implements ComponentContext<T, ComponentElementType<T>> {
-
-            readonly element = element;
-            readonly component = componentResolver.promise;
-            readonly elementSuper = elementSuper;
-            readonly get = values.get;
-            readonly onConnect = connectEvents.on;
-            readonly onDisconnect = disconnectEvents.on;
-            readonly updateState: StateUpdateConsumer = (<V>(key: StateValueKey, newValue: V, oldValue: V) => {
-              this.get(ComponentContext.stateUpdateKey)(key, newValue, oldValue);
-            });
-
-            get connected() {
-              return connected;
-            }
-
+          get component(): T {
+            throw new Error('The component is not constructed yet. Consider to use a `whenConstructed` callback');
           }
 
-          const context = new ElementContext();
+          get connected() {
+            return connected;
+          }
 
-          Object.defineProperty(this, ComponentContext.symbol, { value: context });
-          Object.defineProperty(this, connectedCallback, {
-            value: () => connectEvents.forEach(listener => listener.call(context)),
-          });
-          Object.defineProperty(this, disconnectedCallback, {
-            value: () => disconnectEvents.forEach(listener => listener.call(context)),
-          });
+          whenConstructed(callback: (this: ElementContext, component: T) => void) {
+            whenConstructed = mergeFunctions<[T], void, ElementContext>(whenConstructed, callback);
+          }
 
-          builder.elements.notify(element, context);
-
-          const component = Component.create(componentType, context);
-
-          Object.defineProperty(this, Component.symbol, { value: component });
-
-          componentResolver.resolve(component);
-        } catch (error) {
-          componentResolver.reject(error);
-          throw error;
         }
+
+        const context = new ElementContext();
+
+        Object.defineProperty(this, ComponentContext.symbol, { value: context });
+        Object.defineProperty(this, connectedCallback, {
+          value: () => connectEvents.forEach(listener => listener.call(context)),
+        });
+        Object.defineProperty(this, disconnectedCallback, {
+          value: () => disconnectEvents.forEach(listener => listener.call(context)),
+        });
+
+        builder.elements.notify(element, context);
+
+        const component = Component.create(componentType, context);
+
+        Object.defineProperty(this, Component.symbol, { value: component });
+        Object.defineProperty(context, 'component', {
+          configurable: true,
+          enumerable: true,
+          value: component,
+        });
+        Object.defineProperty(context, 'whenConstructed', {
+          configurable: true,
+          value(callback: (component: T) => void) {
+            callback.call(context, component);
+          },
+        });
+
+        whenConstructed.call(context, component);
       }
 
       // noinspection JSUnusedGlobalSymbols

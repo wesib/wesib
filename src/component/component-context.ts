@@ -19,19 +19,19 @@ export interface ComponentContext<T extends object = object, E extends HTMLEleme
   readonly element: E;
 
   /**
+   * A component instance.
+   *
+   * It is an error accessing this property from inside of `ElementListener` listener or component constructor.
+   * In these cases you may wish to add a `whenConstructed()` callback.
+   */
+  readonly component: T;
+
+  /**
    * Whether the custom HTML element is connected.
    *
    * This becomes `true` right before `onConnect` is called, and becomes false right before `onDisconnect` is called.
    */
   readonly connected: boolean;
-
-  /**
-   * A promise resolved to component.
-   *
-   * The component is constructed shortly after the HTML element. So the component may not exist when requested
-   * e.g. inside component constructor, or inside `ElementListener`.
-   */
-  readonly component: Promise<T>;
 
   /**
    * Registers custom HTML element connection listener.
@@ -70,6 +70,19 @@ export interface ComponentContext<T extends object = object, E extends HTMLEleme
    * @param oldValue Previous value.
    */
   readonly updateState: StateUpdateConsumer;
+
+  /**
+   * Registers component construction callback.
+   *
+   * The component is constructed shortly after the HTML element. So the component may not exist when requested
+   * e.g. inside component constructor or inside `ElementListener`. The registered callback will be notified when
+   * component constructed.
+   *
+   * If the component is constructed already, the callback will be notified immediately.
+   *
+   * @param callback A callback to notify on component construction.
+   */
+  whenConstructed(callback: (this: this, component: T) => void): void;
 
   /**
    * Returns a `super` property value inherited from custom HTML element parent.
