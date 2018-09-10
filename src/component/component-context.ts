@@ -6,7 +6,7 @@ import { ContextValueKey, ContextValues, EventProducer, noop, SingleValueKey, St
  * Passed to component constructor as its only parameter.
  *
  * Extends `ContextValues` interface. The values are provided by corresponding providers registered with
- * `BootstrapContext.provide()` method.
+ * `BootstrapContext.forComponent()` method.
  *
  * @param <E> A type of HTML element.
  */
@@ -85,8 +85,7 @@ export interface ComponentContext<T extends object = object, E extends HTMLEleme
  *
  * It is responsible for constructing the values associated with particular key for each component.
  *
- * This function is called at most once per component, unless it returns `null`/`undefined`. In the latter case
- * it may be called again later.
+ * This function is called at most once per component.
  *
  * @param <S> The type of source value.
  * @param context Target component context.

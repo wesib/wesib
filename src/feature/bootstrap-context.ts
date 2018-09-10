@@ -77,13 +77,15 @@ export interface BootstrapContext extends BootstrapValues {
   whenDefined(componentType: ComponentType<any, any>): PromiseLike<void>;
 
   /**
-   * Registers provider for the given key.
+   * Registers provider that associates a value with the given key with component.
+   *
+   * The given provider will be requested for the value at most once per component.
    *
    * @param <S> The type of source value.
    * @param key Component context value key the provider should associate the value with.
    * @param provider Component context value provider to register.
    */
-  provide<S>(key: ContextValueKey<any, S>, provider: ComponentValueProvider<S>): void;
+  forComponent<S>(key: ContextValueKey<any, S>, provider: ComponentValueProvider<S>): void;
 
 }
 

@@ -175,12 +175,12 @@ describe('bootstrap', () => {
         expect(featureContext.whenDefined(TestComponent)).toBe(promise);
         expect(componentRegistrySpy.whenDefined).toHaveBeenCalledWith(TestComponent);
       });
-      it('proxies provide() method', () => {
+      it('proxies forComponent() method', () => {
 
         const key = new SingleValueKey<string>('test-value-key');
         const provider = () => 'test-value';
 
-        featureContext.provide(key, provider);
+        featureContext.forComponent(key, provider);
 
         expect(componentValueRegistrySpy.provide).toHaveBeenCalledWith(key, provider);
       });
