@@ -131,21 +131,28 @@ export class ContextValueRegistry<C extends ContextValues> {
           return cached;
         }
 
+        let defaultUsed = false;
         const handleDefault: ContextValueDefaultHandler<V> =
-            arguments.length > 1 ? () => defaultValue : defaultProvider => {
+            arguments.length > 1
+                ? () => {
+                  defaultUsed = true;
+                  return defaultValue;
+                } : defaultProvider => {
 
-              const providedDefault = defaultProvider();
+                  const providedDefault = defaultProvider();
 
-              if (providedDefault == null) {
-                throw new Error(`There is no value with the key ${key}`);
-              }
+                  if (providedDefault == null) {
+                    throw new Error(`There is no value with the key ${key}`);
+                  }
 
-              return providedDefault;
-            };
+                  return providedDefault;
+                };
 
         const constructed = providerRegistry.get(key, this, handleDefault);
 
-        values.set(key, constructed);
+        if (!defaultUsed) {
+          values.set(key, constructed);
+        }
 
         return constructed;
       }

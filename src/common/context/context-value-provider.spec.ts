@@ -191,6 +191,34 @@ describe('common/context/context-value-provider', () => {
         expect(values.get(new SingleValueKey<string>(key.name, () => 'default'), undefined))
             .toBeUndefined();
       });
+      it('caches the value', () => {
+
+        const value = 'value';
+        providerSpy.and.returnValue(value);
+
+        expect(values.get(key)).toBe(value);
+        expect(values.get(key)).toBe(value);
+
+        expect(providerSpy).toHaveBeenCalledTimes(1);
+      });
+      it('caches default key value', () => {
+
+        const value = 'default value';
+        const defaultProviderSpy = jasmine.createSpy('default').and.returnValue(value);
+        const keyWithDefault = new SingleValueKey('key-with-default', defaultProviderSpy);
+
+        expect(values.get(keyWithDefault)).toBe(value);
+        expect(values.get(keyWithDefault)).toBe(value);
+        expect(defaultProviderSpy).toHaveBeenCalledTimes(1);
+      });
+      it('does not cache explicit default value', () => {
+
+        const value1 = 'value1';
+        const value2 = 'value2';
+
+        expect(values.get(key, value1)).toBe(value1);
+        expect(values.get(key, value2)).toBe(value2);
+      });
 
       describe('on multi-value', () => {
 
