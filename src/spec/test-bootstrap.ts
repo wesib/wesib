@@ -1,7 +1,6 @@
 import { bootstrapComponents } from '../bootstrap';
 import { Component, ComponentDef, ComponentElementType, ComponentType } from '../component';
 import { BootstrapContext, FeatureType, WesFeature } from '../feature';
-import { componentsWindow } from '../features';
 import { TestIframe } from './test-iframe';
 
 export class TestBootstrap {
@@ -29,11 +28,11 @@ export class TestBootstrap {
 
     @WesFeature({
       configure: ctx => this._context = ctx,
+      provides: { key: BootstrapContext.windowKey, provider: () => this.window },
     })
     class TestFeature {}
 
     bootstrapComponents(
-        componentsWindow(this.window),
         TestFeature,
         ...features,
     );

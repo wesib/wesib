@@ -143,8 +143,6 @@ export namespace BootstrapContext {
    * A key of context value containing a window instance the bootstrap is performed against.
    *
    * Target value defaults to current window.
-   *
-   * Use `componentsWindow()` feature to customize this value.
    */
   export const windowKey = new SingleValueKey<Window>('window', () => window);
 
