@@ -1,49 +1,45 @@
-import { ElementClass } from '../element';
-import { ComponentElementType } from './component-type';
+import { Class } from '../common';
 
 /**
- * Web component definition.
+ * Component definition.
  *
- * A custom HTML element class will be created for each registered web component in accordance to this definition.
+ * A custom element class will be created for each registered component in accordance to this definition.
  *
- * @param <T> A type of web component.
- * @param <E> A type of HTML element this web component extends.
+ * @param <T> A type of component.
  */
-export interface ComponentDef<T extends object = object, E extends HTMLElement = ComponentElementType<T>> {
+export interface ComponentDef<T extends object = object> {
 
   /**
-   * Custom HTML element name.
+   * Custom element name.
    */
   name: string;
 
   /**
-   * Standard HTML element the component extends.
+   * Existing element to extend by custom one.
    */
-  extend?: ExtendedElementDef<E>;
+  extend?: ExtendedElementDef;
 
 }
 
 /**
  * Partial component definition.
  *
- * @param <T> A type of web component.
- * @param <E> A type of HTML element this web component extends.
+ * @param <T> A type of component.
  */
-export type PartialComponentDef<T extends object = object, E extends HTMLElement = ComponentElementType<T>> =
-    Partial<ComponentDef<T, E>>;
+export type PartialComponentDef<T extends object = object> = Partial<ComponentDef<T>>;
 
 /**
- * Standard HTML element to extend by custom HTML element.
+ * The definition of element to extend by custom one.
  */
-export interface ExtendedElementDef<E extends HTMLElement> {
+export interface ExtendedElementDef {
 
   /**
-   * The class constructor of HTML element to extend.
+   * The class constructor of element to extend.
    */
-  type: ElementClass<E>;
+  type: Class;
 
   /**
-   * The name of HTML element to extend.
+   * The name of element to extend.
    *
    * This is to support `as` attribute of standard HTML element. Note that this is not supported by polyfills.
    */
@@ -54,8 +50,8 @@ export interface ExtendedElementDef<E extends HTMLElement> {
 export namespace ComponentDef {
 
   /**
-   * A key of a property holding a web component definition within its class constructor.
+   * A key of a property holding a component definition within its class constructor.
    */
-  export const symbol = Symbol('web-component-def');
+  export const symbol = Symbol('component-def');
 
 }

@@ -1,5 +1,5 @@
 import { ContextValueKey } from '../common/context';
-import { ComponentDef, ComponentType } from '../component';
+import { ComponentClass, ComponentDef } from '../component';
 import { BootstrapContext } from '../feature';
 import { ComponentValueRegistry } from './component-value-registry';
 import { ElementBuilder } from './element-builder';
@@ -25,7 +25,7 @@ describe('element/element-builder', () => {
 
     describe('buildElement', () => {
 
-      let TestComponent: ComponentType;
+      let TestComponent: ComponentClass;
 
       beforeEach(() => {
         TestComponent = class {
@@ -35,7 +35,7 @@ describe('element/element-builder', () => {
         };
       });
 
-      it('builds HTML element', () => {
+      it('builds custom element', () => {
         expect(builder.buildElement(TestComponent).prototype).toEqual(jasmine.any(HTMLElement));
       });
       it('extends HTML element', () => {

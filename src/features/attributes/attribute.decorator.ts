@@ -1,10 +1,10 @@
 import { StateValueKey, TypedPropertyDecorator } from '../../common';
-import { ComponentContext, ComponentType } from '../../component';
+import { ComponentContext, ComponentClass } from '../../component';
 import { attributeStateUpdate } from './attribute-state-update';
 import { AttributeChangedCallback, AttributesDef, AttributeUpdateConsumer } from './attributes-def';
 
 /**
- * Creates decorator for HTML element accessor property.
+ * Creates a decorator for component's property that accesses custom element's attribute.
  *
  * The decorated property accesses corresponding attribute on read, and updates it on setting.
  *
@@ -12,9 +12,9 @@ import { AttributeChangedCallback, AttributesDef, AttributeUpdateConsumer } from
  *
  * @param opts Attribute definition options, or just an attribute name.
  *
- * @return Web component property decorator.
+ * @return Component property decorator.
  */
-export function Attribute<T extends ComponentType>(opts?: Attribute.Opts<T> | string): TypedPropertyDecorator<T> {
+export function Attribute<T extends ComponentClass>(opts?: Attribute.Opts<T> | string): TypedPropertyDecorator<T> {
   return <V>(target: InstanceType<T>, propertyKey: string | symbol, descriptor?: TypedPropertyDescriptor<V>) => {
 
     const { name, updateState } = parseAttributeOpts(target, propertyKey, opts);
@@ -80,7 +80,7 @@ export namespace Attribute {
 /**
  * @internal
  */
-export function parseAttributeOpts<T extends ComponentType>(
+export function parseAttributeOpts<T extends ComponentClass>(
     target: InstanceType<T>,
     propertyKey: string | symbol,
     opts?: Attribute.Opts<T> | string) {

@@ -1,22 +1,21 @@
 import { decoratePropertyAccessor, StateValueKey, TypedPropertyDecorator } from '../../common';
-import { Component, ComponentType } from '../../component';
+import { Component, ComponentClass } from '../../component';
 import { DomPropertiesDef } from './dom-properties-def';
 import './dom-properties-def.ns';
 import { DomPropertyUpdateCallback, propertyStateUpdate } from './property-state-update';
 
 /**
- * Web component property decorator that declares a property to add to custom HTML element created for this web
- * component.
+ * Component property decorator that declares a property to add to custom element created for this component.
  *
- * The value of declared HTML element's property will be read from and written to decorated one.
+ * The value of declared element's property will be read from and written to decorated one.
  *
- * This decorator cane be applied both to plain properties, and to property accessors.
+ * This decorator can be applied both to plain properties and to property accessors.
  *
- * @param opts Custom HTML element property options.
+ * @param opts Custom element property options.
  *
- * @returns Web component property decorator.
+ * @returns Component property decorator.
  */
-export function DomProperty<T extends ComponentType>(opts: DomProperty.Opts<T> = {}): TypedPropertyDecorator<T> {
+export function DomProperty<T extends ComponentClass>(opts: DomProperty.Opts<T> = {}): TypedPropertyDecorator<T> {
 
   return <V>(target: InstanceType<T>, propertyKey: string | symbol, propertyDesc?: TypedPropertyDescriptor<V>) => {
 
@@ -58,7 +57,7 @@ export function DomProperty<T extends ComponentType>(opts: DomProperty.Opts<T> =
 }
 
 /**
- * Web component method decorator that declares a method to add to custom HTML element created for this web component.
+ * Component method decorator that declares a method to add to custom element created for this component.
  *
  * This is just an alias of `@DomProperty` decorator.
  */
@@ -67,9 +66,9 @@ export { DomProperty as DomMethod };
 export namespace DomProperty {
 
   /**
-   * Custom HTML element property options.
+   * Custom element property options.
    *
-   * This is an parameter to `@DomProperty` decorator applied to web component property.
+   * This is an parameter to `@DomProperty` decorator applied to component property.
    */
   export interface Opts<T extends object> {
 
@@ -117,11 +116,11 @@ export namespace DomProperty {
 }
 
 /**
- * DOM property updates consumer invoked after custom HTML element property change.
+ * DOM property updates consumer invoked after custom element property change.
  *
- * @param <T> A type of web component.
- * @param <K> A type of web component property keys.
- * @param this Web component instance.
+ * @param <T> A type of component.
+ * @param <K> A type of component property keys.
+ * @param this Component instance.
  * @param key The changed property key in the form of `[StateValueKey.property, propertyKey]`.
  * @param newValue New property value.
  * @param oldValue Previous property value.

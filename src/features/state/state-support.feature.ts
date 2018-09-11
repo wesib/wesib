@@ -21,7 +21,7 @@ export class StateSupport {
 }
 
 function enableStateSupport(context: BootstrapContext) {
-  context.forComponent(StateTracker.key, () => {
+  context.forComponents(StateTracker.key, () => {
 
     const emitter = new EventEmitter<StateUpdateConsumer>();
 
@@ -37,5 +37,5 @@ function enableStateSupport(context: BootstrapContext) {
 
     return new Tracker();
   });
-  context.forComponent(ComponentContext.stateUpdateKey, ctx => ctx.get(StateTracker.key).updateState);
+  context.forComponents(ComponentContext.stateUpdateKey, ctx => ctx.get(StateTracker.key).updateState);
 }

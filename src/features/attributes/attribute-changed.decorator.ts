@@ -1,16 +1,16 @@
 import { TypedPropertyDecorator } from '../../common';
-import { ComponentType } from '../../component';
+import { ComponentClass } from '../../component';
 import { Attribute, parseAttributeOpts } from './attribute.decorator';
 import { AttributeChangedCallback, AttributesDef } from './attributes-def';
 import './attributes-def.ns';
 
 /**
- * Creates a web component method decorator for custom HTML element attribute change callback.
+ * Creates a component method decorator for custom element attribute change callback.
  *
  * The decorated method should have up to two parameters:
  *
- * - the first one accepting old attribute value (or `null`),
- * - the second one accepting new attribute value.
+ * - the first one accepts new attribute value.
+ * - the second one accepts old attribute value (or `null`),
  *
  * Example:
  * ```TypeScript
@@ -18,7 +18,7 @@ import './attributes-def.ns';
  * class MyComponent {
  *
  *   @AttributeChanged('my-attribute')
- *   void myAttributeChanged(oldValue: string | null, newValue: string) {
+ *   void myAttributeChanged(newValue: string, oldValue: string | null) {
  *     console.log(`my-attribute value changed from ${oldValue} to ${newValue}`);
  *   }
  *
@@ -29,9 +29,9 @@ import './attributes-def.ns';
  *
  * @param opts Attribute definition options, or just an attribute name.
  *
- * @return Web component method decorator.
+ * @return Component method decorator.
  */
-export function AttributeChanged<T extends ComponentType>(opts?: Attribute.Opts<T> | string):
+export function AttributeChanged<T extends ComponentClass>(opts?: Attribute.Opts<T> | string):
     TypedPropertyDecorator<T> {
   return <V>(target: InstanceType<T>, propertyKey: string | symbol) => {
 

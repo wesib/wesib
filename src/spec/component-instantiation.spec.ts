@@ -1,5 +1,5 @@
-import { EventInterest, SingleValueKey } from '../common';
-import { Component, ComponentContext, ComponentType, WesComponent } from '../component';
+import { EventInterest } from '../common';
+import { Component, ComponentClass, ComponentContext, WesComponent } from '../component';
 import { TestBootstrap } from './test-bootstrap';
 import Spy = jasmine.Spy;
 
@@ -7,7 +7,7 @@ describe('component instantiation', () => {
   describe('Life cycle', () => {
 
     let bootstrap: TestBootstrap;
-    let testComponent: ComponentType;
+    let testComponent: ComponentClass;
     let constructorSpy: Spy;
     let context: ComponentContext;
     let componentListenerSpy: Spy;
@@ -72,7 +72,7 @@ describe('component instantiation', () => {
   describe('context callbacks', () => {
 
     let bootstrap: TestBootstrap;
-    let testComponent: ComponentType;
+    let testComponent: ComponentClass;
     let constructorSpy: Spy;
 
     beforeEach(() => {

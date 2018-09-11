@@ -180,7 +180,7 @@ describe('bootstrap', () => {
         const key = new SingleValueKey<string>('test-value-key');
         const provider = () => 'test-value';
 
-        featureContext.forComponent(key, provider);
+        featureContext.forComponents(key, provider);
 
         expect(componentValueRegistrySpy.provide).toHaveBeenCalledWith(key, provider);
       });

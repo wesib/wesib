@@ -2,16 +2,16 @@ import { Class } from './classes';
 import { fieldAccessorDescriptor, PropertyAccessorDescriptor, toPropertyAccessorDescriptor } from './reflect';
 
 /**
- * Web component class decorator.
+ * Typed class decorator.
  *
- * @param <T> A type of web component.
+ * @param <T> A type of class to decorate.
  */
 export type TypedClassDecorator<T extends Class> = (type: T) => T | void;
 
 /**
- * Web component property decorator.
+ * Typed property decorator.
  *
- * @param <T> A type of web component.
+ * @param <T> A type of class the decorated property belongs to.
  */
 export type TypedPropertyDecorator<T extends Class> =
     <V>(target: InstanceType<T>, propertyKey: string | symbol, descriptor?: TypedPropertyDescriptor<V>) => any | void;

@@ -7,7 +7,7 @@ import SpyObj = jasmine.SpyObj;
 describe('features/attributes/attribute-changed', () => {
   describe('@AttributeChanged', () => {
 
-    let contextSpy: SpyObj<ComponentContext<any, any>>;
+    let contextSpy: SpyObj<ComponentContext<any>>;
 
     beforeEach(() => {
       contextSpy = jasmine.createSpyObj('componentContext', ['updateState']);

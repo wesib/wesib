@@ -1,10 +1,7 @@
-import { EventEmitter, noop, StateUpdateConsumer, StateValueKey } from '../common';
-import { mergeFunctions } from '../common/functions';
-import { Component, ComponentContext, ComponentDef, ComponentElementType, ComponentType } from '../component';
+import { Class, EventEmitter, mergeFunctions, noop, StateUpdateConsumer, StateValueKey } from '../common';
+import { Component, ComponentClass, ComponentContext, ComponentDef } from '../component';
 import { BootstrapContext, ComponentListener } from '../feature';
-import { PromiseResolver } from '../util';
 import { ComponentValueRegistry } from './component-value-registry';
-import { ElementClass } from './element';
 
 /**
  * @internal
@@ -34,17 +31,17 @@ export class ElementBuilder {
     this.componentValueRegistry = valueRegistry;
   }
 
-  elementType<T extends object>(def: ComponentDef<T>): ElementClass<ComponentElementType<T>> {
+  elementType<T extends object>(def: ComponentDef<T>): Class {
     return def.extend && def.extend.type || this.bootstrapContext.get(BootstrapContext.baseElementKey);
   }
 
   buildElement<T extends object>(
-      componentType: ComponentType<T>):
-      ElementClass<ComponentElementType<T>> {
+      componentType: ComponentClass<T>):
+      Class {
 
     const builder = this;
     const def = ComponentDef.of(componentType);
-    const elementType: ElementClass<HTMLElement> = this.elementType(def);
+    const elementType = this.elementType(def);
     let connected = false;
 
     const connectedCallback = Symbol('connectedCallback');
@@ -56,7 +53,7 @@ export class ElementBuilder {
       [Component.symbol]: T;
 
       // Component context reference
-      [ComponentContext.symbol]: ComponentContext<T, ComponentElementType<T>>;
+      [ComponentContext.symbol]: ComponentContext<T>;
 
       private readonly [connectedCallback]!: () => void;
       private readonly [disconnectedCallback]!: () => void;
@@ -64,7 +61,7 @@ export class ElementBuilder {
       constructor() {
         super();
 
-        const element: ComponentElementType<T> = this;
+        const element = this;
         // @ts-ignore
         const elementSuper = (name: string) => super[name] as any;
         const values = builder.componentValueRegistry.newValues();
@@ -72,7 +69,7 @@ export class ElementBuilder {
         const connectEvents = new EventEmitter<(this: ElementContext) => void>();
         const disconnectEvents = new EventEmitter<(this: ElementContext) => void>();
 
-        class ElementContext implements ComponentContext<T, ComponentElementType<T>> {
+        class ElementContext implements ComponentContext<T> {
 
           readonly element = element;
           readonly elementSuper = elementSuper;
@@ -141,7 +138,7 @@ export class ElementBuilder {
 
     }
 
-    return Element as ElementClass<any>;
+    return Element;
   }
 
 }

@@ -1,5 +1,5 @@
 import { mergeFunctions, MetaAccessor } from '../../common';
-import { ComponentContext, ComponentType } from '../../component';
+import { ComponentClass } from '../../component';
 import { FeatureDef } from '../../feature';
 import { AttributesDef } from './attributes-def';
 import { AttributesSupport } from './attributes-support.feature';
@@ -9,19 +9,19 @@ declare module './attributes-def' {
   export namespace AttributesDef {
 
     /**
-     * Extracts attributes definition from web component type.
+     * Extracts attributes definition from component type.
      *
-     * @param <T> A type of web component.
-     * @param componentType Target component type.
+     * @param <T> A type of component.
+     * @param componentType Target component class constructor.
      *
      * @returns Attributes definition. May be empty when there is no definition found in the given `componentType`.
      */
-    export function of<T extends object>(componentType: ComponentType<T>): AttributesDef<T>;
+    export function of<T extends object>(componentType: ComponentClass<T>): AttributesDef<T>;
 
     /**
      * Merges multiple attributes definitions.
      *
-     * @param <T> A type of web component.
+     * @param <T> A type of component.
      * @param defs Attributes definitions to merge.
      *
      * @returns Merged attributes definition.
@@ -29,19 +29,19 @@ declare module './attributes-def' {
     export function merge<T extends object = object>(...defs: AttributesDef<T>[]): AttributesDef<T>;
 
     /**
-     * Defines a custom HTML element attributes.
+     * Defines a custom element attributes.
      *
      * Either assigns new or extends an existing attributes definition and stores it under `[AttributesDef.symbol]` key.
      *
      * Automatically enables `AttributesSupport` feature.
      *
-     * @param <T> A type of web component.
-     * @param type Target web component type.
+     * @param <T> A type of component.
+     * @param type Target component class constructor.
      * @param defs Attributes definitions to apply.
      *
      * @returns The `type` instance.
      */
-    export function define<T extends ComponentType>(type: T, ...defs: AttributesDef<InstanceType<T>>[]): T;
+    export function define<T extends ComponentClass>(type: T, ...defs: AttributesDef<InstanceType<T>>[]): T;
 
   }
 
@@ -72,11 +72,11 @@ class AttributesMeta extends MetaAccessor<AttributesDef<any>> {
 
 const meta = new AttributesMeta();
 
-AttributesDef.of = <T extends object>(componentType: ComponentType<T>) => meta.of(componentType) || {};
+AttributesDef.of = <T extends object>(componentType: ComponentClass<T>) => meta.of(componentType) || {};
 
 AttributesDef.merge = <T extends object = object>(...defs: AttributesDef<T>[]) => meta.merge(...defs);
 
-AttributesDef.define = <T extends ComponentType>(type: T, ...defs: AttributesDef<InstanceType<T>>[]) => {
+AttributesDef.define = <T extends ComponentClass>(type: T, ...defs: AttributesDef<InstanceType<T>>[]) => {
   FeatureDef.define(type, { requires: [AttributesSupport] });
   return meta.define(type, ...defs);
 };

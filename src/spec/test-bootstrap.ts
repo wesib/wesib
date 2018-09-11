@@ -1,5 +1,5 @@
 import { bootstrapComponents } from '../bootstrap';
-import { Component, ComponentDef, ComponentElementType, ComponentType } from '../component';
+import { Component, ComponentClass, ComponentDef } from '../component';
 import { BootstrapContext, FeatureType, WesFeature } from '../feature';
 import { TestIframe } from './test-iframe';
 
@@ -40,7 +40,7 @@ export class TestBootstrap {
     return this;
   }
 
-  async addElement<T extends object>(componentType: ComponentType<T>): Promise<ComponentElementType<T>> {
+  async addElement<T extends object>(componentType: ComponentClass<T>): Promise<any> {
 
     const elementType = this._waitForConnect(componentType);
     const elementName = ComponentDef.of(componentType).name;
@@ -50,9 +50,9 @@ export class TestBootstrap {
     return elementType;
   }
 
-  private async _waitForConnect<T extends object>(componentType: ComponentType<T>): Promise<ComponentElementType<T>> {
+  private async _waitForConnect<T extends object>(componentType: ComponentClass<T>): Promise<any> {
 
-    const result = new Promise<ComponentElementType<T>>(resolve => {
+    const result = new Promise<any>(resolve => {
       this.context.onComponent(context => {
         context.onConnect(() => {
           if (Component.of(context.element) instanceof componentType) {

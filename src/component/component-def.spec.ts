@@ -1,7 +1,7 @@
 import { FeatureDef } from '../feature';
+import { ComponentClass } from './component';
 import { ComponentDef, PartialComponentDef } from './component-def';
 import './component-def.ns';
-import { ComponentType } from './component-type';
 
 describe('component/component-def', () => {
   describe('ComponentDef', () => {
@@ -82,7 +82,7 @@ describe('component/component-def', () => {
     });
     describe('define', () => {
 
-      let TestComponent: ComponentType;
+      let TestComponent: ComponentClass;
 
       beforeEach(() => {
         TestComponent = class {};

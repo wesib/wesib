@@ -1,7 +1,6 @@
-import { EventEmitter } from '../common';
-import { ComponentDef, ComponentElementType, ComponentType } from '../component';
+import { Class, EventEmitter } from '../common';
+import { ComponentClass, ComponentDef } from '../component';
 import { BootstrapContext, ComponentDefinitionListener, ElementDefinitionListener } from '../feature';
-import { ElementClass } from './element';
 import { ElementBuilder } from './element-builder';
 
 /**
@@ -33,7 +32,7 @@ export class ComponentRegistry {
     return this.builder.bootstrapContext.get(BootstrapContext.customElementsKey);
   }
 
-  define<T extends object>(componentType: ComponentType<T>) {
+  define<T extends object>(componentType: ComponentClass<T>) {
     this._define(() => {
       componentType = this._componentDefined(componentType);
 
@@ -63,19 +62,19 @@ export class ComponentRegistry {
     delete this._definitions;
   }
 
-  whenDefined(componentType: ComponentType<any, any>): PromiseLike<void> {
+  whenDefined(componentType: ComponentClass<any>): PromiseLike<void> {
     return this.customElements.whenDefined(ComponentDef.of(componentType).name);
   }
 
-  private _componentDefined<T extends object>(componentType: ComponentType<T>): ComponentType<T> {
+  private _componentDefined<T extends object>(componentType: ComponentClass<T>): ComponentClass<T> {
     return this.componentDefinitions.reduce(
         (type, listener) => listener(componentType) || type,
         componentType);
   }
 
   private _elementDefined<T extends object>(
-      elementType: ElementClass<ComponentElementType<T>>,
-      componentType: ComponentType<T>): ElementClass<ComponentElementType<T>> {
+      elementType: Class,
+      componentType: ComponentClass<T>): Class {
     return this.elementDefinitions.reduce(
         (type, listener) => listener(elementType, componentType) || type,
         elementType);

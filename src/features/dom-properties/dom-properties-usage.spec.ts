@@ -1,5 +1,5 @@
 import { StateValueKey } from '../../common';
-import { Component, ComponentContext, ComponentType, WesComponent } from '../../component';
+import { Component, ComponentClass, ComponentContext, WesComponent } from '../../component';
 import { TestBootstrap } from '../../spec/test-bootstrap';
 import { DomMethod, DomProperty } from './dom-property.decorator';
 import Spy = jasmine.Spy;
@@ -8,7 +8,7 @@ describe('features/dom-properties', () => {
   describe('DOM properties usage', () => {
 
     let bootstrap: TestBootstrap;
-    let testComponent: ComponentType;
+    let testComponent: ComponentClass;
     let context: ComponentContext;
     let element: HTMLElement;
     let propertyValue: number;

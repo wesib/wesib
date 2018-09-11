@@ -2,9 +2,9 @@ import { TypedClassDecorator } from '../common';
 import { FeatureDef, FeatureType } from './feature';
 
 /**
- * Web components feature class decorator.
+ * Feature class decorator.
  *
- * Decorate a class with it to define it as a web components feature like this:
+ * Decorate a class with this decorator to define it as a feature like this:
  * ```TypeScript
  * @WesFeature({ requires: [OtherFeature, MyComponent] })
  * class MyFeature {
@@ -16,10 +16,10 @@ import { FeatureDef, FeatureType } from './feature';
  *
  * This is an alternative to direct call to `FeatureDef.define()` method.
  *
- * @param <T> A type of web components feature.
- * @param def Web components feature definition.
+ * @param <T> A type of feature.
+ * @param def Feature definition.
  *
- * @returns A web components feature class decorator.
+ * @returns A feature class decorator.
  */
 export function WesFeature<T extends FeatureType = any>(def: FeatureDef): TypedClassDecorator<T> {
   return (type: T) => FeatureDef.define(type, def);

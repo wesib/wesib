@@ -1,5 +1,5 @@
-import { ComponentElementType, ComponentType } from '../../component';
-import { ElementClass } from '../../element';
+import { Class } from '../../common';
+import { ComponentClass } from '../../component';
 import { BootstrapContext, FeatureType, WesFeature } from '../../feature';
 import { DomPropertiesDef } from './dom-properties-def';
 
@@ -14,8 +14,8 @@ function enableDomProperties(this: FeatureType, context: BootstrapContext) {
 }
 
 function defineDomProperties<T extends object>(
-    elementType: ElementClass<ComponentElementType<T>>,
-    componentType: ComponentType<T>) {
+    elementType: Class,
+    componentType: ComponentClass<T>) {
 
   const props = DomPropertiesDef.of(componentType);
 

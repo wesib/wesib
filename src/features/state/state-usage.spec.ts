@@ -1,5 +1,5 @@
 import { StateUpdateConsumer } from '../../common';
-import { ComponentContext, ComponentType, WesComponent } from '../../component';
+import { ComponentClass, ComponentContext, WesComponent } from '../../component';
 import { WesFeature } from '../../feature';
 import { TestBootstrap } from '../../spec/test-bootstrap';
 import { StateSupport } from './state-support.feature';
@@ -9,7 +9,7 @@ describe('features/state', () => {
   describe('State usage', () => {
 
     let bootstrap: TestBootstrap;
-    let testComponent: ComponentType;
+    let testComponent: ComponentClass;
     let context: ComponentContext;
     let updateState: StateUpdateConsumer;
     let stateTracker: StateTracker;

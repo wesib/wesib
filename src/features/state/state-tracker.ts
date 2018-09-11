@@ -1,7 +1,7 @@
 import { ContextValueKey, EventProducer, SingleValueKey, StateUpdateConsumer } from '../../common';
 
 /**
- * Web component state tracker.
+ * Component state tracker.
  *
  * It is available in component context under `[StateTracker.key]` value key when `StateSupport` feature is enabled.
  */

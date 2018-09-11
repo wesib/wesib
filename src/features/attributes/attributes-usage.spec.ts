@@ -1,5 +1,5 @@
 import { StateValueKey } from '../../common';
-import { Component, ComponentContext, ComponentType, WesComponent } from '../../component';
+import { Component, ComponentClass, ComponentContext, WesComponent } from '../../component';
 import { TestBootstrap } from '../../spec/test-bootstrap';
 import { AttributeChanged } from './attribute-changed.decorator';
 import { Attribute } from './attribute.decorator';
@@ -9,9 +9,9 @@ describe('features/attributes', () => {
   describe('Attributes usage', () => {
 
     let bootstrap: TestBootstrap;
-    let testComponent: ComponentType;
+    let testComponent: ComponentClass;
     let context: ComponentContext;
-    let noAttrComponent: ComponentType;
+    let noAttrComponent: ComponentClass;
     let element: HTMLElement;
     let attrChangedSpy: Spy;
     let attr2ChangedSpy: Spy;

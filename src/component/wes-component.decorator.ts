@@ -1,11 +1,11 @@
 import { TypedClassDecorator } from '../common';
+import { ComponentClass } from './component';
 import { ComponentDef } from './component-def';
-import { ComponentType } from './component-type';
 
 /**
- * Web component class decorator.
+ * Component class decorator.
  *
- * Decorate a class with it to define it as a web component like this:
+ * Decorate a class with this decorator to define a component like this:
  * ```TypeScript
  * @WesComponent({ name: 'my-element' })
  * class MyComponent {
@@ -18,14 +18,14 @@ import { ComponentType } from './component-type';
  *
  * This is an alternative to direct call to `ComponentDef.define()` method.
  *
- * @param <T> A type of web component.
- * @param <E> A type of HTML element this web component extends.
- * @param def Web component definition or just custom HTML element name.
+ * @param <T> A type of component.
+ * @param <E> A type of custom element this component extends.
+ * @param def A component definition or just custom element name.
  *
- * @returns A web component class decorator.
+ * @returns A component class decorator.
  */
-export function WesComponent<
-    T extends ComponentType = any,
-    E extends HTMLElement = HTMLElement>(def: ComponentDef<InstanceType<T>, E> | string): TypedClassDecorator<T> {
+export function WesComponent<T extends ComponentClass = any>(
+    def: ComponentDef<InstanceType<T>> | string):
+    TypedClassDecorator<T> {
   return (type: T) => ComponentDef.define(type, typeof def === 'string' ? { name: def } : def);
 }

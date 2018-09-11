@@ -4,10 +4,7 @@ import { BootstrapContext } from './bootstrap-context';
 import { BootstrapValue } from './bootstrap-values';
 
 /**
- * Web components feature definition.
- *
- * @param <T> A type of web component.
- * @param <E> A type of HTML element this web component extends.
+ * Feature definition.
  */
 export interface FeatureDef {
 
@@ -17,7 +14,7 @@ export interface FeatureDef {
   requires?: FeatureType | FeatureType[];
 
   /**
-   * Features this one provides.
+   * Features this one provides and bootstrap context value providers.
    *
    * The feature always provides itself.
    */
@@ -33,7 +30,7 @@ export interface FeatureDef {
 }
 
 /**
- * Web components feature type.
+ * Feature type.
  *
  * It is used as an identifier of the feature.
  */
@@ -43,9 +40,9 @@ export interface FeatureType<T extends object = object> extends Class<T> {
 export namespace FeatureDef {
 
   /**
-   * A key of a property holding a web components feature definition within its class constructor.
+   * A key of a property holding a feature definition within its class constructor.
    */
-  export const symbol = Symbol('web-feature-def');
+  export const symbol = Symbol('feature-def');
 
   class FeatureMeta extends MetaAccessor<FeatureDef> {
 
@@ -82,21 +79,20 @@ export namespace FeatureDef {
   const meta = new FeatureMeta();
 
   /**
-   * Extracts a web components feature definition from its type.
+   * Extracts a feature definition from its type.
    *
    * @param featureType Target feature type.
    *
-   * @returns Web component feature definition. May be empty when there is no feature definition found in the given
-   * `featureType`.
+   * @returns A feature definition. May be empty when there is no feature definition found in the given `featureType`.
    */
   export function of(featureType: FeatureType): FeatureDef {
     return meta.of(featureType) || {};
   }
 
   /**
-   * Merges multiple web components feature definitions.
+   * Merges multiple feature definitions.
    *
-   * @param defs Web components feature definitions to merge.
+   * @param defs Feature definitions to merge.
    *
    * @returns Merged feature definition.
    */
@@ -105,13 +101,12 @@ export namespace FeatureDef {
   }
 
   /**
-   * Defines a web components feature.
+   * Defines a feature.
    *
-   * Either assigns new or extends an existing components feature definition and stores it under `[FeatureDef.symbol]`
-   * key.
+   * Either creates new or extends an existing feature definition and stores it under `[FeatureDef.symbol]` key.
    *
-   * @param type Web component class constructor.
-   * @param defs Web component definitions.
+   * @param type Feature class constructor.
+   * @param defs Feature definitions.
    *
    * @returns The `type` instance.
    */

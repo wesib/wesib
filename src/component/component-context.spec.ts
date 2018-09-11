@@ -5,7 +5,7 @@ describe('component/component-context', () => {
     describe('of', () => {
 
       let element: HTMLDivElement;
-      let context: ComponentContext<object, HTMLDivElement>;
+      let context: ComponentContext;
 
       beforeEach(() => {
         element = { name: 'HTML element' } as any;
@@ -13,7 +13,7 @@ describe('component/component-context', () => {
         (element as any)[ComponentContext.symbol] = context;
       });
 
-      it('extracts component context from HTML element', () => {
+      it('extracts component context from custom element', () => {
         expect(ComponentContext.of(element)).toBe(context);
       });
       it('fails when there is no context defined', () => {

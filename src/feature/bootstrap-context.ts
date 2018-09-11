@@ -1,10 +1,9 @@
 import { Class, ContextValueKey, EventProducer, SingleValueKey } from '../common';
-import { ComponentContext, ComponentElementType, ComponentType, ComponentValueProvider } from '../component';
-import { ElementClass } from '../element';
+import { ComponentClass, ComponentContext, ComponentValueProvider } from '../component';
 import { BootstrapValues } from './bootstrap-values';
 
 /**
- * Web components bootstrap context.
+ * Components bootstrap context.
  *
  * An instance of this class is passed to `FeatureDef.configure()` method so that the feature can configure itself.
  *
@@ -14,22 +13,22 @@ import { BootstrapValues } from './bootstrap-values';
 export interface BootstrapContext extends BootstrapValues {
 
   /**
-   * Registers web component definition listener.
+   * Registers component definition listener.
    *
    * This listener will be called when new component class is defined, but before its element class created.
    *
-   * @param listener A listener to notify on each web component definition.
+   * @param listener A listener to notify on each component definition.
    *
    * @return An event interest instance.
    */
   readonly onComponentDefinition: EventProducer<ComponentDefinitionListener>;
 
   /**
-   * Registers custom HTML element definition listener.
+   * Registers custom element definition listener.
    *
-   * This listener will be called when new HTML element class is created, but before it is registered as custom element.
+   * This listener will be called when new element class is created, but before it is registered as custom element.
    *
-   * @param listener A listener to notify on each custom HTML element definition.
+   * @param listener A listener to notify on each custom element definition.
    *
    * @return An event interest instance.
    */
@@ -47,37 +46,36 @@ export interface BootstrapContext extends BootstrapValues {
   readonly onComponent: EventProducer<ComponentListener>;
 
   /**
-   * Defines a web component.
+   * Defines a component.
    *
-   * Creates a custom HTML element according to component definition, and registers it with
-   * `window.customElements.define()` method.
+   * Creates a custom element according to component definition, and registers it with custom elements registry.
    *
-   * Note that custom element registration will happen only after all features initialization.
+   * Note that custom element definition will happen only when all features configuration complete.
    *
-   * @param <T> A type of web component.
-   * @param componentType Web component type.
+   * @param <T> A type of component.
+   * @param componentType Component class constructor.
    *
-   * @return Custom HTML element class constructor registered as custom element.
+   * @return Custom element class constructor registered as custom element.
    *
-   * @throws TypeError if `componentType` does not contain a web component definition.
+   * @throws TypeError If `componentType` does not contain a component definition.
    */
-  define<T extends object>(componentType: ComponentType<T>): void;
+  define<T extends object>(componentType: ComponentClass<T>): void;
 
   /**
-   * Allows to wait for web component definition complete.
+   * Allows to wait for component definition.
    *
    * This corresponds to `window.customElements.whenDefined()` method.
    *
-   * @param componentType Web component type.
+   * @param componentType Component class constructor.
    *
-   * @return A promise that is resolved when the given componentType is registered.
+   * @return A promise that is resolved when the given `componentType` is registered.
    *
-   * @throws TypeError if `componentType` does not contain a web component definition.
+   * @throws TypeError If `componentType` does not contain a component definition.
    */
-  whenDefined(componentType: ComponentType<any, any>): PromiseLike<void>;
+  whenDefined(componentType: ComponentClass<any>): PromiseLike<void>;
 
   /**
-   * Registers provider that associates a value with the given key with component.
+   * Registers provider that associates a value with the given key with components.
    *
    * The given provider will be requested for the value at most once per component.
    *
@@ -85,12 +83,12 @@ export interface BootstrapContext extends BootstrapValues {
    * @param key Component context value key the provider should associate the value with.
    * @param provider Component context value provider to register.
    */
-  forComponent<S>(key: ContextValueKey<any, S>, provider: ComponentValueProvider<S>): void;
+  forComponents<S>(key: ContextValueKey<any, S>, provider: ComponentValueProvider<S>): void;
 
 }
 
 /**
- * Web component definition listener.
+ * Component definition listener.
  *
  * It is notified on new component definitions when registered with `BootstrapContext.onComponentDefinition()` method.
  *
@@ -99,30 +97,30 @@ export interface BootstrapContext extends BootstrapValues {
  * then the original component can not be passed to `Components.whenDefined()` method, as the latter relies on element
  * name. Consider to use a `Component.of()` function in that case.
  *
- * @param componentType Web component class constructor.
+ * @param componentType Component class constructor.
  *
- * @returns Either none, or web component class constructor to use instead of `componentType`.
+ * @returns Either none, or component class constructor to use instead of `componentType`.
  */
 export type ComponentDefinitionListener = <T extends object>(
-    componentType: ComponentType<T>) => ComponentType<T> | void;
+    componentType: ComponentClass<T>) => ComponentClass<T> | void;
 
 /**
  * Element definition listener.
  *
- * It is notified on new custom HTML element definitions when registered with `BootstrapContext.onElementDefinition()`
+ * It is notified on new custom element definitions when registered with `BootstrapContext.onElementDefinition()`
  * method.
  *
- * The listener may alter the custom HTML element class or even replace it with another one. For the latter it should
+ * The listener may alter the custom element class or even replace it with another one. For the latter it should
  * return the replacement class.
  *
- * @param elementType Custom HTML element class constructor.
- * @param componentType Web component type the HTML element is created for.
+ * @param elementType Custom element class constructor.
+ * @param componentType Component class constructor the element is created for.
  *
- * @return Either none, or HTML element class constructor to use instead of `elementType`.
+ * @return Either none, or element class constructor to use instead of `elementType`.
  */
 export type ElementDefinitionListener = <T extends object>(
-    elementType: ElementClass<ComponentElementType<T>>,
-    componentType: ComponentType<T>) => ElementClass<ComponentElementType<T>> | void;
+    elementType: Class,
+    componentType: ComponentClass<T>) => Class | void;
 
 /**
  * Component construction listener.
@@ -130,9 +128,9 @@ export type ElementDefinitionListener = <T extends object>(
  * It is notified on new component instance construction when registered with `BootstrapContext.onComponent()`
  * method.
  *
- * @param context Web component context.
+ * @param context Component context.
  */
-export type ComponentListener = <T extends object>(context: ComponentContext<T, ComponentElementType<T>>) => void;
+export type ComponentListener = <T extends object>(context: ComponentContext<T>) => void;
 
 export namespace BootstrapContext {
 
@@ -144,14 +142,13 @@ export namespace BootstrapContext {
   export const windowKey = new SingleValueKey<Window>('window', () => window);
 
   /**
-   * A key of context value containing a base HTML element class constructor.
+   * A key of context value containing a base element class constructor.
    *
-   * This value is the class the custom HTML elements are inherited from unless `ComponentDef.extends.type`
-   * is specified.
+   * This value is the class the custom elements are inherited from unless `ComponentDef.extends.type` is specified.
    *
    * Target value defaults to `HTMLElement` from the window provided under `windowKey`.
    */
-  export const baseElementKey = new SingleValueKey<Class<HTMLElement>>(
+  export const baseElementKey = new SingleValueKey<Class>(
       'base-element',
       values => (values.get(windowKey) as any).HTMLElement);
 

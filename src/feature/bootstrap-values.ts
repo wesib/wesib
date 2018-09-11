@@ -4,13 +4,12 @@ import { ContextValueKey, ContextValues } from '../common';
  * Bootstrap context value provider.
  *
  * It is responsible for constructing the values associated with particular key and available globally. I.e. to
- * other value providers, component features, and web components.
+ * other value providers, features, and components.
  *
- * This function is called at most once per component, unless it returns `null`/`undefined`. In the latter case
- * it may be called again later.
+ * This function is called at most once per bootstrap.
  *
  * @param <S> The type of source value.
- * @param context Target component context.
+ * @param context Target bootstrap context.
  *
  * @return Either constructed value, or `null`/`undefined` if the value can not be constructed.
  */

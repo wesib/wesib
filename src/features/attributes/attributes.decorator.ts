@@ -1,20 +1,20 @@
 import { StateValueKey, TypedClassDecorator } from '../../common';
-import { ComponentType } from '../../component';
+import { ComponentClass } from '../../component';
 import { attributeStateUpdate } from './attribute-state-update';
 import { AttributesDef, AttributeUpdateConsumer } from './attributes-def';
 import './attributes-def.ns';
 
 /**
- * Creates a web component decorator declaring supported custom HTML element attributes.
+ * Creates a component class decorator declaring supported custom element's attributes.
  *
  * This decorator automatically enables `AttributesSupport` feature.
  *
  * @param opts Attributes definition options.
  *
- * @return Web component decorator.
+ * @return New component class decorator.
  */
 export function Attributes<
-    T extends ComponentType = any,
+    T extends ComponentClass = any,
     E extends HTMLElement = HTMLElement>(opts: Attributes.Opts<T>): TypedClassDecorator<T> {
 
   const def: AttributesDef<T> = {};

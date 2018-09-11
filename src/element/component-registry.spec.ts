@@ -1,5 +1,5 @@
 import { ContextValueKey, EventInterest } from '../common';
-import { ComponentDef, ComponentType } from '../component';
+import { ComponentClass, ComponentDef } from '../component';
 import { BootstrapContext } from '../feature';
 import { ComponentRegistry } from './component-registry';
 import { ElementBuilder } from './element-builder';
@@ -13,7 +13,7 @@ describe('element/component-registry', () => {
     let bootstrapContextSpy: SpyObj<BootstrapContext>;
     let builderSpy: SpyObj<ElementBuilder>;
     let registry: ComponentRegistry;
-    let TestComponent: ComponentType;
+    let TestComponent: ComponentClass;
     let ElementSpy: SpyObj<HTMLElement>;
 
     beforeEach(() => {

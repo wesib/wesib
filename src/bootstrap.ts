@@ -1,23 +1,22 @@
 import { ContextValueKey, EventProducer } from './common';
-import { ComponentType, ComponentValueProvider } from './component';
+import { ComponentClass, ComponentValueProvider } from './component';
 import { ComponentRegistry } from './element/component-registry';
 import { ComponentValueRegistry } from './element/component-value-registry';
 import { ElementBuilder } from './element/element-builder';
 import {
   BootstrapContext,
   ComponentDefinitionListener,
-  ElementDefinitionListener,
   ComponentListener,
+  ElementDefinitionListener,
   FeatureType,
 } from './feature';
 import { BootstrapValueRegistry } from './feature/bootstrap-value-registry';
 import { FeatureRegistry } from './feature/feature-registry';
 
 /**
- * Bootstraps web components.
+ * Bootstraps components.
  *
  * Note that both features and components can be passed as parameters to this function, as components are features too.
- * Components would be defined only when all features enabled.
  *
  * @param features Features and components to enable.
  */
@@ -57,15 +56,15 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
       this.onComponent = elementBuilder.elements.on;
     }
 
-    define<T extends object>(componentType: ComponentType<T>) {
+    define<T extends object>(componentType: ComponentClass<T>) {
       componentRegistry.define(componentType);
     }
 
-    whenDefined(componentType: ComponentType<any, any>): PromiseLike<void> {
+    whenDefined(componentType: ComponentClass<any>): PromiseLike<void> {
       return componentRegistry.whenDefined(componentType);
     }
 
-    forComponent<S>(key: ContextValueKey<any, S>, provider: ComponentValueProvider<S>): void {
+    forComponents<S>(key: ContextValueKey<any, S>, provider: ComponentValueProvider<S>): void {
       componentValueRegistry.provide(key, provider);
     }
 
