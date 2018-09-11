@@ -53,9 +53,9 @@ export class TestBootstrap {
   private async _waitForConnect<T extends object>(componentType: ComponentType<T>): Promise<ComponentElementType<T>> {
 
     const result = new Promise<ComponentElementType<T>>(resolve => {
-      this.context.onElement((element, context) => {
+      this.context.onComponent(context => {
         context.onConnect(() => {
-          if (Component.of(element) instanceof componentType) {
+          if (Component.of(context.element) instanceof componentType) {
             resolve(context.element);
           }
         });

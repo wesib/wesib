@@ -1,7 +1,7 @@
 import { EventEmitter, noop, StateUpdateConsumer, StateValueKey } from '../common';
 import { mergeFunctions } from '../common/functions';
 import { Component, ComponentContext, ComponentDef, ComponentElementType, ComponentType } from '../component';
-import { BootstrapContext, ElementListener } from '../feature';
+import { BootstrapContext, ComponentListener } from '../feature';
 import { PromiseResolver } from '../util';
 import { ComponentValueRegistry } from './component-value-registry';
 import { ElementClass } from './element';
@@ -13,7 +13,7 @@ export class ElementBuilder {
 
   readonly bootstrapContext: BootstrapContext;
   readonly componentValueRegistry: ComponentValueRegistry;
-  readonly elements = new EventEmitter<ElementListener>();
+  readonly elements = new EventEmitter<ComponentListener>();
 
   static create(opts: {
     bootstrapContext: BootstrapContext,
@@ -68,7 +68,7 @@ export class ElementBuilder {
         // @ts-ignore
         const elementSuper = (name: string) => super[name] as any;
         const values = builder.componentValueRegistry.newValues();
-        let whenConstructed: (this: ElementContext, component: T) => void = noop;
+        let whenReady: (this: ElementContext, component: T) => void = noop;
         const connectEvents = new EventEmitter<(this: ElementContext) => void>();
         const disconnectEvents = new EventEmitter<(this: ElementContext) => void>();
 
@@ -91,8 +91,8 @@ export class ElementBuilder {
             return connected;
           }
 
-          whenConstructed(callback: (this: ElementContext, component: T) => void) {
-            whenConstructed = mergeFunctions<[T], void, ElementContext>(whenConstructed, callback);
+          whenReady(callback: (this: ElementContext, component: T) => void) {
+            whenReady = mergeFunctions<[T], void, ElementContext>(whenReady, callback);
           }
 
         }
@@ -107,7 +107,7 @@ export class ElementBuilder {
           value: () => disconnectEvents.forEach(listener => listener.call(context)),
         });
 
-        builder.elements.notify(element, context);
+        builder.elements.notify(context);
 
         const component = Component.create(componentType, context);
 
@@ -117,14 +117,14 @@ export class ElementBuilder {
           enumerable: true,
           value: component,
         });
-        Object.defineProperty(context, 'whenConstructed', {
+        Object.defineProperty(context, 'whenReady', {
           configurable: true,
           value(callback: (component: T) => void) {
             callback.call(context, component);
           },
         });
 
-        whenConstructed.call(context, component);
+        whenReady.call(context, component);
       }
 
       // noinspection JSUnusedGlobalSymbols

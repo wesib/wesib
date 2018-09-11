@@ -9,7 +9,7 @@ import {
   BootstrapValues,
   ComponentDefinitionListener,
   ElementDefinitionListener,
-  ElementListener,
+  ComponentListener,
   FeatureDef,
 } from './feature';
 import { BootstrapValueRegistry } from './feature/bootstrap-value-registry';
@@ -64,7 +64,7 @@ describe('bootstrap', () => {
             'buildElement',
         ]);
     (elementBuilderSpy as any).elements =
-        jasmine.createSpyObj<EventEmitter<ElementListener>>('elements', ['on']);
+        jasmine.createSpyObj<EventEmitter<ComponentListener>>('elements', ['on']);
     createElementBuilderSpy = spyOn(ElementBuilder, 'create').and.returnValue(elementBuilderSpy);
 
     componentRegistrySpy = jasmine.createSpyObj(
@@ -191,7 +191,7 @@ describe('bootstrap', () => {
         expect(featureContext.onElementDefinition).toBe(componentRegistrySpy.elementDefinitions.on);
       });
       it('proxies onElement() method', () => {
-        expect(featureContext.onElement).toBe(elementBuilderSpy.elements.on);
+        expect(featureContext.onComponent).toBe(elementBuilderSpy.elements.on);
       });
       it('proxies get() method', () => {
         expect(featureContext.get).toBe(bootstrapValuesSpy.get);

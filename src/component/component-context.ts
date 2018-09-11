@@ -14,15 +14,15 @@ export interface ComponentContext<T extends object = object, E extends HTMLEleme
     extends ContextValues {
 
   /**
-   * Custom HTML element constructed for the component according to its type.
+   * Custom element constructed for the component according to its type.
    */
   readonly element: E;
 
   /**
    * A component instance.
    *
-   * It is an error accessing this property from inside of `ElementListener` listener or component constructor.
-   * In these cases you may wish to add a `whenConstructed()` callback.
+   * It is an error accessing this property before the component is created, e.g. from inside of `ComponentListener`
+   * or component constructor. In these cases you may wish to add a `whenReady()` callback.
    */
   readonly component: T;
 
@@ -72,17 +72,17 @@ export interface ComponentContext<T extends object = object, E extends HTMLEleme
   readonly updateState: StateUpdateConsumer;
 
   /**
-   * Registers component construction callback.
+   * Registers component readiness callback.
    *
-   * The component is constructed shortly after the HTML element. So the component may not exist when requested
-   * e.g. inside component constructor or inside `ElementListener`. The registered callback will be notified when
-   * component constructed.
+   * The component is constructed shortly after custom element. So the component may not exist when requested
+   * e.g. inside component constructor or inside `ComponentListener`. The registered callback will be notified when
+   * the component is constructed.
    *
    * If the component is constructed already, the callback will be notified immediately.
    *
    * @param callback A callback to notify on component construction.
    */
-  whenConstructed(callback: (this: this, component: T) => void): void;
+  whenReady(callback: (this: this, component: T) => void): void;
 
   /**
    * Returns a `super` property value inherited from custom HTML element parent.

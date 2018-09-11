@@ -7,7 +7,7 @@ import {
   BootstrapContext,
   ComponentDefinitionListener,
   ElementDefinitionListener,
-  ElementListener,
+  ComponentListener,
   FeatureType,
 } from './feature';
 import { BootstrapValueRegistry } from './feature/bootstrap-value-registry';
@@ -45,7 +45,7 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
 
     readonly onComponentDefinition: EventProducer<ComponentDefinitionListener>;
     readonly onElementDefinition: EventProducer<ElementDefinitionListener>;
-    readonly onElement: EventProducer<ElementListener>;
+    readonly onComponent: EventProducer<ComponentListener>;
     readonly get = valueRegistry.values.get;
 
     constructor() {
@@ -54,7 +54,7 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
       componentRegistry = ComponentRegistry.create({ builder: elementBuilder });
       this.onComponentDefinition = componentRegistry.componentDefinitions.on;
       this.onElementDefinition = componentRegistry.elementDefinitions.on;
-      this.onElement = elementBuilder.elements.on;
+      this.onComponent = elementBuilder.elements.on;
     }
 
     define<T extends object>(componentType: ComponentType<T>) {

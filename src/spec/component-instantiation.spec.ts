@@ -10,7 +10,7 @@ describe('component instantiation', () => {
     let testComponent: ComponentType;
     let constructorSpy: Spy;
     let context: ComponentContext;
-    let elementListenerSpy: Spy;
+    let componentListenerSpy: Spy;
     let elementListenerInterest: EventInterest;
     let element: HTMLElement;
 
@@ -32,8 +32,8 @@ describe('component instantiation', () => {
     });
     beforeEach(async () => {
       bootstrap = await new TestBootstrap().create(testComponent);
-      elementListenerSpy = jasmine.createSpy('elementListener');
-      elementListenerInterest = bootstrap.context.onElement(elementListenerSpy);
+      componentListenerSpy = jasmine.createSpy('componentListener');
+      elementListenerInterest = bootstrap.context.onComponent(componentListenerSpy);
       element = await bootstrap.addElement(testComponent);
     });
     afterEach(() => bootstrap.dispose());
@@ -62,9 +62,9 @@ describe('component instantiation', () => {
       expect(context.elementSuper('tagName')).toEqual('TEST-COMPONENT');
     });
 
-    describe('onElement listener', () => {
+    describe('onComponent listener', () => {
       it('is notified on new element instantiation', () => {
-        expect(elementListenerSpy).toHaveBeenCalledWith(element, context);
+        expect(componentListenerSpy).toHaveBeenCalledWith(context);
       });
     });
   });
@@ -99,10 +99,10 @@ describe('component instantiation', () => {
         let context: ComponentContext = { name: 'component context' } as any;
 
         const promise = new Promise(resolve => {
-          bootstrap.context.onElement((_el, ctx) => {
+          bootstrap.context.onComponent(ctx => {
             context = ctx;
             expect(() => context.component).toThrowError(/not constructed yet/);
-            ctx.whenConstructed(comp => resolve(comp));
+            ctx.whenReady(comp => resolve(comp));
           });
         });
 
@@ -115,7 +115,7 @@ describe('component instantiation', () => {
 
         let callbackInvoked = false;
 
-        context.whenConstructed(comp => {
+        context.whenReady(comp => {
           callbackInvoked = true;
           expect(comp).toBe(component);
         });
@@ -129,7 +129,7 @@ describe('component instantiation', () => {
 
         const listenerSpy = jasmine.createSpy('onConnect');
 
-        bootstrap.context.onElement((_el, ctx) => {
+        bootstrap.context.onComponent(ctx => {
           ctx.onConnect(listenerSpy);
           ctx.onConnect(() => expect(ctx.connected).toBe(true));
         });
@@ -145,7 +145,7 @@ describe('component instantiation', () => {
 
         const listenerSpy = jasmine.createSpy('onDisconnect');
 
-        bootstrap.context.onElement((_el, ctx) => {
+        bootstrap.context.onComponent(ctx => {
           ctx.onDisconnect(listenerSpy);
           ctx.onDisconnect(() => expect(ctx.connected).toBe(false));
         });

@@ -36,15 +36,15 @@ export interface BootstrapContext extends BootstrapValues {
   readonly onElementDefinition: EventProducer<ElementDefinitionListener>;
 
   /**
-   * Registers custom HTML element instantiation listener.
+   * Registers component construction listener.
    *
-   * This listener will be called when new custom HTML instance created, but before its component instance is created.
+   * This listener will be called right before component is constructed.
    *
-   * @param listener A listener to notify on each custom HTML element instance.
+   * @param listener A listener to notify on each component construction.
    *
    * @return An event interest instance.
    */
-  readonly onElement: EventProducer<ElementListener>;
+  readonly onComponent: EventProducer<ComponentListener>;
 
   /**
    * Defines a web component.
@@ -125,17 +125,14 @@ export type ElementDefinitionListener = <T extends object>(
     componentType: ComponentType<T>) => ElementClass<ComponentElementType<T>> | void;
 
 /**
- * Custom HTML element instantiation listener.
+ * Component construction listener.
  *
- * It is notified on new custom HTML element instance creation when registered with `BootstrapContext.onElement()`
+ * It is notified on new component instance construction when registered with `BootstrapContext.onComponent()`
  * method.
  *
- * @param element Custom HTML element instance.
  * @param context Web component context.
  */
-export type ElementListener = <T extends object>(
-    element: ComponentElementType<T>,
-    context: ComponentContext<T, ComponentElementType<T>>) => void;
+export type ComponentListener = <T extends object>(context: ComponentContext<T, ComponentElementType<T>>) => void;
 
 export namespace BootstrapContext {
 
