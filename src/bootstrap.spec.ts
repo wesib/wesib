@@ -1,15 +1,15 @@
 import { bootstrapComponents } from './bootstrap';
 import { EventEmitter, SingleValueKey } from './common';
 import { WesComponent } from './component';
-import { ComponentRegistry } from './element/component-registry';
-import { ComponentValueRegistry } from './element/component-value-registry';
-import { ElementBuilder } from './element/element-builder';
+import { ComponentRegistry } from './component/definition/component-registry';
+import { ComponentValueRegistry } from './component/definition/component-value-registry';
+import { ElementBuilder } from './component/definition/element-builder';
 import {
   BootstrapContext,
   BootstrapValues,
   ComponentDefinitionListener,
-  ElementDefinitionListener,
   ComponentListener,
+  ElementDefinitionListener,
   FeatureDef,
 } from './feature';
 import { BootstrapValueRegistry } from './feature/bootstrap-value-registry';

@@ -1,6 +1,7 @@
-import { Class, EventEmitter } from '../common';
-import { ComponentClass, ComponentDef } from '../component';
-import { BootstrapContext, ComponentDefinitionListener, ElementDefinitionListener } from '../feature';
+import { Class, EventEmitter } from '../../common';
+import { BootstrapContext, ComponentDefinitionListener, ElementDefinitionListener } from '../../feature';
+import { ComponentClass } from '../component';
+import { ComponentDef } from '../component-def';
 import { ElementBuilder } from './element-builder';
 
 /**

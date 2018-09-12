@@ -1,6 +1,8 @@
-import { Class, EventEmitter, mergeFunctions, noop, StateUpdateConsumer, StateValueKey } from '../common';
-import { Component, ComponentClass, ComponentContext, ComponentDef } from '../component';
-import { BootstrapContext, ComponentListener } from '../feature';
+import { Class, EventEmitter, mergeFunctions, noop, StateUpdateConsumer, StateValueKey } from '../../common';
+import { BootstrapContext, ComponentListener } from '../../feature';
+import { Component, ComponentClass } from '../component';
+import { ComponentContext } from '../component-context';
+import { ComponentDef } from '../component-def';
 import { ComponentValueRegistry } from './component-value-registry';
 
 /**

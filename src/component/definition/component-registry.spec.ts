@@ -1,12 +1,13 @@
-import { ContextValueKey, EventInterest } from '../common';
-import { ComponentClass, ComponentDef } from '../component';
-import { BootstrapContext } from '../feature';
+import { ContextValueKey, EventInterest } from '../../common';
+import { BootstrapContext } from '../../feature';
+import { ComponentClass } from '../component';
+import { ComponentDef } from '../component-def';
 import { ComponentRegistry } from './component-registry';
 import { ElementBuilder } from './element-builder';
 import Spy = jasmine.Spy;
 import SpyObj = jasmine.SpyObj;
 
-describe('element/component-registry', () => {
+describe('new SingleValueKey(\'1\')/component-registry', () => {
   describe('ComponentRegistry', () => {
 
     let customElementsSpy: SpyObj<CustomElementRegistry>;

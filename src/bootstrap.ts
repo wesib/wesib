@@ -1,8 +1,8 @@
 import { Class, ContextValueKey, EventProducer } from './common';
 import { ComponentClass, ComponentValueProvider } from './component';
-import { ComponentRegistry } from './element/component-registry';
-import { ComponentValueRegistry } from './element/component-value-registry';
-import { ElementBuilder } from './element/element-builder';
+import { ComponentRegistry } from './component/definition/component-registry';
+import { ComponentValueRegistry } from './component/definition/component-value-registry';
+import { ElementBuilder } from './component/definition/element-builder';
 import {
   BootstrapContext,
   ComponentDefinitionListener,

@@ -1,11 +1,12 @@
-import { ContextValueKey } from '../common/context';
-import { ComponentClass, ComponentDef } from '../component';
-import { BootstrapContext } from '../feature';
+import { ContextValueKey } from '../../common';
+import { BootstrapContext } from '../../feature';
+import { ComponentClass } from '../component';
+import { ComponentDef } from '../component-def';
 import { ComponentValueRegistry } from './component-value-registry';
 import { ElementBuilder } from './element-builder';
 import SpyObj = jasmine.SpyObj;
 
-describe('element/element-builder', () => {
+describe('component/definition/element-builder', () => {
   describe('ElementBuilder', () => {
 
     let bootstrapContextSpy: SpyObj<BootstrapContext>;

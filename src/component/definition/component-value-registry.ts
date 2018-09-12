@@ -1,5 +1,5 @@
-import { ContextValueRegistry, ContextValueSource } from '../common';
-import { ComponentContext } from '../component';
+import { ContextValueRegistry, ContextValueSource } from '../../common';
+import { ComponentContext } from '../component-context';
 
 /**
  * @internal
