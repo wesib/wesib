@@ -1,5 +1,11 @@
 import { Class, ContextValueKey, EventProducer, SingleValueKey } from '../common';
-import { ComponentClass, ComponentContext, ComponentValueProvider, DefinitionListener } from '../component';
+import {
+  ComponentClass,
+  ComponentListener,
+  ComponentValueProvider,
+  DefinitionListener,
+  DefinitionValueProvider,
+} from '../component';
 import { BootstrapValues } from './bootstrap-values';
 
 /**
@@ -64,6 +70,17 @@ export interface BootstrapContext extends BootstrapValues {
   whenDefined(componentType: ComponentClass<any>): PromiseLike<void>;
 
   /**
+   * Registers provider that associates a value with the given key with component types.
+   *
+   * The given provider will be requested for the value at most once per component.
+   *
+   * @param <S> The type of source value.
+   * @param key Component definition context value key the provider should associate the value with.
+   * @param provider Component definition context value provider to register.
+   */
+  forDefinitions<S>(key: ContextValueKey<any, S>, provider: DefinitionValueProvider<S>): void;
+
+  /**
    * Registers provider that associates a value with the given key with components.
    *
    * The given provider will be requested for the value at most once per component.
@@ -76,16 +93,6 @@ export interface BootstrapContext extends BootstrapValues {
 
 }
 
-/**
- * Component construction listener.
- *
- * It is notified on new component instance construction when registered with `BootstrapContext.onComponent()`
- * method.
- *
- * @param context Component context.
- */
-export type ComponentListener = <T extends object>(this: void, context: ComponentContext<T>) => void;
-
 export namespace BootstrapContext {
 
   /**
@@ -94,17 +101,6 @@ export namespace BootstrapContext {
    * Target value defaults to current window.
    */
   export const windowKey = new SingleValueKey<Window>('window', () => window);
-
-  /**
-   * A key of context value containing a base element class constructor.
-   *
-   * This value is the class the custom elements are inherited from unless `ComponentDef.extends.type` is specified.
-   *
-   * Target value defaults to `HTMLElement` from the window provided under `windowKey`.
-   */
-  export const baseElementKey = new SingleValueKey<Class>(
-      'base-element',
-      values => (values.get(windowKey) as any).HTMLElement);
 
   /**
    * A key of context value containing a `CustomElementRegistry` instance used to register custom elements.

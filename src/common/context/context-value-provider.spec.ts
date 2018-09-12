@@ -157,6 +157,30 @@ describe('common/context/context-value-provider', () => {
       });
     });
 
+    describe('append', () => {
+
+      let registry2: ContextValueRegistry<ContextValues>;
+      let combined: ContextValueRegistry<ContextValues>;
+
+      beforeEach(() => {
+        registry2 = new ContextValueRegistry();
+        combined = registry.append(registry2);
+      });
+
+      it('contains all sources', () => {
+        providerSpy.and.returnValue('1');
+        registry2.provide(key, () => '2');
+        registry2.provide(key, () => '3');
+        expect([...combined.sources(context, key)]).toEqual(['1', '2', '3']);
+      });
+      it('contains reverted sources', () => {
+        providerSpy.and.returnValue('1');
+        registry2.provide(key, () => '2');
+        registry2.provide(key, () => '3');
+        expect([...combined.sources(context, key).reverse()]).toEqual(['3', '2', '1']);
+      });
+    });
+
     describe('Values', () => {
 
       let values: ContextValues;

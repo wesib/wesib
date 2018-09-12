@@ -1,30 +1,25 @@
-import { Class, ContextValueKey, EventInterest } from '../../common';
-import { BootstrapContext } from '../../feature';
+import { Class, EventInterest, SingleValueKey } from '../../common';
 import { ComponentClass } from '../component';
+import { ComponentContext } from '../component-context';
 import { ComponentDef } from '../component-def';
 import { ComponentValueRegistry } from './component-value-registry';
 import { DefinitionContext } from './definition-context';
+import { DefinitionValueRegistry } from './definition-value-registry';
 import { ElementBuilder } from './element-builder';
-import SpyObj = jasmine.SpyObj;
 import Spy = jasmine.Spy;
 
 describe('component/definition/element-builder', () => {
   describe('ElementBuilder', () => {
 
-    let bootstrapContextSpy: SpyObj<BootstrapContext>;
-    let valueRegistry: ComponentValueRegistry;
+    let definitionValueRegistry: DefinitionValueRegistry;
+    let componentValueRegistry: ComponentValueRegistry;
     let builder: ElementBuilder;
     let TestComponent: ComponentClass;
 
     beforeEach(() => {
-      bootstrapContextSpy = jasmine.createSpyObj('bootstrapContext', ['get']);
-      bootstrapContextSpy.get.and.callFake((key: ContextValueKey<any>) => key.merge(
-          bootstrapContextSpy,
-          [],
-          defaultProvider => defaultProvider()));
-
-      valueRegistry = ComponentValueRegistry.create();
-      builder = ElementBuilder.create({ bootstrapContext: bootstrapContextSpy, valueRegistry });
+      definitionValueRegistry = DefinitionValueRegistry.create();
+      componentValueRegistry = ComponentValueRegistry.create();
+      builder = ElementBuilder.create({ definitionValueRegistry, componentValueRegistry });
     });
 
     beforeEach(() => {
@@ -102,6 +97,46 @@ describe('component/definition/element-builder', () => {
 
           expect(elementType).toBe(context.elementType);
         });
+      });
+    });
+    describe('definition context value', () => {
+
+      const key = new SingleValueKey<string>('test-key');
+      let value: string;
+      let element: any;
+      let componentContext: ComponentContext;
+
+      beforeEach(() => {
+        value = 'some value';
+        builder.definitions.on((ctx: DefinitionContext<any>) => {
+          if (ctx.componentType === TestComponent) {
+            ctx.forComponents(key, () => value);
+          }
+        });
+      });
+      beforeEach(() => {
+        definitionValueRegistry.provide(DefinitionContext.baseElementKey, () => Object);
+      });
+      beforeEach(() => {
+        element = new (builder.buildElement(TestComponent));
+        componentContext = ComponentContext.of(element);
+      });
+
+      it('is available to component', () => {
+        expect(componentContext.get(key)).toBe(value);
+      });
+      it('is not available to another component', () => {
+
+        class AnotherComponent {
+          static [ComponentDef.symbol]: ComponentDef = {
+            name: 'another-component',
+          };
+        }
+
+        const otherElement = new (builder.buildElement(AnotherComponent));
+        const otherContext = ComponentContext.of(otherElement);
+
+        expect(otherContext.get(key, null)).toBeNull();
       });
     });
   });

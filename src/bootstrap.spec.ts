@@ -1,10 +1,11 @@
 import { bootstrapComponents } from './bootstrap';
 import { EventEmitter, SingleValueKey } from './common';
-import { DefinitionListener, WesComponent } from './component';
+import { ComponentListener, DefinitionListener, WesComponent } from './component';
 import { ComponentRegistry } from './component/definition/component-registry';
 import { ComponentValueRegistry } from './component/definition/component-value-registry';
+import { DefinitionValueRegistry } from './component/definition/definition-value-registry';
 import { ElementBuilder } from './component/definition/element-builder';
-import { BootstrapContext, BootstrapValues, ComponentListener, FeatureDef } from './feature';
+import { BootstrapContext, BootstrapValues, FeatureDef } from './feature';
 import { BootstrapValueRegistry } from './feature/bootstrap-value-registry';
 import { FeatureRegistry } from './feature/feature-registry';
 import Spy = jasmine.Spy;
@@ -16,6 +17,8 @@ describe('bootstrap', () => {
   let bootstrapValueRegistrySpy: SpyObj<BootstrapValueRegistry>;
   let bootstrapValuesSpy: SpyObj<BootstrapValues>;
   let bootstrapSourcesSpy: Spy;
+  let createDefinitionValueRegistrySpy: Spy;
+  let definitionValueRegistrySpy: SpyObj<DefinitionValueRegistry>;
   let createComponentValueRegistrySpy: Spy;
   let componentValueRegistrySpy: SpyObj<ComponentValueRegistry>;
   let createElementBuilderSpy: Spy;
@@ -43,13 +46,22 @@ describe('bootstrap', () => {
     (bootstrapValueRegistrySpy as any).values = bootstrapValuesSpy;
 
     componentValueRegistrySpy = jasmine.createSpyObj(
-        'valueRegistry',
+        'componentValueRegistry',
         [
           'provide',
           'get',
         ]);
     createComponentValueRegistrySpy = spyOn(ComponentValueRegistry, 'create')
         .and.returnValue(componentValueRegistrySpy);
+
+    definitionValueRegistrySpy = jasmine.createSpyObj(
+        'valueRegistry',
+        [
+          'provide',
+          'get',
+        ]);
+    createDefinitionValueRegistrySpy = spyOn(DefinitionValueRegistry, 'create')
+        .and.returnValue(definitionValueRegistrySpy);
 
     elementBuilderSpy = jasmine.createSpyObj(
         'elementBuilder',
@@ -77,21 +89,26 @@ describe('bootstrap', () => {
       bootstrapComponents();
       expect(createBootstrapValueRegistrySpy).toHaveBeenCalledWith();
     });
+    it('constructs definition value registry', () => {
+      bootstrapComponents();
+      expect(createDefinitionValueRegistrySpy).toHaveBeenCalledWith(bootstrapSourcesSpy);
+    });
     it('constructs component value registry', () => {
       bootstrapComponents();
-      expect(createComponentValueRegistrySpy).toHaveBeenCalledWith(bootstrapSourcesSpy);
+      expect(createComponentValueRegistrySpy).toHaveBeenCalledWith();
     });
     it('constructs element builder', () => {
       bootstrapComponents();
       expect(createElementBuilderSpy).toHaveBeenCalledWith({
-        bootstrapContext: jasmine.anything(),
-        valueRegistry: componentValueRegistrySpy,
+        definitionValueRegistry: definitionValueRegistrySpy,
+        componentValueRegistry: componentValueRegistrySpy,
       });
     });
     it('constructs component registry', () => {
       bootstrapComponents();
       expect(createComponentRegistrySpy).toHaveBeenCalledWith({
-        builder: elementBuilderSpy,
+        bootstrapContext: jasmine.anything(),
+        elementBuilder: elementBuilderSpy,
       });
     });
 
@@ -166,7 +183,16 @@ describe('bootstrap', () => {
         expect(featureContext.whenDefined(TestComponent)).toBe(promise);
         expect(componentRegistrySpy.whenDefined).toHaveBeenCalledWith(TestComponent);
       });
-      it('proxies forComponent() method', () => {
+      it('proxies forDefinitions() method', () => {
+
+        const key = new SingleValueKey<string>('test-value-key');
+        const provider = () => 'test-value';
+
+        featureContext.forDefinitions(key, provider);
+
+        expect(definitionValueRegistrySpy.provide).toHaveBeenCalledWith(key, provider);
+      });
+      it('proxies forComponents() method', () => {
 
         const key = new SingleValueKey<string>('test-value-key');
         const provider = () => 'test-value';

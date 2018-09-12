@@ -1,51 +1,66 @@
-import { Class, EventEmitter, mergeFunctions, noop, StateUpdateConsumer, StateValueKey } from '../../common';
-import { BootstrapContext, ComponentListener } from '../../feature';
+import {
+  Class,
+  ContextValueKey,
+  ContextValues,
+  EventEmitter,
+  mergeFunctions,
+  noop,
+  StateUpdateConsumer,
+  StateValueKey,
+} from '../../common';
 import { Component, ComponentClass } from '../component';
-import { ComponentContext } from '../component-context';
+import { ComponentContext, ComponentListener, ComponentValueProvider } from '../component-context';
 import { ComponentDef } from '../component-def';
 import { ComponentValueRegistry } from './component-value-registry';
 import { DefinitionContext, DefinitionListener } from './definition-context';
+import { DefinitionValueRegistry } from './definition-value-registry';
 
 /**
  * @internal
  */
 export class ElementBuilder {
 
-  readonly bootstrapContext: BootstrapContext;
+  readonly definitionValueRegistry: DefinitionValueRegistry;
   readonly componentValueRegistry: ComponentValueRegistry;
   readonly definitions = new EventEmitter<DefinitionListener>();
   readonly components = new EventEmitter<ComponentListener>();
 
   static create(opts: {
-    bootstrapContext: BootstrapContext,
-    valueRegistry: ComponentValueRegistry;
+    definitionValueRegistry: DefinitionValueRegistry;
+    componentValueRegistry: ComponentValueRegistry;
   }): ElementBuilder {
     return new ElementBuilder(opts);
   }
 
   private constructor(
       {
-        bootstrapContext,
-        valueRegistry,
+        definitionValueRegistry,
+        componentValueRegistry,
       }: {
-        bootstrapContext: BootstrapContext,
-        valueRegistry: ComponentValueRegistry,
+        definitionValueRegistry: DefinitionValueRegistry;
+        componentValueRegistry: ComponentValueRegistry;
       }) {
-    this.bootstrapContext = bootstrapContext;
-    this.componentValueRegistry = valueRegistry;
-  }
-
-  baseElementType<T extends object>(def: ComponentDef<T>): Class {
-    return def.extend && def.extend.type || this.bootstrapContext.get(BootstrapContext.baseElementKey);
+    this.definitionValueRegistry = definitionValueRegistry;
+    this.componentValueRegistry = componentValueRegistry;
   }
 
   buildElement<T extends object>(componentType: ComponentClass<T>): Class {
 
+    const builder = this;
+    let values!: ContextValues;
+    let typeValueRegistry!: ComponentValueRegistry;
     let whenReady: (this: ElementDefinitionContext, elementType: Class) => void = noop;
 
     class ElementDefinitionContext implements DefinitionContext<T> {
 
       readonly componentType: ComponentClass<T> = componentType;
+      readonly get: <V, S>(key: ContextValueKey<V, S>, defaultValue: V | null | undefined) => V | null | undefined;
+
+      constructor() {
+        typeValueRegistry = ComponentValueRegistry.create(builder.definitionValueRegistry.bindSources(this));
+        values = typeValueRegistry.newValues();
+        this.get = values.get;
+      }
 
       get elementType(): Class {
         throw new Error('Custom element class is not constructed yet. Consider to use a `whenReady()` callback');
@@ -55,13 +70,17 @@ export class ElementBuilder {
         whenReady = mergeFunctions<[Class], void, ElementDefinitionContext>(whenReady, callback);
       }
 
+      forComponents<S>(key: ContextValueKey<any, S>, provider: ComponentValueProvider<S>): void {
+        typeValueRegistry.provide(key, provider);
+      }
+
     }
 
     const context = new ElementDefinitionContext();
 
     this.definitions.notify(context as DefinitionContext<any>);
 
-    const elementType = this._elementType(componentType);
+    const elementType = this._elementType(context, this.componentValueRegistry.append(typeValueRegistry));
 
     Object.defineProperty(context, 'elementType', {
       configurable: true,
@@ -80,11 +99,18 @@ export class ElementBuilder {
     return elementType;
   }
 
-  private _elementType<T extends object>(componentType: ComponentClass<T>) {
+  private _baseElementType<T extends object>(definitionContext: DefinitionContext<T>, def: ComponentDef<T>): Class {
+    return def.extend && def.extend.type || definitionContext.get(DefinitionContext.baseElementKey);
+  }
 
+  private _elementType<T extends object>(
+      definitionContext: DefinitionContext<T>,
+      valueRegistry: ComponentValueRegistry) {
+
+    const { componentType } = definitionContext;
     const builder = this;
     const def = ComponentDef.of(componentType);
-    const baseElementType = this.baseElementType(def);
+    const baseElementType = this._baseElementType(definitionContext, def);
 
     const connected = Symbol('connected');
     const connectedCallback = Symbol('connectedCallback');
@@ -108,7 +134,7 @@ export class ElementBuilder {
         const element = this;
         // @ts-ignore
         const elementSuper = (name: string) => super[name] as any;
-        const values = builder.componentValueRegistry.newValues();
+        const values = valueRegistry.newValues();
         let whenReady: (this: ElementContext, component: T) => void = noop;
         const connectEvents = new EventEmitter<(this: ElementContext) => void>();
         const disconnectEvents = new EventEmitter<(this: ElementContext) => void>();

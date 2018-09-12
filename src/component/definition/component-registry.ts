@@ -8,33 +8,38 @@ import { ElementBuilder } from './element-builder';
  */
 export class ComponentRegistry {
 
-  readonly builder: ElementBuilder;
+  readonly bootstrapContext: BootstrapContext;
+  readonly elementBuilder: ElementBuilder;
   private _definitionQueue: (() => void)[] = [];
 
   static create(opts: {
-    builder: ElementBuilder
+    bootstrapContext: BootstrapContext;
+    elementBuilder: ElementBuilder;
   }): ComponentRegistry {
     return new ComponentRegistry(opts);
   }
 
   private constructor(
       {
-        builder,
+        bootstrapContext,
+        elementBuilder,
       }: {
-        builder: ElementBuilder
+        bootstrapContext: BootstrapContext;
+        elementBuilder: ElementBuilder;
       }) {
-    this.builder = builder;
+    this.bootstrapContext = bootstrapContext;
+    this.elementBuilder = elementBuilder;
   }
 
   get customElements(): CustomElementRegistry {
-    return this.builder.bootstrapContext.get(BootstrapContext.customElementsKey);
+    return this.bootstrapContext.get(BootstrapContext.customElementsKey);
   }
 
   define<T extends object>(componentType: ComponentClass<T>) {
     this._definitionQueue.push(() => {
 
       const def = ComponentDef.of(componentType);
-      const elementClass = this.builder.buildElement(componentType);
+      const elementClass = this.elementBuilder.buildElement(componentType);
       const ext = def.extend;
 
       if (ext && ext.name) {

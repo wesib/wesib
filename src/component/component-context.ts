@@ -6,7 +6,7 @@ import { ContextValueKey, ContextValues, EventProducer, noop, SingleValueKey, St
  * Passed to component constructor as its only parameter.
  *
  * Extends `ContextValues` interface. The values are provided by corresponding providers registered with
- * `BootstrapContext.forComponent()` method.
+ * `BootstrapContext.forComponents()` method.
  *
  * @param <T> A type of component.
  */
@@ -109,6 +109,16 @@ export interface ComponentContext<T extends object = object> extends ContextValu
  */
 export type ComponentValueProvider<S> =
     <T extends object>(this: void, context: ComponentContext<T>) => S | null | undefined;
+
+/**
+ * Component construction listener.
+ *
+ * It is notified on new component instance construction when registered with `BootstrapContext.onComponent()`
+ * method.
+ *
+ * @param context Component context.
+ */
+export type ComponentListener = <T extends object>(this: void, context: ComponentContext<T>) => void;
 
 export namespace ComponentContext {
 

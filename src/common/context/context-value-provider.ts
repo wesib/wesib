@@ -1,3 +1,4 @@
+import { ComponentContext } from '../../component';
 import { RevertibleIterable } from '../iteration';
 import { ContextValueDefaultHandler, ContextValueKey } from './context-value-key';
 import { ContextValues } from './context-values';
@@ -81,7 +82,19 @@ export class ContextValueRegistry<C extends ContextValues> {
       key: ContextValueKey<V, S>,
       context: C,
       handleDefault: ContextValueDefaultHandler<V>): V | null | undefined {
-    return key.merge(context, this.bindSources(context)(key), handleDefault);
+    return key.merge(context, this.sources(context, key), handleDefault);
+  }
+
+  /**
+   * Returns the value sources provided for the given key.
+   *
+   * @param key Context value key.
+   * @param context Context to provide value for.
+   *
+   * @returns A revertible iterable of the value sources associated with the given key.
+   */
+  sources<V, S>(context: C, key: ContextValueKey<V, S>): RevertibleIterable<S> {
+    return this.bindSources(context)(key);
   }
 
   /**
@@ -160,6 +173,35 @@ export class ContextValueRegistry<C extends ContextValues> {
     }
 
     return new Values();
+  }
+
+  /**
+   * Appends values provided by another value registry to the ones provided by this one.
+   *
+   * @param other Another context value registry.
+   *
+   * @return New context value registry which values provided by both registries.
+   */
+  append(other: ContextValueRegistry<C>): ContextValueRegistry<C> {
+
+    const self = this;
+
+    return new ContextValueRegistry<C>(<V, S>(
+        key: ContextValueKey<V, S>,
+        context: C) => ({
+      [Symbol.iterator]: function* () {
+        yield* self.sources(context, key);
+        yield* other.sources(context, key);
+      },
+      reverse() {
+        return {
+          [Symbol.iterator]: function* () {
+            yield* other.sources(context, key).reverse();
+            yield* self.sources(context, key).reverse();
+          }
+        };
+      },
+    }));
   }
 
 }

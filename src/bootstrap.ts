@@ -1,9 +1,16 @@
 import { Class, ContextValueKey, EventProducer } from './common';
-import { ComponentClass, ComponentValueProvider, DefinitionListener } from './component';
+import {
+  ComponentClass,
+  ComponentListener,
+  ComponentValueProvider,
+  DefinitionListener,
+  DefinitionValueProvider,
+} from './component';
 import { ComponentRegistry } from './component/definition/component-registry';
 import { ComponentValueRegistry } from './component/definition/component-value-registry';
+import { DefinitionValueRegistry } from './component/definition/definition-value-registry';
 import { ElementBuilder } from './component/definition/element-builder';
-import { BootstrapContext, ComponentListener } from './feature';
+import { BootstrapContext } from './feature';
 import { BootstrapValueRegistry } from './feature/bootstrap-value-registry';
 import { FeatureRegistry } from './feature/feature-registry';
 
@@ -30,6 +37,7 @@ export function bootstrapComponents(...features: Class[]): void {
 
 function initBootstrap(valueRegistry: BootstrapValueRegistry) {
 
+  let definitionValueRegistry: DefinitionValueRegistry;
   let componentValueRegistry: ComponentValueRegistry;
   let elementBuilder: ElementBuilder;
   let componentRegistry: ComponentRegistry;
@@ -41,9 +49,10 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
     readonly get = valueRegistry.values.get;
 
     constructor() {
-      componentValueRegistry = ComponentValueRegistry.create(valueRegistry.bindSources(this));
-      elementBuilder = ElementBuilder.create({ bootstrapContext: this, valueRegistry: componentValueRegistry });
-      componentRegistry = ComponentRegistry.create({ builder: elementBuilder });
+      definitionValueRegistry = DefinitionValueRegistry.create(valueRegistry.bindSources(this));
+      componentValueRegistry = ComponentValueRegistry.create();
+      elementBuilder = ElementBuilder.create({ definitionValueRegistry, componentValueRegistry });
+      componentRegistry = ComponentRegistry.create({ bootstrapContext: this, elementBuilder });
       this.onDefinition = elementBuilder.definitions.on;
       this.onComponent = elementBuilder.components.on;
     }
@@ -54,6 +63,10 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
 
     whenDefined(componentType: ComponentClass<any>): PromiseLike<void> {
       return componentRegistry.whenDefined(componentType);
+    }
+
+    forDefinitions<S>(key: ContextValueKey<any, S>, provider: DefinitionValueProvider<S>): void {
+      definitionValueRegistry.provide(key, provider);
     }
 
     forComponents<S>(key: ContextValueKey<any, S>, provider: ComponentValueProvider<S>): void {

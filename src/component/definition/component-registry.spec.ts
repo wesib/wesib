@@ -1,13 +1,12 @@
-import { ContextValueKey, EventInterest } from '../../common';
+import { ContextValueKey } from '../../common';
 import { BootstrapContext } from '../../feature';
 import { ComponentClass } from '../component';
 import { ComponentDef } from '../component-def';
 import { ComponentRegistry } from './component-registry';
 import { ElementBuilder } from './element-builder';
-import Spy = jasmine.Spy;
 import SpyObj = jasmine.SpyObj;
 
-describe('new SingleValueKey(\'1\')/component-registry', () => {
+describe('component/definition/component-registry', () => {
   describe('ComponentRegistry', () => {
 
     let customElementsSpy: SpyObj<CustomElementRegistry>;
@@ -29,10 +28,12 @@ describe('new SingleValueKey(\'1\')/component-registry', () => {
     });
     beforeEach(() => {
       builderSpy = jasmine.createSpyObj('builder', ['buildElement']);
-      (builderSpy as any).bootstrapContext = bootstrapContextSpy;
     });
     beforeEach(() => {
-      registry = ComponentRegistry.create({ builder: builderSpy });
+      registry = ComponentRegistry.create({
+        bootstrapContext: bootstrapContextSpy,
+        elementBuilder: builderSpy,
+      });
     });
     beforeEach(() => {
       TestComponent = class {
