@@ -1,5 +1,6 @@
-import { Class, noop } from '../common';
+import { Class, noop, SingleValueKey } from '../common';
 import { BootstrapContext } from './bootstrap-context';
+import { BootstrapValueDef } from './bootstrap-values';
 import { FeatureDef } from './feature';
 import Spy = jasmine.Spy;
 
@@ -53,6 +54,16 @@ describe('feature/feature', () => {
       });
     });
     describe('merge', () => {
+      it('merges bootstraps', () => {
+
+        const v1: BootstrapValueDef<string> = { key: new SingleValueKey<string>('1'), provider: () => '1' };
+        const v2: BootstrapValueDef<string> = { key: new SingleValueKey<string>('2'), provider: () => '2' };
+
+        const first: FeatureDef = { bootstraps: v1 };
+        const second: FeatureDef = { bootstraps: v2 };
+
+        expect(FeatureDef.merge(first, second)).toEqual({ bootstraps: [v1, v2]});
+      });
       it('merges requirements', () => {
 
         const first: FeatureDef = { requires: Feature1 };

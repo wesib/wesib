@@ -141,13 +141,13 @@ describe('feature/feature-registry', () => {
 
       expect(() => registry.configure(contextSpy)).toThrow(jasmine.stringMatching(/Circular dependency/));
     });
-    it('registers value providers', () => {
+    it('bootstraps value providers', () => {
 
       const key = new SingleValueKey('test-key');
       const provider = jasmine.createSpy('testValueProvider');
       class Feature {}
 
-      FeatureDef.define(Feature, { provides: { key, provider } });
+      FeatureDef.define(Feature, { bootstraps: { key, provider } });
 
       registry.add(Feature);
       registry.configure(contextSpy);

@@ -1,7 +1,7 @@
 import { Class, mergeFunctions, MetaAccessor } from '../common';
 import { mergeLists } from '../util';
 import { BootstrapContext } from './bootstrap-context';
-import { BootstrapValue } from './bootstrap-values';
+import { BootstrapValueDef } from './bootstrap-values';
 
 /**
  * Feature definition.
@@ -9,16 +9,21 @@ import { BootstrapValue } from './bootstrap-values';
 export interface FeatureDef {
 
   /**
+   * Bootstrap context values enabled along with this feature.
+   */
+  bootstraps?: BootstrapValueDef<any, any> | BootstrapValueDef<any, any>[];
+
+  /**
    * Features this one requires.
    */
   requires?: Class | Class[];
 
   /**
-   * Features this one provides and bootstrap context value providers.
+   * Features this one provides.
    *
    * The feature always provides itself.
    */
-  provides?: Class | BootstrapValue<any, any> | (Class | BootstrapValue<any, any>)[];
+  provides?: Class | Class[];
 
   /**
    * Configures this feature by calling the given configuration context methods.
@@ -47,10 +52,14 @@ export namespace FeatureDef {
           (prev, def) => {
 
             const result: FeatureDef = {};
+            const bootstraps = mergeLists(prev.bootstraps, def.bootstraps);
             const requires = mergeLists(prev.requires, def.requires);
             const provides = mergeLists(prev.provides, def.provides);
             const configure = mergeFunctions<[BootstrapContext], void, Class>(prev.configure, def.configure);
 
+            if (bootstraps !== undefined) {
+              result.bootstraps = bootstraps;
+            }
             if (requires !== undefined) {
               result.requires = requires;
             }

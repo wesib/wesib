@@ -106,10 +106,7 @@ export class FeatureRegistry {
 
     // Add provided features after the feature itself.
     list2set(def.provides).forEach(provided => {
-      if (typeof provided === 'function') {
-        // This is a feature.
-        this.add(provided, feature);
-      }
+      this.add(provided, feature);
     });
   }
 
@@ -121,11 +118,8 @@ export class FeatureRegistry {
   private _provideValues() {
     this._providers.forEach((providers, feature) => {
       if (feature === providers.provider(this._providers)) {
-        list2array(FeatureDef.of(feature).provides).forEach(provided => {
-          if (typeof provided !== 'function') {
-            // This is a bootstrap value provider.
-            this._valueRegistry.provide(provided.key, provided.provider);
-          }
+        list2array(FeatureDef.of(feature).bootstraps).forEach(provided => {
+          this._valueRegistry.provide(provided.key, provided.provider);
         });
       }
     });

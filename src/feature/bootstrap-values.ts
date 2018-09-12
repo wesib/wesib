@@ -19,16 +19,16 @@ export type BootstrapValueProvider<S> = (this: void, context: BootstrapValues) =
  * Values available during components bootstrap.
  *
  * These values are provided by `BootstrapValueProvider`s and can be declared by feature definitions using
- * `FeatureDef.provided` properties.
+ * `FeatureDef.bootstraps` properties.
  */
 export type BootstrapValues = ContextValues;
 
 /**
- * Bootstrap value provider info.
+ * Bootstrap value definition.
  *
- * When added as `FeatureDef.provides` the value for its `key` is provided by its `provider`.
+ * When added as `FeatureDef.bootstraps` the value for its `key` is provided by its `provider`.
  */
-export interface BootstrapValue<V, S> {
+export interface BootstrapValueDef<V, S = V> {
 
   /**
    * Bootstrap context value key the `provider` provides value for.

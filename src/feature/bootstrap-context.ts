@@ -8,7 +8,7 @@ import { BootstrapValues } from './bootstrap-values';
  * An instance of this class is passed to `FeatureDef.configure()` method so that the feature can configure itself.
  *
  * Extends `BootstrapValues` interface. The values are provided by corresponding bootstrap value providers provided
- * by features. I.e. configured in their definitions as `FeatureDef.provided`.
+ * by features. I.e. configured in their definitions as `FeatureDef.bootstraps`.
  */
 export interface BootstrapContext extends BootstrapValues {
 
