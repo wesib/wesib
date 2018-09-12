@@ -1,5 +1,5 @@
-import { TypedClassDecorator } from '../common';
-import { FeatureDef, FeatureType } from './feature';
+import { Class, TypedClassDecorator } from '../common';
+import { FeatureDef } from './feature';
 
 /**
  * Feature class decorator.
@@ -21,6 +21,6 @@ import { FeatureDef, FeatureType } from './feature';
  *
  * @returns A feature class decorator.
  */
-export function WesFeature<T extends FeatureType = any>(def: FeatureDef): TypedClassDecorator<T> {
+export function WesFeature<T extends Class = any>(def: FeatureDef): TypedClassDecorator<T> {
   return (type: T) => FeatureDef.define(type, def);
 }

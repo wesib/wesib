@@ -1,7 +1,7 @@
-import { SingleValueKey } from '../common';
+import { Class, SingleValueKey } from '../common';
 import { BootstrapContext } from './bootstrap-context';
 import { BootstrapValueRegistry } from './bootstrap-value-registry';
-import { FeatureDef, FeatureType } from './feature';
+import { FeatureDef } from './feature';
 import { FeatureRegistry } from './feature-registry';
 import Spy = jasmine.Spy;
 import SpyObj = jasmine.SpyObj;
@@ -9,9 +9,9 @@ import SpyObj = jasmine.SpyObj;
 describe('feature/feature-registry', () => {
   describe('FeatureRegistry', () => {
 
-    let feature1: FeatureType;
+    let feature1: Class;
     let configure1spy: Spy;
-    let feature2: FeatureType;
+    let feature2: Class;
     let configure2spy: Spy;
     let valueRegistrySpy: SpyObj<BootstrapValueRegistry>;
     let registry: FeatureRegistry;

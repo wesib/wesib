@@ -11,30 +11,22 @@ export interface FeatureDef {
   /**
    * Features this one requires.
    */
-  requires?: FeatureType | FeatureType[];
+  requires?: Class | Class[];
 
   /**
    * Features this one provides and bootstrap context value providers.
    *
    * The feature always provides itself.
    */
-  provides?: FeatureType | BootstrapValue<any, any> | (FeatureType | BootstrapValue<any, any>)[];
+  provides?: Class | BootstrapValue<any, any> | (Class | BootstrapValue<any, any>)[];
 
   /**
    * Configures this feature by calling the given configuration context methods.
    *
    * @param context Components bootstrap context.
    */
-  configure?: (this: FeatureType, context: BootstrapContext) => void;
+  configure?: (this: Class, context: BootstrapContext) => void;
 
-}
-
-/**
- * Feature type.
- *
- * It is used as an identifier of the feature.
- */
-export interface FeatureType<T extends object = object> extends Class<T> {
 }
 
 export namespace FeatureDef {
@@ -57,7 +49,7 @@ export namespace FeatureDef {
             const result: FeatureDef = {};
             const requires = mergeLists(prev.requires, def.requires);
             const provides = mergeLists(prev.provides, def.provides);
-            const configure = mergeFunctions<[BootstrapContext], void, FeatureType>(prev.configure, def.configure);
+            const configure = mergeFunctions<[BootstrapContext], void, Class>(prev.configure, def.configure);
 
             if (requires !== undefined) {
               result.requires = requires;
@@ -81,11 +73,11 @@ export namespace FeatureDef {
   /**
    * Extracts a feature definition from its type.
    *
-   * @param featureType Target feature type.
+   * @param featureType Target feature class constructor.
    *
    * @returns A feature definition. May be empty when there is no feature definition found in the given `featureType`.
    */
-  export function of(featureType: FeatureType): FeatureDef {
+  export function of(featureType: Class): FeatureDef {
     return meta.of(featureType) || {};
   }
 
@@ -110,7 +102,7 @@ export namespace FeatureDef {
    *
    * @returns The `type` instance.
    */
-  export function define<T extends FeatureType>(type: T, ...defs: FeatureDef[]): T {
+  export function define<T extends Class>(type: T, ...defs: FeatureDef[]): T {
     return meta.define(type, ...defs);
   }
 

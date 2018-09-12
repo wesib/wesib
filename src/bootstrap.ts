@@ -1,4 +1,4 @@
-import { ContextValueKey, EventProducer } from './common';
+import { Class, ContextValueKey, EventProducer } from './common';
 import { ComponentClass, ComponentValueProvider } from './component';
 import { ComponentRegistry } from './element/component-registry';
 import { ComponentValueRegistry } from './element/component-value-registry';
@@ -8,7 +8,6 @@ import {
   ComponentDefinitionListener,
   ComponentListener,
   ElementDefinitionListener,
-  FeatureType,
 } from './feature';
 import { BootstrapValueRegistry } from './feature/bootstrap-value-registry';
 import { FeatureRegistry } from './feature/feature-registry';
@@ -20,7 +19,7 @@ import { FeatureRegistry } from './feature/feature-registry';
  *
  * @param features Features and components to enable.
  */
-export function bootstrapComponents(...features: FeatureType[]): void {
+export function bootstrapComponents(...features: Class[]): void {
 
   const valueRegistry = BootstrapValueRegistry.create();
   const featureRegistry = FeatureRegistry.create({ valueRegistry });

@@ -1,23 +1,24 @@
+import { Class } from '../common';
 import { list2array, list2set } from '../util';
 import { BootstrapContext } from './bootstrap-context';
 import { BootstrapValueRegistry } from './bootstrap-value-registry';
-import { FeatureDef, FeatureType } from './feature';
+import { FeatureDef } from './feature';
 
 class FeatureProviders {
 
-  readonly providers = new Set<FeatureType>();
+  readonly providers = new Set<Class>();
 
-  constructor(readonly feature: FeatureType) {
+  constructor(readonly feature: Class) {
     this.add(feature);
   }
 
-  add(provider: FeatureType) {
+  add(provider: Class) {
     this.providers.add(provider);
   }
 
   provider(
-      allProviders: Map<FeatureType, FeatureProviders>,
-      dependencies: Set<FeatureType> = new Set()): FeatureType {
+      allProviders: Map<Class, FeatureProviders>,
+      dependencies: Set<Class> = new Set()): Class {
     if (dependencies.has(this.feature)) {
       throw Error(
           'Circular dependency: '
@@ -68,7 +69,7 @@ class FeatureProviders {
  */
 export class FeatureRegistry {
 
-  private readonly _providers = new Map<FeatureType, FeatureProviders>();
+  private readonly _providers = new Map<Class, FeatureProviders>();
   private readonly _valueRegistry: BootstrapValueRegistry;
 
   static create(opts: { valueRegistry: BootstrapValueRegistry }): FeatureRegistry {
@@ -84,7 +85,7 @@ export class FeatureRegistry {
     this._valueRegistry = valueRegistry;
   }
 
-  add(feature: FeatureType, provider: FeatureType = feature) {
+  add(feature: Class, provider: Class = feature) {
 
     const existing = this._providers.get(feature);
     let providers = existing;

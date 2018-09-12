@@ -1,6 +1,6 @@
-import { noop } from '../common';
+import { Class, noop } from '../common';
 import { BootstrapContext } from './bootstrap-context';
-import { FeatureDef, FeatureType } from './feature';
+import { FeatureDef } from './feature';
 import Spy = jasmine.Spy;
 
 describe('feature/feature', () => {
@@ -91,7 +91,7 @@ describe('feature/feature', () => {
     });
     describe('define', () => {
 
-      let TestFeature: FeatureType;
+      let TestFeature: Class;
 
       beforeEach(() => {
         TestFeature = class {

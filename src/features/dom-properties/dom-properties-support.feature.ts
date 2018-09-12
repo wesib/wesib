@@ -1,6 +1,6 @@
 import { Class } from '../../common';
 import { ComponentClass } from '../../component';
-import { BootstrapContext, FeatureType, WesFeature } from '../../feature';
+import { BootstrapContext, WesFeature } from '../../feature';
 import { DomPropertiesDef } from './dom-properties-def';
 
 @WesFeature({
@@ -9,7 +9,7 @@ import { DomPropertiesDef } from './dom-properties-def';
 export class DomPropertiesSupport {
 }
 
-function enableDomProperties(this: FeatureType, context: BootstrapContext) {
+function enableDomProperties(this: Class, context: BootstrapContext) {
   context.onElementDefinition(defineDomProperties);
 }
 

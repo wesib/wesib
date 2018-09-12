@@ -1,6 +1,7 @@
 import { bootstrapComponents } from '../bootstrap';
+import { Class } from '../common';
 import { Component, ComponentClass, ComponentDef } from '../component';
-import { BootstrapContext, FeatureType, WesFeature } from '../feature';
+import { BootstrapContext, WesFeature } from '../feature';
 import { TestIframe } from './test-iframe';
 
 export class TestBootstrap {
@@ -23,7 +24,7 @@ export class TestBootstrap {
     return this.iframe.document;
   }
 
-  async create(...features: FeatureType[]): Promise<this> {
+  async create(...features: Class[]): Promise<this> {
     await this.iframe.create();
 
     @WesFeature({
