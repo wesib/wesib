@@ -1,14 +1,9 @@
 import { Class, ContextValueKey, EventProducer } from './common';
-import { ComponentClass, ComponentValueProvider } from './component';
+import { ComponentClass, ComponentValueProvider, DefinitionListener } from './component';
 import { ComponentRegistry } from './component/definition/component-registry';
 import { ComponentValueRegistry } from './component/definition/component-value-registry';
 import { ElementBuilder } from './component/definition/element-builder';
-import {
-  BootstrapContext,
-  ComponentDefinitionListener,
-  ComponentListener,
-  ElementDefinitionListener,
-} from './feature';
+import { BootstrapContext, ComponentListener } from './feature';
 import { BootstrapValueRegistry } from './feature/bootstrap-value-registry';
 import { FeatureRegistry } from './feature/feature-registry';
 
@@ -41,8 +36,7 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
 
   class Context implements BootstrapContext {
 
-    readonly onComponentDefinition: EventProducer<ComponentDefinitionListener>;
-    readonly onElementDefinition: EventProducer<ElementDefinitionListener>;
+    readonly onDefinition: EventProducer<DefinitionListener>;
     readonly onComponent: EventProducer<ComponentListener>;
     readonly get = valueRegistry.values.get;
 
@@ -50,9 +44,8 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
       componentValueRegistry = ComponentValueRegistry.create(valueRegistry.bindSources(this));
       elementBuilder = ElementBuilder.create({ bootstrapContext: this, valueRegistry: componentValueRegistry });
       componentRegistry = ComponentRegistry.create({ builder: elementBuilder });
-      this.onComponentDefinition = componentRegistry.componentDefinitions.on;
-      this.onElementDefinition = componentRegistry.elementDefinitions.on;
-      this.onComponent = elementBuilder.elements.on;
+      this.onDefinition = elementBuilder.definitions.on;
+      this.onComponent = elementBuilder.components.on;
     }
 
     define<T extends object>(componentType: ComponentClass<T>) {

@@ -1,5 +1,4 @@
-import { Class } from '../../common';
-import { Component, ComponentClass } from '../../component';
+import { Component, DefinitionContext } from '../../component';
 import { BootstrapContext, WesFeature } from '../../feature';
 import { AttributesDef } from './attributes-def';
 
@@ -16,31 +15,30 @@ export class AttributesSupport {
 }
 
 function enableAttributesSupport(context: BootstrapContext) {
-  context.onElementDefinition(defineAttributes);
+  context.onDefinition(defineAttributes);
 }
 
-function defineAttributes<T extends object>(
-    elementType: Class,
-    componentType: ComponentClass<T>) {
+function defineAttributes<T extends object>(context: DefinitionContext<T>) {
 
-  const attrs = AttributesDef.of(componentType);
+  const attrs = AttributesDef.of(context.componentType);
   const observedAttributes = Object.keys(attrs);
 
   if (!observedAttributes.length) {
     return; // No attributes defined
   }
 
-  Object.defineProperty(elementType, 'observedAttributes', {
-    configurable: true,
-    enumerable: true,
-    value: observedAttributes,
-  });
-
-  Object.defineProperty(elementType.prototype, 'attributeChangedCallback', {
-    configurable: true,
-    enumerable: true,
-    value: function (name: string, oldValue: string | null, newValue: string) {
-      attrs[name].call(Component.of(this), newValue, oldValue);
-    },
+  context.whenReady(elementType => {
+    Object.defineProperty(elementType, 'observedAttributes', {
+      configurable: true,
+      enumerable: true,
+      value: observedAttributes,
+    });
+    Object.defineProperty(elementType.prototype, 'attributeChangedCallback', {
+      configurable: true,
+      enumerable: true,
+      value: function (name: string, oldValue: string | null, newValue: string) {
+        attrs[name].call(Component.of(this), newValue, oldValue);
+      },
+    });
   });
 }

@@ -4,6 +4,7 @@ import { Component, ComponentClass } from '../component';
 import { ComponentContext } from '../component-context';
 import { ComponentDef } from '../component-def';
 import { ComponentValueRegistry } from './component-value-registry';
+import { DefinitionContext, DefinitionListener } from './definition-context';
 
 /**
  * @internal
@@ -12,7 +13,8 @@ export class ElementBuilder {
 
   readonly bootstrapContext: BootstrapContext;
   readonly componentValueRegistry: ComponentValueRegistry;
-  readonly elements = new EventEmitter<ComponentListener>();
+  readonly definitions = new EventEmitter<DefinitionListener>();
+  readonly components = new EventEmitter<ComponentListener>();
 
   static create(opts: {
     bootstrapContext: BootstrapContext,
@@ -33,23 +35,62 @@ export class ElementBuilder {
     this.componentValueRegistry = valueRegistry;
   }
 
-  elementType<T extends object>(def: ComponentDef<T>): Class {
+  baseElementType<T extends object>(def: ComponentDef<T>): Class {
     return def.extend && def.extend.type || this.bootstrapContext.get(BootstrapContext.baseElementKey);
   }
 
-  buildElement<T extends object>(
-      componentType: ComponentClass<T>):
-      Class {
+  buildElement<T extends object>(componentType: ComponentClass<T>): Class {
+
+    let whenReady: (this: ElementDefinitionContext, elementType: Class) => void = noop;
+
+    class ElementDefinitionContext implements DefinitionContext<T> {
+
+      readonly componentType: ComponentClass<T> = componentType;
+
+      get elementType(): Class {
+        throw new Error('Custom element class is not constructed yet. Consider to use a `whenReady()` callback');
+      }
+
+      whenReady(callback: (this: ElementDefinitionContext, elementType: Class) => void) {
+        whenReady = mergeFunctions<[Class], void, ElementDefinitionContext>(whenReady, callback);
+      }
+
+    }
+
+    const context = new ElementDefinitionContext();
+
+    this.definitions.notify(context as DefinitionContext<any>);
+
+    const elementType = this._elementType(componentType);
+
+    Object.defineProperty(context, 'elementType', {
+      configurable: true,
+      enumerable: true,
+      value: elementType,
+    });
+    Object.defineProperty(context, 'whenReady', {
+      configurable: true,
+      value(callback: (elementType: Class) => void) {
+        callback.call(context, elementType);
+      },
+    });
+
+    whenReady.call(context, elementType);
+
+    return elementType;
+  }
+
+  private _elementType<T extends object>(componentType: ComponentClass<T>) {
 
     const builder = this;
     const def = ComponentDef.of(componentType);
-    const elementType = this.elementType(def);
-    let connected = false;
+    const baseElementType = this.baseElementType(def);
 
+    const connected = Symbol('connected');
     const connectedCallback = Symbol('connectedCallback');
     const disconnectedCallback = Symbol('disconnectedCallback');
 
-    class Element extends elementType {
+    class Element extends baseElementType {
 
       // Component reference
       [Component.symbol]: T;
@@ -59,6 +100,7 @@ export class ElementBuilder {
 
       private readonly [connectedCallback]!: () => void;
       private readonly [disconnectedCallback]!: () => void;
+      private [connected] = false;
 
       constructor() {
         super();
@@ -83,11 +125,11 @@ export class ElementBuilder {
           });
 
           get component(): T {
-            throw new Error('The component is not constructed yet. Consider to use a `whenConstructed` callback');
+            throw new Error('The component is not constructed yet. Consider to use a `whenReady()` callback');
           }
 
           get connected() {
-            return connected;
+            return element[connected];
           }
 
           whenReady(callback: (this: ElementContext, component: T) => void) {
@@ -106,7 +148,7 @@ export class ElementBuilder {
           value: () => disconnectEvents.forEach(listener => listener.call(context)),
         });
 
-        builder.elements.notify(context);
+        builder.components.notify(context);
 
         const component = Component.create(componentType, context);
 
@@ -128,13 +170,13 @@ export class ElementBuilder {
 
       // noinspection JSUnusedGlobalSymbols
       connectedCallback() {
-        connected = true;
+        this[connected] = true;
         this[connectedCallback]();
       }
 
       // noinspection JSUnusedGlobalSymbols
       disconnectedCallback() {
-        connected = false;
+        this[connected] = false;
         this[disconnectedCallback]();
       }
 
@@ -142,5 +184,4 @@ export class ElementBuilder {
 
     return Element;
   }
-
 }

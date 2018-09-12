@@ -1,5 +1,5 @@
 import { Class, ContextValueKey, EventProducer, SingleValueKey } from '../common';
-import { ComponentClass, ComponentContext, ComponentValueProvider } from '../component';
+import { ComponentClass, ComponentContext, ComponentValueProvider, DefinitionListener } from '../component';
 import { BootstrapValues } from './bootstrap-values';
 
 /**
@@ -15,24 +15,13 @@ export interface BootstrapContext extends BootstrapValues {
   /**
    * Registers component definition listener.
    *
-   * This listener will be called when new component class is defined, but before its element class created.
+   * This listener will be called when new component class is defined, but before its custom element class constructed.
    *
    * @param listener A listener to notify on each component definition.
    *
    * @return An event interest instance.
    */
-  readonly onComponentDefinition: EventProducer<ComponentDefinitionListener>;
-
-  /**
-   * Registers custom element definition listener.
-   *
-   * This listener will be called when new element class is created, but before it is registered as custom element.
-   *
-   * @param listener A listener to notify on each custom element definition.
-   *
-   * @return An event interest instance.
-   */
-  readonly onElementDefinition: EventProducer<ElementDefinitionListener>;
+  readonly onDefinition: EventProducer<DefinitionListener>;
 
   /**
    * Registers component construction listener.
@@ -88,41 +77,6 @@ export interface BootstrapContext extends BootstrapValues {
 }
 
 /**
- * Component definition listener.
- *
- * It is notified on new component definitions when registered with `BootstrapContext.onComponentDefinition()` method.
- *
- * The listener may alter the component class or even replace it with another one. For the latter it should return
- * the replacement class. Be careful however. If the replacement definition element name differs from original one,
- * then the original component can not be passed to `Components.whenDefined()` method, as the latter relies on element
- * name. Consider to use a `Component.of()` function in that case.
- *
- * @param componentType Component class constructor.
- *
- * @returns Either none, or component class constructor to use instead of `componentType`.
- */
-export type ComponentDefinitionListener = <T extends object>(
-    componentType: ComponentClass<T>) => ComponentClass<T> | void;
-
-/**
- * Element definition listener.
- *
- * It is notified on new custom element definitions when registered with `BootstrapContext.onElementDefinition()`
- * method.
- *
- * The listener may alter the custom element class or even replace it with another one. For the latter it should
- * return the replacement class.
- *
- * @param elementType Custom element class constructor.
- * @param componentType Component class constructor the element is created for.
- *
- * @return Either none, or element class constructor to use instead of `elementType`.
- */
-export type ElementDefinitionListener = <T extends object>(
-    elementType: Class,
-    componentType: ComponentClass<T>) => Class | void;
-
-/**
  * Component construction listener.
  *
  * It is notified on new component instance construction when registered with `BootstrapContext.onComponent()`
@@ -130,7 +84,7 @@ export type ElementDefinitionListener = <T extends object>(
  *
  * @param context Component context.
  */
-export type ComponentListener = <T extends object>(context: ComponentContext<T>) => void;
+export type ComponentListener = <T extends object>(this: void, context: ComponentContext<T>) => void;
 
 export namespace BootstrapContext {
 

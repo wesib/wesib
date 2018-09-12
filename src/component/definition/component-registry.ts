@@ -1,5 +1,4 @@
-import { Class, EventEmitter } from '../../common';
-import { BootstrapContext, ComponentDefinitionListener, ElementDefinitionListener } from '../../feature';
+import { BootstrapContext } from '../../feature';
 import { ComponentClass } from '../component';
 import { ComponentDef } from '../component-def';
 import { ElementBuilder } from './element-builder';
@@ -10,9 +9,7 @@ import { ElementBuilder } from './element-builder';
 export class ComponentRegistry {
 
   readonly builder: ElementBuilder;
-  readonly componentDefinitions = new EventEmitter<ComponentDefinitionListener>();
-  readonly elementDefinitions = new EventEmitter<ElementDefinitionListener>();
-  private _definitions: (() => void)[] = [];
+  private _definitionQueue: (() => void)[] = [];
 
   static create(opts: {
     builder: ElementBuilder
@@ -34,11 +31,10 @@ export class ComponentRegistry {
   }
 
   define<T extends object>(componentType: ComponentClass<T>) {
-    this._define(() => {
-      componentType = this._componentDefined(componentType);
+    this._definitionQueue.push(() => {
 
       const def = ComponentDef.of(componentType);
-      const elementClass = this._elementDefined(this.builder.buildElement(componentType), componentType);
+      const elementClass = this.builder.buildElement(componentType);
       const ext = def.extend;
 
       if (ext && ext.name) {
@@ -54,31 +50,13 @@ export class ComponentRegistry {
     });
   }
 
-  private _define(definition: () => void) {
-    this._definitions.push(definition);
-  }
-
   complete() {
-    this._definitions.forEach(definition => definition());
-    delete this._definitions;
+    this._definitionQueue.forEach(definition => definition());
+    delete this._definitionQueue;
   }
 
   whenDefined(componentType: ComponentClass<any>): PromiseLike<void> {
     return this.customElements.whenDefined(ComponentDef.of(componentType).name);
-  }
-
-  private _componentDefined<T extends object>(componentType: ComponentClass<T>): ComponentClass<T> {
-    return this.componentDefinitions.reduce(
-        (type, listener) => listener(componentType) || type,
-        componentType);
-  }
-
-  private _elementDefined<T extends object>(
-      elementType: Class,
-      componentType: ComponentClass<T>): Class {
-    return this.elementDefinitions.reduce(
-        (type, listener) => listener(elementType, componentType) || type,
-        elementType);
   }
 
 }

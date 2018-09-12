@@ -1,17 +1,10 @@
 import { bootstrapComponents } from './bootstrap';
 import { EventEmitter, SingleValueKey } from './common';
-import { WesComponent } from './component';
+import { DefinitionListener, WesComponent } from './component';
 import { ComponentRegistry } from './component/definition/component-registry';
 import { ComponentValueRegistry } from './component/definition/component-value-registry';
 import { ElementBuilder } from './component/definition/element-builder';
-import {
-  BootstrapContext,
-  BootstrapValues,
-  ComponentDefinitionListener,
-  ComponentListener,
-  ElementDefinitionListener,
-  FeatureDef,
-} from './feature';
+import { BootstrapContext, BootstrapValues, ComponentListener, FeatureDef } from './feature';
 import { BootstrapValueRegistry } from './feature/bootstrap-value-registry';
 import { FeatureRegistry } from './feature/feature-registry';
 import Spy = jasmine.Spy;
@@ -63,8 +56,10 @@ describe('bootstrap', () => {
         [
             'buildElement',
         ]);
-    (elementBuilderSpy as any).elements =
+    (elementBuilderSpy as any).components =
         jasmine.createSpyObj<EventEmitter<ComponentListener>>('elements', ['on']);
+    (elementBuilderSpy as any).definitions =
+        jasmine.createSpyObj<EventEmitter<DefinitionListener>>('componentDefinitions', ['on']);
     createElementBuilderSpy = spyOn(ElementBuilder, 'create').and.returnValue(elementBuilderSpy);
 
     componentRegistrySpy = jasmine.createSpyObj(
@@ -74,10 +69,6 @@ describe('bootstrap', () => {
           'complete',
           'whenDefined',
         ]);
-    (componentRegistrySpy as any).componentDefinitions =
-        jasmine.createSpyObj<EventEmitter<ComponentDefinitionListener>>('componentDefinitions', ['on']);
-    (componentRegistrySpy as any).elementDefinitions =
-        jasmine.createSpyObj<EventEmitter<ElementDefinitionListener>>('elementDefinitions', ['on']);
     createComponentRegistrySpy = spyOn(ComponentRegistry, 'create').and.returnValue(componentRegistrySpy);
   });
 
@@ -184,14 +175,11 @@ describe('bootstrap', () => {
 
         expect(componentValueRegistrySpy.provide).toHaveBeenCalledWith(key, provider);
       });
-      it('proxies onComponentDefinition() method', () => {
-        expect(featureContext.onComponentDefinition).toBe(componentRegistrySpy.componentDefinitions.on);
+      it('proxies onDefinition() method', () => {
+        expect(featureContext.onDefinition).toBe(elementBuilderSpy.definitions.on);
       });
-      it('proxies onElementDefinition() method', () => {
-        expect(featureContext.onElementDefinition).toBe(componentRegistrySpy.elementDefinitions.on);
-      });
-      it('proxies onElement() method', () => {
-        expect(featureContext.onComponent).toBe(elementBuilderSpy.elements.on);
+      it('proxies onComponent() method', () => {
+        expect(featureContext.onComponent).toBe(elementBuilderSpy.components.on);
       });
       it('proxies get() method', () => {
         expect(featureContext.get).toBe(bootstrapValuesSpy.get);

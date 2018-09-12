@@ -1,5 +1,5 @@
 import { Class } from '../../common';
-import { ComponentClass } from '../../component';
+import { DefinitionContext } from '../../component';
 import { BootstrapContext, WesFeature } from '../../feature';
 import { DomPropertiesDef } from './dom-properties-def';
 
@@ -10,14 +10,14 @@ export class DomPropertiesSupport {
 }
 
 function enableDomProperties(this: Class, context: BootstrapContext) {
-  context.onElementDefinition(defineDomProperties);
+  context.onDefinition(defineDomProperties);
 }
 
-function defineDomProperties<T extends object>(
-    elementType: Class,
-    componentType: ComponentClass<T>) {
+function defineDomProperties<T extends object>(context: DefinitionContext<T>) {
 
-  const props = DomPropertiesDef.of(componentType);
+  const props = DomPropertiesDef.of(context.componentType);
 
-  Object.defineProperties(elementType.prototype, props);
+  context.whenReady(elementType => {
+    Object.defineProperties(elementType.prototype, props);
+  });
 }
