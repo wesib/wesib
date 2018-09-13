@@ -1,7 +1,9 @@
 import { StateValueKey, TypedPropertyDecorator } from '../../common';
-import { ComponentContext, ComponentClass } from '../../component';
+import { ComponentClass, ComponentContext, ComponentDef } from '../../component';
+import { FeatureDef } from '../../feature';
+import { AttributeChangedCallback, AttributeRegistry, AttributeUpdateConsumer } from './attribute-registry';
 import { attributeStateUpdate } from './attribute-state-update';
-import { AttributeChangedCallback, AttributesDef, AttributeUpdateConsumer } from './attributes-def';
+import { AttributesSupport } from './attributes-support.feature';
 
 /**
  * Creates a decorator for component's property that accesses custom element's attribute.
@@ -20,10 +22,13 @@ export function Attribute<T extends ComponentClass>(opts?: Attribute.Opts<T> | s
     const { name, updateState } = parseAttributeOpts(target, propertyKey, opts);
     const componentType = target.constructor as T;
 
-    AttributesDef.define(
+    FeatureDef.define(componentType, { require: AttributesSupport });
+    ComponentDef.define(
         componentType,
         {
-          [name]: updateState,
+          define(definitionContext) {
+            definitionContext.get(AttributeRegistry.key).onAttributeChange(name, updateState);
+          }
         });
 
     const newDesc: TypedPropertyDescriptor<string | null> = {

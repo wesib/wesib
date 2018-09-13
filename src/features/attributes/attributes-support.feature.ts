@@ -1,6 +1,7 @@
+import { mergeFunctions } from '../../common';
 import { Component, DefinitionContext } from '../../component';
 import { BootstrapContext, WesFeature } from '../../feature';
-import { AttributesDef } from './attributes-def';
+import { AttributeChangedCallback, AttributeRegistry as AttributeRegistry_ } from './attribute-registry';
 
 /**
  * A feature adding attributes to custom elements.
@@ -15,12 +16,31 @@ export class AttributesSupport {
 }
 
 function enableAttributesSupport(context: BootstrapContext) {
-  context.onDefinition(defineAttributes);
+  context.onDefinition(<T extends object>(defContext: DefinitionContext<T>) => {
+
+    const attrs: { [name: string]: AttributeChangedCallback<any> } = {};
+
+    defContext.forComponents(AttributeRegistry_.key, () => {
+
+      class AttributeRegistry implements AttributeRegistry_<T> {
+
+        onAttributeChange(name: string, callback: AttributeChangedCallback<T>): void {
+          attrs[name] = mergeFunctions<[string, string | null], void, T>(attrs[name], callback);
+        }
+
+      }
+
+      return new AttributeRegistry();
+    });
+
+    defContext.whenReady(() => defineAttributes(defContext, attrs));
+  });
 }
 
-function defineAttributes<T extends object>(context: DefinitionContext<T>) {
+function defineAttributes<T extends object>(
+    context: DefinitionContext<T>,
+    attrs: { [name: string]: AttributeChangedCallback<any> }) {
 
-  const attrs = AttributesDef.of(context.componentType);
   const observedAttributes = Object.keys(attrs);
 
   if (!observedAttributes.length) {

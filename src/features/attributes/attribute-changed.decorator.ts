@@ -1,8 +1,9 @@
 import { TypedPropertyDecorator } from '../../common';
-import { ComponentClass } from '../../component';
+import { ComponentClass, ComponentDef } from '../../component';
+import { FeatureDef } from '../../feature';
+import { AttributeChangedCallback, AttributeRegistry } from './attribute-registry';
 import { Attribute, parseAttributeOpts } from './attribute.decorator';
-import { AttributeChangedCallback, AttributesDef } from './attributes-def';
-import './attributes-def.ns';
+import { AttributesSupport } from './attributes-support.feature';
 
 /**
  * Creates a component method decorator for custom element attribute change callback.
@@ -38,19 +39,25 @@ export function AttributeChanged<T extends ComponentClass>(opts?: Attribute.Opts
     const { name, updateState } = parseAttributeOpts(target, propertyKey, opts);
     const componentType = target.constructor as T;
 
-    AttributesDef.define(
+    FeatureDef.define(componentType, { require: AttributesSupport });
+    ComponentDef.define(
         componentType,
         {
-          [name]: function (
-              this: InstanceType<T>,
-              newValue: string,
-              oldValue: string | null) {
+          define(defContext) {
 
-            const callback: AttributeChangedCallback<InstanceType<T>> = (this as any)[propertyKey];
+            const registry = defContext.get(AttributeRegistry.key);
 
-            callback.call(this, newValue, oldValue);
-            updateState.call(this, newValue, oldValue);
-          }
+            registry.onAttributeChange(name, function (
+                this: InstanceType<T>,
+                newValue: string,
+                oldValue: string | null) {
+
+              const callback: AttributeChangedCallback<InstanceType<T>> = (this as any)[propertyKey];
+
+              callback.call(this, newValue, oldValue);
+              updateState.call(this, newValue, oldValue);
+            });
+          },
         });
   };
 }

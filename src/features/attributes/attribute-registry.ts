@@ -1,15 +1,4 @@
-import { StateValueKey } from '../../common';
-
-/**
- * Custom element attributes definition.
- *
- * This is a map containing attribute names as keys and their change callbacks as values.
- *
- * @param <T> A type of component.
- */
-export interface AttributesDef<T extends object = object> {
-  [name: string]: AttributeChangedCallback<T>;
-}
+import { SingleValueKey, StateValueKey } from '../../common';
 
 /**
  * Custom element attribute change callback.
@@ -39,11 +28,14 @@ export type AttributeUpdateConsumer<T extends object> = (
     newValue: string,
     oldValue: string | null) => void;
 
-export namespace AttributesDef {
+export interface AttributeRegistry<T extends object> {
 
-  /**
-   * A key of a property holding a attributes definition within component's class constructor.
-   */
-  export const symbol = Symbol('component-attributes');
+  onAttributeChange(name: string, callback: AttributeChangedCallback<T>): void;
+
+}
+
+export namespace AttributeRegistry {
+
+  export const key = new SingleValueKey<AttributeRegistry<any>>('attribute-registry');
 
 }

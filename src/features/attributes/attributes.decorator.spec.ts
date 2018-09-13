@@ -1,18 +1,10 @@
 import { StateValueKey } from '../../common';
 import { Component, ComponentContext, WesComponent } from '../../component';
-import { AttributesDef } from './attributes-def';
+import { testElement } from '../../spec/test-element';
 import { Attributes } from './attributes.decorator';
-import SpyObj = jasmine.SpyObj;
 
 describe('features/attributes/attributes', () => {
   describe('@Attributes', () => {
-
-    let contextSpy: SpyObj<ComponentContext>;
-
-    beforeEach(() => {
-      contextSpy = jasmine.createSpyObj('componentContext', ['updateState']);
-    });
-
     it('updates the state', () => {
 
       @WesComponent({ name: 'test-component' })
@@ -22,15 +14,12 @@ describe('features/attributes/attributes', () => {
       class TestComponent {
       }
 
-      const attrs = AttributesDef.of(TestComponent);
+      const element = new (testElement(TestComponent));
+      const updateStateSpy = spyOn(ComponentContext.of(element), 'updateState');
 
-      expect(attrs.attr).toBeDefined();
+      element.attributeChangedCallback('attr', 'old', 'new');
 
-      const self = Component.create(TestComponent, contextSpy);
-
-      attrs.attr.call(self, 'new', 'old');
-
-      expect(contextSpy.updateState).toHaveBeenCalledWith([StateValueKey.attribute, 'attr'], 'new', 'old');
+      expect(updateStateSpy).toHaveBeenCalledWith([StateValueKey.attribute, 'attr'], 'new', 'old');
     });
     it('updates the state with custom function', () => {
 
@@ -43,17 +32,15 @@ describe('features/attributes/attributes', () => {
       class TestComponent {
       }
 
-      const attrs = AttributesDef.of(TestComponent);
+      const element = new (testElement(TestComponent));
+      const component = Component.of(element) as TestComponent;
+      const updateStateSpy = spyOn(ComponentContext.of(element), 'updateState');
 
-      expect(attrs.attr).toBeDefined();
+      element.attributeChangedCallback('attr', 'old', 'new');
 
-      const self = Component.create(TestComponent, contextSpy);
-
-      attrs.attr.call(self, 'new', 'old');
-
-      expect(contextSpy.updateState).not.toHaveBeenCalled();
+      expect(updateStateSpy).not.toHaveBeenCalled();
       expect(updateSpy).toHaveBeenCalledWith([StateValueKey.attribute, 'attr'], 'new', 'old');
-      expect(updateSpy.calls.first().object).toBe(self);
+      expect(updateSpy.calls.first().object).toBe(component);
     });
     it('updates the state with custom key', () => {
 
@@ -66,15 +53,12 @@ describe('features/attributes/attributes', () => {
       class TestComponent {
       }
 
-      const attrs = AttributesDef.of(TestComponent);
+      const element = new (testElement(TestComponent));
+      const updateStateSpy = spyOn(ComponentContext.of(element), 'updateState');
 
-      expect(attrs.attr).toBeDefined();
+      element.attributeChangedCallback('attr', 'old', 'new');
 
-      const self = Component.create(TestComponent, contextSpy);
-
-      attrs.attr.call(self, 'new', 'old');
-
-      expect(contextSpy.updateState).toHaveBeenCalledWith(key, 'new', 'old');
+      expect(updateStateSpy).toHaveBeenCalledWith(key, 'new', 'old');
     });
     it('disables state update', () => {
 
@@ -85,15 +69,12 @@ describe('features/attributes/attributes', () => {
       class TestComponent {
       }
 
-      const attrs = AttributesDef.of(TestComponent);
+      const element = new (testElement(TestComponent));
+      const updateStateSpy = spyOn(ComponentContext.of(element), 'updateState');
 
-      expect(attrs.attr).toBeDefined();
+      element.attributeChangedCallback('attr', 'old', 'new');
 
-      const self = Component.create(TestComponent, contextSpy);
-
-      attrs.attr.call(self, 'new', 'old');
-
-      expect(contextSpy.updateState).not.toHaveBeenCalled();
+      expect(updateStateSpy).not.toHaveBeenCalled();
     });
   });
 });

@@ -1,6 +1,6 @@
 import { noop, StateValueKey } from '../../common';
 import { ComponentContext } from '../../component';
-import { AttributeChangedCallback, AttributeUpdateConsumer } from './attributes-def';
+import { AttributeChangedCallback, AttributeUpdateConsumer } from './attribute-registry';
 
 /**
  * @internal

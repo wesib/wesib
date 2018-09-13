@@ -1,23 +1,15 @@
 import { noop, StateValueKey } from '../../common';
 import { Component, ComponentContext, WesComponent } from '../../component';
+import { testElement } from '../../spec/test-element';
 import { AttributeChanged } from './attribute-changed.decorator';
-import { AttributesDef } from './attributes-def';
-import SpyObj = jasmine.SpyObj;
 
 describe('features/attributes/attribute-changed', () => {
   describe('@AttributeChanged', () => {
-
-    let contextSpy: SpyObj<ComponentContext<any>>;
-
-    beforeEach(() => {
-      contextSpy = jasmine.createSpyObj('componentContext', ['updateState']);
-    });
-
     it('declares attribute change callback', () => {
 
       const attrSpy = jasmine.createSpy('attrChanged');
 
-      @WesComponent({ name: 'test-component' })
+      @WesComponent('test-component')
       class TestComponent {
 
         @AttributeChanged()
@@ -25,20 +17,17 @@ describe('features/attributes/attribute-changed', () => {
 
       }
 
-      const attrs = AttributesDef.of(TestComponent);
+      const element = new (testElement(TestComponent));
+      const component = Component.of(element) as TestComponent;
 
-      expect(attrs.attr).toBeDefined();
-
-      const component = Component.create(TestComponent, contextSpy);
-
-      attrs.attr.call(component, 'new', 'old');
+      element.attributeChangedCallback('attr', 'old', 'new');
 
       expect(attrSpy).toHaveBeenCalledWith('new', 'old');
       expect(attrSpy.calls.first().object).toBe(component);
     });
     it('updates the state', () => {
 
-      @WesComponent({ name: 'test-component' })
+      @WesComponent('test-component')
       class TestComponent {
 
         @AttributeChanged({})
@@ -46,21 +35,18 @@ describe('features/attributes/attribute-changed', () => {
 
       }
 
-      const attrs = AttributesDef.of(TestComponent);
+      const element = new (testElement(TestComponent));
+      const updateStateSpy = spyOn(ComponentContext.of(element), 'updateState');
 
-      expect(attrs.attr).toBeDefined();
+      element.attributeChangedCallback('attr', 'old', 'new');
 
-      const self = Component.create(TestComponent, contextSpy);
-
-      attrs.attr.call(self, 'new', 'old');
-
-      expect(contextSpy.updateState).toHaveBeenCalledWith([StateValueKey.attribute, 'attr'], 'new', 'old');
+      expect(updateStateSpy).toHaveBeenCalledWith([StateValueKey.attribute, 'attr'], 'new', 'old');
     });
     it('updates the state with custom function', () => {
 
       const updateSpy = jasmine.createSpy('updateState');
 
-      @WesComponent({ name: 'test-component' })
+      @WesComponent('test-component')
       class TestComponent {
 
         @AttributeChanged({ updateState: updateSpy })
@@ -68,23 +54,21 @@ describe('features/attributes/attribute-changed', () => {
 
       }
 
-      const attrs = AttributesDef.of(TestComponent);
+      const element = new (testElement(TestComponent));
+      const component = Component.of(element) as TestComponent;
+      const updateStateSpy = spyOn(ComponentContext.of(element), 'updateState');
 
-      expect(attrs.attr).toBeDefined();
+      element.attributeChangedCallback('attr', 'old', 'new');
 
-      const self = Component.create(TestComponent, contextSpy);
-
-      attrs.attr.call(self, 'new', 'old');
-
-      expect(contextSpy.updateState).not.toHaveBeenCalled();
+      expect(updateStateSpy).not.toHaveBeenCalled();
       expect(updateSpy).toHaveBeenCalledWith([StateValueKey.attribute, 'attr'], 'new', 'old');
-      expect(updateSpy.calls.first().object).toBe(self);
+      expect(updateSpy.calls.first().object).toBe(component);
     });
     it('updates the state with custom key', () => {
 
       const key = ['attr-key'];
 
-      @WesComponent({ name: 'test-component' })
+      @WesComponent('test-component')
       class TestComponent {
 
         @AttributeChanged({ name: 'my-attr', updateState: key })
@@ -92,15 +76,12 @@ describe('features/attributes/attribute-changed', () => {
 
       }
 
-      const attrs = AttributesDef.of(TestComponent);
+      const element = new (testElement(TestComponent));
+      const updateStateSpy = spyOn(ComponentContext.of(element), 'updateState');
 
-      expect(attrs['my-attr']).toBeDefined();
+      element.attributeChangedCallback('my-attr', 'old', 'new');
 
-      const self = Component.create(TestComponent, contextSpy);
-
-      attrs['my-attr'].call(self, 'new', 'old');
-
-      expect(contextSpy.updateState).toHaveBeenCalledWith(key, 'new', 'old');
+      expect(updateStateSpy).toHaveBeenCalledWith(key, 'new', 'old');
     });
     it('disables state update', () => {
 
@@ -114,23 +95,21 @@ describe('features/attributes/attribute-changed', () => {
 
       }
 
-      const attrs = AttributesDef.of(TestComponent);
+      const element = new (testElement(TestComponent));
+      const component = Component.of(element) as TestComponent;
+      const updateStateSpy = spyOn(ComponentContext.of(element), 'updateState');
 
-      expect(attrs.attr).toBeDefined();
-
-      const self = Component.create(TestComponent, contextSpy);
-
-      attrs.attr.call(self, 'new', 'old');
+      element.attributeChangedCallback('attr', 'old', 'new');
 
       expect(attrSpy).toHaveBeenCalledWith('new', 'old');
-      expect(attrSpy.calls.first().object).toBe(self);
-      expect(contextSpy.updateState).not.toHaveBeenCalled();
+      expect(attrSpy.calls.first().object).toBe(component);
+      expect(updateStateSpy).not.toHaveBeenCalled();
     });
     it('declares attribute with custom attribute name', () => {
 
       const attrSpy = jasmine.createSpy('attrChanged');
 
-      @WesComponent({ name: 'test-component' })
+      @WesComponent('test-component')
       class TestComponent {
 
         @AttributeChanged('my-attr')
@@ -138,16 +117,13 @@ describe('features/attributes/attribute-changed', () => {
 
       }
 
-      const attrs = AttributesDef.of(TestComponent);
+      const element = new (testElement(TestComponent));
+      const component = Component.of(element) as TestComponent;
 
-      expect(attrs['my-attr']).toBeDefined();
-
-      const self = Component.create(TestComponent, contextSpy);
-
-      attrs['my-attr'].call(self, 'new', 'old');
+      element.attributeChangedCallback('my-attr', 'old', 'new');
 
       expect(attrSpy).toHaveBeenCalledWith('new', 'old');
-      expect(attrSpy.calls.first().object).toBe(self);
+      expect(attrSpy.calls.first().object).toBe(component);
     });
     it('fails when attribute name is absent and property key is symbol', () => {
 

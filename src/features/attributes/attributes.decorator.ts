@@ -1,8 +1,9 @@
 import { StateValueKey, TypedClassDecorator } from '../../common';
-import { ComponentClass } from '../../component';
+import { ComponentClass, ComponentDef } from '../../component';
+import { FeatureDef } from '../../feature';
+import { AttributeRegistry, AttributeUpdateConsumer } from './attribute-registry';
 import { attributeStateUpdate } from './attribute-state-update';
-import { AttributesDef, AttributeUpdateConsumer } from './attributes-def';
-import './attributes-def.ns';
+import { AttributesSupport } from './attributes-support.feature';
 
 /**
  * Creates a component class decorator declaring supported custom element's attributes.
@@ -16,14 +17,21 @@ import './attributes-def.ns';
 export function Attributes<
     T extends ComponentClass = any,
     E extends HTMLElement = HTMLElement>(opts: Attributes.Opts<T>): TypedClassDecorator<T> {
+  return componentType => {
+    FeatureDef.define(componentType, { require: AttributesSupport });
+    ComponentDef.define(
+        componentType,
+        {
+          define(defContext) {
 
-  const def: AttributesDef<T> = {};
+            const registry = defContext.get(AttributeRegistry.key);
 
-  Object.keys(opts).forEach(name => {
-    def[name] = attributeStateUpdate(name, opts[name]);
-  });
-
-  return (type: T) => AttributesDef.define(type, def);
+            Object.keys(opts).forEach(name => {
+              registry.onAttributeChange(name, attributeStateUpdate(name, opts[name]));
+            });
+          },
+        });
+  };
 }
 
 export namespace Attributes {

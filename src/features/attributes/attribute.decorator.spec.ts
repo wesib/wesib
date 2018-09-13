@@ -1,6 +1,5 @@
 import { Component, ComponentContext, WesComponent } from '../../component';
 import { Attribute } from './attribute.decorator';
-import { AttributesDef } from './attributes-def';
 import SpyObj = jasmine.SpyObj;
 
 describe('features/attributes/attribute.decorator', () => {
@@ -25,8 +24,6 @@ describe('features/attributes/attribute.decorator', () => {
 
       }
 
-      expect(AttributesDef.of(TestComponent).attr).toBeDefined();
-
       const component = Component.create<TestComponent>(TestComponent, contextSpy);
 
       elementSpy.getAttribute.and.returnValue('value1');
@@ -50,8 +47,6 @@ describe('features/attributes/attribute.decorator', () => {
         }
 
       }
-
-      expect(AttributesDef.of(TestComponent).attr).toBeDefined();
 
       const component = Component.create<TestComponent>(TestComponent, contextSpy);
 
