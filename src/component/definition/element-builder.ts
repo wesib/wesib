@@ -79,11 +79,10 @@ export class ElementBuilder {
 
     const context = new ElementDefinitionContext();
 
+    this.definitions.notify(context as DefinitionContext<any>);
     if (def.define) {
       def.define.call(componentType, context);
     }
-
-    this.definitions.notify(context as DefinitionContext<any>);
 
     const elementType = this._elementType(
         def,
