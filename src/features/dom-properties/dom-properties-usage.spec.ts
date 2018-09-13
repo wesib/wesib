@@ -55,7 +55,7 @@ describe('features/dom-properties', () => {
           propertyValue = value;
         }
 
-        @DomMethod({ name: 'elementMethod' })
+        @DomMethod({ propertyKey: 'elementMethod' })
         componentMethod(...args: string[]): string {
           return `${this.readonlyProperty}: ${args.join(', ')}`;
         }

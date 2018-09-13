@@ -1,43 +1,42 @@
 import { mergeFunctions } from '../../common';
 import { Component, DefinitionContext } from '../../component';
-import { BootstrapContext, WesFeature } from '../../feature';
+import { WesFeature } from '../../feature';
 import { AttributeChangedCallback, AttributeRegistry as AttributeRegistry_ } from './attribute-registry';
 
 /**
  * A feature adding attributes to custom elements.
  *
  * This feature is enabled automatically whenever an `@Attribute`, `@Attributes`, or `@AttributeChanged` decorator
- * applied to any component.
+ * applied to component.
  */
 @WesFeature({
-  bootstrap: enableAttributesSupport,
+  bootstrap(context) {
+    context.onDefinition(defineAttributes);
+  },
 })
-export class AttributesSupport {
-}
+export class AttributesSupport {}
 
-function enableAttributesSupport(context: BootstrapContext) {
-  context.onDefinition(<T extends object>(defContext: DefinitionContext<T>) => {
+function defineAttributes<T extends object>(context: DefinitionContext<T>) {
 
-    const attrs: { [name: string]: AttributeChangedCallback<any> } = {};
+  const attrs: { [name: string]: AttributeChangedCallback<any> } = {};
 
-    defContext.forComponents(AttributeRegistry_.key, () => {
+  context.forComponents(AttributeRegistry_.key, () => {
 
-      class AttributeRegistry implements AttributeRegistry_<T> {
+    class AttributeRegistry implements AttributeRegistry_<T> {
 
-        onAttributeChange(name: string, callback: AttributeChangedCallback<T>): void {
-          attrs[name] = mergeFunctions<[string, string | null], void, T>(attrs[name], callback);
-        }
-
+      onAttributeChange(name: string, callback: AttributeChangedCallback<T>): void {
+        attrs[name] = mergeFunctions<[string, string | null], void, T>(attrs[name], callback);
       }
 
-      return new AttributeRegistry();
-    });
+    }
 
-    defContext.whenReady(() => defineAttributes(defContext, attrs));
+    return new AttributeRegistry();
   });
+
+  context.whenReady(() => declareAttributes(context, attrs));
 }
 
-function defineAttributes<T extends object>(
+function declareAttributes<T extends object>(
     context: DefinitionContext<T>,
     attrs: { [name: string]: AttributeChangedCallback<any> }) {
 

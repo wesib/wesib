@@ -1,7 +1,8 @@
 import { decoratePropertyAccessor, StateValueKey, TypedPropertyDecorator } from '../../common';
-import { Component, ComponentClass } from '../../component';
-import { DomPropertiesDef } from './dom-properties-def';
-import './dom-properties-def.ns';
+import { Component, ComponentClass, ComponentDef } from '../../component';
+import { FeatureDef } from '../../feature';
+import { DomPropertiesSupport } from './dom-properties-support.feature';
+import { DomPropertyRegistry } from './dom-property-registry';
 import { DomPropertyUpdateCallback, propertyStateUpdate } from './property-state-update';
 
 /**
@@ -16,8 +17,11 @@ import { DomPropertyUpdateCallback, propertyStateUpdate } from './property-state
  * @returns Component property decorator.
  */
 export function DomProperty<T extends ComponentClass>(opts: DomProperty.Opts<T> = {}): TypedPropertyDecorator<T> {
-
   return <V>(target: InstanceType<T>, propertyKey: string | symbol, propertyDesc?: TypedPropertyDescriptor<V>) => {
+
+    const componentType = target.constructor as T;
+
+    FeatureDef.define(componentType, { require: DomPropertiesSupport });
 
     let result: TypedPropertyDescriptor<V> | undefined;
 
@@ -46,11 +50,16 @@ export function DomProperty<T extends ComponentClass>(opts: DomProperty.Opts<T> 
       });
     }
 
-    const name = opts.name || propertyKey;
+    const name = opts.propertyKey || propertyKey;
     const desc = domPropertyDescriptor(propertyKey, propertyDesc, opts);
-    const constructor = target.constructor as T;
 
-    DomPropertiesDef.define(constructor, { [name]: desc });
+    ComponentDef.define(
+        componentType,
+        {
+          define(definitionContext) {
+            definitionContext.get(DomPropertyRegistry.key).domProperty(name, desc);
+          }
+        });
 
     return result;
   };
@@ -73,11 +82,11 @@ export namespace DomProperty {
   export interface Opts<T extends object> {
 
     /**
-     * Property name.
+     * Property key.
      *
-     * Decorated property name is used by default.
+     * Decorated property key is used by default.
      */
-    name?: string | symbol;
+    propertyKey?: PropertyKey;
 
     /**
      * Whether the declared property should be configurable.

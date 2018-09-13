@@ -1,33 +1,42 @@
-import { WesComponent } from '../../component';
-import { DomPropertiesDef } from './dom-properties-def';
+import { Component, WesComponent } from '../../component';
+import { testElement } from '../../spec/test-element';
 import { DomProperty } from './dom-property.decorator';
 
 describe('features/dom-properties/dom-property', () => {
   describe('@DomProperty', () => {
     it('declares DOM property', () => {
 
-      @WesComponent({ name: 'test-component' })
+      @WesComponent('test-component')
       class TestComponent {
         @DomProperty()
         customProperty = 'value';
       }
 
-      const def = DomPropertiesDef.of(TestComponent);
+      const element = new (testElement(TestComponent));
+      const component = Component.of(element) as TestComponent;
 
-      expect<any>(def).toEqual(jasmine.objectContaining({ customProperty: jasmine.anything() }));
+      expect(element.customProperty).toBe('value');
+
+      element.customProperty = 'other';
+
+      expect(component.customProperty).toBe('other');
     });
     it('declares DOM property with specified name', () => {
 
       @WesComponent({ name: 'test-component' })
       class TestComponent {
-        @DomProperty({ name: 'otherProperty' })
+        @DomProperty({ propertyKey: 'otherProperty' })
         customProperty = 'value';
       }
 
-      const def = DomPropertiesDef.of(TestComponent);
+      const element = new (testElement(TestComponent));
+      const component = Component.of(element) as TestComponent;
 
-      expect<any>(def).not.toEqual(jasmine.objectContaining({ customProperty: jasmine.anything() }));
-      expect<any>(def).toEqual(jasmine.objectContaining({ otherProperty: jasmine.anything() }));
+      expect(element.otherProperty).toBe('value');
+
+      element.otherProperty = 'other';
+
+      expect(component.customProperty).toBe('other');
     });
 
     describe('for object property', () => {
@@ -39,17 +48,14 @@ describe('features/dom-properties/dom-property', () => {
           customProperty = 'value';
         }
 
-        const def = DomPropertiesDef.of(TestComponent);
-        const expectedDesc: PropertyDescriptor = {
+        const elementType = testElement(TestComponent);
+
+        expect(Object.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: true,
           enumerable: true,
           get: jasmine.any(Function),
           set: jasmine.any(Function),
-        };
-
-        expect<any>(def).toEqual(jasmine.objectContaining({
-          customProperty: expectedDesc,
-        }));
+        });
       });
       it('applies defaults to non-state-updating field', () => {
 
@@ -59,17 +65,14 @@ describe('features/dom-properties/dom-property', () => {
           customProperty = 'value';
         }
 
-        const def = DomPropertiesDef.of(TestComponent);
-        const expectedDesc: PropertyDescriptor = {
+        const elementType = testElement(TestComponent);
+
+        expect(Object.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: true,
           enumerable: true,
           get: jasmine.any(Function),
           set: jasmine.any(Function),
-        };
-
-        expect<any>(def).toEqual(jasmine.objectContaining({
-          customProperty: expectedDesc,
-        }));
+        });
       });
       it('applies custom property attributes', () => {
 
@@ -83,16 +86,14 @@ describe('features/dom-properties/dom-property', () => {
           customProperty = 'value';
         }
 
-        const def = DomPropertiesDef.of(TestComponent);
-        const expectedDesc: PropertyDescriptor = {
+        const elementType = testElement(TestComponent);
+
+        expect(Object.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: false,
           enumerable: false,
           get: jasmine.any(Function),
-        };
-
-        expect<any>(def).toEqual(jasmine.objectContaining({
-          customProperty: expectedDesc,
-        }));
+          set: undefined,
+        });
       });
       it('applies custom property attributes to non-state-updating field', () => {
 
@@ -107,16 +108,14 @@ describe('features/dom-properties/dom-property', () => {
           customProperty = 'value';
         }
 
-        const def = DomPropertiesDef.of(TestComponent);
-        const expectedDesc: PropertyDescriptor = {
+        const elementType = testElement(TestComponent);
+
+        expect(Object.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: false,
           enumerable: false,
           get: jasmine.any(Function),
-        };
-
-        expect<any>(def).toEqual(jasmine.objectContaining({
-          customProperty: expectedDesc,
-        }));
+          set: undefined,
+        });
       });
     });
     describe('for property accessor', () => {
@@ -130,16 +129,14 @@ describe('features/dom-properties/dom-property', () => {
           }
         }
 
-        const def = DomPropertiesDef.of(TestComponent);
-        const expectedDesc: PropertyDescriptor = {
+        const elementType = testElement(TestComponent);
+
+        expect(Object.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: true,
           enumerable: false,
           get: jasmine.any(Function),
-        };
-
-        expect<any>(def).toEqual(jasmine.objectContaining({
-          customProperty: expectedDesc,
-        }));
+          set: undefined,
+        });
       });
       it('applies custom read-only property attributes', () => {
 
@@ -155,16 +152,14 @@ describe('features/dom-properties/dom-property', () => {
           }
         }
 
-        const def = DomPropertiesDef.of(TestComponent);
-        const expectedDesc: PropertyDescriptor = {
+        const elementType = testElement(TestComponent);
+
+        expect(Object.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: false,
           enumerable: true,
           get: jasmine.any(Function),
-        };
-
-        expect<any>(def).toEqual(jasmine.objectContaining({
-          customProperty: expectedDesc,
-        }));
+          set: undefined,
+        });
       });
       it('applies writable property defaults', () => {
 
@@ -184,17 +179,14 @@ describe('features/dom-properties/dom-property', () => {
 
         }
 
-        const def = DomPropertiesDef.of(TestComponent);
-        const expectedDesc: PropertyDescriptor = {
+        const elementType = testElement(TestComponent);
+
+        expect<any>(Object.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: true,
           enumerable: false,
           get: jasmine.any(Function),
           set: jasmine.any(Function),
-        };
-
-        expect<any>(def).toEqual(jasmine.objectContaining({
-          customProperty: expectedDesc,
-        }));
+        });
       });
       it('applies custom writable property attributes', () => {
 
@@ -218,16 +210,14 @@ describe('features/dom-properties/dom-property', () => {
 
         }
 
-        const def = DomPropertiesDef.of(TestComponent);
-        const expectedDesc: PropertyDescriptor = {
+        const elementType = testElement(TestComponent);
+
+        expect(Object.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: false,
           enumerable: true,
           get: jasmine.any(Function),
-        };
-
-        expect<any>(def).toEqual(jasmine.objectContaining({
-          customProperty: expectedDesc,
-        }));
+          set: undefined,
+        });
       });
     });
   });
