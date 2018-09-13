@@ -4,7 +4,7 @@ import { BootstrapContext, WesFeature } from '../../feature';
 import { DomPropertiesDef } from './dom-properties-def';
 
 @WesFeature({
-  configure: enableDomProperties,
+  bootstrap: enableDomProperties,
 })
 export class DomPropertiesSupport {
 }

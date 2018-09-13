@@ -7,7 +7,7 @@ describe('decorators/wes-feature', () => {
     it('assigns feature definition', () => {
 
       const def: FeatureDef = {
-        configure: noop,
+        bootstrap: noop,
       };
 
       @WesFeature(def)

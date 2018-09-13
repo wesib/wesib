@@ -20,7 +20,7 @@ describe('features/state', () => {
       stateTracker = undefined!;
 
       @WesComponent('test-component')
-      @WesFeature({ requires: StateSupport })
+      @WesFeature({ require: StateSupport })
       class TestComponent {
         constructor(ctx: ComponentContext) {
           context = ctx;

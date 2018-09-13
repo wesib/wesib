@@ -1,3 +1,3 @@
-export * from './context-value-key';
-export * from './context-value-provider';
+export * from './context-value';
+export * from './context-value-registry';
 export * from './context-values';

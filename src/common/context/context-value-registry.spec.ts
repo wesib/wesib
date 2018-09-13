@@ -1,9 +1,9 @@
-import { ContextValueDefaultHandler, MultiValueKey, SingleValueKey } from './context-value-key';
-import { ContextValueRegistry } from './context-value-provider';
+import { ContextValueDefaultHandler, MultiValueKey, SingleValueKey } from './context-value';
+import { ContextValueRegistry } from './context-value-registry';
 import { ContextValues } from './context-values';
 import Spy = jasmine.Spy;
 
-describe('common/context/context-value-provider', () => {
+describe('common/context/context-value-registry', () => {
   describe('ContextValueRegistry', () => {
 
     const key = new SingleValueKey<string>('test-key');

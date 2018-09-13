@@ -77,6 +77,6 @@ AttributesDef.of = <T extends object>(componentType: ComponentClass<T>) => meta.
 AttributesDef.merge = <T extends object = object>(...defs: AttributesDef<T>[]) => meta.merge(...defs);
 
 AttributesDef.define = <T extends ComponentClass>(type: T, ...defs: AttributesDef<InstanceType<T>>[]) => {
-  FeatureDef.define(type, { requires: [AttributesSupport] });
+  FeatureDef.define(type, { require: [AttributesSupport] });
   return meta.define(type, ...defs);
 };

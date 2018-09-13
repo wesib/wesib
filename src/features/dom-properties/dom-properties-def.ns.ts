@@ -65,6 +65,6 @@ DomPropertiesDef.of = <T extends object>(componentType: ComponentClass<T>) => me
 DomPropertiesDef.merge = (...defs: DomPropertiesDef[]) => meta.merge(...defs);
 
 DomPropertiesDef.define = <T extends ComponentClass>(type: T, ...defs: DomPropertiesDef[]) => {
-  FeatureDef.define(type, { requires: [DomPropertiesSupport] });
+  FeatureDef.define(type, { require: [DomPropertiesSupport] });
   return meta.define(type, ...defs);
 };

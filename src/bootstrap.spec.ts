@@ -5,7 +5,7 @@ import { ComponentRegistry } from './component/definition/component-registry';
 import { ComponentValueRegistry } from './component/definition/component-value-registry';
 import { DefinitionValueRegistry } from './component/definition/definition-value-registry';
 import { ElementBuilder } from './component/definition/element-builder';
-import { BootstrapContext, BootstrapValues, FeatureDef } from './feature';
+import { BootstrapContext, FeatureDef, PreBootstrapContext } from './feature';
 import { BootstrapValueRegistry } from './feature/bootstrap-value-registry';
 import { FeatureRegistry } from './feature/feature-registry';
 import Spy = jasmine.Spy;
@@ -15,7 +15,7 @@ describe('bootstrap', () => {
 
   let createBootstrapValueRegistrySpy: Spy;
   let bootstrapValueRegistrySpy: SpyObj<BootstrapValueRegistry>;
-  let bootstrapValuesSpy: SpyObj<BootstrapValues>;
+  let preBootstrapContextSpy: SpyObj<PreBootstrapContext>;
   let bootstrapSourcesSpy: Spy;
   let createDefinitionValueRegistrySpy: Spy;
   let definitionValueRegistrySpy: SpyObj<DefinitionValueRegistry>;
@@ -42,8 +42,8 @@ describe('bootstrap', () => {
     bootstrapSourcesSpy = jasmine.createSpy('bootstrapSources');
     bootstrapValueRegistrySpy.bindSources.and.returnValue(bootstrapSourcesSpy);
 
-    bootstrapValuesSpy = jasmine.createSpyObj('bootstrapValues', ['get']);
-    (bootstrapValueRegistrySpy as any).values = bootstrapValuesSpy;
+    preBootstrapContextSpy = jasmine.createSpyObj('bootstrapValues', ['get']);
+    (bootstrapValueRegistrySpy as any).values = preBootstrapContextSpy;
 
     componentValueRegistrySpy = jasmine.createSpyObj(
         'componentValueRegistry',
@@ -157,7 +157,7 @@ describe('bootstrap', () => {
             FeatureDef.define(
                 TestFeature,
                 {
-                  configure(ctx) {
+                  bootstrap(ctx) {
                     featureContext = ctx;
                   }
                 }));
@@ -208,7 +208,7 @@ describe('bootstrap', () => {
         expect(featureContext.onComponent).toBe(elementBuilderSpy.components.on);
       });
       it('proxies get() method', () => {
-        expect(featureContext.get).toBe(bootstrapValuesSpy.get);
+        expect(featureContext.get).toBe(preBootstrapContextSpy.get);
       });
     });
   });

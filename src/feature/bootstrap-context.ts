@@ -1,4 +1,4 @@
-import { Class, ContextValueKey, EventProducer, SingleValueKey } from '../common';
+import { ContextValueKey, ContextValues, EventProducer, SingleValueKey } from '../common';
 import {
   ComponentClass,
   ComponentListener,
@@ -6,17 +6,23 @@ import {
   DefinitionListener,
   DefinitionValueProvider,
 } from '../component';
-import { BootstrapValues } from './bootstrap-values';
+
+/**
+ * Pre-bootstrap context used to declare values available in bootstrap context.
+ *
+ * These values are can be declared by feature definitions using `FeatureDef.prebootstrap` property.
+ */
+export type PreBootstrapContext = ContextValues;
 
 /**
  * Components bootstrap context.
  *
- * An instance of this class is passed to `FeatureDef.configure()` method so that the feature can configure itself.
+ * An instance of this class is passed to `FeatureDef.bootstrap()` method so that the feature can configure itself.
  *
- * Extends `BootstrapValues` interface. The values are provided by corresponding bootstrap value providers provided
- * by features. I.e. configured in their definitions as `FeatureDef.bootstraps`.
+ * Extends `BootstrapValues` interface. The values are pre-bootstrapped by features. I.e. configured in their
+ * definitions as `FeatureDef.prebootstrap`.
  */
-export interface BootstrapContext extends BootstrapValues {
+export interface BootstrapContext extends ContextValues {
 
   /**
    * Registers component definition listener.

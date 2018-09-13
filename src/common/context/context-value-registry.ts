@@ -1,34 +1,6 @@
-import { ComponentContext } from '../../component';
 import { RevertibleIterable } from '../iteration';
-import { ContextValueDefaultHandler, ContextValueKey } from './context-value-key';
+import { ContextValueDefaultHandler, ContextValueKey, ContextValueProvider, ContextValueSource } from './context-value';
 import { ContextValues } from './context-values';
-
-/**
- * Context value provider.
- *
- * It is responsible for constructing the values associated with particular key for the given context. Note that
- * provider generates source value, not the context values themselves.
- *
- * @param <C> The type of context.
- * @param <S> The type of source value.
- * @param context Target context.
- *
- * @return Either constructed value, or `null`/`undefined` if the value can not be constructed.
- */
-export type ContextValueProvider<C extends ContextValues, S> =
-    <T extends C>(this: void, context: T) => S | null | undefined;
-
-/**
- * The source of context values.
- *
- * @param <C> A type of context.
- * @param key Context value key.
- * @param context Target context.
- *
- * @returns Revertible iterable of context value sources associated with the given key provided for the given context.
- */
-export type ContextValueSource<C extends ContextValues> =
-    <V, S>(this: void, key: ContextValueKey<V, S>, context: C) => RevertibleIterable<S>;
 
 /**
  * A registry of context value providers.

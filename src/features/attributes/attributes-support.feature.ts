@@ -9,7 +9,7 @@ import { AttributesDef } from './attributes-def';
  * applied to any component.
  */
 @WesFeature({
-  configure: enableAttributesSupport,
+  bootstrap: enableAttributesSupport,
 })
 export class AttributesSupport {
 }

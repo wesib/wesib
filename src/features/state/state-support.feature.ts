@@ -15,7 +15,7 @@ import { StateTracker } from './state-tracker';
  * features issue state updates when needed.
  */
 @WesFeature({
-  configure: enableStateSupport,
+  bootstrap: enableStateSupport,
 })
 export class StateSupport {
 }

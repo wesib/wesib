@@ -94,7 +94,7 @@ describe('features/attributes/attributes-def', () => {
 
         AttributesDef.define(TestComponent);
 
-        expect(FeatureDef.of(TestComponent).requires).toContain(AttributesSupport);
+        expect(FeatureDef.of(TestComponent).require).toContain(AttributesSupport);
       });
     });
   });

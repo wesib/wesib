@@ -95,7 +95,7 @@ ComponentDef.define = <T extends ComponentClass>(type: T, ...defs: PartialCompon
   return FeatureDef.define(
       type,
       {
-        configure: function (context) {
+        bootstrap: function (context) {
           context.define(this);
         },
       });

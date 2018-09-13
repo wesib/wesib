@@ -1,12 +1,12 @@
 import { ContextValueRegistry } from '../common';
-import { BootstrapValues } from './bootstrap-values';
+import { PreBootstrapContext } from './bootstrap-context';
 
 /**
  * @internal
  */
-export class BootstrapValueRegistry extends ContextValueRegistry<BootstrapValues> {
+export class BootstrapValueRegistry extends ContextValueRegistry<PreBootstrapContext> {
 
-  readonly values: BootstrapValues;
+  readonly values: PreBootstrapContext;
 
   static create(): BootstrapValueRegistry {
     return new BootstrapValueRegistry();

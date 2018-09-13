@@ -121,7 +121,7 @@ describe('component/component-def', () => {
 
           expect(featureDef).toBeDefined();
 
-          const configure = featureDef.configure!;
+          const configure = featureDef.bootstrap!;
 
           expect(configure).toBeDefined();
 
@@ -142,7 +142,7 @@ describe('component/component-def', () => {
 
           expect(featureDef).toBeDefined();
 
-          const configure = featureDef.configure!;
+          const configure = featureDef.bootstrap!;
 
           expect(configure).toBeDefined();
 
@@ -164,7 +164,7 @@ describe('component/component-def', () => {
 
           expect(featureDef).toBeDefined();
 
-          const configure = featureDef.configure!;
+          const configure = featureDef.bootstrap!;
 
           expect(configure).toBeDefined();
 

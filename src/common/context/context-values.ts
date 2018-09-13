@@ -1,4 +1,4 @@
-import { ContextValueKey } from './context-value-key';
+import { ContextValueKey } from './context-value';
 
 /**
  * The values available from context.

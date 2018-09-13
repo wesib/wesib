@@ -1,5 +1,4 @@
 import { RevertibleIterable } from '../iteration';
-import { ContextValueProvider } from './context-value-provider';
 import { ContextValues } from './context-values';
 
 /**
@@ -164,4 +163,102 @@ export class MultiValueKey<V> extends ContextValueKey<V[], V> {
     });
   }
 
+}
+
+/**
+ * Context value provider.
+ *
+ * It is responsible for constructing the values associated with particular key for the given context. Note that
+ * provider generates source value, not the context values themselves.
+ *
+ * @param <C> The type of context.
+ * @param <S> The type of source value.
+ * @param context Target context.
+ *
+ * @return Either constructed value, or `null`/`undefined` if the value can not be constructed.
+ */
+export type ContextValueProvider<C extends ContextValues, S> =
+    <T extends C>(this: void, context: T) => S | null | undefined;
+
+/**
+ * The source of context values.
+ *
+ * @param <C> A type of context.
+ * @param key Context value key.
+ * @param context Target context.
+ *
+ * @returns Revertible iterable of context value sources associated with the given key provided for the given context.
+ */
+export type ContextValueSource<C extends ContextValues> =
+    <V, S>(this: void, key: ContextValueKey<V, S>, context: C) => RevertibleIterable<S>;
+
+/**
+ * Context value specifier.
+ */
+export type ContextValueSpec<C extends ContextValues, V, S = V> =
+    ContextValueDef<C, V, S>
+    | ContextConstDef<C, V, S>;
+
+/**
+ * Context value definition.
+ *
+ * Defines a `provider` for the value with the given `key`.
+ */
+export interface ContextValueDef<C extends ContextValues, V, S = V> {
+
+  /**
+   * Context value key the `provider` provides value for.
+   */
+  key: ContextValueKey<V, S>;
+
+  /**
+   * Context value provider.
+   */
+  provider: ContextValueProvider<C, S>;
+
+}
+
+/**
+ * Context constant definition.
+ *
+ * Defines a source `value` for context value with the given `key`.
+ */
+export interface ContextConstDef<C extends ContextValues, V, S = V> {
+
+  /**
+   * Context value key the `provider` provides value for.
+   */
+  key: ContextValueKey<V, S>;
+
+  /**
+   * Context value source.
+   */
+  value: S;
+
+}
+
+export namespace ContextValueDef {
+
+  /**
+   * Constructs context value definition by context value specifier.
+   *
+   * @param spec Context value specifier to convert to definition.
+   *
+   * @returns Context value definition of the specified value.
+   */
+  export function of<C extends ContextValues, V, S = V>(spec: ContextValueSpec<C, V, S>) {
+    if (isConst(spec)) {
+      return {
+        key: spec.key,
+        provider: () => spec.value,
+      };
+    }
+    return spec;
+  }
+
+}
+
+function isConst<C extends ContextValues, V, S = V>(
+    spec: ContextValueSpec<any, any, any>): spec is ContextConstDef<C, V, S> {
+  return 'value' in spec;
 }

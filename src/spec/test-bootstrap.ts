@@ -28,8 +28,8 @@ export class TestBootstrap {
     await this.iframe.create();
 
     @WesFeature({
-      bootstraps: { key: BootstrapContext.windowKey, provider: () => this.window },
-      configure: ctx => this._context = ctx,
+      prebootstrap: { key: BootstrapContext.windowKey, provider: () => this.window },
+      bootstrap: ctx => this._context = ctx,
     })
     class TestFeature {}
 

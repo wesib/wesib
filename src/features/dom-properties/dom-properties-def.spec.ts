@@ -84,7 +84,7 @@ describe('features/dom-properties/dom-properties-def', () => {
 
         DomPropertiesDef.define(TestComponent);
 
-        expect(FeatureDef.of(TestComponent).requires).toContain(DomPropertiesSupport);
+        expect(FeatureDef.of(TestComponent).require).toContain(DomPropertiesSupport);
       });
     });
   });

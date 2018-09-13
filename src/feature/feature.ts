@@ -1,7 +1,6 @@
-import { Class, mergeFunctions, MetaAccessor } from '../common';
+import { Class, ContextValueSpec, mergeFunctions, MetaAccessor } from '../common';
 import { mergeLists } from '../util';
-import { BootstrapContext } from './bootstrap-context';
-import { BootstrapValueDef } from './bootstrap-values';
+import { BootstrapContext, PreBootstrapContext } from './bootstrap-context';
 
 /**
  * Feature definition.
@@ -9,28 +8,28 @@ import { BootstrapValueDef } from './bootstrap-values';
 export interface FeatureDef {
 
   /**
-   * Bootstrap context values enabled along with this feature.
-   */
-  bootstraps?: BootstrapValueDef<any, any> | BootstrapValueDef<any, any>[];
-
-  /**
    * Features this one requires.
    */
-  requires?: Class | Class[];
+  require?: Class | Class[];
 
   /**
    * Features this one provides.
    *
    * The feature always provides itself.
    */
-  provides?: Class | Class[];
+  provide?: Class | Class[];
 
   /**
-   * Configures this feature by calling the given configuration context methods.
+   * Bootstrap context values to declare prior to bootstrap.
+   */
+  prebootstrap?: ContextValueSpec<PreBootstrapContext, any, any> | ContextValueSpec<PreBootstrapContext, any, any>[];
+
+  /**
+   * Bootstraps this feature by calling the given configuration context methods.
    *
    * @param context Components bootstrap context.
    */
-  configure?: (this: Class, context: BootstrapContext) => void;
+  bootstrap?: (this: Class, context: BootstrapContext) => void;
 
 }
 
@@ -52,22 +51,22 @@ export namespace FeatureDef {
           (prev, def) => {
 
             const result: FeatureDef = {};
-            const bootstraps = mergeLists(prev.bootstraps, def.bootstraps);
-            const requires = mergeLists(prev.requires, def.requires);
-            const provides = mergeLists(prev.provides, def.provides);
-            const configure = mergeFunctions<[BootstrapContext], void, Class>(prev.configure, def.configure);
+            const bootstraps = mergeLists(prev.prebootstrap, def.prebootstrap);
+            const requires = mergeLists(prev.require, def.require);
+            const provides = mergeLists(prev.provide, def.provide);
+            const configure = mergeFunctions<[BootstrapContext], void, Class>(prev.bootstrap, def.bootstrap);
 
             if (bootstraps !== undefined) {
-              result.bootstraps = bootstraps;
+              result.prebootstrap = bootstraps;
             }
             if (requires !== undefined) {
-              result.requires = requires;
+              result.require = requires;
             }
             if (provides !== undefined) {
-              result.provides = provides;
+              result.provide = provides;
             }
             if (configure) {
-              result.configure = configure;
+              result.bootstrap = configure;
             }
 
             return result;
