@@ -22,15 +22,16 @@ export interface DefinitionContext<T extends object> extends ContextValues {
    * Custom element class constructor.
    *
    *  It is an error accessing this property before the element class is created, e.g. from inside of
-   *  `DefinitionListener`. In this case you may wish to add a `whenReady()` callback.
+   *  `DefinitionListener` or `ComponentDef.define()` function. In these cases you may wish to add a `whenReady()`
+   *  callback.
    */
   elementType: Class;
 
   /**
    * Registers component definition readiness callback.
    *
-   * The custom element class is not constructed yet when `DefinitionListener` is called. The registered callback will
-   * be notified when the custom element class is constructed.
+   * The custom element class is not constructed yet when `DefinitionListener` or `ComponentDef.define()` is called.
+   * The registered callback will be notified when the custom element class is constructed.
    *
    * If the custom element class is constructed already, the callback will be notified immediately.
    *

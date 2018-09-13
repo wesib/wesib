@@ -23,6 +23,8 @@ export interface ComponentDef<T extends object = object> {
   /**
    * Defines this component by calling the given component definition context methods.
    *
+   * This function is called before the custom element is defined.
+   *
    * @param context Component definition context.
    */
   define?: (this: Class<T>, context: DefinitionContext<T>) => void;
