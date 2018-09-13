@@ -42,7 +42,7 @@ describe('feature/feature-registry', () => {
       const configureSpy = jasmine.createSpy('configure');
 
       registry.add(FeatureDef.define(FeatureDef.define(Feature, { bootstrap: configureSpy })));
-      registry.configure(contextSpy);
+      registry.bootstrap(contextSpy);
 
       expect(configureSpy).toHaveBeenCalledWith(contextSpy);
     });
@@ -68,19 +68,19 @@ describe('feature/feature-registry', () => {
       expect(addSpy).toHaveBeenCalledWith(feature1, Feature);
       expect(addSpy).toHaveBeenCalledWith(feature2, Feature);
 
-      registry.configure(contextSpy);
+      registry.bootstrap(contextSpy);
     });
     it('prefers feature with dedicated provider', () => {
       registry.add(feature1);
       registry.add(feature1, feature2);
-      registry.configure(contextSpy);
+      registry.bootstrap(contextSpy);
 
       expect(configure1spy).not.toHaveBeenCalled();
     });
     it('prefers feature with dedicated provider when added in reverse order', () => {
       registry.add(feature1, feature2);
       registry.add(feature1);
-      registry.configure(contextSpy);
+      registry.bootstrap(contextSpy);
 
       expect(configure1spy).not.toHaveBeenCalled();
     });
@@ -91,12 +91,12 @@ describe('feature/feature-registry', () => {
       registry.add(Feature, feature1);
       registry.add(Feature, feature2);
 
-      expect(() => registry.configure(contextSpy)).toThrow(jasmine.stringMatching(/multiple providers/));
+      expect(() => registry.bootstrap(contextSpy)).toThrow(jasmine.stringMatching(/multiple providers/));
     });
     it('does not fail when feature provided by the same provider', () => {
       registry.add(feature1, feature2);
       registry.add(feature1, feature2);
-      registry.configure(contextSpy);
+      registry.bootstrap(contextSpy);
 
       expect(configure1spy).not.toHaveBeenCalled();
     });
@@ -107,7 +107,7 @@ describe('feature/feature-registry', () => {
       registry.add(feature1);
       registry.add(feature2, feature1);
       registry.add(Feature, feature2);
-      registry.configure(contextSpy);
+      registry.bootstrap(contextSpy);
 
       expect(configure1spy).toHaveBeenCalledWith(contextSpy);
       expect(configure2spy).not.toHaveBeenCalled();
@@ -120,7 +120,7 @@ describe('feature/feature-registry', () => {
       registry.add(feature2, feature1);
       registry.add(Feature, feature1);
       registry.add(Feature, feature2);
-      registry.configure(contextSpy);
+      registry.bootstrap(contextSpy);
 
       expect(configure1spy).toHaveBeenCalledWith(contextSpy);
       expect(configure2spy).not.toHaveBeenCalled();
@@ -129,7 +129,7 @@ describe('feature/feature-registry', () => {
       registry.add(feature1, feature2);
       registry.add(feature2, feature1);
 
-      expect(() => registry.configure(contextSpy)).toThrow(jasmine.stringMatching(/Circular dependency/));
+      expect(() => registry.bootstrap(contextSpy)).toThrow(jasmine.stringMatching(/Circular dependency/));
     });
     it('fails on deep circular dependency', () => {
 
@@ -139,7 +139,7 @@ describe('feature/feature-registry', () => {
       registry.add(feature1, feature2);
       registry.add(feature2, Feature);
 
-      expect(() => registry.configure(contextSpy)).toThrow(jasmine.stringMatching(/Circular dependency/));
+      expect(() => registry.bootstrap(contextSpy)).toThrow(jasmine.stringMatching(/Circular dependency/));
     });
     it('bootstraps value providers', () => {
 
@@ -150,7 +150,7 @@ describe('feature/feature-registry', () => {
       FeatureDef.define(Feature, { prebootstrap: { key, provider } });
 
       registry.add(Feature);
-      registry.configure(contextSpy);
+      registry.bootstrap(contextSpy);
 
       expect(valueRegistrySpy.provide).toHaveBeenCalledWith(key, provider);
     });

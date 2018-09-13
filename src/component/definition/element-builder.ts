@@ -46,6 +46,7 @@ export class ElementBuilder {
 
   buildElement<T extends object>(componentType: ComponentClass<T>): Class {
 
+    const def = ComponentDef.of(componentType);
     const builder = this;
     let values!: ContextValues;
     let typeValueRegistry!: ComponentValueRegistry;
@@ -78,9 +79,16 @@ export class ElementBuilder {
 
     const context = new ElementDefinitionContext();
 
+    if (def.define) {
+      def.define.call(componentType, context);
+    }
+
     this.definitions.notify(context as DefinitionContext<any>);
 
-    const elementType = this._elementType(context, this.componentValueRegistry.append(typeValueRegistry));
+    const elementType = this._elementType(
+        def,
+        context,
+        this.componentValueRegistry.append(typeValueRegistry));
 
     Object.defineProperty(context, 'elementType', {
       configurable: true,
@@ -104,12 +112,12 @@ export class ElementBuilder {
   }
 
   private _elementType<T extends object>(
+      def: ComponentDef<T>,
       definitionContext: DefinitionContext<T>,
       valueRegistry: ComponentValueRegistry) {
 
     const { componentType } = definitionContext;
     const builder = this;
-    const def = ComponentDef.of(componentType);
     const baseElementType = this._baseElementType(definitionContext, def);
 
     const connected = Symbol('connected');

@@ -1,7 +1,9 @@
-import { MetaAccessor, superClassOf } from '../common';
+import { Class, MetaAccessor, superClassOf } from '../common';
+import { mergeFunctions } from '../common/functions';
 import { FeatureDef } from '../feature';
 import { ComponentClass } from './component';
 import { ComponentDef, PartialComponentDef } from './component-def';
+import { DefinitionContext } from './definition';
 
 declare module './component-def' {
 
@@ -58,7 +60,19 @@ class ComponentMeta extends MetaAccessor<PartialComponentDef<any>> {
   }
 
   merge<T extends object>(...defs: PartialComponentDef<T>[]): PartialComponentDef<T> {
-    return Object.assign({}, ...defs);
+    return defs.reduce(
+        (prev, def) => {
+
+          const merged: PartialComponentDef<T> = { ...prev, ...def };
+          const define = mergeFunctions<[DefinitionContext<T>], void, Class<T>>(prev.define, def.define);
+
+          if (define) {
+            merged.define = define;
+          }
+
+          return merged;
+        },
+        {});
   }
 
 }
@@ -70,7 +84,7 @@ ComponentDef.of = function of<T extends object>(
     ComponentDef<T> {
 
   const def = meta.of(componentType) as ComponentDef<T>;
-  const superType = superClassOf(componentType, st => ComponentDef.symbol in st);
+  const superType = superClassOf(componentType, st => ComponentDef.symbol in st) as Class<T>;
   const superDef = superType && ComponentDef.of(superType);
 
   if (!def) {

@@ -1,7 +1,10 @@
-import { FeatureDef } from '../feature';
+import { noop } from '../common';
+import { BootstrapContext, FeatureDef } from '../feature';
 import { ComponentClass } from './component';
 import { ComponentDef, PartialComponentDef } from './component-def';
 import './component-def.ns';
+import { DefinitionContext } from './definition';
+import Spy = jasmine.Spy;
 
 describe('component/component-def', () => {
   describe('ComponentDef', () => {
@@ -60,12 +63,12 @@ describe('component/component-def', () => {
       });
     });
     describe('merge', () => {
-      it('merges name', () => {
+      it('merges `name`', () => {
         expect(ComponentDef.merge({ name: 'name1' }, { name: 'name2' })).toEqual({ name: 'name2' });
         expect(ComponentDef.merge({ name: 'name1' }, {})).toEqual({ name: 'name1' });
         expect(ComponentDef.merge({}, { name: 'name2' })).toEqual({ name: 'name2' });
       });
-      it('merges element extension', () => {
+      it('merges `extend`', () => {
         expect(ComponentDef.merge<HTMLElement>(
             { extend: { name: 'div', type: HTMLDivElement } },
             { extend: { name: 'input', type: HTMLInputElement } }))
@@ -78,6 +81,27 @@ describe('component/component-def', () => {
             { extend: { name: 'div', type: HTMLDivElement } },
             { extend: { name: 'input', type: HTMLInputElement } }))
             .toEqual({ extend: { name: 'input', type: HTMLInputElement } });
+      });
+      it('merges `define`', () => {
+
+        const define1spy: Spy = jasmine.createSpy('first');
+        const define2spy: Spy = jasmine.createSpy('second');
+        const merged = ComponentDef.merge(
+            { define: define1spy },
+            { define: define2spy }).define || noop;
+        const context: DefinitionContext<any> = { name: 'definition context' } as any;
+
+        class Component {}
+
+        merged.call(Component, context);
+
+        expect(define1spy).toHaveBeenCalledWith(context);
+        expect(define1spy.calls.first().object).toBe(Component);
+        expect(define2spy).toHaveBeenCalledWith(context);
+        expect(define2spy.calls.first().object).toBe(Component);
+      });
+      it('does not merge empty definitions', () => {
+        expect(ComponentDef.merge({}, {})).toEqual({});
       });
     });
     describe('define', () => {

@@ -110,9 +110,9 @@ export class FeatureRegistry {
     });
   }
 
-  configure(context: BootstrapContext) {
+  bootstrap(context: BootstrapContext) {
     this._provideValues();
-    this._configureFeatures(context);
+    this._bootstrapFeatures(context);
   }
 
   private _provideValues() {
@@ -128,7 +128,7 @@ export class FeatureRegistry {
     });
   }
 
-  private _configureFeatures(context: BootstrapContext) {
+  private _bootstrapFeatures(context: BootstrapContext) {
     this._providers.forEach((providers, feature) => {
       if (feature === providers.provider(this._providers)) {
 

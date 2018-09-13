@@ -30,7 +30,7 @@ export function bootstrapComponents(...features: Class[]): void {
 
   const { componentRegistry, bootstrapContext } = initBootstrap(valueRegistry);
 
-  featureRegistry.configure(bootstrapContext);
+  featureRegistry.bootstrap(bootstrapContext);
 
   componentRegistry.complete();
 }

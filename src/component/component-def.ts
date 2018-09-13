@@ -1,4 +1,5 @@
 import { Class } from '../common';
+import { DefinitionContext } from './definition';
 
 /**
  * Component definition.
@@ -18,6 +19,13 @@ export interface ComponentDef<T extends object = object> {
    * Existing element to extend by custom one.
    */
   extend?: ExtendedElementDef;
+
+  /**
+   * Defines this component by calling the given component definition context methods.
+   *
+   * @param context Component definition context.
+   */
+  define?: (this: Class<T>, context: DefinitionContext<T>) => void;
 
 }
 

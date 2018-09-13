@@ -25,7 +25,7 @@ export interface FeatureDef {
   prebootstrap?: ContextValueSpec<PreBootstrapContext, any, any> | ContextValueSpec<PreBootstrapContext, any, any>[];
 
   /**
-   * Bootstraps this feature by calling the given configuration context methods.
+   * Bootstraps this feature by calling the given bootstrap context methods.
    *
    * @param context Components bootstrap context.
    */

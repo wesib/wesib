@@ -246,7 +246,7 @@ export namespace ContextValueDef {
    *
    * @returns Context value definition of the specified value.
    */
-  export function of<C extends ContextValues, V, S = V>(spec: ContextValueSpec<C, V, S>) {
+  export function of<C extends ContextValues, V, S = V>(spec: ContextValueSpec<C, V, S>): ContextValueDef<C, V, S> {
     if (isConst(spec)) {
       return {
         key: spec.key,

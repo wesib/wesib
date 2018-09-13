@@ -118,7 +118,7 @@ describe('bootstrap', () => {
       let createFeatureRegistrySpy: Spy;
 
       beforeEach(() => {
-        featureRegistrySpy = jasmine.createSpyObj<FeatureRegistry>('featureRegistry', ['add', 'configure']);
+        featureRegistrySpy = jasmine.createSpyObj<FeatureRegistry>('featureRegistry', ['add', 'bootstrap']);
         createFeatureRegistrySpy = spyOn(FeatureRegistry, 'create').and.returnValue(featureRegistrySpy);
       });
 

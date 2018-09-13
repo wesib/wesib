@@ -103,6 +103,8 @@ describe('component/definition/element-builder', () => {
 
       const key = new SingleValueKey<string>('test-key');
       let value: string;
+      const key2 = new SingleValueKey<string>('another-key');
+      let value2: string;
       let element: any;
       let componentContext: ComponentContext;
 
@@ -111,6 +113,14 @@ describe('component/definition/element-builder', () => {
         builder.definitions.on((ctx: DefinitionContext<any>) => {
           if (ctx.componentType === TestComponent) {
             ctx.forComponents(key, () => value);
+          }
+        });
+      });
+      beforeEach(() => {
+        value2 = 'other value';
+        ComponentDef.define(TestComponent, {
+          define(context: DefinitionContext<any>) {
+            context.forComponents(key2, () => value2);
           }
         });
       });
@@ -124,6 +134,7 @@ describe('component/definition/element-builder', () => {
 
       it('is available to component', () => {
         expect(componentContext.get(key)).toBe(value);
+        expect(componentContext.get(key2)).toBe(value2);
       });
       it('is not available to another component', () => {
 
@@ -137,6 +148,7 @@ describe('component/definition/element-builder', () => {
         const otherContext = ComponentContext.of(otherElement);
 
         expect(otherContext.get(key, null)).toBeNull();
+        expect(otherContext.get(key2, null)).toBeNull();
       });
     });
   });
