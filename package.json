@@ -4,7 +4,8 @@
   "description": "Web components building blocks",
   "keywords": [
     "web-components",
-    "library"
+    "library",
+    "typescript"
   ],
   "homepage": "https://github.com/wesib/wesib",
   "repository": {
