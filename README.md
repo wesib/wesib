@@ -12,7 +12,7 @@ export class GreetTextComponent {
   }
 
   @AttributeChanged()
-  name(oldValue: string | null, newValue: string) {
+  name(newValue: string) {
     this._context.element.innerText = `Hello, ${newValue}!`;
   }
 
