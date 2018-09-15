@@ -7,16 +7,27 @@ import { ComponentValueProvider } from '../component-context';
  * Component definition context.
  *
  * Extends `ContextValues` interface. The values are provided by corresponding providers registered with
- * `BootstrapContext.forDefinitions()` method.
+ * `BootstrapContext.forDefinitions()` method. All `BootstrapContext` values are available too.
  *
  * @param <T> A type of component.
  */
-export interface DefinitionContext<T extends object> extends ContextValues {
+export abstract class DefinitionContext<T extends object> implements ContextValues {
+
+  /**
+   * A key of definition context value containing a base element class constructor.
+   *
+   * This value is the class the custom elements are inherited from unless `ComponentDef.extends.type` is specified.
+   *
+   * Target value defaults to `HTMLElement` from the window provided under `windowKey`.
+   */
+  static readonly baseElementKey = new SingleValueKey<Class>(
+      'base-element',
+      values => (values.get(BootstrapContext.windowKey) as any).HTMLElement);
 
   /**
    * Component class constructor.
    */
-  componentType: ComponentClass<T>;
+  abstract readonly componentType: ComponentClass<T>;
 
   /**
    * Custom element class constructor.
@@ -25,7 +36,7 @@ export interface DefinitionContext<T extends object> extends ContextValues {
    *  `DefinitionListener` or `ComponentDef.define()` function. In these cases you may wish to add a `whenReady()`
    *  callback.
    */
-  elementType: Class;
+  abstract readonly elementType: Class;
 
   /**
    * Registers component definition readiness callback.
@@ -37,7 +48,7 @@ export interface DefinitionContext<T extends object> extends ContextValues {
    *
    * @param callback A callback to notify on custom element class construction.
    */
-  whenReady(callback: (this: this, elementType: Class) => void): void;
+  abstract whenReady(callback: (this: this, elementType: Class) => void): void;
 
   /**
    * Registers provider that associates a value with the given key with components of the defined component type.
@@ -48,7 +59,29 @@ export interface DefinitionContext<T extends object> extends ContextValues {
    * @param key Component context value key the provider should associate the value with.
    * @param provider Component context value provider to register.
    */
-  forComponents<S>(key: ContextValueKey<any, S>, provider: ComponentValueProvider<S>): void;
+  abstract forComponents<S>(key: ContextValueKey<any, S>, provider: ComponentValueProvider<S>): void;
+
+  abstract get<V, S>(key: ContextValueKey<V, S>, defaultValue?: V): V;
+
+  abstract get<V, S>(key: ContextValueKey<V, S>, defaultValue: V | null): V | null;
+
+  abstract get<V, S>(key: ContextValueKey<V, S>, defaultValue: V | undefined): V | undefined;
+
+  /**
+   * Returns a value associated with the given key.
+   *
+   * @param <V> A type of associated value.
+   * @param <S> A type of source values.
+   * @param key Target key.
+   * @param defaultValue Default value to return if there is no value associated with the given key. Can be `null`
+   * or `undefined` too.
+   *
+   * @returns Associated value.
+   *
+   * @throws Error If there is no value associated with the given key and the default key is not provided neither
+   * as function argument, nor as `ContextValueKey.defaultValue` property.
+   */
+  abstract get<V, S>(key: ContextValueKey<V, S>, defaultValue: V | null | undefined): V | null | undefined;
 
 }
 
@@ -77,18 +110,3 @@ export type DefinitionValueProvider<S> =
  * @param context Component definition context.
  */
 export type DefinitionListener = <T extends object>(this: void, context: DefinitionContext<T>) => void;
-
-export namespace DefinitionContext {
-
-  /**
-   * A key of context value containing a base element class constructor.
-   *
-   * This value is the class the custom elements are inherited from unless `ComponentDef.extends.type` is specified.
-   *
-   * Target value defaults to `HTMLElement` from the window provided under `windowKey`.
-   */
-  export const baseElementKey = new SingleValueKey<Class>(
-      'base-element',
-      values => (values.get(BootstrapContext.windowKey) as any).HTMLElement);
-
-}

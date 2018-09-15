@@ -1,6 +1,6 @@
 import { Class, ContextValueSpec, mergeFunctions, MetaAccessor } from '../common';
 import { mergeLists } from '../util';
-import { BootstrapContext, PreBootstrapContext } from './bootstrap-context';
+import { BootstrapContext } from './bootstrap-context';
 
 /**
  * Feature definition.
@@ -22,7 +22,7 @@ export interface FeatureDef {
   /**
    * Bootstrap context values to declare prior to bootstrap.
    */
-  prebootstrap?: ContextValueSpec<PreBootstrapContext, any, any> | ContextValueSpec<PreBootstrapContext, any, any>[];
+  prebootstrap?: ContextValueSpec<BootstrapContext, any, any> | ContextValueSpec<BootstrapContext, any, any>[];
 
   /**
    * Bootstraps this feature by calling the given bootstrap context methods.

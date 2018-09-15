@@ -1,4 +1,12 @@
-import { ContextValueKey, ContextValues, EventProducer, noop, SingleValueKey, StateUpdateConsumer } from '../common';
+import {
+  ContextValueKey,
+  ContextValues,
+  EventProducer,
+  noop,
+  SingleValueKey,
+  StateUpdateConsumer,
+  StateValueKey,
+} from '../common';
 
 /**
  * Component context.
@@ -10,14 +18,30 @@ import { ContextValueKey, ContextValues, EventProducer, noop, SingleValueKey, St
  *
  * @param <T> A type of component.
  */
-export interface ComponentContext<T extends object = object> extends ContextValues {
+export abstract class ComponentContext<T extends object = object> implements ContextValues {
+
+  /**
+   * A key of a custom element and component properties containing a reference to component context.
+   */
+  static readonly symbol = Symbol('component-context');
+
+  /**
+   * A key of component context value containing a component state update function.
+   *
+   * Features are calling this function by default when component state changes, e.g. attribute value or DOM property
+   * modified.
+   *
+   * Note that this value is not provided, unless the `StateSupport` feature is enabled.
+   */
+  static readonly stateUpdateKey: ContextValueKey<StateUpdateConsumer> =
+      new SingleValueKey<StateUpdateConsumer>('state-update', () => noop);
 
   /**
    * Custom element constructed for the component according to its type.
    *
    * E.g. `HTMLElement` instance.
    */
-  readonly element: any;
+  abstract readonly element: any;
 
   /**
    * A component instance.
@@ -25,14 +49,14 @@ export interface ComponentContext<T extends object = object> extends ContextValu
    * It is an error accessing this property before the component is created, e.g. from inside of `ComponentListener`
    * or component constructor. In these cases you may wish to add a `whenReady()` callback.
    */
-  readonly component: T;
+  abstract readonly component: T;
 
   /**
    * Whether the custom element is connected.
    *
    * This becomes `true` right before `onConnect` is called, and becomes false right before `onDisconnect` is called.
    */
-  readonly connected: boolean;
+  abstract readonly connected: boolean;
 
   /**
    * Registers custom element connection listener.
@@ -43,7 +67,7 @@ export interface ComponentContext<T extends object = object> extends ContextValu
    *
    * @return An event interest instance.
    */
-  readonly onConnect: EventProducer<(this: this) => void>;
+  abstract readonly onConnect: EventProducer<(this: this) => void>;
 
   /**
    * Registers custom element disconnection listener.
@@ -55,7 +79,7 @@ export interface ComponentContext<T extends object = object> extends ContextValu
    *
    * @return An event interest instance.
    */
-  readonly onDisconnect: EventProducer<(this: this) => void>;
+  abstract readonly onDisconnect: EventProducer<(this: this) => void>;
 
   /**
    * Updates component's state.
@@ -71,7 +95,29 @@ export interface ComponentContext<T extends object = object> extends ContextValu
    * @param newValue New value.
    * @param oldValue Previous value.
    */
-  readonly updateState: StateUpdateConsumer;
+  readonly updateState: StateUpdateConsumer = (<V>(key: StateValueKey, newValue: V, oldValue: V) => {
+    this.get(ComponentContext.stateUpdateKey)(key, newValue, oldValue);
+  });
+
+  /**
+   * Extracts component context from its custom element or from component itself.
+   *
+   * @param element Custom element instance created for the component or the component itself.
+   *
+   * @return Component context reference stored under `[ComponentContext.symbol]` key.
+   *
+   * @throws TypeError When the given `element` does not contain component context reference.
+   */
+  static of<T extends object>(element: any): ComponentContext<T> {
+
+    const context = element[ComponentContext.symbol];
+
+    if (!context) {
+      throw TypeError(`No component context found in ${element}`);
+    }
+
+    return context;
+  }
 
   /**
    * Registers component readiness callback.
@@ -84,14 +130,36 @@ export interface ComponentContext<T extends object = object> extends ContextValu
    *
    * @param callback A callback to notify on component construction.
    */
-  whenReady(callback: (this: this, component: T) => void): void;
+  abstract whenReady(callback: (this: this, component: T) => void): void;
 
   /**
    * Returns a `super` property value inherited from custom element parent.
    *
    * @param name Target property name.
    */
-  elementSuper(name: string): any;
+  abstract elementSuper(name: string): any;
+
+  abstract get<V, S>(key: ContextValueKey<V, S>, defaultValue?: V): V;
+
+  abstract get<V, S>(key: ContextValueKey<V, S>, defaultValue: V | null): V | null;
+
+  abstract get<V, S>(key: ContextValueKey<V, S>, defaultValue: V | undefined): V | undefined;
+
+  /**
+   * Returns a value associated with the given key.
+   *
+   * @param <V> A type of associated value.
+   * @param <S> A type of source values.
+   * @param key Target key.
+   * @param defaultValue Default value to return if there is no value associated with the given key. Can be `null`
+   * or `undefined` too.
+   *
+   * @returns Associated value.
+   *
+   * @throws Error If there is no value associated with the given key and the default key is not provided neither
+   * as function argument, nor as `ContextValueKey.defaultValue` property.
+   */
+  abstract get<V, S>(key: ContextValueKey<V, S>, defaultValue: V | null | undefined): V | null | undefined;
 
 }
 
@@ -119,43 +187,3 @@ export type ComponentValueProvider<S> =
  * @param context Component context.
  */
 export type ComponentListener = <T extends object>(this: void, context: ComponentContext<T>) => void;
-
-export namespace ComponentContext {
-
-  /**
-   * Context value key containing a component state update function.
-   *
-   * Features are calling this function by default when component state changes, e.g. attribute value or DOM property
-   * modified.
-   *
-   * Note that this value is not provided, unless the `StateSupport` feature is enabled.
-   */
-  export const stateUpdateKey: ContextValueKey<StateUpdateConsumer> =
-      new SingleValueKey<StateUpdateConsumer>('state-update', () => noop);
-
-  /**
-   * A key of a custom element and component properties containing a reference to component context.
-   */
-  export const symbol = Symbol('component-context');
-
-  /**
-   * Extracts component context from its custom element or from component itself.
-   *
-   * @param element Custom element instance created for the component or the component itself.
-   *
-   * @return Component context reference stored under `[ComponentContext.symbol]` key.
-   *
-   * @throws TypeError When the given `element` does not contain component context reference.
-   */
-  export function of<T extends object>(element: any): ComponentContext<T> {
-
-    const context = element[symbol];
-
-    if (!context) {
-      throw TypeError(`No component context found in ${element}`);
-    }
-
-    return context;
-  }
-
-}

@@ -42,13 +42,14 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
   let elementBuilder: ElementBuilder;
   let componentRegistry: ComponentRegistry;
 
-  class Context implements BootstrapContext {
+  class Context extends BootstrapContext {
 
     readonly onDefinition: EventProducer<DefinitionListener>;
     readonly onComponent: EventProducer<ComponentListener>;
     readonly get = valueRegistry.values.get;
 
     constructor() {
+      super();
       definitionValueRegistry = DefinitionValueRegistry.create(valueRegistry.bindSources(this));
       componentValueRegistry = ComponentValueRegistry.create();
       elementBuilder = ElementBuilder.create({ definitionValueRegistry, componentValueRegistry });

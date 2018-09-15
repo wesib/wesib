@@ -52,12 +52,13 @@ export class ElementBuilder {
     let typeValueRegistry!: ComponentValueRegistry;
     let whenReady: (this: ElementDefinitionContext, elementType: Class) => void = noop;
 
-    class ElementDefinitionContext implements DefinitionContext<T> {
+    class ElementDefinitionContext extends DefinitionContext<T> {
 
       readonly componentType: ComponentClass<T> = componentType;
       readonly get: <V, S>(key: ContextValueKey<V, S>, defaultValue: V | null | undefined) => V | null | undefined;
 
       constructor() {
+        super();
         typeValueRegistry = ComponentValueRegistry.create(builder.definitionValueRegistry.bindSources(this));
         values = typeValueRegistry.newValues();
         this.get = values.get;
@@ -146,16 +147,13 @@ export class ElementBuilder {
         const connectEvents = new EventEmitter<(this: ElementContext) => void>();
         const disconnectEvents = new EventEmitter<(this: ElementContext) => void>();
 
-        class ElementContext implements ComponentContext<T> {
+        class ElementContext extends ComponentContext<T> {
 
           readonly element = element;
           readonly elementSuper = elementSuper;
           readonly get = values.get;
           readonly onConnect = connectEvents.on;
           readonly onDisconnect = disconnectEvents.on;
-          readonly updateState: StateUpdateConsumer = (<V>(key: StateValueKey, newValue: V, oldValue: V) => {
-            this.get(ComponentContext.stateUpdateKey)(key, newValue, oldValue);
-          });
 
           get component(): T {
             throw new Error('The component is not constructed yet. Consider to use a `whenReady()` callback');

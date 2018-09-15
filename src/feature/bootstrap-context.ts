@@ -8,13 +8,6 @@ import {
 } from '../component';
 
 /**
- * Pre-bootstrap context used to declare values available in bootstrap context.
- *
- * These values are can be declared by feature definitions using `FeatureDef.prebootstrap` property.
- */
-export type PreBootstrapContext = ContextValues;
-
-/**
  * Components bootstrap context.
  *
  * An instance of this class is passed to `FeatureDef.bootstrap()` method so that the feature can configure itself.
@@ -22,7 +15,23 @@ export type PreBootstrapContext = ContextValues;
  * Extends `BootstrapValues` interface. The values are pre-bootstrapped by features. I.e. configured in their
  * definitions as `FeatureDef.prebootstrap`.
  */
-export interface BootstrapContext extends ContextValues {
+export abstract class BootstrapContext implements ContextValues {
+
+  /**
+   * A key of bootstrap context value containing a window instance the bootstrap is performed against.
+   *
+   * Target value defaults to current window.
+   */
+  static readonly windowKey = new SingleValueKey<Window>('window', () => window);
+
+  /**
+   * A key of bootstrap context value containing a `CustomElementRegistry` instance used to register custom elements.
+   *
+   * Target value defaults to `window.customElements` from the window provided under `windowKey`.
+   */
+  static readonly customElementsKey = new SingleValueKey<CustomElementRegistry>(
+      'custom-elements',
+      values => values.get(BootstrapContext.windowKey).customElements);
 
   /**
    * Registers component definition listener.
@@ -33,7 +42,7 @@ export interface BootstrapContext extends ContextValues {
    *
    * @return An event interest instance.
    */
-  readonly onDefinition: EventProducer<DefinitionListener>;
+  abstract readonly onDefinition: EventProducer<DefinitionListener>;
 
   /**
    * Registers component construction listener.
@@ -44,7 +53,7 @@ export interface BootstrapContext extends ContextValues {
    *
    * @return An event interest instance.
    */
-  readonly onComponent: EventProducer<ComponentListener>;
+  abstract readonly onComponent: EventProducer<ComponentListener>;
 
   /**
    * Defines a component.
@@ -60,7 +69,7 @@ export interface BootstrapContext extends ContextValues {
    *
    * @throws TypeError If `componentType` does not contain a component definition.
    */
-  define<T extends object>(componentType: ComponentClass<T>): void;
+  abstract define<T extends object>(componentType: ComponentClass<T>): void;
 
   /**
    * Allows to wait for component definition.
@@ -73,7 +82,7 @@ export interface BootstrapContext extends ContextValues {
    *
    * @throws TypeError If `componentType` does not contain a component definition.
    */
-  whenDefined(componentType: ComponentClass<any>): PromiseLike<void>;
+  abstract whenDefined(componentType: ComponentClass<any>): PromiseLike<void>;
 
   /**
    * Registers provider that associates a value with the given key with component types.
@@ -84,7 +93,7 @@ export interface BootstrapContext extends ContextValues {
    * @param key Component definition context value key the provider should associate the value with.
    * @param provider Component definition context value provider to register.
    */
-  forDefinitions<S>(key: ContextValueKey<any, S>, provider: DefinitionValueProvider<S>): void;
+  abstract forDefinitions<S>(key: ContextValueKey<any, S>, provider: DefinitionValueProvider<S>): void;
 
   /**
    * Registers provider that associates a value with the given key with components.
@@ -95,26 +104,28 @@ export interface BootstrapContext extends ContextValues {
    * @param key Component context value key the provider should associate the value with.
    * @param provider Component context value provider to register.
    */
-  forComponents<S>(key: ContextValueKey<any, S>, provider: ComponentValueProvider<S>): void;
+  abstract forComponents<S>(key: ContextValueKey<any, S>, provider: ComponentValueProvider<S>): void;
 
-}
+  abstract get<V, S>(key: ContextValueKey<V, S>, defaultValue?: V): V;
 
-export namespace BootstrapContext {
+  abstract get<V, S>(key: ContextValueKey<V, S>, defaultValue: V | null): V | null;
 
-  /**
-   * A key of context value containing a window instance the bootstrap is performed against.
-   *
-   * Target value defaults to current window.
-   */
-  export const windowKey = new SingleValueKey<Window>('window', () => window);
+  abstract get<V, S>(key: ContextValueKey<V, S>, defaultValue: V | undefined): V | undefined;
 
   /**
-   * A key of context value containing a `CustomElementRegistry` instance used to register custom elements.
+   * Returns a value associated with the given key.
    *
-   * Target value defaults to `window.customElements` from the window provided under `windowKey`.
+   * @param <V> A type of associated value.
+   * @param <S> A type of source values.
+   * @param key Target key.
+   * @param defaultValue Default value to return if there is no value associated with the given key. Can be `null`
+   * or `undefined` too.
+   *
+   * @returns Associated value.
+   *
+   * @throws Error If there is no value associated with the given key and the default key is not provided neither
+   * as function argument, nor as `ContextValueKey.defaultValue` property.
    */
-  export const customElementsKey = new SingleValueKey<CustomElementRegistry>(
-      'custom-elements',
-      values => values.get(windowKey).customElements);
+  abstract get<V, S>(key: ContextValueKey<V, S>, defaultValue: V | null | undefined): V | null | undefined;
 
 }

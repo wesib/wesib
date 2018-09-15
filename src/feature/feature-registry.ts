@@ -132,10 +132,10 @@ export class FeatureRegistry {
     this._providers.forEach((providers, feature) => {
       if (feature === providers.provider(this._providers)) {
 
-        const configure = FeatureDef.of(feature).bootstrap;
+        const bootstrap = FeatureDef.of(feature).bootstrap;
 
-        if (configure) {
-          configure.call(feature, context);
+        if (bootstrap) {
+          bootstrap.call(feature, context);
         }
       }
     });
