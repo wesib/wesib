@@ -1,6 +1,25 @@
-import { DefinitionContext } from '../../component';
+import { Class } from '../../common';
+import { SingleValueKey } from '../../common/context';
 import { WesFeature } from '../../feature';
 import { DomPropertyRegistry as DomPropertyRegistry_ } from './dom-property-registry';
+
+class DomPropertyRegistry implements DomPropertyRegistry_ {
+
+  private readonly _props = new Map<PropertyKey, PropertyDescriptor>();
+
+  domProperty(propertyKey: PropertyKey, descriptor: PropertyDescriptor): void {
+    this._props.set(propertyKey, descriptor);
+  }
+
+  apply(elementType: Class) {
+    this._props.forEach((desc, key) => {
+      Object.defineProperty(elementType.prototype, key, desc);
+    });
+  }
+
+}
+
+const implKey = new SingleValueKey<DomPropertyRegistry>('dom-property-registry:impl');
 
 /**
  * A feature adding properties to custom elements.
@@ -9,34 +28,10 @@ import { DomPropertyRegistry as DomPropertyRegistry_ } from './dom-property-regi
  */
 @WesFeature({
   bootstrap(context) {
-    context.onDefinition(defineDomProperties);
+    context.forDefinitions(implKey, () => new DomPropertyRegistry());
+    context.forDefinitions(DomPropertyRegistry_.key, ctx => ctx.get(implKey));
+    context.onDefinition(defContext =>
+        defContext.whenReady(elementType => defContext.get(implKey).apply(elementType)));
   }
 })
 export class DomPropertiesSupport {}
-
-function defineDomProperties<T extends object>(context: DefinitionContext<T>) {
-
-  const props = new Map<PropertyKey, PropertyDescriptor>();
-
-  context.forComponents(DomPropertyRegistry_.key, () => {
-
-    class DomPropertyRegistry implements DomPropertyRegistry_ {
-
-      domProperty(propertyKey: PropertyKey, descriptor: PropertyDescriptor): void {
-        props.set(propertyKey, descriptor);
-      }
-
-    }
-
-    return new DomPropertyRegistry();
-  });
-
-  context.whenReady(elementType => {
-
-    const prototype = elementType.prototype;
-
-    props.forEach((desc, key) => {
-      Object.defineProperty(prototype, key, desc);
-    });
-  });
-}

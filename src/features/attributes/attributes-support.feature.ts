@@ -1,52 +1,25 @@
-import { mergeFunctions } from '../../common';
-import { Component, DefinitionContext } from '../../component';
+import { Class, mergeFunctions, SingleValueKey } from '../../common';
+import { Component } from '../../component';
 import { WesFeature } from '../../feature';
 import { AttributeChangedCallback, AttributeRegistry as AttributeRegistry_ } from './attribute-registry';
 
-/**
- * A feature adding attributes to custom elements.
- *
- * This feature is enabled automatically whenever an `@Attribute`, `@Attributes`, or `@AttributeChanged` decorator
- * applied to component.
- */
-@WesFeature({
-  bootstrap(context) {
-    context.onDefinition(defineAttributes);
-  },
-})
-export class AttributesSupport {}
+class AttributeRegistry<T extends object> implements AttributeRegistry_<T> {
 
-function defineAttributes<T extends object>(context: DefinitionContext<T>) {
+  private readonly _attrs: { [name: string]: AttributeChangedCallback<T> } = {};
 
-  const attrs: { [name: string]: AttributeChangedCallback<any> } = {};
-
-  context.forComponents(AttributeRegistry_.key, () => {
-
-    class AttributeRegistry implements AttributeRegistry_<T> {
-
-      onAttributeChange(name: string, callback: AttributeChangedCallback<T>): void {
-        attrs[name] = mergeFunctions<[string, string | null], void, T>(attrs[name], callback);
-      }
-
-    }
-
-    return new AttributeRegistry();
-  });
-
-  context.whenReady(() => declareAttributes(context, attrs));
-}
-
-function declareAttributes<T extends object>(
-    context: DefinitionContext<T>,
-    attrs: { [name: string]: AttributeChangedCallback<any> }) {
-
-  const observedAttributes = Object.keys(attrs);
-
-  if (!observedAttributes.length) {
-    return; // No attributes defined
+  onAttributeChange(name: string, callback: AttributeChangedCallback<T>): void {
+    this._attrs[name] = mergeFunctions<[string, string | null], void, T>(this._attrs[name], callback);
   }
 
-  context.whenReady(elementType => {
+  apply(elementType: Class) {
+
+    const attrs = this._attrs;
+    const observedAttributes = Object.keys(attrs);
+
+    if (!observedAttributes.length) {
+      return; // No attributes defined
+    }
+
     Object.defineProperty(elementType, 'observedAttributes', {
       configurable: true,
       enumerable: true,
@@ -59,5 +32,23 @@ function declareAttributes<T extends object>(
         attrs[name].call(Component.of(this), newValue, oldValue);
       },
     });
-  });
+  }
+
 }
+
+const implKey = new SingleValueKey<AttributeRegistry<any>>('attribute-registry:impl');
+
+/**
+ * A feature adding attributes to custom elements.
+ *
+ * This feature is enabled automatically whenever an `@Attribute`, `@Attributes`, or `@AttributeChanged` decorator
+ * applied to component.
+ */
+@WesFeature({
+  bootstrap(context) {
+    context.forDefinitions(implKey, () => new AttributeRegistry());
+    context.forDefinitions(AttributeRegistry_.key, ctx => ctx.get(implKey));
+    context.onDefinition(ctx => ctx.whenReady(elementType => ctx.get(implKey).apply(elementType)));
+  },
+})
+export class AttributesSupport {}
