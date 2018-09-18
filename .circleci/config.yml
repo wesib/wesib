@@ -35,7 +35,7 @@ jobs:
     - run: yarn test-once
 
     # Upload code coverage report
-    - run: yarn codecov
+    - run: yarn codecov --disable=gcov
 
     # Lint
     - run: yarn lint
