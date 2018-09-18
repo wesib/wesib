@@ -61,7 +61,7 @@ module.exports = (config) => {
       coverageOptions: {
         // Exclude tests, test utilities, and index files.
         exclude: /((\.spec|[\\/]index)\.ts$|[\\/]spec[\\/].*)/,
-        /*threshold: {
+        threshold: {
           global: {
             statements: 90,
             branches: 90,
@@ -74,10 +74,19 @@ module.exports = (config) => {
             functions: 90,
             lines: 90,
           }
-        },*/
+        },
       },
       reports: {
-        'html': 'target/coverage',
+        'html': {
+          'directory': 'target/coverage',
+          'filename': 'coverage.lcov',
+          'subdirectory': 'html',
+        },
+        'lcovonly': {
+          'directory': 'target/coverage',
+          'filename': 'coverage.lcov',
+          'subdirectory': 'lcov',
+        },
         'text-summary': null,
       }
     },

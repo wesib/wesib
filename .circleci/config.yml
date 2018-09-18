@@ -28,11 +28,14 @@ jobs:
         - node_modules
         key: v1-dependencies-{{ checksum "yarn.lock" }}
 
-    # run tests!
-    - run: yarn test-once
-
     # Build the project
     - run: yarn build
 
-    # Linting
+    # Run tests
+    - run: yarn test-once
+
+    # Upload code coverage report
+    - run: yarn codecov
+
+    # Lint
     - run: yarn lint

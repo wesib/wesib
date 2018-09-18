@@ -2,6 +2,8 @@ Web components building blocks
 ==============================
 
 [![CircleCI](https://circleci.com/gh/wesib/wesib.svg?style=shield)](https://circleci.com/gh/wesib/wesib)
+[![codecov](https://codecov.io/gh/wesib/wesib/branch/master/graph/badge.svg)](https://codecov.io/gh/wesib/wesib)
+
 
 Example:
 ```TypeScript
