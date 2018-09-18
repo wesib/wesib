@@ -1,6 +1,8 @@
 Web components building blocks
 ==============================
 
+[![CircleCI](https://circleci.com/gh/wesib/wesib.svg?style=shield)](https://circleci.com/gh/wesib/wesib)
+
 Example:
 ```TypeScript
 import { AttributeChanged, bootstrapComponents, ComponentContext, WesComponent } from '@wesib/wesib';
