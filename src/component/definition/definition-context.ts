@@ -1,7 +1,7 @@
-import { Class, ContextValueKey, ContextValues, SingleValueKey } from '../../common';
+import { Class, ContextValueKey, ContextValues, EventProducer, SingleValueKey } from '../../common';
 import { BootstrapContext } from '../../feature';
 import { ComponentClass } from '../component';
-import { ComponentValueProvider } from '../component-context';
+import { ComponentListener, ComponentValueProvider } from '../component-context';
 
 /**
  * Component definition context.
@@ -37,6 +37,17 @@ export abstract class DefinitionContext<T extends object> implements ContextValu
    *  callback.
    */
   abstract readonly elementType: Class;
+
+  /**
+   * Registers component construction listener.
+   *
+   * This listener will be called right before the defined component is constructed.
+   *
+   * @param listener A listener to notify on each defined component construction.
+   *
+   * @return An event interest instance.
+   */
+  abstract readonly onComponent: EventProducer<ComponentListener>;
 
   /**
    * Registers component definition readiness callback.

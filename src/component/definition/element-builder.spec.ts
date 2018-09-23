@@ -2,6 +2,7 @@ import { Class, EventInterest, SingleValueKey } from '../../common';
 import { ComponentClass } from '../component';
 import { ComponentContext } from '../component-context';
 import { ComponentDef } from '../component-def';
+import { WesComponent } from '../wes-component.decorator';
 import { ComponentValueRegistry } from './component-value-registry';
 import { DefinitionContext } from './definition-context';
 import { DefinitionValueRegistry } from './definition-value-registry';
@@ -105,7 +106,6 @@ describe('component/definition/element-builder', () => {
       let value: string;
       const key2 = new SingleValueKey<string>('another-key');
       let value2: string;
-      let element: any;
       let componentContext: ComponentContext;
 
       beforeEach(() => {
@@ -128,7 +128,9 @@ describe('component/definition/element-builder', () => {
         definitionValueRegistry.provide(DefinitionContext.baseElementKey, () => Object);
       });
       beforeEach(() => {
-        element = new (builder.buildElement(TestComponent));
+
+        const element = new (builder.buildElement(TestComponent));
+
         componentContext = ComponentContext.of(element);
       });
 
@@ -149,6 +151,33 @@ describe('component/definition/element-builder', () => {
 
         expect(otherContext.get(key, null)).toBeNull();
         expect(otherContext.get(key2, null)).toBeNull();
+      });
+    });
+    describe('component listener', () => {
+
+      let componentContext: ComponentContext;
+      let onComponentSpy: Spy;
+
+      beforeEach(() => {
+        onComponentSpy = jasmine.createSpy('onComponent');
+        ComponentDef.define(TestComponent, {
+          define(context) {
+            context.onComponent(onComponentSpy);
+          }
+        });
+      });
+      beforeEach(() => {
+        definitionValueRegistry.provide(DefinitionContext.baseElementKey, () => Object);
+      });
+      beforeEach(() => {
+
+        const element = new (builder.buildElement(TestComponent));
+
+        componentContext = ComponentContext.of(element);
+      });
+
+      it('is notified to component instantiation', () => {
+        expect(onComponentSpy).toHaveBeenCalledWith(componentContext);
       });
     });
   });

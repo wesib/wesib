@@ -48,6 +48,7 @@ export class ElementBuilder {
 
     const def = ComponentDef.of(componentType);
     const builder = this;
+    const onComponent = new EventEmitter<ComponentListener>();
     let values!: ContextValues;
     let typeValueRegistry!: ComponentValueRegistry;
     let whenReady: (this: ElementDefinitionContext, elementType: Class) => void = noop;
@@ -55,6 +56,7 @@ export class ElementBuilder {
     class ElementDefinitionContext extends DefinitionContext<T> {
 
       readonly componentType: ComponentClass<T> = componentType;
+      readonly onComponent = onComponent.on;
       readonly get: <V, S>(key: ContextValueKey<V, S>, defaultValue: V | null | undefined) => V | null | undefined;
 
       constructor() {
@@ -88,6 +90,7 @@ export class ElementBuilder {
     const elementType = this._elementType(
         def,
         context,
+        onComponent,
         this.componentValueRegistry.append(typeValueRegistry));
 
     Object.defineProperty(context, 'elementType', {
@@ -114,6 +117,7 @@ export class ElementBuilder {
   private _elementType<T extends object>(
       def: ComponentDef<T>,
       definitionContext: DefinitionContext<T>,
+      onComponent: EventEmitter<ComponentListener>,
       valueRegistry: ComponentValueRegistry) {
 
     const { componentType } = definitionContext;
@@ -180,6 +184,7 @@ export class ElementBuilder {
         });
 
         builder.components.notify(context);
+        onComponent.notify(context);
 
         const component = Component.create(componentType, context);
 
