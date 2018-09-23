@@ -1,13 +1,4 @@
-import {
-  Class,
-  ContextValueKey,
-  ContextValues,
-  EventEmitter,
-  mergeFunctions,
-  noop,
-  StateUpdateConsumer,
-  StateValueKey,
-} from '../../common';
+import { Class, ContextValueKey, ContextValues, EventEmitter, mergeFunctions, noop } from '../../common';
 import { Component, ComponentClass } from '../component';
 import { ComponentContext, ComponentListener, ComponentValueProvider } from '../component-context';
 import { ComponentDef } from '../component-def';
