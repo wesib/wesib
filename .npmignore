@@ -17,12 +17,15 @@ node_modules
 # Source files
 /src
 
+# Build scripts
+/build
+
 # Build configurations
 /.*
 /*.js
 /ts*.json
 
-# Package locks
+# Package lock
 /yarn.lock
 
 # Include distribution dir
