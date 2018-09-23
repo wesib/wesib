@@ -78,14 +78,14 @@ module.exports = (config) => {
       },
       reports: {
         'html': {
-          'directory': 'target/coverage',
-          'filename': 'coverage.lcov',
-          'subdirectory': 'html',
+          'directory': 'target',
+          'subdirectory': 'coverage',
+          'filename': 'html',
         },
         'lcovonly': {
-          'directory': 'target/coverage',
+          'directory': 'target',
+          'subdirectory': 'coverage/lcov',
           'filename': 'coverage.lcov',
-          'subdirectory': 'lcov',
         },
         'text-summary': null,
       }
