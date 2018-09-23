@@ -5,7 +5,12 @@ import { ContextValueKey, EventProducer, SingleValueKey, StateUpdateConsumer } f
  *
  * It is available in component context under `[StateTracker.key]` value key when `StateSupport` feature is enabled.
  */
-export interface StateTracker {
+export abstract class StateTracker {
+
+  /**
+   * A `StateTracker` component context value key.
+   */
+  static readonly key: ContextValueKey<StateTracker> = new SingleValueKey('state-tracker');
 
   /**
    * Registers component state updates listener.
@@ -16,7 +21,7 @@ export interface StateTracker {
    *
    * @return An event interest instance.
    */
-  readonly onStateUpdate: EventProducer<StateUpdateConsumer>;
+  abstract readonly onStateUpdate: EventProducer<StateUpdateConsumer>;
 
   /**
    * Updates the component state.
@@ -31,15 +36,6 @@ export interface StateTracker {
    * @param newValue New value.
    * @param oldValue Previous value.
    */
-  readonly updateState: StateUpdateConsumer;
-
-}
-
-export namespace StateTracker {
-
-  /**
-   * A `StateTracker` component context value key.
-   */
-  export const key: ContextValueKey<StateTracker> = new SingleValueKey('state-tracker');
+  abstract readonly updateState: StateUpdateConsumer;
 
 }
