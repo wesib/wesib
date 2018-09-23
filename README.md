@@ -19,9 +19,9 @@ The [@wesib/generic] package provides generic web components and features.
 
 The examples can be found in [@wesib/examples].  
 
-[Wesib]: https://gihub.com/wesib/wesib 
-[@wesib/generic]: https://gihub.com/wesib/generic
-[@wesib/examples]: https://gihub.com/wesib/examples
+[Wesib]: https://github.com/wesib/wesib 
+[@wesib/generic]: https://github.com/wesib/generic
+[@wesib/examples]: https://github.com/wesib/examples
 
 
 Components
