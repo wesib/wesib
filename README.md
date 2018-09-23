@@ -1,8 +1,9 @@
 Wesib: Web Components Building Blocks
 =====================================
 
-[![CircleCI](https://circleci.com/gh/wesib/wesib.svg?style=shield)](https://circleci.com/gh/wesib/wesib)
-[![codecov](https://codecov.io/gh/wesib/wesib/branch/master/graph/badge.svg)](https://codecov.io/gh/wesib/wesib)
+[![NPM][npm-image]][npm-url]
+[![CircleCI][ci-image]][ci-url]
+[![codecov][codecov-image]][codecov-url]
 
 
 [Wesib] provides a lightweight base for web components definition.
@@ -22,6 +23,12 @@ The examples can be found in [@wesib/examples].
 [Wesib]: https://github.com/wesib/wesib 
 [@wesib/generic]: https://github.com/wesib/generic
 [@wesib/examples]: https://github.com/wesib/examples
+[npm-image]: https://img.shields.io/npm/v/@wesib/wesib.svg
+[npm-url]: https://www.npmjs.com/package/@wesib/wesib
+[ci-image]:https://circleci.com/gh/wesib/wesib.svg?style=shield
+[ci-url]:https://circleci.com/gh/wesib/wesib  
+[codecov-image]: https://codecov.io/gh/wesib/wesib/branch/master/graph/badge.svg
+[codecov-url]: https://codecov.io/gh/wesib/wesib 
 
 
 Components
