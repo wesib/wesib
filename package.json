@@ -20,6 +20,7 @@
   "main": "dist/wesib.umd.js",
   "module": "dist/wesib.esm5.js",
   "es2015": "dist/wesib.esm2015.js",
+  "jsnext:main": "dist/wesib.esm2015.js",
   "typings": "index.d.ts",
   "dependencies": {
     "tslib": "^1.9.0"
