@@ -34,8 +34,7 @@ The examples can be found in [@wesib/examples].
 Components
 ----------
 
-Wesib allows to define custom components by decorating with `@WesComponent` decorator:
-
+Wesib allows to define custom components by decorating a component class with `@WesComponent` decorator:
 ```TypeScript
 import { WesComponent } from '@wesib/wesib';
 
@@ -44,8 +43,8 @@ export class MyComponent {
   // ...component definition
 }
 ```
-No need to extends `HTMLElement` or any other class. Instead Wesib creates custom element according to its definition
-build either programmatically or using component decorators.
+No need to extend `HTMLElement` or any other class. Instead Wesib creates custom element accordingly to its definition
+built either programmatically or using component decorators.
 
 To register custom component(s) call `bootstrapComponents()` function like this:
 ```TypeScript
@@ -66,7 +65,7 @@ delegated to bound component instance.
 Element Attributes
 ------------------
 
-To define attributes the custom element supports use `@Attribute` or `@AttributeChanged` component property decorators,
+To define custom element attributes use `@Attribute` or `@AttributeChanged` component property decorators,
 or `@Attributes` component class decorator.
 ```TypeScript
 import { Attribute, AttributeChanged, Attributes, WesComponent } from '@wesib/wesib';
@@ -100,7 +99,7 @@ export class MyComponent {
 Element Properties
 ------------------
 
-To define the properties of custom element use `@DomProperty` component property decorator.
+To define the properties of custom element use a `@DomProperty` component property decorator.
 ```TypeScript
 import { DomProperty, WesComponent } from '@wesib/wesib';
 
@@ -120,7 +119,7 @@ The same can be done for element methods with `@DomMethod` decorator, which is j
 IoC Container
 -------------
 
-Wesib provides contexts to each component and feature (see below). This context can be used to access provided values.
+Wesib provides contexts for each component and feature (see below). This context can be used to access provided values.
 
 For example, each component class constructor accepts a `ComponentContext` instance as its only argument.
 
@@ -143,11 +142,11 @@ export class MyComponent {
 Features
 --------
 
-Apart from custom elements construction definition and IoC container everything in Wesib is an opt-in feature.
+Apart from custom elements definition and IoC container, everything in Wesib is an opt-in feature.
 
 Some features are built-in and enabled when appropriate decorator is used. E.g. `AttributesSupport` feature is enabled
 when one of element attribute decorators used, `DomPropertiesSupport` is enabled when one of element property decorators
-is used, etc.
+used, etc.
 
 It is possible to define custom features too to extend Wesib. E.g. to augment the components, extend custom elements
 (like `@Attribute` or `@DomProperty` decorators do), or provide some context values.
@@ -162,11 +161,12 @@ import { BootstrapContext, ComponentContext, DefinitionContext, WesFeature } fro
     MyComponent, // The required component will be defined too.  
   ], 
   prebootstrap: [
-    { key: MyService.key, provide: () => new MyService() }, // Provide a `MyService` globally available
-                                                            // in all IoC contexts
+    { key: GlobalService.key, provide: () => new GlobalService() }, // Provide a `GlobalService` available globally
+                                                                    // in all IoC contexts
   ],
   bootstrap(context: BootstrapContext) {
-    // Bootstrap the feature by calling methods of provided context
+    // Bootstrap the feature by calling methods of provided context.
+
     context.forDefinitions(
         DefinitionService.key,
         (definitionContext: DefinitionContext) => {
@@ -219,8 +219,8 @@ import { bootstrapComponents } from '@wesib/wesib';
 bootstrapComponents(MyFeature);
 ```
 
-Note that components are kind of features that when passed to this function (or enabled with `require` option) register
-themselves.
+Note that components are kind of features that, when passed to this function (or enabled with `require` option),
+register themselves as components.
 
 
 Component State
@@ -253,7 +253,7 @@ export class MyComponent {
 }
 ```
 
-However, the component state update notification is a noop by default. To enable state tracking changes
+However, the component state update notification is no-op by default. To enable state tracking changes
 a `StateSupport` feature must be enabled. Then a `StateTracker` instance will be available in component context.
 The state tracker allows to subscribe for component state updates.
 
@@ -262,7 +262,7 @@ Rendering
 ---------
 
 Wesib core does not provide any mechanics for component rendering. It is completely up to the developer which rendering
-mechanics to use: direct DOM manipulations, template processing, or virtual DOM.
+mechanics to use: direct DOM manipulations, template processing, virtual DOM, etc.
 
 However, Wesib is able to notify the renderer on component state updates and trigger its rendering. For that a `@Render`
 decorator can be applied to component renderer method:
@@ -279,14 +279,14 @@ export class GreetTextComponent {
   }
 
   @Render()
-  name() {
+  render() {
     this._context.element.innerText = `Hello, ${this.name}!`;
   }
 
 }
 ```
 
-The `@Render`-decorated method will be called as a `requestAnimationFrame()` callback. So, it won't be called too
+The `@Render`-decorated method will be called from `requestAnimationFrame()` callback. So, it won't be called too
 frequently.
 
 The `@Render` decorator enables `StateSupport` and `RenderSupport` features. The latter provides a per-component
