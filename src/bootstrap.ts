@@ -50,7 +50,7 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
 
     constructor() {
       super();
-      definitionValueRegistry = DefinitionValueRegistry.create(valueRegistry.bindSources(this));
+      definitionValueRegistry = DefinitionValueRegistry.create(valueRegistry.valueSources);
       componentValueRegistry = ComponentValueRegistry.create();
       elementBuilder = ElementBuilder.create({ definitionValueRegistry, componentValueRegistry });
       componentRegistry = ComponentRegistry.create({ bootstrapContext: this, elementBuilder });
