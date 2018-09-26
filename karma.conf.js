@@ -15,6 +15,7 @@ module.exports = (config) => {
       require('karma-chrome-launcher'),
       require('karma-jasmine'),
       require('karma-jasmine-html-reporter'),
+      require('karma-junit-reporter'),
       require('karma-typescript'),
     ],
     files: [
@@ -26,6 +27,7 @@ module.exports = (config) => {
       'src/**/*.ts': ['karma-typescript'],
     },
     reporters: [
+      'junit',
       'progress',
       'kjhtml',
       'karma-typescript',
@@ -89,6 +91,11 @@ module.exports = (config) => {
         },
         'text-summary': null,
       }
+    },
+    junitReporter: {
+      outputDir: 'target/test-results/junit',
+      outputFile: 'junit.xml',
+      useBrowserName: false,
     },
     customLaunchers: {
       Puppeteer: {

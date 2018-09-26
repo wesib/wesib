@@ -34,6 +34,20 @@ jobs:
     # Run tests
     - run: yarn test-once
 
+    # Test results artifacts
+    - store_artifacts:
+        path: target/test-results
+        prefix: test-results
+
+    # Coverage reports artifacts
+    - store_artifacts:
+        path: target/coverage
+        prefix: coverage
+
+    # Upload test results for display in Test Summary
+    - store_test_results:
+        path: target/test-results
+
     # Upload code coverage report
     - run: yarn codecov --disable=gcov
 
