@@ -40,7 +40,7 @@ describe('bootstrap', () => {
         .and.returnValue(bootstrapValueRegistrySpy);
 
     bootstrapSourcesSpy = jasmine.createSpy('bootstrapSources');
-    bootstrapValueRegistrySpy.bindSources.and.returnValue(bootstrapSourcesSpy);
+    (bootstrapValueRegistrySpy as any).valueSources = bootstrapSourcesSpy;
 
     bootstrapContextSpy = jasmine.createSpyObj('bootstrapContext', ['get']);
     (bootstrapValueRegistrySpy as any).values = bootstrapContextSpy;

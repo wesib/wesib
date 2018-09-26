@@ -1,4 +1,4 @@
-import { Class, ContextValueKey, ContextValues, EventEmitter, mergeFunctions, noop } from '../../common';
+import { Class, ContextValueKey, EventEmitter, mergeFunctions, noop } from '../../common';
 import { Component, ComponentClass } from '../component';
 import { ComponentContext, ComponentListener, ComponentValueProvider } from '../component-context';
 import { ComponentDef } from '../component-def';
@@ -11,8 +11,8 @@ import { DefinitionValueRegistry } from './definition-value-registry';
  */
 export class ElementBuilder {
 
-  readonly definitionValueRegistry: DefinitionValueRegistry;
-  readonly componentValueRegistry: ComponentValueRegistry;
+  private readonly _definitionValueRegistry: DefinitionValueRegistry;
+  private readonly _componentValueRegistry: ComponentValueRegistry;
   readonly definitions = new EventEmitter<DefinitionListener>();
   readonly components = new EventEmitter<ComponentListener>();
 
@@ -31,8 +31,8 @@ export class ElementBuilder {
         definitionValueRegistry: DefinitionValueRegistry;
         componentValueRegistry: ComponentValueRegistry;
       }) {
-    this.definitionValueRegistry = definitionValueRegistry;
-    this.componentValueRegistry = componentValueRegistry;
+    this._definitionValueRegistry = definitionValueRegistry;
+    this._componentValueRegistry = componentValueRegistry;
   }
 
   buildElement<T extends object>(componentType: ComponentClass<T>): Class {
@@ -40,7 +40,6 @@ export class ElementBuilder {
     const def = ComponentDef.of(componentType);
     const builder = this;
     const onComponent = new EventEmitter<ComponentListener>();
-    let values!: ContextValues;
     let typeValueRegistry!: ComponentValueRegistry;
     let whenReady: (this: ElementDefinitionContext, elementType: Class) => void = noop;
 
@@ -52,8 +51,10 @@ export class ElementBuilder {
 
       constructor() {
         super();
-        typeValueRegistry = ComponentValueRegistry.create(builder.definitionValueRegistry.bindSources(this));
-        values = typeValueRegistry.newValues();
+        typeValueRegistry = ComponentValueRegistry.create(builder._definitionValueRegistry.bindSources(this));
+
+        const values = typeValueRegistry.newValues();
+
         this.get = values.get;
       }
 
@@ -82,7 +83,7 @@ export class ElementBuilder {
         def,
         context,
         onComponent,
-        this.componentValueRegistry.append(typeValueRegistry));
+        this._componentValueRegistry.append(typeValueRegistry));
 
     Object.defineProperty(context, 'elementType', {
       configurable: true,

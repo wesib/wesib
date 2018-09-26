@@ -22,7 +22,15 @@ export abstract class ContextValueKey<V, S = V> {
   readonly name: string;
 
   /**
-   * Constructs context key.
+   * A key of context value holding the sources of the value associated with this key.
+   *
+   * When multiple context value keys have the same `sourceKey`, then their values are constructed against the same
+   * set of sources.
+   */
+  abstract readonly sourcesKey: ContextValueSourcesKey<S>;
+
+  /**
+   * Constructs context value key.
    *
    * @param name Human-readable key name.
    */
@@ -69,6 +77,56 @@ export abstract class ContextValueKey<V, S = V> {
 export type ContextValueDefaultHandler<V> = (defaultProvider: () => V | null | undefined) => V | null | undefined;
 
 /**
+ * A key of context value holding sources for some other context value.
+ *
+ * An instance of this class is used as `ContextValueKey.sourcesKey` value by default.
+ */
+export class ContextValueSourcesKey<S> extends ContextValueKey<RevertibleIterable<S>, S> {
+
+  /**
+   * Constructs context value sources key.
+   *
+   * @param key A key of context value having its sources associated with this key.
+   */
+  constructor(key: ContextValueKey<any, S>) {
+    super(`${name}:sources`);
+  }
+
+  /**
+   * Always refers to itself.
+   */
+  get sourcesKey(): this {
+     return this;
+  }
+
+  merge(context: ContextValues, sourceValues: RevertibleIterable<S>): RevertibleIterable<S> {
+    return sourceValues;
+  }
+
+}
+
+/**
+ * Abstract context value key.
+ */
+export abstract class AbstractContextValueKey<V, S = V> extends ContextValueKey<V, S> {
+
+  readonly sourcesKey: ContextValueSourcesKey<S>;
+
+  /**
+   * Constructs context value key.
+   *
+   * @param name Human-readable key name.
+   * @param sourcesKey A key of context value holding the sources of the value associated with this key. An instance
+   * of `ContextValueSourcesKey` will be constructed by default.
+   */
+  protected constructor(name: string, sourcesKey?: ContextValueSourcesKey<S>) {
+    super(name);
+    this.sourcesKey = sourcesKey || new ContextValueSourcesKey(this);
+  }
+
+}
+
+/**
  * Single context value key.
  *
  * Treats the last source value as context one and ignores the rest of them.
@@ -76,7 +134,7 @@ export type ContextValueDefaultHandler<V> = (defaultProvider: () => V | null | u
  * @param <V> The type of associated value.
  * @param <S> The type of source values.
  */
-export class SingleValueKey<V> extends ContextValueKey<V> {
+export class SingleValueKey<V> extends AbstractContextValueKey<V> {
 
   /**
    * A provider of context value used when there is no value associated with this key.
@@ -122,7 +180,7 @@ export class SingleValueKey<V> extends ContextValueKey<V> {
  * @param <V> The type of associated value.
  * @param <S> The type of source values.
  */
-export class MultiValueKey<V> extends ContextValueKey<V[], V> {
+export class MultiValueKey<V> extends AbstractContextValueKey<V[], V> {
 
   /**
    * A provider of context value used when there is no value associated with this key.
