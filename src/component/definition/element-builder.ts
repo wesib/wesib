@@ -40,7 +40,6 @@ export class ElementBuilder {
     const def = ComponentDef.of(componentType);
     const builder = this;
     const onComponent = new EventEmitter<ComponentListener>();
-    let values!: ContextValues;
     let typeValueRegistry!: ComponentValueRegistry;
     let whenReady: (this: ElementDefinitionContext, elementType: Class) => void = noop;
 
@@ -53,8 +52,7 @@ export class ElementBuilder {
       constructor() {
         super();
         typeValueRegistry = ComponentValueRegistry.create(builder.definitionValueRegistry.bindSources(this));
-        values = typeValueRegistry.newValues();
-        this.get = values.get;
+        this.get = typeValueRegistry.values.get;
       }
 
       get elementType(): Class {
@@ -137,7 +135,6 @@ export class ElementBuilder {
         const element = this;
         // @ts-ignore
         const elementSuper = (name: string) => super[name] as any;
-        const values = valueRegistry.newValues();
         let whenReady: (this: ElementContext, component: T) => void = noop;
         const connectEvents = new EventEmitter<(this: ElementContext) => void>();
         const disconnectEvents = new EventEmitter<(this: ElementContext) => void>();
@@ -146,7 +143,7 @@ export class ElementBuilder {
 
           readonly element = element;
           readonly elementSuper = elementSuper;
-          readonly get = values.get;
+          readonly get = valueRegistry.values.get;
           readonly onConnect = connectEvents.on;
           readonly onDisconnect = disconnectEvents.on;
 

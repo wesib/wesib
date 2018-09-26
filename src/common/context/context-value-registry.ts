@@ -11,6 +11,7 @@ export class ContextValueRegistry<C extends ContextValues> {
 
   private readonly _providers = new Map<ContextValueKey<any>, ContextValueProvider<C, any>[]>();
   private readonly _initial: ContextValueSource<C>;
+  private _values?: ContextValues & ThisType<C>;
 
   /**
    * Constructs a registry for context value providers.
@@ -96,12 +97,14 @@ export class ContextValueRegistry<C extends ContextValues> {
   }
 
   /**
-   * Creates new context values instance consulting this registry for value providers.
+   * Context values instance consulting this registry for value providers.
    *
-   * @returns New context values instance which methods treat `this` instance as target context the values
-   * provided for.
+   * Treats `this` instance as target context the values provided for.
    */
-  newValues(): ContextValues & ThisType<C> {
+  get values(): ContextValues & ThisType<C> {
+    if (this._values) {
+      return this._values;
+    }
 
     const values = new Map<ContextValueKey<any>, any>();
     const providerRegistry = this;
@@ -144,7 +147,7 @@ export class ContextValueRegistry<C extends ContextValues> {
 
     }
 
-    return new Values();
+    return this._values = new Values();
   }
 
   /**

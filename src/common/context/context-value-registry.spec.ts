@@ -186,9 +186,12 @@ describe('common/context/context-value-registry', () => {
       let values: ContextValues;
 
       beforeEach(() => {
-        values = registry.newValues();
+        values = registry.values;
       });
 
+      it('is singleton instance', () => {
+        expect(registry.values).toBe(values);
+      });
       it('return associated value', () => {
         providerSpy.and.returnValue('value');
 
