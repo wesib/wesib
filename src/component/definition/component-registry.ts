@@ -1,6 +1,6 @@
 import { BootstrapContext } from '../../feature';
 import { ComponentClass } from '../component';
-import { ComponentDef } from '../component-def';
+import { CustomElements } from './custom-elements';
 import { ElementBuilder } from './element-builder';
 
 /**
@@ -31,27 +31,16 @@ export class ComponentRegistry {
     this.elementBuilder = elementBuilder;
   }
 
-  get customElements(): CustomElementRegistry {
-    return this.bootstrapContext.get(BootstrapContext.customElementsKey);
+  get customElements(): CustomElements {
+    return this.bootstrapContext.get(CustomElements.key);
   }
 
   define<T extends object>(componentType: ComponentClass<T>) {
     this._definitionQueue.push(() => {
 
-      const def = ComponentDef.of(componentType);
-      const elementClass = this.elementBuilder.buildElement(componentType);
-      const ext = def.extend;
+      const elementType = this.elementBuilder.buildElement(componentType);
 
-      if (ext && ext.name) {
-        this.customElements.define(
-            def.name,
-            elementClass,
-            {
-              extends: ext.name,
-            });
-      } else {
-        this.customElements.define(def.name, elementClass);
-      }
+      this.customElements.define(componentType, elementType);
     });
   }
 
@@ -61,7 +50,7 @@ export class ComponentRegistry {
   }
 
   whenDefined(componentType: ComponentClass<any>): PromiseLike<void> {
-    return this.customElements.whenDefined(ComponentDef.of(componentType).name);
+    return this.customElements.whenDefined(componentType);
   }
 
 }

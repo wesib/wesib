@@ -3,13 +3,14 @@ import { BootstrapContext } from '../../feature';
 import { ComponentClass } from '../component';
 import { ComponentDef } from '../component-def';
 import { ComponentRegistry } from './component-registry';
+import { CustomElements } from './custom-elements';
 import { ElementBuilder } from './element-builder';
 import SpyObj = jasmine.SpyObj;
 
 describe('component/definition/component-registry', () => {
   describe('ComponentRegistry', () => {
 
-    let customElementsSpy: SpyObj<CustomElementRegistry>;
+    let customElementsSpy: SpyObj<CustomElements>;
     let bootstrapContextSpy: SpyObj<BootstrapContext>;
     let builderSpy: SpyObj<ElementBuilder>;
     let registry: ComponentRegistry;
@@ -19,7 +20,7 @@ describe('component/definition/component-registry', () => {
     beforeEach(() => {
       bootstrapContextSpy = jasmine.createSpyObj('bootstrapContext', ['get']);
       bootstrapContextSpy.get.and.callFake((key: ContextValueKey<any>) => {
-        if (key === BootstrapContext.customElementsKey) {
+        if (key === CustomElements.key) {
           return customElementsSpy;
         }
         return;
@@ -57,41 +58,7 @@ describe('component/definition/component-registry', () => {
         registry.define(TestComponent);
         registry.complete();
 
-        expect(customElementsSpy.define).toHaveBeenCalledWith('test-component', ElementSpy);
-      });
-      it('defines custom element extending another one', () => {
-
-        class BaseElement extends HTMLElement {
-          constructor() {
-            super();
-          }
-        }
-
-        ComponentDef.define(TestComponent, {
-          extend: {
-            type: BaseElement,
-          }
-        });
-
-        registry.define(TestComponent);
-        registry.complete();
-
-        expect(customElementsSpy.define).toHaveBeenCalledWith('test-component', ElementSpy);
-      });
-      it('defines custom element extending standard one', () => {
-        ComponentDef.define(TestComponent, {
-          extend: {
-            name: 'input',
-            type: HTMLInputElement,
-          }
-        });
-
-        registry.define(TestComponent);
-        registry.complete();
-
-        expect(customElementsSpy.define).toHaveBeenCalledWith('test-component', ElementSpy, {
-          extends: 'input',
-        });
+        expect(customElementsSpy.define).toHaveBeenCalledWith(TestComponent, ElementSpy);
       });
     });
     describe('whenDefined', () => {
@@ -102,7 +69,7 @@ describe('component/definition/component-registry', () => {
         customElementsSpy.whenDefined.and.returnValue(promise);
 
         expect(registry.whenDefined(TestComponent)).toBe(promise);
-        expect(customElementsSpy.whenDefined).toHaveBeenCalledWith('test-component');
+        expect(customElementsSpy.whenDefined).toHaveBeenCalledWith(TestComponent);
       });
     });
   });

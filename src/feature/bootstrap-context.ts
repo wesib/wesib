@@ -22,16 +22,7 @@ export abstract class BootstrapContext implements ContextValues {
    *
    * Target value defaults to current window.
    */
-  static readonly windowKey = new SingleValueKey<Window>('window', () => window);
-
-  /**
-   * A key of bootstrap context value containing a `CustomElementRegistry` instance used to register custom elements.
-   *
-   * Target value defaults to `window.customElements` from the window provided under `windowKey`.
-   */
-  static readonly customElementsKey = new SingleValueKey<CustomElementRegistry>(
-      'custom-elements',
-      values => values.get(BootstrapContext.windowKey).customElements);
+  static readonly windowKey: ContextValueKey<Window> = new SingleValueKey<Window>('window', () => window);
 
   /**
    * Registers component definition listener.
