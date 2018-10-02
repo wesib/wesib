@@ -1,6 +1,6 @@
 import { bootstrapComponents } from '../../bootstrap';
-import { Component, ComponentClass, DefinitionContext, WesComponent } from '../../component';
-import { BootstrapContext, FeatureDef, WesFeature } from '../../feature';
+import { Component, ComponentClass, CustomElements, DefinitionContext, WesComponent } from '../../component';
+import { FeatureDef, WesFeature } from '../../feature';
 import { DomProperty } from '../dom-properties';
 import { StateSupport } from '../state';
 import { RenderScheduler } from './render-scheduler';
@@ -12,7 +12,7 @@ import SpyObj = jasmine.SpyObj;
 describe('features/render/render.decorator', () => {
   describe('@Render', () => {
 
-    let customElementsSpy: SpyObj<CustomElementRegistry>;
+    let customElementsSpy: SpyObj<CustomElements>;
     let renderSchedulerSpy: SpyObj<RenderScheduler>;
     let testComponent: ComponentClass;
     let renderSpy: Spy;
@@ -52,7 +52,7 @@ describe('features/render/render.decorator', () => {
         require: testComponent,
         prebootstrap: [
           { key: RenderScheduler.key, value: renderSchedulerSpy },
-          { key: BootstrapContext.customElementsKey, value: customElementsSpy },
+          { key: CustomElements.key, value: customElementsSpy },
         ],
         provide: RenderSupport,
       })
