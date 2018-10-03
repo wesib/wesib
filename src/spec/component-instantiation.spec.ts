@@ -48,7 +48,7 @@ describe('component instantiation', () => {
       expect(ComponentContext.of(element)).toBe(context);
     });
     it('assigns component context reference to component', () => {
-      expect(ComponentContext.of(Component.of(element) as object)).toBe(context);
+      expect(ComponentContext.of(Component.of(element))).toBe(context);
     });
     it('passes context to component', () => {
 
@@ -57,6 +57,9 @@ describe('component instantiation', () => {
       };
 
       expect(constructorSpy).toHaveBeenCalledWith(jasmine.objectContaining(expectedContext));
+    });
+    it('uses custom element as content root', () => {
+      expect(context.contentRoot).toBe(element);
     });
     it('allows to access inherited element properties', () => {
       expect(context.elementSuper('tagName')).toEqual('TEST-COMPONENT');

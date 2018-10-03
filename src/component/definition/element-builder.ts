@@ -138,7 +138,6 @@ export class ElementBuilder {
         const element = this;
         // @ts-ignore
         const elementSuper = (name: string) => super[name] as any;
-        const values = valueRegistry.newValues();
         let whenReady: (this: ElementContext, component: T) => void = noop;
         const connectEvents = new EventEmitter<(this: ElementContext) => void>();
         const disconnectEvents = new EventEmitter<(this: ElementContext) => void>();
@@ -147,7 +146,7 @@ export class ElementBuilder {
 
           readonly element = element;
           readonly elementSuper = elementSuper;
-          readonly get = values.get;
+          readonly get = valueRegistry.newValues().get;
           readonly onConnect = connectEvents.on;
           readonly onDisconnect = disconnectEvents.on;
 
@@ -166,6 +165,8 @@ export class ElementBuilder {
         }
 
         const context = new ElementContext();
+
+        valueRegistry.provide(ComponentContext.key, () => context);
 
         Object.defineProperty(this, ComponentContext.symbol, { value: context });
         Object.defineProperty(this, connectedCallback, {

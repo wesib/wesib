@@ -6,7 +6,12 @@ describe('features/dom-properties/dom-property', () => {
   describe('@DomProperty', () => {
     it('declares DOM property', () => {
 
-      @WesComponent('test-component')
+      @WesComponent({
+        name: 'test-component',
+        extend: {
+          type: Object,
+        }
+      })
       class TestComponent {
         @DomProperty()
         customProperty = 'value';
@@ -23,7 +28,12 @@ describe('features/dom-properties/dom-property', () => {
     });
     it('declares DOM property with specified name', () => {
 
-      @WesComponent({ name: 'test-component' })
+      @WesComponent({
+        name: 'test-component',
+        extend: {
+          type: Object,
+        }
+      })
       class TestComponent {
         @DomProperty({ propertyKey: 'otherProperty' })
         customProperty = 'value';
@@ -42,7 +52,12 @@ describe('features/dom-properties/dom-property', () => {
     describe('for object property', () => {
       it('applies defaults', () => {
 
-        @WesComponent('test-component')
+        @WesComponent({
+          name: 'test-component',
+          extend: {
+            type: Object,
+          }
+        })
         class TestComponent {
           @DomProperty()
           customProperty = 'value';
@@ -59,7 +74,12 @@ describe('features/dom-properties/dom-property', () => {
       });
       it('applies defaults to non-state-updating field', () => {
 
-        @WesComponent('test-component')
+        @WesComponent({
+          name: 'test-component',
+          extend: {
+            type: Object,
+          }
+        })
         class TestComponent {
           @DomProperty({ updateState: false })
           customProperty = 'value';
@@ -76,7 +96,12 @@ describe('features/dom-properties/dom-property', () => {
       });
       it('applies custom property attributes', () => {
 
-        @WesComponent('test-component')
+        @WesComponent({
+          name: 'test-component',
+          extend: {
+            type: Object,
+          }
+        })
         class TestComponent {
           @DomProperty({
             configurable: false,
@@ -97,7 +122,12 @@ describe('features/dom-properties/dom-property', () => {
       });
       it('applies custom property attributes to non-state-updating field', () => {
 
-        @WesComponent('test-component')
+        @WesComponent({
+          name: 'test-component',
+          extend: {
+            type: Object,
+          }
+        })
         class TestComponent {
           @DomProperty({
             configurable: false,
@@ -121,7 +151,12 @@ describe('features/dom-properties/dom-property', () => {
     describe('for property accessor', () => {
       it('applies read-only property defaults', () => {
 
-        @WesComponent('test-component')
+        @WesComponent({
+          name: 'test-component',
+          extend: {
+            type: Object,
+          }
+        })
         class TestComponent {
           @DomProperty()
           get customProperty() {
@@ -140,7 +175,12 @@ describe('features/dom-properties/dom-property', () => {
       });
       it('applies custom read-only property attributes', () => {
 
-        @WesComponent('test-component')
+        @WesComponent({
+          name: 'test-component',
+          extend: {
+            type: Object,
+          }
+        })
         class TestComponent {
           @DomProperty({
             configurable: false,
@@ -163,7 +203,12 @@ describe('features/dom-properties/dom-property', () => {
       });
       it('applies writable property defaults', () => {
 
-        @WesComponent('test-component')
+        @WesComponent({
+          name: 'test-component',
+          extend: {
+            type: Object,
+          }
+        })
         class TestComponent {
 
           private _value = 'value';
@@ -190,7 +235,12 @@ describe('features/dom-properties/dom-property', () => {
       });
       it('applies custom writable property attributes', () => {
 
-        @WesComponent('test-component')
+        @WesComponent({
+          name: 'test-component',
+          extend: {
+            type: Object,
+          }
+        })
         class TestComponent {
 
           private _value = 'value';

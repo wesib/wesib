@@ -9,7 +9,12 @@ describe('features/attributes/attribute-changed', () => {
 
       const attrSpy = jasmine.createSpy('attrChanged');
 
-      @WesComponent('test-component')
+      @WesComponent({
+        name: 'test-component',
+        extend: {
+          type: Object,
+        }
+      })
       class TestComponent {
 
         @AttributeChanged()
@@ -27,7 +32,12 @@ describe('features/attributes/attribute-changed', () => {
     });
     it('updates the state', () => {
 
-      @WesComponent('test-component')
+      @WesComponent({
+        name: 'test-component',
+        extend: {
+          type: Object,
+        }
+      })
       class TestComponent {
 
         @AttributeChanged({})
@@ -46,7 +56,12 @@ describe('features/attributes/attribute-changed', () => {
 
       const updateSpy = jasmine.createSpy('updateState');
 
-      @WesComponent('test-component')
+      @WesComponent({
+        name: 'test-component',
+        extend: {
+          type: Object,
+        }
+      })
       class TestComponent {
 
         @AttributeChanged({ updateState: updateSpy })
@@ -68,7 +83,12 @@ describe('features/attributes/attribute-changed', () => {
 
       const key = ['attr-key'];
 
-      @WesComponent('test-component')
+      @WesComponent({
+        name: 'test-component',
+        extend: {
+          type: Object,
+        }
+      })
       class TestComponent {
 
         @AttributeChanged({ name: 'my-attr', updateState: key })
@@ -87,7 +107,12 @@ describe('features/attributes/attribute-changed', () => {
 
       const attrSpy = jasmine.createSpy('attrChanged');
 
-      @WesComponent({ name: 'test-component' })
+      @WesComponent({
+        name: 'test-component',
+        extend: {
+          type: Object,
+        }
+      })
       class TestComponent {
 
         @AttributeChanged({ updateState: false })
@@ -109,7 +134,12 @@ describe('features/attributes/attribute-changed', () => {
 
       const attrSpy = jasmine.createSpy('attrChanged');
 
-      @WesComponent('test-component')
+      @WesComponent({
+        name: 'test-component',
+        extend: {
+          type: Object,
+        }
+      })
       class TestComponent {
 
         @AttributeChanged('my-attr')
