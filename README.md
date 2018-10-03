@@ -258,6 +258,21 @@ a `StateSupport` feature must be enabled. Then a `StateTracker` instance will be
 The state tracker allows to subscribe for component state updates.
 
 
+Shadow DOM
+----------
+
+It is possible to attach shadow root to custom element by decorating the component with `@AttachShadow` decorator.
+
+If shadow DOM is supported, then a shadow root will be attached to element. Otherwise an element itself will be used
+as shadow root. In both cases the shadow root will be available in component context under
+`[ComponentContext.shadowRootKey]` key.
+
+The `@AttachShadow` decorator automatically enables an `ShadowDomSupport` feature.
+
+A `ComponentContext.contentRoot` property is always available. It either contains a shadow root, or element itself.
+This is a DOM node to use to insert the DOM nodes to component.
+
+
 Rendering
 ---------
 
@@ -280,7 +295,7 @@ export class GreetTextComponent {
 
   @Render()
   render() {
-    this._context.element.innerText = `Hello, ${this.name}!`;
+    this._context.contentRoot.innerText = `Hello, ${this.name}!`;
   }
 
 }
