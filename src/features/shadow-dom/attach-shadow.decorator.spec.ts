@@ -1,11 +1,12 @@
-import { testElement } from '../spec/test-element';
+import { ComponentClass, ComponentContext, WesComponent } from '../../component';
+import { FeatureDef } from '../../feature';
+import { testElement } from '../../spec/test-element';
+import { list2set } from '../../util';
 import { AttachShadow } from './attach-shadow.decorator';
-import { ComponentClass } from './component';
-import { ComponentContext } from './component-context';
-import { WesComponent } from './wes-component.decorator';
+import { ShadowDomSupport } from './shadow-root-support.feature';
 import Spy = jasmine.Spy;
 
-describe('component/attach-shadow.decorator', () => {
+describe('features/shadow-dom/attach-shadow.decorator', () => {
   describe('@AttachShadow', () => {
 
     let testComponent: ComponentClass;
@@ -37,6 +38,9 @@ describe('component/attach-shadow.decorator', () => {
       context = ComponentContext.of(element);
     });
 
+    it('enables shadow root support', () => {
+      expect(list2set(FeatureDef.of(testComponent).require)).toContain(ShadowDomSupport);
+    });
     it('provides shadow root', () => {
       expect(context.get(ComponentContext.shadowRootKey)).toBe(shadowRoot);
     });
@@ -68,6 +72,28 @@ describe('component/attach-shadow.decorator', () => {
       element = new (testElement(OtherComponent))();
 
       expect(attachShadowSpy).toHaveBeenCalledWith(init);
+    });
+    it('uses element as shadow root if shadow DOM is not supported', () => {
+      attachShadowSpy.calls.reset();
+
+      const init: ShadowRootInit = {
+        mode: 'closed',
+      };
+
+      @AttachShadow(init)
+      @WesComponent({
+        name: 'other-component',
+        extend: {
+          type: Object,
+        }
+      })
+      class OtherComponent {
+      }
+
+      element = new (testElement(OtherComponent))();
+      context = ComponentContext.of(element);
+
+      expect(context.get(ComponentContext.shadowRootKey)).toBe(element);
     });
   });
 });
