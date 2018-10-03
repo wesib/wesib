@@ -2,7 +2,7 @@ import { TypedClassDecorator } from '../../common';
 import { ComponentClass, ComponentContext, ComponentDef, DefinitionContext } from '../../component';
 import { FeatureDef } from '../../feature';
 import { ShadowRootBuilder } from './shadow-root-builder';
-import { ShadowDomSupport } from './shadow-root-support.feature';
+import { ShadowDomSupport } from './shadow-dom-support.feature';
 
 /**
  * Component class decorator that attaches shadow root to decorated component instance.

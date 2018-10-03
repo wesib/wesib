@@ -3,7 +3,7 @@ import { FeatureDef } from '../../feature';
 import { testElement } from '../../spec/test-element';
 import { list2set } from '../../util';
 import { AttachShadow } from './attach-shadow.decorator';
-import { ShadowDomSupport } from './shadow-root-support.feature';
+import { ShadowDomSupport } from './shadow-dom-support.feature';
 import Spy = jasmine.Spy;
 
 describe('features/shadow-dom/attach-shadow.decorator', () => {
