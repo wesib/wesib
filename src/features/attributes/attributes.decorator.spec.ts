@@ -7,7 +7,12 @@ describe('features/attributes/attributes', () => {
   describe('@Attributes', () => {
     it('updates the state', () => {
 
-      @WesComponent({ name: 'test-component' })
+      @WesComponent({
+        name: 'test-component',
+        extend: {
+          type: Object,
+        }
+      })
       @Attributes({
         attr: true,
       })
@@ -25,7 +30,12 @@ describe('features/attributes/attributes', () => {
 
       const updateSpy = jasmine.createSpy('updateState');
 
-      @WesComponent({ name: 'test-component' })
+      @WesComponent({
+        name: 'test-component',
+        extend: {
+          type: Object,
+        }
+      })
       @Attributes({
         attr: updateSpy,
       })
@@ -46,7 +56,12 @@ describe('features/attributes/attributes', () => {
 
       const key = ['custom-key'];
 
-      @WesComponent({ name: 'test-component' })
+      @WesComponent({
+        name: 'test-component',
+        extend: {
+          type: Object,
+        }
+      })
       @Attributes({
         attr: key,
       })
@@ -62,7 +77,12 @@ describe('features/attributes/attributes', () => {
     });
     it('disables state update', () => {
 
-      @WesComponent({ name: 'test-component' })
+      @WesComponent({
+        name: 'test-component',
+        extend: {
+          type: Object,
+        }
+      })
       @Attributes({
         attr: false,
       })

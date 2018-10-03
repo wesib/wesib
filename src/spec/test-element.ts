@@ -4,7 +4,7 @@ import { ComponentClass, ComponentDef, CustomElements } from '../component';
 import { WesFeature } from '../feature';
 
 export function testElement(componentType: Class): Class<any> {
-  ComponentDef.define(componentType, { extend: { type: Object } });
+  ComponentDef.define(componentType);
 
   let result!: Class;
 

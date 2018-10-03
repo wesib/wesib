@@ -26,6 +26,28 @@ export abstract class ComponentContext<T extends object = object> implements Con
   static readonly symbol = Symbol('component-context');
 
   /**
+   * A key of component context value containing a component context instance itself.
+   *
+   * It is useful e.g. when constructing default context values relying on context instance.
+   */
+  static readonly key: ContextValueKey<ComponentContext<any>> = new SingleValueKey('component-context');
+
+  /**
+   * A key of component context value containing a component root element.
+   *
+   * This is an element itself by default. But can be overridden e.g. by `@AttachShadow` decorator.
+   */
+  static readonly contentRootKey: ContextValueKey<ParentNode> =
+      new SingleValueKey('content-root', ctx => ctx.get(ComponentContext.key).element);
+
+  /**
+   * A key of component context value containing a shadow root instance.
+   *
+   * This is only available when the component is decorated with `@AttachShadow` decorator.
+   */
+  static readonly shadowRootKey: ContextValueKey<ShadowRoot> = new SingleValueKey('shadow-root');
+
+  /**
    * A key of component context value containing a component state update function.
    *
    * Features are calling this function by default when component state changes, e.g. attribute value or DOM property
@@ -34,7 +56,7 @@ export abstract class ComponentContext<T extends object = object> implements Con
    * Note that this value is not provided, unless the `StateSupport` feature is enabled.
    */
   static readonly stateUpdateKey: ContextValueKey<StateUpdateConsumer> =
-      new SingleValueKey<StateUpdateConsumer>('state-update', () => noop);
+      new SingleValueKey('state-update', () => noop);
 
   /**
    * Custom element constructed for the component according to its type.
@@ -84,7 +106,7 @@ export abstract class ComponentContext<T extends object = object> implements Con
   /**
    * Updates component's state.
    *
-   * It is a shorthand for invoking a component state update function available under
+   * This is a shorthand for invoking a component state update function available under
    * `[ComponentContext.stateUpdateKey]` key.
    *
    * Note that state update has no effect unless `StateSupport` feature is enabled or
@@ -117,6 +139,15 @@ export abstract class ComponentContext<T extends object = object> implements Con
     }
 
     return context;
+  }
+
+  /**
+   * Component content root.
+   *
+   * This is a shorthand for requesting c ontent root instance available under `[ComponentContext.contentRootKey]` key.
+   */
+  get contentRoot(): ParentNode {
+    return this.get(ComponentContext.contentRootKey);
   }
 
   /**

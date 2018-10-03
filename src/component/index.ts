@@ -1,3 +1,4 @@
+export * from './attach-shadow.decorator';
 export * from './component';
 export * from './component-context';
 export * from './component-def';
