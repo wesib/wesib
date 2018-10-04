@@ -1,8 +1,7 @@
 import { noop } from '../common';
-import { BootstrapContext, FeatureDef } from '../feature';
+import { FeatureDef } from '../feature';
 import { ComponentClass } from './component';
 import { ComponentDef, PartialComponentDef } from './component-def';
-import './component-def.ns';
 import { DefinitionContext } from './definition';
 import Spy = jasmine.Spy;
 

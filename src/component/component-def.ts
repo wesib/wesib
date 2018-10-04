@@ -1,4 +1,6 @@
-import { Class } from '../common';
+import { Class, mergeFunctions, MetaAccessor, superClassOf } from '../common';
+import { FeatureDef } from '../feature';
+import { ComponentClass } from './component';
 import { DefinitionContext } from './definition';
 
 /**
@@ -63,5 +65,101 @@ export namespace ComponentDef {
    * A key of a property holding a component definition within its class constructor.
    */
   export const symbol = Symbol('component-def');
+
+  class ComponentMeta extends MetaAccessor<PartialComponentDef<any>> {
+
+    constructor() {
+      super(ComponentDef.symbol);
+    }
+
+    merge<T extends object>(...defs: PartialComponentDef<T>[]): PartialComponentDef<T> {
+      return defs.reduce(
+          (prev, def) => {
+
+            const merged: PartialComponentDef<T> = { ...prev, ...def };
+            const newDefine = mergeFunctions<[DefinitionContext<T>], void, Class<T>>(prev.define, def.define);
+
+            if (newDefine) {
+              merged.define = newDefine;
+            }
+
+            return merged;
+          },
+          {});
+    }
+
+  }
+
+  const meta = new ComponentMeta();
+
+  /**
+   * Extracts a component definition from its type.
+   *
+   * @param <T> A type of component.
+   * @param componentType Target component class constructor.
+   *
+   * @returns Component definition.
+   *
+   * @throws TypeError If target `componentType` does not contain a component definition.
+   */
+  export function of<T extends object>(componentType: ComponentClass<T>): ComponentDef<T> {
+
+    const def = meta.of(componentType) as ComponentDef<T>;
+    const superType = superClassOf(componentType, st => ComponentDef.symbol in st) as Class<T>;
+    const superDef = superType && ComponentDef.of(superType);
+
+    if (!def) {
+      throw TypeError(`Not a component type: ${componentType.name}`);
+    }
+
+    return superDef && superDef !== def ? ComponentDef.merge(superDef, def) as ComponentDef<T> : def;
+  }
+
+  /**
+   * Merges multiple (partial) component definitions.
+   *
+   * @param <T> A type of component.
+   * @param defs Partial component definitions to merge.
+   *
+   * @returns Merged component definition.
+   */
+  export function merge<T extends object>(...defs: PartialComponentDef<T>[]): PartialComponentDef<T> {
+    return meta.merge(...defs);
+  }
+
+  /**
+   * Defines a component.
+   *
+   * Either assigns new or extends an existing component definition and stores it under `[ComponentDef.symbol]` key.
+   *
+   * Note that each `ComponentClass` is also a feature able to register itself, so it can be passed directly to
+   * `bootstrapComponents()` function or added as a requirement of another feature.
+   *
+   * @param <T> A type of component.
+   * @param type Component class constructor.
+   * @param defs Component definitions.
+   *
+   * @returns The `type` instance.
+   */
+  export function define<T extends ComponentClass>(
+      type: T,
+      ...defs: PartialComponentDef<InstanceType<T>>[]): T {
+
+    const prevDef = meta.of(type);
+
+    meta.define(type, ...defs);
+
+    if (prevDef) {
+      return type; // Define component only once.
+    }
+
+    return FeatureDef.define(
+        type,
+        {
+          bootstrap: function (context) {
+            context.define(this);
+          },
+        });
+  }
 
 }
