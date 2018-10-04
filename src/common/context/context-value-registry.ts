@@ -15,8 +15,13 @@ import { ContextValues } from './context-values';
  */
 export class ContextValueRegistry<C extends ContextValues> {
 
+  /** @internal */
   private readonly _initial: ContextValueSource<C>;
+
+  /** @internal */
   private readonly _providers = new Map<ContextValueSourcesKey<any>, ContextValueProvider<C, any>[]>();
+
+  /** @internal */
   private _nonCachedValues?: ContextValues;
 
   /**

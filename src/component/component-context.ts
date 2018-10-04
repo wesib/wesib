@@ -41,13 +41,6 @@ export abstract class ComponentContext<T extends object = object> implements Con
       new SingleValueKey('content-root', ctx => ctx.get(ComponentContext.key).element);
 
   /**
-   * A key of component context value containing a shadow root instance.
-   *
-   * This is only available when the component is decorated with `@AttachShadow` decorator.
-   */
-  static readonly shadowRootKey: ContextValueKey<ShadowRoot> = new SingleValueKey('shadow-root');
-
-  /**
    * A key of component context value containing a component state update function.
    *
    * Features are calling this function by default when component state changes, e.g. attribute value or DOM property
