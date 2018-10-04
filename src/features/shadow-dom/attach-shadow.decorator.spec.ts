@@ -42,7 +42,7 @@ describe('features/shadow-dom/attach-shadow.decorator', () => {
       expect(list2set(FeatureDef.of(testComponent).require)).toContain(ShadowDomSupport);
     });
     it('provides shadow root', () => {
-      expect(context.get(ComponentContext.shadowRootKey)).toBe(shadowRoot);
+      expect(context.get(ShadowDomSupport.shadowRootKey)).toBe(shadowRoot);
     });
     it('provides shadow root as content root', () => {
       expect(context.contentRoot).toBe(shadowRoot);
@@ -93,7 +93,7 @@ describe('features/shadow-dom/attach-shadow.decorator', () => {
       element = new (testElement(OtherComponent))();
       context = ComponentContext.of(element);
 
-      expect(context.get(ComponentContext.shadowRootKey)).toBe(element);
+      expect(context.get(ShadowDomSupport.shadowRootKey)).toBe(element);
     });
   });
 });
