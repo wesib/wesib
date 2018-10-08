@@ -7,6 +7,7 @@ import {
   StateUpdateConsumer,
   StateValueKey,
 } from '../common';
+import { ComponentClass } from './component';
 
 /**
  * Component context.
@@ -50,6 +51,11 @@ export abstract class ComponentContext<T extends object = object> implements Con
    */
   static readonly stateUpdateKey: ContextValueKey<StateUpdateConsumer> =
       new SingleValueKey('state-update', () => noop);
+
+  /**
+   * Component class constructor.
+   */
+  abstract readonly componentType: ComponentClass<T>;
 
   /**
    * Custom element constructed for the component according to its type.

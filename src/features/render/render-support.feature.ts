@@ -16,7 +16,7 @@ import { RenderScheduler as RenderScheduler_ } from './render-scheduler';
 export class RenderSupport {
 }
 
-function createRenderScheduler(ctx: ComponentContext) {
+function createRenderScheduler<T extends object>(ctx: ComponentContext<T>) {
 
   let scheduled: () => void = noop;
   const window = ctx.get(BootstrapContext.windowKey);

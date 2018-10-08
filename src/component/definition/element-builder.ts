@@ -144,6 +144,7 @@ export class ElementBuilder {
 
         class ElementContext extends ComponentContext<T> {
 
+          readonly componentType = definitionContext.componentType;
           readonly element = element;
           readonly elementSuper = elementSuper;
           readonly get = valueRegistry.newValues().get;
@@ -176,8 +177,8 @@ export class ElementBuilder {
           value: () => disconnectEvents.forEach(listener => listener.call(context)),
         });
 
-        builder.components.notify(context);
-        onComponent.notify(context);
+        builder.components.forEach(consumer => consumer(context));
+        onComponent.forEach(consumer => consumer(context));
 
         const component = Component.create(componentType, context);
 
