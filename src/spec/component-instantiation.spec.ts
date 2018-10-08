@@ -61,6 +61,9 @@ describe('component instantiation', () => {
     it('uses custom element as content root', () => {
       expect(context.contentRoot).toBe(element);
     });
+    it('sets component type', () => {
+      expect(context.componentType).toBe(testComponent);
+    });
     it('allows to access inherited element properties', () => {
       expect(context.elementSuper('tagName')).toEqual('TEST-COMPONENT');
     });
@@ -99,7 +102,7 @@ describe('component instantiation', () => {
     describe('component', () => {
       it('is resolved on component instantiation', async () => {
 
-        let context: ComponentContext = { name: 'component context' } as any;
+        let context: ComponentContext<any> = { name: 'component context' } as any;
 
         const promise = new Promise(resolve => {
           bootstrap.context.onComponent(ctx => {

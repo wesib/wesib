@@ -12,7 +12,7 @@ import { ComponentContext } from '../../component';
  *
  * @returns A shadow root instance for target component.
  */
-export type ShadowRootBuilder = (context: ComponentContext, init: ShadowRootInit) => ShadowRoot;
+export type ShadowRootBuilder = <T extends object>(context: ComponentContext<T>, init: ShadowRootInit) => ShadowRoot;
 
 export namespace ShadowRootBuilder {
 
