@@ -45,6 +45,9 @@ describe('features/shadow-dom/attach-shadow.decorator', () => {
     it('provides shadow root', () => {
       expect(context.get(ShadowContentRoot)).toBe(shadowRoot);
     });
+    it('assigns component context to shadow root', () => {
+      expect(ComponentContext.of(context.get(ShadowContentRoot))).toBe(context);
+    });
     it('provides shadow root as content root', () => {
       expect(context.contentRoot).toBe(shadowRoot);
     });

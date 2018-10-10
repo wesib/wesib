@@ -1,3 +1,4 @@
+import { emit } from 'cluster';
 import { EventEmitter } from './event-emitter';
 import { EventInterest } from './event-producer';
 import Spy = jasmine.Spy;
@@ -17,6 +18,10 @@ describe('common/events/event-emitter', () => {
       consumer2Spy = jasmine.createSpy('consumer2');
     });
 
+    it('has no consumers initially', () => {
+      expect(emitter.hasConsumers).toBe(false);
+    });
+
     describe('on', () => {
 
       let interest: EventInterest;
@@ -26,6 +31,8 @@ describe('common/events/event-emitter', () => {
       });
 
       it('registers event consumer', () => {
+        expect(emitter.hasConsumers).toBe(true);
+
         emitter.on(consumer2Spy);
 
         emitter.notify('event');
@@ -66,6 +73,8 @@ describe('common/events/event-emitter', () => {
         emitter.on(consumerSpy);
         emitter.on(consumer2Spy);
         emitter.clear();
+
+        expect(emitter.hasConsumers).toBe(false);
 
         emitter.notify('event');
 
