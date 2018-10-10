@@ -10,7 +10,7 @@ import { ComponentRegistry } from './component/definition/component-registry';
 import { ComponentValueRegistry } from './component/definition/component-value-registry';
 import { DefinitionValueRegistry } from './component/definition/definition-value-registry';
 import { ElementBuilder } from './component/definition/element-builder';
-import { BootstrapContext } from './feature';
+import { BootstrapContext as BootstrapContext_ } from './feature';
 import { BootstrapValueRegistry } from './feature/bootstrap-value-registry';
 import { FeatureRegistry } from './feature/feature-registry';
 
@@ -42,7 +42,7 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
   let elementBuilder: ElementBuilder;
   let componentRegistry: ComponentRegistry;
 
-  class Context extends BootstrapContext {
+  class BootstrapContext extends BootstrapContext_ {
 
     readonly onDefinition: EventProducer<DefinitionListener>;
     readonly onComponent: EventProducer<ComponentListener>;
@@ -76,7 +76,7 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
 
   }
 
-  const bootstrapContext = new Context();
+  const bootstrapContext = new BootstrapContext();
 
   return {
     // @ts-ignore

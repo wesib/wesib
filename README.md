@@ -132,7 +132,7 @@ export class MyComponent {
   private readonly _service: MyService;
   
   constructor(context: ComponentContext) {
-    this._service = context.get(MyService.key); // Obtain a `MyService` instance provided by some feature elsewhere.
+    this._service = context.get(MyService); // Obtain a `MyService` instance provided by some feature elsewhere.
   }
 
 }
@@ -161,14 +161,14 @@ import { BootstrapContext, ComponentContext, DefinitionContext, WesFeature } fro
     MyComponent, // The required component will be defined too.  
   ], 
   prebootstrap: [
-    { key: GlobalService.key, provide: () => new GlobalService() }, // Provide a `GlobalService` available globally
+    { key: GlobalService, provide: () => new GlobalService() }, // Provide a `GlobalService` available globally
                                                                     // in all IoC contexts
   ],
   bootstrap(context: BootstrapContext) {
     // Bootstrap the feature by calling methods of provided context.
 
     context.forDefinitions(
-        DefinitionService.key,
+        DefinitionService,
         (definitionContext: DefinitionContext) => {
           // Provide a `DefinitionService` available during component definition.
           // Such service will be provided per component class
@@ -180,7 +180,7 @@ import { BootstrapContext, ComponentContext, DefinitionContext, WesFeature } fro
       // Notified on each component definition.
 
       // The service provided with `forDefinitions()` method above is available here      
-      const definitionService = definitionContext.get(DefinitionService.key);
+      const definitionService = definitionContext.get(DefinitionService);
       
       definitionContext.whenReady(() => {
         // This is called when element class is defined.
@@ -199,7 +199,7 @@ import { BootstrapContext, ComponentContext, DefinitionContext, WesFeature } fro
       // Notified on each component instantiation.
       
       // The service provided with `forComponents()` method above is available here      
-      const myService = componentContext.get(MyService.key);
+      const myService = componentContext.get(MyService);
       
       componentContext.whenReady(() => {
         // This is called when component is instantiated,

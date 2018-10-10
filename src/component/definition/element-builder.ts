@@ -1,9 +1,9 @@
 import { Class, ContextValueKey, EventEmitter, mergeFunctions, noop } from '../../common';
 import { Component, ComponentClass } from '../component';
-import { ComponentContext, ComponentListener, ComponentValueProvider } from '../component-context';
+import { ComponentContext as ComponentContext_, ComponentListener, ComponentValueProvider } from '../component-context';
 import { ComponentDef } from '../component-def';
 import { ComponentValueRegistry } from './component-value-registry';
-import { DefinitionContext, DefinitionListener } from './definition-context';
+import { DefinitionContext as DefinitionContext_, DefinitionListener } from './definition-context';
 import { DefinitionValueRegistry } from './definition-value-registry';
 
 /**
@@ -41,9 +41,9 @@ export class ElementBuilder {
     const builder = this;
     const onComponent = new EventEmitter<ComponentListener>();
     let typeValueRegistry!: ComponentValueRegistry;
-    let whenReady: (this: ElementDefinitionContext, elementType: Class) => void = noop;
+    let whenReady: (this: DefinitionContext, elementType: Class) => void = noop;
 
-    class ElementDefinitionContext extends DefinitionContext<T> {
+    class DefinitionContext extends DefinitionContext_<T> {
 
       readonly componentType: ComponentClass<T> = componentType;
       readonly onComponent = onComponent.on;
@@ -62,8 +62,8 @@ export class ElementBuilder {
         throw new Error('Custom element class is not constructed yet. Consider to use a `whenReady()` callback');
       }
 
-      whenReady(callback: (this: ElementDefinitionContext, elementType: Class) => void) {
-        whenReady = mergeFunctions<[Class], void, ElementDefinitionContext>(whenReady, callback);
+      whenReady(callback: (this: DefinitionContext, elementType: Class) => void) {
+        whenReady = mergeFunctions<[Class], void, DefinitionContext>(whenReady, callback);
       }
 
       forComponents<S>(key: ContextValueKey<any, S>, provider: ComponentValueProvider<S>): void {
@@ -72,12 +72,12 @@ export class ElementBuilder {
 
     }
 
-    const context = new ElementDefinitionContext();
+    const context = new DefinitionContext();
 
     if (def.define) {
       def.define.call(componentType, context);
     }
-    this.definitions.notify(context as DefinitionContext<any>);
+    this.definitions.forEach(listener => listener(context));
 
     const elementType = this._elementType(
         def,
@@ -102,13 +102,13 @@ export class ElementBuilder {
     return elementType;
   }
 
-  private _baseElementType<T extends object>(definitionContext: DefinitionContext<T>, def: ComponentDef<T>): Class {
-    return def.extend && def.extend.type || definitionContext.get(DefinitionContext.baseElementKey);
+  private _baseElementType<T extends object>(definitionContext: DefinitionContext_<T>, def: ComponentDef<T>): Class {
+    return def.extend && def.extend.type || definitionContext.get(DefinitionContext_.baseElementKey);
   }
 
   private _elementType<T extends object>(
       def: ComponentDef<T>,
-      definitionContext: DefinitionContext<T>,
+      definitionContext: DefinitionContext_<T>,
       onComponent: EventEmitter<ComponentListener>,
       valueRegistry: ComponentValueRegistry) {
 
@@ -126,7 +126,7 @@ export class ElementBuilder {
       [Component.symbol]: T;
 
       // Component context reference
-      [ComponentContext.symbol]: ComponentContext<T>;
+      [ComponentContext_.symbol]: ComponentContext_<T>;
 
       private readonly [connectedCallback]!: () => void;
       private readonly [disconnectedCallback]!: () => void;
@@ -138,11 +138,11 @@ export class ElementBuilder {
         const element = this;
         // @ts-ignore
         const elementSuper = (name: string) => super[name] as any;
-        let whenReady: (this: ElementContext, component: T) => void = noop;
-        const connectEvents = new EventEmitter<(this: ElementContext) => void>();
-        const disconnectEvents = new EventEmitter<(this: ElementContext) => void>();
+        let whenReady: (this: ComponentContext, component: T) => void = noop;
+        const connectEvents = new EventEmitter<(this: ComponentContext) => void>();
+        const disconnectEvents = new EventEmitter<(this: ComponentContext) => void>();
 
-        class ElementContext extends ComponentContext<T> {
+        class ComponentContext extends ComponentContext_<T> {
 
           readonly componentType = definitionContext.componentType;
           readonly element = element;
@@ -159,17 +159,17 @@ export class ElementBuilder {
             return element[connected];
           }
 
-          whenReady(callback: (this: ElementContext, component: T) => void) {
-            whenReady = mergeFunctions<[T], void, ElementContext>(whenReady, callback);
+          whenReady(callback: (this: ComponentContext, component: T) => void) {
+            whenReady = mergeFunctions<[T], void, ComponentContext>(whenReady, callback);
           }
 
         }
 
-        const context = new ElementContext();
+        const context = new ComponentContext();
 
-        valueRegistry.provide(ComponentContext.key, () => context);
+        valueRegistry.provide(ComponentContext_.key, () => context);
 
-        Object.defineProperty(this, ComponentContext.symbol, { value: context });
+        Object.defineProperty(this, ComponentContext_.symbol, { value: context });
         Object.defineProperty(this, connectedCallback, {
           value: () => connectEvents.forEach(listener => listener.call(context)),
         });

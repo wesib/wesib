@@ -2,7 +2,7 @@ import { RevertibleIterable } from '../iteration';
 import {
   ContextValueDefaultHandler,
   ContextValueKey,
-  ContextValueProvider,
+  ContextValueProvider, ContextValueRequest,
   ContextValueSource,
   ContextValueSourcesKey,
 } from './context-value';
@@ -106,7 +106,10 @@ export class ContextValueRegistry<C extends ContextValues> {
 
     class Values implements ContextValues {
 
-      get<V, S>(this: C, key: ContextValueKey<V, S>, defaultValue?: V | null | undefined): V | null | undefined {
+      get<V, S>(
+          this: C,
+          { key }: { key: ContextValueKey<V, S> },
+          defaultValue?: V | null | undefined): V | null | undefined {
 
         const context = this;
         const cached: V | undefined = values.get(key);

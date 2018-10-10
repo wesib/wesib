@@ -2,6 +2,22 @@ import { RevertibleIterable } from '../iteration';
 import { ContextValues } from './context-values';
 
 /**
+ * A request for context value.
+ *
+ * This is passed to `ContextValues.get()` methods in order to obtain a context value.
+ *
+ * This is typically a context value key. But may also be any object with `key` property containing such key.
+ */
+export interface ContextValueRequest<V> {
+
+  /**
+   * A key of context value to request.
+   */
+  readonly key: ContextValueKey<V, any>;
+
+}
+
+/**
  * Context value key.
  *
  * Every key should be an unique instance of this class.
@@ -12,7 +28,7 @@ import { ContextValues } from './context-values';
  * @param <V> A type of associated value.
  * @param <S> A type of source values.
  */
-export abstract class ContextValueKey<V, S = V> {
+export abstract class ContextValueKey<V, S = V> implements ContextValueRequest<V> {
 
   /**
    * Human-readable key name.
@@ -36,6 +52,13 @@ export abstract class ContextValueKey<V, S = V> {
    */
   protected constructor(name: string) {
     this.name = name;
+  }
+
+  /**
+   * Always self. This is to use context value keys as context value requests.
+   */
+  get key(): this {
+    return this;
   }
 
   /**

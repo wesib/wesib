@@ -1,5 +1,5 @@
 import {
-  ContextValueKey,
+  ContextValueKey, ContextValueRequest,
   ContextValues,
   EventProducer,
   noop,
@@ -39,7 +39,7 @@ export abstract class ComponentContext<T extends object = object> implements Con
    * This is an element itself by default. But can be overridden e.g. by `@AttachShadow` decorator.
    */
   static readonly contentRootKey: ContextValueKey<ParentNode> =
-      new SingleValueKey('content-root', ctx => ctx.get(ComponentContext.key).element);
+      new SingleValueKey('content-root', ctx => ctx.get(ComponentContext).element);
 
   /**
    * A key of component context value containing a component state update function.
@@ -169,18 +169,17 @@ export abstract class ComponentContext<T extends object = object> implements Con
    */
   abstract elementSuper(name: string): any;
 
-  abstract get<V, S>(key: ContextValueKey<V, S>, defaultValue?: V): V;
+  abstract get<V>(request: ContextValueRequest<V>, defaultValue?: V): V;
 
-  abstract get<V, S>(key: ContextValueKey<V, S>, defaultValue: V | null): V | null;
+  abstract get<V>(request: ContextValueRequest<V>, defaultValue: V | null): V | null;
 
-  abstract get<V, S>(key: ContextValueKey<V, S>, defaultValue: V | undefined): V | undefined;
+  abstract get<V>(request: ContextValueRequest<V>, defaultValue: V | undefined): V | undefined;
 
   /**
    * Returns a value associated with the given key.
    *
    * @param <V> A type of associated value.
-   * @param <S> A type of source values.
-   * @param key Target key.
+   * @param request Context value request with target key.
    * @param defaultValue Default value to return if there is no value associated with the given key. Can be `null`
    * or `undefined` too.
    *
@@ -189,7 +188,7 @@ export abstract class ComponentContext<T extends object = object> implements Con
    * @throws Error If there is no value associated with the given key and the default key is not provided neither
    * as function argument, nor as `ContextValueKey.defaultValue` property.
    */
-  abstract get<V, S>(key: ContextValueKey<V, S>, defaultValue: V | null | undefined): V | null | undefined;
+  abstract get<V>(request: ContextValueRequest<V>, defaultValue: V | null | undefined): V | null | undefined;
 
 }
 
