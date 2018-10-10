@@ -9,6 +9,11 @@ import {
 } from '../common';
 import { ComponentClass } from './component';
 
+const componentContextKey: ContextValueKey<ComponentContext<any>> = new SingleValueKey('component-context');
+const contentRootKey: ContextValueKey<ContentRoot> = new SingleValueKey(
+    'content-root',
+    ctx => ctx.get(componentContextKey).element);
+
 /**
  * Component context.
  *
@@ -31,15 +36,7 @@ export abstract class ComponentContext<T extends object = object> implements Con
    *
    * It is useful e.g. when constructing default context values relying on context instance.
    */
-  static readonly key: ContextValueKey<ComponentContext<any>> = new SingleValueKey('component-context');
-
-  /**
-   * A key of component context value containing a component root element.
-   *
-   * This is an element itself by default. But can be overridden e.g. by `@AttachShadow` decorator.
-   */
-  static readonly contentRootKey: ContextValueKey<ParentNode> =
-      new SingleValueKey('content-root', ctx => ctx.get(ComponentContext).element);
+  static readonly key = componentContextKey;
 
   /**
    * Component class constructor.
@@ -131,10 +128,10 @@ export abstract class ComponentContext<T extends object = object> implements Con
   /**
    * Component content root.
    *
-   * This is a shorthand for requesting c ontent root instance available under `[ComponentContext.contentRootKey]` key.
+   * This is a shorthand for requesting content root instance available under `[ContentRoot.key]` key.
    */
   get contentRoot(): ParentNode {
-    return this.get(ComponentContext.contentRootKey);
+    return this.get(contentRootKey);
   }
 
   /**
@@ -177,6 +174,22 @@ export abstract class ComponentContext<T extends object = object> implements Con
    * as function argument, nor as `ContextValueKey.defaultValue` property.
    */
   abstract get<V>(request: ContextValueRequest<V>, defaultValue: V | null | undefined): V | null | undefined;
+
+}
+
+/**
+ * Component content root node.
+ */
+export type ContentRoot = ParentNode;
+
+export namespace ContentRoot {
+
+  /**
+   * A key of component context value containing a component root element.
+   *
+   * This is an element itself by default. But can be overridden e.g. by `@AttachShadow` decorator.
+   */
+  export const key = contentRootKey;
 
 }
 
