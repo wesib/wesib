@@ -52,6 +52,7 @@ export class ElementBuilder {
       constructor() {
         super();
         typeValueRegistry = ComponentValueRegistry.create(builder._definitionValueRegistry.bindSources(this));
+        typeValueRegistry.provide({ provide: DefinitionContext_, value: this });
 
         const values = typeValueRegistry.newValues();
 
@@ -116,13 +117,13 @@ export class ElementBuilder {
 
     const { componentType } = definitionContext;
     const builder = this;
-    const baseElementType = this._elementBaseClass(definitionContext, def);
+    const elementBaseClass = this._elementBaseClass(definitionContext, def);
 
     const connected = Symbol('connected');
     const connectedCallback = Symbol('connectedCallback');
     const disconnectedCallback = Symbol('disconnectedCallback');
 
-    class Element extends baseElementType {
+    class Element extends elementBaseClass {
 
       // Component reference
       [Component.symbol]: T;

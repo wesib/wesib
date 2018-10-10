@@ -105,11 +105,13 @@ describe('component/definition/element-builder', () => {
       let value: string;
       const key2 = new SingleValueKey<string>('another-key');
       let value2: string;
+      let definitionContext: DefinitionContext<any>;
       let componentContext: ComponentContext;
 
       beforeEach(() => {
         value = 'some value';
         builder.definitions.on((ctx: DefinitionContext<any>) => {
+          definitionContext = ctx;
           if (ctx.componentType === TestComponent) {
             ctx.forComponents({ provide: key, value });
           }
@@ -133,6 +135,11 @@ describe('component/definition/element-builder', () => {
         componentContext = ComponentContext.of(element);
       });
 
+      describe('DefinitionContext', () => {
+        it('is available as context value', () => {
+          expect(definitionContext.get(DefinitionContext)).toBe(definitionContext);
+        });
+      });
       it('is available to component', () => {
         expect(componentContext.get(key)).toBe(value);
         expect(componentContext.get(key2)).toBe(value2);

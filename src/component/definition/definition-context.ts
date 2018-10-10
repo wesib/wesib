@@ -1,5 +1,5 @@
 import {
-  Class,
+  Class, ContextValueKey,
   ContextValueRequest,
   ContextValues,
   ContextValueSpec,
@@ -19,6 +19,11 @@ import { ComponentContext, ComponentListener } from '../component-context';
  * @param <T> A type of component.
  */
 export abstract class DefinitionContext<T extends object> implements ContextValues {
+
+  /**
+   * A key of definition context value containing a definition context itself.
+   */
+  static readonly key: ContextValueKey<DefinitionContext<any>> = new SingleValueKey('definition-context');
 
   /**
    * Component class constructor.
