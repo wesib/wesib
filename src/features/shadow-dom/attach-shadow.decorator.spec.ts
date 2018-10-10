@@ -3,6 +3,7 @@ import { FeatureDef } from '../../feature';
 import { testElement } from '../../spec/test-element';
 import { list2set } from '../../util';
 import { AttachShadow } from './attach-shadow.decorator';
+import { ShadowContentRoot } from './shadow-content-root';
 import { ShadowDomSupport } from './shadow-dom-support.feature';
 import Spy = jasmine.Spy;
 
@@ -11,7 +12,7 @@ describe('features/shadow-dom/attach-shadow.decorator', () => {
 
     let testComponent: ComponentClass;
     let attachShadowSpy: Spy;
-    let shadowRoot: ShadowRoot;
+    let shadowRoot: ShadowContentRoot;
     let element: any;
     let context: ComponentContext;
 
@@ -42,7 +43,7 @@ describe('features/shadow-dom/attach-shadow.decorator', () => {
       expect(list2set(FeatureDef.of(testComponent).require)).toContain(ShadowDomSupport);
     });
     it('provides shadow root', () => {
-      expect(context.get(ShadowDomSupport.shadowRootKey)).toBe(shadowRoot);
+      expect(context.get(ShadowContentRoot)).toBe(shadowRoot);
     });
     it('provides shadow root as content root', () => {
       expect(context.contentRoot).toBe(shadowRoot);
@@ -93,7 +94,7 @@ describe('features/shadow-dom/attach-shadow.decorator', () => {
       element = new (testElement(OtherComponent))();
       context = ComponentContext.of(element);
 
-      expect(context.get(ShadowDomSupport.shadowRootKey)).toBe(element);
+      expect(context.get(ShadowContentRoot)).toBe(element);
     });
   });
 });
