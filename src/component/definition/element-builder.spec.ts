@@ -2,9 +2,8 @@ import { Class, EventInterest, SingleValueKey } from '../../common';
 import { ComponentClass } from '../component';
 import { ComponentContext } from '../component-context';
 import { ComponentDef } from '../component-def';
-import { WesComponent } from '../wes-component.decorator';
 import { ComponentValueRegistry } from './component-value-registry';
-import { DefinitionContext } from './definition-context';
+import { DefinitionContext, ElementBaseClass } from './definition-context';
 import { DefinitionValueRegistry } from './definition-value-registry';
 import { ElementBuilder } from './element-builder';
 import Spy = jasmine.Spy;
@@ -125,7 +124,7 @@ describe('component/definition/element-builder', () => {
         });
       });
       beforeEach(() => {
-        definitionValueRegistry.provide({ provide: DefinitionContext.baseElementKey, value: Object });
+        definitionValueRegistry.provide({ provide: ElementBaseClass, value: Object });
       });
       beforeEach(() => {
 
@@ -167,7 +166,7 @@ describe('component/definition/element-builder', () => {
         });
       });
       beforeEach(() => {
-        definitionValueRegistry.provide({ provide: DefinitionContext.baseElementKey, value: Object });
+        definitionValueRegistry.provide({ provide: ElementBaseClass, value: Object });
       });
       beforeEach(() => {
 

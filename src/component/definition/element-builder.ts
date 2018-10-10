@@ -3,7 +3,7 @@ import { Component, ComponentClass } from '../component';
 import { ComponentContext as ComponentContext_, ComponentListener } from '../component-context';
 import { ComponentDef } from '../component-def';
 import { ComponentValueRegistry } from './component-value-registry';
-import { DefinitionContext as DefinitionContext_, DefinitionListener } from './definition-context';
+import { DefinitionContext as DefinitionContext_, DefinitionListener, ElementBaseClass } from './definition-context';
 import { DefinitionValueRegistry } from './definition-value-registry';
 
 /**
@@ -102,8 +102,10 @@ export class ElementBuilder {
     return elementType;
   }
 
-  private _baseElementType<T extends object>(definitionContext: DefinitionContext_<T>, def: ComponentDef<T>): Class {
-    return def.extend && def.extend.type || definitionContext.get(DefinitionContext_.baseElementKey);
+  private _elementBaseClass<T extends object>(
+      definitionContext: DefinitionContext_<T>,
+      def: ComponentDef<T>): ElementBaseClass {
+    return def.extend && def.extend.type || definitionContext.get(ElementBaseClass);
   }
 
   private _elementType<T extends object>(
@@ -114,7 +116,7 @@ export class ElementBuilder {
 
     const { componentType } = definitionContext;
     const builder = this;
-    const baseElementType = this._baseElementType(definitionContext, def);
+    const baseElementType = this._elementBaseClass(definitionContext, def);
 
     const connected = Symbol('connected');
     const connectedCallback = Symbol('connectedCallback');

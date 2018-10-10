@@ -21,17 +21,6 @@ import { ComponentContext, ComponentListener } from '../component-context';
 export abstract class DefinitionContext<T extends object> implements ContextValues {
 
   /**
-   * A key of definition context value containing a base element class constructor.
-   *
-   * This value is the class the custom elements are inherited from unless `ComponentDef.extend.type` is specified.
-   *
-   * Target value defaults to `HTMLElement` from the window provided under `[BootstrapWindow.key]`.
-   */
-  static readonly baseElementKey = new SingleValueKey<Class>(
-      'base-element',
-      values => (values.get(BootstrapWindow) as any).HTMLElement);
-
-  /**
    * Component class constructor.
    */
   abstract readonly componentType: ComponentClass<T>;
@@ -98,6 +87,26 @@ export abstract class DefinitionContext<T extends object> implements ContextValu
    * as function argument, nor as `ContextValueKey.defaultValue` property.
    */
   abstract get<V>(request: ContextValueRequest<V>, defaultValue: V | null | undefined): V | null | undefined;
+
+}
+
+/**
+ * Base element class constructor.
+ */
+export type ElementBaseClass<T extends object = object> = Class<T>;
+
+export namespace ElementBaseClass {
+
+  /**
+   * A key of definition context value containing a base element class constructor.
+   *
+   * This value is the class the custom elements are inherited from unless `ComponentDef.extend.type` is specified.
+   *
+   * Target value defaults to `HTMLElement` from the window provided under `[BootstrapWindow.key]`.
+   */
+  export const key = new SingleValueKey<ElementBaseClass>(
+      'element-base-class',
+      values => (values.get(BootstrapWindow) as any).HTMLElement);
 
 }
 
