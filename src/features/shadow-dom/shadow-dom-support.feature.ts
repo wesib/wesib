@@ -7,7 +7,12 @@ function attachShadow(context: ComponentContext, init: ShadowRootInit): ShadowRo
   const element = context.element;
 
   if ('attachShadow' in element) {
-    return element.attachShadow(init);
+
+    const shadowRoot = element.attachShadow(init);
+
+    (shadowRoot as any)[ComponentContext.symbol] = context;
+
+    return shadowRoot;
   }
 
   return element;
