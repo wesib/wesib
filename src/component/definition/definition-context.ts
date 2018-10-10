@@ -9,6 +9,7 @@ import {
 import { BootstrapWindow } from '../../feature';
 import { ComponentClass } from '../component';
 import { ComponentContext, ComponentListener } from '../component-context';
+import { ComponentDef } from '../component-def';
 
 /**
  * Component definition context.
@@ -105,13 +106,20 @@ export namespace ElementBaseClass {
   /**
    * A key of definition context value containing a base element class constructor.
    *
-   * This value is the class the custom elements are inherited from unless `ComponentDef.extend.type` is specified.
+   * This value is the class the custom elements are inherited from.
    *
-   * Target value defaults to `HTMLElement` from the window provided under `[BootstrapWindow.key]`.
+   * Target value defaults to `HTMLElement` from the window provided under `[BootstrapWindow.key]`,
+   * unless `ComponentDef.extend.type` is specified.
    */
   export const key = new SingleValueKey<ElementBaseClass>(
       'element-base-class',
-      values => (values.get(BootstrapWindow) as any).HTMLElement);
+      values => {
+
+        const componentType = values.get(DefinitionContext).componentType;
+        const extend = ComponentDef.of(componentType).extend;
+
+        return extend && extend.type ||  (values.get(BootstrapWindow) as any).HTMLElement;
+      });
 
 }
 

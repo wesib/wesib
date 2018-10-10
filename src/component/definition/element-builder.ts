@@ -103,12 +103,6 @@ export class ElementBuilder {
     return elementType;
   }
 
-  private _elementBaseClass<T extends object>(
-      definitionContext: DefinitionContext_<T>,
-      def: ComponentDef<T>): ElementBaseClass {
-    return def.extend && def.extend.type || definitionContext.get(ElementBaseClass);
-  }
-
   private _elementType<T extends object>(
       def: ComponentDef<T>,
       definitionContext: DefinitionContext_<T>,
@@ -117,7 +111,7 @@ export class ElementBuilder {
 
     const { componentType } = definitionContext;
     const builder = this;
-    const elementBaseClass = this._elementBaseClass(definitionContext, def);
+    const elementBaseClass = definitionContext.get(ElementBaseClass);
 
     const connected = Symbol('connected');
     const connectedCallback = Symbol('connectedCallback');
