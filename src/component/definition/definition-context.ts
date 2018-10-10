@@ -1,7 +1,15 @@
-import { Class, ContextValueKey, ContextValues, EventProducer, SingleValueKey } from '../../common';
-import { BootstrapContext } from '../../feature';
+import {
+  Class, ContextValueKey,
+  ContextValueRequest,
+  ContextValues,
+  ContextValueSpec,
+  EventProducer,
+  SingleValueKey,
+} from '../../common';
+import { BootstrapWindow } from '../../feature';
 import { ComponentClass } from '../component';
-import { ComponentListener, ComponentValueProvider } from '../component-context';
+import { ComponentContext, ComponentListener } from '../component-context';
+import { ComponentDef } from '../component-def';
 
 /**
  * Component definition context.
@@ -14,15 +22,9 @@ import { ComponentListener, ComponentValueProvider } from '../component-context'
 export abstract class DefinitionContext<T extends object> implements ContextValues {
 
   /**
-   * A key of definition context value containing a base element class constructor.
-   *
-   * This value is the class the custom elements are inherited from unless `ComponentDef.extends.type` is specified.
-   *
-   * Target value defaults to `HTMLElement` from the window provided under `windowKey`.
+   * A key of definition context value containing a definition context itself.
    */
-  static readonly baseElementKey = new SingleValueKey<Class>(
-      'base-element',
-      values => (values.get(BootstrapContext.windowKey) as any).HTMLElement);
+  static readonly key: ContextValueKey<DefinitionContext<any>> = new SingleValueKey('definition-context');
 
   /**
    * Component class constructor.
@@ -66,24 +68,22 @@ export abstract class DefinitionContext<T extends object> implements ContextValu
    *
    * The given provider will be requested for the value at most once per component.
    *
-   * @param <S> The type of source value.
-   * @param key Component context value key the provider should associate the value with.
-   * @param provider Component context value provider to register.
+   * @param <S> The type of context value sources.
+   * @param spec Component context value specifier.
    */
-  abstract forComponents<S>(key: ContextValueKey<any, S>, provider: ComponentValueProvider<S>): void;
+  abstract forComponents<S>(spec: ContextValueSpec<ComponentContext<any>, any, S>): void;
 
-  abstract get<V, S>(key: ContextValueKey<V, S>, defaultValue?: V): V;
+  abstract get<V>(request: ContextValueRequest<V>, defaultValue?: V): V;
 
-  abstract get<V, S>(key: ContextValueKey<V, S>, defaultValue: V | null): V | null;
+  abstract get<V>(request: ContextValueRequest<V>, defaultValue: V | null): V | null;
 
-  abstract get<V, S>(key: ContextValueKey<V, S>, defaultValue: V | undefined): V | undefined;
+  abstract get<V>(request: ContextValueRequest<V>, defaultValue: V | undefined): V | undefined;
 
   /**
    * Returns a value associated with the given key.
    *
    * @param <V> A type of associated value.
-   * @param <S> A type of source values.
-   * @param key Target key.
+   * @param request Context value request with target key.
    * @param defaultValue Default value to return if there is no value associated with the given key. Can be `null`
    * or `undefined` too.
    *
@@ -92,24 +92,36 @@ export abstract class DefinitionContext<T extends object> implements ContextValu
    * @throws Error If there is no value associated with the given key and the default key is not provided neither
    * as function argument, nor as `ContextValueKey.defaultValue` property.
    */
-  abstract get<V, S>(key: ContextValueKey<V, S>, defaultValue: V | null | undefined): V | null | undefined;
+  abstract get<V>(request: ContextValueRequest<V>, defaultValue: V | null | undefined): V | null | undefined;
 
 }
 
 /**
- * Component definition context value provider.
- *
- * It is responsible for constructing the values associated with particular key for each component type.
- *
- * This function is called at most once per component type.
- *
- * @param <S> The type of source value.
- * @param context Target component definition context.
- *
- * @return Either constructed value, or `null`/`undefined` if the value can not be constructed.
+ * Base element class constructor.
  */
-export type DefinitionValueProvider<S> =
-    <T extends object>(this: void, context: DefinitionContext<T>) => S | null | undefined;
+export type ElementBaseClass<T extends object = object> = Class<T>;
+
+export namespace ElementBaseClass {
+
+  /**
+   * A key of definition context value containing a base element class constructor.
+   *
+   * This value is the class the custom elements are inherited from.
+   *
+   * Target value defaults to `HTMLElement` from the window provided under `[BootstrapWindow.key]`,
+   * unless `ComponentDef.extend.type` is specified.
+   */
+  export const key = new SingleValueKey<ElementBaseClass>(
+      'element-base-class',
+      values => {
+
+        const componentType = values.get(DefinitionContext).componentType;
+        const extend = ComponentDef.of(componentType).extend;
+
+        return extend && extend.type ||  (values.get(BootstrapWindow) as any).HTMLElement;
+      });
+
+}
 
 /**
  * Component definition listener.

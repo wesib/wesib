@@ -1,5 +1,4 @@
-import { EventEmitter, StateUpdateConsumer, StateValueKey } from '../../common';
-import { ComponentContext } from '../../component';
+import { EventEmitter, StateUpdater, StateValueKey } from '../../common';
 import { BootstrapContext, WesFeature } from '../../feature';
 import { StateTracker as StateTracker_ } from './state-tracker';
 
@@ -8,7 +7,7 @@ import { StateTracker as StateTracker_ } from './state-tracker';
  *
  * When enabled, it registers context values for each component with the following keys:
  *
- * - `[ComponentContext.stateUpdateKey]` that allows to update the component state, and
+ * - `[StateUpdater.key]` that allows to update the component state, and
  * - `[StateTracker.key]` containing a `StateTracker` instance to track the state changes.
  *
  * Other features would use this to notify when the state changes. E.g. `DomPropertiesSupport` and `AttributesSupport`
@@ -21,21 +20,29 @@ export class StateSupport {
 }
 
 function enableStateSupport(context: BootstrapContext) {
-  context.forComponents(StateTracker_.key, () => {
+  context.forComponents({
+    provide: StateTracker_,
+    provider() {
 
-    const emitter = new EventEmitter<StateUpdateConsumer>();
+      const emitter = new EventEmitter<StateUpdater>();
 
-    class StateTracker extends StateTracker_ {
+      class StateTracker extends StateTracker_ {
 
-      readonly onStateUpdate = emitter.on;
+        readonly onStateUpdate = emitter.on;
 
-      readonly updateState: StateUpdateConsumer = <V>(key: StateValueKey, newValue: V, oldValue: V) => {
-        emitter.notify(key, newValue, oldValue);
+        readonly updateState: StateUpdater = <V>(key: StateValueKey, newValue: V, oldValue: V) => {
+          emitter.notify(key, newValue, oldValue);
+        }
+
       }
 
-    }
-
-    return new StateTracker();
+      return new StateTracker();
+    },
   });
-  context.forComponents(ComponentContext.stateUpdateKey, ctx => ctx.get(StateTracker_.key).updateState);
+  context.forComponents({
+    provide: StateUpdater,
+    provider(ctx) {
+      return ctx.get(StateTracker_).updateState;
+    },
+  });
 }

@@ -1,6 +1,6 @@
 import { noop } from '../../common';
 import { ComponentContext } from '../../component';
-import { BootstrapContext, WesFeature } from '../../feature';
+import { BootstrapWindow, WesFeature } from '../../feature';
 import { RenderScheduler as RenderScheduler_ } from './render-scheduler';
 
 /**
@@ -10,7 +10,7 @@ import { RenderScheduler as RenderScheduler_ } from './render-scheduler';
  */
 @WesFeature({
   bootstrap(context) {
-    context.forComponents(RenderScheduler_.key, createRenderScheduler);
+    context.forComponents({ provide: RenderScheduler_, provider: createRenderScheduler });
   }
 })
 export class RenderSupport {
@@ -19,7 +19,7 @@ export class RenderSupport {
 function createRenderScheduler<T extends object>(ctx: ComponentContext<T>) {
 
   let scheduled: () => void = noop;
-  const window = ctx.get(BootstrapContext.windowKey);
+  const window = ctx.get(BootstrapWindow);
 
   class RenderScheduler extends RenderScheduler_ {
 

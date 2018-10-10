@@ -1,4 +1,4 @@
-import { ContextValueKey, EventProducer, SingleValueKey, StateUpdateConsumer } from '../../common';
+import { ContextValueKey, EventProducer, SingleValueKey, StateUpdater } from '../../common';
 
 /**
  * Component state tracker.
@@ -21,14 +21,14 @@ export abstract class StateTracker {
    *
    * @return An event interest instance.
    */
-  abstract readonly onStateUpdate: EventProducer<StateUpdateConsumer>;
+  abstract readonly onStateUpdate: EventProducer<StateUpdater>;
 
   /**
    * Updates the component state.
    *
    * All listeners registered with `onStateUpdate()` will be notified on this update.
    *
-   * This method is also called by the function available under `[ComponentContext.stateUpdateKey]` key.
+   * This method is also called by the function available under `[StateUpdater.key]` key.
    * The latter is preferred way to call it, as the caller won't depend on `StateSupport` feature then.
    *
    * @param <V> A type of changed value.
@@ -36,6 +36,6 @@ export abstract class StateTracker {
    * @param newValue New value.
    * @param oldValue Previous value.
    */
-  abstract readonly updateState: StateUpdateConsumer;
+  abstract readonly updateState: StateUpdater;
 
 }

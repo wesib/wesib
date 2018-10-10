@@ -15,7 +15,7 @@ describe('common/context/context-value-registry', () => {
       registry = new ContextValueRegistry();
       values = registry.newValues();
       providerSpy = jasmine.createSpy('provider');
-      registry.provide(key, providerSpy);
+      registry.provide({ provide: key, provider: providerSpy });
     });
 
     describe('Single value', () => {
@@ -38,7 +38,7 @@ describe('common/context/context-value-registry', () => {
         const defaultValue = 'default';
         const keyWithDefaults = new SingleValueKey(key.name, () => defaultValue);
 
-        registry.provide(keyWithDefaults, () => null);
+        registry.provide({ provide: keyWithDefaults, value: null });
 
         expect(values.get(keyWithDefaults)).toBe(defaultValue);
       });
@@ -114,8 +114,8 @@ describe('common/context/context-value-registry', () => {
         expect(values.get(multiKey)).toEqual([]);
       });
       it('is associated with empty array if providers did not return any values', () => {
-        registry.provide(multiKey, () => null);
-        registry.provide(multiKey, () => undefined);
+        registry.provide({ provide: multiKey, value: null });
+        registry.provide({ provide: multiKey, value: undefined });
 
         expect(values.get(multiKey)).toEqual([]);
       });
@@ -131,20 +131,20 @@ describe('common/context/context-value-registry', () => {
         const defaultValue = ['default'];
         const keyWithDefaults = new MultiValueKey('key', () => defaultValue);
 
-        registry.provide(keyWithDefaults, () => null);
-        registry.provide(keyWithDefaults, () => undefined);
+        registry.provide({ provide: keyWithDefaults, value: null });
+        registry.provide({ provide: keyWithDefaults, value: undefined });
 
         expect(values.get(keyWithDefaults)).toEqual(defaultValue);
       });
       it('is associated with provided values array', () => {
-        registry.provide(multiKey, () => 'a');
-        registry.provide(multiKey, () => undefined);
-        registry.provide(multiKey, () => 'c');
+        registry.provide({ provide: multiKey, value: 'a' });
+        registry.provide({ provide: multiKey, value: undefined });
+        registry.provide({ provide: multiKey, value: 'c' });
 
         expect(values.get(multiKey)).toEqual(['a', 'c']);
       });
       it('is associated with value', () => {
-        registry.provide(multiKey, () => 'value');
+        registry.provide({ provide: multiKey, value: 'value' });
 
         expect(values.get(multiKey)).toEqual(['value']);
       });
@@ -180,7 +180,7 @@ describe('common/context/context-value-registry', () => {
 
       beforeEach(() => {
         provider2Spy = jasmine.createSpy('provider2');
-        registry.provide(key, provider2Spy);
+        registry.provide({ provide: key, provider: provider2Spy });
       });
 
       it('provides the last constructed value', () => {
@@ -223,7 +223,7 @@ describe('common/context/context-value-registry', () => {
 
         providerSpy.and.returnValue(value1);
 
-        chained.provide(key, provider2Spy);
+        chained.provide({ provide: key, provider: provider2Spy });
         provider2Spy.and.returnValue(value2);
 
         expect(chainedValues.get(key)).toBe(value2);
@@ -234,7 +234,7 @@ describe('common/context/context-value-registry', () => {
 
         providerSpy.and.returnValue(value1);
 
-        chained.provide(key, provider2Spy);
+        chained.provide({ provide: key, provider: provider2Spy });
         provider2Spy.and.returnValue(null);
 
         expect(chainedValues.get(key)).toBe(value1);
@@ -255,14 +255,14 @@ describe('common/context/context-value-registry', () => {
 
       it('contains all sources', () => {
         providerSpy.and.returnValue('1');
-        registry2.provide(key, () => '2');
-        registry2.provide(key, () => '3');
+        registry2.provide({ provide: key, value: '2' });
+        registry2.provide({ provide: key, value: '3' });
         expect([...combined.sources(context, key)]).toEqual(['1', '2', '3']);
       });
       it('contains reverted sources', () => {
         providerSpy.and.returnValue('1');
-        registry2.provide(key, () => '2');
-        registry2.provide(key, () => '3');
+        registry2.provide({ provide: key, value: '2' });
+        registry2.provide({ provide: key, value: '3' });
         expect([...combined.sources(context, key).reverse()]).toEqual(['3', '2', '1']);
       });
     });

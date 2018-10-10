@@ -27,7 +27,7 @@ export function Attribute<T extends ComponentClass>(opts?: Attribute.Opts<T> | s
         componentType,
         {
           define(definitionContext) {
-            definitionContext.get(AttributeRegistry.key).onAttributeChange(name, updateState);
+            definitionContext.get(AttributeRegistry).onAttributeChange(name, updateState);
           }
         });
 

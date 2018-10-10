@@ -5,6 +5,7 @@ import { AttributeChangedCallback, AttributeRegistry as AttributeRegistry_ } fro
 
 class AttributeRegistry<T extends object> implements AttributeRegistry_<T> {
 
+  static readonly key = new SingleValueKey<AttributeRegistry<any>>('attribute-registry:impl');
   private readonly _attrs: { [name: string]: AttributeChangedCallback<T> } = {};
 
   onAttributeChange(name: string, callback: AttributeChangedCallback<T>): void {
@@ -36,8 +37,6 @@ class AttributeRegistry<T extends object> implements AttributeRegistry_<T> {
 
 }
 
-const implKey = new SingleValueKey<AttributeRegistry<any>>('attribute-registry:impl');
-
 /**
  * A feature adding attributes to custom elements.
  *
@@ -46,9 +45,9 @@ const implKey = new SingleValueKey<AttributeRegistry<any>>('attribute-registry:i
  */
 @WesFeature({
   bootstrap(context) {
-    context.forDefinitions(implKey, () => new AttributeRegistry());
-    context.forDefinitions(AttributeRegistry_.key, ctx => ctx.get(implKey));
-    context.onDefinition(ctx => ctx.whenReady(elementType => ctx.get(implKey).apply(elementType)));
+    context.forDefinitions({ provide: AttributeRegistry, provider: () => new AttributeRegistry() });
+    context.forDefinitions({ provide: AttributeRegistry_, provider: ctx => ctx.get(AttributeRegistry) });
+    context.onDefinition(ctx => ctx.whenReady(elementType => ctx.get(AttributeRegistry).apply(elementType)));
   },
 })
 export class AttributesSupport {}

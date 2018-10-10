@@ -1,13 +1,18 @@
 import {
   ContextValueKey,
+  ContextValueRequest,
   ContextValues,
   EventProducer,
-  noop,
   SingleValueKey,
-  StateUpdateConsumer,
+  StateUpdater,
   StateValueKey,
 } from '../common';
 import { ComponentClass } from './component';
+
+const componentContextKey: ContextValueKey<ComponentContext<any>> = new SingleValueKey('component-context');
+const contentRootKey: ContextValueKey<ContentRoot> = new SingleValueKey(
+    'content-root',
+    ctx => ctx.get(componentContextKey).element);
 
 /**
  * Component context.
@@ -31,26 +36,7 @@ export abstract class ComponentContext<T extends object = object> implements Con
    *
    * It is useful e.g. when constructing default context values relying on context instance.
    */
-  static readonly key: ContextValueKey<ComponentContext<any>> = new SingleValueKey('component-context');
-
-  /**
-   * A key of component context value containing a component root element.
-   *
-   * This is an element itself by default. But can be overridden e.g. by `@AttachShadow` decorator.
-   */
-  static readonly contentRootKey: ContextValueKey<ParentNode> =
-      new SingleValueKey('content-root', ctx => ctx.get(ComponentContext.key).element);
-
-  /**
-   * A key of component context value containing a component state update function.
-   *
-   * Features are calling this function by default when component state changes, e.g. attribute value or DOM property
-   * modified.
-   *
-   * Note that this value is not provided, unless the `StateSupport` feature is enabled.
-   */
-  static readonly stateUpdateKey: ContextValueKey<StateUpdateConsumer> =
-      new SingleValueKey('state-update', () => noop);
+  static readonly key = componentContextKey;
 
   /**
    * Component class constructor.
@@ -105,19 +91,18 @@ export abstract class ComponentContext<T extends object = object> implements Con
   /**
    * Updates component's state.
    *
-   * This is a shorthand for invoking a component state update function available under
-   * `[ComponentContext.stateUpdateKey]` key.
+   * This is a shorthand for invoking a component state update function available under `[StateUpdater.key]` key.
    *
-   * Note that state update has no effect unless `StateSupport` feature is enabled or
-   * `[ComponentContext.stateUpdateKey]` context value is provided by other means.
+   * Note that state update has no effect unless `StateSupport` feature is enabled or `[StateUpdater.key]` context value
+   * is provided by other means.
    *
    * @param <V> A type of changed value.
    * @param key Changed value key.
    * @param newValue New value.
    * @param oldValue Previous value.
    */
-  readonly updateState: StateUpdateConsumer = (<V>(key: StateValueKey, newValue: V, oldValue: V) => {
-    this.get(ComponentContext.stateUpdateKey)(key, newValue, oldValue);
+  readonly updateState: StateUpdater = (<V>(key: StateValueKey, newValue: V, oldValue: V) => {
+    this.get(StateUpdater)(key, newValue, oldValue);
   });
 
   /**
@@ -143,10 +128,10 @@ export abstract class ComponentContext<T extends object = object> implements Con
   /**
    * Component content root.
    *
-   * This is a shorthand for requesting c ontent root instance available under `[ComponentContext.contentRootKey]` key.
+   * This is a shorthand for requesting content root instance available under `[ContentRoot.key]` key.
    */
   get contentRoot(): ParentNode {
-    return this.get(ComponentContext.contentRootKey);
+    return this.get(contentRootKey);
   }
 
   /**
@@ -169,18 +154,17 @@ export abstract class ComponentContext<T extends object = object> implements Con
    */
   abstract elementSuper(name: string): any;
 
-  abstract get<V, S>(key: ContextValueKey<V, S>, defaultValue?: V): V;
+  abstract get<V>(request: ContextValueRequest<V>, defaultValue?: V): V;
 
-  abstract get<V, S>(key: ContextValueKey<V, S>, defaultValue: V | null): V | null;
+  abstract get<V>(request: ContextValueRequest<V>, defaultValue: V | null): V | null;
 
-  abstract get<V, S>(key: ContextValueKey<V, S>, defaultValue: V | undefined): V | undefined;
+  abstract get<V>(request: ContextValueRequest<V>, defaultValue: V | undefined): V | undefined;
 
   /**
    * Returns a value associated with the given key.
    *
    * @param <V> A type of associated value.
-   * @param <S> A type of source values.
-   * @param key Target key.
+   * @param request Context value request with target key.
    * @param defaultValue Default value to return if there is no value associated with the given key. Can be `null`
    * or `undefined` too.
    *
@@ -189,24 +173,25 @@ export abstract class ComponentContext<T extends object = object> implements Con
    * @throws Error If there is no value associated with the given key and the default key is not provided neither
    * as function argument, nor as `ContextValueKey.defaultValue` property.
    */
-  abstract get<V, S>(key: ContextValueKey<V, S>, defaultValue: V | null | undefined): V | null | undefined;
+  abstract get<V>(request: ContextValueRequest<V>, defaultValue: V | null | undefined): V | null | undefined;
 
 }
 
 /**
- * Component context value provider.
- *
- * It is responsible for constructing the values associated with particular key for each component.
- *
- * This function is called at most once per component.
- *
- * @param <S> The type of source value.
- * @param context Target component context.
- *
- * @return Either constructed value, or `null`/`undefined` if the value can not be constructed.
+ * Component content root node.
  */
-export type ComponentValueProvider<S> =
-    <T extends object>(this: void, context: ComponentContext<T>) => S | null | undefined;
+export type ContentRoot = ParentNode;
+
+export namespace ContentRoot {
+
+  /**
+   * A key of component context value containing a component root element.
+   *
+   * This is an element itself by default. But can be overridden e.g. by `@AttachShadow` decorator.
+   */
+  export const key = contentRootKey;
+
+}
 
 /**
  * Component construction listener.

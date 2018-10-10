@@ -2,6 +2,40 @@ import { RevertibleIterable } from '../iteration';
 import { ContextValues } from './context-values';
 
 /**
+ * A request for context value.
+ *
+ * This is passed to `ContextValues.get()` methods in order to obtain a context value.
+ *
+ * This is typically a context value key. But may also be any object with `key` property containing such key.
+ *
+ * @param <V> A type of requested context value.
+ */
+export interface ContextValueRequest<V> {
+
+  /**
+   * A key of context value to request.
+   */
+  readonly key: ContextValueKey<V, any>;
+
+}
+
+/**
+ * A definition of provided context value.
+ *
+ * This is used when declaring providers for context values.
+ *
+ * @param <S> A type of provided context value source.
+ */
+export interface ProvidedContextValue<S> extends ContextValueRequest<any> {
+
+  /**
+   * A key of context value to provide.
+   */
+  readonly key: ContextValueKey<any, S>;
+
+}
+
+/**
  * Context value key.
  *
  * Every key should be an unique instance of this class.
@@ -12,7 +46,7 @@ import { ContextValues } from './context-values';
  * @param <V> A type of associated value.
  * @param <S> A type of source values.
  */
-export abstract class ContextValueKey<V, S = V> {
+export abstract class ContextValueKey<V, S = V> implements ContextValueRequest<V>, ProvidedContextValue<S> {
 
   /**
    * Human-readable key name.
@@ -36,6 +70,15 @@ export abstract class ContextValueKey<V, S = V> {
    */
   protected constructor(name: string) {
     this.name = name;
+  }
+
+  /**
+   * Always the key itself.
+   *
+   * This is to use context value keys both as context value requests and definitions of provided context values.
+   */
+  get key(): this {
+    return this;
   }
 
   /**
@@ -242,13 +285,13 @@ export type ContextValueProvider<C extends ContextValues, S> =
  * The source of context values.
  *
  * @param <C> A type of context.
- * @param key Context value key.
+ * @param provide A definition of provided context value.
  * @param context Target context.
  *
  * @returns Revertible iterable of context value sources associated with the given key provided for the given context.
  */
 export type ContextValueSource<C extends ContextValues> =
-    <V, S>(this: void, key: ContextValueKey<V, S>, context: C) => RevertibleIterable<S>;
+    <S>(this: void, provide: ProvidedContextValue<S>, context: C) => RevertibleIterable<S>;
 
 /**
  * Context value specifier.
@@ -265,9 +308,9 @@ export type ContextValueSpec<C extends ContextValues, V, S = V> =
 export interface ContextValueDef<C extends ContextValues, V, S = V> {
 
   /**
-   * Context value key the `provider` provides value for.
+   * A definition of context value provided by `provider`.
    */
-  key: ContextValueKey<V, S>;
+  provide: ProvidedContextValue<S>;
 
   /**
    * Context value provider.
@@ -284,9 +327,9 @@ export interface ContextValueDef<C extends ContextValues, V, S = V> {
 export interface ContextConstDef<C extends ContextValues, V, S = V> {
 
   /**
-   * Context value key the `provider` provides value for.
+   * A definition of context `value` provided.
    */
-  key: ContextValueKey<V, S>;
+  provide: ProvidedContextValue<S>;
 
   /**
    * Context value source.
@@ -307,7 +350,7 @@ export namespace ContextValueDef {
   export function of<C extends ContextValues, V, S = V>(spec: ContextValueSpec<C, V, S>): ContextValueDef<C, V, S> {
     if (isConst(spec)) {
       return {
-        key: spec.key,
+        provide: spec.provide,
         provider: () => spec.value,
       };
     }

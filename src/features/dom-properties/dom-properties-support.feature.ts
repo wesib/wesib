@@ -5,6 +5,8 @@ import { DomPropertyRegistry as DomPropertyRegistry_ } from './dom-property-regi
 
 class DomPropertyRegistry implements DomPropertyRegistry_ {
 
+  static readonly key = new SingleValueKey<DomPropertyRegistry>('dom-property-registry:impl');
+
   private readonly _props = new Map<PropertyKey, PropertyDescriptor>();
 
   domProperty(propertyKey: PropertyKey, descriptor: PropertyDescriptor): void {
@@ -19,8 +21,6 @@ class DomPropertyRegistry implements DomPropertyRegistry_ {
 
 }
 
-const implKey = new SingleValueKey<DomPropertyRegistry>('dom-property-registry:impl');
-
 /**
  * A feature adding properties to custom elements.
  *
@@ -28,10 +28,9 @@ const implKey = new SingleValueKey<DomPropertyRegistry>('dom-property-registry:i
  */
 @WesFeature({
   bootstrap(context) {
-    context.forDefinitions(implKey, () => new DomPropertyRegistry());
-    context.forDefinitions(DomPropertyRegistry_.key, ctx => ctx.get(implKey));
-    context.onDefinition(defContext =>
-        defContext.whenReady(elementType => defContext.get(implKey).apply(elementType)));
+    context.forDefinitions({ provide: DomPropertyRegistry, provider: () => new DomPropertyRegistry() });
+    context.forDefinitions({ provide: DomPropertyRegistry_, provider: ctx => ctx.get(DomPropertyRegistry) });
+    context.onDefinition(ctx => ctx.whenReady(elementType => ctx.get(DomPropertyRegistry).apply(elementType)));
   }
 })
 export class DomPropertiesSupport {}

@@ -2,7 +2,7 @@ import SpyObj = jasmine.SpyObj;
 import { bootstrapComponents } from '../../bootstrap';
 import { Class } from '../../common';
 import { ComponentClass, ComponentContext, CustomElements, WesComponent } from '../../component';
-import { BootstrapContext, WesFeature } from '../../feature';
+import { BootstrapWindow, WesFeature } from '../../feature';
 import { RenderScheduler } from './render-scheduler';
 import { RenderSupport } from './render-support.feature';
 
@@ -42,8 +42,8 @@ describe('features/render/render-support.feature', () => {
       @WesFeature({
         require: [RenderSupport, testComponent],
         prebootstrap: [
-          { key: BootstrapContext.windowKey, value: windowSpy },
-          { key: CustomElements.key, value: customElementsSpy },
+          { provide: BootstrapWindow, value: windowSpy },
+          { provide: CustomElements, value: customElementsSpy },
         ]
       })
       class TestFeature {}
@@ -61,7 +61,7 @@ describe('features/render/render-support.feature', () => {
         const element = new elementType;
 
         componentContext = ComponentContext.of(element);
-        renderScheduler = componentContext.get(RenderScheduler.key);
+        renderScheduler = componentContext.get(RenderScheduler);
       });
 
       it('is available to component', () => {

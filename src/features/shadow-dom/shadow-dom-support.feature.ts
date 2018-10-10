@@ -1,7 +1,6 @@
-import { ContextValueKey, SingleValueKey } from '../../common';
 import { ComponentContext } from '../../component';
 import { WesFeature } from '../../feature';
-import { ShadowRootBuilder as ShadowRootBuilder_ } from './shadow-root-builder';
+import { ShadowRootBuilder } from './shadow-root-builder';
 
 function attachShadow(context: ComponentContext, init: ShadowRootInit): ShadowRoot {
 
@@ -21,16 +20,7 @@ function attachShadow(context: ComponentContext, init: ShadowRootInit): ShadowRo
  */
 @WesFeature({
   prebootstrap: [
-    { key: ShadowRootBuilder_.key, value: attachShadow },
+    { provide: ShadowRootBuilder, value: attachShadow },
   ],
 })
-export class ShadowDomSupport {
-
-  /**
-   * A key of component context value containing a shadow root instance.
-   *
-   * This is only available when the component is decorated with `@AttachShadow` decorator.
-   */
-  static readonly shadowRootKey: ContextValueKey<ShadowRoot> = new SingleValueKey('shadow-root');
-
-}
+export class ShadowDomSupport {}

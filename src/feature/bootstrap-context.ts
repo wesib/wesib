@@ -1,10 +1,17 @@
-import { ContextValueKey, ContextValues, EventProducer, SingleValueKey } from '../common';
+import {
+  ContextValueKey,
+  ContextValueRequest,
+  ContextValues,
+  ContextValueSpec,
+  EventProducer,
+  SingleValueKey,
+} from '../common';
 import {
   ComponentClass,
+  ComponentContext,
   ComponentListener,
-  ComponentValueProvider,
+  DefinitionContext,
   DefinitionListener,
-  DefinitionValueProvider,
 } from '../component';
 
 /**
@@ -16,13 +23,6 @@ import {
  * definitions as `FeatureDef.prebootstrap`.
  */
 export abstract class BootstrapContext implements ContextValues {
-
-  /**
-   * A key of bootstrap context value containing a window instance the bootstrap is performed against.
-   *
-   * Target value defaults to current window.
-   */
-  static readonly windowKey: ContextValueKey<Window> = new SingleValueKey<Window>('window', () => window);
 
   /**
    * Registers component definition listener.
@@ -80,35 +80,32 @@ export abstract class BootstrapContext implements ContextValues {
    *
    * The given provider will be requested for the value at most once per component.
    *
-   * @param <S> The type of source value.
-   * @param key Component definition context value key the provider should associate the value with.
-   * @param provider Component definition context value provider to register.
+   * @param <S> The type of context value sources.
+   * @param spec Component definition context value specifier.
    */
-  abstract forDefinitions<S>(key: ContextValueKey<any, S>, provider: DefinitionValueProvider<S>): void;
+  abstract forDefinitions<S>(spec: ContextValueSpec<DefinitionContext<any>, any, S>): void;
 
   /**
    * Registers provider that associates a value with the given key with components.
    *
    * The given provider will be requested for the value at most once per component.
    *
-   * @param <S> The type of source value.
-   * @param key Component context value key the provider should associate the value with.
-   * @param provider Component context value provider to register.
+   * @param <S> The type of context value sources.
+   * @param spec Component context value specifier.
    */
-  abstract forComponents<S>(key: ContextValueKey<any, S>, provider: ComponentValueProvider<S>): void;
+  abstract forComponents<S>(spec: ContextValueSpec<ComponentContext<any>, any, S>): void;
 
-  abstract get<V, S>(key: ContextValueKey<V, S>, defaultValue?: V): V;
+  abstract get<V>(request: ContextValueRequest<V>, defaultValue?: V): V;
 
-  abstract get<V, S>(key: ContextValueKey<V, S>, defaultValue: V | null): V | null;
+  abstract get<V>(request: ContextValueRequest<V>, defaultValue: V | null): V | null;
 
-  abstract get<V, S>(key: ContextValueKey<V, S>, defaultValue: V | undefined): V | undefined;
+  abstract get<V>(request: ContextValueRequest<V>, defaultValue: V | undefined): V | undefined;
 
   /**
    * Returns a value associated with the given key.
    *
    * @param <V> A type of associated value.
-   * @param <S> A type of source values.
-   * @param key Target key.
+   * @param request Context value request with target key.
    * @param defaultValue Default value to return if there is no value associated with the given key. Can be `null`
    * or `undefined` too.
    *
@@ -117,6 +114,6 @@ export abstract class BootstrapContext implements ContextValues {
    * @throws Error If there is no value associated with the given key and the default key is not provided neither
    * as function argument, nor as `ContextValueKey.defaultValue` property.
    */
-  abstract get<V, S>(key: ContextValueKey<V, S>, defaultValue: V | null | undefined): V | null | undefined;
+  abstract get<V>(request: ContextValueRequest<V>, defaultValue: V | null | undefined): V | null | undefined;
 
 }
