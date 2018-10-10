@@ -6,7 +6,7 @@ import {
   EventProducer,
   SingleValueKey,
 } from '../../common';
-import { BootstrapContext } from '../../feature';
+import { BootstrapWindow } from '../../feature';
 import { ComponentClass } from '../component';
 import { ComponentContext, ComponentListener } from '../component-context';
 
@@ -23,13 +23,13 @@ export abstract class DefinitionContext<T extends object> implements ContextValu
   /**
    * A key of definition context value containing a base element class constructor.
    *
-   * This value is the class the custom elements are inherited from unless `ComponentDef.extends.type` is specified.
+   * This value is the class the custom elements are inherited from unless `ComponentDef.extend.type` is specified.
    *
-   * Target value defaults to `HTMLElement` from the window provided under `windowKey`.
+   * Target value defaults to `HTMLElement` from the window provided under `[BootstrapWindow.key]`.
    */
   static readonly baseElementKey = new SingleValueKey<Class>(
       'base-element',
-      values => (values.get(BootstrapContext.windowKey) as any).HTMLElement);
+      values => (values.get(BootstrapWindow) as any).HTMLElement);
 
   /**
    * Component class constructor.

@@ -1,7 +1,7 @@
 import SpyObj = jasmine.SpyObj;
 import { Class } from '../../common';
 import { ContextValueRegistry } from '../../common/context';
-import { BootstrapContext } from '../../feature';
+import { BootstrapContext, BootstrapWindow } from '../../feature';
 import { ComponentClass } from '../component';
 import { ComponentDef } from '../component-def';
 import { CustomElements } from './custom-elements';
@@ -28,7 +28,7 @@ describe('component/definition/custom-elements', () => {
         get: valueRegistry.newValues().get,
       } as any;
 
-      valueRegistry.provide({ provide: BootstrapContext.windowKey, value: windowSpy });
+      valueRegistry.provide({ provide: BootstrapWindow, value: windowSpy });
     });
 
     beforeEach(() => {

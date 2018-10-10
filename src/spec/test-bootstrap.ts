@@ -1,7 +1,7 @@
 import { bootstrapComponents } from '../bootstrap';
 import { Class } from '../common';
 import { Component, ComponentClass, ComponentDef } from '../component';
-import { BootstrapContext, WesFeature } from '../feature';
+import { BootstrapContext, BootstrapWindow, WesFeature } from '../feature';
 import { TestIframe } from './test-iframe';
 
 export class TestBootstrap {
@@ -28,7 +28,7 @@ export class TestBootstrap {
     await this.iframe.create();
 
     @WesFeature({
-      prebootstrap: { provide: BootstrapContext.windowKey, provider: () => this.window },
+      prebootstrap: { provide: BootstrapWindow, provider: () => this.window },
       bootstrap: ctx => this._context = ctx,
     })
     class TestFeature {}

@@ -1,5 +1,5 @@
 import { Class, ContextValueKey, SingleValueKey } from '../../common';
-import { BootstrapContext } from '../../feature';
+import { BootstrapWindow } from '../../feature';
 import { ComponentClass } from '../component';
 import { ComponentDef } from '../component-def';
 
@@ -8,7 +8,7 @@ import { ComponentDef } from '../component-def';
  *
  * This is used to register custom elements.
  *
- * Typically implemented by to `window.customElements`.
+ * Typically implemented by `window.customElements`.
  */
 export abstract class CustomElements {
 
@@ -16,13 +16,13 @@ export abstract class CustomElements {
    * A key of bootstrap context value containing a `CustomElements` instance used to register custom
    * elements.
    *
-   * Target value defaults to `window.customElements` from the window provided under `windowKey`.
+   * Target value defaults to `window.customElements` from the window provided under `[BootstrapWindow.key]`.
    */
   static readonly key: ContextValueKey<CustomElements> = new SingleValueKey<CustomElements>(
       'custom-elements',
       values => {
 
-        const customElements = values.get(BootstrapContext.windowKey).customElements;
+        const customElements = values.get(BootstrapWindow).customElements;
 
         class WindowCustomElements extends CustomElements {
 

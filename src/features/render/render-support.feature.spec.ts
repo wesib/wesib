@@ -2,7 +2,7 @@ import SpyObj = jasmine.SpyObj;
 import { bootstrapComponents } from '../../bootstrap';
 import { Class } from '../../common';
 import { ComponentClass, ComponentContext, CustomElements, WesComponent } from '../../component';
-import { BootstrapContext, WesFeature } from '../../feature';
+import { BootstrapWindow, WesFeature } from '../../feature';
 import { RenderScheduler } from './render-scheduler';
 import { RenderSupport } from './render-support.feature';
 
@@ -42,7 +42,7 @@ describe('features/render/render-support.feature', () => {
       @WesFeature({
         require: [RenderSupport, testComponent],
         prebootstrap: [
-          { provide: BootstrapContext.windowKey, value: windowSpy },
+          { provide: BootstrapWindow, value: windowSpy },
           { provide: CustomElements, value: customElementsSpy },
         ]
       })

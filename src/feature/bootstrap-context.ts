@@ -25,13 +25,6 @@ import {
 export abstract class BootstrapContext implements ContextValues {
 
   /**
-   * A key of bootstrap context value containing a window instance the bootstrap is performed against.
-   *
-   * Target value defaults to current window.
-   */
-  static readonly windowKey: ContextValueKey<Window> = new SingleValueKey<Window>('window', () => window);
-
-  /**
    * Registers component definition listener.
    *
    * This listener will be called when new component class is defined, but before its custom element class constructed.
