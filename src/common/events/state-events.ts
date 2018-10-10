@@ -1,7 +1,9 @@
 import { list2array } from '../../util';
+import { ContextValueKey, SingleValueKey } from '../context';
+import { noop } from '../functions';
 
 /**
- * A consumer of state updates.
+ * A state updates consumer function.
  *
  * It is called when the value with the given `key` changes.
  *
@@ -10,7 +12,21 @@ import { list2array } from '../../util';
  * @param newValue New value.
  * @param oldValue Previous value.
  */
-export type StateUpdateConsumer = <V>(this: void, key: StateValueKey, newValue: V, oldValue: V) => void;
+export type StateUpdater = <V>(this: void, key: StateValueKey, newValue: V, oldValue: V) => void;
+
+export namespace StateUpdater {
+
+  /**
+   * A key of component context value containing a component state updates consumer function.
+   *
+   * Features are calling this function by default when component state changes, e.g. attribute value or DOM property
+   * modified.
+   *
+   * Note that this value is not provided, unless the `StateSupport` feature is enabled.
+   */
+  export const key: ContextValueKey<StateUpdater> = new SingleValueKey('state-update', () => noop);
+
+}
 
 /**
  * A key of the state value.

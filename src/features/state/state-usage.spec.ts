@@ -1,4 +1,4 @@
-import { StateUpdateConsumer } from '../../common';
+import { StateUpdater } from '../../common';
 import { ComponentClass, ComponentContext, WesComponent } from '../../component';
 import { WesFeature } from '../../feature';
 import { TestBootstrap } from '../../spec/test-bootstrap';
@@ -11,7 +11,7 @@ describe('features/state', () => {
     let bootstrap: TestBootstrap;
     let testComponent: ComponentClass;
     let context: ComponentContext;
-    let updateState: StateUpdateConsumer;
+    let updateState: StateUpdater;
     let stateTracker: StateTracker;
 
     beforeEach(() => {
@@ -24,8 +24,8 @@ describe('features/state', () => {
       class TestComponent {
         constructor(ctx: ComponentContext) {
           context = ctx;
-          updateState = ctx.get(ComponentContext.stateUpdateKey);
-          stateTracker = ctx.get(StateTracker.key);
+          updateState = ctx.get(StateUpdater);
+          stateTracker = ctx.get(StateTracker);
         }
       }
 

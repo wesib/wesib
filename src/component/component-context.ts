@@ -1,10 +1,10 @@
 import {
-  ContextValueKey, ContextValueRequest,
+  ContextValueKey,
+  ContextValueRequest,
   ContextValues,
   EventProducer,
-  noop,
   SingleValueKey,
-  StateUpdateConsumer,
+  StateUpdater,
   StateValueKey,
 } from '../common';
 import { ComponentClass } from './component';
@@ -40,17 +40,6 @@ export abstract class ComponentContext<T extends object = object> implements Con
    */
   static readonly contentRootKey: ContextValueKey<ParentNode> =
       new SingleValueKey('content-root', ctx => ctx.get(ComponentContext).element);
-
-  /**
-   * A key of component context value containing a component state update function.
-   *
-   * Features are calling this function by default when component state changes, e.g. attribute value or DOM property
-   * modified.
-   *
-   * Note that this value is not provided, unless the `StateSupport` feature is enabled.
-   */
-  static readonly stateUpdateKey: ContextValueKey<StateUpdateConsumer> =
-      new SingleValueKey('state-update', () => noop);
 
   /**
    * Component class constructor.
@@ -105,19 +94,18 @@ export abstract class ComponentContext<T extends object = object> implements Con
   /**
    * Updates component's state.
    *
-   * This is a shorthand for invoking a component state update function available under
-   * `[ComponentContext.stateUpdateKey]` key.
+   * This is a shorthand for invoking a component state update function available under `[StateUpdater.key]` key.
    *
-   * Note that state update has no effect unless `StateSupport` feature is enabled or
-   * `[ComponentContext.stateUpdateKey]` context value is provided by other means.
+   * Note that state update has no effect unless `StateSupport` feature is enabled or `[StateUpdater.key]` context value
+   * is provided by other means.
    *
    * @param <V> A type of changed value.
    * @param key Changed value key.
    * @param newValue New value.
    * @param oldValue Previous value.
    */
-  readonly updateState: StateUpdateConsumer = (<V>(key: StateValueKey, newValue: V, oldValue: V) => {
-    this.get(ComponentContext.stateUpdateKey)(key, newValue, oldValue);
+  readonly updateState: StateUpdater = (<V>(key: StateValueKey, newValue: V, oldValue: V) => {
+    this.get(StateUpdater)(key, newValue, oldValue);
   });
 
   /**
