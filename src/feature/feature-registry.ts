@@ -118,12 +118,8 @@ export class FeatureRegistry {
   private _provideValues() {
     this._providers.forEach((providers, feature) => {
       if (feature === providers.provider(this._providers)) {
-        list2array(FeatureDef.of(feature).prebootstrap).forEach(spec => {
-
-          const { key, provider } = ContextValueDef.of(spec);
-
-          this._valueRegistry.provide(key, provider);
-        });
+        list2array(FeatureDef.of(feature).prebootstrap)
+            .forEach(spec => this._valueRegistry.provide(spec));
       }
     });
   }

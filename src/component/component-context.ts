@@ -181,21 +181,6 @@ export abstract class ComponentContext<T extends object = object> implements Con
 }
 
 /**
- * Component context value provider.
- *
- * It is responsible for constructing the values associated with particular key for each component.
- *
- * This function is called at most once per component.
- *
- * @param <S> The type of source value.
- * @param context Target component context.
- *
- * @return Either constructed value, or `null`/`undefined` if the value can not be constructed.
- */
-export type ComponentValueProvider<S> =
-    <T extends object>(this: void, context: ComponentContext<T>) => S | null | undefined;
-
-/**
  * Component construction listener.
  *
  * It is notified on new component instance construction when registered with `BootstrapContext.onComponent()`

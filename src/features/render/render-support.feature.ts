@@ -10,7 +10,7 @@ import { RenderScheduler as RenderScheduler_ } from './render-scheduler';
  */
 @WesFeature({
   bootstrap(context) {
-    context.forComponents(RenderScheduler_.key, createRenderScheduler);
+    context.forComponents({ provide: RenderScheduler_, provider: createRenderScheduler });
   }
 })
 export class RenderSupport {

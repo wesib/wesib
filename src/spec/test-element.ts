@@ -21,7 +21,7 @@ export function testElement(componentType: Class): Class<any> {
   };
 
   @WesFeature({
-    prebootstrap: { key: CustomElements.key, value: customElements },
+    prebootstrap: { provide: CustomElements, value: customElements },
     require: componentType,
   })
   class TestFeature {}

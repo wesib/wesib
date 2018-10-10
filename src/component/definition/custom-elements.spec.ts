@@ -28,7 +28,7 @@ describe('component/definition/custom-elements', () => {
         get: valueRegistry.newValues().get,
       } as any;
 
-      valueRegistry.provide(BootstrapContext.windowKey, () => windowSpy);
+      valueRegistry.provide({ provide: BootstrapContext.windowKey, value: windowSpy });
     });
 
     beforeEach(() => {

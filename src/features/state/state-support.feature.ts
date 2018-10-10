@@ -20,21 +20,29 @@ export class StateSupport {
 }
 
 function enableStateSupport(context: BootstrapContext) {
-  context.forComponents(StateTracker_.key, () => {
+  context.forComponents({
+    provide: StateTracker_,
+    provider() {
 
-    const emitter = new EventEmitter<StateUpdater>();
+      const emitter = new EventEmitter<StateUpdater>();
 
-    class StateTracker extends StateTracker_ {
+      class StateTracker extends StateTracker_ {
 
-      readonly onStateUpdate = emitter.on;
+        readonly onStateUpdate = emitter.on;
 
-      readonly updateState: StateUpdater = <V>(key: StateValueKey, newValue: V, oldValue: V) => {
-        emitter.notify(key, newValue, oldValue);
+        readonly updateState: StateUpdater = <V>(key: StateValueKey, newValue: V, oldValue: V) => {
+          emitter.notify(key, newValue, oldValue);
+        }
+
       }
 
-    }
-
-    return new StateTracker();
+      return new StateTracker();
+    },
   });
-  context.forComponents(StateUpdater.key, ctx => ctx.get(StateTracker_.key).updateState);
+  context.forComponents({
+    provide: StateUpdater,
+    provider(ctx) {
+      return ctx.get(StateTracker_.key).updateState;
+    },
+  });
 }

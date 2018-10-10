@@ -20,12 +20,20 @@ export function AttachShadow<T extends ComponentClass<any> = any>(
         {
           define(this: ComponentClass<InstanceType<T>>, context: DefinitionContext<InstanceType<T>>) {
 
-            context.forComponents(
-                ShadowDomSupport.shadowRootKey,
-                ctx => ctx.get(ShadowRootBuilder.key)(ctx, init));
+            context.forComponents({
+              provide: ShadowDomSupport.shadowRootKey,
+              provider(ctx) {
+                return ctx.get(ShadowRootBuilder.key)(ctx, init);
+              },
+            });
 
             // Content root is an alias of shadow root.
-            context.forComponents(ComponentContext.contentRootKey, ctx => ctx.get(ShadowDomSupport.shadowRootKey));
+            context.forComponents({
+              provide: ComponentContext.contentRootKey,
+              provider(ctx) {
+                return ctx.get(ShadowDomSupport.shadowRootKey);
+              },
+            });
 
             // Attach shadow root eagerly on element instantiation.
             context.onComponent(ctx => ctx.get(ShadowDomSupport.shadowRootKey));

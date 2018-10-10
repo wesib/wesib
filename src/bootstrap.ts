@@ -1,10 +1,10 @@
-import { Class, ContextValueKey, EventProducer } from './common';
+import { Class, ContextValueSpec, EventProducer } from './common';
 import {
   ComponentClass,
+  ComponentContext,
   ComponentListener,
-  ComponentValueProvider,
+  DefinitionContext,
   DefinitionListener,
-  DefinitionValueProvider,
 } from './component';
 import { ComponentRegistry } from './component/definition/component-registry';
 import { ComponentValueRegistry } from './component/definition/component-value-registry';
@@ -66,12 +66,12 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
       return componentRegistry.whenDefined(componentType);
     }
 
-    forDefinitions<S>(key: ContextValueKey<any, S>, provider: DefinitionValueProvider<S>): void {
-      definitionValueRegistry.provide(key, provider);
+    forDefinitions<S>(spec: ContextValueSpec<DefinitionContext<any>, any, S>): void {
+      definitionValueRegistry.provide(spec);
     }
 
-    forComponents<S>(key: ContextValueKey<any, S>, provider: ComponentValueProvider<S>): void {
-      componentValueRegistry.provide(key, provider);
+    forComponents<S>(spec: ContextValueSpec<ComponentContext<any>, any, S>): void {
+      componentValueRegistry.provide(spec);
     }
 
   }

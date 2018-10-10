@@ -51,8 +51,8 @@ describe('features/render/render.decorator', () => {
       @WesFeature({
         require: testComponent,
         prebootstrap: [
-          { key: RenderScheduler.key, value: renderSchedulerSpy },
-          { key: CustomElements.key, value: customElementsSpy },
+          { provide: RenderScheduler, value: renderSchedulerSpy },
+          { provide: CustomElements, value: customElementsSpy },
         ],
         provide: RenderSupport,
       })

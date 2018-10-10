@@ -1,14 +1,14 @@
 import {
   Class,
-  ContextValueKey,
   ContextValueRequest,
   ContextValues,
+  ContextValueSpec,
   EventProducer,
   SingleValueKey,
 } from '../../common';
 import { BootstrapContext } from '../../feature';
 import { ComponentClass } from '../component';
-import { ComponentListener, ComponentValueProvider } from '../component-context';
+import { ComponentContext, ComponentListener } from '../component-context';
 
 /**
  * Component definition context.
@@ -73,11 +73,10 @@ export abstract class DefinitionContext<T extends object> implements ContextValu
    *
    * The given provider will be requested for the value at most once per component.
    *
-   * @param <S> The type of source value.
-   * @param key Component context value key the provider should associate the value with.
-   * @param provider Component context value provider to register.
+   * @param <S> The type of context value sources.
+   * @param spec Component context value specifier.
    */
-  abstract forComponents<S>(key: ContextValueKey<any, S>, provider: ComponentValueProvider<S>): void;
+  abstract forComponents<S>(spec: ContextValueSpec<ComponentContext<any>, any, S>): void;
 
   abstract get<V>(request: ContextValueRequest<V>, defaultValue?: V): V;
 
@@ -101,21 +100,6 @@ export abstract class DefinitionContext<T extends object> implements ContextValu
   abstract get<V>(request: ContextValueRequest<V>, defaultValue: V | null | undefined): V | null | undefined;
 
 }
-
-/**
- * Component definition context value provider.
- *
- * It is responsible for constructing the values associated with particular key for each component type.
- *
- * This function is called at most once per component type.
- *
- * @param <S> The type of source value.
- * @param context Target component definition context.
- *
- * @return Either constructed value, or `null`/`undefined` if the value can not be constructed.
- */
-export type DefinitionValueProvider<S> =
-    <T extends object>(this: void, context: DefinitionContext<T>) => S | null | undefined;
 
 /**
  * Component definition listener.

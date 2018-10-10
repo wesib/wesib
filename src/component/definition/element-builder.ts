@@ -1,6 +1,6 @@
-import { Class, ContextValueKey, EventEmitter, mergeFunctions, noop } from '../../common';
+import { Class, ContextValueKey, ContextValueSpec, EventEmitter, mergeFunctions, noop } from '../../common';
 import { Component, ComponentClass } from '../component';
-import { ComponentContext as ComponentContext_, ComponentListener, ComponentValueProvider } from '../component-context';
+import { ComponentContext as ComponentContext_, ComponentListener } from '../component-context';
 import { ComponentDef } from '../component-def';
 import { ComponentValueRegistry } from './component-value-registry';
 import { DefinitionContext as DefinitionContext_, DefinitionListener } from './definition-context';
@@ -66,8 +66,8 @@ export class ElementBuilder {
         whenReady = mergeFunctions<[Class], void, DefinitionContext>(whenReady, callback);
       }
 
-      forComponents<S>(key: ContextValueKey<any, S>, provider: ComponentValueProvider<S>): void {
-        typeValueRegistry.provide(key, provider);
+      forComponents<S>(spec: ContextValueSpec<ComponentContext_<any>, any, S>): void {
+        typeValueRegistry.provide(spec);
       }
 
     }
@@ -167,7 +167,7 @@ export class ElementBuilder {
 
         const context = new ComponentContext();
 
-        valueRegistry.provide(ComponentContext_.key, () => context);
+        valueRegistry.provide({ provide: ComponentContext_, value: context });
 
         Object.defineProperty(this, ComponentContext_.symbol, { value: context });
         Object.defineProperty(this, connectedCallback, {

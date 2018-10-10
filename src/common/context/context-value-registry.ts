@@ -1,10 +1,13 @@
 import { RevertibleIterable } from '../iteration';
 import {
+  ContextValueDef,
   ContextValueDefaultHandler,
   ContextValueKey,
-  ContextValueProvider, ContextValueRequest,
+  ContextValueProvider,
   ContextValueSource,
   ContextValueSourcesKey,
+  ContextValueSpec,
+  ProvidedContextValue,
 } from './context-value';
 import { ContextValues } from './context-values';
 
@@ -37,12 +40,13 @@ export class ContextValueRegistry<C extends ContextValues> {
   /**
    * Registers provider for the values with the given key.
    *
-   * @param <S> A type of source value.
-   * @param key Context value key.
-   * @param provider Context value provider.
+   * @param <S> A type of context value sources.
+   * @param spec Component context value specifier.
    */
-  provide<S>(key: ContextValueKey<any, S>, provider: ContextValueProvider<C, S>): void {
+  provide<S>(spec: ContextValueSpec<C, any, S>): void {
 
+    const { provide, provider } = ContextValueDef.of(spec);
+    const key = provide.key;
     const sourcesKey = key.sourcesKey;
     let providers: ContextValueProvider<C, S>[] | undefined = this._providers.get(sourcesKey);
 
@@ -57,13 +61,13 @@ export class ContextValueRegistry<C extends ContextValues> {
   /**
    * Returns the value sources provided for the given key.
    *
-   * @param key Context value key.
    * @param context Context to provide value for.
+   * @param request Context value sources request.
    *
    * @returns A revertible iterable of the value sources associated with the given key.
    */
-  sources<V, S>(context: C, key: ContextValueKey<V, S>): RevertibleIterable<S> {
-    return this.bindSources(context, false)(key);
+  sources<S>(context: C, request: ProvidedContextValue<S>): RevertibleIterable<S> {
+    return this.bindSources(context, false)(request);
   }
 
   /**
@@ -74,11 +78,13 @@ export class ContextValueRegistry<C extends ContextValues> {
    *
    * @returns A provider of context value sources bound to the given context.
    */
-  bindSources(context: C, cache?: boolean): <V, S>(this: void, key: ContextValueKey<V, S>) => RevertibleIterable<S> {
+  bindSources(context: C, cache?: boolean): <V, S>(
+      this: void,
+      request: ProvidedContextValue<S>) => RevertibleIterable<S> {
 
     const values = this.newValues(cache);
 
-    return <V, S>(key: ContextValueKey<V, S>) => values.get.call(context, key.sourcesKey);
+    return <S>({ key }: ProvidedContextValue<S>) => values.get.call(context, key.sourcesKey);
   }
 
   /**
@@ -97,7 +103,7 @@ export class ContextValueRegistry<C extends ContextValues> {
     const values = new Map<ContextValueKey<any>, any>();
     const registry = this;
 
-    function sourcesProvidersFor<V, S>(key: ContextValueSourcesKey<S>): SourceProvider<C, S>[] {
+    function sourcesProvidersFor<S>(key: ContextValueSourcesKey<S>): SourceProvider<C, S>[] {
 
       const providers: ContextValueProvider<C, S>[] = registry._providers.get(key) || [];
 
@@ -188,18 +194,18 @@ export class ContextValueRegistry<C extends ContextValues> {
 
     const self = this;
 
-    return new ContextValueRegistry<C>(<V, S>(
-        key: ContextValueKey<V, S>,
+    return new ContextValueRegistry<C>(<S>(
+        provide: ProvidedContextValue<S>,
         context: C) => ({
       [Symbol.iterator]: function* () {
-        yield* self.sources(context, key);
-        yield* other.sources(context, key);
+        yield* self.sources(context, provide);
+        yield* other.sources(context, provide);
       },
       reverse() {
         return {
           [Symbol.iterator]: function* () {
-            yield* other.sources(context, key).reverse();
-            yield* self.sources(context, key).reverse();
+            yield* other.sources(context, provide).reverse();
+            yield* self.sources(context, provide).reverse();
           }
         };
       },

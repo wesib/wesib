@@ -14,7 +14,7 @@ describe('common/context/context-value', () => {
       it('uses context value definition as is', () => {
 
         const spec: ContextValueDef<ContextValues, string> = {
-          key: new SingleValueKey<string>('value'),
+          provide: new SingleValueKey<string>('value'),
           provider: () => 'foo',
         };
 
@@ -23,12 +23,12 @@ describe('common/context/context-value', () => {
       it('converts context constant to definition', () => {
 
         const spec: ContextConstDef<ContextValues, string> = {
-          key: new SingleValueKey<string>('value'),
+          provide: new SingleValueKey<string>('value'),
           value: 'foo',
         };
         const def = ContextValueDef.of(spec);
 
-        expect(def.key).toBe(spec.key);
+        expect(def.provide).toBe(spec.provide);
         expect(def.provider(context)).toBe(spec.value);
       });
     });
