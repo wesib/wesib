@@ -36,6 +36,13 @@ export class EventEmitter<C extends EventConsumer<any[], any>> {
   });
 
   /**
+   * Whether there are any event consumers registered in this event emitter.
+   */
+  get hasConsumers(): boolean {
+    return !!this._consumers.size;
+  }
+
+  /**
    * Performs the given `action` for each registered consumer in order of their registration.
    *
    * Same as `Array.forEach()`.
