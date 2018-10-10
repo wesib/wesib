@@ -57,7 +57,7 @@ export function DomProperty<T extends ComponentClass>(opts: DomProperty.Opts<T> 
         componentType,
         {
           define(definitionContext) {
-            definitionContext.get(DomPropertyRegistry.key).domProperty(name, desc);
+            definitionContext.get(DomPropertyRegistry).domProperty(name, desc);
           }
         });
 

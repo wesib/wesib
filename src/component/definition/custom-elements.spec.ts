@@ -32,7 +32,7 @@ describe('component/definition/custom-elements', () => {
     });
 
     beforeEach(() => {
-      customElements = context.get(CustomElements.key);
+      customElements = context.get(CustomElements);
     });
 
     beforeEach(() => {

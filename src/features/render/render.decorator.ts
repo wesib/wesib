@@ -29,8 +29,8 @@ export function Render<T extends ComponentClass>(): TypedPropertyDecorator<T> {
               compContext.whenReady(() => {
 
                 const component = compContext.component as any;
-                const stateTracker = compContext.get(StateTracker.key);
-                const renderScheduler = compContext.get(RenderScheduler.key);
+                const stateTracker = compContext.get(StateTracker);
+                const renderScheduler = compContext.get(RenderScheduler);
 
                 stateTracker.onStateUpdate(() => {
                   renderScheduler.scheduleRender(() => component[propertyKey]());

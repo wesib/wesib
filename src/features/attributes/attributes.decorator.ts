@@ -24,7 +24,7 @@ export function Attributes<
         {
           define(defContext) {
 
-            const registry = defContext.get(AttributeRegistry.key);
+            const registry = defContext.get(AttributeRegistry);
 
             Object.keys(opts).forEach(name => {
               registry.onAttributeChange(name, attributeStateUpdate(name, opts[name]));

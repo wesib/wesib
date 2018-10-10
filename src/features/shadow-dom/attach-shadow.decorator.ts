@@ -23,7 +23,7 @@ export function AttachShadow<T extends ComponentClass<any> = any>(
             context.forComponents({
               provide: ShadowDomSupport.shadowRootKey,
               provider(ctx) {
-                return ctx.get(ShadowRootBuilder.key)(ctx, init);
+                return ctx.get(ShadowRootBuilder)(ctx, init);
               },
             });
 

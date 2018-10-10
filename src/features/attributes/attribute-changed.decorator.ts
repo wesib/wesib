@@ -45,7 +45,7 @@ export function AttributeChanged<T extends ComponentClass>(opts?: Attribute.Opts
         {
           define(defContext) {
 
-            const registry = defContext.get(AttributeRegistry.key);
+            const registry = defContext.get(AttributeRegistry);
 
             registry.onAttributeChange(name, function (
                 this: InstanceType<T>,

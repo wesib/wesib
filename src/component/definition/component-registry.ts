@@ -32,7 +32,7 @@ export class ComponentRegistry {
   }
 
   get customElements(): CustomElements {
-    return this.bootstrapContext.get(CustomElements.key);
+    return this.bootstrapContext.get(CustomElements);
   }
 
   define<T extends object>(componentType: ComponentClass<T>) {

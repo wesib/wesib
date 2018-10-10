@@ -45,9 +45,7 @@ export class ContextValueRegistry<C extends ContextValues> {
    */
   provide<S>(spec: ContextValueSpec<C, any, S>): void {
 
-    const { provide, provider } = ContextValueDef.of(spec);
-    const key = provide.key;
-    const sourcesKey = key.sourcesKey;
+    const { provide: { key: { sourcesKey } }, provider } = ContextValueDef.of(spec);
     let providers: ContextValueProvider<C, S>[] | undefined = this._providers.get(sourcesKey);
 
     if (providers == null) {

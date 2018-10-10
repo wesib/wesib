@@ -42,7 +42,7 @@ function enableStateSupport(context: BootstrapContext) {
   context.forComponents({
     provide: StateUpdater,
     provider(ctx) {
-      return ctx.get(StateTracker_.key).updateState;
+      return ctx.get(StateTracker_).updateState;
     },
   });
 }

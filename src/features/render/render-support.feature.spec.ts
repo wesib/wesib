@@ -61,7 +61,7 @@ describe('features/render/render-support.feature', () => {
         const element = new elementType;
 
         componentContext = ComponentContext.of(element);
-        renderScheduler = componentContext.get(RenderScheduler.key);
+        renderScheduler = componentContext.get(RenderScheduler);
       });
 
       it('is available to component', () => {
