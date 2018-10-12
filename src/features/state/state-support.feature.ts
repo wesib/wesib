@@ -28,7 +28,7 @@ function enableStateSupport(context: BootstrapContext) {
   context.forComponents({
     provide: StateUpdater,
     provider(ctx) {
-      return ctx.get(StateTracker).updateState;
+      return ctx.get(StateTracker).update;
     },
   });
 }

@@ -15,19 +15,19 @@ describe('features/state/state-tracker.impl', () => {
 
     it('notifies on state update', () => {
 
-      const interest = tracker.onStateUpdate(consumerSpy);
+      const interest = tracker.onUpdate(consumerSpy);
 
       const path = ['some', 'path'];
       const newValue = 'new';
       const oldValue = 'old';
 
-      tracker.updateState(path, newValue, oldValue);
+      tracker.update(path, newValue, oldValue);
       expect(consumerSpy).toHaveBeenCalledWith(path, newValue, oldValue);
 
       consumerSpy.calls.reset();
       interest.off();
 
-      tracker.updateState(path, newValue, oldValue);
+      tracker.update(path, newValue, oldValue);
       expect(consumerSpy).not.toHaveBeenCalled();
     });
     describe('part', () => {
@@ -46,16 +46,16 @@ describe('features/state/state-tracker.impl', () => {
         expect(part.track([])).toBe(part);
       });
       it('notifies on partial state update', () => {
-        tracker.onStateUpdate(consumerSpy);
+        tracker.onUpdate(consumerSpy);
 
-        const interest = part.onStateUpdate(partSpy);
+        const interest = part.onUpdate(partSpy);
 
         const path = ['some', 'path'];
         const fullPath = [...partPath, ...path];
         const newValue = 'new';
         const oldValue = 'old';
 
-        part.updateState(path, newValue, oldValue);
+        part.update(path, newValue, oldValue);
         expect(consumerSpy).toHaveBeenCalledWith(fullPath, newValue, oldValue);
         expect(partSpy).toHaveBeenCalledWith(path, newValue, oldValue);
 
@@ -63,21 +63,21 @@ describe('features/state/state-tracker.impl', () => {
         partSpy.calls.reset();
         interest.off();
 
-        part.updateState(path, newValue, oldValue);
+        part.update(path, newValue, oldValue);
         expect(consumerSpy).toHaveBeenCalledWith(fullPath, newValue, oldValue);
         expect(partSpy).not.toHaveBeenCalled();
       });
       it('is notified on partial state update', () => {
-        tracker.onStateUpdate(consumerSpy);
+        tracker.onUpdate(consumerSpy);
 
-        const interest = part.onStateUpdate(partSpy);
+        const interest = part.onUpdate(partSpy);
 
         const subPath = ['some'];
         const path = [...partPath, ...subPath];
         const newValue = 'new';
         const oldValue = 'old';
 
-        tracker.updateState(path, newValue, oldValue);
+        tracker.update(path, newValue, oldValue);
         expect(consumerSpy).toHaveBeenCalledWith(path, newValue, oldValue);
         expect(partSpy).toHaveBeenCalledWith(subPath, newValue, oldValue);
 
@@ -85,30 +85,30 @@ describe('features/state/state-tracker.impl', () => {
         partSpy.calls.reset();
         interest.off();
 
-        tracker.updateState(path, newValue, oldValue);
+        tracker.update(path, newValue, oldValue);
         expect(consumerSpy).toHaveBeenCalledWith(path, newValue, oldValue);
         expect(partSpy).not.toHaveBeenCalled();
       });
       it('is not notified on other state update', () => {
-        tracker.onStateUpdate(consumerSpy);
-        part.onStateUpdate(partSpy);
+        tracker.onUpdate(consumerSpy);
+        part.onUpdate(partSpy);
 
         const path = [...partPath.slice(0, partPath.length - 1), 'other'];
         const newValue = 'new';
         const oldValue = 'old';
 
-        tracker.updateState(path, newValue, oldValue);
+        tracker.update(path, newValue, oldValue);
         expect(consumerSpy).toHaveBeenCalledWith(path, newValue, oldValue);
         expect(partSpy).not.toHaveBeenCalled();
       });
       it('is notified on parent state update', () => {
-        tracker.onStateUpdate(consumerSpy);
-        part.onStateUpdate(partSpy);
+        tracker.onUpdate(consumerSpy);
+        part.onUpdate(partSpy);
 
         const parent = tracker.track(partPath[0]);
         const parentSpy = jasmine.createSpy('parentConsumer');
 
-        const parentInterest = parent.onStateUpdate(parentSpy);
+        const parentInterest = parent.onUpdate(parentSpy);
 
         const subPath = ['some'];
         const fullPath = [...partPath, ...subPath];
@@ -116,7 +116,7 @@ describe('features/state/state-tracker.impl', () => {
         const newValue = 'new';
         const oldValue = 'old';
 
-        parent.updateState(parentPath, newValue, oldValue);
+        parent.update(parentPath, newValue, oldValue);
         expect(consumerSpy).toHaveBeenCalledWith(fullPath, newValue, oldValue);
         expect(parentSpy).toHaveBeenCalledWith(parentPath, newValue, oldValue);
         expect(partSpy).toHaveBeenCalledWith(subPath, newValue, oldValue);
@@ -126,7 +126,7 @@ describe('features/state/state-tracker.impl', () => {
         partSpy.calls.reset();
         parentInterest.off();
 
-        parent.updateState(parentPath, newValue, oldValue);
+        parent.update(parentPath, newValue, oldValue);
         expect(consumerSpy).toHaveBeenCalledWith(fullPath, newValue, oldValue);
         expect(parentSpy).not.toHaveBeenCalled();
         expect(partSpy).toHaveBeenCalledWith(subPath, newValue, oldValue);

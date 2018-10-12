@@ -91,7 +91,7 @@ class Trackers {
 
 export class StateTracker extends StateTracker_ {
 
-  readonly updateState: StateUpdater = (<V>(path: StatePath, newValue: V, oldValue: V) => {
+  readonly update: StateUpdater = (<V>(path: StatePath, newValue: V, oldValue: V) => {
     this._trackers.notify([...this._path, ...StatePath.of(path)], newValue, oldValue);
   });
 
@@ -105,7 +105,7 @@ export class StateTracker extends StateTracker_ {
     super();
   }
 
-  get onStateUpdate(): EventProducer<StateUpdater> {
+  get onUpdate(): EventProducer<StateUpdater> {
     return consumer => this._trackers.on(this._path, consumer);
   }
 

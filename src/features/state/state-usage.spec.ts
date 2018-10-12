@@ -50,7 +50,7 @@ describe('features/state', () => {
     it('notifies on state update', () => {
 
       const listenerSpy = jasmine.createSpy('stateListener');
-      const interest = stateTracker.onStateUpdate(listenerSpy);
+      const interest = stateTracker.onUpdate(listenerSpy);
 
       updateState(['key'], 'new', 'old');
 
@@ -65,7 +65,7 @@ describe('features/state', () => {
     it('notifies on state update with `updateState()` method' , () => {
 
       const listenerSpy = jasmine.createSpy('stateListener');
-      const interest = stateTracker.onStateUpdate(listenerSpy);
+      const interest = stateTracker.onUpdate(listenerSpy);
 
       context.updateState(['key'], 'new', 'old');
 

@@ -32,7 +32,7 @@ export function Render<T extends ComponentClass>(): TypedPropertyDecorator<T> {
                 const stateTracker = compContext.get(StateTracker);
                 const renderScheduler = compContext.get(RenderScheduler);
 
-                stateTracker.onStateUpdate(() => {
+                stateTracker.onUpdate(() => {
                   renderScheduler.scheduleRender(() => component[propertyKey]());
                 });
               });
