@@ -1,4 +1,4 @@
-import { StateValueKey } from '../../common';
+import { StatePath } from '../../common';
 import { Component, ComponentClass, ComponentContext, WesComponent } from '../../component';
 import { TestBootstrap } from '../../spec/test-bootstrap';
 import { AttributeChanged } from './attribute-changed.decorator';
@@ -109,7 +109,7 @@ describe('features/attributes', () => {
 
       (Component.of(element) as any).attr3 = value;
 
-      expect(updateStateSpy).toHaveBeenCalledWith([StateValueKey.attribute, 'attr3'], value, null);
+      expect(updateStateSpy).toHaveBeenCalledWith([StatePath.attribute, 'attr3'], value, null);
     });
   });
 });

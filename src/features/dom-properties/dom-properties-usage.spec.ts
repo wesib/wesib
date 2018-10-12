@@ -1,4 +1,4 @@
-import { StateValueKey } from '../../common';
+import { StatePath } from '../../common';
 import { Component, ComponentClass, ComponentContext, WesComponent } from '../../component';
 import { TestBootstrap } from '../../spec/test-bootstrap';
 import { DomMethod, DomProperty } from './dom-property.decorator';
@@ -13,13 +13,13 @@ describe('features/dom-properties', () => {
     let element: HTMLElement;
     let propertyValue: number;
     let customUpdateStateSpy: Spy;
-    let customUpdateStateKey: StateValueKey;
+    let customUpdateStatePath: StatePath;
 
     beforeEach(() => {
       context = undefined!;
       propertyValue = 0;
       customUpdateStateSpy = jasmine.createSpy('customUpdateState');
-      customUpdateStateKey = ['custom', 'key'];
+      customUpdateStatePath = ['custom', 'key'];
 
       @WesComponent({ name: 'test-component' })
       class TestComponent {
@@ -33,8 +33,8 @@ describe('features/dom-properties', () => {
         @DomProperty({ updateState: customUpdateStateSpy })
         customStateUpdatingField = 91;
 
-        @DomProperty({ updateState: customUpdateStateKey })
-        customStateKeyField = 911;
+        @DomProperty({ updateState: customUpdateStatePath })
+        customStatePathField = 911;
 
         constructor(ctx: ComponentContext) {
           context = ctx;
@@ -88,7 +88,7 @@ describe('features/dom-properties', () => {
 
       (element as any).writableProperty = 1;
 
-      expect(updateStateSpy).toHaveBeenCalledWith([StateValueKey.property, 'writableProperty'], 1, 11);
+      expect(updateStateSpy).toHaveBeenCalledWith([StatePath.property, 'writableProperty'], 1, 11);
     });
     it('reads component field', () => {
       expect((element as any).field).toBe('initial');
@@ -103,7 +103,7 @@ describe('features/dom-properties', () => {
 
       (element as any).field = 'new';
 
-      expect(updateStateSpy).toHaveBeenCalledWith([StateValueKey.property, 'field'], 'new', 'initial');
+      expect(updateStateSpy).toHaveBeenCalledWith([StatePath.property, 'field'], 'new', 'initial');
     });
     it('does not update the component state when disabled', () => {
 
@@ -122,17 +122,17 @@ describe('features/dom-properties', () => {
 
       expect((element as any).customStateUpdatingField).toEqual(19);
       expect(updateStateSpy).not.toHaveBeenCalled();
-      expect(customUpdateStateSpy).toHaveBeenCalledWith([StateValueKey.property, 'customStateUpdatingField'], 19, 91);
+      expect(customUpdateStateSpy).toHaveBeenCalledWith([StatePath.property, 'customStateUpdatingField'], 19, 91);
       expect(customUpdateStateSpy.calls.first().object).toBe(Component.of(element));
     });
-    it('updates the component state with custom key', () => {
+    it('updates the component state with custom path', () => {
 
       const updateStateSpy = spyOn(context, 'updateState');
 
-      (element as any).customStateKeyField = 119;
+      (element as any).customStatePathField = 119;
 
-      expect((element as any).customStateKeyField).toEqual(119);
-      expect(updateStateSpy).toHaveBeenCalledWith(customUpdateStateKey, 119, 911);
+      expect((element as any).customStatePathField).toEqual(119);
+      expect(updateStateSpy).toHaveBeenCalledWith(customUpdateStatePath, 119, 911);
     });
     it('calls component method', () => {
       expect((element as any).elementMethod('1', '2', '3')).toBe(`${propertyValue}: 1, 2, 3`);

@@ -1,4 +1,4 @@
-import { EventEmitter, StateUpdater, StateValueKey } from '../../common';
+import { EventEmitter, StateUpdater, StatePath } from '../../common';
 import { BootstrapContext, WesFeature } from '../../feature';
 import { StateTracker as StateTracker_ } from './state-tracker';
 
@@ -30,7 +30,7 @@ function enableStateSupport(context: BootstrapContext) {
 
         readonly onStateUpdate = emitter.on;
 
-        readonly updateState: StateUpdater = <V>(key: StateValueKey, newValue: V, oldValue: V) => {
+        readonly updateState: StateUpdater = <V>(key: StatePath, newValue: V, oldValue: V) => {
           emitter.notify(key, newValue, oldValue);
         }
 

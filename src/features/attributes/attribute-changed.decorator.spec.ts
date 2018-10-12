@@ -1,4 +1,4 @@
-import { noop, StateValueKey } from '../../common';
+import { noop, StatePath } from '../../common';
 import { Component, ComponentContext, WesComponent } from '../../component';
 import { testElement } from '../../spec/test-element';
 import { AttributeChanged } from './attribute-changed.decorator';
@@ -50,7 +50,7 @@ describe('features/attributes/attribute-changed', () => {
 
       element.attributeChangedCallback('attr', 'old', 'new');
 
-      expect(updateStateSpy).toHaveBeenCalledWith([StateValueKey.attribute, 'attr'], 'new', 'old');
+      expect(updateStateSpy).toHaveBeenCalledWith([StatePath.attribute, 'attr'], 'new', 'old');
     });
     it('updates the state with custom function', () => {
 
@@ -76,7 +76,7 @@ describe('features/attributes/attribute-changed', () => {
       element.attributeChangedCallback('attr', 'old', 'new');
 
       expect(updateStateSpy).not.toHaveBeenCalled();
-      expect(updateSpy).toHaveBeenCalledWith([StateValueKey.attribute, 'attr'], 'new', 'old');
+      expect(updateSpy).toHaveBeenCalledWith([StatePath.attribute, 'attr'], 'new', 'old');
       expect(updateSpy.calls.first().object).toBe(component);
     });
     it('updates the state with custom key', () => {

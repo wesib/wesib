@@ -5,7 +5,7 @@ import {
   EventProducer,
   SingleValueKey,
   StateUpdater,
-  StateValueKey,
+  StatePath,
 } from '../common';
 import { ComponentClass } from './component';
 
@@ -101,7 +101,7 @@ export abstract class ComponentContext<T extends object = object> implements Con
    * @param newValue New value.
    * @param oldValue Previous value.
    */
-  readonly updateState: StateUpdater = (<V>(key: StateValueKey, newValue: V, oldValue: V) => {
+  readonly updateState: StateUpdater = (<V>(key: StatePath, newValue: V, oldValue: V) => {
     this.get(StateUpdater)(key, newValue, oldValue);
   });
 

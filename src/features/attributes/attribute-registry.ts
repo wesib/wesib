@@ -1,4 +1,4 @@
-import { SingleValueKey, StateValueKey } from '../../common';
+import { SingleValueKey, StatePath } from '../../common';
 
 /**
  * Custom element attribute change callback.
@@ -18,13 +18,13 @@ export type AttributeChangedCallback<T extends object = object> =
  *
  * @param <T> A type of component.
  * @param this Component instance.
- * @param key The changed attribute key in the form of `[StateValueKey.attribute, attributeName]`.
+ * @param path The changed attribute state path in the form of `[StatePath.attribute, attributeName]`.
  * @param newValue New attribute value.
  * @param oldValue Previous attribute value, or `null` if there were no value assigned.
  */
 export type AttributeUpdateConsumer<T extends object> = (
     this: T,
-    key: [typeof StateValueKey.attribute, string],
+    path: [typeof StatePath.attribute, string],
     newValue: string,
     oldValue: string | null) => void;
 

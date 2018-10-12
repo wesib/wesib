@@ -1,4 +1,4 @@
-import { decoratePropertyAccessor, StateValueKey, TypedPropertyDecorator } from '../../common';
+import { decoratePropertyAccessor, StatePath, TypedPropertyDecorator } from '../../common';
 import { Component, ComponentClass, ComponentDef } from '../../component';
 import { FeatureDef } from '../../feature';
 import { DomPropertiesSupport } from './dom-properties-support.feature';
@@ -118,7 +118,7 @@ export namespace DomProperty {
      * - when `false` the component state will not be updated.
      * - when `true` (the default value), then the component state will be updated with changed property key.
      */
-    updateState?: boolean | StateValueKey | DomPropertyUpdateConsumer<T>;
+    updateState?: boolean | StatePath | DomPropertyUpdateConsumer<T>;
 
   }
 
@@ -130,13 +130,13 @@ export namespace DomProperty {
  * @param <T> A type of component.
  * @param <K> A type of component property keys.
  * @param this Component instance.
- * @param key The changed property key in the form of `[StateValueKey.property, propertyKey]`.
+ * @param path The changed property state path in the form of `[StatePath.property, propertyKey]`.
  * @param newValue New property value.
  * @param oldValue Previous property value.
  */
 export type DomPropertyUpdateConsumer<T extends object> = <K extends keyof T>(
     this: T,
-    key: [typeof StateValueKey.property, K],
+    path: [typeof StatePath.property, K],
     newValue: T[K],
     oldValue: T[K]) => void;
 

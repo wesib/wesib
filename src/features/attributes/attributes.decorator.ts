@@ -1,4 +1,4 @@
-import { StateValueKey, TypedClassDecorator } from '../../common';
+import { StatePath, TypedClassDecorator } from '../../common';
 import { ComponentClass, ComponentDef } from '../../component';
 import { FeatureDef } from '../../feature';
 import { AttributeRegistry, AttributeUpdateConsumer } from './attribute-registry';
@@ -48,7 +48,7 @@ export namespace Attributes {
    * - an attribute update consumer function with custom state update logic.
    */
   export interface Opts<T extends object> {
-    [name: string]: boolean | StateValueKey | AttributeUpdateConsumer<T>;
+    [name: string]: boolean | StatePath | AttributeUpdateConsumer<T>;
   }
 
 }
