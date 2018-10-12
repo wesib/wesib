@@ -5,7 +5,6 @@ class PathEntry {
 
   readonly emitter = new EventEmitter<StateUpdater>();
   private readonly _nested = new Map<PropertyKey, PathEntry>();
-  private _consumers = 0;
 
   constructor(private readonly _drop: () => void) {
     this.emitter.on((path, newValue, oldValue) => {
@@ -25,12 +24,9 @@ class PathEntry {
     const entry = this;
     const interest = this.emitter.on(consumer);
 
-    ++this._consumers;
-
     return {
       off() {
         interest.off();
-        --entry._consumers;
         entry._dropIfEmpty();
       },
     };
@@ -57,7 +53,7 @@ class PathEntry {
   }
 
   private _dropIfEmpty() {
-    if (!this._consumers && !this._nested.size) {
+    if (!this._nested.size && this.emitter.consumers <= 1) {
       this._drop();
     }
   }

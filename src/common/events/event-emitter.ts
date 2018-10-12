@@ -36,10 +36,10 @@ export class EventEmitter<C extends EventConsumer<any[], any>> {
   });
 
   /**
-   * Whether there are any event consumers registered in this event emitter.
+   * The number of registered event consumers.
    */
-  get hasConsumers(): boolean {
-    return !!this._consumers.size;
+  get consumers(): number {
+    return this._consumers.size;
   }
 
   /**

@@ -19,7 +19,7 @@ describe('common/events/event-emitter', () => {
     });
 
     it('has no consumers initially', () => {
-      expect(emitter.hasConsumers).toBe(false);
+      expect(emitter.consumers).toBe(0);
     });
 
     describe('on', () => {
@@ -31,7 +31,7 @@ describe('common/events/event-emitter', () => {
       });
 
       it('registers event consumer', () => {
-        expect(emitter.hasConsumers).toBe(true);
+        expect(emitter.consumers).toBe(1);
 
         emitter.on(consumer2Spy);
 
@@ -42,6 +42,7 @@ describe('common/events/event-emitter', () => {
       });
       it('does not register event consumer', () => {
         expect(emitter.on(consumerSpy)).toBe(EventInterest.none);
+        expect(emitter.consumers).toBe(1);
 
         emitter.notify('event');
 
@@ -74,7 +75,7 @@ describe('common/events/event-emitter', () => {
         emitter.on(consumer2Spy);
         emitter.clear();
 
-        expect(emitter.hasConsumers).toBe(false);
+        expect(emitter.consumers).toBe(0);
 
         emitter.notify('event');
 
