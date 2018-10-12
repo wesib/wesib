@@ -8,7 +8,7 @@ import { noop } from '../functions';
  * It is called when the value with the given `key` changes.
  *
  * @param <V> A type of changed value.
- * @param key Changed sub-state path.
+ * @param path A path to changed state part.
  * @param newValue New value.
  * @param oldValue Previous value.
  */
@@ -29,7 +29,7 @@ export namespace StateUpdater {
 }
 
 /**
- * A path to state or sub-state. E.g. property value.
+ * A path to state or its part. E.g. property value.
  *
  * May consist of one or more property keys.
  *
@@ -71,7 +71,7 @@ export namespace StatePath {
    *
    * @param path Arbitrary state path.
    *
-   * @return Normalized state value key.
+   * @return Normalized state path.
    */
   export function of(path: StatePath): Normalized {
     return list2array(path);
