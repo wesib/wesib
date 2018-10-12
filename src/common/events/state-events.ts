@@ -8,11 +8,11 @@ import { noop } from '../functions';
  * It is called when the value with the given `key` changes.
  *
  * @param <V> A type of changed value.
- * @param key Changed value key.
+ * @param path A path to changed state part.
  * @param newValue New value.
  * @param oldValue Previous value.
  */
-export type StateUpdater = <V>(this: void, key: StateValueKey, newValue: V, oldValue: V) => void;
+export type StateUpdater = <V>(this: void, path: StatePath, newValue: V, oldValue: V) => void;
 
 export namespace StateUpdater {
 
@@ -29,50 +29,52 @@ export namespace StateUpdater {
 }
 
 /**
- * A key of the state value.
+ * A path to state or its part. E.g. property value.
  *
  * May consist of one or more property keys.
  *
  * An array consisting of the only one property key is the same as this property key.
- */
-export type StateValueKey = PropertyKey | NormalizedStateValueKey;
-
-/**
- * Normalized state value key.
  *
- * This is always a tuple of property keys.
+ * The empty array is a path to the state itself.
  */
-export type NormalizedStateValueKey = PropertyKey[];
+export type StatePath = PropertyKey | StatePath.Normalized;
 
-export namespace StateValueKey {
+export namespace StatePath {
 
   /**
-   * State value key element preceding a property key.
+   * Normalized state path.
    *
-   * Thus a property key is always something like `[StateValueKey.property, 'property-name']`.
+   * This is always a tuple of property keys.
+   */
+  export type Normalized = PropertyKey[];
+
+  /**
+   * A path to sub-state containing element properties.
+   *
+   * Thus a property state path is always something like `[StatePath.property, 'property-name']`.
    */
   export const property = Symbol('property');
 
   /**
-   * State value key element preceding an attribute name.
+   * A path to sub-state containing element an attributes.
    *
-   * Thus, an attribute key is always something like `[StateValueKey.attribute, 'attribute-name']`.
+   * Thus, an attribute state path is always something like `[StatePath.attribute, 'attribute-name']`.
    */
   export const attribute = Symbol('attribute');
 
-  export function normalize<K extends PropertyKey>(key: K): [K];
+  export function of<K extends PropertyKey>(key: K): [K];
 
-  export function normalize(key: NormalizedStateValueKey): NormalizedStateValueKey;
+  export function of(path: StatePath): Normalized;
 
   /**
-   * Normalizes state value key. I.e. converts it to tuple.
+   * Normalizes state path. I.e. converts it to tuple.
    *
-   * @param key Arbitrary state value key.
+   * @param path Arbitrary state path.
    *
-   * @return Normalized state value key.
+   * @return Normalized state path.
    */
-  export function normalize(key: StateValueKey): NormalizedStateValueKey {
-    return list2array(key);
+  export function of(path: StatePath): Normalized {
+    return list2array(path);
   }
 
 }

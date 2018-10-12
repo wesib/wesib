@@ -1,23 +1,23 @@
-import { StateValueKey } from './state-events';
+import { StatePath } from './state-events';
 
 describe('events/state-events', () => {
-  describe('StateValueKey', () => {
-    describe('normalize', () => {
+  describe('StatePath', () => {
+    describe('of', () => {
       it('normalizes non-compound state value key', () => {
-        expect(StateValueKey.normalize('key')).toEqual(['key']);
-        expect(StateValueKey.normalize(0)).toEqual([0]);
+        expect(StatePath.of('key')).toEqual(['key']);
+        expect(StatePath.of(0)).toEqual([0]);
 
         const key = Symbol('key');
 
-        expect(StateValueKey.normalize(key)).toEqual([key]);
+        expect(StatePath.of(key)).toEqual([key]);
       });
       it('does not alter normalized value keys', () => {
 
-        const key1 = ['key'];
-        const key2 = ['key', 2];
+        const path1 = ['key'];
+        const path2 = ['key', 2];
 
-        expect(StateValueKey.normalize(key1)).toBe(key1);
-        expect(StateValueKey.normalize(key2)).toBe(key2);
+        expect(StatePath.of(path1)).toBe(path1);
+        expect(StatePath.of(path2)).toBe(path2);
       });
     });
   });

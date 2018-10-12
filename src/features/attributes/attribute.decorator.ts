@@ -1,4 +1,4 @@
-import { StateValueKey, TypedPropertyDecorator } from '../../common';
+import { StatePath, TypedPropertyDecorator } from '../../common';
 import { ComponentClass, ComponentContext, ComponentDef } from '../../component';
 import { FeatureDef } from '../../feature';
 import { AttributeChangedCallback, AttributeRegistry, AttributeUpdateConsumer } from './attribute-registry';
@@ -76,7 +76,7 @@ export namespace Attribute {
      * - a state value key to update, or
      * - an attribute update consumer function with custom state update logic.
      */
-    updateState?: boolean | StateValueKey | AttributeUpdateConsumer<T>;
+    updateState?: boolean | StatePath | AttributeUpdateConsumer<T>;
 
   }
 

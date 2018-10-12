@@ -50,26 +50,26 @@ describe('features/state', () => {
     it('notifies on state update', () => {
 
       const listenerSpy = jasmine.createSpy('stateListener');
-      const interest = stateTracker.onStateUpdate(listenerSpy);
+      const interest = stateTracker.onUpdate(listenerSpy);
 
-      updateState('key', 'new', 'old');
+      updateState(['key'], 'new', 'old');
 
-      expect(listenerSpy).toHaveBeenCalledWith('key', 'new', 'old');
+      expect(listenerSpy).toHaveBeenCalledWith(['key'], 'new', 'old');
 
       interest.off();
       listenerSpy.calls.reset();
-      updateState('kew', 'new', 'old');
+      updateState('key', 'new', 'old');
 
       expect(listenerSpy).not.toHaveBeenCalled();
     });
     it('notifies on state update with `updateState()` method' , () => {
 
       const listenerSpy = jasmine.createSpy('stateListener');
-      const interest = stateTracker.onStateUpdate(listenerSpy);
+      const interest = stateTracker.onUpdate(listenerSpy);
 
-      context.updateState('key', 'new', 'old');
+      context.updateState(['key'], 'new', 'old');
 
-      expect(listenerSpy).toHaveBeenCalledWith('key', 'new', 'old');
+      expect(listenerSpy).toHaveBeenCalledWith(['key'], 'new', 'old');
 
       interest.off();
       listenerSpy.calls.reset();

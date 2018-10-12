@@ -1,4 +1,4 @@
-import { StateValueKey } from '../../common';
+import { StatePath } from '../../common';
 import { ComponentContext } from '../../component';
 import { DomPropertyUpdateConsumer } from './dom-property.decorator';
 
@@ -15,14 +15,14 @@ export type DomPropertyUpdateCallback<T extends object> = <K extends keyof T>(
  */
 export function propertyStateUpdate<T extends object>(
     propertyKey: PropertyKey,
-    updateState: true | DomPropertyUpdateConsumer<T> | StateValueKey = true): DomPropertyUpdateCallback<T> {
+    updateState: true | DomPropertyUpdateConsumer<T> | StatePath = true): DomPropertyUpdateCallback<T> {
   if (updateState === true || typeof updateState === 'function') {
 
-    const key = [StateValueKey.property, propertyKey];
+    const path = [StatePath.property, propertyKey];
     const update: DomPropertyUpdateConsumer<T> = updateState === true ? defaultUpdateState : updateState;
 
     return function (this: T, newValue, oldValue) {
-      update.call(this, key, newValue, oldValue);
+      update.call(this, path, newValue, oldValue);
     };
   }
   return function (this: T, newValue, oldValue) {
@@ -32,8 +32,8 @@ export function propertyStateUpdate<T extends object>(
 
 function defaultUpdateState<T extends object, K extends keyof T>(
     this: T,
-    key: [typeof StateValueKey.property, K],
+    path: [typeof StatePath.property, K],
     newValue: T[K],
     oldValue: T[K]) {
-  ComponentContext.of(this).updateState(key, newValue, oldValue);
+  ComponentContext.of(this).updateState(path, newValue, oldValue);
 }

@@ -1,6 +1,7 @@
-import { EventEmitter, StateUpdater, StateValueKey } from '../../common';
+import { StateUpdater } from '../../common';
 import { BootstrapContext, WesFeature } from '../../feature';
-import { StateTracker as StateTracker_ } from './state-tracker';
+import { StateTracker } from './state-tracker';
+import { StateTracker as StateTrackerImpl } from './state-tracker.impl';
 
 /**
  * Component state support feature.
@@ -21,28 +22,13 @@ export class StateSupport {
 
 function enableStateSupport(context: BootstrapContext) {
   context.forComponents({
-    provide: StateTracker_,
-    provider() {
-
-      const emitter = new EventEmitter<StateUpdater>();
-
-      class StateTracker extends StateTracker_ {
-
-        readonly onStateUpdate = emitter.on;
-
-        readonly updateState: StateUpdater = <V>(key: StateValueKey, newValue: V, oldValue: V) => {
-          emitter.notify(key, newValue, oldValue);
-        }
-
-      }
-
-      return new StateTracker();
-    },
+    provide: StateTracker,
+    provider: StateTrackerImpl.create,
   });
   context.forComponents({
     provide: StateUpdater,
     provider(ctx) {
-      return ctx.get(StateTracker_).updateState;
+      return ctx.get(StateTracker).update;
     },
   });
 }

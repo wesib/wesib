@@ -1,4 +1,4 @@
-import { ContextValueKey, EventProducer, SingleValueKey, StateUpdater } from '../../common';
+import { ContextValueKey, EventProducer, SingleValueKey, StatePath, StateUpdater } from '../../common';
 
 /**
  * Component state tracker.
@@ -15,18 +15,18 @@ export abstract class StateTracker {
   /**
    * Registers component state updates listener.
    *
-   * This listener will be notified when `updateState()` is called.
+   * This listener will be notified when `update()` is called.
    *
    * @param listener A listener to notify on state updates.
    *
    * @return An event interest instance.
    */
-  abstract readonly onStateUpdate: EventProducer<StateUpdater>;
+  abstract readonly onUpdate: EventProducer<StateUpdater>;
 
   /**
    * Updates the component state.
    *
-   * All listeners registered with `onStateUpdate()` will be notified on this update.
+   * All listeners registered with `onUpdate()` will be notified on this update.
    *
    * This method is also called by the function available under `[StateUpdater.key]` key.
    * The latter is preferred way to call it, as the caller won't depend on `StateSupport` feature then.
@@ -36,6 +36,15 @@ export abstract class StateTracker {
    * @param newValue New value.
    * @param oldValue Previous value.
    */
-  abstract readonly updateState: StateUpdater;
+  abstract readonly update: StateUpdater;
+
+  /**
+   * Starts tracking of partial state under the given path.
+   *
+   * @param path A path to state part.
+   *
+   * @return New partial state tracker.
+   */
+  abstract track(path: StatePath): StateTracker;
 
 }
