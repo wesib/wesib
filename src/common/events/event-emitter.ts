@@ -11,7 +11,7 @@ import { EventConsumer, EventInterest, EventProducer } from './event-producer';
  * @param <E> An event type. This is a list of event consumer parameter types.
  * @param <R> Event processing result. This is a type of event consumer result.
  */
-export class EventEmitter<C extends EventConsumer<any[], any>> {
+export class EventEmitter<C extends EventConsumer<any[], any>> implements Iterable<C> {
 
   /**
    * @internal
@@ -42,6 +42,10 @@ export class EventEmitter<C extends EventConsumer<any[], any>> {
     return this._consumers.size;
   }
 
+  [Symbol.iterator](): IterableIterator<C> {
+    return this._consumers[Symbol.iterator]();
+  }
+
   /**
    * Performs the given `action` for each registered consumer in order of their registration.
    *
@@ -62,7 +66,9 @@ export class EventEmitter<C extends EventConsumer<any[], any>> {
    * @param event An event represented by function call arguments.
    */
   notify(...event: ArgumentTypes<C>): void {
-    this.forEach(consumer => consumer(...event));
+    for (const consumer of this) {
+      consumer(...event);
+    }
   }
 
   /**
