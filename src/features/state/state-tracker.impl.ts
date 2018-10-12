@@ -7,7 +7,7 @@ class PathEntry {
   private readonly _nested = new Map<PropertyKey, PathEntry>();
   private _consumers = 0;
 
-  constructor(private readonly _depth: number, private readonly _drop: () => void) {
+  constructor(private readonly _drop: () => void) {
     this.emitter.on((path, newValue, oldValue) => {
       path = StatePath.of(path);
 
@@ -44,7 +44,7 @@ class PathEntry {
       return found;
     }
 
-    const created = new PathEntry(this._depth + 1, () => this._remove(key));
+    const created = new PathEntry(() => this._remove(key));
 
     this._nested.set(key, created);
 
@@ -66,7 +66,7 @@ class PathEntry {
 
 class Trackers {
 
-  private readonly _root = new PathEntry(0, noop);
+  private readonly _root = new PathEntry(noop);
 
   on(path: StatePath.Normalized, consumer: StateUpdater): EventInterest {
     return this._entry(path).on(consumer);
