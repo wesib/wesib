@@ -1,3 +1,4 @@
+export * from './array-set';
 export * from './classes';
 export * from './context';
 export * from './decorators';

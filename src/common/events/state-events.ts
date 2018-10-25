@@ -1,4 +1,3 @@
-import { list2array } from '../../util';
 import { ContextValueKey, SingleValueKey } from '../context';
 import { noop } from '../functions';
 
@@ -74,7 +73,7 @@ export namespace StatePath {
    * @return Normalized state path.
    */
   export function of(path: StatePath): Normalized {
-    return list2array(path);
+    return Array.isArray(path) ? path : [path];
   }
 
 }

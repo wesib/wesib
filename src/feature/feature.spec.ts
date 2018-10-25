@@ -116,7 +116,7 @@ describe('feature/feature', () => {
 
       it('assigns feature definition', () => {
 
-        const def: FeatureDef = { require: [Feature1] };
+        const def: FeatureDef = { require: Feature1 };
         const componentType = FeatureDef.define(TestFeature, def);
 
         expect(FeatureDef.of(componentType)).toEqual(def);

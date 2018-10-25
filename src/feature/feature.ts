@@ -1,5 +1,4 @@
-import { Class, ContextValueSpec, mergeFunctions, MetaAccessor } from '../common';
-import { mergeLists } from '../util';
+import { ArraySet, Class, ContextValueSpec, mergeFunctions, MetaAccessor } from '../common';
 import { BootstrapContext } from './bootstrap-context';
 
 /**
@@ -51,19 +50,19 @@ export namespace FeatureDef {
           (prev, def) => {
 
             const result: FeatureDef = {};
-            const bootstraps = mergeLists(prev.prebootstrap, def.prebootstrap);
-            const requires = mergeLists(prev.require, def.require);
-            const provides = mergeLists(prev.provide, def.provide);
+            const bootstraps = new ArraySet(prev.prebootstrap).merge(def.prebootstrap);
+            const requires = new ArraySet(prev.require).merge(def.require);
+            const provides = new ArraySet(prev.provide).merge(def.provide);
             const configure = mergeFunctions<[BootstrapContext], void, Class>(prev.bootstrap, def.bootstrap);
 
-            if (bootstraps !== undefined) {
-              result.prebootstrap = bootstraps;
+            if (bootstraps.size) {
+              result.prebootstrap = bootstraps.value;
             }
-            if (requires !== undefined) {
-              result.require = requires;
+            if (requires.size) {
+              result.require = requires.value;
             }
-            if (provides !== undefined) {
-              result.provide = provides;
+            if (provides.size) {
+              result.provide = provides.value;
             }
             if (configure) {
               result.bootstrap = configure;

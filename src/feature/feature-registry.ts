@@ -1,5 +1,4 @@
-import { Class, ContextValueDef } from '../common';
-import { list2array, list2set } from '../util';
+import { ArraySet, Class } from '../common';
 import { BootstrapContext } from './bootstrap-context';
 import { BootstrapValueRegistry } from './bootstrap-value-registry';
 import { FeatureDef } from './feature';
@@ -98,16 +97,14 @@ export class FeatureRegistry {
     const def = FeatureDef.of(feature);
 
     // Add requirements before the feature itself.
-    list2set(def.require).forEach(required => this.add(required));
+    new ArraySet(def.require).items.forEach(required => this.add(required));
 
     if (!existing) {
       this._providers.set(feature, providers);
     }
 
     // Add provided features after the feature itself.
-    list2set(def.provide).forEach(provided => {
-      this.add(provided, feature);
-    });
+    new ArraySet(def.provide).items.forEach(provided => this.add(provided, feature));
   }
 
   bootstrap(context: BootstrapContext) {
@@ -118,8 +115,8 @@ export class FeatureRegistry {
   private _provideValues() {
     this._providers.forEach((providers, feature) => {
       if (feature === providers.provider(this._providers)) {
-        list2array(FeatureDef.of(feature).prebootstrap)
-            .forEach(spec => this._valueRegistry.provide(spec));
+        new ArraySet(FeatureDef.of(feature).prebootstrap)
+            .items.forEach(spec => this._valueRegistry.provide(spec));
       }
     });
   }

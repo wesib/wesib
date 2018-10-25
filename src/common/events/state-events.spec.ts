@@ -16,8 +16,8 @@ describe('events/state-events', () => {
         const path1 = ['key'];
         const path2 = ['key', 2];
 
-        expect(StatePath.of(path1)).toBe(path1);
-        expect(StatePath.of(path2)).toBe(path2);
+        expect(StatePath.of(path1)).toEqual(path1);
+        expect(StatePath.of(path2)).toEqual(path2);
       });
     });
   });
