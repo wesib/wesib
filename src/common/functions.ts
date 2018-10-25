@@ -4,13 +4,6 @@
 export function noop(): void {
 }
 
-/**
- * Function argument types.
- *
- * @param <F> Function type.
- */
-export type ArgumentTypes<F extends (...args: any[]) => any> = F extends (...args: infer A) => any ? A : never;
-
 export function mergeFunctions<P extends any[], R, T>(
     first: (this: T, ...args: P) => R,
     second: ((this: T, ...args: P) => R) | undefined,

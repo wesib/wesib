@@ -1,4 +1,3 @@
-import { ArgumentTypes } from '../functions';
 import { EventConsumer, EventInterest, EventProducer } from './event-producer';
 
 /**
@@ -65,7 +64,7 @@ export class EventEmitter<C extends EventConsumer<any[], any>> implements Iterab
    *
    * @param event An event represented by function call arguments.
    */
-  notify(...event: ArgumentTypes<C>): void {
+  notify(...event: Parameters<C>): void {
     for (const consumer of this) {
       consumer(...event);
     }
