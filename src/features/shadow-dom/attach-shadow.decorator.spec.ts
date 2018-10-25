@@ -1,7 +1,6 @@
 import { ComponentClass, ComponentContext, WesComponent } from '../../component';
 import { FeatureDef } from '../../feature';
 import { testElement } from '../../spec/test-element';
-import { list2set } from '../../util';
 import { AttachShadow } from './attach-shadow.decorator';
 import { ShadowContentRoot } from './shadow-content-root';
 import { ShadowDomSupport } from './shadow-dom-support.feature';
@@ -40,7 +39,7 @@ describe('features/shadow-dom/attach-shadow.decorator', () => {
     });
 
     it('enables shadow root support', () => {
-      expect(list2set(FeatureDef.of(testComponent).require)).toContain(ShadowDomSupport);
+      expect(FeatureDef.of(testComponent).require).toBe(ShadowDomSupport);
     });
     it('provides shadow root', () => {
       expect(context.get(ShadowContentRoot)).toBe(shadowRoot);
