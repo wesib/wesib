@@ -33,7 +33,7 @@ function newComponent<T extends object>(type: ComponentClass<T>, context: Compon
   } finally {
     proto[ComponentContext_.symbol] = prevContext;
   }
-};
+}
 
 /**
  * @internal

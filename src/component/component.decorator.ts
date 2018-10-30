@@ -1,6 +1,5 @@
 import { TypedClassDecorator } from '../common';
 import { ComponentClass } from './component-class';
-import { ComponentContext } from './component-context';
 import { ComponentDef } from './component-def';
 
 /**
@@ -30,5 +29,3 @@ export function Component<T extends ComponentClass = any>(
     TypedClassDecorator<T> {
   return (type: T) => ComponentDef.define(type, typeof def === 'string' ? { name: def } : def);
 }
-
-
