@@ -1,5 +1,5 @@
 import { StatePath } from '../../common';
-import { Component, ComponentContext, WesComponent } from '../../component';
+import { Component, ComponentContext } from '../../component';
 import { testElement } from '../../spec/test-element';
 import { Attributes } from './attributes.decorator';
 
@@ -7,7 +7,7 @@ describe('features/attributes/attributes', () => {
   describe('@Attributes', () => {
     it('updates the state', () => {
 
-      @WesComponent({
+      @Component({
         name: 'test-component',
         extend: {
           type: Object,
@@ -30,7 +30,7 @@ describe('features/attributes/attributes', () => {
 
       const updateSpy = jasmine.createSpy('updateState');
 
-      @WesComponent({
+      @Component({
         name: 'test-component',
         extend: {
           type: Object,
@@ -56,7 +56,7 @@ describe('features/attributes/attributes', () => {
 
       const key = ['custom-key'];
 
-      @WesComponent({
+      @Component({
         name: 'test-component',
         extend: {
           type: Object,
@@ -77,7 +77,7 @@ describe('features/attributes/attributes', () => {
     });
     it('disables state update', () => {
 
-      @WesComponent({
+      @Component({
         name: 'test-component',
         extend: {
           type: Object,

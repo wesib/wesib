@@ -1,6 +1,6 @@
 import { bootstrapComponents } from './bootstrap';
 import { EventEmitter, SingleValueKey } from './common';
-import { ComponentListener, DefinitionListener, WesComponent } from './component';
+import { ComponentListener, DefinitionListener, Component } from './component';
 import { ComponentRegistry } from './component/definition/component-registry';
 import { ComponentValueRegistry } from './component/definition/component-value-registry';
 import { DefinitionValueRegistry } from './component/definition/definition-value-registry';
@@ -165,7 +165,7 @@ describe('bootstrap', () => {
 
       it('proxies define() method', () => {
 
-        @WesComponent({ name: 'test-component', extend: { name: 'div', type: HTMLDivElement } })
+        @Component({ name: 'test-component', extend: { name: 'div', type: HTMLDivElement } })
         class TestComponent {}
 
         featureContext.define(TestComponent);
@@ -177,7 +177,7 @@ describe('bootstrap', () => {
 
         componentRegistrySpy.whenDefined.and.returnValue(promise);
 
-        @WesComponent({ name: 'test-component', extend: { name: 'div', type: HTMLDivElement } })
+        @Component({ name: 'test-component', extend: { name: 'div', type: HTMLDivElement } })
         class TestComponent {}
 
         expect(featureContext.whenDefined(TestComponent)).toBe(promise);

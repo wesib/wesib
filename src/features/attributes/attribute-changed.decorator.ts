@@ -15,7 +15,7 @@ import { AttributesSupport } from './attributes-support.feature';
  *
  * Example:
  * ```TypeScript
- * @WesComponent('my-component')
+ * @Component('my-component')
  * class MyComponent {
  *
  *   @AttributeChanged('my-attribute')

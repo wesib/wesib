@@ -1,4 +1,4 @@
-import { Component, ComponentContext, WesComponent } from '../../component';
+import { Component, ComponentContext } from '../../component';
 import { Attribute } from './attribute.decorator';
 import SpyObj = jasmine.SpyObj;
 
@@ -16,7 +16,7 @@ describe('features/attributes/attribute.decorator', () => {
 
     it('declares attribute field', () => {
 
-      @WesComponent('test-component')
+      @Component('test-component')
       class TestComponent {
 
         @Attribute()
@@ -35,7 +35,7 @@ describe('features/attributes/attribute.decorator', () => {
     });
     it('declares attribute property', () => {
 
-      @WesComponent('test-component')
+      @Component('test-component')
       class TestComponent {
 
         @Attribute()

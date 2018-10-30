@@ -1,5 +1,5 @@
 import { StatePath } from '../../common';
-import { Component, ComponentClass, ComponentContext, WesComponent } from '../../component';
+import { Component, ComponentClass, ComponentContext } from '../../component';
 import { TestBootstrap } from '../../spec/test-bootstrap';
 import { DomMethod, DomProperty } from './dom-property.decorator';
 import Spy = jasmine.Spy;
@@ -21,7 +21,7 @@ describe('features/dom-properties', () => {
       customUpdateStateSpy = jasmine.createSpy('customUpdateState');
       customUpdateStatePath = ['custom', 'key'];
 
-      @WesComponent({ name: 'test-component' })
+      @Component({ name: 'test-component' })
       class TestComponent {
 
         @DomProperty()

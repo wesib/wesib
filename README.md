@@ -34,11 +34,11 @@ The examples can be found in [@wesib/examples].
 Components
 ----------
 
-Wesib allows to define custom components by decorating a component class with `@WesComponent` decorator:
+Wesib allows to define custom components by decorating a component class with `@Component` decorator:
 ```TypeScript
-import { WesComponent } from '@wesib/wesib';
+import { Component } from '@wesib/wesib';
 
-@WesComponent('my-component') // Custom element name
+@Component('my-component') // Custom element name
 export class MyComponent {
   // ...component definition
 }
@@ -68,9 +68,9 @@ Element Attributes
 To define custom element attributes use `@Attribute` or `@AttributeChanged` component property decorators,
 or `@Attributes` component class decorator.
 ```TypeScript
-import { Attribute, AttributeChanged, Attributes, WesComponent } from '@wesib/wesib';
+import { Attribute, AttributeChanged, Attributes, Component } from '@wesib/wesib';
 
-@WesComponent('my-component') // Custom element name
+@Component('my-component') // Custom element name
 @Attributes({
   'attribute-one': true, // `true` means the component state is updated when attribute value changes   
 })
@@ -101,9 +101,9 @@ Element Properties
 
 To define the properties of custom element use a `@DomProperty` component property decorator.
 ```TypeScript
-import { DomProperty, WesComponent } from '@wesib/wesib';
+import { DomProperty, Component } from '@wesib/wesib';
 
-@WesComponent('my-component') // Custom element name
+@Component('my-component') // Custom element name
 export class MyComponent {
 
   @DomProperty('elementProperty') // Element property name. The decorated property name is used if omitted.
@@ -124,9 +124,9 @@ Wesib provides contexts for each component and feature (see below). This context
 For example, each component class constructor accepts a `ComponentContext` instance as its only argument.
 
 ```TypeScript
-import { ComponentContext, WesComponent } from '@wesib/wesib';
+import { ComponentContext, Component } from '@wesib/wesib';
 
-@WesComponent('my-component') // Custom element name
+@Component('my-component') // Custom element name
 export class MyComponent {
 
   private readonly _service: MyService;
@@ -231,9 +231,9 @@ is issued.
 
 A state update notification can also be issued by calling a `ComponentContext.updateState()` method:
 ```TypeScript
-import { ComponentContext, WesComponent } from '@wesib/wesib';
+import { Component, ComponentContext } from '@wesib/wesib';
 
-@WesComponent('my-component') // Custom element name
+@Component('my-component') // Custom element name
 export class MyComponent {
 
   data: any;
@@ -282,9 +282,9 @@ mechanics to use: direct DOM manipulations, template processing, virtual DOM, et
 However, Wesib is able to notify the renderer on component state updates and trigger its rendering. For that a `@Render`
 decorator can be applied to component renderer method:
 ```TypeScript
-import { Attribute, ComponentContext, Render, WesComponent } from '@wesib/wesib';
+import { Attribute, Component, ComponentContext, Render } from '@wesib/wesib';
 
-@WesComponent('greet-text')
+@Component('greet-text')
 export class GreetTextComponent {
 
   @Attribute()

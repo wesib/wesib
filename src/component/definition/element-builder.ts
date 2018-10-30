@@ -1,7 +1,8 @@
 import { Class, ContextValueKey, ContextValueSpec, EventEmitter, mergeFunctions, noop } from '../../common';
-import { Component, ComponentClass } from '../component';
+import { ComponentClass } from '../component';
 import { ComponentContext as ComponentContext_, ComponentListener } from '../component-context';
 import { ComponentDef } from '../component-def';
+import { Component } from '../component.decorator';
 import { ComponentValueRegistry } from './component-value-registry';
 import { DefinitionContext as DefinitionContext_, DefinitionListener, ElementBaseClass } from './definition-context';
 import { DefinitionValueRegistry } from './definition-value-registry';

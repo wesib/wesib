@@ -1,5 +1,5 @@
 import { EventInterest } from '../common';
-import { Component, ComponentClass, ComponentContext, WesComponent } from '../component';
+import { Component, ComponentClass, ComponentContext } from '../component';
 import { TestBootstrap } from './test-bootstrap';
 import Spy = jasmine.Spy;
 
@@ -19,7 +19,7 @@ describe('component instantiation', () => {
       constructorSpy = jasmine.createSpy('constructor')
           .and.callFake((ctx: ComponentContext) => context = ctx);
 
-      @WesComponent({ name: 'test-component' })
+      @Component({ name: 'test-component' })
       class TestComponent {
 
         constructor(...args: any[]) {
@@ -84,7 +84,7 @@ describe('component instantiation', () => {
     beforeEach(() => {
       constructorSpy = jasmine.createSpy('constructor');
 
-      @WesComponent({ name: 'test-component' })
+      @Component({ name: 'test-component' })
       class TestComponent {
         constructor() {
           constructorSpy();

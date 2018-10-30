@@ -1,5 +1,5 @@
 import { bootstrapComponents } from '../../bootstrap';
-import { Component, ComponentClass, CustomElements, DefinitionContext, WesComponent } from '../../component';
+import { Component, ComponentClass, CustomElements, DefinitionContext } from '../../component';
 import { FeatureDef, WesFeature } from '../../feature';
 import { DomProperty } from '../dom-properties';
 import { StateSupport } from '../state';
@@ -21,7 +21,7 @@ describe('features/render/render.decorator', () => {
     beforeEach(() => {
       renderSpy = jasmine.createSpy('render');
 
-      @WesComponent({
+      @Component({
         name: 'test-component',
         extend: {
           type: Object,

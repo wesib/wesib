@@ -1,4 +1,4 @@
-import { ComponentClass, ComponentContext, WesComponent } from '../../component';
+import { ComponentClass, ComponentContext, Component } from '../../component';
 import { FeatureDef } from '../../feature';
 import { testElement } from '../../spec/test-element';
 import { AttachShadow } from './attach-shadow.decorator';
@@ -20,7 +20,7 @@ describe('features/shadow-dom/attach-shadow.decorator', () => {
       attachShadowSpy = jasmine.createSpy('attachShadow').and.returnValue(shadowRoot);
 
       @AttachShadow()
-      @WesComponent({
+      @Component({
         name: 'test-component',
         extend: {
           type: class {
@@ -61,7 +61,7 @@ describe('features/shadow-dom/attach-shadow.decorator', () => {
       };
 
       @AttachShadow(init)
-      @WesComponent({
+      @Component({
         name: 'other-component',
         extend: {
           type: class {
@@ -84,7 +84,7 @@ describe('features/shadow-dom/attach-shadow.decorator', () => {
       };
 
       @AttachShadow(init)
-      @WesComponent({
+      @Component({
         name: 'other-component',
         extend: {
           type: Object,
