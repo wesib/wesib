@@ -1,5 +1,5 @@
 import { ComponentContext } from '../../component';
-import { WesFeature } from '../../feature';
+import { Feature } from '../../feature';
 import { ShadowRootBuilder } from './shadow-root-builder';
 
 function attachShadow(context: ComponentContext, init: ShadowRootInit): ShadowRoot {
@@ -23,7 +23,7 @@ function attachShadow(context: ComponentContext, init: ShadowRootInit): ShadowRo
  *
  * This feature is automatically enabled when `@AttachShadow` decorator is used.
  */
-@WesFeature({
+@Feature({
   prebootstrap: [
     { provide: ShadowRootBuilder, value: attachShadow },
   ],

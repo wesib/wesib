@@ -1,12 +1,12 @@
 import { Class, TypedClassDecorator } from '../common';
-import { FeatureDef } from './feature';
+import { FeatureDef } from './feature-def';
 
 /**
  * Feature class decorator.
  *
  * Decorate a class with this decorator to define it as a feature like this:
  * ```TypeScript
- * @WesFeature({ requires: [OtherFeature, MyComponent] })
+ * @Feature({ requires: [OtherFeature, MyComponent] })
  * class MyFeature {
  *   // ...
  * }
@@ -21,6 +21,6 @@ import { FeatureDef } from './feature';
  *
  * @returns A feature class decorator.
  */
-export function WesFeature<T extends Class = any>(def: FeatureDef): TypedClassDecorator<T> {
+export function Feature<T extends Class = any>(def: FeatureDef): TypedClassDecorator<T> {
   return (type: T) => FeatureDef.define(type, def);
 }

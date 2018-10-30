@@ -1,6 +1,6 @@
 import { Class } from '../../common';
 import { SingleValueKey } from '../../common/context';
-import { WesFeature } from '../../feature';
+import { Feature } from '../../feature';
 import { DomPropertyRegistry as DomPropertyRegistry_ } from './dom-property-registry';
 
 class DomPropertyRegistry implements DomPropertyRegistry_ {
@@ -26,7 +26,7 @@ class DomPropertyRegistry implements DomPropertyRegistry_ {
  *
  * This feature is enabled automatically whenever an `@DomProperty decorator applied to component.
  */
-@WesFeature({
+@Feature({
   bootstrap(context) {
     context.forDefinitions({ provide: DomPropertyRegistry, provider: () => new DomPropertyRegistry() });
     context.forDefinitions({ provide: DomPropertyRegistry_, provider: ctx => ctx.get(DomPropertyRegistry) });

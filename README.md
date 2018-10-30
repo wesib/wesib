@@ -151,11 +151,11 @@ used, etc.
 It is possible to define custom features too to extend Wesib. E.g. to augment the components, extend custom elements
 (like `@Attribute` or `@DomProperty` decorators do), or provide some context values.
 
-The feature is a class decorated with `@WesFeature` decorator:
+The feature is a class decorated with `@Feature` decorator:
 ```TypeScript
-import { BootstrapContext, ComponentContext, DefinitionContext, WesFeature } from '@wesib/wesib';
+import { BootstrapContext, ComponentContext, DefinitionContext, Feature } from '@wesib/wesib';
 
-@WesFeature({
+@Feature({
   require: [
     OtherFeature1, // Requires other features to be enabled.
     MyComponent, // The required component will be defined too.  

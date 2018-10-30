@@ -1,6 +1,6 @@
 import { bootstrapComponents } from '../../bootstrap';
 import { Component, ComponentClass, CustomElements, DefinitionContext } from '../../component';
-import { FeatureDef, WesFeature } from '../../feature';
+import { FeatureDef, Feature } from '../../feature';
 import { DomProperty } from '../dom-properties';
 import { StateSupport } from '../state';
 import { RenderScheduler } from './render-scheduler';
@@ -48,7 +48,7 @@ describe('features/render/render.decorator', () => {
     beforeEach(() => {
       customElementsSpy = jasmine.createSpyObj('customElements', ['define']);
 
-      @WesFeature({
+      @Feature({
         require: testComponent,
         prebootstrap: [
           { provide: RenderScheduler, value: renderSchedulerSpy },
