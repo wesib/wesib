@@ -1,7 +1,7 @@
 import { bootstrapComponents } from '../bootstrap';
 import { Class } from '../common';
-import { Component, ComponentClass, ComponentDef } from '../component';
-import { BootstrapContext, BootstrapWindow, WesFeature } from '../feature';
+import { ComponentClass, ComponentDef } from '../component';
+import { BootstrapContext, BootstrapWindow, Feature } from '../feature';
 import { TestIframe } from './test-iframe';
 
 export class TestBootstrap {
@@ -27,7 +27,7 @@ export class TestBootstrap {
   async create(...features: Class[]): Promise<this> {
     await this.iframe.create();
 
-    @WesFeature({
+    @Feature({
       prebootstrap: { provide: BootstrapWindow, provider: () => this.window },
       bootstrap: ctx => this._context = ctx,
     })
@@ -56,7 +56,7 @@ export class TestBootstrap {
     const result = new Promise<any>(resolve => {
       this.context.onComponent(context => {
         context.onConnect(() => {
-          if (Component.of(context.element) instanceof componentType) {
+          if (context.component instanceof componentType) {
             resolve(context.element);
           }
         });

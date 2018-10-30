@@ -1,5 +1,5 @@
 import { Class, EventInterest, SingleValueKey } from '../../common';
-import { ComponentClass } from '../component';
+import { ComponentClass } from '../component-class';
 import { ComponentContext } from '../component-context';
 import { ComponentDef } from '../component-def';
 import { ComponentValueRegistry } from './component-value-registry';

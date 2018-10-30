@@ -1,4 +1,4 @@
-import { Component, ComponentContext, WesComponent } from '../../component';
+import { Component, ComponentContext } from '../../component';
 import { Attribute } from './attribute.decorator';
 import SpyObj = jasmine.SpyObj;
 
@@ -16,15 +16,17 @@ describe('features/attributes/attribute.decorator', () => {
 
     it('declares attribute field', () => {
 
-      @WesComponent('test-component')
+      @Component('test-component')
       class TestComponent {
+
+        [ComponentContext.symbol] = contextSpy;
 
         @Attribute()
         attr!: string;
 
       }
 
-      const component = Component.create<TestComponent>(TestComponent, contextSpy);
+      const component = new TestComponent();
 
       elementSpy.getAttribute.and.returnValue('value1');
 
@@ -35,8 +37,10 @@ describe('features/attributes/attribute.decorator', () => {
     });
     it('declares attribute property', () => {
 
-      @WesComponent('test-component')
+      @Component('test-component')
       class TestComponent {
+
+        [ComponentContext.symbol] = contextSpy;
 
         @Attribute()
         get attr(): string {
@@ -48,7 +52,7 @@ describe('features/attributes/attribute.decorator', () => {
 
       }
 
-      const component = Component.create<TestComponent>(TestComponent, contextSpy);
+      const component = new TestComponent();
 
       elementSpy.getAttribute.and.returnValue('value1');
 

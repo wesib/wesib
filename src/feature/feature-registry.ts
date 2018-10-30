@@ -1,7 +1,7 @@
 import { ArraySet, Class } from '../common';
 import { BootstrapContext } from './bootstrap-context';
 import { BootstrapValueRegistry } from './bootstrap-value-registry';
-import { FeatureDef } from './feature';
+import { FeatureDef } from './feature-def';
 
 class FeatureProviders {
 

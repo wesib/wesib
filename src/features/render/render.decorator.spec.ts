@@ -1,6 +1,6 @@
 import { bootstrapComponents } from '../../bootstrap';
-import { Component, ComponentClass, CustomElements, DefinitionContext, WesComponent } from '../../component';
-import { FeatureDef, WesFeature } from '../../feature';
+import { Component, ComponentClass, ComponentContext, CustomElements, DefinitionContext } from '../../component';
+import { Feature, FeatureDef } from '../../feature';
 import { DomProperty } from '../dom-properties';
 import { StateSupport } from '../state';
 import { RenderScheduler } from './render-scheduler';
@@ -21,7 +21,7 @@ describe('features/render/render.decorator', () => {
     beforeEach(() => {
       renderSpy = jasmine.createSpy('render');
 
-      @WesComponent({
+      @Component({
         name: 'test-component',
         extend: {
           type: Object,
@@ -48,7 +48,7 @@ describe('features/render/render.decorator', () => {
     beforeEach(() => {
       customElementsSpy = jasmine.createSpyObj('customElements', ['define']);
 
-      @WesFeature({
+      @Feature({
         require: testComponent,
         prebootstrap: [
           { provide: RenderScheduler, value: renderSchedulerSpy },
@@ -75,7 +75,7 @@ describe('features/render/render.decorator', () => {
 
       beforeEach(() => {
         element = new definitionContext.elementType;
-        component = Component.of(element) as any;
+        component = ComponentContext.of(element).component as any;
       });
 
       it('is scheduled on state update', () => {

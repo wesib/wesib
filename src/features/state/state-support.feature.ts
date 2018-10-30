@@ -1,5 +1,5 @@
 import { StateUpdater } from '../../common';
-import { BootstrapContext, WesFeature } from '../../feature';
+import { BootstrapContext, Feature } from '../../feature';
 import { StateTracker } from './state-tracker';
 import { StateTracker as StateTrackerImpl } from './state-tracker.impl';
 
@@ -14,7 +14,7 @@ import { StateTracker as StateTrackerImpl } from './state-tracker.impl';
  * Other features would use this to notify when the state changes. E.g. `DomPropertiesSupport` and `AttributesSupport`
  * features issue state updates when needed.
  */
-@WesFeature({
+@Feature({
   bootstrap: enableStateSupport,
 })
 export class StateSupport {

@@ -1,5 +1,5 @@
 import { noop, StatePath } from '../../common';
-import { Component, ComponentContext, WesComponent } from '../../component';
+import { Component, ComponentContext } from '../../component';
 import { testElement } from '../../spec/test-element';
 import { AttributeChanged } from './attribute-changed.decorator';
 
@@ -9,7 +9,7 @@ describe('features/attributes/attribute-changed', () => {
 
       const attrSpy = jasmine.createSpy('attrChanged');
 
-      @WesComponent({
+      @Component({
         name: 'test-component',
         extend: {
           type: Object,
@@ -23,7 +23,7 @@ describe('features/attributes/attribute-changed', () => {
       }
 
       const element = new (testElement(TestComponent));
-      const component = Component.of(element) as TestComponent;
+      const component = ComponentContext.of(element).component;
 
       element.attributeChangedCallback('attr', 'old', 'new');
 
@@ -32,7 +32,7 @@ describe('features/attributes/attribute-changed', () => {
     });
     it('updates the state', () => {
 
-      @WesComponent({
+      @Component({
         name: 'test-component',
         extend: {
           type: Object,
@@ -56,7 +56,7 @@ describe('features/attributes/attribute-changed', () => {
 
       const updateSpy = jasmine.createSpy('updateState');
 
-      @WesComponent({
+      @Component({
         name: 'test-component',
         extend: {
           type: Object,
@@ -70,7 +70,7 @@ describe('features/attributes/attribute-changed', () => {
       }
 
       const element = new (testElement(TestComponent));
-      const component = Component.of(element) as TestComponent;
+      const component = ComponentContext.of(element).component;
       const updateStateSpy = spyOn(ComponentContext.of(element), 'updateState');
 
       element.attributeChangedCallback('attr', 'old', 'new');
@@ -83,7 +83,7 @@ describe('features/attributes/attribute-changed', () => {
 
       const key = ['attr-key'];
 
-      @WesComponent({
+      @Component({
         name: 'test-component',
         extend: {
           type: Object,
@@ -107,7 +107,7 @@ describe('features/attributes/attribute-changed', () => {
 
       const attrSpy = jasmine.createSpy('attrChanged');
 
-      @WesComponent({
+      @Component({
         name: 'test-component',
         extend: {
           type: Object,
@@ -121,7 +121,7 @@ describe('features/attributes/attribute-changed', () => {
       }
 
       const element = new (testElement(TestComponent));
-      const component = Component.of(element) as TestComponent;
+      const component = ComponentContext.of(element).component;
       const updateStateSpy = spyOn(ComponentContext.of(element), 'updateState');
 
       element.attributeChangedCallback('attr', 'old', 'new');
@@ -134,7 +134,7 @@ describe('features/attributes/attribute-changed', () => {
 
       const attrSpy = jasmine.createSpy('attrChanged');
 
-      @WesComponent({
+      @Component({
         name: 'test-component',
         extend: {
           type: Object,
@@ -148,7 +148,7 @@ describe('features/attributes/attribute-changed', () => {
       }
 
       const element = new (testElement(TestComponent));
-      const component = Component.of(element) as TestComponent;
+      const component = ComponentContext.of(element).component;
 
       element.attributeChangedCallback('my-attr', 'old', 'new');
 
@@ -161,7 +161,7 @@ describe('features/attributes/attribute-changed', () => {
       const attrSpy = jasmine.createSpy('attrChanged');
 
       expect(() => {
-        @WesComponent({ name: 'test-component' })
+        @Component({ name: 'test-component' })
         class TestComponent {
           @AttributeChanged()
           [key] = attrSpy;

@@ -1,7 +1,7 @@
 import { Class, SingleValueKey } from '../common';
 import { BootstrapContext } from './bootstrap-context';
 import { BootstrapValueRegistry } from './bootstrap-value-registry';
-import { FeatureDef } from './feature';
+import { FeatureDef } from './feature-def';
 import { FeatureRegistry } from './feature-registry';
 import Spy = jasmine.Spy;
 import SpyObj = jasmine.SpyObj;

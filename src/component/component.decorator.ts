@@ -1,5 +1,5 @@
 import { TypedClassDecorator } from '../common';
-import { ComponentClass } from './component';
+import { ComponentClass } from './component-class';
 import { ComponentDef } from './component-def';
 
 /**
@@ -7,7 +7,7 @@ import { ComponentDef } from './component-def';
  *
  * Decorate a class with this decorator to define a component like this:
  * ```TypeScript
- * @WesComponent({ name: 'my-element' })
+ * @Component({ name: 'my-element' })
  * class MyComponent {
  *   // ...
  * }
@@ -24,7 +24,7 @@ import { ComponentDef } from './component-def';
  *
  * @returns A component class decorator.
  */
-export function WesComponent<T extends ComponentClass = any>(
+export function Component<T extends ComponentClass = any>(
     def: ComponentDef<InstanceType<T>> | string):
     TypedClassDecorator<T> {
   return (type: T) => ComponentDef.define(type, typeof def === 'string' ? { name: def } : def);

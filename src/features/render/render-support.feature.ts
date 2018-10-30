@@ -1,6 +1,6 @@
 import { noop } from '../../common';
 import { ComponentContext } from '../../component';
-import { BootstrapWindow, WesFeature } from '../../feature';
+import { BootstrapWindow, Feature } from '../../feature';
 import { RenderScheduler as RenderScheduler_ } from './render-scheduler';
 
 /**
@@ -8,7 +8,7 @@ import { RenderScheduler as RenderScheduler_ } from './render-scheduler';
  *
  * This feature is automatically enabled when `@Render` decorator is used.
  */
-@WesFeature({
+@Feature({
   bootstrap(context) {
     context.forComponents({ provide: RenderScheduler_, provider: createRenderScheduler });
   }

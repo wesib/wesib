@@ -1,5 +1,5 @@
 import { BootstrapContext } from '../../feature';
-import { ComponentClass } from '../component';
+import { ComponentClass } from '../component-class';
 import { CustomElements } from './custom-elements';
 import { ElementBuilder } from './element-builder';
 

@@ -1,9 +1,9 @@
 import { Class, ContextValueSpec, noop, SingleValueKey } from '../common';
 import { BootstrapContext } from './bootstrap-context';
-import { FeatureDef } from './feature';
+import { FeatureDef } from './feature-def';
 import Spy = jasmine.Spy;
 
-describe('feature/feature', () => {
+describe('feature/feature-def', () => {
 
   class Feature1 {}
   class Feature2 {}

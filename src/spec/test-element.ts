@@ -1,7 +1,7 @@
 import { bootstrapComponents } from '../bootstrap';
 import { Class } from '../common';
 import { ComponentClass, ComponentDef, CustomElements } from '../component';
-import { WesFeature } from '../feature';
+import { Feature } from '../feature';
 
 export function testElement(componentType: Class): Class<any> {
   ComponentDef.define(componentType);
@@ -20,7 +20,7 @@ export function testElement(componentType: Class): Class<any> {
 
   };
 
-  @WesFeature({
+  @Feature({
     prebootstrap: { provide: CustomElements, value: customElements },
     require: componentType,
   })

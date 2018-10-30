@@ -4,10 +4,10 @@ import {
   ContextValues,
   EventProducer,
   SingleValueKey,
-  StateUpdater,
   StatePath,
+  StateUpdater,
 } from '../common';
-import { ComponentClass } from './component';
+import { ComponentClass } from './component-class';
 
 const componentContextKey: ContextValueKey<ComponentContext<any>> = new SingleValueKey('component-context');
 const contentRootKey: ContextValueKey<ContentRoot> = new SingleValueKey(

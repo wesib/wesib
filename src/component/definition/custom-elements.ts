@@ -1,6 +1,6 @@
 import { Class, ContextValueKey, SingleValueKey } from '../../common';
 import { BootstrapWindow } from '../../feature';
-import { ComponentClass } from '../component';
+import { ComponentClass } from '../component-class';
 import { ComponentDef } from '../component-def';
 
 /**

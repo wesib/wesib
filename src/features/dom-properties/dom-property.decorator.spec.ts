@@ -1,4 +1,4 @@
-import { Component, WesComponent } from '../../component';
+import { Component, ComponentContext } from '../../component';
 import { testElement } from '../../spec/test-element';
 import { DomProperty } from './dom-property.decorator';
 
@@ -6,7 +6,7 @@ describe('features/dom-properties/dom-property', () => {
   describe('@DomProperty', () => {
     it('declares DOM property', () => {
 
-      @WesComponent({
+      @Component({
         name: 'test-component',
         extend: {
           type: Object,
@@ -18,7 +18,7 @@ describe('features/dom-properties/dom-property', () => {
       }
 
       const element = new (testElement(TestComponent));
-      const component = Component.of(element) as TestComponent;
+      const component = ComponentContext.of(element).component as TestComponent;
 
       expect(element.customProperty).toBe('value');
 
@@ -28,7 +28,7 @@ describe('features/dom-properties/dom-property', () => {
     });
     it('declares DOM property with specified name', () => {
 
-      @WesComponent({
+      @Component({
         name: 'test-component',
         extend: {
           type: Object,
@@ -40,7 +40,7 @@ describe('features/dom-properties/dom-property', () => {
       }
 
       const element = new (testElement(TestComponent));
-      const component = Component.of(element) as TestComponent;
+      const component = ComponentContext.of(element).component as TestComponent;
 
       expect(element.otherProperty).toBe('value');
 
@@ -52,7 +52,7 @@ describe('features/dom-properties/dom-property', () => {
     describe('for object property', () => {
       it('applies defaults', () => {
 
-        @WesComponent({
+        @Component({
           name: 'test-component',
           extend: {
             type: Object,
@@ -74,7 +74,7 @@ describe('features/dom-properties/dom-property', () => {
       });
       it('applies defaults to non-state-updating field', () => {
 
-        @WesComponent({
+        @Component({
           name: 'test-component',
           extend: {
             type: Object,
@@ -96,7 +96,7 @@ describe('features/dom-properties/dom-property', () => {
       });
       it('applies custom property attributes', () => {
 
-        @WesComponent({
+        @Component({
           name: 'test-component',
           extend: {
             type: Object,
@@ -122,7 +122,7 @@ describe('features/dom-properties/dom-property', () => {
       });
       it('applies custom property attributes to non-state-updating field', () => {
 
-        @WesComponent({
+        @Component({
           name: 'test-component',
           extend: {
             type: Object,
@@ -151,7 +151,7 @@ describe('features/dom-properties/dom-property', () => {
     describe('for property accessor', () => {
       it('applies read-only property defaults', () => {
 
-        @WesComponent({
+        @Component({
           name: 'test-component',
           extend: {
             type: Object,
@@ -175,7 +175,7 @@ describe('features/dom-properties/dom-property', () => {
       });
       it('applies custom read-only property attributes', () => {
 
-        @WesComponent({
+        @Component({
           name: 'test-component',
           extend: {
             type: Object,
@@ -203,7 +203,7 @@ describe('features/dom-properties/dom-property', () => {
       });
       it('applies writable property defaults', () => {
 
-        @WesComponent({
+        @Component({
           name: 'test-component',
           extend: {
             type: Object,
@@ -235,7 +235,7 @@ describe('features/dom-properties/dom-property', () => {
       });
       it('applies custom writable property attributes', () => {
 
-        @WesComponent({
+        @Component({
           name: 'test-component',
           extend: {
             type: Object,

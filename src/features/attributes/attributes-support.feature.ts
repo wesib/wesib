@@ -1,6 +1,6 @@
 import { Class, mergeFunctions, SingleValueKey } from '../../common';
-import { Component } from '../../component';
-import { WesFeature } from '../../feature';
+import { ComponentContext } from '../../component';
+import { Feature } from '../../feature';
 import { AttributeChangedCallback, AttributeRegistry as AttributeRegistry_ } from './attribute-registry';
 
 class AttributeRegistry<T extends object> implements AttributeRegistry_<T> {
@@ -30,7 +30,7 @@ class AttributeRegistry<T extends object> implements AttributeRegistry_<T> {
       configurable: true,
       enumerable: true,
       value: function (name: string, oldValue: string | null, newValue: string) {
-        attrs[name].call(Component.of(this), newValue, oldValue);
+        attrs[name].call(ComponentContext.of(this).component, newValue, oldValue);
       },
     });
   }
@@ -43,7 +43,7 @@ class AttributeRegistry<T extends object> implements AttributeRegistry_<T> {
  * This feature is enabled automatically whenever an `@Attribute`, `@Attributes`, or `@AttributeChanged` decorator
  * applied to component.
  */
-@WesFeature({
+@Feature({
   bootstrap(context) {
     context.forDefinitions({ provide: AttributeRegistry, provider: () => new AttributeRegistry() });
     context.forDefinitions({ provide: AttributeRegistry_, provider: ctx => ctx.get(AttributeRegistry) });

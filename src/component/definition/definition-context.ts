@@ -1,5 +1,6 @@
 import {
-  Class, ContextValueKey,
+  Class,
+  ContextValueKey,
   ContextValueRequest,
   ContextValues,
   ContextValueSpec,
@@ -7,7 +8,7 @@ import {
   SingleValueKey,
 } from '../../common';
 import { BootstrapWindow } from '../../feature';
-import { ComponentClass } from '../component';
+import { ComponentClass } from '../component-class';
 import { ComponentContext, ComponentListener } from '../component-context';
 import { ComponentDef } from '../component-def';
 

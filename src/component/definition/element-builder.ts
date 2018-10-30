@@ -1,10 +1,39 @@
 import { Class, ContextValueKey, ContextValueSpec, EventEmitter, mergeFunctions, noop } from '../../common';
-import { Component, ComponentClass } from '../component';
+import { ComponentClass } from '../component-class';
 import { ComponentContext as ComponentContext_, ComponentListener } from '../component-context';
 import { ComponentDef } from '../component-def';
 import { ComponentValueRegistry } from './component-value-registry';
 import { DefinitionContext as DefinitionContext_, DefinitionListener, ElementBaseClass } from './definition-context';
 import { DefinitionValueRegistry } from './definition-value-registry';
+
+/**
+ * Creates new component of the given type.
+ *
+ * It makes component context available under `[ComponentContext.symbol]` key in constructed component.
+ * The component context is also available inside component constructor by temporarily assigning it to component
+ * prototype.
+ *
+ * @param <T> A type of component.
+ * @param type Component class constructor.
+ * @param context Target component context.
+ */
+function newComponent<T extends object>(type: ComponentClass<T>, context: ComponentContext_<T>): T {
+
+  const proto = type.prototype as any;
+  const prevContext = proto[ComponentContext_.symbol];
+
+  proto[ComponentContext_.symbol] = context;
+  try {
+
+    const component = new type(context);
+
+    Object.defineProperty(component, ComponentContext_.symbol, { value: context });
+
+    return component;
+  } finally {
+    proto[ComponentContext_.symbol] = prevContext;
+  }
+}
 
 /**
  * @internal
@@ -119,9 +148,6 @@ export class ElementBuilder {
 
     class Element extends elementBaseClass {
 
-      // Component reference
-      [Component.symbol]: T;
-
       // Component context reference
       [ComponentContext_.symbol]: ComponentContext_<T>;
 
@@ -177,9 +203,8 @@ export class ElementBuilder {
         builder.components.forEach(consumer => consumer(context));
         onComponent.forEach(consumer => consumer(context));
 
-        const component = Component.create(componentType, context);
+        const component = newComponent(componentType, context);
 
-        Object.defineProperty(this, Component.symbol, { value: component });
         Object.defineProperty(context, 'component', {
           configurable: true,
           enumerable: true,

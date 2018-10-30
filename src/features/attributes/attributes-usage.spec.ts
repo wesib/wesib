@@ -1,5 +1,5 @@
 import { StatePath } from '../../common';
-import { Component, ComponentClass, ComponentContext, WesComponent } from '../../component';
+import { Component, ComponentClass, ComponentContext } from '../../component';
 import { TestBootstrap } from '../../spec/test-bootstrap';
 import { AttributeChanged } from './attribute-changed.decorator';
 import { Attribute } from './attribute.decorator';
@@ -21,7 +21,7 @@ describe('features/attributes', () => {
       attrChangedSpy = jasmine.createSpy('attrChanged');
       attr2ChangedSpy = jasmine.createSpy('attr2Changed');
 
-      @WesComponent({ name: 'test-component' })
+      @Component({ name: 'test-component' })
       class TestComponent {
 
         constructor(ctx: ComponentContext) {
@@ -45,7 +45,7 @@ describe('features/attributes', () => {
       attrChangedSpy = jasmine.createSpy('attrChanged');
       attr2ChangedSpy = jasmine.createSpy('attr2Changed');
 
-      @WesComponent({ name: 'no-attr-component' })
+      @Component({ name: 'no-attr-component' })
       class NoAttrComponent {
       }
 
@@ -92,13 +92,13 @@ describe('features/attributes', () => {
 
       element.setAttribute('attr3', value);
 
-      expect((Component.of(element) as any).attr3).toBe(value);
+      expect((ComponentContext.of(element).component as any).attr3).toBe(value);
     });
     it('updates attribute value', () => {
 
       const value = 'new value';
 
-      (Component.of(element) as any).attr3 = value;
+      (ComponentContext.of(element).component as any).attr3 = value;
 
       expect(element.getAttribute('attr3')).toBe(value);
     });
@@ -107,7 +107,7 @@ describe('features/attributes', () => {
       const updateStateSpy = spyOn(context, 'updateState');
       const value = 'new value';
 
-      (Component.of(element) as any).attr3 = value;
+      (ComponentContext.of(element).component as any).attr3 = value;
 
       expect(updateStateSpy).toHaveBeenCalledWith([StatePath.attribute, 'attr3'], value, null);
     });
