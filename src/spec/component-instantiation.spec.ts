@@ -41,14 +41,11 @@ describe('component instantiation', () => {
     it('instantiates custom element', async () => {
       expect(element).toBeDefined();
     });
-    it('assigns component reference to custom element', () => {
-      expect(Component.of(element)).toEqual(jasmine.any(testComponent));
-    });
     it('assigns component context reference to custom element', () => {
       expect(ComponentContext.of(element)).toBe(context);
     });
     it('assigns component context reference to component', () => {
-      expect(ComponentContext.of(Component.of(element))).toBe(context);
+      expect(ComponentContext.of(context.component)).toBe(context);
     });
     it('passes context to component', () => {
 

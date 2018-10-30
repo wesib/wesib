@@ -1,6 +1,6 @@
 import { bootstrapComponents } from '../../bootstrap';
-import { Component, ComponentClass, CustomElements, DefinitionContext } from '../../component';
-import { FeatureDef, Feature } from '../../feature';
+import { Component, ComponentClass, ComponentContext, CustomElements, DefinitionContext } from '../../component';
+import { Feature, FeatureDef } from '../../feature';
 import { DomProperty } from '../dom-properties';
 import { StateSupport } from '../state';
 import { RenderScheduler } from './render-scheduler';
@@ -75,7 +75,7 @@ describe('features/render/render.decorator', () => {
 
       beforeEach(() => {
         element = new definitionContext.elementType;
-        component = Component.of(element) as any;
+        component = ComponentContext.of(element).component as any;
       });
 
       it('is scheduled on state update', () => {

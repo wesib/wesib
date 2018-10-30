@@ -1,6 +1,6 @@
-import { ContextValueKey, ContextValueRequest } from '../../common';
+import { ContextValueRequest } from '../../common';
 import { BootstrapContext } from '../../feature';
-import { ComponentClass } from '../component';
+import { ComponentClass } from '../component-class';
 import { ComponentDef } from '../component-def';
 import { ComponentRegistry } from './component-registry';
 import { CustomElements } from './custom-elements';

@@ -23,7 +23,7 @@ describe('features/attributes/attribute-changed', () => {
       }
 
       const element = new (testElement(TestComponent));
-      const component = Component.of(element) as TestComponent;
+      const component = ComponentContext.of(element).component;
 
       element.attributeChangedCallback('attr', 'old', 'new');
 
@@ -70,7 +70,7 @@ describe('features/attributes/attribute-changed', () => {
       }
 
       const element = new (testElement(TestComponent));
-      const component = Component.of(element) as TestComponent;
+      const component = ComponentContext.of(element).component;
       const updateStateSpy = spyOn(ComponentContext.of(element), 'updateState');
 
       element.attributeChangedCallback('attr', 'old', 'new');
@@ -121,7 +121,7 @@ describe('features/attributes/attribute-changed', () => {
       }
 
       const element = new (testElement(TestComponent));
-      const component = Component.of(element) as TestComponent;
+      const component = ComponentContext.of(element).component;
       const updateStateSpy = spyOn(ComponentContext.of(element), 'updateState');
 
       element.attributeChangedCallback('attr', 'old', 'new');
@@ -148,7 +148,7 @@ describe('features/attributes/attribute-changed', () => {
       }
 
       const element = new (testElement(TestComponent));
-      const component = Component.of(element) as TestComponent;
+      const component = ComponentContext.of(element).component;
 
       element.attributeChangedCallback('my-attr', 'old', 'new');
 

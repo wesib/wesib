@@ -1,5 +1,5 @@
 import { Class, mergeFunctions, SingleValueKey } from '../../common';
-import { Component } from '../../component';
+import { ComponentContext } from '../../component';
 import { Feature } from '../../feature';
 import { AttributeChangedCallback, AttributeRegistry as AttributeRegistry_ } from './attribute-registry';
 
@@ -30,7 +30,7 @@ class AttributeRegistry<T extends object> implements AttributeRegistry_<T> {
       configurable: true,
       enumerable: true,
       value: function (name: string, oldValue: string | null, newValue: string) {
-        attrs[name].call(Component.of(this), newValue, oldValue);
+        attrs[name].call(ComponentContext.of(this).component, newValue, oldValue);
       },
     });
   }

@@ -1,6 +1,6 @@
 import { bootstrapComponents } from '../bootstrap';
 import { Class } from '../common';
-import { Component, ComponentClass, ComponentDef } from '../component';
+import { ComponentClass, ComponentDef } from '../component';
 import { BootstrapContext, BootstrapWindow, Feature } from '../feature';
 import { TestIframe } from './test-iframe';
 
@@ -56,7 +56,7 @@ export class TestBootstrap {
     const result = new Promise<any>(resolve => {
       this.context.onComponent(context => {
         context.onConnect(() => {
-          if (Component.of(context.element) instanceof componentType) {
+          if (context.component instanceof componentType) {
             resolve(context.element);
           }
         });

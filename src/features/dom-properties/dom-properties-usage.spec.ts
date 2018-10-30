@@ -123,7 +123,7 @@ describe('features/dom-properties', () => {
       expect((element as any).customStateUpdatingField).toEqual(19);
       expect(updateStateSpy).not.toHaveBeenCalled();
       expect(customUpdateStateSpy).toHaveBeenCalledWith([StatePath.property, 'customStateUpdatingField'], 19, 91);
-      expect(customUpdateStateSpy.calls.first().object).toBe(Component.of(element));
+      expect(customUpdateStateSpy.calls.first().object).toBe(ComponentContext.of(element).component);
     });
     it('updates the component state with custom path', () => {
 

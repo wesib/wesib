@@ -43,7 +43,7 @@ describe('features/attributes/attributes', () => {
       }
 
       const element = new (testElement(TestComponent));
-      const component = Component.of(element) as TestComponent;
+      const component = ComponentContext.of(element).component;
       const updateStateSpy = spyOn(ComponentContext.of(element), 'updateState');
 
       element.attributeChangedCallback('attr', 'old', 'new');

@@ -1,6 +1,6 @@
 import { Class, mergeFunctions, MetaAccessor, superClassOf } from '../common';
 import { FeatureDef } from '../feature';
-import { ComponentClass } from './component';
+import { ComponentClass } from './component-class';
 import { DefinitionContext } from './definition';
 
 /**

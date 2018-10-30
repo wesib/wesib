@@ -1,5 +1,5 @@
 import { decoratePropertyAccessor, StatePath, TypedPropertyDecorator } from '../../common';
-import { Component, ComponentClass, ComponentDef } from '../../component';
+import { Component, ComponentClass, ComponentContext, ComponentDef } from '../../component';
 import { FeatureDef } from '../../feature';
 import { DomPropertiesSupport } from './dom-properties-support.feature';
 import { DomPropertyRegistry } from './dom-property-registry';
@@ -180,13 +180,13 @@ function domPropertyDescriptor<V>(
     configurable,
     enumerable,
     get: function (this: HTMLElement) {
-      return (Component.of(this) as any)[propertyKey];
+      return (ComponentContext.of(this).component as any)[propertyKey];
     }
   };
 
   if (writable) {
     desc.set = function (this: HTMLElement, value: any) {
-      (Component.of(this) as any)[propertyKey] = value;
+      (ComponentContext.of(this).component as any)[propertyKey] = value;
     };
   }
 

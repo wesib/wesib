@@ -1,4 +1,4 @@
-import { Component } from '../../component';
+import { Component, ComponentContext } from '../../component';
 import { testElement } from '../../spec/test-element';
 import { DomProperty } from './dom-property.decorator';
 
@@ -18,7 +18,7 @@ describe('features/dom-properties/dom-property', () => {
       }
 
       const element = new (testElement(TestComponent));
-      const component = Component.of(element) as TestComponent;
+      const component = ComponentContext.of(element).component as TestComponent;
 
       expect(element.customProperty).toBe('value');
 
@@ -40,7 +40,7 @@ describe('features/dom-properties/dom-property', () => {
       }
 
       const element = new (testElement(TestComponent));
-      const component = Component.of(element) as TestComponent;
+      const component = ComponentContext.of(element).component as TestComponent;
 
       expect(element.otherProperty).toBe('value');
 
