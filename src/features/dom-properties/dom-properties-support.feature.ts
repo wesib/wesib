@@ -1,11 +1,11 @@
 import { Class } from '../../common';
 import { SingleValueKey } from '../../common/context';
 import { Feature } from '../../feature';
-import { DomPropertyRegistry as DomPropertyRegistry_ } from './dom-property-registry';
+import { DomPropertyRegistrar } from './dom-property-registrar';
 
-class DomPropertyRegistry implements DomPropertyRegistry_ {
+class DomPropertyRegistry {
 
-  static readonly key = new SingleValueKey<DomPropertyRegistry>('dom-property-registry:impl');
+  static readonly key = new SingleValueKey<DomPropertyRegistry>('dom-property-registry');
 
   private readonly _props = new Map<PropertyKey, PropertyDescriptor>();
 
@@ -29,7 +29,13 @@ class DomPropertyRegistry implements DomPropertyRegistry_ {
 @Feature({
   bootstrap(context) {
     context.forDefinitions({ provide: DomPropertyRegistry, provider: () => new DomPropertyRegistry() });
-    context.forDefinitions({ provide: DomPropertyRegistry_, provider: ctx => ctx.get(DomPropertyRegistry) });
+    context.forDefinitions({
+      provide: DomPropertyRegistrar,
+      provider(ctx) {
+        return (propertyKey: PropertyKey, descriptor: PropertyDescriptor) =>
+            ctx.get(DomPropertyRegistry).domProperty(propertyKey, descriptor);
+      },
+    });
     context.onDefinition(ctx => ctx.whenReady(elementType => ctx.get(DomPropertyRegistry).apply(elementType)));
   }
 })

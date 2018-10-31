@@ -2,7 +2,7 @@ import { decoratePropertyAccessor, StatePath, TypedPropertyDecorator } from '../
 import { Component, ComponentClass, ComponentContext, ComponentDef } from '../../component';
 import { FeatureDef } from '../../feature';
 import { DomPropertiesSupport } from './dom-properties-support.feature';
-import { DomPropertyRegistry } from './dom-property-registry';
+import { DomPropertyRegistrar } from './dom-property-registrar';
 import { DomPropertyUpdateCallback, propertyStateUpdate } from './property-state-update';
 
 /**
@@ -57,7 +57,7 @@ export function DomProperty<T extends ComponentClass>(opts: DomProperty.Opts<T> 
         componentType,
         {
           define(definitionContext) {
-            definitionContext.get(DomPropertyRegistry).domProperty(name, desc);
+            definitionContext.get(DomPropertyRegistrar)(name, desc);
           }
         });
 
