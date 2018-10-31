@@ -1,6 +1,6 @@
 import { noop, StatePath } from '../../common';
 import { ComponentContext } from '../../component';
-import { AttributeChangedCallback, AttributeUpdateConsumer } from './attribute-registry';
+import { AttributeChangedCallback, AttributeUpdateConsumer } from './attribute-registrar';
 
 /**
  * @internal

@@ -1,7 +1,7 @@
 import { TypedPropertyDecorator } from '../../common';
 import { ComponentClass, ComponentDef } from '../../component';
 import { FeatureDef } from '../../feature';
-import { AttributeChangedCallback, AttributeRegistry } from './attribute-registry';
+import { AttributeChangedCallback, AttributeRegistrar } from './attribute-registrar';
 import { Attribute, parseAttributeOpts } from './attribute.decorator';
 import { AttributesSupport } from './attributes-support.feature';
 
@@ -44,10 +44,7 @@ export function AttributeChanged<T extends ComponentClass>(opts?: Attribute.Opts
         componentType,
         {
           define(defContext) {
-
-            const registry = defContext.get(AttributeRegistry);
-
-            registry.onAttributeChange(name, function (
+            defContext.get(AttributeRegistrar)(name, function (
                 this: InstanceType<T>,
                 newValue: string,
                 oldValue: string | null) {

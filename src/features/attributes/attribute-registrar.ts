@@ -28,14 +28,10 @@ export type AttributeUpdateConsumer<T extends object> = (
     newValue: string,
     oldValue: string | null) => void;
 
-export interface AttributeRegistry<T extends object> {
+export type AttributeRegistrar<T extends object> = (name: string, callback: AttributeChangedCallback<T>) => void;
 
-  onAttributeChange(name: string, callback: AttributeChangedCallback<T>): void;
+export namespace AttributeRegistrar {
 
-}
-
-export namespace AttributeRegistry {
-
-  export const key = new SingleValueKey<AttributeRegistry<any>>('attribute-registry');
+  export const key = new SingleValueKey<AttributeRegistrar<any>>('attribute-registrar');
 
 }

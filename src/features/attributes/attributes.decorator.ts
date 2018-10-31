@@ -1,7 +1,7 @@
 import { StatePath, TypedClassDecorator } from '../../common';
 import { ComponentClass, ComponentDef } from '../../component';
 import { FeatureDef } from '../../feature';
-import { AttributeRegistry, AttributeUpdateConsumer } from './attribute-registry';
+import { AttributeRegistrar, AttributeUpdateConsumer } from './attribute-registrar';
 import { attributeStateUpdate } from './attribute-state-update';
 import { AttributesSupport } from './attributes-support.feature';
 
@@ -24,10 +24,10 @@ export function Attributes<
         {
           define(defContext) {
 
-            const registry = defContext.get(AttributeRegistry);
+            const registrar = defContext.get(AttributeRegistrar);
 
             Object.keys(opts).forEach(name => {
-              registry.onAttributeChange(name, attributeStateUpdate(name, opts[name]));
+              registrar(name, attributeStateUpdate(name, opts[name]));
             });
           },
         });
