@@ -1,7 +1,7 @@
 import { StatePath, TypedPropertyDecorator } from '../../common';
 import { ComponentClass, ComponentContext, ComponentDef } from '../../component';
 import { FeatureDef } from '../../feature';
-import { AttributeChangedCallback, AttributeRegistry, AttributeUpdateConsumer } from './attribute-registry';
+import { AttributeChangedCallback, AttributeRegistrar, AttributeUpdateConsumer } from './attribute-registrar';
 import { attributeStateUpdate } from './attribute-state-update';
 import { AttributesSupport } from './attributes-support.feature';
 
@@ -27,7 +27,7 @@ export function Attribute<T extends ComponentClass>(opts?: Attribute.Opts<T> | s
         componentType,
         {
           define(definitionContext) {
-            definitionContext.get(AttributeRegistry).onAttributeChange(name, updateState);
+            definitionContext.get(AttributeRegistrar)(name, updateState);
           }
         });
 
