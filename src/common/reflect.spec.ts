@@ -58,6 +58,7 @@ describe('common/reflect', () => {
     });
     it('converts read-only data property descriptor to property accessor one', () => {
 
+      const target = {};
       const value = 'abc';
       const dataDesc: TypedPropertyDescriptor<string> = { value };
       const desc = toPropertyAccessorDescriptor(dataDesc);
@@ -67,10 +68,11 @@ describe('common/reflect', () => {
 
       const getter = desc.get!;
 
-      expect(getter()).toBe(value);
+      expect(getter.call(target)).toBe(value);
     });
     it('converts writable data property descriptor to property accessor one', () => {
 
+      const target = {};
       const value = 'abc';
       const dataDesc: TypedPropertyDescriptor<string> = {
         value,
@@ -84,13 +86,13 @@ describe('common/reflect', () => {
       const getter = desc.get!;
       const setter = desc.set!;
 
-      expect(getter()).toBe(value);
+      expect(getter.call(target)).toBe(value);
 
       const newValue = 'def';
 
-      setter(newValue);
+      setter.call(target, newValue);
 
-      expect(getter()).toBe(newValue);
+      expect(getter.call(target)).toBe(newValue);
     });
   });
 });
