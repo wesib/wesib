@@ -1,9 +1,9 @@
-import nodeResolve from "rollup-plugin-node-resolve";
-import commonjs from "rollup-plugin-commonjs";
-import sourcemaps from "rollup-plugin-sourcemaps";
-import { terser } from "rollup-plugin-terser";
-import typescript from "rollup-plugin-typescript2";
-import { uglify } from "rollup-plugin-uglify";
+import nodeResolve from 'rollup-plugin-node-resolve';
+import commonjs from 'rollup-plugin-commonjs';
+import sourcemaps from 'rollup-plugin-sourcemaps';
+import { terser } from 'rollup-plugin-terser';
+import typescript from 'rollup-plugin-typescript2';
+import { uglify } from 'rollup-plugin-uglify';
 
 function makeConfig(baseConfig, ...configs) {
   return configs.reduce(
@@ -65,7 +65,7 @@ function baseConfig(tsconfig) {
 }
 
 const umdConfig = makeConfig(
-    baseConfig("tsconfig.umd.json"),
+    baseConfig('tsconfig.umd.json'),
     {
       output: {
         file: './dist/wesib.umd.js',
@@ -74,27 +74,29 @@ const umdConfig = makeConfig(
     uglifyConfig);
 
 const esm5Config = makeConfig(
-    baseConfig("tsconfig.esm5.json"),
+    baseConfig('tsconfig.esm5.json'),
     {
       external: [
-        "tslib",
+        'a-iterable',
+        'tslib',
       ],
       output: {
-        format: "es",
-        file: "./dist/wesib.esm5.js",
+        format: 'es',
+        file: './dist/wesib.esm5.js',
       },
     },
     terserConfig);
 
 const esm2015Config = makeConfig(
-    baseConfig("tsconfig.esm2015.json"),
+    baseConfig('tsconfig.esm2015.json'),
     {
       external: [
-        "tslib",
+        'a-iterable',
+        'tslib',
       ],
       output: {
-        format: "es",
-        file: "./dist/wesib.esm2015.js",
+        format: 'es',
+        file: './dist/wesib.esm2015.js',
       },
     },
     terserConfig);

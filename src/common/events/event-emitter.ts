@@ -1,3 +1,4 @@
+import { AIterable } from 'a-iterable';
 import { EventConsumer, EventInterest, EventProducer } from './event-producer';
 
 /**
@@ -7,10 +8,12 @@ import { EventConsumer, EventInterest, EventProducer } from './event-producer';
  * registered event consumers, and removes them from the list once they lose their interest (i.e. `EventInterest.off()`
  * method is called on returned event interest instance).
  *
+ * Implements `AIterable` interface by iterating over registered event consumers in order of their registration.
+ *
  * @param <E> An event type. This is a list of event consumer parameter types.
  * @param <R> Event processing result. This is a type of event consumer result.
  */
-export class EventEmitter<C extends EventConsumer<any[], any>> implements Iterable<C> {
+export class EventEmitter<C extends EventConsumer<any[], any>> extends AIterable<C> {
 
   /**
    * @internal
@@ -46,18 +49,6 @@ export class EventEmitter<C extends EventConsumer<any[], any>> implements Iterab
   }
 
   /**
-   * Performs the given `action` for each registered consumer in order of their registration.
-   *
-   * Same as `Array.forEach()`.
-   *
-   * @param action An action to perform on each event consumer. This is a function
-   * accepting an event consumer as its only argument.
-   */
-  forEach(action: (consumer: C) => void) {
-    this._consumers.forEach(action);
-  }
-
-  /**
    * Notifies all consumers on the given event.
    *
    * The event processing results are ignored by this method.
@@ -68,27 +59,6 @@ export class EventEmitter<C extends EventConsumer<any[], any>> implements Iterab
     for (const consumer of this) {
       consumer(...event);
     }
-  }
-
-  /**
-   * Applies a function against an accumulator and each registered consumer in order of their registration
-   * to reduce consumers to a single value.
-   *
-   * Same as `Array.reduce()`.
-   *
-   * @param reducer A function to apply the value returned from the previous `reducer` call and to each registered
-   * consumer.
-   * @param initialValue Initial value passed to the first `reducer` call.
-   */
-  reduce<T>(reducer: (prev: T, consumer: C) => T, initialValue: T): T {
-
-    let value = initialValue;
-
-    this.forEach(consumer => {
-      value = reducer(value, consumer);
-    });
-
-    return value;
   }
 
   /**
