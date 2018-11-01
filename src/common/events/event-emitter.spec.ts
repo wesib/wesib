@@ -59,16 +59,6 @@ describe('common/events/event-emitter', () => {
         expect(consumer2Spy).toHaveBeenCalledWith('event');
       });
     });
-    describe('reduce', () => {
-      it('reduces value', () => {
-        consumerSpy.and.returnValue('1');
-        consumer2Spy.and.returnValue('2');
-        emitter.on(consumerSpy);
-        emitter.on(consumer2Spy);
-
-        expect(emitter.reduce((prev, consumer) => prev + consumer(prev), '0')).toBe('012');
-      });
-    });
     describe('clear', () => {
       it('removes all event consumers', () => {
         emitter.on(consumerSpy);
