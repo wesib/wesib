@@ -1,4 +1,4 @@
-import { RevertibleIterable } from '../iteration';
+import { RevertibleIterable } from 'a-iterable';
 import {
   ContextValueDef,
   ContextValueDefaultHandler,
