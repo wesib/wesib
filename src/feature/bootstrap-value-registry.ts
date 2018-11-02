@@ -1,4 +1,5 @@
-import { ContextValueRegistry, ContextValues, ProvidedContextValue, RevertibleIterable } from '../common';
+import { RevertibleIterable } from 'a-iterable';
+import { ContextValueRegistry, ContextValues, ProvidedContextValue } from '../common';
 import { BootstrapContext } from './bootstrap-context';
 
 /**
