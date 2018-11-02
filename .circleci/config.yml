@@ -6,50 +6,56 @@ version: 2
 jobs:
   build:
     docker:
-    # specify the version you desire here
-    - image: circleci/node:8-jessie-browsers
+    - image: circleci/node:10-jessie-browsers
 
     working_directory: ~/repo
 
     steps:
     - checkout
 
-    # Download and cache dependencies
     - restore_cache:
+        name: Restore Yarn package cache
         keys:
         - v1-dependencies-{{ checksum "yarn.lock" }}
         # fallback to using the latest cache if no exact match is found
         - v1-dependencies-
 
-    - run: yarn install
+    - run:
+        name: Install Dependencies
+        command: yarn install
 
     - save_cache:
-        paths:
-        - node_modules
+        name: Save Yarn package cache
         key: v1-dependencies-{{ checksum "yarn.lock" }}
+        paths:
+        - ~/.cache/yarn
 
-    # Build the project
-    - run: yarn build
+    - run:
+        name: Build the project
+        command: yarn build
 
-    # Run tests
-    - run: yarn test-once
+    - run:
+        name: Run tests
+        command: yarn test-onc
 
-    # Test results artifacts
     - store_artifacts:
+        name: Store test results
         path: target/test-results
         prefix: test-results
 
-    # Coverage reports artifacts
     - store_artifacts:
+        name: Store coverage reports
         path: target/coverage
         prefix: coverage
 
-    # Upload test results for display in Test Summary
     - store_test_results:
+        name: Upload test results # to display in Test Summary
         path: target/test-results
 
-    # Upload code coverage report
-    - run: yarn codecov --disable=gcov
+    - run:
+        name: Upload code coverage report
+        command: yarn codecov --disable=gcov
 
-    # Lint
-    - run: yarn lint
+    - run:
+        name: Linting
+        command: yarn lint
