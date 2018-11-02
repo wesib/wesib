@@ -60,6 +60,9 @@ function baseConfig(tsconfig) {
       format: 'umd',
       sourcemap: true,
       name: 'wesib',
+      globals: {
+        'a-iterable': 'aIterable',
+      },
     },
   };
 }
