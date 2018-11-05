@@ -1,10 +1,11 @@
-import { RevertibleIterable } from 'a-iterable';
+import { AIterable } from 'a-iterable';
 import {
   ContextValueDef,
   ContextValueDefaultHandler,
   ContextValueKey,
   ContextValueProvider,
-  ContextValueSource,
+  ContextValueSourceProvider,
+  ContextValueSources,
   ContextValueSourcesKey,
   ContextValueSpec,
   ProvidedContextValue,
@@ -19,7 +20,7 @@ import { ContextValues } from './context-values';
 export class ContextValueRegistry<C extends ContextValues> {
 
   /** @internal */
-  private readonly _initial: ContextValueSource<C>;
+  private readonly _initial: ContextValueSourceProvider<C>;
 
   /** @internal */
   private readonly _providers = new Map<ContextValueSourcesKey<any>, ContextValueProvider<C, any>[]>();
@@ -33,7 +34,7 @@ export class ContextValueRegistry<C extends ContextValues> {
    * @param initial An optional source of initially known context values. This is useful e.g. for chaining
    * registries.
    */
-  constructor(initial: ContextValueSource<C> = () => []) {
+  constructor(initial: ContextValueSourceProvider<C> = () => AIterable.none()) {
     this._initial = initial;
   }
 
@@ -54,6 +55,8 @@ export class ContextValueRegistry<C extends ContextValues> {
     } else {
       providers.push(provider);
     }
+
+    this._providers.set(sourcesKey, providers);
   }
 
   /**
@@ -64,7 +67,7 @@ export class ContextValueRegistry<C extends ContextValues> {
    *
    * @returns A revertible iterable of the value sources associated with the given key.
    */
-  sources<S>(context: C, request: ProvidedContextValue<S>): RevertibleIterable<S> {
+  sources<S>(context: C, request: ProvidedContextValue<S>): ContextValueSources<S> {
     return this.bindSources(context, false)(request);
   }
 
@@ -78,7 +81,7 @@ export class ContextValueRegistry<C extends ContextValues> {
    */
   bindSources(context: C, cache?: boolean): <V, S>(
       this: void,
-      request: ProvidedContextValue<S>) => RevertibleIterable<S> {
+      request: ProvidedContextValue<S>) => ContextValueSources<S> {
 
     const values = this.newValues(cache);
 
@@ -101,11 +104,11 @@ export class ContextValueRegistry<C extends ContextValues> {
     const values = new Map<ContextValueKey<any>, any>();
     const registry = this;
 
-    function sourcesProvidersFor<S>(key: ContextValueSourcesKey<S>): SourceProvider<C, S>[] {
+    function sourcesProvidersFor<S>(key: ContextValueSourcesKey<S>): AIterable<SourceProvider<C, S>> {
 
       const providers: ContextValueProvider<C, S>[] = registry._providers.get(key) || [];
 
-      return providers.map(provider => [provider] as SourceProvider<C, S>);
+      return AIterable.from(providers.map(toSourceProvider));
     }
 
     class Values implements ContextValues {
@@ -122,7 +125,7 @@ export class ContextValueRegistry<C extends ContextValues> {
           return cached;
         }
 
-        let sourceValues: RevertibleIterable<S>;
+        let sourceValues: ContextValueSources<S>;
 
         if (key.sourcesKey !== key as any) {
           // This is not a sources key
@@ -134,16 +137,10 @@ export class ContextValueRegistry<C extends ContextValues> {
           const sourceProviders = sourcesProvidersFor(key.sourcesKey);
           const initial = registry._initial(key, context);
 
-          sourceValues = {
-            [Symbol.iterator]: function* () {
-              yield* initial;
-              yield* valueSources(context, sourceProviders);
-            },
-            reverse: function* () {
-              yield* valueSources(context, sourceProviders.reverse());
-              yield* initial.reverse();
-            },
-          };
+          sourceValues = AIterable.from([
+            () => initial,
+            () => valueSources(context, sourceProviders),
+          ]).flatMap(fn => fn());
         }
 
         let defaultUsed = false;
@@ -194,20 +191,10 @@ export class ContextValueRegistry<C extends ContextValues> {
 
     return new ContextValueRegistry<C>(<S>(
         provide: ProvidedContextValue<S>,
-        context: C) => ({
-      [Symbol.iterator]: function* () {
-        yield* self.sources(context, provide);
-        yield* other.sources(context, provide);
-      },
-      reverse() {
-        return {
-          [Symbol.iterator]: function* () {
-            yield* other.sources(context, provide).reverse();
-            yield* self.sources(context, provide).reverse();
-          }
-        };
-      },
-    }));
+        context: C) => AIterable.from([
+      () => self.sources(context, provide),
+      () => other.sources(context, provide),
+    ]).flatMap(fn => fn()));
   }
 
 }
@@ -215,22 +202,26 @@ export class ContextValueRegistry<C extends ContextValues> {
 // Context value provider and cached context value source.
 type SourceProvider<C extends ContextValues, S> = [ContextValueProvider<C, S>, (S | null | undefined)?];
 
-function* valueSources<C extends ContextValues, S>(
+function toSourceProvider<C extends ContextValues, S>(valueProvider: ContextValueProvider<C, S>): SourceProvider<C, S> {
+  return [valueProvider];
+}
+
+function valueSources<C extends ContextValues, S>(
     context: C,
-    sourceProviders: Iterable<SourceProvider<C, S>>): Iterable<S> {
-  for (const sourceProvider of sourceProviders) {
-
-    let sourceValue: S | null | undefined;
-
+    sourceProviders: AIterable<SourceProvider<C, S>>): AIterable<S> {
+  return sourceProviders.map(sourceProvider => {
     if (sourceProvider.length > 1) {
-      sourceValue = sourceProvider[1];
-    } else {
-      sourceValue = sourceProvider[0](context);
-      sourceProvider.push(sourceValue);
+      return sourceProvider[1];
     }
 
-    if (sourceValue != null) {
-      yield sourceValue;
-    }
-  }
+    const sourceValue = sourceProvider[0](context);
+
+    sourceProvider.push(sourceValue);
+
+    return sourceValue;
+  }).filter<S>(isPresent);
+}
+
+function isPresent<S>(value: S | null | undefined): value is S {
+  return value != null;
 }

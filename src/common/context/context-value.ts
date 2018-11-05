@@ -1,5 +1,15 @@
-import { RevertibleIterable } from 'a-iterable';
+import { AIterable, itsLast } from 'a-iterable';
 import { ContextValues } from './context-values';
+
+/**
+ * Context value sources.
+ *
+ * This is an iterable of source values that are passed to `ContextValueKey.merge()` method in order to construct
+ * a context value.
+ *
+ * @param <S> A type of source values.
+ */
+export type ContextValueSources<S> = AIterable<S>;
 
 /**
  * A request for context value.
@@ -85,14 +95,14 @@ export abstract class ContextValueKey<V, S = V> implements ContextValueRequest<V
    * Merges multiple source values into one context value.
    *
    * @param context Context values.
-   * @param sourceValues An iterable of source values to merge.
+   * @param sources A sources of context value.
    * @param handleDefault Default value handler. The default values should be passed through it.
    *
    * @returns Single context value, or `undefined` if there is no default value.
    */
   abstract merge(
       context: ContextValues,
-      sourceValues: RevertibleIterable<S>,
+      sources: ContextValueSources<S>,
       handleDefault: ContextValueDefaultHandler<V>): V | null | undefined;
 
   toString(): string {
@@ -124,7 +134,7 @@ export type ContextValueDefaultHandler<V> = (defaultProvider: () => V | null | u
  *
  * An instance of this class is used as `ContextValueKey.sourcesKey` value by default.
  */
-export class ContextValueSourcesKey<S> extends ContextValueKey<RevertibleIterable<S>, S> {
+export class ContextValueSourcesKey<S> extends ContextValueKey<ContextValueSources<S>, S> {
 
   /**
    * Constructs context value sources key.
@@ -142,8 +152,8 @@ export class ContextValueSourcesKey<S> extends ContextValueKey<RevertibleIterabl
      return this;
   }
 
-  merge(context: ContextValues, sourceValues: RevertibleIterable<S>): RevertibleIterable<S> {
-    return sourceValues;
+  merge(context: ContextValues, sources: ContextValueSources<S>): ContextValueSources<S> {
+    return sources;
   }
 
 }
@@ -199,10 +209,10 @@ export class SingleValueKey<V> extends AbstractContextValueKey<V> {
 
   merge(
       context: ContextValues,
-      sourceValues: RevertibleIterable<V>,
+      sources: ContextValueSources<V>,
       handleDefault: ContextValueDefaultHandler<V>): V | null | undefined {
 
-    const value = sourceValues.reverse()[Symbol.iterator]().next().value;
+    const value = itsLast(sources);
 
     if (value != null) {
       return value;
@@ -243,10 +253,10 @@ export class MultiValueKey<V> extends AbstractContextValueKey<V[], V> {
 
   merge(
       context: ContextValues,
-      sourceValues: RevertibleIterable<V>,
+      sources: ContextValueSources<V>,
       handleDefault: ContextValueDefaultHandler<V[]>): V[] | null | undefined {
 
-    const result = [...sourceValues];
+    const result = [...sources];
 
     if (result.length) {
       return result;
@@ -282,16 +292,16 @@ export type ContextValueProvider<C extends ContextValues, S> =
     <T extends C>(this: void, context: T) => S | null | undefined;
 
 /**
- * The source of context values.
+ * A provider of context value sources.
  *
  * @param <C> A type of context.
  * @param provide A definition of provided context value.
  * @param context Target context.
  *
- * @returns Revertible iterable of context value sources associated with the given key provided for the given context.
+ * @returns Context value sources associated with the given key provided for the given context.
  */
-export type ContextValueSource<C extends ContextValues> =
-    <S>(this: void, provide: ProvidedContextValue<S>, context: C) => RevertibleIterable<S>;
+export type ContextValueSourceProvider<C extends ContextValues> =
+    <S>(this: void, provide: ProvidedContextValue<S>, context: C) => ContextValueSources<S>;
 
 /**
  * Context value specifier.
