@@ -132,7 +132,7 @@ export class ContextValueSourcesKey<S> extends ContextValueKey<RevertibleIterabl
    * @param key A key of context value having its sources associated with this key.
    */
   constructor(key: ContextValueKey<any, S>) {
-    super(`${name}:sources`);
+    super(`${key.name}:sources`);
   }
 
   /**
