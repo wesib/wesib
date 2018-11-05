@@ -1,5 +1,4 @@
-import { RevertibleIterable } from 'a-iterable';
-import { ContextValueRegistry, ContextValues, ProvidedContextValue } from '../common';
+import { ContextValueRegistry, ContextValues, ContextValueSources, ProvidedContextValue } from '../common';
 import { BootstrapContext } from './bootstrap-context';
 
 /**
@@ -8,7 +7,7 @@ import { BootstrapContext } from './bootstrap-context';
 export class BootstrapValueRegistry extends ContextValueRegistry<BootstrapContext> {
 
   readonly values: ContextValues;
-  readonly valueSources: <S>(this: void, request: ProvidedContextValue<S>) => RevertibleIterable<S>;
+  readonly valueSources: <S>(this: void, request: ProvidedContextValue<S>) => ContextValueSources<S>;
 
   static create(): BootstrapValueRegistry {
     return new BootstrapValueRegistry();

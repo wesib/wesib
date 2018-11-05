@@ -1,4 +1,4 @@
-import { ContextValueRegistry, ContextValueSource } from '../../common';
+import { ContextValueRegistry, ContextValueSourceProvider } from '../../common';
 import { DefinitionContext } from './definition-context';
 
 /**
@@ -6,11 +6,11 @@ import { DefinitionContext } from './definition-context';
  */
 export class DefinitionValueRegistry extends ContextValueRegistry<DefinitionContext<any>> {
 
-  static create(initial?: ContextValueSource<DefinitionContext<any>>): DefinitionValueRegistry {
+  static create(initial?: ContextValueSourceProvider<DefinitionContext<any>>): DefinitionValueRegistry {
     return new DefinitionValueRegistry(initial);
   }
 
-  private constructor(initial?: ContextValueSource<DefinitionContext<any>>) {
+  private constructor(initial?: ContextValueSourceProvider<DefinitionContext<any>>) {
     super(initial);
   }
 
