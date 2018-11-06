@@ -1,10 +1,10 @@
+import { EventProducer } from 'fun-events';
 import {
   Class,
   ContextValueKey,
   ContextValueRequest,
   ContextValues,
   ContextValueSpec,
-  EventProducer,
   SingleValueKey,
 } from '../../common';
 import { BootstrapWindow } from '../../feature';

@@ -1,11 +1,5 @@
-import {
-  ContextValueKey,
-  ContextValueRequest,
-  ContextValues,
-  ContextValueSpec,
-  EventProducer,
-  SingleValueKey,
-} from '../common';
+import { EventProducer } from 'fun-events';
+import { ContextValueRequest, ContextValues, ContextValueSpec } from '../common';
 import {
   ComponentClass,
   ComponentContext,

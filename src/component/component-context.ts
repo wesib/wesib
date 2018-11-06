@@ -1,8 +1,8 @@
+import { EventProducer } from 'fun-events';
 import {
   ContextValueKey,
   ContextValueRequest,
   ContextValues,
-  EventProducer,
   SingleValueKey,
   StatePath,
   StateUpdater,

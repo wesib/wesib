@@ -1,4 +1,5 @@
-import { Class, ContextValueKey, ContextValueSpec, EventEmitter, mergeFunctions, noop } from '../../common';
+import { EventEmitter } from 'fun-events';
+import { Class, ContextValueKey, ContextValueSpec, mergeFunctions, noop } from '../../common';
 import { ComponentClass } from '../component-class';
 import { ComponentContext as ComponentContext_, ComponentListener } from '../component-context';
 import { ComponentDef } from '../component-def';
@@ -162,8 +163,8 @@ export class ElementBuilder {
         // @ts-ignore
         const elementSuper = (name: string) => super[name] as any;
         let whenReady: (this: ComponentContext, component: T) => void = noop;
-        const connectEvents = new EventEmitter<(this: ComponentContext) => void>();
-        const disconnectEvents = new EventEmitter<(this: ComponentContext) => void>();
+        const connectEvents = new EventEmitter<(this: any) => void>();
+        const disconnectEvents = new EventEmitter<(this: any) => void>();
 
         class ComponentContext extends ComponentContext_<T> {
 

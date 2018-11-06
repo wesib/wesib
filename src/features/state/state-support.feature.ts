@@ -1,7 +1,5 @@
-import { StateUpdater } from '../../common';
+import { StateTracker, StateUpdater } from '../../common';
 import { BootstrapContext, Feature } from '../../feature';
-import { StateTracker } from './state-tracker';
-import { StateTracker as StateTrackerImpl } from './state-tracker.impl';
 
 /**
  * Component state support feature.
@@ -23,7 +21,7 @@ export class StateSupport {
 function enableStateSupport(context: BootstrapContext) {
   context.forComponents({
     provide: StateTracker,
-    provider: StateTrackerImpl.create,
+    provider: () => new StateTracker(),
   });
   context.forComponents({
     provide: StateUpdater,

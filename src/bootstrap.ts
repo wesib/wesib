@@ -1,4 +1,5 @@
-import { Class, ContextValueSpec, EventProducer } from './common';
+import { EventProducer } from 'fun-events';
+import { Class, ContextValueSpec } from './common';
 import {
   ComponentClass,
   ComponentContext,

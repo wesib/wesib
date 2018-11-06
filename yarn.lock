@@ -1499,6 +1499,13 @@ fsevents@^1.2.2:
     nan "^2.9.2"
     node-pre-gyp "^0.10.0"
 
+fun-events@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/fun-events/-/fun-events-1.0.1.tgz#a357b2b719fd8092586c9c4f00db536412da1c43"
+  integrity sha512-T2thwBTIgvgWwOUWioM8xvG8vGoV1cv7yOb7CdaLGn1xN7niGvbH8afEzHnwxugvOgArr8qRCOggmocoQNPFNg==
+  dependencies:
+    tslib "^1.9.0"
+
 gauge@~2.7.3:
   version "2.7.4"
   resolved "https://registry.yarnpkg.com/gauge/-/gauge-2.7.4.tgz#2c03405c7538c39d7eb37b317022e325fb018bf7"
