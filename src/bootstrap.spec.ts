@@ -1,6 +1,6 @@
 import { EventEmitter } from 'fun-events';
 import { bootstrapComponents } from './bootstrap';
-import { SingleValueKey } from './common';
+import { SingleContextKey } from './common';
 import { ComponentListener, DefinitionListener, Component } from './component';
 import { ComponentRegistry } from './component/definition/component-registry';
 import { ComponentValueRegistry } from './component/definition/component-value-registry';
@@ -186,7 +186,7 @@ describe('bootstrap', () => {
       });
       it('proxies forDefinitions() method', () => {
 
-        const provide = new SingleValueKey<string>('test-value-key');
+        const provide = new SingleContextKey<string>('test-value-key');
         const provider = () => 'test-value';
 
         featureContext.forDefinitions({ provide, provider });
@@ -195,7 +195,7 @@ describe('bootstrap', () => {
       });
       it('proxies forComponents() method', () => {
 
-        const provide = new SingleValueKey<string>('test-value-key');
+        const provide = new SingleContextKey<string>('test-value-key');
         const provider = () => 'test-value';
 
         featureContext.forComponents({ provide, provider });

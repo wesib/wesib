@@ -1,4 +1,4 @@
-import { ContextValueRequest } from './context-value';
+import { ContextRequest } from './context-value';
 
 /**
  * The values available from context.
@@ -7,11 +7,11 @@ import { ContextValueRequest } from './context-value';
  */
 export interface ContextValues {
 
-  get<V>(request: ContextValueRequest<V>, defaultValue?: V): V;
+  get<V>(request: ContextRequest<V>, defaultValue?: V): V;
 
-  get<V>(request: ContextValueRequest<V>, defaultValue: V | null): V | null;
+  get<V>(request: ContextRequest<V>, defaultValue: V | null): V | null;
 
-  get<V>(request: ContextValueRequest<V>, defaultValue: V | undefined): V | undefined;
+  get<V>(request: ContextRequest<V>, defaultValue: V | undefined): V | undefined;
 
   /**
    * Returns a value associated with the given key.
@@ -24,8 +24,8 @@ export interface ContextValues {
    * @returns Associated value.
    *
    * @throws Error If there is no value associated with the given key and the default key is not provided neither
-   * as function argument, nor as `ContextValueKey.defaultValue` property.
+   * as function argument, nor as key default.
    */
-  get<V>(request: ContextValueRequest<V>, defaultValue: V | null | undefined): V | null | undefined;
+  get<V>(request: ContextRequest<V>, defaultValue: V | null | undefined): V | null | undefined;
 
 }

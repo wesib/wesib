@@ -1,4 +1,4 @@
-import { ContextValueKey, SingleValueKey } from '../../common/context';
+import { ContextKey, SingleContextKey } from '../../common/context';
 
 /**
  * Rendering scheduler.
@@ -10,7 +10,7 @@ export abstract class RenderScheduler {
   /**
    * A `RenderScheduler` component context value key.
    */
-  static readonly key: ContextValueKey<RenderScheduler> = new SingleValueKey('render-scheduler');
+  static readonly key: ContextKey<RenderScheduler> = new SingleContextKey('render-scheduler');
 
   /**
    * Schedules component rendering.

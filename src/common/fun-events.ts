@@ -1,5 +1,5 @@
 import { StatePath as StatePath_, StateTracker as StateTracker_, StateUpdater as StateUpdater_ } from 'fun-events';
-import { ContextValueKey, SingleValueKey } from './context';
+import { ContextKey, SingleContextKey } from './context';
 import { noop } from './functions';
 
 export type StatePath = StatePath_;
@@ -34,7 +34,7 @@ export namespace StateUpdater {
    *
    * Note that this value is not provided, unless the `StateSupport` feature is enabled.
    */
-  export const key: ContextValueKey<StateUpdater> = new SingleValueKey('state-updater', () => noop);
+  export const key: ContextKey<StateUpdater> = new SingleContextKey('state-updater', () => noop);
 
 }
 
@@ -43,6 +43,6 @@ export class StateTracker extends StateTracker_ {
   /**
    * A `StateTracker` component context value key.
    */
-  static readonly key: ContextValueKey<StateTracker> = new SingleValueKey('state-tracker');
+  static readonly key: ContextKey<StateTracker> = new SingleContextKey('state-tracker');
 
 }

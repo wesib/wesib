@@ -1,4 +1,4 @@
-import { ContextConstDef, ContextValueDef, SingleValueKey } from './context-value';
+import { ContextConstDef, ContextValueDef, SingleContextKey } from './context-value';
 import { ContextValues } from './context-values';
 
 describe('common/context/context-value', () => {
@@ -14,7 +14,7 @@ describe('common/context/context-value', () => {
       it('uses context value definition as is', () => {
 
         const spec: ContextValueDef<ContextValues, string> = {
-          provide: new SingleValueKey<string>('value'),
+          provide: new SingleContextKey<string>('value'),
           provider: () => 'foo',
         };
 
@@ -23,7 +23,7 @@ describe('common/context/context-value', () => {
       it('converts context constant to definition', () => {
 
         const spec: ContextConstDef<ContextValues, string> = {
-          provide: new SingleValueKey<string>('value'),
+          provide: new SingleContextKey<string>('value'),
           value: 'foo',
         };
         const def = ContextValueDef.of(spec);

@@ -1,4 +1,4 @@
-import { ContextValueKey, SingleValueKey } from '../../common';
+import { ContextKey, SingleContextKey } from '../../common';
 
 /**
  * Component shadow content root.
@@ -12,6 +12,6 @@ export namespace ShadowContentRoot {
    *
    * This is only available when the component is decorated with `@AttachShadow` decorator.
    */
-  export const key: ContextValueKey<ShadowContentRoot> = new SingleValueKey('shadow-root');
+  export const key: ContextKey<ShadowContentRoot> = new SingleContextKey('shadow-root');
 
 }

@@ -2,13 +2,13 @@ import { AIterable } from 'a-iterable';
 import {
   ContextValueDef,
   ContextValueDefaultHandler,
-  ContextValueKey,
+  ContextKey,
   ContextValueProvider,
-  ContextValueSourceProvider,
-  ContextValueSources,
-  ContextValueSourcesKey,
+  ContextSourcesProvider,
+  ContextSources,
+  ContextSourcesKey,
   ContextValueSpec,
-  ProvidedContextValue,
+  ContextTarget,
 } from './context-value';
 import { ContextValues } from './context-values';
 
@@ -17,13 +17,13 @@ import { ContextValues } from './context-values';
  *
  * @param <C> A type of context.
  */
-export class ContextValueRegistry<C extends ContextValues> {
+export class ContextRegistry<C extends ContextValues> {
 
   /** @internal */
-  private readonly _initial: ContextValueSourceProvider<C>;
+  private readonly _initial: ContextSourcesProvider<C>;
 
   /** @internal */
-  private readonly _providers = new Map<ContextValueSourcesKey<any>, ContextValueProvider<C, any>[]>();
+  private readonly _providers = new Map<ContextSourcesKey<any>, ContextValueProvider<C, any>[]>();
 
   /** @internal */
   private _nonCachedValues?: ContextValues;
@@ -34,7 +34,7 @@ export class ContextValueRegistry<C extends ContextValues> {
    * @param initial An optional source of initially known context values. This is useful e.g. for chaining
    * registries.
    */
-  constructor(initial: ContextValueSourceProvider<C> = () => AIterable.none()) {
+  constructor(initial: ContextSourcesProvider<C> = () => AIterable.none()) {
     this._initial = initial;
   }
 
@@ -67,7 +67,7 @@ export class ContextValueRegistry<C extends ContextValues> {
    *
    * @returns A revertible iterable of the value sources associated with the given key.
    */
-  sources<S>(context: C, request: ProvidedContextValue<S>): ContextValueSources<S> {
+  sources<S>(context: C, request: ContextTarget<S>): ContextSources<S> {
     return this.bindSources(context, false)(request);
   }
 
@@ -81,11 +81,11 @@ export class ContextValueRegistry<C extends ContextValues> {
    */
   bindSources(context: C, cache?: boolean): <V, S>(
       this: void,
-      request: ProvidedContextValue<S>) => ContextValueSources<S> {
+      request: ContextTarget<S>) => ContextSources<S> {
 
     const values = this.newValues(cache);
 
-    return <S>({ key }: ProvidedContextValue<S>) => values.get.call(context, key.sourcesKey);
+    return <S>({ key }: ContextTarget<S>) => values.get.call(context, key.sourcesKey);
   }
 
   /**
@@ -101,10 +101,10 @@ export class ContextValueRegistry<C extends ContextValues> {
       return this._nonCachedValues;
     }
 
-    const values = new Map<ContextValueKey<any>, any>();
+    const values = new Map<ContextKey<any>, any>();
     const registry = this;
 
-    function sourcesProvidersFor<S>(key: ContextValueSourcesKey<S>): AIterable<SourceProvider<C, S>> {
+    function sourcesProvidersFor<S>(key: ContextSourcesKey<S>): AIterable<SourceProvider<C, S>> {
 
       const providers: ContextValueProvider<C, S>[] = registry._providers.get(key) || [];
 
@@ -115,7 +115,7 @@ export class ContextValueRegistry<C extends ContextValues> {
 
       get<V, S>(
           this: C,
-          { key }: { key: ContextValueKey<V, S> },
+          { key }: { key: ContextKey<V, S> },
           defaultValue?: V | null | undefined): V | null | undefined {
 
         const context = this;
@@ -125,7 +125,7 @@ export class ContextValueRegistry<C extends ContextValues> {
           return cached;
         }
 
-        let sourceValues: ContextValueSources<S>;
+        let sourceValues: ContextSources<S>;
 
         if (key.sourcesKey !== key as any) {
           // This is not a sources key
@@ -185,12 +185,12 @@ export class ContextValueRegistry<C extends ContextValues> {
    *
    * @return New context value registry which values provided by both registries.
    */
-  append(other: ContextValueRegistry<C>): ContextValueRegistry<C> {
+  append(other: ContextRegistry<C>): ContextRegistry<C> {
 
     const self = this;
 
-    return new ContextValueRegistry<C>(<S>(
-        provide: ProvidedContextValue<S>,
+    return new ContextRegistry<C>(<S>(
+        provide: ContextTarget<S>,
         context: C) => AIterable.from([
       () => self.sources(context, provide),
       () => other.sources(context, provide),

@@ -1,4 +1,4 @@
-import { Class, ContextValueSpec, noop, SingleValueKey } from '../common';
+import { Class, ContextValueSpec, noop, SingleContextKey } from '../common';
 import { BootstrapContext } from './bootstrap-context';
 import { FeatureDef } from './feature-def';
 import Spy = jasmine.Spy;
@@ -70,11 +70,11 @@ describe('feature/feature-def', () => {
       it('merges `prebootstrap`', () => {
 
         const v1: ContextValueSpec<BootstrapContext, string> = {
-          provide: new SingleValueKey<string>('1'),
+          provide: new SingleContextKey<string>('1'),
           value: '1',
         };
         const v2: ContextValueSpec<BootstrapContext, string> = {
-          provide: new SingleValueKey<string>('2'),
+          provide: new SingleContextKey<string>('2'),
           value: '2',
         };
 

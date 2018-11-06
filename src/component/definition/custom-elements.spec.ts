@@ -1,6 +1,6 @@
 import SpyObj = jasmine.SpyObj;
 import { Class } from '../../common';
-import { ContextValueRegistry } from '../../common/context';
+import { ContextRegistry } from '../../common/context';
 import { BootstrapContext, BootstrapWindow } from '../../feature';
 import { ComponentClass } from '../component-class';
 import { ComponentDef } from '../component-def';
@@ -17,7 +17,7 @@ describe('component/definition/custom-elements', () => {
 
     beforeEach(() => {
 
-      const valueRegistry = new ContextValueRegistry<BootstrapContext>();
+      const valueRegistry = new ContextRegistry<BootstrapContext>();
 
       registrySpy = jasmine.createSpyObj('customElements', ['define', 'whenDefined']);
       const windowSpy: Window = {

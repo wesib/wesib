@@ -1,4 +1,4 @@
-import { Class, SingleValueKey } from '../common';
+import { Class, SingleContextKey } from '../common';
 import { BootstrapContext } from './bootstrap-context';
 import { BootstrapValueRegistry } from './bootstrap-value-registry';
 import { FeatureDef } from './feature-def';
@@ -143,7 +143,7 @@ describe('feature/feature-registry', () => {
     });
     it('bootstraps value providers', () => {
 
-      const provide = new SingleValueKey('test-key');
+      const provide = new SingleContextKey('test-key');
       const provider = jasmine.createSpy('testValueProvider');
       class Feature {}
 

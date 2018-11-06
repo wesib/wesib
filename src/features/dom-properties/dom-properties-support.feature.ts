@@ -1,11 +1,11 @@
 import { Class } from '../../common';
-import { SingleValueKey } from '../../common/context';
+import { SingleContextKey } from '../../common/context';
 import { Feature } from '../../feature';
 import { DomPropertyRegistrar } from './dom-property-registrar';
 
 class DomPropertyRegistry {
 
-  static readonly key = new SingleValueKey<DomPropertyRegistry>('dom-property-registry');
+  static readonly key = new SingleContextKey<DomPropertyRegistry>('dom-property-registry');
 
   private readonly _props = new Map<PropertyKey, PropertyDescriptor>();
 

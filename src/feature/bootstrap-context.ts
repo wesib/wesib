@@ -1,5 +1,5 @@
 import { EventProducer } from 'fun-events';
-import { ContextValueRequest, ContextValues, ContextValueSpec } from '../common';
+import { ContextRequest, ContextValues, ContextValueSpec } from '../common';
 import {
   ComponentClass,
   ComponentContext,
@@ -89,11 +89,11 @@ export abstract class BootstrapContext implements ContextValues {
    */
   abstract forComponents<S>(spec: ContextValueSpec<ComponentContext<any>, any, S>): void;
 
-  abstract get<V>(request: ContextValueRequest<V>, defaultValue?: V): V;
+  abstract get<V>(request: ContextRequest<V>, defaultValue?: V): V;
 
-  abstract get<V>(request: ContextValueRequest<V>, defaultValue: V | null): V | null;
+  abstract get<V>(request: ContextRequest<V>, defaultValue: V | null): V | null;
 
-  abstract get<V>(request: ContextValueRequest<V>, defaultValue: V | undefined): V | undefined;
+  abstract get<V>(request: ContextRequest<V>, defaultValue: V | undefined): V | undefined;
 
   /**
    * Returns a value associated with the given key.
@@ -106,8 +106,8 @@ export abstract class BootstrapContext implements ContextValues {
    * @returns Associated value.
    *
    * @throws Error If there is no value associated with the given key and the default key is not provided neither
-   * as function argument, nor as `ContextValueKey.defaultValue` property.
+   * as function argument, nor as key default.
    */
-  abstract get<V>(request: ContextValueRequest<V>, defaultValue: V | null | undefined): V | null | undefined;
+  abstract get<V>(request: ContextRequest<V>, defaultValue: V | null | undefined): V | null | undefined;
 
 }

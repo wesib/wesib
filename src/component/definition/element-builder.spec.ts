@@ -1,5 +1,5 @@
 import { EventInterest } from 'fun-events';
-import { Class, SingleValueKey } from '../../common';
+import { Class, SingleContextKey } from '../../common';
 import { ComponentClass } from '../component-class';
 import { ComponentContext } from '../component-context';
 import { ComponentDef } from '../component-def';
@@ -102,9 +102,9 @@ describe('component/definition/element-builder', () => {
     });
     describe('definition context value', () => {
 
-      const key = new SingleValueKey<string>('test-key');
+      const key = new SingleContextKey<string>('test-key');
       let value: string;
-      const key2 = new SingleValueKey<string>('another-key');
+      const key2 = new SingleContextKey<string>('another-key');
       let value2: string;
       let definitionContext: DefinitionContext<any>;
       let componentContext: ComponentContext;

@@ -1,4 +1,4 @@
-import { ContextValueKey, SingleValueKey } from '../../common';
+import { ContextKey, SingleContextKey } from '../../common';
 import { ComponentContext } from '../../component';
 
 /**
@@ -19,6 +19,6 @@ export namespace ShadowRootBuilder {
   /**
    * A key of component context value containing a shadow root builder instance.
    */
-  export const key: ContextValueKey<ShadowRootBuilder> = new SingleValueKey('shadow-root-builder');
+  export const key: ContextKey<ShadowRootBuilder> = new SingleContextKey('shadow-root-builder');
 
 }
