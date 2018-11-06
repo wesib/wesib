@@ -1,21 +1,21 @@
-import { MultiValueKey, SingleValueKey } from './context-value';
-import { ContextValueRegistry } from './context-value-registry';
+import { ContextRegistry } from './context-registry';
+import { MultiContextKey, SingleContextKey } from './context-value';
 import { ContextValues } from './context-values';
 import Spy = jasmine.Spy;
 
-describe('common/context/context-value-registry', () => {
-  describe('ContextValueRegistry', () => {
+describe('common/context/context-registry', () => {
+  describe('ContextRegistry', () => {
 
-    const key = new SingleValueKey<string>('test-key');
-    let registry: ContextValueRegistry<ContextValues>;
+    const key = new SingleContextKey<string>('test-key');
+    let registry: ContextRegistry<ContextValues>;
     let values: ContextValues;
     let providerSpy: Spy;
 
     beforeEach(() => {
-      registry = new ContextValueRegistry();
+      registry = new ContextRegistry();
       values = registry.newValues();
       providerSpy = jasmine.createSpy('provider');
-      registry.provide({ provide: key, provider: providerSpy });
+      registry.provide({ a: key, by: providerSpy });
     });
 
     describe('Single value', () => {
@@ -28,33 +28,33 @@ describe('common/context/context-value-registry', () => {
         expect(values.get(key)).toBe(value);
       });
       it('throws if there is no default value', () => {
-        expect(() => values.get(new SingleValueKey(key.name))).toThrowError();
+        expect(() => values.get(new SingleContextKey(key.name))).toThrowError();
       });
       it('provides default value is there is no provider', () => {
-        expect(values.get(new SingleValueKey<string>(key.name), 'default')).toBe('default');
+        expect(values.get(new SingleContextKey<string>(key.name), { or: 'default' })).toBe('default');
       });
       it('provides default value if provider did not provide any value', () => {
 
         const defaultValue = 'default';
-        const keyWithDefaults = new SingleValueKey(key.name, () => defaultValue);
+        const keyWithDefaults = new SingleContextKey(key.name, () => defaultValue);
 
-        registry.provide({ provide: keyWithDefaults, value: null });
+        registry.provide({ a: keyWithDefaults, is: null });
 
         expect(values.get(keyWithDefaults)).toBe(defaultValue);
       });
       it('is associated with default value is there is no provider', () => {
-        expect(values.get(new SingleValueKey<string>(key.name, () => 'default'))).toBe('default');
+        expect(values.get(new SingleContextKey<string>(key.name, () => 'default'))).toBe('default');
       });
       it('prefers explicit default value over key one', () => {
-        expect(values.get(new SingleValueKey<string>(key.name, () => 'key default'), 'explicit default'))
+        expect(values.get(new SingleContextKey<string>(key.name, () => 'key default'), { or: 'explicit default' }))
             .toBe('explicit default');
       });
       it('prefers explicit `null` default value over key one', () => {
-        expect(values.get(new SingleValueKey<string>(key.name, () => 'default'), null))
+        expect(values.get(new SingleContextKey<string>(key.name, () => 'default'), { or: null }))
             .toBeNull();
       });
       it('prefers explicit `undefined` default value over key one', () => {
-        expect(values.get(new SingleValueKey<string>(key.name, () => 'default'), undefined))
+        expect(values.get(new SingleContextKey<string>(key.name, () => 'default'), { or: undefined }))
             .toBeUndefined();
       });
       it('caches value sources', () => {
@@ -86,7 +86,7 @@ describe('common/context/context-value-registry', () => {
 
         const value = 'default value';
         const defaultProviderSpy = jasmine.createSpy('default').and.returnValue(value);
-        const keyWithDefault = new SingleValueKey('key-with-default', defaultProviderSpy);
+        const keyWithDefault = new SingleContextKey('key-with-default', defaultProviderSpy);
 
         expect(values.get(keyWithDefault)).toBe(value);
         expect(values.get(keyWithDefault)).toBe(value);
@@ -97,79 +97,83 @@ describe('common/context/context-value-registry', () => {
         const value1 = 'value1';
         const value2 = 'value2';
 
-        expect(values.get(key, value1)).toBe(value1);
-        expect(values.get(key, value2)).toBe(value2);
+        expect(values.get(key, { or: value1 })).toBe(value1);
+        expect(values.get(key, { or: value2 })).toBe(value2);
       });
     });
 
     describe('Multi-value', () => {
 
-      let multiKey: MultiValueKey<string>;
+      let multiKey: MultiContextKey<string>;
 
       beforeEach(() => {
-        multiKey = new MultiValueKey('values');
+        multiKey = new MultiContextKey('values');
       });
 
       it('is associated with empty array by default', () => {
         expect(values.get(multiKey)).toEqual([]);
       });
       it('is associated with empty array if providers did not return any values', () => {
-        registry.provide({ provide: multiKey, value: null });
-        registry.provide({ provide: multiKey, value: undefined });
+        registry.provide({ a: multiKey, is: null });
+        registry.provide({ a: multiKey, is: undefined });
 
         expect(values.get(multiKey)).toEqual([]);
       });
       it('is associated with default value if there is no provider', () => {
 
         const defaultValue = ['default'];
-        const keyWithDefaults = new MultiValueKey('key', () => defaultValue);
+        const keyWithDefaults = new MultiContextKey('key', () => defaultValue);
 
         expect(values.get(keyWithDefaults)).toEqual(defaultValue);
       });
       it('is associated with default value if providers did not return any values', () => {
 
         const defaultValue = ['default'];
-        const keyWithDefaults = new MultiValueKey('key', () => defaultValue);
+        const keyWithDefaults = new MultiContextKey('key', () => defaultValue);
 
-        registry.provide({ provide: keyWithDefaults, value: null });
-        registry.provide({ provide: keyWithDefaults, value: undefined });
+        registry.provide({ a: keyWithDefaults, is: null });
+        registry.provide({ a: keyWithDefaults, is: undefined });
 
         expect(values.get(keyWithDefaults)).toEqual(defaultValue);
       });
       it('is associated with provided values array', () => {
-        registry.provide({ provide: multiKey, value: 'a' });
-        registry.provide({ provide: multiKey, value: undefined });
-        registry.provide({ provide: multiKey, value: 'c' });
+        registry.provide({ a: multiKey, is: 'a' });
+        registry.provide({ a: multiKey, is: undefined });
+        registry.provide({ a: multiKey, is: 'c' });
 
         expect(values.get(multiKey)).toEqual(['a', 'c']);
       });
       it('is associated with value', () => {
-        registry.provide({ provide: multiKey, value: 'value' });
+        registry.provide({ a: multiKey, is: 'value' });
 
         expect(values.get(multiKey)).toEqual(['value']);
       });
       it('throws if there is no default value', () => {
-        expect(() => values.get(new MultiValueKey(multiKey.name, () => null))).toThrowError();
+        expect(() => values.get(new MultiContextKey(multiKey.name, () => null))).toThrowError();
       });
       it('is associated with empty array by default', () => {
-        expect(values.get(new MultiValueKey(multiKey.name))).toEqual([]);
+        expect(values.get(new MultiContextKey(multiKey.name))).toEqual([]);
       });
       it('is associated with default value is there is no value', () => {
-        expect(values.get(new MultiValueKey<string>(multiKey.name), ['default'])).toEqual(['default']);
+        expect(values.get(new MultiContextKey<string>(multiKey.name), { or: ['default'] })).toEqual(['default']);
       });
       it('is associated with key default value is there is no value', () => {
-        expect(values.get(new MultiValueKey<string>(multiKey.name, () => ['default']))).toEqual(['default']);
+        expect(values.get(new MultiContextKey<string>(multiKey.name, () => ['default']))).toEqual(['default']);
       });
       it('prefers explicit default value over key one', () => {
-        expect(values.get(new MultiValueKey<string>(multiKey.name, () => ['key', 'default']), ['explicit', 'default']))
+        expect(values.get(
+            new MultiContextKey<string>(
+                multiKey.name,
+                () => ['key', 'default']),
+            { or: ['explicit', 'default'] }))
             .toEqual(['explicit', 'default']);
       });
       it('prefers explicit `null` default value over key one', () => {
-        expect(values.get(new MultiValueKey<string>(multiKey.name, () => ['key', 'default']), null))
+        expect(values.get(new MultiContextKey<string>(multiKey.name, () => ['key', 'default']), { or: null }))
             .toBeNull();
       });
       it('prefers explicit `undefined` default value over key one', () => {
-        expect(values.get(new MultiValueKey<string>(multiKey.name, () => ['key', 'default']), undefined))
+        expect(values.get(new MultiContextKey<string>(multiKey.name, () => ['key', 'default']), { or: undefined }))
             .toBeUndefined();
       });
     });
@@ -180,7 +184,7 @@ describe('common/context/context-value-registry', () => {
 
       beforeEach(() => {
         provider2Spy = jasmine.createSpy('provider2');
-        registry.provide({ provide: key, provider: provider2Spy });
+        registry.provide({ a: key, by: provider2Spy });
       });
 
       it('provides the last constructed value', () => {
@@ -204,14 +208,14 @@ describe('common/context/context-value-registry', () => {
 
     describe('Chained registry', () => {
 
-      let chained: ContextValueRegistry<ContextValues>;
+      let chained: ContextRegistry<ContextValues>;
       let chainedValues: ContextValues;
       let provider2Spy: Spy;
       let context: ContextValues;
 
       beforeEach(() => {
         context = { name: 'context' } as any;
-        chained = new ContextValueRegistry(registry.bindSources(context));
+        chained = new ContextRegistry(registry.bindSources(context));
         chainedValues = chained.newValues();
         provider2Spy = jasmine.createSpy('provider2');
       });
@@ -223,7 +227,7 @@ describe('common/context/context-value-registry', () => {
 
         providerSpy.and.returnValue(value1);
 
-        chained.provide({ provide: key, provider: provider2Spy });
+        chained.provide({ a: key, by: provider2Spy });
         provider2Spy.and.returnValue(value2);
 
         expect(chainedValues.get(key)).toBe(value2);
@@ -234,7 +238,7 @@ describe('common/context/context-value-registry', () => {
 
         providerSpy.and.returnValue(value1);
 
-        chained.provide({ provide: key, provider: provider2Spy });
+        chained.provide({ a: key, by: provider2Spy });
         provider2Spy.and.returnValue(null);
 
         expect(chainedValues.get(key)).toBe(value1);
@@ -243,26 +247,26 @@ describe('common/context/context-value-registry', () => {
 
     describe('append', () => {
 
-      let registry2: ContextValueRegistry<ContextValues>;
-      let combined: ContextValueRegistry<ContextValues>;
+      let registry2: ContextRegistry<ContextValues>;
+      let combined: ContextRegistry<ContextValues>;
       let context: ContextValues;
 
       beforeEach(() => {
-        registry2 = new ContextValueRegistry();
+        registry2 = new ContextRegistry();
         combined = registry.append(registry2);
         context = { name: 'context' } as any;
       });
 
       it('contains all sources', () => {
         providerSpy.and.returnValue('1');
-        registry2.provide({ provide: key, value: '2' });
-        registry2.provide({ provide: key, value: '3' });
+        registry2.provide({ a: key, is: '2' });
+        registry2.provide({ a: key, is: '3' });
         expect([...combined.sources(context, key)]).toEqual(['1', '2', '3']);
       });
       it('contains reverted sources', () => {
         providerSpy.and.returnValue('1');
-        registry2.provide({ provide: key, value: '2' });
-        registry2.provide({ provide: key, value: '3' });
+        registry2.provide({ a: key, is: '2' });
+        registry2.provide({ a: key, is: '3' });
         expect([...combined.sources(context, key).reverse()]).toEqual(['3', '2', '1']);
       });
     });

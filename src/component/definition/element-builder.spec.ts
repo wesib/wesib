@@ -1,5 +1,5 @@
 import { EventInterest } from 'fun-events';
-import { Class, SingleValueKey } from '../../common';
+import { Class, SingleContextKey } from '../../common';
 import { ComponentClass } from '../component-class';
 import { ComponentContext } from '../component-context';
 import { ComponentDef } from '../component-def';
@@ -102,9 +102,9 @@ describe('component/definition/element-builder', () => {
     });
     describe('definition context value', () => {
 
-      const key = new SingleValueKey<string>('test-key');
+      const key = new SingleContextKey<string>('test-key');
       let value: string;
-      const key2 = new SingleValueKey<string>('another-key');
+      const key2 = new SingleContextKey<string>('another-key');
       let value2: string;
       let definitionContext: DefinitionContext<any>;
       let componentContext: ComponentContext;
@@ -114,7 +114,7 @@ describe('component/definition/element-builder', () => {
         builder.definitions.on((ctx: DefinitionContext<any>) => {
           definitionContext = ctx;
           if (ctx.componentType === TestComponent) {
-            ctx.forComponents({ provide: key, value });
+            ctx.forComponents({ a: key, is: value });
           }
         });
       });
@@ -122,12 +122,12 @@ describe('component/definition/element-builder', () => {
         value2 = 'other value';
         ComponentDef.define(TestComponent, {
           define(context: DefinitionContext<any>) {
-            context.forComponents({ provide: key2, value: value2 });
+            context.forComponents({ a: key2, is: value2 });
           }
         });
       });
       beforeEach(() => {
-        definitionValueRegistry.provide({ provide: ElementBaseClass, value: Object });
+        definitionValueRegistry.provide({ a: ElementBaseClass, is: Object });
       });
       beforeEach(() => {
 
@@ -156,8 +156,8 @@ describe('component/definition/element-builder', () => {
         const otherElement = new (builder.buildElement(AnotherComponent));
         const otherContext = ComponentContext.of(otherElement);
 
-        expect(otherContext.get(key, null)).toBeNull();
-        expect(otherContext.get(key2, null)).toBeNull();
+        expect(otherContext.get(key, { or: null })).toBeNull();
+        expect(otherContext.get(key2, { or: null })).toBeNull();
       });
     });
     describe('component listener', () => {
@@ -174,7 +174,7 @@ describe('component/definition/element-builder', () => {
         });
       });
       beforeEach(() => {
-        definitionValueRegistry.provide({ provide: ElementBaseClass, value: Object });
+        definitionValueRegistry.provide({ a: ElementBaseClass, is: Object });
       });
       beforeEach(() => {
 

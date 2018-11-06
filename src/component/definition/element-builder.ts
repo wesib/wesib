@@ -1,5 +1,5 @@
 import { EventEmitter } from 'fun-events';
-import { Class, ContextValueKey, ContextValueSpec, mergeFunctions, noop } from '../../common';
+import { Class, ContextKey, ContextValueSpec, mergeFunctions, noop } from '../../common';
 import { ComponentClass } from '../component-class';
 import { ComponentContext as ComponentContext_, ComponentListener } from '../component-context';
 import { ComponentDef } from '../component-def';
@@ -77,12 +77,12 @@ export class ElementBuilder {
 
       readonly componentType: ComponentClass<T> = componentType;
       readonly onComponent = onComponent.on;
-      readonly get: <V, S>(key: ContextValueKey<V, S>, defaultValue: V | null | undefined) => V | null | undefined;
+      readonly get: <V, S>(key: ContextKey<V, S>, defaultValue: V | null | undefined) => V | null | undefined;
 
       constructor() {
         super();
         typeValueRegistry = ComponentValueRegistry.create(builder._definitionValueRegistry.bindSources(this));
-        typeValueRegistry.provide({ provide: DefinitionContext_, value: this });
+        typeValueRegistry.provide({ a: DefinitionContext_, is: this });
 
         const values = typeValueRegistry.newValues();
 
@@ -191,7 +191,7 @@ export class ElementBuilder {
 
         const context = new ComponentContext();
 
-        valueRegistry.provide({ provide: ComponentContext_, value: context });
+        valueRegistry.provide({ a: ComponentContext_, is: context });
 
         Object.defineProperty(this, ComponentContext_.symbol, { value: context });
         Object.defineProperty(this, connectedCallback, {

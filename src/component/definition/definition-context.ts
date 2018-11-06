@@ -1,11 +1,11 @@
 import { EventProducer } from 'fun-events';
 import {
   Class,
-  ContextValueKey,
-  ContextValueRequest,
+  ContextKey,
+  ContextRequest,
   ContextValues,
   ContextValueSpec,
-  SingleValueKey,
+  SingleContextKey,
 } from '../../common';
 import { BootstrapWindow } from '../../feature';
 import { ComponentClass } from '../component-class';
@@ -25,7 +25,7 @@ export abstract class DefinitionContext<T extends object> implements ContextValu
   /**
    * A key of definition context value containing a definition context itself.
    */
-  static readonly key: ContextValueKey<DefinitionContext<any>> = new SingleValueKey('definition-context');
+  static readonly key: ContextKey<DefinitionContext<any>> = new SingleContextKey('definition-context');
 
   /**
    * Component class constructor.
@@ -74,26 +74,41 @@ export abstract class DefinitionContext<T extends object> implements ContextValu
    */
   abstract forComponents<S>(spec: ContextValueSpec<ComponentContext<any>, any, S>): void;
 
-  abstract get<V>(request: ContextValueRequest<V>, defaultValue?: V): V;
-
-  abstract get<V>(request: ContextValueRequest<V>, defaultValue: V | null): V | null;
-
-  abstract get<V>(request: ContextValueRequest<V>, defaultValue: V | undefined): V | undefined;
+  /**
+   * Returns a value associated with the given key.
+   *
+   * @param <V> A type of associated value.
+   * @param request Context value request with target key.
+   * @param opts Context value request options.
+   *
+   * @returns Associated value or `null` if there is no associated value.
+   */
+  abstract get<V>(request: ContextRequest<V>, opts: { or: null }): V | null;
 
   /**
    * Returns a value associated with the given key.
    *
    * @param <V> A type of associated value.
    * @param request Context value request with target key.
-   * @param defaultValue Default value to return if there is no value associated with the given key. Can be `null`
-   * or `undefined` too.
+   * @param opts Context value request options.
+   *
+   * @returns Associated value or `null` if there is no associated value.
+   */
+  abstract get<V>(request: ContextRequest<V>, opts: { or: undefined }): V | undefined;
+
+  /**
+   * Returns a value associated with the given key.
+   *
+   * @param <V> A type of associated value.
+   * @param request Context value request with target key.
+   * @param opts Context value request options.
    *
    * @returns Associated value.
    *
    * @throws Error If there is no value associated with the given key and the default key is not provided neither
-   * as function argument, nor as `ContextValueKey.defaultValue` property.
+   * as function argument, nor as key default.
    */
-  abstract get<V>(request: ContextValueRequest<V>, defaultValue: V | null | undefined): V | null | undefined;
+  abstract get<V>(request: ContextRequest<V>, opts?: { or: V }): V;
 
 }
 
@@ -112,7 +127,7 @@ export namespace ElementBaseClass {
    * Target value defaults to `HTMLElement` from the window provided under `[BootstrapWindow.key]`,
    * unless `ComponentDef.extend.type` is specified.
    */
-  export const key = new SingleValueKey<ElementBaseClass>(
+  export const key = new SingleContextKey<ElementBaseClass>(
       'element-base-class',
       values => {
 

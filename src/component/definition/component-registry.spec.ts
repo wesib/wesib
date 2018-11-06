@@ -1,4 +1,4 @@
-import { ContextValueRequest } from '../../common';
+import { ContextRequest } from '../../common';
 import { BootstrapContext } from '../../feature';
 import { ComponentClass } from '../component-class';
 import { ComponentDef } from '../component-def';
@@ -19,7 +19,7 @@ describe('component/definition/component-registry', () => {
 
     beforeEach(() => {
       bootstrapContextSpy = jasmine.createSpyObj('bootstrapContext', ['get']);
-      bootstrapContextSpy.get.and.callFake((request: ContextValueRequest<any>) => {
+      bootstrapContextSpy.get.and.callFake((request: ContextRequest<any>) => {
         if (request.key === CustomElements.key) {
           return customElementsSpy;
         }

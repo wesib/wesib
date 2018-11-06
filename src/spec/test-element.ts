@@ -21,7 +21,7 @@ export function testElement(componentType: Class): Class<any> {
   };
 
   @Feature({
-    prebootstrap: { provide: CustomElements, value: customElements },
+    prebootstrap: { a: CustomElements, is: customElements },
     require: componentType,
   })
   class TestFeature {}

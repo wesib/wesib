@@ -4,12 +4,12 @@ import { ContextValues } from './context-values';
 /**
  * Context value sources.
  *
- * This is an iterable of source values that are passed to `ContextValueKey.merge()` method in order to construct
+ * This is an iterable of source values that are passed to `ContextKey.merge()` method in order to construct
  * a context value.
  *
  * @param <S> A type of source values.
  */
-export type ContextValueSources<S> = AIterable<S>;
+export type ContextSources<S> = AIterable<S>;
 
 /**
  * A request for context value.
@@ -20,28 +20,48 @@ export type ContextValueSources<S> = AIterable<S>;
  *
  * @param <V> A type of requested context value.
  */
-export interface ContextValueRequest<V> {
+export interface ContextRequest<V> {
 
   /**
    * A key of context value to request.
    */
-  readonly key: ContextValueKey<V, any>;
+  readonly key: ContextKey<V, any>;
+
+}
+
+export namespace ContextRequest {
+
+  /**
+   * Context request options.
+   *
+   * This can be passed to `ContextValues.get()` method as a second parameter.
+   *
+   * @param <V> A type of requested context value.
+   */
+  export interface Opts<V> {
+
+    /**
+     * The default value to return if there is no value associated with the given key. Can be `null` or `undefined` too.
+     */
+    or: V | null | undefined;
+
+  }
 
 }
 
 /**
- * A definition of provided context value.
+ * Context value definition target.
  *
- * This is used when declaring providers for context values.
+ * Designates a declared declaring context value.
  *
- * @param <S> A type of provided context value source.
+ * @param <S> A type of declared context value sources.
  */
-export interface ProvidedContextValue<S> extends ContextValueRequest<any> {
+export interface ContextTarget<S> extends ContextRequest<any> {
 
   /**
    * A key of context value to provide.
    */
-  readonly key: ContextValueKey<any, S>;
+  readonly key: ContextKey<any, S>;
 
 }
 
@@ -50,13 +70,13 @@ export interface ProvidedContextValue<S> extends ContextValueRequest<any> {
  *
  * Every key should be an unique instance of this class.
  *
- * Multiple source values can be provided internally per value key. Then they are merged with `ContextValueKey.merge()`
+ * Multiple source values can be provided internally per value key. Then they are merged with `ContextKey.merge()`
  * method into single context value.
  *
  * @param <V> A type of associated value.
  * @param <S> A type of source values.
  */
-export abstract class ContextValueKey<V, S = V> implements ContextValueRequest<V>, ProvidedContextValue<S> {
+export abstract class ContextKey<V, S = V> implements ContextRequest<V>, ContextTarget<S> {
 
   /**
    * Human-readable key name.
@@ -71,7 +91,7 @@ export abstract class ContextValueKey<V, S = V> implements ContextValueRequest<V
    * When multiple context value keys have the same `sourceKey`, then their values are constructed against the same
    * set of sources.
    */
-  abstract readonly sourcesKey: ContextValueSourcesKey<S>;
+  abstract readonly sourcesKey: ContextSourcesKey<S>;
 
   /**
    * Constructs context value key.
@@ -102,11 +122,11 @@ export abstract class ContextValueKey<V, S = V> implements ContextValueRequest<V
    */
   abstract merge(
       context: ContextValues,
-      sources: ContextValueSources<S>,
+      sources: ContextSources<S>,
       handleDefault: ContextValueDefaultHandler<V>): V | null | undefined;
 
   toString(): string {
-    return `ContextValueKey(${this.name})`;
+    return `ContextKey(${this.name})`;
   }
 
 }
@@ -114,7 +134,7 @@ export abstract class ContextValueKey<V, S = V> implements ContextValueRequest<V
 /**
  * Default context value handler.
  *
- * It is called from `ContextValueKey.merge()` operation to handle default values.
+ * It is called from `ContextKey.merge()` operation to handle default values.
  *
  * It is responsible for default value selection. As explicitly specified default value should always take precedence
  * over the one specified in the value key.
@@ -132,16 +152,16 @@ export type ContextValueDefaultHandler<V> = (defaultProvider: () => V | null | u
 /**
  * A key of context value holding sources for some other context value.
  *
- * An instance of this class is used as `ContextValueKey.sourcesKey` value by default.
+ * An instance of this class is used as `ContextKey.sourcesKey` value by default.
  */
-export class ContextValueSourcesKey<S> extends ContextValueKey<ContextValueSources<S>, S> {
+export class ContextSourcesKey<S> extends ContextKey<ContextSources<S>, S> {
 
   /**
    * Constructs context value sources key.
    *
    * @param key A key of context value having its sources associated with this key.
    */
-  constructor(key: ContextValueKey<any, S>) {
+  constructor(key: ContextKey<any, S>) {
     super(`${key.name}:sources`);
   }
 
@@ -152,7 +172,7 @@ export class ContextValueSourcesKey<S> extends ContextValueKey<ContextValueSourc
      return this;
   }
 
-  merge(context: ContextValues, sources: ContextValueSources<S>): ContextValueSources<S> {
+  merge(context: ContextValues, sources: ContextSources<S>): ContextSources<S> {
     return sources;
   }
 
@@ -161,20 +181,20 @@ export class ContextValueSourcesKey<S> extends ContextValueKey<ContextValueSourc
 /**
  * Abstract context value key.
  */
-export abstract class AbstractContextValueKey<V, S = V> extends ContextValueKey<V, S> {
+export abstract class AbstractContextKey<V, S = V> extends ContextKey<V, S> {
 
-  readonly sourcesKey: ContextValueSourcesKey<S>;
+  readonly sourcesKey: ContextSourcesKey<S>;
 
   /**
    * Constructs context value key.
    *
    * @param name Human-readable key name.
    * @param sourcesKey A key of context value holding the sources of the value associated with this key. An instance
-   * of `ContextValueSourcesKey` will be constructed by default.
+   * of `ContextSourcesKey` will be constructed by default.
    */
-  protected constructor(name: string, sourcesKey?: ContextValueSourcesKey<S>) {
+  protected constructor(name: string, sourcesKey?: ContextSourcesKey<S>) {
     super(name);
-    this.sourcesKey = sourcesKey || new ContextValueSourcesKey(this);
+    this.sourcesKey = sourcesKey || new ContextSourcesKey(this);
   }
 
 }
@@ -187,7 +207,7 @@ export abstract class AbstractContextValueKey<V, S = V> extends ContextValueKey<
  * @param <V> The type of associated value.
  * @param <S> The type of source values.
  */
-export class SingleValueKey<V> extends AbstractContextValueKey<V> {
+export class SingleContextKey<V> extends AbstractContextKey<V> {
 
   /**
    * A provider of context value used when there is no value associated with this key.
@@ -209,7 +229,7 @@ export class SingleValueKey<V> extends AbstractContextValueKey<V> {
 
   merge(
       context: ContextValues,
-      sources: ContextValueSources<V>,
+      sources: ContextSources<V>,
       handleDefault: ContextValueDefaultHandler<V>): V | null | undefined {
 
     const value = itsLast(sources);
@@ -233,7 +253,7 @@ export class SingleValueKey<V> extends AbstractContextValueKey<V> {
  * @param <V> The type of associated value.
  * @param <S> The type of source values.
  */
-export class MultiValueKey<V> extends AbstractContextValueKey<V[], V> {
+export class MultiContextKey<V> extends AbstractContextKey<V[], V> {
 
   /**
    * A provider of context value used when there is no value associated with this key.
@@ -253,7 +273,7 @@ export class MultiValueKey<V> extends AbstractContextValueKey<V[], V> {
 
   merge(
       context: ContextValues,
-      sources: ContextValueSources<V>,
+      sources: ContextSources<V>,
       handleDefault: ContextValueDefaultHandler<V[]>): V[] | null | undefined {
 
     const result = [...sources];
@@ -300,76 +320,70 @@ export type ContextValueProvider<C extends ContextValues, S> =
  *
  * @returns Context value sources associated with the given key provided for the given context.
  */
-export type ContextValueSourceProvider<C extends ContextValues> =
-    <S>(this: void, provide: ProvidedContextValue<S>, context: C) => ContextValueSources<S>;
+export type ContextSourcesProvider<C extends ContextValues> =
+    <S>(this: void, provide: ContextTarget<S>, context: C) => ContextSources<S>;
 
 /**
  * Context value specifier.
  */
 export type ContextValueSpec<C extends ContextValues, V, S = V> =
-    ContextValueDef<C, V, S>
-    | ContextConstDef<C, V, S>;
+    ContextValueSpec.ByProvider<C, V, S>
+    | ContextValueSpec.IsConstant<C, V, S>;
 
-/**
- * Context value definition.
- *
- * Defines a `provider` for the value with the given `key`.
- */
-export interface ContextValueDef<C extends ContextValues, V, S = V> {
+export namespace ContextValueSpec {
 
   /**
-   * A definition of context value provided by `provider`.
+   * A specifier of context value defined by provider.
    */
-  provide: ProvidedContextValue<S>;
+  export interface ByProvider<C extends ContextValues, V, S = V> {
+
+    /**
+     * Target value to define.
+     */
+    a: ContextTarget<S>;
+
+    /**
+     * Context value provider.
+     */
+    by: ContextValueProvider<C, S>;
+
+  }
 
   /**
-   * Context value provider.
+   * A specifier defining a context value is constant.
    */
-  provider: ContextValueProvider<C, S>;
+  export interface IsConstant<C extends ContextValues, V, S = V> {
 
-}
+    /**
+     * Target value to define.
+     */
+    a: ContextTarget<S>;
 
-/**
- * Context constant definition.
- *
- * Defines a source `value` for context value with the given `key`.
- */
-export interface ContextConstDef<C extends ContextValues, V, S = V> {
+    /**
+     * Constant context value.
+     */
+    is: S;
 
-  /**
-   * A definition of context `value` provided.
-   */
-  provide: ProvidedContextValue<S>;
+  }
 
-  /**
-   * Context value source.
-   */
-  value: S;
-
-}
-
-export namespace ContextValueDef {
+  function isConstant<C extends ContextValues, V, S = V>(
+      spec: ContextValueSpec<any, any, any>): spec is IsConstant<C, V, S> {
+    return 'is' in spec;
+  }
 
   /**
-   * Constructs context value definition by context value specifier.
+   * Constructs a specifier of context value defined by provider out of arbitrary one.
    *
-   * @param spec Context value specifier to convert to definition.
-   *
-   * @returns Context value definition of the specified value.
+   * @param spec Context value specifier to convert.
    */
-  export function of<C extends ContextValues, V, S = V>(spec: ContextValueSpec<C, V, S>): ContextValueDef<C, V, S> {
-    if (isConst(spec)) {
+  export function of<C extends ContextValues, V, S = V>(spec: ContextValueSpec<C, V, S>): ByProvider<C, V, S> {
+    if (isConstant(spec)) {
       return {
-        provide: spec.provide,
-        provider: () => spec.value,
+        a: spec.a,
+        by: () => spec.is,
       };
     }
     return spec;
   }
 
-}
-
-function isConst<C extends ContextValues, V, S = V>(
-    spec: ContextValueSpec<any, any, any>): spec is ContextConstDef<C, V, S> {
-  return 'value' in spec;
 }

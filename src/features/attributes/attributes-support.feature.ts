@@ -1,11 +1,11 @@
-import { Class, mergeFunctions, SingleValueKey } from '../../common';
+import { Class, mergeFunctions, SingleContextKey } from '../../common';
 import { ComponentContext } from '../../component';
 import { Feature } from '../../feature';
 import { AttributeChangedCallback, AttributeRegistrar } from './attribute-registrar';
 
 class AttributeRegistry<T extends object> {
 
-  static readonly key = new SingleValueKey<AttributeRegistry<any>>('attribute-registry');
+  static readonly key = new SingleContextKey<AttributeRegistry<any>>('attribute-registry');
   private readonly _attrs: { [name: string]: AttributeChangedCallback<T> } = {};
 
   onAttributeChange(name: string, callback: AttributeChangedCallback<T>): void {
@@ -45,10 +45,10 @@ class AttributeRegistry<T extends object> {
  */
 @Feature({
   bootstrap(context) {
-    context.forDefinitions({ provide: AttributeRegistry, provider: () => new AttributeRegistry() });
+    context.forDefinitions({ a: AttributeRegistry, by: () => new AttributeRegistry() });
     context.forDefinitions({
-      provide: AttributeRegistrar,
-      provider(ctx) {
+      a: AttributeRegistrar,
+      by(ctx) {
         return <T extends object>(name: string, callback: AttributeChangedCallback<T>) =>
             ctx.get(AttributeRegistry).onAttributeChange(name, callback);
       },

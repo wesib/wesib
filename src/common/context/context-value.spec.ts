@@ -1,8 +1,8 @@
-import { ContextConstDef, ContextValueDef, SingleValueKey } from './context-value';
+import { ContextValueSpec, SingleContextKey } from './context-value';
 import { ContextValues } from './context-values';
 
 describe('common/context/context-value', () => {
-  describe('ContextValueDef', () => {
+  describe('ContextValueSpec', () => {
     describe('of', () => {
 
       let context: ContextValues;
@@ -13,23 +13,23 @@ describe('common/context/context-value', () => {
 
       it('uses context value definition as is', () => {
 
-        const spec: ContextValueDef<ContextValues, string> = {
-          provide: new SingleValueKey<string>('value'),
-          provider: () => 'foo',
+        const spec: ContextValueSpec.ByProvider<ContextValues, string> = {
+          a: new SingleContextKey<string>('value'),
+          by: () => 'foo',
         };
 
-        expect(ContextValueDef.of(spec)).toBe(spec);
+        expect(ContextValueSpec.of(spec)).toBe(spec);
       });
       it('converts context constant to definition', () => {
 
-        const spec: ContextConstDef<ContextValues, string> = {
-          provide: new SingleValueKey<string>('value'),
-          value: 'foo',
+        const spec: ContextValueSpec.IsConstant<ContextValues, string> = {
+          a: new SingleContextKey<string>('value'),
+          is: 'foo',
         };
-        const def = ContextValueDef.of(spec);
+        const def = ContextValueSpec.of(spec);
 
-        expect(def.provide).toBe(spec.provide);
-        expect(def.provider(context)).toBe(spec.value);
+        expect(def.a).toBe(spec.a);
+        expect(def.by(context)).toBe(spec.is);
       });
     });
   });

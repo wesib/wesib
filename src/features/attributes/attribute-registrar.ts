@@ -1,4 +1,4 @@
-import { SingleValueKey, StatePath } from '../../common';
+import { SingleContextKey, StatePath } from '../../common';
 
 /**
  * Custom element attribute change callback.
@@ -32,6 +32,6 @@ export type AttributeRegistrar<T extends object> = (name: string, callback: Attr
 
 export namespace AttributeRegistrar {
 
-  export const key = new SingleValueKey<AttributeRegistrar<any>>('attribute-registrar');
+  export const key = new SingleContextKey<AttributeRegistrar<any>>('attribute-registrar');
 
 }

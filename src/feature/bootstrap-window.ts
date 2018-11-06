@@ -1,4 +1,4 @@
-import { ContextValueKey, SingleValueKey } from '../common/context';
+import { ContextKey, SingleContextKey } from '../common/context';
 
 /**
  * A window the components bootstrap is performed against.
@@ -12,6 +12,6 @@ export namespace BootstrapWindow {
    *
    * Target value defaults to current window.
    */
-  export const key: ContextValueKey<BootstrapWindow> = new SingleValueKey('window', () => window);
+  export const key: ContextKey<BootstrapWindow> = new SingleContextKey('window', () => window);
 
 }

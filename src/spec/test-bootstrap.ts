@@ -28,7 +28,7 @@ export class TestBootstrap {
     await this.iframe.create();
 
     @Feature({
-      prebootstrap: { provide: BootstrapWindow, provider: () => this.window },
+      prebootstrap: { a: BootstrapWindow, by: () => this.window },
       bootstrap: ctx => this._context = ctx,
     })
     class TestFeature {}

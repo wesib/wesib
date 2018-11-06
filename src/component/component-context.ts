@@ -1,16 +1,16 @@
 import { EventProducer } from 'fun-events';
 import {
-  ContextValueKey,
-  ContextValueRequest,
+  ContextKey,
+  ContextRequest,
   ContextValues,
-  SingleValueKey,
+  SingleContextKey,
   StatePath,
   StateUpdater,
 } from '../common';
 import { ComponentClass } from './component-class';
 
-const componentContextKey: ContextValueKey<ComponentContext<any>> = new SingleValueKey('component-context');
-const contentRootKey: ContextValueKey<ContentRoot> = new SingleValueKey(
+const componentContextKey: ContextKey<ComponentContext<any>> = new SingleContextKey('component-context');
+const contentRootKey: ContextKey<ContentRoot> = new SingleContextKey(
     'content-root',
     ctx => ctx.get(componentContextKey).element);
 
@@ -154,26 +154,41 @@ export abstract class ComponentContext<T extends object = object> implements Con
    */
   abstract elementSuper(name: string): any;
 
-  abstract get<V>(request: ContextValueRequest<V>, defaultValue?: V): V;
-
-  abstract get<V>(request: ContextValueRequest<V>, defaultValue: V | null): V | null;
-
-  abstract get<V>(request: ContextValueRequest<V>, defaultValue: V | undefined): V | undefined;
+  /**
+   * Returns a value associated with the given key.
+   *
+   * @param <V> A type of associated value.
+   * @param request Context value request with target key.
+   * @param opts Context value request options.
+   *
+   * @returns Associated value or `null` if there is no associated value.
+   */
+  abstract get<V>(request: ContextRequest<V>, opts: { or: null }): V | null;
 
   /**
    * Returns a value associated with the given key.
    *
    * @param <V> A type of associated value.
    * @param request Context value request with target key.
-   * @param defaultValue Default value to return if there is no value associated with the given key. Can be `null`
-   * or `undefined` too.
+   * @param opts Context value request options.
+   *
+   * @returns Associated value or `null` if there is no associated value.
+   */
+  abstract get<V>(request: ContextRequest<V>, opts: { or: undefined }): V | undefined;
+
+  /**
+   * Returns a value associated with the given key.
+   *
+   * @param <V> A type of associated value.
+   * @param request Context value request with target key.
+   * @param opts Context value request options.
    *
    * @returns Associated value.
    *
    * @throws Error If there is no value associated with the given key and the default key is not provided neither
-   * as function argument, nor as `ContextValueKey.defaultValue` property.
+   * as function argument, nor as key default.
    */
-  abstract get<V>(request: ContextValueRequest<V>, defaultValue: V | null | undefined): V | null | undefined;
+  abstract get<V>(request: ContextRequest<V>, opts?: { or: V }): V;
 
 }
 

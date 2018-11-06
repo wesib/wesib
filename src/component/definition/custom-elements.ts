@@ -1,4 +1,4 @@
-import { Class, ContextValueKey, SingleValueKey } from '../../common';
+import { Class, ContextKey, SingleContextKey } from '../../common';
 import { BootstrapWindow } from '../../feature';
 import { ComponentClass } from '../component-class';
 import { ComponentDef } from '../component-def';
@@ -18,7 +18,7 @@ export abstract class CustomElements {
    *
    * Target value defaults to `window.customElements` from the window provided under `[BootstrapWindow.key]`.
    */
-  static readonly key: ContextValueKey<CustomElements> = new SingleValueKey<CustomElements>(
+  static readonly key: ContextKey<CustomElements> = new SingleContextKey<CustomElements>(
       'custom-elements',
       values => {
 
