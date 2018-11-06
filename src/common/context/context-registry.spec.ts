@@ -161,7 +161,11 @@ describe('common/context/context-registry', () => {
         expect(values.get(new MultiContextKey<string>(multiKey.name, () => ['default']))).toEqual(['default']);
       });
       it('prefers explicit default value over key one', () => {
-        expect(values.get(new MultiContextKey<string>(multiKey.name, () => ['key', 'default']), ['explicit', 'default']))
+        expect(values.get(
+            new MultiContextKey<string>(
+                multiKey.name,
+                () => ['key', 'default']),
+            ['explicit', 'default']))
             .toEqual(['explicit', 'default']);
       });
       it('prefers explicit `null` default value over key one', () => {
