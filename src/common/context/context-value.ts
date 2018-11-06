@@ -307,57 +307,56 @@ export type ContextSourcesProvider<C extends ContextValues> =
  * Context value specifier.
  */
 export type ContextValueSpec<C extends ContextValues, V, S = V> =
-    ContextValueDef<C, V, S>
-    | ContextConstDef<C, V, S>;
+    ContextValueSpec.ByProvider<C, V, S>
+    | ContextValueSpec.AsConstant<C, V, S>;
 
-/**
- * Context value definition.
- *
- * Defines a `provider` for the value with the given `key`.
- */
-export interface ContextValueDef<C extends ContextValues, V, S = V> {
+export namespace ContextValueSpec {
 
   /**
-   * A definition of context value provided by `provider`.
+   * A specifier of context value defined by provider.
    */
-  a: ContextTarget<S>;
+  export interface ByProvider<C extends ContextValues, V, S = V> {
+
+    /**
+     * Target value to define.
+     */
+    a: ContextTarget<S>;
+
+    /**
+     * Context value provider.
+     */
+    by: ContextValueProvider<C, S>;
+
+  }
 
   /**
-   * Context value provider.
+   * A specifier of context value defined as constant.
    */
-  by: ContextValueProvider<C, S>;
+  export interface AsConstant<C extends ContextValues, V, S = V> {
 
-}
+    /**
+     * Target value to define.
+     */
+    a: ContextTarget<S>;
 
-/**
- * Context constant definition.
- *
- * Defines a source `value` for context value with the given `key`.
- */
-export interface ContextConstDef<C extends ContextValues, V, S = V> {
+    /**
+     * Constant context value.
+     */
+    as: S;
 
-  /**
-   * A definition of context `value` provided.
-   */
-  a: ContextTarget<S>;
+  }
 
-  /**
-   * Context value source.
-   */
-  as: S;
-
-}
-
-export namespace ContextValueDef {
+  function isConst<C extends ContextValues, V, S = V>(
+      spec: ContextValueSpec<any, any, any>): spec is AsConstant<C, V, S> {
+    return 'as' in spec;
+  }
 
   /**
-   * Constructs context value definition by context value specifier.
+   * Constructs a specifier of context value defined by provider out of arbitrary one.
    *
-   * @param spec Context value specifier to convert to definition.
-   *
-   * @returns Context value definition of the specified value.
+   * @param spec Context value specifier to convert.
    */
-  export function of<C extends ContextValues, V, S = V>(spec: ContextValueSpec<C, V, S>): ContextValueDef<C, V, S> {
+  export function of<C extends ContextValues, V, S = V>(spec: ContextValueSpec<C, V, S>): ByProvider<C, V, S> {
     if (isConst(spec)) {
       return {
         a: spec.a,
@@ -367,9 +366,4 @@ export namespace ContextValueDef {
     return spec;
   }
 
-}
-
-function isConst<C extends ContextValues, V, S = V>(
-    spec: ContextValueSpec<any, any, any>): spec is ContextConstDef<C, V, S> {
-  return 'as' in spec;
 }

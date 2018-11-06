@@ -1,6 +1,5 @@
 import { AIterable } from 'a-iterable';
 import {
-  ContextValueDef,
   ContextValueDefaultHandler,
   ContextKey,
   ContextValueProvider,
@@ -46,7 +45,7 @@ export class ContextRegistry<C extends ContextValues> {
    */
   provide<S>(spec: ContextValueSpec<C, any, S>): void {
 
-    const { a: { key: { sourcesKey } }, by } = ContextValueDef.of(spec);
+    const { a: { key: { sourcesKey } }, by } = ContextValueSpec.of(spec);
     let providers: ContextValueProvider<C, S>[] | undefined = this._providers.get(sourcesKey);
 
     if (providers == null) {
