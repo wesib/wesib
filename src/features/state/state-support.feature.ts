@@ -20,12 +20,12 @@ export class StateSupport {
 
 function enableStateSupport(context: BootstrapContext) {
   context.forComponents({
-    provide: StateTracker,
-    provider: () => new StateTracker(),
+    a: StateTracker,
+    by: () => new StateTracker(),
   });
   context.forComponents({
-    provide: StateUpdater,
-    provider(ctx) {
+    a: StateUpdater,
+    by(ctx) {
       return ctx.get(StateTracker).update;
     },
   });

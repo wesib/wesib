@@ -22,16 +22,16 @@ export function AttachShadow<T extends ComponentClass<any> = any>(
           define(this: ComponentClass<InstanceType<T>>, context: DefinitionContext<InstanceType<T>>) {
 
             context.forComponents({
-              provide: ShadowContentRoot,
-              provider(ctx) {
+              a: ShadowContentRoot,
+              by(ctx) {
                 return ctx.get(ShadowRootBuilder)(ctx, init);
               },
             });
 
             // Content root is an alias of shadow root.
             context.forComponents({
-              provide: ContentRoot,
-              provider(ctx) {
+              a: ContentRoot,
+              by(ctx) {
                 return ctx.get(ShadowContentRoot);
               },
             });

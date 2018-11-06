@@ -42,8 +42,8 @@ describe('features/render/render-support.feature', () => {
       @Feature({
         require: [RenderSupport, testComponent],
         prebootstrap: [
-          { provide: BootstrapWindow, value: windowSpy },
-          { provide: CustomElements, value: customElementsSpy },
+          { a: BootstrapWindow, as: windowSpy },
+          { a: CustomElements, as: customElementsSpy },
         ]
       })
       class TestFeature {}

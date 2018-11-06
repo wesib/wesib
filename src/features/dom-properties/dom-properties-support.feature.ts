@@ -28,10 +28,10 @@ class DomPropertyRegistry {
  */
 @Feature({
   bootstrap(context) {
-    context.forDefinitions({ provide: DomPropertyRegistry, provider: () => new DomPropertyRegistry() });
+    context.forDefinitions({ a: DomPropertyRegistry, by: () => new DomPropertyRegistry() });
     context.forDefinitions({
-      provide: DomPropertyRegistrar,
-      provider(ctx) {
+      a: DomPropertyRegistrar,
+      by(ctx) {
         return (propertyKey: PropertyKey, descriptor: PropertyDescriptor) =>
             ctx.get(DomPropertyRegistry).domProperty(propertyKey, descriptor);
       },

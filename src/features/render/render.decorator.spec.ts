@@ -51,8 +51,8 @@ describe('features/render/render.decorator', () => {
       @Feature({
         require: testComponent,
         prebootstrap: [
-          { provide: RenderScheduler, value: renderSchedulerSpy },
-          { provide: CustomElements, value: customElementsSpy },
+          { a: RenderScheduler, as: renderSchedulerSpy },
+          { a: CustomElements, as: customElementsSpy },
         ],
         provide: RenderSupport,
       })

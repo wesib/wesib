@@ -82,7 +82,7 @@ export class ElementBuilder {
       constructor() {
         super();
         typeValueRegistry = ComponentValueRegistry.create(builder._definitionValueRegistry.bindSources(this));
-        typeValueRegistry.provide({ provide: DefinitionContext_, value: this });
+        typeValueRegistry.provide({ a: DefinitionContext_, as: this });
 
         const values = typeValueRegistry.newValues();
 
@@ -191,7 +191,7 @@ export class ElementBuilder {
 
         const context = new ComponentContext();
 
-        valueRegistry.provide({ provide: ComponentContext_, value: context });
+        valueRegistry.provide({ a: ComponentContext_, as: context });
 
         Object.defineProperty(this, ComponentContext_.symbol, { value: context });
         Object.defineProperty(this, connectedCallback, {

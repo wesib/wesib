@@ -161,21 +161,22 @@ import { BootstrapContext, ComponentContext, DefinitionContext, Feature } from '
     MyComponent, // The required component will be defined too.  
   ], 
   prebootstrap: [
-    { key: GlobalService, provide: () => new GlobalService() }, // Provide a `GlobalService` available globally
-                                                                    // in all IoC contexts
+    { a: GlobalService, by: () => new GlobalService() }, // Provide a `GlobalService` available globally
+                                                           // in all IoC contexts
   ],
   bootstrap(context: BootstrapContext) {
     // Bootstrap the feature by calling methods of provided context.
 
-    context.forDefinitions(
-        DefinitionService,
-        (definitionContext: DefinitionContext) => {
-          // Provide a `DefinitionService` available during component definition.
-          // Such service will be provided per component class
-          // and will be available during custom element construction,
-          // e.g. to `onDefinition()` listeners.
-          return new DefinitionService(definitionContext);
-        });
+    context.forDefinitions({
+      a: DefinitionService,
+      by: (definitionContext: DefinitionContext) => {
+        // Provide a `DefinitionService` available during component definition.
+        // Such service will be provided per component class
+        // and will be available during custom element construction,
+        // e.g. to `onDefinition()` listeners.
+        return new DefinitionService(definitionContext);
+      }
+    });
     context.onDefinition((definitionContext: DefinitionContext) => {
       // Notified on each component definition.
 
@@ -189,11 +190,14 @@ import { BootstrapContext, ComponentContext, DefinitionContext, Feature } from '
           + ` for component of ${definitionContext.componentType.name} type`)        
       });
     });
-    context.forComponents((componentContext: ComponentContext) => {
-      // Provide a `MyService` available to component instance.
-      // Such service will be provided per component instance
-      // and will be available to component instance and `onComponent()` listeners.
-      return new MyService(componentContext.component);
+    context.forComponents({
+      a: MyService,
+      by: (componentContext: ComponentContext) => {
+        // Provide a `MyService` available to component instance.
+        // Such service will be provided per component instance
+        // and will be available to component instance and `onComponent()` listeners.
+        return new MyService(componentContext.component);
+      }
     });
     context.onComponent((componentContext: ComponentContext) => {
       // Notified on each component instantiation.

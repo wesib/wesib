@@ -25,7 +25,7 @@ function attachShadow(context: ComponentContext, init: ShadowRootInit): ShadowRo
  */
 @Feature({
   prebootstrap: [
-    { provide: ShadowRootBuilder, value: attachShadow },
+    { a: ShadowRootBuilder, as: attachShadow },
   ],
 })
 export class ShadowDomSupport {}

@@ -143,16 +143,16 @@ describe('feature/feature-registry', () => {
     });
     it('bootstraps value providers', () => {
 
-      const provide = new SingleContextKey('test-key');
+      const key = new SingleContextKey('test-key');
       const provider = jasmine.createSpy('testValueProvider');
       class Feature {}
 
-      FeatureDef.define(Feature, { prebootstrap: { provide, provider } });
+      FeatureDef.define(Feature, { prebootstrap: { a: key, by: provider } });
 
       registry.add(Feature);
       registry.bootstrap(contextSpy);
 
-      expect(valueRegistrySpy.provide).toHaveBeenCalledWith({ provide, provider });
+      expect(valueRegistrySpy.provide).toHaveBeenCalledWith({ a: key, by: provider });
     });
   });
 });

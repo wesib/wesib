@@ -320,12 +320,12 @@ export interface ContextValueDef<C extends ContextValues, V, S = V> {
   /**
    * A definition of context value provided by `provider`.
    */
-  provide: ContextTarget<S>;
+  a: ContextTarget<S>;
 
   /**
    * Context value provider.
    */
-  provider: ContextValueProvider<C, S>;
+  by: ContextValueProvider<C, S>;
 
 }
 
@@ -339,12 +339,12 @@ export interface ContextConstDef<C extends ContextValues, V, S = V> {
   /**
    * A definition of context `value` provided.
    */
-  provide: ContextTarget<S>;
+  a: ContextTarget<S>;
 
   /**
    * Context value source.
    */
-  value: S;
+  as: S;
 
 }
 
@@ -360,8 +360,8 @@ export namespace ContextValueDef {
   export function of<C extends ContextValues, V, S = V>(spec: ContextValueSpec<C, V, S>): ContextValueDef<C, V, S> {
     if (isConst(spec)) {
       return {
-        provide: spec.provide,
-        provider: () => spec.value,
+        a: spec.a,
+        by: () => spec.as,
       };
     }
     return spec;
@@ -371,5 +371,5 @@ export namespace ContextValueDef {
 
 function isConst<C extends ContextValues, V, S = V>(
     spec: ContextValueSpec<any, any, any>): spec is ContextConstDef<C, V, S> {
-  return 'value' in spec;
+  return 'as' in spec;
 }

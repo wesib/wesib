@@ -10,7 +10,7 @@ import { RenderScheduler as RenderScheduler_ } from './render-scheduler';
  */
 @Feature({
   bootstrap(context) {
-    context.forComponents({ provide: RenderScheduler_, provider: createRenderScheduler });
+    context.forComponents({ a: RenderScheduler_, by: createRenderScheduler });
   }
 })
 export class RenderSupport {

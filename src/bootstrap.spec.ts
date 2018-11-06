@@ -186,21 +186,21 @@ describe('bootstrap', () => {
       });
       it('proxies forDefinitions() method', () => {
 
-        const provide = new SingleContextKey<string>('test-value-key');
+        const key = new SingleContextKey<string>('test-value-key');
         const provider = () => 'test-value';
 
-        featureContext.forDefinitions({ provide, provider });
+        featureContext.forDefinitions({ a: key, by: provider });
 
-        expect(definitionValueRegistrySpy.provide).toHaveBeenCalledWith({ provide, provider });
+        expect(definitionValueRegistrySpy.provide).toHaveBeenCalledWith({ a: key, by: provider });
       });
       it('proxies forComponents() method', () => {
 
-        const provide = new SingleContextKey<string>('test-value-key');
+        const key = new SingleContextKey<string>('test-value-key');
         const provider = () => 'test-value';
 
-        featureContext.forComponents({ provide, provider });
+        featureContext.forComponents({ a: key, by: provider });
 
-        expect(componentValueRegistrySpy.provide).toHaveBeenCalledWith({ provide, provider });
+        expect(componentValueRegistrySpy.provide).toHaveBeenCalledWith({ a: key, by: provider });
       });
       it('proxies onDefinition() method', () => {
         expect(featureContext.onDefinition).toBe(elementBuilderSpy.definitions.on);
