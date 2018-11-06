@@ -1,5 +1,6 @@
+import { EventEmitter } from 'fun-events';
 import { bootstrapComponents } from './bootstrap';
-import { EventEmitter, SingleValueKey } from './common';
+import { SingleValueKey } from './common';
 import { ComponentListener, DefinitionListener, Component } from './component';
 import { ComponentRegistry } from './component/definition/component-registry';
 import { ComponentValueRegistry } from './component/definition/component-value-registry';

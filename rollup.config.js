@@ -62,6 +62,7 @@ function baseConfig(tsconfig) {
       name: 'wesib',
       globals: {
         'a-iterable': 'aIterable',
+        'fun-events': 'funEvents',
       },
     },
   };

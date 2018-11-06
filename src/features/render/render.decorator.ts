@@ -1,7 +1,7 @@
-import { TypedPropertyDecorator } from '../../common';
+import { StateTracker, TypedPropertyDecorator } from '../../common';
 import { ComponentClass, ComponentDef } from '../../component';
 import { FeatureDef } from '../../feature';
-import { StateSupport, StateTracker } from '../state';
+import { StateSupport } from '../state';
 import { RenderScheduler } from './render-scheduler';
 import { RenderSupport } from './render-support.feature';
 

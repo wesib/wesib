@@ -1,9 +1,8 @@
-import { StateUpdater } from '../../common';
-import { ComponentClass, ComponentContext, Component } from '../../component';
+import { StateTracker, StateUpdater } from '../../common';
+import { Component, ComponentClass, ComponentContext } from '../../component';
 import { Feature } from '../../feature';
 import { TestBootstrap } from '../../spec/test-bootstrap';
 import { StateSupport } from './state-support.feature';
-import { StateTracker } from './state-tracker';
 
 describe('features/state', () => {
   describe('State usage', () => {

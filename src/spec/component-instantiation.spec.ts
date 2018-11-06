@@ -1,4 +1,4 @@
-import { EventInterest } from '../common';
+import { EventInterest } from 'fun-events';
 import { Component, ComponentClass, ComponentContext } from '../component';
 import { TestBootstrap } from './test-bootstrap';
 import Spy = jasmine.Spy;
