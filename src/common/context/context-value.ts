@@ -29,6 +29,26 @@ export interface ContextRequest<V> {
 
 }
 
+export namespace ContextRequest {
+
+  /**
+   * Context request options.
+   *
+   * This can be passed to `ContextValues.get()` method as a second parameter.
+   *
+   * @param <V> A type of requested context value.
+   */
+  export interface Opts<V> {
+
+    /**
+     * The default value to return if there is no value associated with the given key. Can be `null` or `undefined` too.
+     */
+    or: V | null | undefined;
+
+  }
+
+}
+
 /**
  * Context value definition target.
  *

@@ -7,7 +7,7 @@ import {
   ContextSources,
   ContextSourcesKey,
   ContextValueSpec,
-  ContextTarget,
+  ContextTarget, ContextRequest,
 } from './context-value';
 import { ContextValues } from './context-values';
 
@@ -115,7 +115,7 @@ export class ContextRegistry<C extends ContextValues> {
       get<V, S>(
           this: C,
           { key }: { key: ContextKey<V, S> },
-          defaultValue?: V | null | undefined): V | null | undefined {
+          opts?: ContextRequest.Opts<V>): V | null | undefined {
 
         const context = this;
         const cached: V | undefined = values.get(key);
@@ -143,21 +143,20 @@ export class ContextRegistry<C extends ContextValues> {
         }
 
         let defaultUsed = false;
-        const handleDefault: ContextValueDefaultHandler<V> =
-            arguments.length > 1
-                ? () => {
-                  defaultUsed = true;
-                  return defaultValue;
-                } : defaultProvider => {
+        const handleDefault: ContextValueDefaultHandler<V> = opts
+            ? () => {
+              defaultUsed = true;
+              return opts.or;
+            } : defaultProvider => {
 
-                  const providedDefault = defaultProvider();
+              const providedDefault = defaultProvider();
 
-                  if (providedDefault == null) {
-                    throw new Error(`There is no value with the key ${key}`);
-                  }
+              if (providedDefault == null) {
+                throw new Error(`There is no value with the key ${key}`);
+              }
 
-                  return providedDefault;
-                };
+              return providedDefault;
+            };
 
         const constructed = key.merge(context, sourceValues, handleDefault);
 

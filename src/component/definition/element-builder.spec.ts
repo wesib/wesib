@@ -156,8 +156,8 @@ describe('component/definition/element-builder', () => {
         const otherElement = new (builder.buildElement(AnotherComponent));
         const otherContext = ComponentContext.of(otherElement);
 
-        expect(otherContext.get(key, null)).toBeNull();
-        expect(otherContext.get(key2, null)).toBeNull();
+        expect(otherContext.get(key, { or: null })).toBeNull();
+        expect(otherContext.get(key2, { or: null })).toBeNull();
       });
     });
     describe('component listener', () => {

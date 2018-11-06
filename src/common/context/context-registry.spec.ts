@@ -31,7 +31,7 @@ describe('common/context/context-registry', () => {
         expect(() => values.get(new SingleContextKey(key.name))).toThrowError();
       });
       it('provides default value is there is no provider', () => {
-        expect(values.get(new SingleContextKey<string>(key.name), 'default')).toBe('default');
+        expect(values.get(new SingleContextKey<string>(key.name), { or: 'default' })).toBe('default');
       });
       it('provides default value if provider did not provide any value', () => {
 
@@ -46,15 +46,15 @@ describe('common/context/context-registry', () => {
         expect(values.get(new SingleContextKey<string>(key.name, () => 'default'))).toBe('default');
       });
       it('prefers explicit default value over key one', () => {
-        expect(values.get(new SingleContextKey<string>(key.name, () => 'key default'), 'explicit default'))
+        expect(values.get(new SingleContextKey<string>(key.name, () => 'key default'), { or: 'explicit default' }))
             .toBe('explicit default');
       });
       it('prefers explicit `null` default value over key one', () => {
-        expect(values.get(new SingleContextKey<string>(key.name, () => 'default'), null))
+        expect(values.get(new SingleContextKey<string>(key.name, () => 'default'), { or: null }))
             .toBeNull();
       });
       it('prefers explicit `undefined` default value over key one', () => {
-        expect(values.get(new SingleContextKey<string>(key.name, () => 'default'), undefined))
+        expect(values.get(new SingleContextKey<string>(key.name, () => 'default'), { or: undefined }))
             .toBeUndefined();
       });
       it('caches value sources', () => {
@@ -97,8 +97,8 @@ describe('common/context/context-registry', () => {
         const value1 = 'value1';
         const value2 = 'value2';
 
-        expect(values.get(key, value1)).toBe(value1);
-        expect(values.get(key, value2)).toBe(value2);
+        expect(values.get(key, { or: value1 })).toBe(value1);
+        expect(values.get(key, { or: value2 })).toBe(value2);
       });
     });
 
@@ -155,7 +155,7 @@ describe('common/context/context-registry', () => {
         expect(values.get(new MultiContextKey(multiKey.name))).toEqual([]);
       });
       it('is associated with default value is there is no value', () => {
-        expect(values.get(new MultiContextKey<string>(multiKey.name), ['default'])).toEqual(['default']);
+        expect(values.get(new MultiContextKey<string>(multiKey.name), { or: ['default'] })).toEqual(['default']);
       });
       it('is associated with key default value is there is no value', () => {
         expect(values.get(new MultiContextKey<string>(multiKey.name, () => ['default']))).toEqual(['default']);
@@ -165,15 +165,15 @@ describe('common/context/context-registry', () => {
             new MultiContextKey<string>(
                 multiKey.name,
                 () => ['key', 'default']),
-            ['explicit', 'default']))
+            { or: ['explicit', 'default'] }))
             .toEqual(['explicit', 'default']);
       });
       it('prefers explicit `null` default value over key one', () => {
-        expect(values.get(new MultiContextKey<string>(multiKey.name, () => ['key', 'default']), null))
+        expect(values.get(new MultiContextKey<string>(multiKey.name, () => ['key', 'default']), { or: null }))
             .toBeNull();
       });
       it('prefers explicit `undefined` default value over key one', () => {
-        expect(values.get(new MultiContextKey<string>(multiKey.name, () => ['key', 'default']), undefined))
+        expect(values.get(new MultiContextKey<string>(multiKey.name, () => ['key', 'default']), { or: undefined }))
             .toBeUndefined();
       });
     });
