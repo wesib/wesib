@@ -38,10 +38,10 @@ export class ContextRegistry<C extends ContextValues> {
   }
 
   /**
-   * Registers provider for the values with the given key.
+   * Defines a context value.
    *
    * @param <S> A type of context value sources.
-   * @param spec Component context value specifier.
+   * @param spec Context value specifier.
    */
   provide<S>(spec: ContextValueSpec<C, any, S>): void {
 
