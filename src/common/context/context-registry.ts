@@ -110,7 +110,7 @@ export class ContextRegistry<C extends ContextValues> {
       return AIterable.from(providers.map(toSourceProvider));
     }
 
-    class Values implements ContextValues {
+    class Values extends ContextValues {
 
       get<V, S>(
           this: C,

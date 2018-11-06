@@ -1,5 +1,5 @@
 import { EventProducer } from 'fun-events';
-import { ContextRequest, ContextValues, ContextValueSpec } from '../common';
+import { ContextValues, ContextValueSpec } from '../common';
 import {
   ComponentClass,
   ComponentContext,
@@ -16,7 +16,7 @@ import {
  * Extends `BootstrapValues` interface. The values are pre-bootstrapped by features. I.e. configured in their
  * definitions as `FeatureDef.prebootstrap`.
  */
-export abstract class BootstrapContext implements ContextValues {
+export abstract class BootstrapContext extends ContextValues {
 
   /**
    * Registers component definition listener.
@@ -88,41 +88,5 @@ export abstract class BootstrapContext implements ContextValues {
    * @param spec Component context value specifier.
    */
   abstract forComponents<S>(spec: ContextValueSpec<ComponentContext<any>, any, S>): void;
-
-  /**
-   * Returns a value associated with the given key.
-   *
-   * @param <V> A type of associated value.
-   * @param request Context value request with target key.
-   * @param opts Context value request options.
-   *
-   * @returns Associated value or `null` if there is no associated value.
-   */
-  abstract get<V>(request: ContextRequest<V>, opts: { or: null }): V | null;
-
-  /**
-   * Returns a value associated with the given key.
-   *
-   * @param <V> A type of associated value.
-   * @param request Context value request with target key.
-   * @param opts Context value request options.
-   *
-   * @returns Associated value or `null` if there is no associated value.
-   */
-  abstract get<V>(request: ContextRequest<V>, opts: { or: undefined }): V | undefined;
-
-  /**
-   * Returns a value associated with the given key.
-   *
-   * @param <V> A type of associated value.
-   * @param request Context value request with target key.
-   * @param opts Context value request options.
-   *
-   * @returns Associated value.
-   *
-   * @throws Error If there is no value associated with the given key and the default key is not provided neither
-   * as function argument, nor as key default.
-   */
-  abstract get<V>(request: ContextRequest<V>, opts?: { or: V }): V;
 
 }
