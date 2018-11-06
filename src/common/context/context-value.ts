@@ -308,7 +308,7 @@ export type ContextSourcesProvider<C extends ContextValues> =
  */
 export type ContextValueSpec<C extends ContextValues, V, S = V> =
     ContextValueSpec.ByProvider<C, V, S>
-    | ContextValueSpec.AsConstant<C, V, S>;
+    | ContextValueSpec.IsConstant<C, V, S>;
 
 export namespace ContextValueSpec {
 
@@ -330,9 +330,9 @@ export namespace ContextValueSpec {
   }
 
   /**
-   * A specifier of context value defined as constant.
+   * A specifier defining a context value is constant.
    */
-  export interface AsConstant<C extends ContextValues, V, S = V> {
+  export interface IsConstant<C extends ContextValues, V, S = V> {
 
     /**
      * Target value to define.
@@ -342,13 +342,13 @@ export namespace ContextValueSpec {
     /**
      * Constant context value.
      */
-    as: S;
+    is: S;
 
   }
 
-  function isConst<C extends ContextValues, V, S = V>(
-      spec: ContextValueSpec<any, any, any>): spec is AsConstant<C, V, S> {
-    return 'as' in spec;
+  function isConstant<C extends ContextValues, V, S = V>(
+      spec: ContextValueSpec<any, any, any>): spec is IsConstant<C, V, S> {
+    return 'is' in spec;
   }
 
   /**
@@ -357,10 +357,10 @@ export namespace ContextValueSpec {
    * @param spec Context value specifier to convert.
    */
   export function of<C extends ContextValues, V, S = V>(spec: ContextValueSpec<C, V, S>): ByProvider<C, V, S> {
-    if (isConst(spec)) {
+    if (isConstant(spec)) {
       return {
         a: spec.a,
-        by: () => spec.as,
+        by: () => spec.is,
       };
     }
     return spec;

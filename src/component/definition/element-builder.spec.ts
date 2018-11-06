@@ -114,7 +114,7 @@ describe('component/definition/element-builder', () => {
         builder.definitions.on((ctx: DefinitionContext<any>) => {
           definitionContext = ctx;
           if (ctx.componentType === TestComponent) {
-            ctx.forComponents({ a: key, as: value });
+            ctx.forComponents({ a: key, is: value });
           }
         });
       });
@@ -122,12 +122,12 @@ describe('component/definition/element-builder', () => {
         value2 = 'other value';
         ComponentDef.define(TestComponent, {
           define(context: DefinitionContext<any>) {
-            context.forComponents({ a: key2, as: value2 });
+            context.forComponents({ a: key2, is: value2 });
           }
         });
       });
       beforeEach(() => {
-        definitionValueRegistry.provide({ a: ElementBaseClass, as: Object });
+        definitionValueRegistry.provide({ a: ElementBaseClass, is: Object });
       });
       beforeEach(() => {
 
@@ -174,7 +174,7 @@ describe('component/definition/element-builder', () => {
         });
       });
       beforeEach(() => {
-        definitionValueRegistry.provide({ a: ElementBaseClass, as: Object });
+        definitionValueRegistry.provide({ a: ElementBaseClass, is: Object });
       });
       beforeEach(() => {
 

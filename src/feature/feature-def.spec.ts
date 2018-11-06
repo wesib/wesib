@@ -71,11 +71,11 @@ describe('feature/feature-def', () => {
 
         const v1: ContextValueSpec<BootstrapContext, string> = {
           a: new SingleContextKey<string>('1'),
-          as: '1',
+          is: '1',
         };
         const v2: ContextValueSpec<BootstrapContext, string> = {
           a: new SingleContextKey<string>('2'),
-          as: '2',
+          is: '2',
         };
 
         const first: FeatureDef = { prebootstrap: v1 };

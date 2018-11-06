@@ -38,7 +38,7 @@ describe('common/context/context-registry', () => {
         const defaultValue = 'default';
         const keyWithDefaults = new SingleContextKey(key.name, () => defaultValue);
 
-        registry.provide({ a: keyWithDefaults, as: null });
+        registry.provide({ a: keyWithDefaults, is: null });
 
         expect(values.get(keyWithDefaults)).toBe(defaultValue);
       });
@@ -114,8 +114,8 @@ describe('common/context/context-registry', () => {
         expect(values.get(multiKey)).toEqual([]);
       });
       it('is associated with empty array if providers did not return any values', () => {
-        registry.provide({ a: multiKey, as: null });
-        registry.provide({ a: multiKey, as: undefined });
+        registry.provide({ a: multiKey, is: null });
+        registry.provide({ a: multiKey, is: undefined });
 
         expect(values.get(multiKey)).toEqual([]);
       });
@@ -131,20 +131,20 @@ describe('common/context/context-registry', () => {
         const defaultValue = ['default'];
         const keyWithDefaults = new MultiContextKey('key', () => defaultValue);
 
-        registry.provide({ a: keyWithDefaults, as: null });
-        registry.provide({ a: keyWithDefaults, as: undefined });
+        registry.provide({ a: keyWithDefaults, is: null });
+        registry.provide({ a: keyWithDefaults, is: undefined });
 
         expect(values.get(keyWithDefaults)).toEqual(defaultValue);
       });
       it('is associated with provided values array', () => {
-        registry.provide({ a: multiKey, as: 'a' });
-        registry.provide({ a: multiKey, as: undefined });
-        registry.provide({ a: multiKey, as: 'c' });
+        registry.provide({ a: multiKey, is: 'a' });
+        registry.provide({ a: multiKey, is: undefined });
+        registry.provide({ a: multiKey, is: 'c' });
 
         expect(values.get(multiKey)).toEqual(['a', 'c']);
       });
       it('is associated with value', () => {
-        registry.provide({ a: multiKey, as: 'value' });
+        registry.provide({ a: multiKey, is: 'value' });
 
         expect(values.get(multiKey)).toEqual(['value']);
       });
@@ -259,14 +259,14 @@ describe('common/context/context-registry', () => {
 
       it('contains all sources', () => {
         providerSpy.and.returnValue('1');
-        registry2.provide({ a: key, as: '2' });
-        registry2.provide({ a: key, as: '3' });
+        registry2.provide({ a: key, is: '2' });
+        registry2.provide({ a: key, is: '3' });
         expect([...combined.sources(context, key)]).toEqual(['1', '2', '3']);
       });
       it('contains reverted sources', () => {
         providerSpy.and.returnValue('1');
-        registry2.provide({ a: key, as: '2' });
-        registry2.provide({ a: key, as: '3' });
+        registry2.provide({ a: key, is: '2' });
+        registry2.provide({ a: key, is: '3' });
         expect([...combined.sources(context, key).reverse()]).toEqual(['3', '2', '1']);
       });
     });

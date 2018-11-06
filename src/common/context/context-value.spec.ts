@@ -22,14 +22,14 @@ describe('common/context/context-value', () => {
       });
       it('converts context constant to definition', () => {
 
-        const spec: ContextValueSpec.AsConstant<ContextValues, string> = {
+        const spec: ContextValueSpec.IsConstant<ContextValues, string> = {
           a: new SingleContextKey<string>('value'),
-          as: 'foo',
+          is: 'foo',
         };
         const def = ContextValueSpec.of(spec);
 
         expect(def.a).toBe(spec.a);
-        expect(def.by(context)).toBe(spec.as);
+        expect(def.by(context)).toBe(spec.is);
       });
     });
   });
