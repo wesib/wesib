@@ -35,8 +35,10 @@ export type ContextSourcesProvider<C extends ContextValues> =
 export type ContextValueSpec<C extends ContextValues, V, D extends any[] = unknown[], S = V> =
     ContextValueSpec.IsConstant<S>
     | ContextValueSpec.ViaAlias<S>
-    | ContextValueSpec.ByProvider<C, V, S>
-    | ContextValueSpec.ByProviderWithDeps<V, D, S>;
+    | ContextValueSpec.ByProvider<C, S>
+    | ContextValueSpec.ByProviderWithDeps<D, S>
+    | ContextValueSpec.AsInstance<C, S>
+    | ContextValueSpec.AsInstanceWithDeps<D, S>;
 
 export namespace ContextValueSpec {
 
@@ -75,9 +77,9 @@ export namespace ContextValueSpec {
   }
 
   /**
-   * A specifier of context value defined by provider.
+   * A specifier of context value defined by provider function.
    */
-  export interface ByProvider<C extends ContextValues, V, S = V> {
+  export interface ByProvider<C extends ContextValues, S> {
 
     /**
      * Target value to define.
@@ -91,7 +93,10 @@ export namespace ContextValueSpec {
 
   }
 
-  export interface ByProviderWithDeps<V, D extends any[], S = V> {
+  /**
+   * A specifier of context value defined by provider function with dependencies on other context values.
+   */
+  export interface ByProviderWithDeps<D extends any[], S> {
 
     /**
      * Target value to define.
@@ -110,13 +115,57 @@ export namespace ContextValueSpec {
 
   }
 
+  /**
+   * A specifier of context value defined as instance of some class.
+   */
+  export interface AsInstance<C extends ContextValues, S> {
+
+    /**
+     * Target value to define.
+     */
+    a: ContextTarget<S>;
+
+    /**
+     * Context value class constructor.
+     */
+    as: new (context: C) => S;
+
+  }
+
+  /**
+   * A specifier of context value defined as instance of some class with dependencies on other context values.
+   */
+  export interface AsInstanceWithDeps<D extends any[], S> {
+
+    /**
+     * Target value to define.
+     */
+    a: ContextTarget<S>;
+
+    /**
+     * Context value class constructor.
+     */
+    as: new (...args: D) => S;
+
+    /**
+     * Context value requests for corresponding constructor arguments.
+     */
+    with: DepsRequests<D>;
+
+  }
+
   export type DepsRequests<P extends any[]> = {
     [index in keyof P]: ContextRequest<P[index]>;
   };
 
   function byProvider<C extends ContextValues, V, D extends any[], S>(
-      spec: ContextValueSpec<C, V, D, S>): spec is ByProvider<C, V, S> | ByProviderWithDeps<V, D, S> {
+      spec: ContextValueSpec<C, V, D, S>): spec is ByProvider<C, S> | ByProviderWithDeps<D, S> {
     return 'by' in spec;
+  }
+
+  function asInstance<C extends ContextValues, V, D extends any[], S>(
+      spec: ContextValueSpec<C, V, D, S>): spec is AsInstance<C, S> | AsInstanceWithDeps<D, S> {
+    return 'as' in spec;
   }
 
   function isConstant<C extends ContextValues, V, D extends any[], S>(
@@ -130,7 +179,9 @@ export namespace ContextValueSpec {
   }
 
   function withDeps<C extends ContextValues, D extends any[], V, S>(
-      spec: ByProvider<C, V, S> | ByProviderWithDeps<V, D, S>): spec is ByProviderWithDeps<V, D, S>;
+      spec: ByProvider<C, S> | ByProviderWithDeps<D, S>): spec is ByProviderWithDeps<D, S>;
+  function withDeps<C extends ContextValues, D extends any[], V, S>(
+      spec: AsInstance<C, S> | AsInstanceWithDeps<D, S>): spec is AsInstanceWithDeps<D, S>;
   function withDeps<C extends ContextValues, D extends any[], V, S>(spec: ContextValueSpec<C, V, D, S>): boolean {
     return 'with' in spec;
   }
@@ -143,7 +194,10 @@ export namespace ContextValueSpec {
    * @throws TypeError On malformed context value specifier.
    */
   export function of<C extends ContextValues, V, D extends any[], S = V>(
-      spec: ContextValueSpec<C, V, D, S>): ByProvider<C, V, S> {
+      spec: ContextValueSpec<C, V, D, S>): ByProvider<C, S> {
+
+    const { a } = spec;
+
     if (byProvider(spec)) {
       if (!withDeps(spec)) {
         return spec;
@@ -152,18 +206,44 @@ export namespace ContextValueSpec {
       const { by, with: deps } = spec;
 
       return {
-        a: spec.a,
+        a,
         by(this: void, context: C) {
           function dep<T>(request: ContextRequest<T>): T {
             return context.get(request);
           }
+
           return by(...deps.map(dep) as D);
         },
       };
     }
+    if (asInstance(spec)) {
+      if (!withDeps(spec)) {
+
+        const { as: type } = spec;
+
+        return {
+          a,
+          by: (ctx: C) => new type(ctx),
+        };
+      } else {
+
+        const { as: type, with: deps } = spec;
+
+        return {
+          a,
+          by(this: void, context: C) {
+            function dep<T>(request: ContextRequest<T>): T {
+              return context.get(request);
+            }
+
+            return new type(...deps.map(dep) as D);
+          },
+        };
+      }
+    }
     if (isConstant(spec)) {
       return {
-        a: spec.a,
+        a,
         by: () => spec.is,
       };
     }
@@ -172,8 +252,8 @@ export namespace ContextValueSpec {
       const { via } = spec;
 
       return {
-        a: spec.a,
-        by: (ctx) => ctx.get(via),
+        a,
+        by: (ctx: C) => ctx.get(via),
       };
     }
 
