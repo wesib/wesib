@@ -33,16 +33,17 @@ export type ContextSourcesProvider<C extends ContextValues> =
  * Context value specifier.
  */
 export type ContextValueSpec<C extends ContextValues, V, D extends any[] = unknown[], S = V> =
-    ContextValueSpec.IsConstant<C, V, S>
+    ContextValueSpec.IsConstant<S>
+    | ContextValueSpec.ViaAlias<S>
     | ContextValueSpec.ByProvider<C, V, S>
-    | ContextValueSpec.ByProviderWithDeps<C, V, D, S>;
+    | ContextValueSpec.ByProviderWithDeps<V, D, S>;
 
 export namespace ContextValueSpec {
 
   /**
    * A specifier defining a context value is constant.
    */
-  export interface IsConstant<C extends ContextValues, V, S = V> {
+  export interface IsConstant<S> {
 
     /**
      * Target value to define.
@@ -53,6 +54,23 @@ export namespace ContextValueSpec {
      * Constant context value.
      */
     is: S;
+
+  }
+
+  /**
+   * A specifier defining a context value via another one (alias).
+   */
+  export interface ViaAlias<S> {
+
+    /**
+     * Target value to define.
+     */
+    a: ContextTarget<S>;
+
+    /**
+     * Context value request for the another value that will be used instead as provided one.
+     */
+    via: ContextRequest<S>;
 
   }
 
@@ -73,7 +91,7 @@ export namespace ContextValueSpec {
 
   }
 
-  export interface ByProviderWithDeps<C extends ContextValues, V, D extends any[], S = V> {
+  export interface ByProviderWithDeps<V, D extends any[], S = V> {
 
     /**
      * Target value to define.
@@ -96,13 +114,23 @@ export namespace ContextValueSpec {
     [index in keyof P]: ContextRequest<P[index]>;
   };
 
+  function byProvider<C extends ContextValues, V, D extends any[], S>(
+      spec: ContextValueSpec<C, V, D, S>): spec is ByProvider<C, V, S> | ByProviderWithDeps<V, D, S> {
+    return 'by' in spec;
+  }
+
   function isConstant<C extends ContextValues, V, D extends any[], S>(
-      spec: ContextValueSpec<C, V, D, S>): spec is IsConstant<C, V, S> {
+      spec: ContextValueSpec<C, V, D, S>): spec is IsConstant<S> {
     return 'is' in spec;
   }
 
+  function viaAlias<C extends ContextValues, V, D extends any[], S>(
+      spec: ContextValueSpec<C, V, D, S>): spec is ViaAlias<S> {
+    return 'via' in spec;
+  }
+
   function withDeps<C extends ContextValues, D extends any[], V, S>(
-      spec: ByProviderWithDeps<C, V, D, S> | ByProvider<C, V, S>): spec is ByProviderWithDeps<C, V, D, S>;
+      spec: ByProvider<C, V, S> | ByProviderWithDeps<V, D, S>): spec is ByProviderWithDeps<V, D, S>;
   function withDeps<C extends ContextValues, D extends any[], V, S>(spec: ContextValueSpec<C, V, D, S>): boolean {
     return 'with' in spec;
   }
@@ -111,31 +139,45 @@ export namespace ContextValueSpec {
    * Constructs a specifier of context value defined by provider out of arbitrary one.
    *
    * @param spec Context value specifier to convert.
+   *
+   * @throws TypeError On malformed context value specifier.
    */
   export function of<C extends ContextValues, V, D extends any[], S = V>(
       spec: ContextValueSpec<C, V, D, S>): ByProvider<C, V, S> {
+    if (byProvider(spec)) {
+      if (!withDeps(spec)) {
+        return spec;
+      }
+
+      const { by, with: deps } = spec;
+
+      return {
+        a: spec.a,
+        by(this: void, context: C) {
+          function dep<T>(request: ContextRequest<T>): T {
+            return context.get(request);
+          }
+          return by(...deps.map(dep) as D);
+        },
+      };
+    }
     if (isConstant(spec)) {
       return {
         a: spec.a,
         by: () => spec.is,
       };
     }
-    if (!withDeps(spec)) {
-      return spec;
+    if (viaAlias(spec)) {
+
+      const { via } = spec;
+
+      return {
+        a: spec.a,
+        by: (ctx) => ctx.get(via),
+      };
     }
 
-    const by: (this: void, ...args: D) => S | null | undefined = spec.by;
-    const deps: DepsRequests<D> = spec.with;
-
-    return {
-      a: spec.a,
-      by(this: void, context: C) {
-        function dep<T>(request: ContextRequest<T>): T {
-          return context.get(request);
-        }
-        return by(...deps.map(dep) as D);
-      },
-    };
+    throw new TypeError(`Malformed context value specifier: ${spec}`);
   }
 
 }
