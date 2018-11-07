@@ -45,7 +45,7 @@ class AttributeRegistry<T extends object> {
  */
 @Feature({
   bootstrap(context) {
-    context.forDefinitions({ a: AttributeRegistry });
+    context.forDefinitions({ as: AttributeRegistry });
     context.forDefinitions({
       a: AttributeRegistrar,
       by(registry: AttributeRegistry<any>) {

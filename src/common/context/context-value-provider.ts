@@ -140,9 +140,9 @@ export namespace ContextValueSpec {
   export interface SelfInstance<C extends ContextValues, S> {
 
     /**
-     * Target value to define.
+     * Target value to define as its class constructor.
      */
-    a: ContextTarget<S> & (new (context: C) => S);
+    as: ContextTarget<S> & (new (context: C) => S);
 
   }
 
@@ -175,9 +175,9 @@ export namespace ContextValueSpec {
   export interface SelfInstanceWithDeps<D extends any[], S> {
 
     /**
-     * Target value to define.
+     * Target value to define as its class constructor.
      */
-    a: ContextTarget<S> & (new (...args: D) => S);
+    as: ContextTarget<S> & (new (...args: D) => S);
 
     /**
      * Context value requests for corresponding constructor arguments.
@@ -202,14 +202,14 @@ export namespace ContextValueSpec {
 
   function selfInstance<C extends ContextValues, V, D extends any[], S>(
       spec: ContextValueSpec<C, V, D, S>): spec is SelfInstance<C, S> | SelfInstanceWithDeps<D, S> {
-    return typeof spec.a === 'function';
+    return !('a' in spec);
   }
 
   function toAsInstance<C extends ContextValues, V, D extends any[], S>(
       spec: SelfInstance<C, S> | SelfInstanceWithDeps<D, S>): AsInstance<C, S> | AsInstanceWithDeps<D, S> {
     return {
       ...spec,
-      as: spec.a,
+      a: spec.as,
     } as AsInstance<C, S> | AsInstanceWithDeps<D, S>;
   }
 
@@ -240,15 +240,12 @@ export namespace ContextValueSpec {
    */
   export function of<C extends ContextValues, V, D extends any[], S = V>(
       spec: ContextValueSpec<C, V, D, S>): ByProvider<C, S> {
-
-    const { a } = spec;
-
     if (byProvider(spec)) {
       if (!withDeps(spec)) {
         return spec;
       }
 
-      const { by, with: deps } = spec;
+      const { a, by, with: deps } = spec;
 
       return {
         a,
@@ -263,7 +260,7 @@ export namespace ContextValueSpec {
     }
     if (isConstant(spec)) {
 
-      const { is: value } = spec;
+      const { a, is: value } = spec;
 
       return {
         a,
@@ -272,42 +269,43 @@ export namespace ContextValueSpec {
     }
     if (viaAlias(spec)) {
 
-      const { via } = spec;
+      const { a, via } = spec;
 
       return {
         a,
         by: (ctx: C) => ctx.get(via),
       };
     }
-    if (!asInstance(spec)) {
-      if (!selfInstance(spec)) {
-        throw new TypeError(`Malformed context value specifier: ${spec}`);
+    if (asInstance(spec)) {
+      if (selfInstance(spec)) {
+        spec = toAsInstance(spec);
       }
-      spec = toAsInstance(spec);
+      if (!withDeps(spec)) {
+
+        const { a, as: type } = spec;
+
+        return {
+          a,
+          by: (ctx: C) => new type(ctx),
+        };
+      } else {
+
+        const { a, as: type, with: deps } = spec;
+
+        return {
+          a,
+          by(this: void, context: C) {
+            function dep<T>(request: ContextRequest<T>): T {
+              return context.get(request);
+            }
+
+            return new type(...deps.map(dep) as D);
+          },
+        };
+      }
     }
-    if (!withDeps(spec)) {
 
-      const { as: type } = spec;
-
-      return {
-        a,
-        by: (ctx: C) => new type(ctx),
-      };
-    } else {
-
-      const { as: type, with: deps } = spec;
-
-      return {
-        a,
-        by(this: void, context: C) {
-          function dep<T>(request: ContextRequest<T>): T {
-            return context.get(request);
-          }
-
-          return new type(...deps.map(dep) as D);
-        },
-      };
-    }
+    throw new TypeError(`Malformed context value specifier: ${spec}`);
   }
 
 }
