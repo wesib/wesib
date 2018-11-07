@@ -1499,10 +1499,10 @@ fsevents@^1.2.2:
     nan "^2.9.2"
     node-pre-gyp "^0.10.0"
 
-fun-events@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/fun-events/-/fun-events-1.0.1.tgz#a357b2b719fd8092586c9c4f00db536412da1c43"
-  integrity sha512-T2thwBTIgvgWwOUWioM8xvG8vGoV1cv7yOb7CdaLGn1xN7niGvbH8afEzHnwxugvOgArr8qRCOggmocoQNPFNg==
+fun-events@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/fun-events/-/fun-events-1.2.0.tgz#782b2ca8d8d7220b74744f99a6dc67722d5f6363"
+  integrity sha512-P9OOU2tyTDMBoy53kjmgv0JHHg3WNxdNWQkHb+kNCDEllAuCJ1RJkSXb+PX5bgVmUXbJKHum5yDM1hSbiXnMcg==
   dependencies:
     tslib "^1.9.0"
 
