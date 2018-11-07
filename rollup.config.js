@@ -56,6 +56,11 @@ function baseConfig(tsconfig) {
       sourcemaps(),
     ],
     input: './src/index.ts',
+    external: [
+      'a-iterable',
+      'fun-events',
+      'tslib',
+    ],
     output: {
       format: 'umd',
       sourcemap: true,
@@ -63,6 +68,7 @@ function baseConfig(tsconfig) {
       globals: {
         'a-iterable': 'aIterable',
         'fun-events': 'funEvents',
+        'tslib': 'tslib',
       },
     },
   };
@@ -80,10 +86,6 @@ const umdConfig = makeConfig(
 const esm5Config = makeConfig(
     baseConfig('tsconfig.esm5.json'),
     {
-      external: [
-        'a-iterable',
-        'tslib',
-      ],
       output: {
         format: 'es',
         file: './dist/wesib.esm5.js',
@@ -94,10 +96,6 @@ const esm5Config = makeConfig(
 const esm2015Config = makeConfig(
     baseConfig('tsconfig.esm2015.json'),
     {
-      external: [
-        'a-iterable',
-        'tslib',
-      ],
       output: {
         format: 'es',
         file: './dist/wesib.esm2015.js',
