@@ -1,4 +1,4 @@
-import { ContextRequest, SingleContextKey } from './context-value';
+import { ContextKey, ContextRequest, SingleContextKey } from './context-value';
 import { ContextValueSpec } from './context-value-provider';
 import { ContextValues } from './context-values';
 import SpyObj = jasmine.SpyObj;
@@ -91,6 +91,9 @@ describe('common/context/context-value-provider', () => {
 
         let constructorSpy: Spy;
         class Value {
+
+          static readonly key: ContextKey<Value> = new SingleContextKey('value')
+
           constructor(...args: any[]) {
             constructorSpy(...args);
           }
@@ -103,10 +106,19 @@ describe('common/context/context-value-provider', () => {
         it('converts class to provider', () => {
 
           const spec: ContextValueSpec.AsInstance<ContextValues, Value> = {
-            a: new SingleContextKey<string>('value'),
+            a: Value,
             as: Value,
           };
 
+          const def = ContextValueSpec.of(spec);
+
+          expect(def.a).toBe(spec.a);
+          expect(def.by(contextSpy)).toEqual(jasmine.any(Value));
+          expect(constructorSpy).toHaveBeenCalledWith(contextSpy);
+        });
+        it('converts self class to provider', () => {
+
+          const spec: ContextValueSpec.SelfInstance<ContextValues, Value> = { a: Value };
           const def = ContextValueSpec.of(spec);
 
           expect(def.a).toBe(spec.a);
@@ -118,8 +130,37 @@ describe('common/context/context-value-provider', () => {
           const key1 = new SingleContextKey<string>('arg1');
           const key2 = new SingleContextKey<number>('arg2');
           const spec: ContextValueSpec.AsInstanceWithDeps<[string, number], Value> = {
-            a: new SingleContextKey<string>('value'),
+            a: Value,
             as: Value,
+            with: [key1, key2],
+          };
+          const def = ContextValueSpec.of(spec);
+
+          const arg1 = 'arg';
+          const arg2 = 2;
+
+          contextSpy.get.and.callFake((request: ContextRequest<any>) => {
+            if (request.key === key1) {
+              return arg1;
+            }
+            if (request.key === key2) {
+              return arg2;
+            }
+            return;
+          });
+
+          expect(def.a).toBe(spec.a);
+          expect(def.by(contextSpy)).toEqual(jasmine.any(Value));
+          expect(constructorSpy).toHaveBeenCalledWith(arg1, arg2);
+          expect(contextSpy.get).toHaveBeenCalledWith(key1);
+          expect(contextSpy.get).toHaveBeenCalledWith(key2);
+        });
+        it('converts self class with dependencies to provider', () => {
+
+          const key1 = new SingleContextKey<string>('arg1');
+          const key2 = new SingleContextKey<number>('arg2');
+          const spec: ContextValueSpec.SelfInstanceWithDeps<[string, number], Value> = {
+            a: Value,
             with: [key1, key2],
           };
           const def = ContextValueSpec.of(spec);

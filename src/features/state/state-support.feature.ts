@@ -19,7 +19,7 @@ export class StateSupport {
 }
 
 function enableStateSupport(context: BootstrapContext) {
-  context.forComponents({ a: StateTracker, as: StateTracker });
+  context.forComponents({ a: StateTracker });
   context.forComponents({
     a: StateUpdater,
     by(tracker: StateTracker) {

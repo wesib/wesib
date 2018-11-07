@@ -1,5 +1,5 @@
 import { Class, mergeFunctions, SingleContextKey } from '../../common';
-import { ComponentContext, DefinitionContext } from '../../component';
+import { ComponentContext } from '../../component';
 import { Feature } from '../../feature';
 import { AttributeChangedCallback, AttributeRegistrar } from './attribute-registrar';
 
@@ -45,7 +45,7 @@ class AttributeRegistry<T extends object> {
  */
 @Feature({
   bootstrap(context) {
-    context.forDefinitions({ a: AttributeRegistry, as: AttributeRegistry });
+    context.forDefinitions({ a: AttributeRegistry });
     context.forDefinitions({
       a: AttributeRegistrar,
       by(registry: AttributeRegistry<any>) {
