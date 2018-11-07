@@ -74,19 +74,21 @@ export abstract class BootstrapContext extends ContextValues {
    *
    * The given provider will be requested for the value at most once per component.
    *
+   * @param <D> A type of dependencies.
    * @param <S> The type of context value sources.
    * @param spec Component definition context value specifier.
    */
-  abstract forDefinitions<S>(spec: ContextValueSpec<DefinitionContext<any>, any, S>): void;
+  abstract forDefinitions<D extends any[], S>(spec: ContextValueSpec<DefinitionContext<any>, any, D, S>): void;
 
   /**
    * Registers provider that associates a value with the given key with components.
    *
    * The given provider will be requested for the value at most once per component.
    *
+   * @param <D> A type of dependencies.
    * @param <S> The type of context value sources.
    * @param spec Component context value specifier.
    */
-  abstract forComponents<S>(spec: ContextValueSpec<ComponentContext<any>, any, S>): void;
+  abstract forComponents<D extends any[], S>(spec: ContextValueSpec<ComponentContext<any>, any, D, S>): void;
 
 }

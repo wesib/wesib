@@ -1,5 +1,5 @@
 import { Class, mergeFunctions, SingleContextKey } from '../../common';
-import { ComponentContext } from '../../component';
+import { ComponentContext, DefinitionContext } from '../../component';
 import { Feature } from '../../feature';
 import { AttributeChangedCallback, AttributeRegistrar } from './attribute-registrar';
 
@@ -48,7 +48,7 @@ class AttributeRegistry<T extends object> {
     context.forDefinitions({ a: AttributeRegistry, by: () => new AttributeRegistry() });
     context.forDefinitions({
       a: AttributeRegistrar,
-      by(ctx) {
+      by(ctx: DefinitionContext) {
         return <T extends object>(name: string, callback: AttributeChangedCallback<T>) =>
             ctx.get(AttributeRegistry).onAttributeChange(name, callback);
       },

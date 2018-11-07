@@ -25,8 +25,9 @@ function enableStateSupport(context: BootstrapContext) {
   });
   context.forComponents({
     a: StateUpdater,
-    by(ctx) {
-      return ctx.get(StateTracker).update;
+    by(tracker: StateTracker) {
+      return tracker.update;
     },
+    with: [StateTracker],
   });
 }

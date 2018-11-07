@@ -39,10 +39,11 @@ export class ContextRegistry<C extends ContextValues> {
   /**
    * Defines a context value.
    *
+   * @param <D> A type of dependencies.
    * @param <S> A type of context value sources.
    * @param spec Context value specifier.
    */
-  provide<S>(spec: ContextValueSpec<C, any, S>): void {
+  provide<D extends any[], S>(spec: ContextValueSpec<C, any, D, S>): void {
 
     const { a: { key: { sourcesKey } }, by } = ContextValueSpec.of(spec);
     let providers: ContextValueProvider<C, S>[] | undefined = this._providers.get(sourcesKey);

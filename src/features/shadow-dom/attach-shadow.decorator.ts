@@ -1,5 +1,5 @@
 import { TypedClassDecorator } from '../../common';
-import { ComponentClass, ComponentDef, ContentRoot, DefinitionContext } from '../../component';
+import { ComponentClass, ComponentContext, ComponentDef, ContentRoot, DefinitionContext } from '../../component';
 import { FeatureDef } from '../../feature';
 import { ShadowContentRoot } from './shadow-content-root';
 import { ShadowDomSupport } from './shadow-dom-support.feature';
@@ -23,7 +23,7 @@ export function AttachShadow<T extends ComponentClass<any> = any>(
 
             context.forComponents({
               a: ShadowContentRoot,
-              by(ctx) {
+              by(ctx: ComponentContext) {
                 return ctx.get(ShadowRootBuilder)(ctx, init);
               },
             });
@@ -31,9 +31,10 @@ export function AttachShadow<T extends ComponentClass<any> = any>(
             // Content root is an alias of shadow root.
             context.forComponents({
               a: ContentRoot,
-              by(ctx) {
-                return ctx.get(ShadowContentRoot);
+              by(shadowRoot: ShadowContentRoot) {
+                return shadowRoot;
               },
+              with: [ShadowContentRoot],
             });
 
             // Attach shadow root eagerly on element instantiation.
