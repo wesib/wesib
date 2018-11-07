@@ -92,7 +92,7 @@ describe('common/context/context-value-provider', () => {
         let constructorSpy: Spy;
         class Value {
 
-          static readonly key: ContextKey<Value> = new SingleContextKey('value')
+          static readonly key: ContextKey<Value> = new SingleContextKey('value');
 
           constructor(...args: any[]) {
             constructorSpy(...args);
