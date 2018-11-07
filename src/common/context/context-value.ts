@@ -44,8 +44,20 @@ export namespace ContextRequest {
     /**
      * The default value to return if there is no value associated with the given key. Can be `null` or `undefined` too.
      */
-    or: V | null | undefined;
+    or?: V | null;
 
+  }
+
+  export interface OrDefault<V> extends Opts<V> {
+    or: V;
+  }
+
+  export interface OrNull<V> extends Opts<V> {
+    or: null;
+  }
+
+  export interface OrUndefined<V> extends Opts<V> {
+    or?: undefined;
   }
 
 }

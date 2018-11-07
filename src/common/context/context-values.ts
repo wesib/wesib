@@ -14,9 +14,9 @@ export abstract class ContextValues {
    * @param request Context value request with target key.
    * @param opts Context value request options.
    *
-   * @returns Associated value or `null` if there is no associated value.
+   * @returns Associated value or `null` when there is no associated value.
    */
-  abstract get<V>(request: ContextRequest<V>, opts: { or: null }): V | null;
+  abstract get<V>(request: ContextRequest<V>, opts: ContextRequest.OrNull<V>): V | null;
 
   /**
    * Returns a value associated with the given key.
@@ -25,9 +25,9 @@ export abstract class ContextValues {
    * @param request Context value request with target key.
    * @param opts Context value request options.
    *
-   * @returns Associated value or `null` if there is no associated value.
+   * @returns Associated value or `undefined` when there is no associated value.
    */
-  abstract get<V>(request: ContextRequest<V>, opts: { or: undefined }): V | undefined;
+  abstract get<V>(request: ContextRequest<V>, opts: ContextRequest.OrUndefined<V>): V | undefined;
 
   /**
    * Returns a value associated with the given key.
@@ -36,11 +36,12 @@ export abstract class ContextValues {
    * @param request Context value request with target key.
    * @param opts Context value request options.
    *
-   * @returns Associated value.
+   * @returns Associated value. Or the default one when there is no associated value. Or key default when there is
+   * neither.
    *
-   * @throws Error If there is no value associated with the given key and the default key is not provided neither
-   * as function argument, nor as key default.
+   * @throws Error If there is no value associated with the given key, the default value is not provided,
+   * and the key has no default value.
    */
-  abstract get<V>(request: ContextRequest<V>, opts?: { or: V }): V;
+  abstract get<V>(request: ContextRequest<V>, opts?: ContextRequest.OrDefault<V>): V;
 
 }
