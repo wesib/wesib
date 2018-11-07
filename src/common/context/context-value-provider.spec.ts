@@ -118,10 +118,10 @@ describe('common/context/context-value-provider', () => {
         });
         it('converts self class to provider', () => {
 
-          const spec: ContextValueSpec.SelfInstance<ContextValues, Value> = { a: Value };
+          const spec: ContextValueSpec.SelfInstance<ContextValues, Value> = { as: Value };
           const def = ContextValueSpec.of(spec);
 
-          expect(def.a).toBe(spec.a);
+          expect(def.a).toBe(spec.as);
           expect(def.by(contextSpy)).toEqual(jasmine.any(Value));
           expect(constructorSpy).toHaveBeenCalledWith(contextSpy);
         });
@@ -160,7 +160,7 @@ describe('common/context/context-value-provider', () => {
           const key1 = new SingleContextKey<string>('arg1');
           const key2 = new SingleContextKey<number>('arg2');
           const spec: ContextValueSpec.SelfInstanceWithDeps<[string, number], Value> = {
-            a: Value,
+            as: Value,
             with: [key1, key2],
           };
           const def = ContextValueSpec.of(spec);
@@ -178,7 +178,7 @@ describe('common/context/context-value-provider', () => {
             return;
           });
 
-          expect(def.a).toBe(spec.a);
+          expect(def.a).toBe(spec.as);
           expect(def.by(contextSpy)).toEqual(jasmine.any(Value));
           expect(constructorSpy).toHaveBeenCalledWith(arg1, arg2);
           expect(contextSpy.get).toHaveBeenCalledWith(key1);

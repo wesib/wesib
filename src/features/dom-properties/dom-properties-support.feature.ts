@@ -29,7 +29,7 @@ class DomPropertyRegistry {
  */
 @Feature({
   bootstrap(context) {
-    context.forDefinitions({ a: DomPropertyRegistry });
+    context.forDefinitions({ as: DomPropertyRegistry });
     context.forDefinitions({
       a: DomPropertyRegistrar,
       by(registry: DomPropertyRegistry) {
