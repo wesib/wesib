@@ -1,7 +1,8 @@
-import { ContextValueSpec, SingleContextKey } from './context-value';
+import { SingleContextKey } from './context-value';
+import { ContextValueSpec } from './context-value-provider';
 import { ContextValues } from './context-values';
 
-describe('common/context/context-value', () => {
+describe('common/context/context-value-provider', () => {
   describe('ContextValueSpec', () => {
     describe('of', () => {
 

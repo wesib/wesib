@@ -1,14 +1,13 @@
 import { AIterable } from 'a-iterable';
 import {
-  ContextValueDefaultHandler,
   ContextKey,
-  ContextValueProvider,
-  ContextSourcesProvider,
+  ContextRequest,
   ContextSources,
   ContextSourcesKey,
-  ContextValueSpec,
-  ContextTarget, ContextRequest,
+  ContextTarget,
+  ContextValueDefaultHandler,
 } from './context-value';
+import { ContextSourcesProvider, ContextValueProvider, ContextValueSpec } from './context-value-provider';
 import { ContextValues } from './context-values';
 
 /**
