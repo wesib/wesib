@@ -97,7 +97,7 @@ export class ElementBuilder {
         whenReady = mergeFunctions<[Class], void, DefinitionContext>(whenReady, callback);
       }
 
-      forComponents<S>(spec: ContextValueSpec<ComponentContext_<any>, any, S>): void {
+      forComponents<S>(spec: ContextValueSpec<ComponentContext_<any>, any, any[], S>): void {
         typeValueRegistry.provide(spec);
       }
 

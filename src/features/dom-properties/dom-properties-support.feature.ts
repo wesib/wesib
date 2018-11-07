@@ -1,5 +1,6 @@
 import { Class } from '../../common';
 import { SingleContextKey } from '../../common/context';
+import { DefinitionContext } from '../../component/definition';
 import { Feature } from '../../feature';
 import { DomPropertyRegistrar } from './dom-property-registrar';
 
@@ -28,13 +29,14 @@ class DomPropertyRegistry {
  */
 @Feature({
   bootstrap(context) {
-    context.forDefinitions({ a: DomPropertyRegistry, by: () => new DomPropertyRegistry() });
+    context.forDefinitions({ a: DomPropertyRegistry });
     context.forDefinitions({
       a: DomPropertyRegistrar,
-      by(ctx) {
+      by(registry: DomPropertyRegistry) {
         return (propertyKey: PropertyKey, descriptor: PropertyDescriptor) =>
-            ctx.get(DomPropertyRegistry).domProperty(propertyKey, descriptor);
+            registry.domProperty(propertyKey, descriptor);
       },
+      with: [DomPropertyRegistry],
     });
     context.onDefinition(ctx => ctx.whenReady(elementType => ctx.get(DomPropertyRegistry).apply(elementType)));
   }

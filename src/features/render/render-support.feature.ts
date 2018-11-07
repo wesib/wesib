@@ -10,16 +10,19 @@ import { RenderScheduler as RenderScheduler_ } from './render-scheduler';
  */
 @Feature({
   bootstrap(context) {
-    context.forComponents({ a: RenderScheduler_, by: createRenderScheduler });
+    context.forComponents({
+      a: RenderScheduler_,
+      by: createRenderScheduler,
+      with: [BootstrapWindow],
+    });
   }
 })
 export class RenderSupport {
 }
 
-function createRenderScheduler<T extends object>(ctx: ComponentContext<T>) {
+function createRenderScheduler<T extends object>(window: BootstrapWindow) {
 
   let scheduled: () => void = noop;
-  const window = ctx.get(BootstrapWindow);
 
   class RenderScheduler extends RenderScheduler_ {
 

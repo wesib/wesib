@@ -20,7 +20,7 @@ import { ComponentDef } from '../component-def';
  *
  * @param <T> A type of component.
  */
-export abstract class DefinitionContext<T extends object> extends ContextValues {
+export abstract class DefinitionContext<T extends object = object> extends ContextValues {
 
   /**
    * A key of definition context value containing a definition context itself.
@@ -69,10 +69,11 @@ export abstract class DefinitionContext<T extends object> extends ContextValues 
    *
    * The given provider will be requested for the value at most once per component.
    *
+   * @param <D> A type of dependencies.
    * @param <S> The type of context value sources.
    * @param spec Component context value specifier.
    */
-  abstract forComponents<S>(spec: ContextValueSpec<ComponentContext<any>, any, S>): void;
+  abstract forComponents<S>(spec: ContextValueSpec<ComponentContext<any>, any, any[], S>): void;
 
 }
 

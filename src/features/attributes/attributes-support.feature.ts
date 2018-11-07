@@ -45,13 +45,14 @@ class AttributeRegistry<T extends object> {
  */
 @Feature({
   bootstrap(context) {
-    context.forDefinitions({ a: AttributeRegistry, by: () => new AttributeRegistry() });
+    context.forDefinitions({ a: AttributeRegistry });
     context.forDefinitions({
       a: AttributeRegistrar,
-      by(ctx) {
+      by(registry: AttributeRegistry<any>) {
         return <T extends object>(name: string, callback: AttributeChangedCallback<T>) =>
-            ctx.get(AttributeRegistry).onAttributeChange(name, callback);
+            registry.onAttributeChange(name, callback);
       },
+      with: [AttributeRegistry],
     });
     context.onDefinition(ctx => ctx.whenReady(elementType => ctx.get(AttributeRegistry).apply(elementType)));
   },
