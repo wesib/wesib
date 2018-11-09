@@ -19,7 +19,7 @@ export function Render<T extends ComponentClass>(): TypedPropertyDecorator<T> {
 
     const componentType = target.constructor as T;
 
-    FeatureDef.define(componentType, { require: [StateSupport, RenderSupport] });
+    FeatureDef.define(componentType, { need: [StateSupport, RenderSupport] });
 
     ComponentDef.define(
         componentType,

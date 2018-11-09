@@ -28,7 +28,7 @@ class DomPropertyRegistry {
  * This feature is enabled automatically whenever an `@DomProperty decorator applied to component.
  */
 @Feature({
-  bootstrap(context) {
+  init(context) {
     context.forDefinitions({ as: DomPropertyRegistry });
     context.forDefinitions({
       a: DomPropertyRegistrar,

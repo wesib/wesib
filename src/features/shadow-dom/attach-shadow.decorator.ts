@@ -15,7 +15,7 @@ import { ShadowRootBuilder } from './shadow-root-builder';
 export function AttachShadow<T extends ComponentClass<any> = any>(
     init: ShadowRootInit = { mode: 'open' }): TypedClassDecorator<T> {
   return (type: T) => {
-    FeatureDef.define(type, { require: [ShadowDomSupport] });
+    FeatureDef.define(type, { need: [ShadowDomSupport] });
     ComponentDef.define(
         type,
         {

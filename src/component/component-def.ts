@@ -156,7 +156,7 @@ export namespace ComponentDef {
     return FeatureDef.define(
         type,
         {
-          bootstrap: function (context) {
+          init: function (context) {
             context.define(this);
           },
         });

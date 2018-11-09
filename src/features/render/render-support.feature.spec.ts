@@ -40,8 +40,8 @@ describe('features/render/render-support.feature', () => {
     beforeEach(() => {
 
       @Feature({
-        require: [RenderSupport, testComponent],
-        prebootstrap: [
+        need: [RenderSupport, testComponent],
+        set: [
           { a: BootstrapWindow, is: windowSpy },
           { a: CustomElements, is: customElementsSpy },
         ]

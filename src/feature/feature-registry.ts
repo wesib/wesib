@@ -97,14 +97,14 @@ export class FeatureRegistry {
     const def = FeatureDef.of(feature);
 
     // Add requirements before the feature itself.
-    new ArraySet(def.require).items.forEach(required => this.add(required));
+    new ArraySet(def.need).items.forEach(required => this.add(required));
 
     if (!existing) {
       this._providers.set(feature, providers);
     }
 
     // Add provided features after the feature itself.
-    new ArraySet(def.provide).items.forEach(provided => this.add(provided, feature));
+    new ArraySet(def.has).items.forEach(provided => this.add(provided, feature));
   }
 
   bootstrap(context: BootstrapContext) {
@@ -115,7 +115,7 @@ export class FeatureRegistry {
   private _provideValues() {
     this._providers.forEach((providers, feature) => {
       if (feature === providers.provider(this._providers)) {
-        new ArraySet(FeatureDef.of(feature).prebootstrap)
+        new ArraySet(FeatureDef.of(feature).set)
             .items.forEach(spec => this._valueRegistry.provide(spec));
       }
     });
@@ -125,7 +125,7 @@ export class FeatureRegistry {
     this._providers.forEach((providers, feature) => {
       if (feature === providers.provider(this._providers)) {
 
-        const bootstrap = FeatureDef.of(feature).bootstrap;
+        const bootstrap = FeatureDef.of(feature).init;
 
         if (bootstrap) {
           bootstrap.call(feature, context);

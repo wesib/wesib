@@ -21,12 +21,12 @@ describe('feature/feature-registry', () => {
     beforeEach(() => {
       configure1spy = jasmine.createSpy('configure1');
       feature1 = FeatureDef.define(class Feature1 {}, {
-        bootstrap: configure1spy,
+        init: configure1spy,
       });
 
       configure2spy = jasmine.createSpy('configure2');
       feature2 = FeatureDef.define(class Feature2 {}, {
-        bootstrap: configure2spy,
+        init: configure2spy,
       });
     });
     beforeEach(() => {
@@ -41,7 +41,7 @@ describe('feature/feature-registry', () => {
       class Feature {}
       const configureSpy = jasmine.createSpy('configure');
 
-      registry.add(FeatureDef.define(FeatureDef.define(Feature, { bootstrap: configureSpy })));
+      registry.add(FeatureDef.define(FeatureDef.define(Feature, { init: configureSpy })));
       registry.bootstrap(contextSpy);
 
       expect(configureSpy).toHaveBeenCalledWith(contextSpy);
@@ -51,7 +51,7 @@ describe('feature/feature-registry', () => {
       class Feature {}
 
       registry.add(FeatureDef.define(FeatureDef.define(Feature, {
-        require: [feature1, feature2],
+        need: [feature1, feature2],
       })));
 
       expect(addSpy).toHaveBeenCalledWith(feature1);
@@ -62,7 +62,7 @@ describe('feature/feature-registry', () => {
       class Feature {}
 
       registry.add(FeatureDef.define(FeatureDef.define(Feature, {
-        provide: [feature1, feature2],
+        has: [feature1, feature2],
       })));
 
       expect(addSpy).toHaveBeenCalledWith(feature1, Feature);
@@ -147,7 +147,7 @@ describe('feature/feature-registry', () => {
       const provider = jasmine.createSpy('testValueProvider');
       class Feature {}
 
-      FeatureDef.define(Feature, { prebootstrap: { a: key, by: provider } });
+      FeatureDef.define(Feature, { set: { a: key, by: provider } });
 
       registry.add(Feature);
       registry.bootstrap(contextSpy);
