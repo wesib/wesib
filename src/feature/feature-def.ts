@@ -9,26 +9,26 @@ export interface FeatureDef {
   /**
    * Features this one requires.
    */
-  require?: Class | Class[];
+  need?: Class | Class[];
 
   /**
    * Features this one provides.
    *
    * The feature always provides itself.
    */
-  provide?: Class | Class[];
+  has?: Class | Class[];
 
   /**
    * Bootstrap context values to declare prior to bootstrap.
    */
-  prebootstrap?: ContextValueSpec<BootstrapContext, any, any> | ContextValueSpec<BootstrapContext, any, any>[];
+  set?: ContextValueSpec<BootstrapContext, any, any> | ContextValueSpec<BootstrapContext, any, any>[];
 
   /**
    * Bootstraps this feature by calling the given bootstrap context methods.
    *
    * @param context Components bootstrap context.
    */
-  bootstrap?: (this: Class, context: BootstrapContext) => void;
+  init?: (this: Class, context: BootstrapContext) => void;
 
 }
 
@@ -50,22 +50,22 @@ export namespace FeatureDef {
           (prev, def) => {
 
             const result: FeatureDef = {};
-            const bootstraps = new ArraySet(prev.prebootstrap).merge(def.prebootstrap);
-            const requires = new ArraySet(prev.require).merge(def.require);
-            const provides = new ArraySet(prev.provide).merge(def.provide);
-            const configure = mergeFunctions<[BootstrapContext], void, Class>(prev.bootstrap, def.bootstrap);
+            const set = new ArraySet(prev.set).merge(def.set);
+            const need = new ArraySet(prev.need).merge(def.need);
+            const has = new ArraySet(prev.has).merge(def.has);
+            const init = mergeFunctions<[BootstrapContext], void, Class>(prev.init, def.init);
 
-            if (bootstraps.size) {
-              result.prebootstrap = bootstraps.value;
+            if (set.size) {
+              result.set = set.value;
             }
-            if (requires.size) {
-              result.require = requires.value;
+            if (need.size) {
+              result.need = need.value;
             }
-            if (provides.size) {
-              result.provide = provides.value;
+            if (has.size) {
+              result.has = has.value;
             }
-            if (configure) {
-              result.bootstrap = configure;
+            if (init) {
+              result.init = init;
             }
 
             return result;

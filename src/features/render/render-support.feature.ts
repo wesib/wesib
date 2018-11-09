@@ -9,7 +9,7 @@ import { RenderScheduler as RenderScheduler_ } from './render-scheduler';
  * This feature is automatically enabled when `@Render` decorator is used.
  */
 @Feature({
-  bootstrap(context) {
+  init(context) {
     context.forComponents({
       a: RenderScheduler_,
       by: createRenderScheduler,

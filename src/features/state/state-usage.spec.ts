@@ -19,7 +19,7 @@ describe('features/state', () => {
       stateTracker = undefined!;
 
       @Component('test-component')
-      @Feature({ require: StateSupport })
+      @Feature({ need: StateSupport })
       class TestComponent {
         constructor(ctx: ComponentContext) {
           context = ctx;

@@ -49,12 +49,12 @@ describe('features/render/render.decorator', () => {
       customElementsSpy = jasmine.createSpyObj('customElements', ['define']);
 
       @Feature({
-        require: testComponent,
-        prebootstrap: [
+        need: testComponent,
+        set: [
           { a: RenderScheduler, is: renderSchedulerSpy },
           { a: CustomElements, is: customElementsSpy },
         ],
-        provide: RenderSupport,
+        has: RenderSupport,
       })
       class TestFeature {}
 
@@ -62,10 +62,10 @@ describe('features/render/render.decorator', () => {
     });
 
     it('requires state support', () => {
-      expect(FeatureDef.of(testComponent).require).toContain(StateSupport);
+      expect(FeatureDef.of(testComponent).need).toContain(StateSupport);
     });
     it('requires rendering support', () => {
-      expect(FeatureDef.of(testComponent).require).toContain(RenderSupport);
+      expect(FeatureDef.of(testComponent).need).toContain(RenderSupport);
     });
 
     describe('Rendering', () => {

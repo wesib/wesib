@@ -158,7 +158,7 @@ describe('bootstrap', () => {
             FeatureDef.define(
                 TestFeature,
                 {
-                  bootstrap(ctx) {
+                  init(ctx) {
                     featureContext = ctx;
                   }
                 }));

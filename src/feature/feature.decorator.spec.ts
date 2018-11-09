@@ -7,7 +7,7 @@ describe('decorators/feature', () => {
     it('assigns feature definition', () => {
 
       const def: FeatureDef = {
-        bootstrap: noop,
+        init: noop,
       };
 
       @Feature(def)

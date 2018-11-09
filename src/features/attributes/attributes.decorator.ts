@@ -18,7 +18,7 @@ export function Attributes<
     T extends ComponentClass = any,
     E extends HTMLElement = HTMLElement>(opts: Attributes.Opts<T>): TypedClassDecorator<T> {
   return componentType => {
-    FeatureDef.define(componentType, { require: AttributesSupport });
+    FeatureDef.define(componentType, { need: AttributesSupport });
     ComponentDef.define(
         componentType,
         {

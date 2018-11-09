@@ -21,7 +21,7 @@ export function DomProperty<T extends ComponentClass>(opts: DomProperty.Opts<T> 
 
     const componentType = target.constructor as T;
 
-    FeatureDef.define(componentType, { require: DomPropertiesSupport });
+    FeatureDef.define(componentType, { need: DomPropertiesSupport });
 
     let result: TypedPropertyDescriptor<V> | undefined;
 

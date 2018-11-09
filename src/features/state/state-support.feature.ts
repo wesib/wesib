@@ -13,7 +13,7 @@ import { BootstrapContext, Feature } from '../../feature';
  * features issue state updates when needed.
  */
 @Feature({
-  bootstrap: enableStateSupport,
+  init: enableStateSupport,
 })
 export class StateSupport {
 }

@@ -24,7 +24,7 @@ function attachShadow(context: ComponentContext, init: ShadowRootInit): ShadowRo
  * This feature is automatically enabled when `@AttachShadow` decorator is used.
  */
 @Feature({
-  prebootstrap: [
+  set: [
     { a: ShadowRootBuilder, is: attachShadow },
   ],
 })
