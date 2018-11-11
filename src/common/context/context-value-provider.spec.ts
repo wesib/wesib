@@ -97,6 +97,23 @@ describe('common/context/context-value-provider', () => {
           constructor(...args: any[]) {
             constructorSpy(...args);
           }
+
+          get some() {
+            return 'some';
+          }
+
+        }
+
+        class Val implements Value {
+
+          constructor(...args: any[]) {
+            constructorSpy(...args);
+          }
+
+          get some() {
+            return 'other';
+          }
+
         }
 
         beforeEach(() => {
@@ -107,13 +124,17 @@ describe('common/context/context-value-provider', () => {
 
           const spec: ContextValueSpec.AsInstance<ContextValues, Value> = {
             a: Value,
-            as: Value,
+            as: Val,
           };
 
           const def = ContextValueSpec.of(spec);
 
           expect(def.a).toBe(spec.a);
-          expect(def.by(contextSpy)).toEqual(jasmine.any(Value));
+
+          const value = def.by(contextSpy) as Value;
+
+          expect(value).toEqual(jasmine.any(Val));
+          expect(value.some).toBe('other');
           expect(constructorSpy).toHaveBeenCalledWith(contextSpy);
         });
         it('converts self class to provider', () => {
@@ -122,7 +143,11 @@ describe('common/context/context-value-provider', () => {
           const def = ContextValueSpec.of(spec);
 
           expect(def.a).toBe(spec.as);
-          expect(def.by(contextSpy)).toEqual(jasmine.any(Value));
+
+          const value = def.by(contextSpy) as Value;
+
+          expect(value).toEqual(jasmine.any(Value));
+          expect(value.some).toBe('some');
           expect(constructorSpy).toHaveBeenCalledWith(contextSpy);
         });
         it('converts class with dependencies to provider', () => {
@@ -131,7 +156,7 @@ describe('common/context/context-value-provider', () => {
           const key2 = new SingleContextKey<number>('arg2');
           const spec: ContextValueSpec.AsInstanceWithDeps<[string, number], Value> = {
             a: Value,
-            as: Value,
+            as: Val,
             with: [key1, key2],
           };
           const def = ContextValueSpec.of(spec);
@@ -150,7 +175,12 @@ describe('common/context/context-value-provider', () => {
           });
 
           expect(def.a).toBe(spec.a);
-          expect(def.by(contextSpy)).toEqual(jasmine.any(Value));
+
+          const value = def.by(contextSpy) as Value;
+
+          expect(value).toEqual(jasmine.any(Val));
+          expect(value.some).toBe('other');
+
           expect(constructorSpy).toHaveBeenCalledWith(arg1, arg2);
           expect(contextSpy.get).toHaveBeenCalledWith(key1);
           expect(contextSpy.get).toHaveBeenCalledWith(key2);
@@ -179,7 +209,11 @@ describe('common/context/context-value-provider', () => {
           });
 
           expect(def.a).toBe(spec.as);
-          expect(def.by(contextSpy)).toEqual(jasmine.any(Value));
+
+          const value = def.by(contextSpy) as Value;
+
+          expect(value).toEqual(jasmine.any(Value));
+          expect(value.some).toBe('some');
           expect(constructorSpy).toHaveBeenCalledWith(arg1, arg2);
           expect(contextSpy.get).toHaveBeenCalledWith(key1);
           expect(contextSpy.get).toHaveBeenCalledWith(key2);
