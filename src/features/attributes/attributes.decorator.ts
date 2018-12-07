@@ -1,4 +1,5 @@
-import { StatePath, TypedClassDecorator } from '../../common';
+import { StatePath } from 'fun-events';
+import { TypedClassDecorator } from '../../common';
 import { ComponentClass, ComponentDef } from '../../component';
 import { FeatureDef } from '../../feature';
 import { AttributeRegistrar, AttributeUpdateConsumer } from './attribute-registrar';

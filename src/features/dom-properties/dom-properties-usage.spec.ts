@@ -1,4 +1,4 @@
-import { StatePath } from '../../common';
+import { StatePath } from 'fun-events';
 import { Component, ComponentClass, ComponentContext } from '../../component';
 import { TestBootstrap } from '../../spec/test-bootstrap';
 import { DomMethod, DomProperty } from './dom-property.decorator';

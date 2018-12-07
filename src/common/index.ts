@@ -6,3 +6,5 @@ export * from './functions';
 export * from './fun-events';
 export * from './meta-accessor';
 export * from './reflect';
+
+import './fun-events';

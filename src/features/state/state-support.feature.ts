@@ -1,4 +1,4 @@
-import { StateTracker, StateUpdater } from '../../common';
+import { StateTracker, StateUpdater } from 'fun-events';
 import { BootstrapContext, Feature } from '../../feature';
 
 /**
