@@ -1,4 +1,4 @@
-import { StatePath } from '../../common';
+import { StatePath } from 'fun-events';
 import { ComponentContext } from '../../component';
 import { DomPropertyUpdateConsumer } from './dom-property.decorator';
 

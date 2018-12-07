@@ -1,4 +1,5 @@
-import { decoratePropertyAccessor, StatePath, TypedPropertyDecorator } from '../../common';
+import { StatePath } from 'fun-events';
+import { decoratePropertyAccessor, TypedPropertyDecorator } from '../../common';
 import { Component, ComponentClass, ComponentContext, ComponentDef } from '../../component';
 import { FeatureDef } from '../../feature';
 import { DomPropertiesSupport } from './dom-properties-support.feature';

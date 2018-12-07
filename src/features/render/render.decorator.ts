@@ -1,4 +1,5 @@
-import { StateTracker, TypedPropertyDecorator } from '../../common';
+import { StateTracker } from 'fun-events';
+import { TypedPropertyDecorator } from '../../common';
 import { ComponentClass, ComponentDef } from '../../component';
 import { FeatureDef } from '../../feature';
 import { StateSupport } from '../state';

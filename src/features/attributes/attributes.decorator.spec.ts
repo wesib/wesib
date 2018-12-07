@@ -1,4 +1,4 @@
-import { StatePath } from '../../common';
+import { StatePath } from 'fun-events';
 import { Component, ComponentContext } from '../../component';
 import { testElement } from '../../spec/test-element';
 import { Attributes } from './attributes.decorator';
