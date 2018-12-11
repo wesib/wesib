@@ -138,6 +138,10 @@ export class MyComponent {
 }
 ```
 
+IoC container implementation is based on [context-values].
+
+[context-values]: https://npmjs.com/package/context-values
+
 
 Features
 --------
