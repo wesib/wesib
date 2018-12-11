@@ -1,13 +1,12 @@
 import { StatePath } from 'fun-events';
 import { Component, ComponentClass, ComponentContext } from '../../component';
-import { TestBootstrap } from '../../spec/test-bootstrap';
+import { testElement } from '../../spec/test-element';
 import { DomMethod, DomProperty } from './dom-property.decorator';
 import Spy = jasmine.Spy;
 
 describe('features/dom-properties', () => {
   describe('DOM properties usage', () => {
 
-    let bootstrap: TestBootstrap;
     let testComponent: ComponentClass;
     let context: ComponentContext;
     let element: HTMLElement;
@@ -21,7 +20,12 @@ describe('features/dom-properties', () => {
       customUpdateStateSpy = jasmine.createSpy('customUpdateState');
       customUpdateStatePath = ['custom', 'key'];
 
-      @Component({ name: 'test-component' })
+      @Component({
+        extend: {
+          type: Object,
+        },
+        name: 'test-component',
+      })
       class TestComponent {
 
         @DomProperty()
@@ -66,10 +70,8 @@ describe('features/dom-properties', () => {
     });
 
     beforeEach(async () => {
-      bootstrap = await new TestBootstrap().create(testComponent);
-      element = await bootstrap.addElement(testComponent);
+      element = new (testElement(testComponent))();
     });
-    afterEach(() => bootstrap.dispose());
 
     it('reads component property', () => {
       expect((element as any).readonlyProperty).toBe(propertyValue);
