@@ -1,25 +1,40 @@
 import { EventInterest } from 'fun-events';
 import { Component, ComponentClass, ComponentContext } from '../component';
-import { TestBootstrap } from './test-bootstrap';
+import { Feature } from '../feature';
+import { testElement } from './test-element';
 import Spy = jasmine.Spy;
 
 describe('component instantiation', () => {
   describe('Life cycle', () => {
 
-    let bootstrap: TestBootstrap;
     let testComponent: ComponentClass;
     let constructorSpy: Spy;
     let context: ComponentContext;
     let componentListenerSpy: Spy;
     let elementListenerInterest: EventInterest;
-    let element: HTMLElement;
+    let element: any;
 
     beforeEach(() => {
       context = undefined!;
       constructorSpy = jasmine.createSpy('constructor')
           .and.callFake((ctx: ComponentContext) => context = ctx);
+      componentListenerSpy = jasmine.createSpy('componentListener');
 
-      @Component({ name: 'test-component' })
+      @Component({
+        name: 'test-component',
+        extend: {
+          type: class {
+            get inheritedProperty() {
+              return 'inherited-value';
+            }
+          },
+        },
+      })
+      @Feature({
+        init(bootCtx) {
+          elementListenerInterest = bootCtx.onComponent(componentListenerSpy);
+        }
+      })
       class TestComponent {
 
         constructor(...args: any[]) {
@@ -30,13 +45,9 @@ describe('component instantiation', () => {
 
       testComponent = TestComponent;
     });
-    beforeEach(async () => {
-      bootstrap = await new TestBootstrap().create(testComponent);
-      componentListenerSpy = jasmine.createSpy('componentListener');
-      elementListenerInterest = bootstrap.context.onComponent(componentListenerSpy);
-      element = await bootstrap.addElement(testComponent);
+    beforeEach(() => {
+      element = new (testElement(testComponent))();
     });
-    afterEach(() => bootstrap.dispose());
 
     it('instantiates custom element', async () => {
       expect(element).toBeDefined();
@@ -62,7 +73,7 @@ describe('component instantiation', () => {
       expect(context.componentType).toBe(testComponent);
     });
     it('allows to access inherited element properties', () => {
-      expect(context.elementSuper('tagName')).toEqual('TEST-COMPONENT');
+      expect(context.elementSuper('inheritedProperty')).toEqual('inherited-value');
     });
 
     describe('onComponent listener', () => {
@@ -74,46 +85,37 @@ describe('component instantiation', () => {
 
   describe('context callbacks', () => {
 
-    let bootstrap: TestBootstrap;
-    let testComponent: ComponentClass;
-    let constructorSpy: Spy;
-
-    beforeEach(() => {
-      constructorSpy = jasmine.createSpy('constructor');
-
-      @Component({ name: 'test-component' })
-      class TestComponent {
-        constructor() {
-          constructorSpy();
-        }
-      }
-
-      testComponent = TestComponent;
-    });
-    beforeEach(async () => {
-      bootstrap = await new TestBootstrap().create(testComponent);
-      await bootstrap.addElement(testComponent);
-    });
-    afterEach(() => bootstrap.dispose());
-
     describe('component', () => {
       it('is resolved on component instantiation', async () => {
 
         let context: ComponentContext<any> = { name: 'component context' } as any;
 
         const promise = new Promise(resolve => {
-          bootstrap.context.onComponent(ctx => {
-            context = ctx;
-            expect(() => context.component).toThrowError(/not constructed yet/);
-            ctx.whenReady(comp => resolve(comp));
-          });
-        });
 
-        await bootstrap.addElement(testComponent);
+          @Component({
+            name: 'test-component',
+            extend: {
+              type: Object,
+            },
+          })
+          @Feature({
+            init(bootCtx) {
+              bootCtx.onComponent(ctx => {
+                context = ctx;
+                expect(() => context.component).toThrowError(/not constructed yet/);
+                ctx.whenReady(comp => resolve(comp));
+              });
+            }
+          })
+          class TestComponent {
+          }
+
+          const _element = new (testElement(TestComponent))();
+        });
 
         const component = await promise;
 
-        expect(component).toEqual(jasmine.any(testComponent));
+        expect(component).toBeDefined();
         expect(context.component).toBe(component);
 
         let callbackInvoked = false;
@@ -128,36 +130,62 @@ describe('component instantiation', () => {
     });
 
     describe('onConnect listener', () => {
-      it('is notified on when custom element connected', async () => {
+      it('is notified on when custom element connected', () => {
 
         const listenerSpy = jasmine.createSpy('onConnect');
 
-        bootstrap.context.onComponent(ctx => {
-          ctx.onConnect(listenerSpy);
-          ctx.onConnect(() => expect(ctx.connected).toBe(true));
-        });
+        @Component({
+          name: 'test-component',
+          extend: {
+            type: Object,
+          },
+        })
+        @Feature({
+          init(bootCtx) {
+            bootCtx.onComponent(ctx => {
+              ctx.onConnect(listenerSpy);
+              ctx.onConnect(() => expect(ctx.connected).toBe(true));
+            });
+          }
+        })
+        class TestComponent {
+        }
 
-        await bootstrap.addElement(testComponent);
+        const element: any = new (testElement(TestComponent))();
+
+        element.connectedCallback();
 
         expect(listenerSpy).toHaveBeenCalled();
       });
     });
 
     describe('onDisconnect listener', () => {
-      it('is notified on when custom element disconnected', async () => {
+      it('is notified on when custom element disconnected', () => {
 
         const listenerSpy = jasmine.createSpy('onDisconnect');
 
-        bootstrap.context.onComponent(ctx => {
-          ctx.onDisconnect(listenerSpy);
-          ctx.onDisconnect(() => expect(ctx.connected).toBe(false));
-        });
+        @Component({
+          name: 'test-component',
+          extend: {
+            type: Object,
+          },
+        })
+        @Feature({
+          init(bootCtx) {
+            bootCtx.onComponent(ctx => {
+              ctx.onDisconnect(listenerSpy);
+              ctx.onDisconnect(() => expect(ctx.connected).toBe(false));
+            });
+          }
+        })
+        class TestComponent {
+        }
 
-        const el = await bootstrap.addElement(testComponent);
+        const element: any = new (testElement(TestComponent))();
 
         expect(listenerSpy).not.toHaveBeenCalled();
 
-        el.remove();
+        element.disconnectedCallback();
 
         expect(listenerSpy).toHaveBeenCalled();
       });
