@@ -2,12 +2,12 @@ import { StateTracker, StateUpdater } from 'fun-events';
 import { Component, ComponentClass, ComponentContext } from '../../component';
 import { Feature } from '../../feature';
 import { TestBootstrap } from '../../spec/test-bootstrap';
+import { testElement } from '../../spec/test-element';
 import { StateSupport } from './state-support.feature';
 
 describe('features/state', () => {
   describe('State usage', () => {
 
-    let bootstrap: TestBootstrap;
     let testComponent: ComponentClass;
     let context: ComponentContext;
     let updateState: StateUpdater;
@@ -18,7 +18,12 @@ describe('features/state', () => {
       updateState = undefined!;
       stateTracker = undefined!;
 
-      @Component('test-component')
+      @Component({
+        name: 'test-component',
+        extend: {
+          type: Object,
+        },
+      })
       @Feature({ need: StateSupport })
       class TestComponent {
         constructor(ctx: ComponentContext) {
@@ -31,13 +36,8 @@ describe('features/state', () => {
       testComponent = TestComponent;
     });
 
-    beforeEach(async () => {
-      bootstrap = await new TestBootstrap().create(testComponent);
-    });
-    afterEach(() => bootstrap.dispose());
-
-    beforeEach(async () => {
-      await bootstrap.addElement(testComponent);
+    beforeEach(() => {
+      const _element = new (testElement(testComponent))();
     });
 
     it('provides state update', () => {

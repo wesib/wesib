@@ -50,7 +50,7 @@ describe('features/attributes', () => {
       attrChangedSpy = jasmine.createSpy('attrChanged');
       attr2ChangedSpy = jasmine.createSpy('attr2Changed');
     });
-    beforeEach(async () => {
+    beforeEach(() => {
       element = new (testElement(testComponent))();
     });
 
