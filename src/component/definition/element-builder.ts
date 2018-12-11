@@ -112,7 +112,6 @@ export class ElementBuilder {
     this.definitions.forEach(listener => listener(context));
 
     const elementType = this._elementType(
-        def,
         context,
         onComponent,
         this._componentValueRegistry.append(typeValueRegistry));
@@ -135,7 +134,6 @@ export class ElementBuilder {
   }
 
   private _elementType<T extends object>(
-      def: ComponentDef<T>,
       definitionContext: DefinitionContext_<T>,
       onComponent: EventEmitter<ComponentListener>,
       valueRegistry: ComponentValueRegistry) {
