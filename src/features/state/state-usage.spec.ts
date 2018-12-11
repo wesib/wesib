@@ -1,7 +1,6 @@
 import { StateTracker, StateUpdater } from 'fun-events';
 import { Component, ComponentClass, ComponentContext } from '../../component';
 import { Feature } from '../../feature';
-import { TestBootstrap } from '../../spec/test-bootstrap';
 import { testElement } from '../../spec/test-element';
 import { StateSupport } from './state-support.feature';
 
