@@ -18,4 +18,5 @@ node_modules
 /dist
 
 # Type definitions
-*.d.ts
+/d.ts
+
