@@ -28,7 +28,7 @@ export function DomProperty<T extends ComponentClass>(opts: DomProperty.Opts<T> 
 
     if (opts.updateState !== false) {
 
-      const updateState: DomPropertyUpdateCallback<T> = propertyStateUpdate(propertyKey, opts.updateState);
+      const updateState: any = propertyStateUpdate(propertyKey, opts.updateState);
 
       result = decoratePropertyAccessor(target, propertyKey, propertyDesc, dsc => {
 

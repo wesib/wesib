@@ -1,5 +1,6 @@
+import { SingleContextKey } from 'context-values';
 import { EventInterest } from 'fun-events';
-import { Class, SingleContextKey } from '../../common';
+import { Class } from '../../common';
 import { ComponentClass } from '../component-class';
 import { ComponentContext } from '../component-context';
 import { ComponentDef } from '../component-def';

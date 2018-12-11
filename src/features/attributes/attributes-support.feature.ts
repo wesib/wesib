@@ -1,4 +1,5 @@
-import { Class, mergeFunctions, SingleContextKey } from '../../common';
+import { SingleContextKey } from 'context-values';
+import { Class, mergeFunctions } from '../../common';
 import { ComponentContext } from '../../component';
 import { Feature } from '../../feature';
 import { AttributeChangedCallback, AttributeRegistrar } from './attribute-registrar';
@@ -30,7 +31,7 @@ class AttributeRegistry<T extends object> {
       configurable: true,
       enumerable: true,
       value: function (name: string, oldValue: string | null, newValue: string) {
-        attrs[name].call(ComponentContext.of(this).component, newValue, oldValue);
+        (attrs[name] as any).call(ComponentContext.of(this).component, newValue, oldValue);
       },
     });
   }

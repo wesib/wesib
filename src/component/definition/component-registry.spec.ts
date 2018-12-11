@@ -1,4 +1,4 @@
-import { ContextRequest } from '../../common';
+import { ContextRequest } from 'context-values';
 import { BootstrapContext } from '../../feature';
 import { ComponentClass } from '../component-class';
 import { ComponentDef } from '../component-def';

@@ -1,4 +1,4 @@
-import { ContextKey, SingleContextKey } from '../common/context';
+import { ContextKey, SingleContextKey } from 'context-values';
 
 /**
  * A window the components bootstrap is performed against.

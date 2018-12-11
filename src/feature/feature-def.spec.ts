@@ -1,4 +1,5 @@
-import { Class, ContextValueSpec, noop, SingleContextKey } from '../common';
+import { ContextValueSpec, SingleContextKey } from 'context-values';
+import { Class, noop } from '../common';
 import { BootstrapContext } from './bootstrap-context';
 import { FeatureDef } from './feature-def';
 import Spy = jasmine.Spy;

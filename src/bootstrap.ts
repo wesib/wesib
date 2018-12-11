@@ -1,5 +1,6 @@
+import { ContextValueSpec } from 'context-values';
 import { EventProducer } from 'fun-events';
-import { Class, ContextValueSpec } from './common';
+import { Class } from './common';
 import {
   ComponentClass,
   ComponentContext,
