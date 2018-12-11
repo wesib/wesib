@@ -1,4 +1,5 @@
-import { ArraySet, Class, ContextValueSpec, mergeFunctions, MetaAccessor } from '../common';
+import { ContextValueSpec } from 'context-values';
+import { ArraySet, Class, mergeFunctions, MetaAccessor } from '../common';
 import { BootstrapContext } from './bootstrap-context';
 
 /**

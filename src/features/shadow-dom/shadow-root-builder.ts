@@ -1,4 +1,4 @@
-import { ContextKey, SingleContextKey } from '../../common';
+import { ContextKey, SingleContextKey } from 'context-values';
 import { ComponentContext } from '../../component';
 
 /**

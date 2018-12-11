@@ -1,6 +1,6 @@
 import SpyObj = jasmine.SpyObj;
+import { ContextRegistry } from 'context-values';
 import { Class } from '../../common';
-import { ContextRegistry } from '../../common/context';
 import { BootstrapContext, BootstrapWindow } from '../../feature';
 import { ComponentClass } from '../component-class';
 import { ComponentDef } from '../component-def';

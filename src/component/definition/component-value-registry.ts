@@ -1,4 +1,4 @@
-import { ContextRegistry, ContextSourcesProvider } from '../../common';
+import { ContextRegistry, ContextSourcesProvider } from 'context-values';
 import { ComponentContext } from '../component-context';
 
 /**

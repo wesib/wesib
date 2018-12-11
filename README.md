@@ -35,7 +35,7 @@ Components
 ----------
 
 Wesib allows to define custom components by decorating a component class with `@Component` decorator:
-```TypeScript
+```typescript
 import { Component } from '@wesib/wesib';
 
 @Component('my-component') // Custom element name
@@ -47,7 +47,7 @@ No need to extend `HTMLElement` or any other class. Instead Wesib creates custom
 built either programmatically or using component decorators.
 
 To register custom component(s) call `bootstrapComponents()` function like this:
-```TypeScript
+```typescript
 import { bootstrapComponents } from '@wesib/wesib';
 
 bootstrapComponents(MyComponent);
@@ -67,7 +67,7 @@ Element Attributes
 
 To define custom element attributes use `@Attribute` or `@AttributeChanged` component property decorators,
 or `@Attributes` component class decorator.
-```TypeScript
+```typescript
 import { Attribute, AttributeChanged, Attributes, Component } from '@wesib/wesib';
 
 @Component('my-component') // Custom element name
@@ -100,7 +100,7 @@ Element Properties
 ------------------
 
 To define the properties of custom element use a `@DomProperty` component property decorator.
-```TypeScript
+```typescript
 import { DomProperty, Component } from '@wesib/wesib';
 
 @Component('my-component') // Custom element name
@@ -123,7 +123,7 @@ Wesib provides contexts for each component and feature (see below). This context
 
 For example, each component class constructor accepts a `ComponentContext` instance as its only argument.
 
-```TypeScript
+```typescript
 import { ComponentContext, Component } from '@wesib/wesib';
 
 @Component('my-component') // Custom element name
@@ -137,6 +137,10 @@ export class MyComponent {
 
 }
 ```
+
+IoC container implementation is based on [context-values].
+
+[context-values]: https://npmjs.com/package/context-values
 
 
 Features
@@ -152,7 +156,7 @@ It is possible to define custom features too to extend Wesib. E.g. to augment th
 (like `@Attribute` or `@DomProperty` decorators do), or provide some context values.
 
 The feature is a class decorated with `@Feature` decorator:
-```TypeScript
+```typescript
 import { BootstrapContext, ComponentContext, DefinitionContext, Feature } from '@wesib/wesib';
 
 @Feature({
@@ -217,7 +221,7 @@ export class MyFeature {}
 ```  
 
 To enable custom feature just pass it to `bootstrapComponents()` like this:
-```TypeScript
+```typescript
 import { bootstrapComponents } from '@wesib/wesib';
 
 bootstrapComponents(MyFeature);
@@ -234,7 +238,7 @@ Whenever a component state changes, e.g. when element attribute or property valu
 is issued.
 
 A state update notification can also be issued by calling a `ComponentContext.updateState()` method:
-```TypeScript
+```typescript
 import { Component, ComponentContext } from '@wesib/wesib';
 
 @Component('my-component') // Custom element name
@@ -285,7 +289,7 @@ mechanics to use: direct DOM manipulations, template processing, virtual DOM, et
 
 However, Wesib is able to notify the renderer on component state updates and trigger its rendering. For that a `@Render`
 decorator can be applied to component renderer method:
-```TypeScript
+```typescript
 import { Attribute, Component, ComponentContext, Render } from '@wesib/wesib';
 
 @Component('greet-text')

@@ -1,7 +1,7 @@
+import { SingleContextKey } from 'context-values';
 import { EventEmitter } from 'fun-events';
 import { bootstrapComponents } from './bootstrap';
-import { SingleContextKey } from './common';
-import { ComponentListener, DefinitionListener, Component } from './component';
+import { Component, ComponentListener, DefinitionListener } from './component';
 import { ComponentRegistry } from './component/definition/component-registry';
 import { ComponentValueRegistry } from './component/definition/component-value-registry';
 import { DefinitionValueRegistry } from './component/definition/definition-value-registry';

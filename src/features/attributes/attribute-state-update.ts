@@ -14,7 +14,7 @@ export function attributeStateUpdate<T extends object>(
   }
   if (updateState === true || typeof updateState === 'function') {
 
-    const key = [StatePath.attribute, name];
+    const key = StatePath.ofAttribute(name);
     const update: AttributeUpdateConsumer<T> = updateState === true ? defaultUpdateState : updateState;
 
     return function (this: T, newValue, oldValue) {

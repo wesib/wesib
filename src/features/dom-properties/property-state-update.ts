@@ -18,8 +18,8 @@ export function propertyStateUpdate<T extends object>(
     updateState: true | DomPropertyUpdateConsumer<T> | StatePath = true): DomPropertyUpdateCallback<T> {
   if (updateState === true || typeof updateState === 'function') {
 
-    const path = [StatePath.property, propertyKey];
-    const update: DomPropertyUpdateConsumer<T> = updateState === true ? defaultUpdateState : updateState;
+    const path = StatePath.ofProperty(propertyKey);
+    const update: any = updateState === true ? defaultUpdateState : updateState;
 
     return function (this: T, newValue, oldValue) {
       update.call(this, path, newValue, oldValue);

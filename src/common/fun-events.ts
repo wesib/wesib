@@ -1,5 +1,5 @@
+import { ContextKey, SingleContextKey } from 'context-values';
 import { EventProducer, StatePath, StateTracker, StateUpdater } from 'fun-events';
-import { ContextKey, SingleContextKey } from './context';
 
 declare module 'fun-events' {
 
@@ -16,12 +16,16 @@ declare module 'fun-events' {
      */
     export const property: unique symbol;
 
+    export function ofProperty(key: PropertyKey): [typeof property, string];
+
     /**
      * A path to sub-state containing element an attributes.
      *
      * Thus, an attribute state path is always something like `[StatePath.attribute, 'attribute-name']`.
      */
     export const attribute: unique symbol;
+
+    export function ofAttribute(name: string): [typeof attribute, string];
 
   }
 
@@ -60,7 +64,11 @@ declare module 'fun-events' {
 
 }
 
-(StatePath as any).property = Symbol('property');
-(StatePath as any).attribute = Symbol('attribute');
+const statePath = StatePath as any;
+
+statePath.property = Symbol('property');
+statePath.attribute = Symbol('attribute');
+statePath.ofProperty = (key: PropertyKey) => [StatePath.property, key];
+statePath.ofAttribute = (name: string) => [StatePath.attribute, name];
 (StateUpdater as any).key = new SingleContextKey('state-updater', () => StateUpdater.noop);
 (StateTracker as any).key = new SingleContextKey('state-tracker');

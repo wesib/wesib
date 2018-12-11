@@ -1,5 +1,5 @@
+import { SingleContextKey } from 'context-values';
 import { StatePath } from 'fun-events';
-import { SingleContextKey } from '../../common';
 
 /**
  * Custom element attribute change callback.

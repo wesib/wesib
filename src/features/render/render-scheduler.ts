@@ -1,4 +1,4 @@
-import { ContextKey, SingleContextKey } from '../../common/context';
+import { ContextKey, SingleContextKey } from 'context-values';
 
 /**
  * Rendering scheduler.

@@ -1,5 +1,5 @@
+import { ContextKey, ContextValues, SingleContextKey } from 'context-values';
 import { EventProducer, StatePath, StateUpdater } from 'fun-events';
-import { ContextKey, ContextValues, SingleContextKey } from '../common';
 import { ComponentClass } from './component-class';
 
 const componentContextKey: ContextKey<ComponentContext<any>> = new SingleContextKey('component-context');
