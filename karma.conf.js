@@ -21,7 +21,6 @@ module.exports = (config) => {
     files: [
       { pattern: 'node_modules/tslib/tslib.js', watched: false },
       { pattern: 'src/**/*.ts' },
-      { pattern: 'src/spec/*.html', included: false },
     ],
     preprocessors: {
       'src/**/*.ts': ['karma-typescript'],

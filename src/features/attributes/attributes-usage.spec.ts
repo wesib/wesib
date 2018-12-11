@@ -1,18 +1,18 @@
 import { StatePath } from 'fun-events';
 import { Component, ComponentClass, ComponentContext } from '../../component';
-import { TestBootstrap } from '../../spec/test-bootstrap';
+import { Feature } from '../../feature';
+import { MockElement, testElement } from '../../spec/test-element';
 import { AttributeChanged } from './attribute-changed.decorator';
 import { Attribute } from './attribute.decorator';
+import { AttributesSupport } from './attributes-support.feature';
 import Spy = jasmine.Spy;
 
 describe('features/attributes', () => {
   describe('Attributes usage', () => {
 
-    let bootstrap: TestBootstrap;
     let testComponent: ComponentClass;
     let context: ComponentContext;
-    let noAttrComponent: ComponentClass;
-    let element: HTMLElement;
+    let element: any;
     let attrChangedSpy: Spy;
     let attr2ChangedSpy: Spy;
 
@@ -21,7 +21,12 @@ describe('features/attributes', () => {
       attrChangedSpy = jasmine.createSpy('attrChanged');
       attr2ChangedSpy = jasmine.createSpy('attr2Changed');
 
-      @Component({ name: 'test-component' })
+      @Component({
+        extend: {
+          type: MockElement,
+        },
+        name: 'test-component'
+      })
       class TestComponent {
 
         constructor(ctx: ComponentContext) {
@@ -44,18 +49,10 @@ describe('features/attributes', () => {
     beforeEach(() => {
       attrChangedSpy = jasmine.createSpy('attrChanged');
       attr2ChangedSpy = jasmine.createSpy('attr2Changed');
-
-      @Component({ name: 'no-attr-component' })
-      class NoAttrComponent {
-      }
-
-      noAttrComponent = NoAttrComponent;
     });
-    beforeEach(async () => {
-      bootstrap = await new TestBootstrap().create(testComponent, noAttrComponent);
-      element = await bootstrap.addElement(testComponent);
+    beforeEach(() => {
+      element = new (testElement(testComponent))();
     });
-    afterEach(() => bootstrap.dispose());
 
     it('notifies on attribute change', () => {
       element.setAttribute('custom-attribute', 'value1');
@@ -77,7 +74,19 @@ describe('features/attributes', () => {
     });
     it('does not apply attributes when not defined', async () => {
 
-      const noAttrElement = await bootstrap.addElement(noAttrComponent);
+      @Component({
+        extend: {
+          type: Object,
+        },
+        name: 'no-attr-component'
+      })
+      @Feature({
+        need: AttributesSupport,
+      })
+      class NoAttrComponent {
+      }
+
+      const noAttrElement = new (testElement(NoAttrComponent))();
 
       expect(noAttrElement.constructor).not.toEqual(jasmine.objectContaining({
         observedAttributes: jasmine.anything(),

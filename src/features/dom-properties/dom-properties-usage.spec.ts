@@ -1,16 +1,15 @@
 import { StatePath } from 'fun-events';
 import { Component, ComponentClass, ComponentContext } from '../../component';
-import { TestBootstrap } from '../../spec/test-bootstrap';
+import { testElement } from '../../spec/test-element';
 import { DomMethod, DomProperty } from './dom-property.decorator';
 import Spy = jasmine.Spy;
 
 describe('features/dom-properties', () => {
   describe('DOM properties usage', () => {
 
-    let bootstrap: TestBootstrap;
     let testComponent: ComponentClass;
     let context: ComponentContext;
-    let element: HTMLElement;
+    let element: any;
     let propertyValue: number;
     let customUpdateStateSpy: Spy;
     let customUpdateStatePath: StatePath;
@@ -21,7 +20,12 @@ describe('features/dom-properties', () => {
       customUpdateStateSpy = jasmine.createSpy('customUpdateState');
       customUpdateStatePath = ['custom', 'key'];
 
-      @Component({ name: 'test-component' })
+      @Component({
+        extend: {
+          type: Object,
+        },
+        name: 'test-component',
+      })
       class TestComponent {
 
         @DomProperty()
@@ -65,20 +69,18 @@ describe('features/dom-properties', () => {
       testComponent = TestComponent;
     });
 
-    beforeEach(async () => {
-      bootstrap = await new TestBootstrap().create(testComponent);
-      element = await bootstrap.addElement(testComponent);
+    beforeEach(() => {
+      element = new (testElement(testComponent))();
     });
-    afterEach(() => bootstrap.dispose());
 
     it('reads component property', () => {
-      expect((element as any).readonlyProperty).toBe(propertyValue);
+      expect(element.readonlyProperty).toBe(propertyValue);
       propertyValue = 1;
-      expect((element as any).readonlyProperty).toBe(propertyValue);
+      expect(element.readonlyProperty).toBe(propertyValue);
     });
     it('writes component property', () => {
-      expect((element as any).writableProperty).toBe(propertyValue);
-      (element as any).writableProperty = 1;
+      expect(element.writableProperty).toBe(propertyValue);
+      element.writableProperty = 1;
       expect(propertyValue).toBe(1);
     });
 
@@ -86,22 +88,22 @@ describe('features/dom-properties', () => {
 
       const updateStateSpy = spyOn(context, 'updateState');
 
-      (element as any).writableProperty = 1;
+      element.writableProperty = 1;
 
       expect(updateStateSpy).toHaveBeenCalledWith([StatePath.property, 'writableProperty'], 1, 11);
     });
     it('reads component field', () => {
-      expect((element as any).field).toBe('initial');
+      expect(element.field).toBe('initial');
     });
     it('writes component field', () => {
-      (element as any).field = 'new';
-      expect((element as any).field).toBe('new');
+      element.field = 'new';
+      expect(element.field).toBe('new');
     });
     it('updates the component state on field update', () => {
 
       const updateStateSpy = spyOn(context, 'updateState');
 
-      (element as any).field = 'new';
+      element.field = 'new';
 
       expect(updateStateSpy).toHaveBeenCalledWith([StatePath.property, 'field'], 'new', 'initial');
     });
@@ -109,18 +111,18 @@ describe('features/dom-properties', () => {
 
       const updateStateSpy = spyOn(context, 'updateState');
 
-      (element as any).nonStateUpdating = [1, 2];
+      element.nonStateUpdating = [1, 2];
 
-      expect((element as any).nonStateUpdating).toEqual([1, 2]);
+      expect(element.nonStateUpdating).toEqual([1, 2]);
       expect(updateStateSpy).not.toHaveBeenCalled();
     });
     it('updates the component state with custom function', () => {
 
       const updateStateSpy = spyOn(context, 'updateState');
 
-      (element as any).customStateUpdatingField = 19;
+      element.customStateUpdatingField = 19;
 
-      expect((element as any).customStateUpdatingField).toEqual(19);
+      expect(element.customStateUpdatingField).toEqual(19);
       expect(updateStateSpy).not.toHaveBeenCalled();
       expect(customUpdateStateSpy).toHaveBeenCalledWith([StatePath.property, 'customStateUpdatingField'], 19, 91);
       expect(customUpdateStateSpy.calls.first().object).toBe(ComponentContext.of(element).component);
@@ -129,19 +131,19 @@ describe('features/dom-properties', () => {
 
       const updateStateSpy = spyOn(context, 'updateState');
 
-      (element as any).customStatePathField = 119;
+      element.customStatePathField = 119;
 
-      expect((element as any).customStatePathField).toEqual(119);
+      expect(element.customStatePathField).toEqual(119);
       expect(updateStateSpy).toHaveBeenCalledWith(customUpdateStatePath, 119, 911);
     });
     it('calls component method', () => {
-      expect((element as any).elementMethod('1', '2', '3')).toBe(`${propertyValue}: 1, 2, 3`);
+      expect(element.elementMethod('1', '2', '3')).toBe(`${propertyValue}: 1, 2, 3`);
     });
     it('does not update the component state on method call', () => {
 
       const updateStateSpy = spyOn(context, 'updateState');
 
-      (element as any).elementMethod('1', '2', '3');
+      element.elementMethod('1', '2', '3');
 
       expect(updateStateSpy).not.toHaveBeenCalled();
     });
