@@ -6,20 +6,20 @@ import { StateSupport } from '../state';
 import { RenderScheduler } from './render-scheduler';
 import { RenderSupport } from './render-support.feature';
 import { Render } from './render.decorator';
-import Spy = jasmine.Spy;
-import SpyObj = jasmine.SpyObj;
+import Mock = jest.Mock;
+import Mocked = jest.Mocked;
 
 describe('features/render/render.decorator', () => {
   describe('@Render', () => {
 
-    let customElementsSpy: SpyObj<CustomElements>;
-    let renderSchedulerSpy: SpyObj<RenderScheduler>;
+    let customElementsSpy: Mocked<CustomElements>;
+    let renderSchedulerSpy: Mocked<RenderScheduler>;
     let testComponent: ComponentClass;
-    let renderSpy: Spy;
+    let renderSpy: Mock;
     let definitionContext: DefinitionContext<object>;
 
     beforeEach(() => {
-      renderSpy = jasmine.createSpy('render');
+      renderSpy = jest.fn();
 
       @Component({
         name: 'test-component',
@@ -43,10 +43,14 @@ describe('features/render/render.decorator', () => {
       testComponent = TestComponent;
     });
     beforeEach(() => {
-      renderSchedulerSpy = jasmine.createSpyObj('renderScheduler', ['scheduleRender']);
+      renderSchedulerSpy = {
+        scheduleRender: jest.fn(),
+      };
     });
     beforeEach(() => {
-      customElementsSpy = jasmine.createSpyObj('customElements', ['define']);
+      customElementsSpy = {
+        define: jest.fn(),
+      } as any;
 
       @Feature({
         need: testComponent,
@@ -84,10 +88,10 @@ describe('features/render/render.decorator', () => {
       });
       it('uses decorated method', () => {
         component.property = 'other';
-        renderSchedulerSpy.scheduleRender.calls.first().args[0]();
+        renderSchedulerSpy.scheduleRender.mock.calls[0][0]();
 
         expect(renderSpy).toHaveBeenCalledWith();
-        expect(renderSpy.calls.first().object).toBe(component);
+        expect(renderSpy.mock.instances[0]).toBe(component);
       });
     });
   });

@@ -4,43 +4,48 @@ import { BootstrapContext } from './bootstrap-context';
 import { BootstrapValueRegistry } from './bootstrap-value-registry';
 import { FeatureDef } from './feature-def';
 import { FeatureRegistry } from './feature-registry';
-import Spy = jasmine.Spy;
-import SpyObj = jasmine.SpyObj;
+import Mocked = jest.Mocked;
+import Mock = jest.Mock;
+import SpyInstance = jest.SpyInstance;
 
 describe('feature/feature-registry', () => {
   describe('FeatureRegistry', () => {
 
     let feature1: Class;
-    let configure1spy: Spy;
+    let configure1spy: Mock;
     let feature2: Class;
-    let configure2spy: Spy;
-    let valueRegistrySpy: SpyObj<BootstrapValueRegistry>;
+    let configure2spy: Mock;
+    let valueRegistrySpy: Mocked<BootstrapValueRegistry>;
     let registry: FeatureRegistry;
-    let contextSpy: SpyObj<BootstrapContext>;
-    let addSpy: Spy;
+    let contextSpy: Mocked<BootstrapContext>;
+    let addSpy: SpyInstance;
 
     beforeEach(() => {
-      configure1spy = jasmine.createSpy('configure1');
+      configure1spy = jest.fn();
       feature1 = FeatureDef.define(class Feature1 {}, {
         init: configure1spy,
       });
 
-      configure2spy = jasmine.createSpy('configure2');
+      configure2spy = jest.fn();
       feature2 = FeatureDef.define(class Feature2 {}, {
         init: configure2spy,
       });
     });
     beforeEach(() => {
-      valueRegistrySpy = jasmine.createSpyObj('valueRegistry', ['provide']);
+      valueRegistrySpy = {
+        provide: jest.fn(),
+      } as any;
       registry = FeatureRegistry.create({ valueRegistry: valueRegistrySpy });
-      contextSpy = jasmine.createSpyObj('bootstrapContext', ['define']);
-      addSpy = spyOn(registry, 'add').and.callThrough();
+      contextSpy = {
+        define: jest.fn(),
+      } as any;
+      addSpy = jest.spyOn(registry, 'add');
     });
 
     it('applies feature', () => {
 
       class Feature {}
-      const configureSpy = jasmine.createSpy('configure');
+      const configureSpy = jest.fn();
 
       registry.add(FeatureDef.define(FeatureDef.define(Feature, { init: configureSpy })));
       registry.bootstrap(contextSpy);
@@ -92,7 +97,7 @@ describe('feature/feature-registry', () => {
       registry.add(Feature, feature1);
       registry.add(Feature, feature2);
 
-      expect(() => registry.bootstrap(contextSpy)).toThrow(jasmine.stringMatching(/multiple providers/));
+      expect(() => registry.bootstrap(contextSpy)).toThrow(/multiple providers/);
     });
     it('does not fail when feature provided by the same provider', () => {
       registry.add(feature1, feature2);
@@ -130,7 +135,7 @@ describe('feature/feature-registry', () => {
       registry.add(feature1, feature2);
       registry.add(feature2, feature1);
 
-      expect(() => registry.bootstrap(contextSpy)).toThrow(jasmine.stringMatching(/Circular dependency/));
+      expect(() => registry.bootstrap(contextSpy)).toThrow(/Circular dependency/);
     });
     it('fails on deep circular dependency', () => {
 
@@ -140,12 +145,12 @@ describe('feature/feature-registry', () => {
       registry.add(feature1, feature2);
       registry.add(feature2, Feature);
 
-      expect(() => registry.bootstrap(contextSpy)).toThrow(jasmine.stringMatching(/Circular dependency/));
+      expect(() => registry.bootstrap(contextSpy)).toThrow(/Circular dependency/);
     });
     it('bootstraps value providers', () => {
 
       const key = new SingleContextKey('test-key');
-      const provider = jasmine.createSpy('testValueProvider');
+      const provider = jest.fn();
       class Feature {}
 
       FeatureDef.define(Feature, { set: { a: key, by: provider } });

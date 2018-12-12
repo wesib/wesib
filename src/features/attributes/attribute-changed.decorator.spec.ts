@@ -8,7 +8,7 @@ describe('features/attributes/attribute-changed', () => {
   describe('@AttributeChanged', () => {
     it('declares attribute change callback', () => {
 
-      const attrSpy = jasmine.createSpy('attrChanged');
+      const attrSpy = jest.fn();
 
       @Component({
         name: 'test-component',
@@ -29,7 +29,7 @@ describe('features/attributes/attribute-changed', () => {
       element.attributeChangedCallback('attr', 'old', 'new');
 
       expect(attrSpy).toHaveBeenCalledWith('new', 'old');
-      expect(attrSpy.calls.first().object).toBe(component);
+      expect(attrSpy.mock.instances[0]).toBe(component);
     });
     it('updates the state', () => {
 
@@ -47,15 +47,15 @@ describe('features/attributes/attribute-changed', () => {
       }
 
       const element = new (testElement(TestComponent));
-      const updateStateSpy = spyOn(ComponentContext.of(element), 'updateState');
+      const updateStateSpy = jest.spyOn(ComponentContext.of(element), 'updateState');
 
       element.attributeChangedCallback('attr', 'old', 'new');
 
-      expect(updateStateSpy).toHaveBeenCalledWith([StatePath.attribute, 'attr'], 'new', 'old');
+      expect(updateStateSpy).toHaveBeenCalledWith(StatePath.ofAttribute('attr'), 'new', 'old');
     });
     it('updates the state with custom function', () => {
 
-      const updateSpy = jasmine.createSpy('updateState');
+      const updateSpy = jest.fn();
 
       @Component({
         name: 'test-component',
@@ -72,13 +72,13 @@ describe('features/attributes/attribute-changed', () => {
 
       const element = new (testElement(TestComponent));
       const component = ComponentContext.of(element).component;
-      const updateStateSpy = spyOn(ComponentContext.of(element), 'updateState');
+      const updateStateSpy = jest.spyOn(ComponentContext.of(element), 'updateState');
 
       element.attributeChangedCallback('attr', 'old', 'new');
 
       expect(updateStateSpy).not.toHaveBeenCalled();
-      expect(updateSpy).toHaveBeenCalledWith([StatePath.attribute, 'attr'], 'new', 'old');
-      expect(updateSpy.calls.first().object).toBe(component);
+      expect(updateSpy).toHaveBeenCalledWith(StatePath.ofAttribute('attr'), 'new', 'old');
+      expect(updateSpy.mock.instances[0]).toBe(component);
     });
     it('updates the state with custom key', () => {
 
@@ -98,7 +98,7 @@ describe('features/attributes/attribute-changed', () => {
       }
 
       const element = new (testElement(TestComponent));
-      const updateStateSpy = spyOn(ComponentContext.of(element), 'updateState');
+      const updateStateSpy = jest.spyOn(ComponentContext.of(element), 'updateState');
 
       element.attributeChangedCallback('my-attr', 'old', 'new');
 
@@ -106,7 +106,7 @@ describe('features/attributes/attribute-changed', () => {
     });
     it('disables state update', () => {
 
-      const attrSpy = jasmine.createSpy('attrChanged');
+      const attrSpy = jest.fn();
 
       @Component({
         name: 'test-component',
@@ -123,17 +123,17 @@ describe('features/attributes/attribute-changed', () => {
 
       const element = new (testElement(TestComponent));
       const component = ComponentContext.of(element).component;
-      const updateStateSpy = spyOn(ComponentContext.of(element), 'updateState');
+      const updateStateSpy = jest.spyOn(ComponentContext.of(element), 'updateState');
 
       element.attributeChangedCallback('attr', 'old', 'new');
 
       expect(attrSpy).toHaveBeenCalledWith('new', 'old');
-      expect(attrSpy.calls.first().object).toBe(component);
+      expect(attrSpy.mock.instances[0]).toBe(component);
       expect(updateStateSpy).not.toHaveBeenCalled();
     });
     it('declares attribute with custom attribute name', () => {
 
-      const attrSpy = jasmine.createSpy('attrChanged');
+      const attrSpy = jest.fn();
 
       @Component({
         name: 'test-component',
@@ -154,12 +154,12 @@ describe('features/attributes/attribute-changed', () => {
       element.attributeChangedCallback('my-attr', 'old', 'new');
 
       expect(attrSpy).toHaveBeenCalledWith('new', 'old');
-      expect(attrSpy.calls.first().object).toBe(component);
+      expect(attrSpy.mock.instances[0]).toBe(component);
     });
     it('fails when attribute name is absent and property key is symbol', () => {
 
       const key = Symbol('test');
-      const attrSpy = jasmine.createSpy('attrChanged');
+      const attrSpy = jest.fn();
 
       expect(() => {
         @Component({ name: 'test-component' })

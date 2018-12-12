@@ -1,9 +1,9 @@
 import { noop } from '../common';
-import { FeatureDef } from '../feature';
+import { BootstrapContext, FeatureDef } from '../feature';
 import { ComponentClass } from './component-class';
 import { ComponentDef, PartialComponentDef } from './component-def';
 import { DefinitionContext } from './definition';
-import Spy = jasmine.Spy;
+import Mocked = jest.Mocked;
 
 describe('component/component-def', () => {
   describe('ComponentDef', () => {
@@ -23,7 +23,7 @@ describe('component/component-def', () => {
         class TestComponent {
         }
 
-        expect(() => ComponentDef.of(TestComponent)).toThrow(jasmine.any(TypeError));
+        expect(() => ComponentDef.of(TestComponent)).toThrow(TypeError);
       });
       it('requests inherited definition', () => {
 
@@ -38,12 +38,14 @@ describe('component/component-def', () => {
       });
       it('merges with inherited definition', () => {
 
+        class BaseA {}
+        class BaseB {}
         class A {
           static [ComponentDef.symbol]: ComponentDef = {
             name: 'component-a',
             extend: {
               name: 'div',
-              type: HTMLDivElement,
+              type: BaseA,
             },
           };
         }
@@ -52,7 +54,7 @@ describe('component/component-def', () => {
             name: 'component-b',
             extend: {
               name: 'span',
-              type: HTMLSpanElement,
+              type: BaseB,
             },
           };
         }
@@ -68,23 +70,27 @@ describe('component/component-def', () => {
         expect(ComponentDef.merge({}, { name: 'name2' })).toEqual({ name: 'name2' });
       });
       it('merges `extend`', () => {
-        expect(ComponentDef.merge<HTMLElement>(
-            { extend: { name: 'div', type: HTMLDivElement } },
-            { extend: { name: 'input', type: HTMLInputElement } }))
-            .toEqual({ extend: { name: 'input', type: HTMLInputElement } });
-        expect(ComponentDef.merge<HTMLElement>(
-            { extend: { name: 'div', type: HTMLDivElement } },
+
+        class Base1 {}
+        class Base2 {}
+
+        expect(ComponentDef.merge(
+            { extend: { name: 'div', type: Base1 } },
+            { extend: { name: 'input', type: Base2 } }))
+            .toEqual({ extend: { name: 'input', type: Base2 } });
+        expect(ComponentDef.merge(
+            { extend: { name: 'div', type: Base1 } },
             {}))
-            .toEqual({ extend: { name: 'div', type: HTMLDivElement } });
-        expect(ComponentDef.merge<HTMLElement>(
-            { extend: { name: 'div', type: HTMLDivElement } },
-            { extend: { name: 'input', type: HTMLInputElement } }))
-            .toEqual({ extend: { name: 'input', type: HTMLInputElement } });
+            .toEqual({ extend: { name: 'div', type: Base1 } });
+        expect(ComponentDef.merge(
+            { extend: { name: 'div', type: Base1 } },
+            { extend: { name: 'input', type: Base2 } }))
+            .toEqual({ extend: { name: 'input', type: Base2 } });
       });
       it('merges `define`', () => {
 
-        const define1spy: Spy = jasmine.createSpy('first');
-        const define2spy: Spy = jasmine.createSpy('second');
+        const define1spy = jest.fn();
+        const define2spy = jest.fn();
         const merged = ComponentDef.merge(
             { define: define1spy },
             { define: define2spy }).define || noop;
@@ -95,9 +101,9 @@ describe('component/component-def', () => {
         merged.call(Component, context);
 
         expect(define1spy).toHaveBeenCalledWith(context);
-        expect(define1spy.calls.first().object).toBe(Component);
+        expect(define1spy.mock.instances[0]).toBe(Component);
         expect(define2spy).toHaveBeenCalledWith(context);
-        expect(define2spy.calls.first().object).toBe(Component);
+        expect(define2spy.mock.instances[0]).toBe(Component);
       });
       it('does not merge empty definitions', () => {
         expect(ComponentDef.merge({}, {})).toEqual({});
@@ -120,6 +126,8 @@ describe('component/component-def', () => {
       });
       it('updates component definition', () => {
 
+        class Base {}
+
         const initialDef: ComponentDef = {
           name: 'test',
         };
@@ -129,7 +137,7 @@ describe('component/component-def', () => {
         const def: PartialComponentDef = {
           extend: {
             name: 'span',
-            type: HTMLSpanElement,
+            type: Base,
           },
         };
         const componentType = ComponentDef.define(TestComponent, def);
@@ -144,15 +152,17 @@ describe('component/component-def', () => {
 
           expect(featureDef).toBeDefined();
 
-          const configure = featureDef.init!;
+          const init = featureDef.init!;
 
-          expect(configure).toBeDefined();
+          expect(init).toBeDefined();
 
-          const featureContextSpy = jasmine.createSpyObj('bootstrapContext', ['define']);
+          const bootstrapContextSpy: Mocked<BootstrapContext> = {
+            define: jest.fn(),
+          } as any;
 
-          configure.call(componentType, featureContextSpy);
+          init.call(componentType, bootstrapContextSpy);
 
-          expect(featureContextSpy.define).toHaveBeenCalledWith(componentType);
+          expect(bootstrapContextSpy.define).toHaveBeenCalledWith(componentType);
         });
         it('does not register the base component', () => {
 
@@ -165,16 +175,18 @@ describe('component/component-def', () => {
 
           expect(featureDef).toBeDefined();
 
-          const configure = featureDef.init!;
+          const init = featureDef.init!;
 
-          expect(configure).toBeDefined();
+          expect(init).toBeDefined();
 
-          const featureContextSpy = jasmine.createSpyObj('bootstrapContext', ['define']);
+          const bootstrapContextSpy: Mocked<BootstrapContext> = {
+            define: jest.fn(),
+          } as any;
 
-          configure.call(extType, featureContextSpy);
+          init.call(extType, bootstrapContextSpy);
 
-          expect(featureContextSpy.define).toHaveBeenCalledWith(extType);
-          expect(featureContextSpy.define).not.toHaveBeenCalledWith(baseType);
+          expect(bootstrapContextSpy.define).toHaveBeenCalledWith(extType);
+          expect(bootstrapContextSpy.define).not.toHaveBeenCalledWith(baseType);
         });
         it('registers component only once', () => {
 
@@ -187,16 +199,18 @@ describe('component/component-def', () => {
 
           expect(featureDef).toBeDefined();
 
-          const configure = featureDef.init!;
+          const init = featureDef.init!;
 
-          expect(configure).toBeDefined();
+          expect(init).toBeDefined();
 
-          const featureContextSpy = jasmine.createSpyObj('bootstrapContext', ['define']);
+          const bootstrapContextSpy: Mocked<BootstrapContext> = {
+            define: jest.fn(),
+          } as any;
 
-          configure.call(componentType, featureContextSpy);
+          init.call(componentType, bootstrapContextSpy);
 
-          expect(featureContextSpy.define).toHaveBeenCalledWith(componentType);
-          expect(featureContextSpy.define).toHaveBeenCalledTimes(1);
+          expect(bootstrapContextSpy.define).toHaveBeenCalledWith(componentType);
+          expect(bootstrapContextSpy.define).toHaveBeenCalledTimes(1);
         });
       });
     });

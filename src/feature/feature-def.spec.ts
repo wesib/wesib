@@ -2,7 +2,6 @@ import { ContextValueSpec, SingleContextKey } from 'context-values';
 import { Class, noop } from '../common';
 import { BootstrapContext } from './bootstrap-context';
 import { FeatureDef } from './feature-def';
-import Spy = jasmine.Spy;
 
 describe('feature/feature-def', () => {
 
@@ -86,8 +85,8 @@ describe('feature/feature-def', () => {
       });
       it('merges `init`', () => {
 
-        const bootstrap1spy: Spy = jasmine.createSpy('first');
-        const bootstrap2spy: Spy = jasmine.createSpy('second');
+        const bootstrap1spy = jest.fn();
+        const bootstrap2spy = jest.fn();
         const merged = FeatureDef.merge(
             { init: bootstrap1spy },
             { init: bootstrap2spy }).init || noop;
@@ -98,9 +97,9 @@ describe('feature/feature-def', () => {
         merged.call(Feature, context);
 
         expect(bootstrap1spy).toHaveBeenCalledWith(context);
-        expect(bootstrap1spy.calls.first().object).toBe(Feature);
+        expect(bootstrap1spy.mock.instances[0]).toBe(Feature);
         expect(bootstrap2spy).toHaveBeenCalledWith(context);
-        expect(bootstrap2spy.calls.first().object).toBe(Feature);
+        expect(bootstrap2spy.mock.instances[0]).toBe(Feature);
       });
       it('does not merge empty definitions', () => {
         expect(FeatureDef.merge({}, {})).toEqual({});

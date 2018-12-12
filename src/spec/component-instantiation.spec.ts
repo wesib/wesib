@@ -2,23 +2,22 @@ import { EventInterest } from 'fun-events';
 import { Component, ComponentClass, ComponentContext } from '../component';
 import { Feature } from '../feature';
 import { testElement } from './test-element';
-import Spy = jasmine.Spy;
+import Mock = jest.Mock;
 
 describe('component instantiation', () => {
   describe('Life cycle', () => {
 
     let testComponent: ComponentClass;
-    let constructorSpy: Spy;
+    let constructorSpy: Mock;
     let context: ComponentContext;
-    let componentListenerSpy: Spy;
+    let componentListenerSpy: Mock;
     let elementListenerInterest: EventInterest;
     let element: any;
 
     beforeEach(() => {
       context = undefined!;
-      constructorSpy = jasmine.createSpy('constructor')
-          .and.callFake((ctx: ComponentContext) => context = ctx);
-      componentListenerSpy = jasmine.createSpy('componentListener');
+      constructorSpy = jest.fn((ctx: ComponentContext) => context = ctx);
+      componentListenerSpy = jest.fn();
 
       @Component({
         name: 'test-component',
@@ -64,7 +63,7 @@ describe('component instantiation', () => {
         element,
       };
 
-      expect(constructorSpy).toHaveBeenCalledWith(jasmine.objectContaining(expectedContext));
+      expect(constructorSpy).toHaveBeenCalledWith(expect.objectContaining(expectedContext));
     });
     it('uses custom element as content root', () => {
       expect(context.contentRoot).toBe(element);
@@ -102,7 +101,7 @@ describe('component instantiation', () => {
             init(bootCtx) {
               bootCtx.onComponent(ctx => {
                 context = ctx;
-                expect(() => context.component).toThrowError(/not constructed yet/);
+                expect(() => context.component).toThrow(/not constructed yet/);
                 ctx.whenReady(comp => resolve(comp));
               });
             }
@@ -132,7 +131,7 @@ describe('component instantiation', () => {
     describe('onConnect listener', () => {
       it('is notified on when custom element connected', () => {
 
-        const listenerSpy = jasmine.createSpy('onConnect');
+        const listenerSpy = jest.fn();
 
         @Component({
           name: 'test-component',
@@ -162,7 +161,7 @@ describe('component instantiation', () => {
     describe('onDisconnect listener', () => {
       it('is notified on when custom element disconnected', () => {
 
-        const listenerSpy = jasmine.createSpy('onDisconnect');
+        const listenerSpy = jest.fn();
 
         @Component({
           name: 'test-component',

@@ -1,6 +1,8 @@
 import { SingleContextKey } from 'context-values';
 import { EventInterest } from 'fun-events';
+import { JSDOM } from 'jsdom';
 import { Class } from '../../common';
+import { BootstrapWindow } from '../../feature';
 import { ComponentClass } from '../component-class';
 import { ComponentContext } from '../component-context';
 import { ComponentDef } from '../component-def';
@@ -8,9 +10,16 @@ import { ComponentValueRegistry } from './component-value-registry';
 import { DefinitionContext, ElementBaseClass } from './definition-context';
 import { DefinitionValueRegistry } from './definition-value-registry';
 import { ElementBuilder } from './element-builder';
-import Spy = jasmine.Spy;
+import Mock = jest.Mock;
 
 describe('component/definition/element-builder', () => {
+
+  let dom: JSDOM;
+
+  beforeEach(() => {
+    dom = new JSDOM();
+  });
+
   describe('ElementBuilder', () => {
 
     let definitionValueRegistry: DefinitionValueRegistry;
@@ -20,6 +29,7 @@ describe('component/definition/element-builder', () => {
 
     beforeEach(() => {
       definitionValueRegistry = DefinitionValueRegistry.create();
+      definitionValueRegistry.provide({ a: BootstrapWindow, is: dom.window });
       componentValueRegistry = ComponentValueRegistry.create();
       builder = ElementBuilder.create({ definitionValueRegistry, componentValueRegistry });
     });
@@ -34,38 +44,38 @@ describe('component/definition/element-builder', () => {
 
     describe('buildElement', () => {
       it('builds custom element', () => {
-        expect(builder.buildElement(TestComponent).prototype).toEqual(jasmine.any(HTMLElement));
+        expect(builder.buildElement(TestComponent).prototype).toBeInstanceOf(dom.window.HTMLElement);
       });
       it('extends HTML element', () => {
         ComponentDef.define(TestComponent, {
           extend: {
             name: 'input',
-            type: HTMLInputElement,
+            type: dom.window.HTMLInputElement,
           },
         });
 
-        expect(builder.buildElement(TestComponent).prototype).toEqual(jasmine.any(HTMLInputElement));
+        expect(builder.buildElement(TestComponent).prototype).toBeInstanceOf(dom.window.HTMLInputElement);
       });
     });
     describe('component definition listener', () => {
 
-      let listenerSpy: Spy;
+      let listenerSpy: Mock;
       let interest: EventInterest;
 
       beforeEach(() => {
-        listenerSpy = jasmine.createSpy('listener');
+        listenerSpy = jest.fn();
         interest = builder.definitions.on(listenerSpy);
       });
 
       it('is notified on component definition', () => {
         builder.buildElement(TestComponent);
 
-        expect(listenerSpy).toHaveBeenCalledWith(jasmine.objectContaining({ componentType: TestComponent }));
+        expect(listenerSpy).toHaveBeenCalledWith(expect.objectContaining({ componentType: TestComponent }));
       });
 
       describe('element type', () => {
         it('is absent when listener notified', () => {
-          listenerSpy.and.callFake((context: DefinitionContext<any>) => {
+          listenerSpy.mockImplementation((context: DefinitionContext<any>) => {
             expect(() => context.elementType).toThrowError(/not constructed yet/);
           });
 
@@ -74,24 +84,24 @@ describe('component/definition/element-builder', () => {
         it('is reported when ready', async () => {
 
           const promise = new Promise<Class>(resolve => {
-            listenerSpy.and.callFake((context: DefinitionContext<any>) => context.whenReady(resolve));
+            listenerSpy.mockImplementation((context: DefinitionContext<any>) => context.whenReady(resolve));
           });
 
           builder.buildElement(TestComponent);
 
-          expect(await promise).toEqual(jasmine.any(Function));
+          expect(await promise).toBeInstanceOf(Function);
         });
         it('is present when element built', () => {
           builder.buildElement(TestComponent);
 
-          const context: DefinitionContext<any> = listenerSpy.calls.first().args[0];
+          const context: DefinitionContext<any> = listenerSpy.mock.calls[0][0];
 
-          expect(context.elementType).toEqual(jasmine.any(Function));
+          expect(context.elementType).toBeInstanceOf(Function);
         });
         it('is reported immediately by callback when element built', () => {
           builder.buildElement(TestComponent);
 
-          const context: DefinitionContext<any> = listenerSpy.calls.first().args[0];
+          const context: DefinitionContext<any> = listenerSpy.mock.calls[0][0];
 
           let elementType: Class | undefined;
 
@@ -164,10 +174,10 @@ describe('component/definition/element-builder', () => {
     describe('component listener', () => {
 
       let componentContext: ComponentContext;
-      let onComponentSpy: Spy;
+      let onComponentSpy: Mock;
 
       beforeEach(() => {
-        onComponentSpy = jasmine.createSpy('onComponent');
+        onComponentSpy = jest.fn();
         ComponentDef.define(TestComponent, {
           define(context) {
             context.onComponent(onComponentSpy);

@@ -1,23 +1,23 @@
-import { ComponentClass, ComponentContext, Component } from '../../component';
+import { Component, ComponentClass, ComponentContext } from '../../component';
 import { FeatureDef } from '../../feature';
 import { testElement } from '../../spec/test-element';
 import { AttachShadow } from './attach-shadow.decorator';
 import { ShadowContentRoot } from './shadow-content-root';
 import { ShadowDomSupport } from './shadow-dom-support.feature';
-import Spy = jasmine.Spy;
+import Mock = jest.Mock;
 
 describe('features/shadow-dom/attach-shadow.decorator', () => {
   describe('@AttachShadow', () => {
 
     let testComponent: ComponentClass;
-    let attachShadowSpy: Spy;
+    let attachShadowSpy: Mock;
     let shadowRoot: ShadowContentRoot;
     let element: any;
     let context: ComponentContext;
 
     beforeEach(() => {
       shadowRoot = { name: 'shadowRoot' } as any;
-      attachShadowSpy = jasmine.createSpy('attachShadow').and.returnValue(shadowRoot);
+      attachShadowSpy = jest.fn(() => shadowRoot);
 
       @AttachShadow()
       @Component({
@@ -54,7 +54,7 @@ describe('features/shadow-dom/attach-shadow.decorator', () => {
       expect(attachShadowSpy).toHaveBeenCalledWith({ mode: 'open' });
     });
     it('attaches shadow root', () => {
-      attachShadowSpy.calls.reset();
+      attachShadowSpy.mockClear();
 
       const init: ShadowRootInit = {
         mode: 'closed',
@@ -77,7 +77,7 @@ describe('features/shadow-dom/attach-shadow.decorator', () => {
       expect(attachShadowSpy).toHaveBeenCalledWith(init);
     });
     it('uses element as shadow root if shadow DOM is not supported', () => {
-      attachShadowSpy.calls.reset();
+      attachShadowSpy.mockClear();
 
       const init: ShadowRootInit = {
         mode: 'closed',

@@ -20,7 +20,7 @@ describe('features/attributes/attributes', () => {
       }
 
       const element = new (testElement(TestComponent));
-      const updateStateSpy = spyOn(ComponentContext.of(element), 'updateState');
+      const updateStateSpy = jest.spyOn(ComponentContext.of(element), 'updateState');
 
       element.attributeChangedCallback('attr', 'old', 'new');
 
@@ -28,7 +28,7 @@ describe('features/attributes/attributes', () => {
     });
     it('updates the state with custom function', () => {
 
-      const updateSpy = jasmine.createSpy('updateState');
+      const updateSpy = jest.fn();
 
       @Component({
         name: 'test-component',
@@ -44,13 +44,13 @@ describe('features/attributes/attributes', () => {
 
       const element = new (testElement(TestComponent));
       const component = ComponentContext.of(element).component;
-      const updateStateSpy = spyOn(ComponentContext.of(element), 'updateState');
+      const updateStateSpy = jest.spyOn(ComponentContext.of(element), 'updateState');
 
       element.attributeChangedCallback('attr', 'old', 'new');
 
       expect(updateStateSpy).not.toHaveBeenCalled();
       expect(updateSpy).toHaveBeenCalledWith([StatePath.attribute, 'attr'], 'new', 'old');
-      expect(updateSpy.calls.first().object).toBe(component);
+      expect(updateSpy.mock.instances[0]).toBe(component);
     });
     it('updates the state with custom key', () => {
 
@@ -69,7 +69,7 @@ describe('features/attributes/attributes', () => {
       }
 
       const element = new (testElement(TestComponent));
-      const updateStateSpy = spyOn(ComponentContext.of(element), 'updateState');
+      const updateStateSpy = jest.spyOn(ComponentContext.of(element), 'updateState');
 
       element.attributeChangedCallback('attr', 'old', 'new');
 
@@ -90,7 +90,7 @@ describe('features/attributes/attributes', () => {
       }
 
       const element = new (testElement(TestComponent));
-      const updateStateSpy = spyOn(ComponentContext.of(element), 'updateState');
+      const updateStateSpy = jest.spyOn(ComponentContext.of(element), 'updateState');
 
       element.attributeChangedCallback('attr', 'old', 'new');
 

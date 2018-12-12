@@ -64,7 +64,7 @@ describe('common/reflect', () => {
       const desc = toPropertyAccessorDescriptor(dataDesc);
 
       expect(desc.set).toBeUndefined();
-      expect(desc.get).toEqual(jasmine.any(Function));
+      expect(desc.get).toBeInstanceOf(Function);
 
       const getter = desc.get!;
 
@@ -80,8 +80,8 @@ describe('common/reflect', () => {
       };
       const desc = toPropertyAccessorDescriptor(dataDesc);
 
-      expect(desc.set).toEqual(jasmine.any(Function));
-      expect(desc.get).toEqual(jasmine.any(Function));
+      expect(desc.set).toBeInstanceOf(Function);
+      expect(desc.get).toBeInstanceOf(Function);
 
       const getter = desc.get!;
       const setter = desc.set!;

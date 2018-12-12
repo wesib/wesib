@@ -2,7 +2,7 @@ import { StatePath } from 'fun-events';
 import { Component, ComponentClass, ComponentContext } from '../../component';
 import { testElement } from '../../spec/test-element';
 import { DomMethod, DomProperty } from './dom-property.decorator';
-import Spy = jasmine.Spy;
+import Mock = jest.Mock;
 
 describe('features/dom-properties', () => {
   describe('DOM properties usage', () => {
@@ -11,13 +11,13 @@ describe('features/dom-properties', () => {
     let context: ComponentContext;
     let element: any;
     let propertyValue: number;
-    let customUpdateStateSpy: Spy;
+    let customUpdateStateSpy: Mock;
     let customUpdateStatePath: StatePath;
 
     beforeEach(() => {
       context = undefined!;
       propertyValue = 0;
-      customUpdateStateSpy = jasmine.createSpy('customUpdateState');
+      customUpdateStateSpy = jest.fn();
       customUpdateStatePath = ['custom', 'key'];
 
       @Component({
@@ -86,7 +86,7 @@ describe('features/dom-properties', () => {
 
     it('updates the component state on property update', () => {
 
-      const updateStateSpy = spyOn(context, 'updateState');
+      const updateStateSpy = jest.spyOn(context, 'updateState');
 
       element.writableProperty = 1;
 
@@ -101,7 +101,7 @@ describe('features/dom-properties', () => {
     });
     it('updates the component state on field update', () => {
 
-      const updateStateSpy = spyOn(context, 'updateState');
+      const updateStateSpy = jest.spyOn(context, 'updateState');
 
       element.field = 'new';
 
@@ -109,7 +109,7 @@ describe('features/dom-properties', () => {
     });
     it('does not update the component state when disabled', () => {
 
-      const updateStateSpy = spyOn(context, 'updateState');
+      const updateStateSpy = jest.spyOn(context, 'updateState');
 
       element.nonStateUpdating = [1, 2];
 
@@ -118,18 +118,18 @@ describe('features/dom-properties', () => {
     });
     it('updates the component state with custom function', () => {
 
-      const updateStateSpy = spyOn(context, 'updateState');
+      const updateStateSpy = jest.spyOn(context, 'updateState');
 
       element.customStateUpdatingField = 19;
 
       expect(element.customStateUpdatingField).toEqual(19);
       expect(updateStateSpy).not.toHaveBeenCalled();
       expect(customUpdateStateSpy).toHaveBeenCalledWith([StatePath.property, 'customStateUpdatingField'], 19, 91);
-      expect(customUpdateStateSpy.calls.first().object).toBe(ComponentContext.of(element).component);
+      expect(customUpdateStateSpy.mock.instances[0]).toBe(ComponentContext.of(element).component);
     });
     it('updates the component state with custom path', () => {
 
-      const updateStateSpy = spyOn(context, 'updateState');
+      const updateStateSpy = jest.spyOn(context, 'updateState');
 
       element.customStatePathField = 119;
 
@@ -141,7 +141,7 @@ describe('features/dom-properties', () => {
     });
     it('does not update the component state on method call', () => {
 
-      const updateStateSpy = spyOn(context, 'updateState');
+      const updateStateSpy = jest.spyOn(context, 'updateState');
 
       element.elementMethod('1', '2', '3');
 
