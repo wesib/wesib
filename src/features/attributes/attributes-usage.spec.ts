@@ -5,7 +5,7 @@ import { MockElement, testElement } from '../../spec/test-element';
 import { AttributeChanged } from './attribute-changed.decorator';
 import { Attribute } from './attribute.decorator';
 import { AttributesSupport } from './attributes-support.feature';
-import Spy = jasmine.Spy;
+import Mock = jest.Mock;
 
 describe('features/attributes', () => {
   describe('Attributes usage', () => {
@@ -13,13 +13,13 @@ describe('features/attributes', () => {
     let testComponent: ComponentClass;
     let context: ComponentContext;
     let element: any;
-    let attrChangedSpy: Spy;
-    let attr2ChangedSpy: Spy;
+    let attrChangedSpy: Mock;
+    let attr2ChangedSpy: Mock;
 
     beforeEach(() => {
       context = undefined!;
-      attrChangedSpy = jasmine.createSpy('attrChanged');
-      attr2ChangedSpy = jasmine.createSpy('attr2Changed');
+      attrChangedSpy = jest.fn();
+      attr2ChangedSpy = jest.fn();
 
       @Component({
         extend: {
@@ -47,10 +47,6 @@ describe('features/attributes', () => {
       testComponent = TestComponent;
     });
     beforeEach(() => {
-      attrChangedSpy = jasmine.createSpy('attrChanged');
-      attr2ChangedSpy = jasmine.createSpy('attr2Changed');
-    });
-    beforeEach(() => {
       element = new (testElement(testComponent))();
     });
 
@@ -58,7 +54,7 @@ describe('features/attributes', () => {
       element.setAttribute('custom-attribute', 'value1');
       expect(attrChangedSpy).toHaveBeenCalledWith('value1', null);
 
-      attrChangedSpy.calls.reset();
+      attrChangedSpy.mockClear();
       element.setAttribute('custom-attribute', 'value2');
       expect(attrChangedSpy).toHaveBeenCalledWith('value2', 'value1');
     });
@@ -88,12 +84,12 @@ describe('features/attributes', () => {
 
       const noAttrElement = new (testElement(NoAttrComponent))();
 
-      expect(noAttrElement.constructor).not.toEqual(jasmine.objectContaining({
-        observedAttributes: jasmine.anything(),
+      expect(noAttrElement.constructor).not.toEqual(expect.objectContaining({
+        observedAttributes: expect.anything(),
       }));
-      expect<any>(noAttrElement).not.toEqual(jasmine.objectContaining({
-        attributeChangedCallback: jasmine.anything(),
-      }));
+      expect<any>(noAttrElement).not.toMatchObject({
+        attributeChangedCallback: expect.anything(),
+      });
     });
     it('accesses attribute value', () => {
 
@@ -113,7 +109,7 @@ describe('features/attributes', () => {
     });
     it('notifies on attribute update', () => {
 
-      const updateStateSpy = spyOn(context, 'updateState');
+      const updateStateSpy = jest.spyOn(context, 'updateState');
       const value = 'new value';
 
       (ComponentContext.of(element).component as any).attr3 = value;

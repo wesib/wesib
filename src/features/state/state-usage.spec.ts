@@ -40,14 +40,14 @@ describe('features/state', () => {
     });
 
     it('provides state update', () => {
-      expect(updateState).toEqual(jasmine.any(Function));
+      expect(updateState).toBeInstanceOf(Function);
     });
     it('provides state tracker', () => {
-      expect(stateTracker).toEqual(jasmine.any(Object));
+      expect(stateTracker).toBeInstanceOf(Object);
     });
     it('notifies on state update', () => {
 
-      const listenerSpy = jasmine.createSpy('stateListener');
+      const listenerSpy = jest.fn();
       const interest = stateTracker.onUpdate(listenerSpy);
 
       updateState(['key'], 'new', 'old');
@@ -55,14 +55,14 @@ describe('features/state', () => {
       expect(listenerSpy).toHaveBeenCalledWith(['key'], 'new', 'old');
 
       interest.off();
-      listenerSpy.calls.reset();
+      listenerSpy.mockClear();
       updateState('key', 'new', 'old');
 
       expect(listenerSpy).not.toHaveBeenCalled();
     });
     it('notifies on state update with `updateState()` method' , () => {
 
-      const listenerSpy = jasmine.createSpy('stateListener');
+      const listenerSpy = jest.fn();
       const interest = stateTracker.onUpdate(listenerSpy);
 
       context.updateState(['key'], 'new', 'old');
@@ -70,7 +70,7 @@ describe('features/state', () => {
       expect(listenerSpy).toHaveBeenCalledWith(['key'], 'new', 'old');
 
       interest.off();
-      listenerSpy.calls.reset();
+      listenerSpy.mockClear();
       updateState('key', 'new', 'old');
 
       expect(listenerSpy).not.toHaveBeenCalled();

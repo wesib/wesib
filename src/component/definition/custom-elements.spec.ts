@@ -1,16 +1,24 @@
-import SpyObj = jasmine.SpyObj;
 import { ContextRegistry } from 'context-values';
+import { JSDOM } from 'jsdom';
 import { Class } from '../../common';
 import { BootstrapContext, BootstrapWindow } from '../../feature';
 import { ComponentClass } from '../component-class';
 import { ComponentDef } from '../component-def';
 import { CustomElements } from './custom-elements';
+import Mocked = jest.Mocked;
 
 describe('component/definition/custom-elements', () => {
+
+  let dom: JSDOM;
+
+  beforeEach(() => {
+    dom = new JSDOM();
+  });
+
   describe('CustomElements', () => {
 
     let context: BootstrapContext;
-    let registrySpy: SpyObj<CustomElementRegistry>;
+    let registrySpy: Mocked<CustomElementRegistry>;
     let customElements: CustomElements;
     let TestComponent: ComponentClass;
     let elementType: Class;
@@ -19,7 +27,10 @@ describe('component/definition/custom-elements', () => {
 
       const valueRegistry = new ContextRegistry<BootstrapContext>();
 
-      registrySpy = jasmine.createSpyObj('customElements', ['define', 'whenDefined']);
+      registrySpy = {
+        define: jest.fn(),
+        whenDefined: jest.fn(),
+      } as any;
       const windowSpy: Window = {
         customElements: registrySpy,
       } as any;
@@ -42,7 +53,7 @@ describe('component/definition/custom-elements', () => {
         };
       };
 
-      elementType = HTMLElement;
+      elementType = dom.window.HTMLElement;
     });
 
     describe('define', () => {
@@ -53,10 +64,7 @@ describe('component/definition/custom-elements', () => {
       });
       it('defines custom element extending another one', () => {
 
-        class BaseElement extends HTMLElement {
-          constructor() {
-            super();
-          }
+        class BaseElement {
         }
 
         ComponentDef.define(TestComponent, {
@@ -70,10 +78,14 @@ describe('component/definition/custom-elements', () => {
         expect(registrySpy.define).toHaveBeenCalledWith('test-component', elementType);
       });
       it('defines custom element extending standard one', () => {
+
+        class BaseElement {
+        }
+
         ComponentDef.define(TestComponent, {
           extend: {
             name: 'input',
-            type: HTMLInputElement,
+            type: BaseElement,
           }
         });
 
@@ -90,7 +102,7 @@ describe('component/definition/custom-elements', () => {
 
         const promise = Promise.resolve<any>('defined');
 
-        registrySpy.whenDefined.and.returnValue(promise);
+        registrySpy.whenDefined.mockReturnValue(promise);
 
         expect(customElements.whenDefined(TestComponent)).toBe(promise);
         expect(registrySpy.whenDefined).toHaveBeenCalledWith('test-component');

@@ -1,5 +1,5 @@
 import { mergeFunctions, noop } from './functions';
-import Spy = jasmine.Spy;
+import Mock = jest.Mock;
 
 describe('util/functions', () => {
   describe('noop', () => {
@@ -10,14 +10,14 @@ describe('util/functions', () => {
 
   describe('mergeFunctions', () => {
 
-    let firstSpy: Spy;
-    let secondSpy: Spy;
-    let mergeSpy: Spy;
+    let firstSpy: Mock;
+    let secondSpy: Mock;
+    let mergeSpy: Mock;
 
     beforeEach(() => {
-      firstSpy = jasmine.createSpy('first').and.returnValue(1);
-      secondSpy = jasmine.createSpy('second').and.returnValue(2);
-      mergeSpy = jasmine.createSpy('merge').and.returnValue(3);
+      firstSpy = jest.fn().mockReturnValue(1);
+      secondSpy = jest.fn().mockReturnValue(2);
+      mergeSpy = jest.fn().mockReturnValue(3);
     });
 
     it('merges function results', () => {
@@ -30,11 +30,11 @@ describe('util/functions', () => {
 
       expect(firstSpy).toHaveBeenCalledTimes(1);
       expect(firstSpy).toHaveBeenCalledWith(...args);
-      expect(firstSpy.calls.first().object).toBe(self);
+      expect(firstSpy.mock.instances[0]).toBe(self);
 
       expect(secondSpy).toHaveBeenCalledTimes(1);
       expect(secondSpy).toHaveBeenCalledWith(...args);
-      expect(secondSpy.calls.first().object).toBe(self);
+      expect(secondSpy.mock.instances[0]).toBe(self);
 
       expect(mergeSpy).toHaveBeenCalledTimes(1);
       expect(mergeSpy).toHaveBeenCalledWith(1, 2);
@@ -49,11 +49,11 @@ describe('util/functions', () => {
 
       expect(firstSpy).toHaveBeenCalledTimes(1);
       expect(firstSpy).toHaveBeenCalledWith(...args);
-      expect(firstSpy.calls.first().object).toBe(self);
+      expect(firstSpy.mock.instances[0]).toBe(self);
 
       expect(secondSpy).toHaveBeenCalledTimes(1);
       expect(secondSpy).toHaveBeenCalledWith(...args);
-      expect(secondSpy.calls.first().object).toBe(self);
+      expect(secondSpy.mock.instances[0]).toBe(self);
 
       expect(mergeSpy).not.toHaveBeenCalled();
     });

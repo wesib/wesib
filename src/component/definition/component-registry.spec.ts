@@ -5,30 +5,36 @@ import { ComponentDef } from '../component-def';
 import { ComponentRegistry } from './component-registry';
 import { CustomElements } from './custom-elements';
 import { ElementBuilder } from './element-builder';
-import SpyObj = jasmine.SpyObj;
+import Mocked = jest.Mocked;
 
 describe('component/definition/component-registry', () => {
   describe('ComponentRegistry', () => {
 
-    let customElementsSpy: SpyObj<CustomElements>;
-    let bootstrapContextSpy: SpyObj<BootstrapContext>;
-    let builderSpy: SpyObj<ElementBuilder>;
+    let customElementsSpy: Mocked<Pick<CustomElements, 'define' | 'whenDefined'>>;
+    let bootstrapContextSpy: Mocked<BootstrapContext>;
+    let builderSpy: Mocked<ElementBuilder>;
     let registry: ComponentRegistry;
     let TestComponent: ComponentClass;
-    let ElementSpy: SpyObj<HTMLElement>;
+    let ElementSpy: Mocked<HTMLElement>;
 
     beforeEach(() => {
-      bootstrapContextSpy = jasmine.createSpyObj('bootstrapContext', ['get']);
-      bootstrapContextSpy.get.and.callFake((request: ContextRequest<any>) => {
-        if (request.key === CustomElements.key) {
-          return customElementsSpy;
-        }
-        return;
-      });
-      customElementsSpy = jasmine.createSpyObj('customElements', ['define', 'whenDefined']);
+      bootstrapContextSpy = {
+        get: jest.fn((request: ContextRequest<any>) => {
+          if (request.key === CustomElements.key) {
+            return customElementsSpy;
+          }
+          return;
+        })
+      } as any;
+      customElementsSpy = {
+        define: jest.fn(),
+        whenDefined: jest.fn(),
+      };
     });
     beforeEach(() => {
-      builderSpy = jasmine.createSpyObj('builder', ['buildElement']);
+      builderSpy = {
+        buildElement: jest.fn(),
+      } as any;
     });
     beforeEach(() => {
       registry = ComponentRegistry.create({
@@ -43,8 +49,10 @@ describe('component/definition/component-registry', () => {
         };
       };
 
-      ElementSpy = jasmine.createSpyObj('Element', ['addEventListener']);
-      builderSpy.buildElement.and.returnValue(ElementSpy);
+      ElementSpy = {
+        addEventListener: jest.fn(),
+      } as any;
+      builderSpy.buildElement.mockReturnValue(ElementSpy);
     });
 
     describe('define', () => {
@@ -66,7 +74,7 @@ describe('component/definition/component-registry', () => {
 
         const promise = Promise.resolve<any>('defined');
 
-        customElementsSpy.whenDefined.and.returnValue(promise);
+        customElementsSpy.whenDefined.mockReturnValue(promise);
 
         expect(registry.whenDefined(TestComponent)).toBe(promise);
         expect(customElementsSpy.whenDefined).toHaveBeenCalledWith(TestComponent);

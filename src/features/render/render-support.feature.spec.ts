@@ -1,20 +1,24 @@
-import SpyObj = jasmine.SpyObj;
 import { bootstrapComponents } from '../../bootstrap';
 import { Class } from '../../common';
 import { ComponentClass, ComponentContext, CustomElements, Component } from '../../component';
 import { BootstrapWindow, Feature } from '../../feature';
 import { RenderScheduler } from './render-scheduler';
 import { RenderSupport } from './render-support.feature';
+import Mocked = jest.Mocked;
 
 describe('features/render/render-support.feature', () => {
   describe('RenderSupport', () => {
 
-    let windowSpy: SpyObj<Window>;
-    let customElementsSpy: SpyObj<CustomElements>;
+    let windowSpy: Mocked<Window>;
+    let customElementsSpy: Mocked<CustomElements>;
 
     beforeEach(() => {
-      windowSpy = jasmine.createSpyObj('window', ['requestAnimationFrame']);
-      customElementsSpy = jasmine.createSpyObj('customElements', ['define']);
+      windowSpy = {
+        requestAnimationFrame: jest.fn(),
+      } as any;
+      customElementsSpy = {
+        define: jest.fn(),
+      } as any;
     });
 
     let testComponent: ComponentClass;
@@ -71,21 +75,21 @@ describe('features/render/render-support.feature', () => {
       describe('scheduleRender', () => {
         it('requests animation frame', () => {
 
-          const renderSpy = jasmine.createSpy('render');
+          const renderSpy = jest.fn();
 
           renderScheduler.scheduleRender(renderSpy);
 
-          expect(windowSpy.requestAnimationFrame).toHaveBeenCalledWith(jasmine.any(Function));
+          expect(windowSpy.requestAnimationFrame).toHaveBeenCalledWith(expect.any(Function));
           expect(renderSpy).not.toHaveBeenCalled();
 
-          windowSpy.requestAnimationFrame.calls.first().args[0]();
+          windowSpy.requestAnimationFrame.mock.calls[0][0]();
 
           expect(renderSpy).toHaveBeenCalled();
         });
         it('does not request animation frame for the second time', () => {
 
-          const render1spy = jasmine.createSpy('render1');
-          const render2spy = jasmine.createSpy('render2');
+          const render1spy = jest.fn();
+          const render2spy = jest.fn();
 
           renderScheduler.scheduleRender(render1spy);
           renderScheduler.scheduleRender(render2spy);
@@ -94,32 +98,32 @@ describe('features/render/render-support.feature', () => {
         });
         it('renders with the latest scheduled renderer', () => {
 
-          const render1spy = jasmine.createSpy('render1');
-          const render2spy = jasmine.createSpy('render2');
+          const render1spy = jest.fn();
+          const render2spy = jest.fn();
 
           renderScheduler.scheduleRender(render1spy);
           renderScheduler.scheduleRender(render2spy);
 
-          windowSpy.requestAnimationFrame.calls.first().args[0]();
+          windowSpy.requestAnimationFrame.mock.calls[0][0]();
 
           expect(render1spy).not.toHaveBeenCalled();
           expect(render2spy).toHaveBeenCalled();
         });
         it('allows to re-render', () => {
 
-          const render1spy = jasmine.createSpy('render1');
+          const render1spy = jest.fn();
 
           renderScheduler.scheduleRender(render1spy);
 
-          windowSpy.requestAnimationFrame.calls.first().args[0]();
+          windowSpy.requestAnimationFrame.mock.calls[0][0]();
 
           expect(render1spy).toHaveBeenCalled();
 
-          const render2spy = jasmine.createSpy('render2');
+          const render2spy = jest.fn();
 
           renderScheduler.scheduleRender(render2spy);
 
-          windowSpy.requestAnimationFrame.calls.first().args[0]();
+          windowSpy.requestAnimationFrame.mock.calls[0][0]();
 
           expect(render2spy).toHaveBeenCalled();
         });

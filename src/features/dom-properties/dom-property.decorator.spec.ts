@@ -68,8 +68,8 @@ describe('features/dom-properties/dom-property', () => {
         expect(Object.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: true,
           enumerable: true,
-          get: jasmine.any(Function),
-          set: jasmine.any(Function),
+          get: expect.any(Function),
+          set: expect.any(Function),
         });
       });
       it('applies defaults to non-state-updating field', () => {
@@ -90,8 +90,8 @@ describe('features/dom-properties/dom-property', () => {
         expect(Object.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: true,
           enumerable: true,
-          get: jasmine.any(Function),
-          set: jasmine.any(Function),
+          get: expect.any(Function),
+          set: expect.any(Function),
         });
       });
       it('applies custom property attributes', () => {
@@ -116,7 +116,7 @@ describe('features/dom-properties/dom-property', () => {
         expect(Object.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: false,
           enumerable: false,
-          get: jasmine.any(Function),
+          get: expect.any(Function),
           set: undefined,
         });
       });
@@ -143,7 +143,7 @@ describe('features/dom-properties/dom-property', () => {
         expect(Object.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: false,
           enumerable: false,
-          get: jasmine.any(Function),
+          get: expect.any(Function),
           set: undefined,
         });
       });
@@ -169,7 +169,7 @@ describe('features/dom-properties/dom-property', () => {
         expect(Object.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: true,
           enumerable: false,
-          get: jasmine.any(Function),
+          get: expect.any(Function),
           set: undefined,
         });
       });
@@ -197,7 +197,7 @@ describe('features/dom-properties/dom-property', () => {
         expect(Object.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: false,
           enumerable: true,
-          get: jasmine.any(Function),
+          get: expect.any(Function),
           set: undefined,
         });
       });
@@ -229,8 +229,8 @@ describe('features/dom-properties/dom-property', () => {
         expect<any>(Object.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: true,
           enumerable: false,
-          get: jasmine.any(Function),
-          set: jasmine.any(Function),
+          get: expect.any(Function),
+          set: expect.any(Function),
         });
       });
       it('applies custom writable property attributes', () => {
@@ -265,7 +265,7 @@ describe('features/dom-properties/dom-property', () => {
         expect(Object.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: false,
           enumerable: true,
-          get: jasmine.any(Function),
+          get: expect.any(Function),
           set: undefined,
         });
       });

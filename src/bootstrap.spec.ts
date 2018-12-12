@@ -1,7 +1,6 @@
 import { SingleContextKey } from 'context-values';
-import { EventEmitter } from 'fun-events';
 import { bootstrapComponents } from './bootstrap';
-import { Component, ComponentListener, DefinitionListener } from './component';
+import { Component } from './component';
 import { ComponentRegistry } from './component/definition/component-registry';
 import { ComponentValueRegistry } from './component/definition/component-value-registry';
 import { DefinitionValueRegistry } from './component/definition/definition-value-registry';
@@ -9,80 +8,73 @@ import { ElementBuilder } from './component/definition/element-builder';
 import { BootstrapContext, FeatureDef } from './feature';
 import { BootstrapValueRegistry } from './feature/bootstrap-value-registry';
 import { FeatureRegistry } from './feature/feature-registry';
-import Spy = jasmine.Spy;
-import SpyObj = jasmine.SpyObj;
+import Mock = jest.Mock;
+import Mocked = jest.Mocked;
 
 describe('bootstrap', () => {
 
-  let createBootstrapValueRegistrySpy: Spy;
-  let bootstrapValueRegistrySpy: SpyObj<BootstrapValueRegistry>;
-  let bootstrapContextSpy: SpyObj<BootstrapContext>;
-  let bootstrapSourcesSpy: Spy;
-  let createDefinitionValueRegistrySpy: Spy;
-  let definitionValueRegistrySpy: SpyObj<DefinitionValueRegistry>;
-  let createComponentValueRegistrySpy: Spy;
-  let componentValueRegistrySpy: SpyObj<ComponentValueRegistry>;
-  let createElementBuilderSpy: Spy;
-  let elementBuilderSpy: SpyObj<ElementBuilder>;
-  let createComponentRegistrySpy: Spy;
-  let componentRegistrySpy: SpyObj<ComponentRegistry>;
+  let createBootstrapValueRegistrySpy: Mock;
+  let bootstrapValueRegistrySpy: Mocked<BootstrapValueRegistry>;
+  let bootstrapContextSpy: Mocked<BootstrapContext>;
+  let bootstrapSourcesSpy: Mock;
+  let createDefinitionValueRegistrySpy: Mock;
+  let definitionValueRegistrySpy: Mocked<DefinitionValueRegistry>;
+  let createComponentValueRegistrySpy: Mock;
+  let componentValueRegistrySpy: Mocked<ComponentValueRegistry>;
+  let createElementBuilderSpy: Mock;
+  let elementBuilderSpy: Mocked<ElementBuilder>;
+  let createComponentRegistrySpy: Mock;
+  let componentRegistrySpy: Mocked<ComponentRegistry>;
 
   beforeEach(() => {
 
-    bootstrapValueRegistrySpy = jasmine.createSpyObj(
-        'bootstrapValueRegistry',
-        [
-          'provide',
-          'get',
-          'newValues',
-          'bindSources',
-        ]);
-    createBootstrapValueRegistrySpy = spyOn(BootstrapValueRegistry, 'create')
-        .and.returnValue(bootstrapValueRegistrySpy);
+    bootstrapValueRegistrySpy = {
+      provide: jest.fn(),
+      newValues: jest.fn(),
+      bindSources: jest.fn(),
+    } as any;
+    createBootstrapValueRegistrySpy = jest.spyOn(BootstrapValueRegistry, 'create')
+        .mockReturnValue(bootstrapValueRegistrySpy);
 
-    bootstrapSourcesSpy = jasmine.createSpy('bootstrapSources');
+    bootstrapSourcesSpy = jest.fn();
     (bootstrapValueRegistrySpy as any).valueSources = bootstrapSourcesSpy;
 
-    bootstrapContextSpy = jasmine.createSpyObj('bootstrapContext', ['get']);
+    bootstrapContextSpy = {
+      get: jest.fn(),
+    } as any;
     (bootstrapValueRegistrySpy as any).values = bootstrapContextSpy;
 
-    componentValueRegistrySpy = jasmine.createSpyObj(
-        'componentValueRegistry',
-        [
-          'provide',
-          'get',
-        ]);
-    createComponentValueRegistrySpy = spyOn(ComponentValueRegistry, 'create')
-        .and.returnValue(componentValueRegistrySpy);
+    componentValueRegistrySpy = {
+      provide: jest.fn(),
+    } as any;
+    createComponentValueRegistrySpy = jest.spyOn(ComponentValueRegistry, 'create')
+        .mockReturnValue(componentValueRegistrySpy);
 
-    definitionValueRegistrySpy = jasmine.createSpyObj(
-        'valueRegistry',
-        [
-          'provide',
-          'get',
-        ]);
-    createDefinitionValueRegistrySpy = spyOn(DefinitionValueRegistry, 'create')
-        .and.returnValue(definitionValueRegistrySpy);
+    definitionValueRegistrySpy = {
+      provide: jest.fn(),
+    } as any;
+    createDefinitionValueRegistrySpy = jest.spyOn(DefinitionValueRegistry, 'create')
+        .mockReturnValue(definitionValueRegistrySpy);
 
-    elementBuilderSpy = jasmine.createSpyObj(
-        'elementBuilder',
-        [
-            'buildElement',
-        ]);
-    (elementBuilderSpy as any).components =
-        jasmine.createSpyObj<EventEmitter<ComponentListener>>('elements', ['on']);
-    (elementBuilderSpy as any).definitions =
-        jasmine.createSpyObj<EventEmitter<DefinitionListener>>('componentDefinitions', ['on']);
-    createElementBuilderSpy = spyOn(ElementBuilder, 'create').and.returnValue(elementBuilderSpy);
+    elementBuilderSpy = {
+      buildElement: jest.fn(),
+      components: {
+        on: jest.fn(),
+      },
+      definitions: {
+        on: jest.fn(),
+      },
+    } as any;
+    createElementBuilderSpy = jest.spyOn(ElementBuilder, 'create')
+        .mockReturnValue(elementBuilderSpy);
 
-    componentRegistrySpy = jasmine.createSpyObj(
-        'componentRegistry',
-        [
-          'define',
-          'complete',
-          'whenDefined',
-        ]);
-    createComponentRegistrySpy = spyOn(ComponentRegistry, 'create').and.returnValue(componentRegistrySpy);
+    componentRegistrySpy = {
+      define: jest.fn(),
+      complete: jest.fn(),
+      whenDefined: jest.fn(),
+    } as any;
+    createComponentRegistrySpy = jest.spyOn(ComponentRegistry, 'create')
+        .mockReturnValue(componentRegistrySpy);
   });
 
   describe('bootstrapComponents', () => {
@@ -108,19 +100,23 @@ describe('bootstrap', () => {
     it('constructs component registry', () => {
       bootstrapComponents();
       expect(createComponentRegistrySpy).toHaveBeenCalledWith({
-        bootstrapContext: jasmine.anything(),
+        bootstrapContext: expect.anything(),
         elementBuilder: elementBuilderSpy,
       });
     });
 
     describe('FeatureRegistry', () => {
 
-      let featureRegistrySpy: SpyObj<FeatureRegistry>;
-      let createFeatureRegistrySpy: Spy;
+      let featureRegistrySpy: Mocked<Pick<FeatureRegistry, 'add' | 'bootstrap'>>;
+      let createFeatureRegistrySpy: Mock;
 
       beforeEach(() => {
-        featureRegistrySpy = jasmine.createSpyObj<FeatureRegistry>('featureRegistry', ['add', 'bootstrap']);
-        createFeatureRegistrySpy = spyOn(FeatureRegistry, 'create').and.returnValue(featureRegistrySpy);
+        featureRegistrySpy = {
+          add: jest.fn(),
+          bootstrap: jest.fn(),
+        };
+        createFeatureRegistrySpy = jest.spyOn(FeatureRegistry, 'create')
+            .mockReturnValue(featureRegistrySpy);
       });
 
       it('creates feature registry', () => {
@@ -148,9 +144,13 @@ describe('bootstrap', () => {
 
     describe('BootstrapContext', () => {
 
+      class Base {
+      }
+
       let featureContext: BootstrapContext;
 
       beforeEach(() => {
+        featureContext = undefined!;
 
         class TestFeature {}
 
@@ -166,7 +166,7 @@ describe('bootstrap', () => {
 
       it('proxies define() method', () => {
 
-        @Component({ name: 'test-component', extend: { name: 'div', type: HTMLDivElement } })
+        @Component({ name: 'test-component', extend: { name: 'div', type: Base } })
         class TestComponent {}
 
         featureContext.define(TestComponent);
@@ -176,9 +176,9 @@ describe('bootstrap', () => {
 
         const promise = Promise.resolve<any>('abc');
 
-        componentRegistrySpy.whenDefined.and.returnValue(promise);
+        componentRegistrySpy.whenDefined.mockReturnValue(promise);
 
-        @Component({ name: 'test-component', extend: { name: 'div', type: HTMLDivElement } })
+        @Component({ name: 'test-component', extend: { name: 'div', type: Base } })
         class TestComponent {}
 
         expect(featureContext.whenDefined(TestComponent)).toBe(promise);

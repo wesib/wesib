@@ -5,11 +5,13 @@ describe('decorators/component', () => {
   describe('@Component', () => {
     it('assigns component definition', () => {
 
+      class BaseElement {}
+
       const def: ComponentDef = {
         name: 'test-component',
         extend: {
           name: 'input',
-          type: HTMLInputElement
+          type: BaseElement
         },
       };
 
