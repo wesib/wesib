@@ -1,13 +1,7 @@
-import { mergeFunctions, noop } from './functions';
+import { mergeFunctions } from './functions';
 import Mock = jest.Mock;
 
-describe('util/functions', () => {
-  describe('noop', () => {
-    it('returns nothing', () => {
-      expect(noop()).toBeUndefined();
-    });
-  });
-
+describe('common/functions', () => {
   describe('mergeFunctions', () => {
 
     let firstSpy: Mock;

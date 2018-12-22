@@ -1,9 +1,3 @@
-/**
- * A no-op function that does nothing.
- */
-export function noop(): void {
-}
-
 export function mergeFunctions<P extends any[], R, T>(
     first: (this: T, ...args: P) => R,
     second: ((this: T, ...args: P) => R) | undefined,

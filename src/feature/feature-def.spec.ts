@@ -1,5 +1,6 @@
+import { noop } from 'call-thru';
 import { ContextValueSpec, SingleContextKey } from 'context-values';
-import { Class, noop } from '../common';
+import { Class } from '../common';
 import { BootstrapContext } from './bootstrap-context';
 import { FeatureDef } from './feature-def';
 

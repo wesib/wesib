@@ -1,4 +1,4 @@
-import { noop } from '../common';
+import { noop } from 'call-thru';
 import { FeatureDef } from './feature-def';
 import { Feature } from './feature.decorator';
 

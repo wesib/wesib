@@ -1,4 +1,4 @@
-import { noop } from '../common';
+import { noop } from 'call-thru';
 import { BootstrapContext, FeatureDef } from '../feature';
 import { ComponentClass } from './component-class';
 import { ComponentDef, PartialComponentDef } from './component-def';

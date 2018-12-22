@@ -1,6 +1,7 @@
+import { noop } from 'call-thru';
 import { ContextKey, ContextValueSpec } from 'context-values';
 import { EventEmitter } from 'fun-events';
-import { Class, mergeFunctions, noop } from '../../common';
+import { Class, mergeFunctions } from '../../common';
 import { ComponentClass } from '../component-class';
 import { ComponentContext as ComponentContext_, ComponentListener } from '../component-context';
 import { ComponentDef } from '../component-def';

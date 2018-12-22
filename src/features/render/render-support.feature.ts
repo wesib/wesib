@@ -1,5 +1,4 @@
-import { noop } from '../../common';
-import { ComponentContext } from '../../component';
+import { noop } from 'call-thru';
 import { BootstrapWindow, Feature } from '../../feature';
 import { RenderScheduler as RenderScheduler_ } from './render-scheduler';
 

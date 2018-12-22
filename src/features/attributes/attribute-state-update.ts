@@ -1,5 +1,5 @@
+import { noop } from 'call-thru';
 import { StatePath } from 'fun-events';
-import { noop } from '../../common';
 import { ComponentContext } from '../../component';
 import { AttributeChangedCallback, AttributeUpdateConsumer } from './attribute-registrar';
 

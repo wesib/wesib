@@ -1,5 +1,5 @@
+import { noop } from 'call-thru';
 import { StatePath } from 'fun-events';
-import { noop } from '../../common';
 import { Component, ComponentContext } from '../../component';
 import { testElement } from '../../spec/test-element';
 import { AttributeChanged } from './attribute-changed.decorator';
