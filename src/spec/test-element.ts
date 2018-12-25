@@ -1,7 +1,8 @@
-import { bootstrapComponents } from '../bootstrap';
 import { Class } from '../common';
-import { ComponentClass, ComponentDef, CustomElements } from '../component';
+import { ComponentClass, ComponentDef } from '../component';
+import { CustomElements } from '../component/definition';
 import { Feature } from '../feature';
+import { bootstrapComponents } from '../kit/bootstrap';
 
 export function testElement(componentType: Class<any>): Class<any> {
   ComponentDef.define(componentType);

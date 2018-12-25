@@ -1,13 +1,13 @@
 import { ContextRegistry } from 'context-values';
 import { JSDOM } from 'jsdom';
 import { Class } from '../../common';
-import { BootstrapContext, BootstrapWindow } from '../../feature';
+import { BootstrapContext, BootstrapWindow } from '../../kit';
 import { ComponentClass } from '../component-class';
 import { ComponentDef } from '../component-def';
 import { CustomElements } from './custom-elements';
 import Mocked = jest.Mocked;
 
-describe('component/definition/custom-elements', () => {
+describe('kit/custom-elements', () => {
 
   let dom: JSDOM;
 

@@ -1,6 +1,6 @@
 import { ContextValueSpec } from 'context-values';
 import { ArraySet, Class, mergeFunctions, MetaAccessor } from '../common';
-import { BootstrapContext } from './bootstrap-context';
+import { BootstrapContext } from '../kit';
 
 /**
  * Feature definition.

@@ -1,11 +1,11 @@
 import { SingleContextKey } from 'context-values';
 import { Class } from '../common';
-import { BootstrapContext } from './bootstrap-context';
-import { BootstrapValueRegistry } from './bootstrap-value-registry';
+import { BootstrapContext } from '../kit';
+import { BootstrapValueRegistry } from '../kit/bootstrap/bootstrap-value-registry';
 import { FeatureDef } from './feature-def';
 import { FeatureRegistry } from './feature-registry';
-import Mocked = jest.Mocked;
 import Mock = jest.Mock;
+import Mocked = jest.Mocked;
 import SpyInstance = jest.SpyInstance;
 
 describe('feature/feature-registry', () => {

@@ -1,6 +1,6 @@
 import { ContextKey, SingleContextKey } from 'context-values';
 import { Class } from '../../common';
-import { BootstrapWindow } from '../../feature';
+import { BootstrapWindow } from '../../kit';
 import { ComponentClass } from '../component-class';
 import { ComponentDef } from '../component-def';
 

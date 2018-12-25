@@ -1,7 +1,7 @@
 import { ContextKey, ContextValues, ContextValueSpec, SingleContextKey } from 'context-values';
 import { EventProducer } from 'fun-events';
 import { Class } from '../../common';
-import { BootstrapWindow } from '../../feature';
+import { BootstrapWindow } from '../../kit';
 import { ComponentClass } from '../component-class';
 import { ComponentContext, ComponentListener } from '../component-context';
 import { ComponentDef } from '../component-def';

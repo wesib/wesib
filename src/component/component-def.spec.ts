@@ -1,5 +1,6 @@
 import { noop } from 'call-thru';
-import { BootstrapContext, FeatureDef } from '../feature';
+import { FeatureDef } from '../feature';
+import { BootstrapContext } from '../kit';
 import { ComponentClass } from './component-class';
 import { ComponentDef, PartialComponentDef } from './component-def';
 import { DefinitionContext } from './definition';
