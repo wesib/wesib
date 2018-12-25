@@ -1,5 +1,5 @@
 import { ContextRegistry, ContextSourcesProvider } from 'context-values';
-import { DefinitionContext } from './definition-context';
+import { DefinitionContext } from '../../component/definition';
 
 /**
  * @internal

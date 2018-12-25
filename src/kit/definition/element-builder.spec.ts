@@ -1,18 +1,16 @@
 import { SingleContextKey } from 'context-values';
 import { EventInterest } from 'fun-events';
 import { JSDOM } from 'jsdom';
+import { BootstrapWindow } from '..';
 import { Class } from '../../common';
-import { BootstrapWindow } from '../../feature';
-import { ComponentClass } from '../component-class';
-import { ComponentContext } from '../component-context';
-import { ComponentDef } from '../component-def';
+import { ComponentClass, ComponentContext, ComponentDef } from '../../component';
+import { DefinitionContext, ElementBaseClass } from '../../component/definition';
 import { ComponentValueRegistry } from './component-value-registry';
-import { DefinitionContext, ElementBaseClass } from './definition-context';
 import { DefinitionValueRegistry } from './definition-value-registry';
 import { ElementBuilder } from './element-builder';
 import Mock = jest.Mock;
 
-describe('component/definition/element-builder', () => {
+describe('kit/definition/element-builder', () => {
 
   let dom: JSDOM;
 

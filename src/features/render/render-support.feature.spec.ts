@@ -1,7 +1,9 @@
-import { bootstrapComponents } from '../../bootstrap';
 import { Class } from '../../common';
-import { ComponentClass, ComponentContext, CustomElements, Component } from '../../component';
-import { BootstrapWindow, Feature } from '../../feature';
+import { Component, ComponentClass, ComponentContext } from '../../component';
+import { CustomElements } from '../../component/definition';
+import { Feature } from '../../feature';
+import { BootstrapWindow } from '../../kit';
+import { bootstrapComponents } from '../../kit/bootstrap';
 import { RenderScheduler } from './render-scheduler';
 import { RenderSupport } from './render-support.feature';
 import Mocked = jest.Mocked;

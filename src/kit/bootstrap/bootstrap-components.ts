@@ -1,20 +1,15 @@
 import { ContextValueSpec } from 'context-values';
 import { EventProducer } from 'fun-events';
-import { Class } from './common';
-import {
-  ComponentClass,
-  ComponentContext,
-  ComponentListener,
-  DefinitionContext,
-  DefinitionListener,
-} from './component';
-import { ComponentRegistry } from './component/definition/component-registry';
-import { ComponentValueRegistry } from './component/definition/component-value-registry';
-import { DefinitionValueRegistry } from './component/definition/definition-value-registry';
-import { ElementBuilder } from './component/definition/element-builder';
-import { BootstrapContext as BootstrapContext_ } from './feature';
-import { BootstrapValueRegistry } from './feature/bootstrap-value-registry';
-import { FeatureRegistry } from './feature/feature-registry';
+import { Class } from '../../common';
+import { ComponentClass, ComponentContext, ComponentListener } from '../../component';
+import { DefinitionContext, DefinitionListener } from '../../component/definition';
+import { FeatureRegistry } from '../../feature/feature-registry';
+import { BootstrapContext as BootstrapContext_ } from '../bootstrap-context';
+import { ComponentRegistry } from '../definition/component-registry';
+import { ComponentValueRegistry } from '../definition/component-value-registry';
+import { DefinitionValueRegistry } from '../definition/definition-value-registry';
+import { ElementBuilder } from '../definition/element-builder';
+import { BootstrapValueRegistry } from './bootstrap-value-registry';
 
 /**
  * Bootstraps components.

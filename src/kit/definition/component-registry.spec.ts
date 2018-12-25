@@ -1,13 +1,12 @@
 import { ContextRequest } from 'context-values';
-import { BootstrapContext } from '../../feature';
-import { ComponentClass } from '../component-class';
-import { ComponentDef } from '../component-def';
+import { BootstrapContext } from '..';
+import { ComponentClass, ComponentDef } from '../../component';
+import { CustomElements } from '../../component/definition';
 import { ComponentRegistry } from './component-registry';
-import { CustomElements } from './custom-elements';
 import { ElementBuilder } from './element-builder';
 import Mocked = jest.Mocked;
 
-describe('component/definition/component-registry', () => {
+describe('kit/definition/component-registry', () => {
   describe('ComponentRegistry', () => {
 
     let customElementsSpy: Mocked<Pick<CustomElements, 'define' | 'whenDefined'>>;

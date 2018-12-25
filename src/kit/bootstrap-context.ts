@@ -1,12 +1,7 @@
 import { ContextValues, ContextValueSpec } from 'context-values';
 import { EventProducer } from 'fun-events';
-import {
-  ComponentClass,
-  ComponentContext,
-  ComponentListener,
-  DefinitionContext,
-  DefinitionListener,
-} from '../component';
+import { ComponentClass, ComponentContext, ComponentListener } from '../component';
+import { DefinitionContext, DefinitionListener } from '../component/definition';
 
 /**
  * Components bootstrap context.

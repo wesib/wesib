@@ -1,5 +1,6 @@
 import { StateTracker, StateUpdater } from 'fun-events';
-import { BootstrapContext, Feature } from '../../feature';
+import { Feature } from '../../feature';
+import { BootstrapContext } from '../../kit';
 
 /**
  * Component state support feature.

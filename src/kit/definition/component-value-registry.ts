@@ -1,5 +1,5 @@
 import { ContextRegistry, ContextSourcesProvider } from 'context-values';
-import { ComponentContext } from '../component-context';
+import { ComponentContext } from '../../component';
 
 /**
  * @internal

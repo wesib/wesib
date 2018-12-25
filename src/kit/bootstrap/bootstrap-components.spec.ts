@@ -1,17 +1,18 @@
 import { SingleContextKey } from 'context-values';
-import { bootstrapComponents } from './bootstrap';
-import { Component } from './component';
-import { ComponentRegistry } from './component/definition/component-registry';
-import { ComponentValueRegistry } from './component/definition/component-value-registry';
-import { DefinitionValueRegistry } from './component/definition/definition-value-registry';
-import { ElementBuilder } from './component/definition/element-builder';
-import { BootstrapContext, FeatureDef } from './feature';
-import { BootstrapValueRegistry } from './feature/bootstrap-value-registry';
-import { FeatureRegistry } from './feature/feature-registry';
+import { Component } from '../../component';
+import { FeatureDef } from '../../feature';
+import { FeatureRegistry } from '../../feature/feature-registry';
+import { BootstrapContext } from '../bootstrap-context';
+import { ComponentRegistry } from '../definition/component-registry';
+import { ComponentValueRegistry } from '../definition/component-value-registry';
+import { DefinitionValueRegistry } from '../definition/definition-value-registry';
+import { ElementBuilder } from '../definition/element-builder';
+import { bootstrapComponents } from './bootstrap-components';
+import { BootstrapValueRegistry } from './bootstrap-value-registry';
 import Mock = jest.Mock;
 import Mocked = jest.Mocked;
 
-describe('bootstrap', () => {
+describe('kit/bootstrap/bootstrap-components', () => {
 
   let createBootstrapValueRegistrySpy: Mock;
   let bootstrapValueRegistrySpy: Mocked<BootstrapValueRegistry>;

@@ -4,7 +4,7 @@ import { Component, ComponentClass, ComponentContext, ComponentDef } from '../..
 import { FeatureDef } from '../../feature';
 import { DomPropertiesSupport } from './dom-properties-support.feature';
 import { DomPropertyRegistrar } from './dom-property-registrar';
-import { DomPropertyUpdateCallback, propertyStateUpdate } from './property-state-update';
+import { propertyStateUpdate } from './property-state-update';
 
 /**
  * Component property decorator that declares a property to add to custom element created for this component.

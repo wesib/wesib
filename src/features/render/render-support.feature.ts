@@ -1,5 +1,6 @@
 import { noop } from 'call-thru';
-import { BootstrapWindow, Feature } from '../../feature';
+import { Feature } from '../../feature';
+import { BootstrapWindow } from '../../kit';
 import { RenderScheduler as RenderScheduler_ } from './render-scheduler';
 
 /**

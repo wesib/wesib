@@ -1,6 +1,7 @@
-import { bootstrapComponents } from '../../bootstrap';
-import { Component, ComponentClass, ComponentContext, CustomElements, DefinitionContext } from '../../component';
+import { Component, ComponentClass, ComponentContext } from '../../component';
+import { CustomElements, DefinitionContext } from '../../component/definition';
 import { Feature, FeatureDef } from '../../feature';
+import { bootstrapComponents } from '../../kit/bootstrap';
 import { DomProperty } from '../dom-properties';
 import { StateSupport } from '../state';
 import { RenderScheduler } from './render-scheduler';

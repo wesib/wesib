@@ -1,5 +1,5 @@
 import { ContextRegistry, ContextSources, ContextTarget, ContextValues } from 'context-values';
-import { BootstrapContext } from './bootstrap-context';
+import { BootstrapContext } from '..';
 
 /**
  * @internal
