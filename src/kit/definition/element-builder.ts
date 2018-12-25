@@ -2,7 +2,7 @@ import { noop } from 'call-thru';
 import { ContextKey, ContextValueSpec } from 'context-values';
 import { EventEmitter } from 'fun-events';
 import { Class, mergeFunctions } from '../../common';
-import { ComponentClass, ComponentDef } from '../../component';
+import { ComponentClass, ComponentDef, ComponentMount as ComponentMount_ } from '../../component';
 import { ComponentContext as ComponentContext_, ComponentListener } from '../../component/component-context';
 import { ComponentFactory as ComponentFactory_ } from '../../component/definition';
 import {
@@ -42,6 +42,10 @@ function newComponent<T extends object>(type: ComponentClass<T>, context: Compon
   }
 }
 
+const CONNECTED = Symbol('connected');
+const CONNECTED_CALLBACK = Symbol('connectedCallback');
+const DISCONNECTED_CALLBACK = Symbol('disconnectedCallback');
+
 /**
  * @internal
  */
@@ -78,21 +82,53 @@ export class ElementBuilder {
     const onComponent = new EventEmitter<ComponentListener>();
     let typeValueRegistry!: ComponentValueRegistry;
     let whenReady: (this: DefinitionContext, elementType: Class) => void = noop;
-    let context: DefinitionContext;
+    let definitionContext: DefinitionContext;
+
+    function createValueRegistry() {
+      return builder._componentValueRegistry.append(typeValueRegistry);
+    }
 
     class ComponentFactory extends ComponentFactory_<T> {
 
       get componentType() {
-        return context.componentType;
+        return definitionContext.componentType;
       }
 
       get elementType() {
-        return context.elementType;
+        return definitionContext.elementType;
+      }
+
+      mountTo(element: any): ComponentMount_<T> {
+
+        let context: ComponentContext_<T>;
+
+        class ComponentMount extends ComponentMount_<T> {
+
+          get context() {
+            return context;
+          }
+
+        }
+
+        const mount = new ComponentMount();
+
+        context = builder._createComponent({
+          definitionContext,
+          onComponent,
+          valueRegistry: createValueRegistry(),
+          element,
+          elementSuper(key) {
+            return element[key];
+          },
+          mount,
+        });
+
+        return mount;
       }
 
     }
 
-    const factory = new ComponentFactory();
+    const componentFactory = new ComponentFactory();
 
     class DefinitionContext extends DefinitionContext_<T> {
 
@@ -104,7 +140,7 @@ export class ElementBuilder {
         super();
         typeValueRegistry = ComponentValueRegistry.create(builder._definitionValueRegistry.bindSources(this));
         typeValueRegistry.provide({ a: DefinitionContext_, is: this });
-        typeValueRegistry.provide({ a: ComponentFactory_, is: factory });
+        typeValueRegistry.provide({ a: ComponentFactory_, is: componentFactory });
 
         const values = typeValueRegistry.newValues();
 
@@ -125,33 +161,30 @@ export class ElementBuilder {
 
     }
 
-    context = new DefinitionContext();
+    definitionContext = new DefinitionContext();
 
     if (def.define) {
-      def.define.call(componentType, context);
+      def.define.call(componentType, definitionContext);
     }
-    this.definitions.forEach(listener => listener(context));
+    this.definitions.forEach(listener => listener(definitionContext));
 
-    const elementType = this._elementType(
-        context,
-        onComponent,
-        this._componentValueRegistry.append(typeValueRegistry));
+    const elementType = this._elementType(definitionContext, onComponent, createValueRegistry());
 
-    Object.defineProperty(context, 'elementType', {
+    Object.defineProperty(definitionContext, 'elementType', {
       configurable: true,
       enumerable: true,
       value: elementType,
     });
-    Object.defineProperty(context, 'whenReady', {
+    Object.defineProperty(definitionContext, 'whenReady', {
       configurable: true,
       value(callback: (elementType: Class) => void) {
-        callback.call(context, elementType);
+        callback.call(definitionContext, elementType);
       },
     });
 
-    whenReady.call(context, elementType);
+    whenReady.call(definitionContext, elementType);
 
-    return factory;
+    return componentFactory;
   }
 
   private _elementType<T extends object>(
@@ -159,102 +192,131 @@ export class ElementBuilder {
       onComponent: EventEmitter<ComponentListener>,
       valueRegistry: ComponentValueRegistry) {
 
-    const { componentType } = definitionContext;
     const builder = this;
     const elementBaseClass = definitionContext.get(ElementBaseClass);
-
-    const connected = Symbol('connected');
-    const connectedCallback = Symbol('connectedCallback');
-    const disconnectedCallback = Symbol('disconnectedCallback');
 
     class Element extends elementBaseClass {
 
       // Component context reference
       [ComponentContext_.symbol]: ComponentContext_<T>;
 
-      private readonly [connectedCallback]!: () => void;
-      private readonly [disconnectedCallback]!: () => void;
-      private [connected] = false;
+      private readonly [CONNECTED_CALLBACK]!: () => void;
+      private readonly [DISCONNECTED_CALLBACK]!: () => void;
+      private [CONNECTED] = false;
 
       constructor() {
         super();
-
-        const element = this;
-        // @ts-ignore
-        const elementSuper = (name: string) => super[name] as any;
-        let whenReady: (this: ComponentContext, component: T) => void = noop;
-        const connectEvents = new EventEmitter<(this: any) => void>();
-        const disconnectEvents = new EventEmitter<(this: any) => void>();
-
-        class ComponentContext extends ComponentContext_<T> {
-
-          readonly componentType = definitionContext.componentType;
-          readonly element = element;
-          readonly elementSuper = elementSuper;
-          readonly get = valueRegistry.newValues().get;
-          readonly onConnect = connectEvents.on;
-          readonly onDisconnect = disconnectEvents.on;
-
-          get component(): T {
-            throw new Error('The component is not constructed yet. Consider to use a `whenReady()` callback');
+        builder._createComponent({
+          definitionContext,
+          onComponent,
+          valueRegistry,
+          element: this,
+          elementSuper: (key) => {
+            // @ts-ignore
+            return super[key] as any;
           }
-
-          get connected() {
-            return element[connected];
-          }
-
-          whenReady(callback: (this: ComponentContext, component: T) => void) {
-            whenReady = mergeFunctions<[T], void, ComponentContext>(whenReady, callback);
-          }
-
-        }
-
-        const context = new ComponentContext();
-
-        valueRegistry.provide({ a: ComponentContext_, is: context });
-
-        Object.defineProperty(this, ComponentContext_.symbol, { value: context });
-        Object.defineProperty(this, connectedCallback, {
-          value: () => connectEvents.forEach(listener => listener.call(context)),
         });
-        Object.defineProperty(this, disconnectedCallback, {
-          value: () => disconnectEvents.forEach(listener => listener.call(context)),
-        });
-
-        builder.components.forEach(consumer => consumer(context));
-        onComponent.forEach(consumer => consumer(context));
-
-        const component = newComponent(componentType, context);
-
-        Object.defineProperty(context, 'component', {
-          configurable: true,
-          enumerable: true,
-          value: component,
-        });
-        Object.defineProperty(context, 'whenReady', {
-          configurable: true,
-          value(callback: (component: T) => void) {
-            callback.call(context, component);
-          },
-        });
-
-        whenReady.call(context, component);
       }
 
       // noinspection JSUnusedGlobalSymbols
       connectedCallback() {
-        this[connected] = true;
-        this[connectedCallback]();
+        this[CONNECTED] = true;
+        this[CONNECTED_CALLBACK]();
       }
 
       // noinspection JSUnusedGlobalSymbols
       disconnectedCallback() {
-        this[connected] = false;
-        this[disconnectedCallback]();
+        this[CONNECTED] = false;
+        this[DISCONNECTED_CALLBACK]();
       }
 
     }
 
     return Element;
   }
+
+  private _createComponent<T extends object>(
+      {
+        definitionContext,
+        onComponent,
+        valueRegistry,
+        element,
+        mount,
+        elementSuper,
+      }: ComponentMeta<T>): ComponentContext_<T> {
+
+    let whenReady: (this: ComponentContext, component: T) => void = noop;
+    const connectEvents = new EventEmitter<(this: any) => void>();
+    const disconnectEvents = new EventEmitter<(this: any) => void>();
+
+    class ComponentContext extends ComponentContext_<T> {
+
+      readonly componentType = definitionContext.componentType;
+      readonly element = element;
+      readonly elementSuper = elementSuper;
+      readonly get = valueRegistry.newValues().get;
+      readonly onConnect = connectEvents.on;
+      readonly onDisconnect = disconnectEvents.on;
+
+      get component(): T {
+        throw new Error('The component is not constructed yet. Consider to use a `whenReady()` callback');
+      }
+
+      get mount() {
+        return mount;
+      }
+
+      get connected() {
+        return element[CONNECTED];
+      }
+
+      whenReady(callback: (this: ComponentContext, component: T) => void) {
+        whenReady = mergeFunctions<[T], void, ComponentContext>(whenReady, callback);
+      }
+
+    }
+
+    const context = new ComponentContext();
+
+    valueRegistry.provide({ a: ComponentContext_, is: context });
+
+    Object.defineProperty(element, ComponentContext_.symbol, { value: context });
+    Object.defineProperty(element, CONNECTED_CALLBACK, {
+      value: () => connectEvents.forEach(listener => listener.call(context)),
+    });
+    Object.defineProperty(element, DISCONNECTED_CALLBACK, {
+      value: () => disconnectEvents.forEach(listener => listener.call(context)),
+    });
+
+    this.components.forEach(consumer => consumer(context));
+    onComponent.forEach(consumer => consumer(context));
+
+    const component = newComponent(definitionContext.componentType, context);
+
+    Object.defineProperty(context, 'component', {
+      configurable: true,
+      enumerable: true,
+      value: component,
+    });
+    Object.defineProperty(context, 'whenReady', {
+      configurable: true,
+      value(callback: (component: T) => void) {
+        callback.call(context, component);
+      },
+    });
+
+    whenReady.call(context, component);
+
+    return context;
+  }
+
+}
+
+interface ComponentMeta<T extends object> {
+  definitionContext: DefinitionContext_<T>;
+  onComponent: EventEmitter<ComponentListener>;
+  valueRegistry: ComponentValueRegistry;
+  element: any;
+  elementSuper: (name: PropertyKey) => any;
+  mount?: ComponentMount_<T>;
 }

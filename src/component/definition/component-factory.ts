@@ -1,6 +1,7 @@
 import { ContextKey, SingleContextKey } from 'context-values';
 import { Class } from '../../common';
 import { ComponentClass } from '../component-class';
+import { ComponentMount } from '../component-mount';
 
 /**
  * A factory of components of particular type.
@@ -25,5 +26,20 @@ export abstract class ComponentFactory<C extends object = object> {
    * callback.
    */
   abstract readonly elementType: Class;
+
+  /**
+   * Mounts a component to arbitrary element.
+   *
+   * This method creates a component, but instead of creating a custom element for, it mounts it to the target
+   * `element`.
+   *
+   * It is up to the features to update the target element. They can use a `ComponentContext.whenMounted()` callback
+   * for that.
+   *
+   * @param element Target element to mount new component to.
+   *
+   * @throws Error If target element is already associated with another component, or mount failed.
+   */
+  abstract mountTo(element: any): ComponentMount<C>;
 
 }

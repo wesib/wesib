@@ -2,7 +2,7 @@ import { SingleContextKey } from 'context-values';
 import { EventInterest } from 'fun-events';
 import { JSDOM } from 'jsdom';
 import { Class } from '../../common';
-import { ComponentClass, ComponentContext, ComponentDef } from '../../component';
+import { ComponentClass, ComponentContext, ComponentDef, ComponentMount } from '../../component';
 import { ComponentFactory, DefinitionContext, ElementBaseClass } from '../../component/definition';
 import { BootstrapWindow } from '../bootstrap-window';
 import { ComponentValueRegistry } from './component-value-registry';
@@ -66,6 +66,7 @@ describe('kit/definition/element-builder', () => {
       beforeEach(() => {
         factory = builder.buildElement(TestComponent);
       });
+
       it('refers the component type', () => {
         expect(factory.componentType).toBe(TestComponent);
       });
@@ -126,12 +127,37 @@ describe('kit/definition/element-builder', () => {
       });
     });
 
-    describe('definition context value', () => {
+    describe('definition context', () => {
+
+      let definitionContext: DefinitionContext<any>;
+
+      beforeEach(() => {
+        builder.definitions.on((ctx: DefinitionContext<any>) => {
+          definitionContext = ctx;
+        });
+      });
+      beforeEach(() => {
+        definitionValueRegistry.provide({ a: ElementBaseClass, is: Object });
+      });
+
+      let factory: ComponentFactory;
+
+      beforeEach(() => {
+        factory = builder.buildElement(TestComponent);
+      });
+
+      it('contains itself', () => {
+        expect(definitionContext.get(DefinitionContext)).toBe(definitionContext);
+      });
+      it('contains component factory', () => {
+        expect(definitionContext.get(ComponentFactory)).toBe(factory);
+      });
+    });
+
+    describe('constructed element', () => {
 
       const key = new SingleContextKey<string>('test-key');
       let value: string;
-      const key2 = new SingleContextKey<string>('another-key');
-      let value2: string;
       let definitionContext: DefinitionContext<any>;
       let componentContext: ComponentContext;
 
@@ -145,42 +171,23 @@ describe('kit/definition/element-builder', () => {
         });
       });
       beforeEach(() => {
-        value2 = 'other value';
-        ComponentDef.define(TestComponent, {
-          define(context: DefinitionContext<any>) {
-            context.forComponents({ a: key2, is: value2 });
-          }
-        });
-      });
-      beforeEach(() => {
         definitionValueRegistry.provide({ a: ElementBaseClass, is: Object });
       });
 
-      let factory: ComponentFactory;
-
       beforeEach(() => {
-        factory = builder.buildElement(TestComponent);
 
-        const element = new (factory.elementType);
+        const element = new (builder.buildElement(TestComponent).elementType);
 
         componentContext = ComponentContext.of(element);
       });
 
-      describe('DefinitionContext', () => {
-        it('is available as context value', () => {
-          expect(definitionContext.get(DefinitionContext)).toBe(definitionContext);
-        });
-      });
-      describe('ComponentFactory', () => {
-        it('is available as context value', () => {
-          expect(definitionContext.get(ComponentFactory)).toBe(factory);
-        });
-      });
-      it('is available to component', () => {
+      it('has access to definition context value', () => {
         expect(componentContext.get(key)).toBe(value);
-        expect(componentContext.get(key2)).toBe(value2);
       });
-      it('is not available to another component', () => {
+      it('is not mounted', () => {
+        expect(componentContext.mount).toBeUndefined();
+      });
+      it('can not access values of another component type', () => {
 
         class AnotherComponent {
           static [ComponentDef.symbol]: ComponentDef = {
@@ -192,9 +199,49 @@ describe('kit/definition/element-builder', () => {
         const otherContext = ComponentContext.of(otherElement);
 
         expect(otherContext.get(key, { or: null })).toBeNull();
-        expect(otherContext.get(key2, { or: null })).toBeNull();
       });
     });
+
+    describe('mounted element', () => {
+
+      let factory: ComponentFactory;
+      let element: any;
+      let mount: ComponentMount;
+      let context: ComponentContext;
+
+      beforeEach(() => {
+        factory = builder.buildElement(TestComponent);
+
+        class Element {
+          get property() {
+            return 'overridden';
+          }
+        }
+
+        element = new Element();
+        mount = factory.mountTo(element);
+        context = mount.context;
+      });
+
+      it('has context reference', () => {
+        expect(ComponentContext.of(element)).toBe(context);
+      });
+      it('has access ot overridden element properties', () => {
+        expect(context.elementSuper('property')).toBe('overridden');
+      });
+      it('is mounted', () => {
+        expect(context.mount).toBe(mount);
+      });
+      describe('component mount', () => {
+        it('refers to element', () => {
+          expect(mount.element).toBe(element);
+        });
+        it('refers to component', () => {
+          expect(mount.component).toBe(context.component);
+        });
+      });
+    });
+
     describe('component listener', () => {
 
       let componentContext: ComponentContext;

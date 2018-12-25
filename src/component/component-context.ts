@@ -1,6 +1,7 @@
 import { ContextKey, ContextValues, SingleContextKey } from 'context-values';
 import { EventProducer, StatePath, StateUpdater } from 'fun-events';
 import { ComponentClass } from './component-class';
+import { ComponentMount } from './component-mount';
 
 const componentContextKey: ContextKey<ComponentContext<any>> = new SingleContextKey('component-context');
 const contentRootKey: ContextKey<ContentRoot> = new SingleContextKey(
@@ -52,6 +53,14 @@ export abstract class ComponentContext<T extends object = object> extends Contex
   abstract readonly component: T;
 
   /**
+   * Component mount.
+   *
+   * This is defined when component is mounted to arbitrary element by `ComponentFactory.mountTo()`. Ot is `undefined`
+   * for components created in standard way.
+   */
+  abstract readonly mount: ComponentMount<T> | undefined;
+
+  /**
    * Whether the custom element is connected.
    *
    * This becomes `true` right before `onConnect` is called, and becomes false right before `onDisconnect` is called.
@@ -61,7 +70,7 @@ export abstract class ComponentContext<T extends object = object> extends Contex
   /**
    * Registers custom element connection listener.
    *
-   * This listener will be called when custom element is connected, i.e. its `connectedCallback()` method is called.
+   * This listener is called when custom element is connected, i.e. its `connectedCallback()` method is called.
    *
    * @param listener A listener to notify on element connection.
    *
@@ -143,9 +152,9 @@ export abstract class ComponentContext<T extends object = object> extends Contex
   /**
    * Returns a `super` property value inherited from custom element parent.
    *
-   * @param name Target property name.
+   * @param key Target property key.
    */
-  abstract elementSuper(name: string): any;
+  abstract elementSuper(key: PropertyKey): any;
 
 }
 
