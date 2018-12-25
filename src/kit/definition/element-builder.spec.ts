@@ -1,10 +1,10 @@
 import { SingleContextKey } from 'context-values';
 import { EventInterest } from 'fun-events';
 import { JSDOM } from 'jsdom';
-import { BootstrapWindow } from '..';
 import { Class } from '../../common';
 import { ComponentClass, ComponentContext, ComponentDef } from '../../component';
 import { DefinitionContext, ElementBaseClass } from '../../component/definition';
+import { BootstrapWindow } from '../bootstrap-window';
 import { ComponentValueRegistry } from './component-value-registry';
 import { DefinitionValueRegistry } from './definition-value-registry';
 import { ElementBuilder } from './element-builder';

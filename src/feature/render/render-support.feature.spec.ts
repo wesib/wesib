@@ -1,14 +1,14 @@
 import { Class } from '../../common';
 import { Component, ComponentClass, ComponentContext } from '../../component';
 import { CustomElements } from '../../component/definition';
-import { Feature } from '../../feature';
 import { BootstrapWindow } from '../../kit';
 import { bootstrapComponents } from '../../kit/bootstrap';
+import { Feature } from '../feature.decorator';
 import { RenderScheduler } from './render-scheduler';
 import { RenderSupport } from './render-support.feature';
 import Mocked = jest.Mocked;
 
-describe('features/render/render-support.feature', () => {
+describe('feature/render/render-support.feature', () => {
   describe('RenderSupport', () => {
 
     let windowSpy: Mocked<Window>;

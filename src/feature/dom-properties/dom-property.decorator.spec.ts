@@ -2,7 +2,7 @@ import { Component, ComponentContext } from '../../component';
 import { testElement } from '../../spec/test-element';
 import { DomProperty } from './dom-property.decorator';
 
-describe('features/dom-properties/dom-property', () => {
+describe('feature/dom-properties/dom-property', () => {
   describe('@DomProperty', () => {
     it('declares DOM property', () => {
 

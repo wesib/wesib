@@ -1,8 +1,9 @@
 import { Component, ComponentClass, ComponentContext } from '../../component';
 import { CustomElements, DefinitionContext } from '../../component/definition';
-import { Feature, FeatureDef } from '../../feature';
 import { bootstrapComponents } from '../../kit/bootstrap';
 import { DomProperty } from '../dom-properties';
+import { FeatureDef } from '../feature-def';
+import { Feature } from '../feature.decorator';
 import { StateSupport } from '../state';
 import { RenderScheduler } from './render-scheduler';
 import { RenderSupport } from './render-support.feature';
@@ -10,7 +11,7 @@ import { Render } from './render.decorator';
 import Mock = jest.Mock;
 import Mocked = jest.Mocked;
 
-describe('features/render/render.decorator', () => {
+describe('feature/render/render.decorator', () => {
   describe('@Render', () => {
 
     let customElementsSpy: Mocked<CustomElements>;

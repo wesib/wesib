@@ -3,7 +3,7 @@ import { Component, ComponentContext } from '../../component';
 import { testElement } from '../../spec/test-element';
 import { Attributes } from './attributes.decorator';
 
-describe('features/attributes/attributes', () => {
+describe('feature/attributes/attributes', () => {
   describe('@Attributes', () => {
     it('updates the state', () => {
 

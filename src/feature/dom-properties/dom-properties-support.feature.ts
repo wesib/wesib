@@ -1,6 +1,6 @@
 import { ContextKey, SingleContextKey } from 'context-values';
 import { Class } from '../../common';
-import { Feature } from '../../feature';
+import { Feature } from '../feature.decorator';
 import { DomPropertyRegistrar } from './dom-property-registrar';
 
 class DomPropertyRegistry {

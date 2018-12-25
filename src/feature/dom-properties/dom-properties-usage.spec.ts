@@ -4,7 +4,7 @@ import { testElement } from '../../spec/test-element';
 import { DomMethod, DomProperty } from './dom-property.decorator';
 import Mock = jest.Mock;
 
-describe('features/dom-properties', () => {
+describe('feature/dom-properties', () => {
   describe('DOM properties usage', () => {
 
     let testComponent: ComponentClass;

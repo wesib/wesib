@@ -4,7 +4,7 @@ import { Component, ComponentContext } from '../../component';
 import { testElement } from '../../spec/test-element';
 import { AttributeChanged } from './attribute-changed.decorator';
 
-describe('features/attributes/attribute-changed', () => {
+describe('feature/attributes/attribute-changed', () => {
   describe('@AttributeChanged', () => {
     it('declares attribute change callback', () => {
 

@@ -2,7 +2,7 @@ import { Component, ComponentContext } from '../../component';
 import { Attribute } from './attribute.decorator';
 import Mocked = jest.Mocked;
 
-describe('features/attributes/attribute.decorator', () => {
+describe('feature/attributes/attribute.decorator', () => {
   describe('@Attribute', () => {
 
     let contextSpy: Mocked<ComponentContext<any>>;

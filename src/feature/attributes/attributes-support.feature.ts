@@ -1,7 +1,7 @@
 import { SingleContextKey } from 'context-values';
 import { Class, mergeFunctions } from '../../common';
 import { ComponentContext } from '../../component';
-import { Feature } from '../../feature';
+import { Feature } from '../feature.decorator';
 import { AttributeChangedCallback, AttributeRegistrar } from './attribute-registrar';
 
 class AttributeRegistry<T extends object> {

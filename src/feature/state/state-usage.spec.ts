@@ -1,10 +1,10 @@
 import { StateTracker, StateUpdater } from 'fun-events';
 import { Component, ComponentClass, ComponentContext } from '../../component';
-import { Feature } from '../../feature';
 import { testElement } from '../../spec/test-element';
+import { Feature } from '../feature.decorator';
 import { StateSupport } from './state-support.feature';
 
-describe('features/state', () => {
+describe('feature/state', () => {
   describe('State usage', () => {
 
     let testComponent: ComponentClass;

@@ -1,7 +1,7 @@
 import { StatePath } from 'fun-events';
 import { decoratePropertyAccessor, TypedPropertyDecorator } from '../../common';
 import { Component, ComponentClass, ComponentContext, ComponentDef } from '../../component';
-import { FeatureDef } from '../../feature';
+import { FeatureDef } from '../feature-def';
 import { DomPropertiesSupport } from './dom-properties-support.feature';
 import { DomPropertyRegistrar } from './dom-property-registrar';
 import { propertyStateUpdate } from './property-state-update';

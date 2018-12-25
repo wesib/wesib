@@ -1,8 +1,9 @@
 import { ContextRegistry } from 'context-values';
 import { JSDOM } from 'jsdom';
-import { ComponentClass, ComponentDef } from '..';
 import { Class } from '../../common';
 import { BootstrapContext, BootstrapWindow } from '../../kit';
+import { ComponentClass } from '../component-class';
+import { ComponentDef } from '../component-def';
 import { CustomElements } from './custom-elements';
 import Mocked = jest.Mocked;
 

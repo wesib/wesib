@@ -1,6 +1,6 @@
 import { TypedPropertyDecorator } from '../../common';
 import { ComponentClass, ComponentDef } from '../../component';
-import { FeatureDef } from '../../feature';
+import { FeatureDef } from '../feature-def';
 import { AttributeChangedCallback, AttributeRegistrar } from './attribute-registrar';
 import { Attribute, parseAttributeOpts } from './attribute.decorator';
 import { AttributesSupport } from './attributes-support.feature';

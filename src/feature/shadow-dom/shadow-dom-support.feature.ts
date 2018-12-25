@@ -1,5 +1,5 @@
 import { ComponentContext } from '../../component';
-import { Feature } from '../../feature';
+import { Feature } from '../feature.decorator';
 import { ShadowRootBuilder } from './shadow-root-builder';
 
 function attachShadow(context: ComponentContext, init: ShadowRootInit): ShadowRoot {

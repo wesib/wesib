@@ -1,13 +1,13 @@
 import { StatePath } from 'fun-events';
 import { Component, ComponentClass, ComponentContext } from '../../component';
-import { Feature } from '../../feature';
 import { MockElement, testElement } from '../../spec/test-element';
+import { Feature } from '../feature.decorator';
 import { AttributeChanged } from './attribute-changed.decorator';
 import { Attribute } from './attribute.decorator';
 import { AttributesSupport } from './attributes-support.feature';
 import Mock = jest.Mock;
 
-describe('features/attributes', () => {
+describe('feature/attributes', () => {
   describe('Attributes usage', () => {
 
     let testComponent: ComponentClass;

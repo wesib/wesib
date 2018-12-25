@@ -1,7 +1,7 @@
 import { StateTracker } from 'fun-events';
 import { TypedPropertyDecorator } from '../../common';
 import { ComponentClass, ComponentDef } from '../../component';
-import { FeatureDef } from '../../feature';
+import { FeatureDef } from '../feature-def';
 import { StateSupport } from '../state';
 import { RenderScheduler } from './render-scheduler';
 import { RenderSupport } from './render-support.feature';

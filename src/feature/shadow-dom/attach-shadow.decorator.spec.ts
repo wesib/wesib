@@ -1,12 +1,12 @@
 import { Component, ComponentClass, ComponentContext } from '../../component';
-import { FeatureDef } from '../../feature';
 import { testElement } from '../../spec/test-element';
+import { FeatureDef } from '../feature-def';
 import { AttachShadow } from './attach-shadow.decorator';
 import { ShadowContentRoot } from './shadow-content-root';
 import { ShadowDomSupport } from './shadow-dom-support.feature';
 import Mock = jest.Mock;
 
-describe('features/shadow-dom/attach-shadow.decorator', () => {
+describe('feature/shadow-dom/attach-shadow.decorator', () => {
   describe('@AttachShadow', () => {
 
     let testComponent: ComponentClass;

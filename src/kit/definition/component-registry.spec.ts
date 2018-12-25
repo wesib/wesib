@@ -1,7 +1,7 @@
 import { ContextRequest } from 'context-values';
-import { BootstrapContext } from '..';
 import { ComponentClass, ComponentDef } from '../../component';
 import { CustomElements } from '../../component/definition';
+import { BootstrapContext } from '../bootstrap-context';
 import { ComponentRegistry } from './component-registry';
 import { ElementBuilder } from './element-builder';
 import Mocked = jest.Mocked;

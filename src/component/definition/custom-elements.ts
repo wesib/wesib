@@ -1,7 +1,8 @@
 import { ContextKey, SingleContextKey } from 'context-values';
-import { ComponentClass, ComponentDef } from '..';
 import { Class } from '../../common';
 import { BootstrapWindow } from '../../kit';
+import { ComponentClass } from '../component-class';
+import { ComponentDef } from '../component-def';
 
 /**
  * Custom elements registry.

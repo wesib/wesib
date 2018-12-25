@@ -1,7 +1,7 @@
 import { StatePath } from 'fun-events';
 import { TypedPropertyDecorator } from '../../common';
 import { ComponentClass, ComponentContext, ComponentDef } from '../../component';
-import { FeatureDef } from '../../feature';
+import { FeatureDef } from '../feature-def';
 import { AttributeChangedCallback, AttributeRegistrar, AttributeUpdateConsumer } from './attribute-registrar';
 import { attributeStateUpdate } from './attribute-state-update';
 import { AttributesSupport } from './attributes-support.feature';

@@ -1,7 +1,7 @@
 import { TypedClassDecorator } from '../../common';
 import { ComponentClass, ComponentContext, ComponentDef, ContentRoot } from '../../component';
 import { DefinitionContext } from '../../component/definition';
-import { FeatureDef } from '../../feature';
+import { FeatureDef } from '../feature-def';
 import { ShadowContentRoot } from './shadow-content-root';
 import { ShadowDomSupport } from './shadow-dom-support.feature';
 import { ShadowRootBuilder } from './shadow-root-builder';
