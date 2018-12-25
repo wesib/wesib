@@ -18,6 +18,8 @@ import { BootstrapValueRegistry } from './bootstrap-value-registry';
  * Note that both features and components can be passed as parameters to this function, as components are features too.
  *
  * @param features Features and components to enable.
+ *
+ * @returns New component kit instance.
  */
 export function bootstrapComponents(...features: Class[]): ComponentKit_ {
 
