@@ -3,7 +3,7 @@ import { EventInterest } from 'fun-events';
 import { JSDOM } from 'jsdom';
 import { Class } from '../../common';
 import { ComponentClass, ComponentContext, ComponentDef } from '../../component';
-import { DefinitionContext, ElementBaseClass } from '../../component/definition';
+import { ComponentFactory, DefinitionContext, ElementBaseClass } from '../../component/definition';
 import { BootstrapWindow } from '../bootstrap-window';
 import { ComponentValueRegistry } from './component-value-registry';
 import { DefinitionValueRegistry } from './definition-value-registry';
@@ -41,6 +41,9 @@ describe('kit/definition/element-builder', () => {
     });
 
     describe('buildElement', () => {
+      it('builds component factory', () => {
+        expect(builder.buildElement(TestComponent)).toBeInstanceOf(ComponentFactory);
+      });
       it('builds custom element', () => {
         expect(builder.buildElement(TestComponent).elementType.prototype).toBeInstanceOf(dom.window.HTMLElement);
       });
@@ -55,6 +58,19 @@ describe('kit/definition/element-builder', () => {
         expect(builder.buildElement(TestComponent).elementType.prototype).toBeInstanceOf(dom.window.HTMLInputElement);
       });
     });
+
+    describe('component factory', () => {
+
+      let factory: ComponentFactory;
+
+      beforeEach(() => {
+        factory = builder.buildElement(TestComponent);
+      });
+      it('refers the component type', () => {
+        expect(factory.componentType).toBe(TestComponent);
+      });
+    });
+
     describe('component definition listener', () => {
 
       let listenerSpy: Mock;
@@ -109,6 +125,7 @@ describe('kit/definition/element-builder', () => {
         });
       });
     });
+
     describe('definition context value', () => {
 
       const key = new SingleContextKey<string>('test-key');
@@ -138,9 +155,13 @@ describe('kit/definition/element-builder', () => {
       beforeEach(() => {
         definitionValueRegistry.provide({ a: ElementBaseClass, is: Object });
       });
-      beforeEach(() => {
 
-        const element = new (builder.buildElement(TestComponent).elementType);
+      let factory: ComponentFactory;
+
+      beforeEach(() => {
+        factory = builder.buildElement(TestComponent);
+
+        const element = new (factory.elementType);
 
         componentContext = ComponentContext.of(element);
       });
@@ -148,6 +169,11 @@ describe('kit/definition/element-builder', () => {
       describe('DefinitionContext', () => {
         it('is available as context value', () => {
           expect(definitionContext.get(DefinitionContext)).toBe(definitionContext);
+        });
+      });
+      describe('ComponentFactory', () => {
+        it('is available as context value', () => {
+          expect(definitionContext.get(ComponentFactory)).toBe(factory);
         });
       });
       it('is available to component', () => {

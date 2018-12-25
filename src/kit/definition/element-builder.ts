@@ -4,7 +4,7 @@ import { EventEmitter } from 'fun-events';
 import { Class, mergeFunctions } from '../../common';
 import { ComponentClass, ComponentDef } from '../../component';
 import { ComponentContext as ComponentContext_, ComponentListener } from '../../component/component-context';
-import { ComponentFactory } from '../../component/definition';
+import { ComponentFactory as ComponentFactory_ } from '../../component/definition';
 import {
   DefinitionContext as DefinitionContext_,
   DefinitionListener,
@@ -71,13 +71,28 @@ export class ElementBuilder {
     this._componentValueRegistry = componentValueRegistry;
   }
 
-  buildElement<T extends object>(componentType: ComponentClass<T>): ComponentFactory<T> {
+  buildElement<T extends object>(componentType: ComponentClass<T>): ComponentFactory_<T> {
 
     const def = ComponentDef.of(componentType);
     const builder = this;
     const onComponent = new EventEmitter<ComponentListener>();
     let typeValueRegistry!: ComponentValueRegistry;
     let whenReady: (this: DefinitionContext, elementType: Class) => void = noop;
+    let context: DefinitionContext;
+
+    class ComponentFactory extends ComponentFactory_<T> {
+
+      get componentType() {
+        return context.componentType;
+      }
+
+      get elementType() {
+        return context.elementType;
+      }
+
+    }
+
+    const factory = new ComponentFactory();
 
     class DefinitionContext extends DefinitionContext_<T> {
 
@@ -89,6 +104,7 @@ export class ElementBuilder {
         super();
         typeValueRegistry = ComponentValueRegistry.create(builder._definitionValueRegistry.bindSources(this));
         typeValueRegistry.provide({ a: DefinitionContext_, is: this });
+        typeValueRegistry.provide({ a: ComponentFactory_, is: factory });
 
         const values = typeValueRegistry.newValues();
 
@@ -109,7 +125,7 @@ export class ElementBuilder {
 
     }
 
-    const context = new DefinitionContext();
+    context = new DefinitionContext();
 
     if (def.define) {
       def.define.call(componentType, context);
@@ -135,7 +151,7 @@ export class ElementBuilder {
 
     whenReady.call(context, elementType);
 
-    return context;
+    return factory;
   }
 
   private _elementType<T extends object>(
