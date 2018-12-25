@@ -5,6 +5,7 @@ import { ComponentClass, ComponentContext, ComponentListener } from '../../compo
 import { DefinitionContext, DefinitionListener } from '../../component/definition';
 import { FeatureRegistry } from '../../feature/feature-registry';
 import { BootstrapContext as BootstrapContext_ } from '../bootstrap-context';
+import { ComponentKit as ComponentKit_ } from '../component-kit';
 import { ComponentRegistry } from '../definition/component-registry';
 import { ComponentValueRegistry } from '../definition/component-value-registry';
 import { DefinitionValueRegistry } from '../definition/definition-value-registry';
@@ -18,7 +19,7 @@ import { BootstrapValueRegistry } from './bootstrap-value-registry';
  *
  * @param features Features and components to enable.
  */
-export function bootstrapComponents(...features: Class[]): void {
+export function bootstrapComponents(...features: Class[]): ComponentKit_ {
 
   const valueRegistry = BootstrapValueRegistry.create();
   const featureRegistry = FeatureRegistry.create({ valueRegistry });
@@ -30,6 +31,8 @@ export function bootstrapComponents(...features: Class[]): void {
   featureRegistry.bootstrap(bootstrapContext);
 
   componentRegistry.complete();
+
+  return bootstrapContext.get(ComponentKit_);
 }
 
 function initBootstrap(valueRegistry: BootstrapValueRegistry) {
@@ -38,6 +41,14 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
   let componentValueRegistry: ComponentValueRegistry;
   let elementBuilder: ElementBuilder;
   let componentRegistry: ComponentRegistry;
+
+  class ComponentKit extends ComponentKit_ {
+
+    whenDefined(componentType: ComponentClass<any>): Promise<void> {
+      return componentRegistry.whenDefined(componentType);
+    }
+
+  }
 
   class BootstrapContext extends BootstrapContext_ {
 
@@ -53,14 +64,11 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
       componentRegistry = ComponentRegistry.create({ bootstrapContext: this, elementBuilder });
       this.onDefinition = elementBuilder.definitions.on;
       this.onComponent = elementBuilder.components.on;
+      valueRegistry.provide({ a: ComponentKit_, as: ComponentKit });
     }
 
     define<T extends object>(componentType: ComponentClass<T>) {
       componentRegistry.define(componentType);
-    }
-
-    whenDefined(componentType: ComponentClass<any>): PromiseLike<void> {
-      return componentRegistry.whenDefined(componentType);
     }
 
     forDefinitions<D extends any[], S>(spec: ContextValueSpec<DefinitionContext<any>, any, D, S>): void {

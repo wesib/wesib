@@ -49,7 +49,7 @@ export class ComponentRegistry {
     delete this._definitionQueue;
   }
 
-  whenDefined(componentType: ComponentClass<any>): PromiseLike<void> {
+  whenDefined(componentType: ComponentClass<any>): Promise<void> {
     return this.customElements.whenDefined(componentType);
   }
 

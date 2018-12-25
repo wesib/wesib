@@ -2,6 +2,7 @@ import { ContextValues, ContextValueSpec } from 'context-values';
 import { EventProducer } from 'fun-events';
 import { ComponentClass, ComponentContext, ComponentListener } from '../component';
 import { DefinitionContext, DefinitionListener } from '../component/definition';
+import { ComponentKit } from './component-kit';
 
 /**
  * Components bootstrap context.
@@ -62,7 +63,9 @@ export abstract class BootstrapContext extends ContextValues {
    *
    * @throws TypeError If `componentType` does not contain a component definition.
    */
-  abstract whenDefined(componentType: ComponentClass<any>): PromiseLike<void>;
+  whenDefined(componentType: ComponentClass<any>): Promise<void> {
+    return this.get(ComponentKit).whenDefined(componentType);
+  }
 
   /**
    * Registers provider that associates a value with the given key with component types.
