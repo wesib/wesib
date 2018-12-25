@@ -2,7 +2,7 @@ import { ContextValueSpec } from 'context-values';
 import { EventProducer } from 'fun-events';
 import { Class } from '../../common';
 import { ComponentClass, ComponentContext, ComponentListener } from '../../component';
-import { DefinitionContext, DefinitionListener } from '../../component/definition';
+import { ComponentFactory, DefinitionContext, DefinitionListener } from '../../component/definition';
 import { FeatureRegistry } from '../../feature/feature-registry';
 import { BootstrapContext as BootstrapContext_ } from '../bootstrap-context';
 import { ComponentKit as ComponentKit_ } from '../component-kit';
@@ -46,7 +46,7 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
 
   class ComponentKit extends ComponentKit_ {
 
-    whenDefined(componentType: ComponentClass<any>): Promise<void> {
+    whenDefined<C extends object>(componentType: ComponentClass<C>) {
       return componentRegistry.whenDefined(componentType);
     }
 
@@ -73,11 +73,11 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
       componentRegistry.define(componentType);
     }
 
-    forDefinitions<D extends any[], S>(spec: ContextValueSpec<DefinitionContext<any>, any, D, S>): void {
+    forDefinitions<D extends any[], S>(spec: ContextValueSpec<DefinitionContext<any>, any, D, S>) {
       definitionValueRegistry.provide(spec);
     }
 
-    forComponents<D extends any[], S>(spec: ContextValueSpec<ComponentContext<any>, any, D, S>): void {
+    forComponents<D extends any[], S>(spec: ContextValueSpec<ComponentContext<any>, any, D, S>) {
       componentValueRegistry.provide(spec);
     }
 

@@ -29,9 +29,9 @@ export abstract class DefinitionContext<T extends object = object> extends Conte
   /**
    * Custom element class constructor.
    *
-   *  It is an error accessing this property before the element class is created, e.g. from inside of
-   *  `DefinitionListener` or `ComponentDef.define()` function. In these cases you may wish to add a `whenReady()`
-   *  callback.
+   * It is an error accessing this property before the element class is created, e.g. from inside of
+   * `DefinitionListener` or `ComponentDef.define()` function. In these cases you may wish to add a `whenReady()`
+   * callback.
    */
   abstract readonly elementType: Class;
 

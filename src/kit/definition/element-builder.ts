@@ -4,6 +4,7 @@ import { EventEmitter } from 'fun-events';
 import { Class, mergeFunctions } from '../../common';
 import { ComponentClass, ComponentDef } from '../../component';
 import { ComponentContext as ComponentContext_, ComponentListener } from '../../component/component-context';
+import { ComponentFactory } from '../../component/definition';
 import {
   DefinitionContext as DefinitionContext_,
   DefinitionListener,
@@ -70,7 +71,7 @@ export class ElementBuilder {
     this._componentValueRegistry = componentValueRegistry;
   }
 
-  buildElement<T extends object>(componentType: ComponentClass<T>): Class {
+  buildElement<T extends object>(componentType: ComponentClass<T>): ComponentFactory<T> {
 
     const def = ComponentDef.of(componentType);
     const builder = this;
@@ -134,7 +135,7 @@ export class ElementBuilder {
 
     whenReady.call(context, elementType);
 
-    return elementType;
+    return context;
   }
 
   private _elementType<T extends object>(

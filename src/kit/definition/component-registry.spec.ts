@@ -2,7 +2,7 @@ import { ContextRequest } from 'context-values';
 import { ComponentClass, ComponentDef } from '../../component';
 import { CustomElements } from '../../component/definition';
 import { BootstrapContext } from '../bootstrap-context';
-import { ComponentRegistry } from './component-registry';
+import { COMPONENT_FACTORY, ComponentRegistry } from './component-registry';
 import { ElementBuilder } from './element-builder';
 import Mocked = jest.Mocked;
 
@@ -51,7 +51,7 @@ describe('kit/definition/component-registry', () => {
       ElementSpy = {
         addEventListener: jest.fn(),
       } as any;
-      builderSpy.buildElement.mockReturnValue(ElementSpy);
+      builderSpy.buildElement.mockReturnValue({ elementType: ElementSpy });
     });
 
     describe('define', () => {
@@ -69,13 +69,31 @@ describe('kit/definition/component-registry', () => {
       });
     });
     describe('whenDefined', () => {
-      it('awaits for component definition', () => {
+      it('awaits for component definition', async () => {
 
-        const promise = Promise.resolve<any>('defined');
+        class Element {}
 
-        customElementsSpy.whenDefined.mockReturnValue(promise);
+        (TestComponent as any)[COMPONENT_FACTORY] = { elementType: Element, componentType: TestComponent };
 
-        expect(registry.whenDefined(TestComponent)).toBe(promise);
+        customElementsSpy.whenDefined.mockReturnValue(Promise.resolve());
+
+        await registry.whenDefined(TestComponent);
+
+        expect(customElementsSpy.whenDefined).toHaveBeenCalledWith(TestComponent);
+      });
+      it('fails if component factory is absent', async () => {
+        customElementsSpy.whenDefined.mockReturnValue(Promise.resolve());
+
+        expect(registry.whenDefined(TestComponent)).rejects.toThrow(TypeError);
+        expect(customElementsSpy.whenDefined).toHaveBeenCalledWith(TestComponent);
+      });
+      it('fails if component registry fails', async () => {
+
+        const error = new Error();
+
+        customElementsSpy.whenDefined.mockReturnValue(Promise.reject(error));
+
+        expect(registry.whenDefined(TestComponent)).rejects.toBe(error);
         expect(customElementsSpy.whenDefined).toHaveBeenCalledWith(TestComponent);
       });
     });

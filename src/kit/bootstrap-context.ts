@@ -1,7 +1,7 @@
 import { ContextValues, ContextValueSpec } from 'context-values';
 import { EventProducer } from 'fun-events';
 import { ComponentClass, ComponentContext, ComponentListener } from '../component';
-import { DefinitionContext, DefinitionListener } from '../component/definition';
+import { ComponentFactory, DefinitionContext, DefinitionListener } from '../component/definition';
 import { ComponentKit } from './component-kit';
 
 /**
@@ -59,11 +59,11 @@ export abstract class BootstrapContext extends ContextValues {
    *
    * @param componentType Component class constructor.
    *
-   * @return A promise that is resolved when the given `componentType` is registered.
+   * @return A promise that is resolved to component factory when the given `componentType` is registered.
    *
    * @throws TypeError If `componentType` does not contain a component definition.
    */
-  whenDefined(componentType: ComponentClass<any>): Promise<void> {
+  whenDefined<C extends object>(componentType: ComponentClass<C>): Promise<ComponentFactory<C>> {
     return this.get(ComponentKit).whenDefined(componentType);
   }
 

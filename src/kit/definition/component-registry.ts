@@ -1,7 +1,12 @@
 import { ComponentClass } from '../../component';
-import { CustomElements } from '../../component/definition';
+import { ComponentFactory, CustomElements } from '../../component/definition';
 import { BootstrapContext } from '../bootstrap-context';
 import { ElementBuilder } from './element-builder';
+
+/**
+ * @internal
+ */
+export const COMPONENT_FACTORY = Symbol('component-factory');
 
 /**
  * @internal
@@ -38,9 +43,10 @@ export class ComponentRegistry {
   define<T extends object>(componentType: ComponentClass<T>) {
     this._definitionQueue.push(() => {
 
-      const elementType = this.elementBuilder.buildElement(componentType);
+      const factory = this.elementBuilder.buildElement(componentType);
+      (componentType as any)[COMPONENT_FACTORY] = factory;
 
-      this.customElements.define(componentType, elementType);
+      this.customElements.define(componentType, factory.elementType);
     });
   }
 
@@ -49,8 +55,16 @@ export class ComponentRegistry {
     delete this._definitionQueue;
   }
 
-  whenDefined(componentType: ComponentClass<any>): Promise<void> {
-    return this.customElements.whenDefined(componentType);
+  async whenDefined<C extends object>(componentType: ComponentClass<C>): Promise<ComponentFactory<C>> {
+    await this.customElements.whenDefined(componentType);
+
+    const factory = (componentType as any)[COMPONENT_FACTORY];
+
+    if (!factory) {
+      throw new TypeError(`Component is not defined: ${componentType}`);
+    }
+
+    return factory;
   }
 
 }

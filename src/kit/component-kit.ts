@@ -1,5 +1,6 @@
 import { ContextKey, SingleContextKey } from 'context-values';
 import { ComponentClass } from '../component';
+import { ComponentFactory } from '../component/definition';
 
 /**
  * A component kit.
@@ -21,10 +22,10 @@ export abstract class ComponentKit {
    *
    * @param componentType Component class constructor.
    *
-   * @return A promise that is resolved when the given `componentType` is registered.
+   * @return A promise that is resolved to component factory when the given `componentType` is registered.
    *
    * @throws TypeError If `componentType` does not contain a component definition.
    */
-  abstract whenDefined(componentType: ComponentClass<any>): Promise<void>;
+  abstract whenDefined<C extends object>(componentType: ComponentClass<C>): Promise<ComponentFactory<C>>;
 
 }

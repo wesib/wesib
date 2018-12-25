@@ -42,7 +42,7 @@ describe('kit/definition/element-builder', () => {
 
     describe('buildElement', () => {
       it('builds custom element', () => {
-        expect(builder.buildElement(TestComponent).prototype).toBeInstanceOf(dom.window.HTMLElement);
+        expect(builder.buildElement(TestComponent).elementType.prototype).toBeInstanceOf(dom.window.HTMLElement);
       });
       it('extends HTML element', () => {
         ComponentDef.define(TestComponent, {
@@ -52,7 +52,7 @@ describe('kit/definition/element-builder', () => {
           },
         });
 
-        expect(builder.buildElement(TestComponent).prototype).toBeInstanceOf(dom.window.HTMLInputElement);
+        expect(builder.buildElement(TestComponent).elementType.prototype).toBeInstanceOf(dom.window.HTMLInputElement);
       });
     });
     describe('component definition listener', () => {
@@ -140,7 +140,7 @@ describe('kit/definition/element-builder', () => {
       });
       beforeEach(() => {
 
-        const element = new (builder.buildElement(TestComponent));
+        const element = new (builder.buildElement(TestComponent).elementType);
 
         componentContext = ComponentContext.of(element);
       });
@@ -162,7 +162,7 @@ describe('kit/definition/element-builder', () => {
           };
         }
 
-        const otherElement = new (builder.buildElement(AnotherComponent));
+        const otherElement = new (builder.buildElement(AnotherComponent).elementType);
         const otherContext = ComponentContext.of(otherElement);
 
         expect(otherContext.get(key, { or: null })).toBeNull();
@@ -187,7 +187,7 @@ describe('kit/definition/element-builder', () => {
       });
       beforeEach(() => {
 
-        const element = new (builder.buildElement(TestComponent));
+        const element = new (builder.buildElement(TestComponent).elementType);
 
         componentContext = ComponentContext.of(element);
       });
