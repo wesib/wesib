@@ -97,7 +97,7 @@ export class FeatureRegistry {
     const def = FeatureDef.of(feature);
 
     // Add requirements before the feature itself.
-    new ArraySet(def.need).items.forEach(required => this.add(required));
+    new ArraySet(def.need).items.forEach(needed => this.add(needed));
 
     if (!existing) {
       this._providers.set(feature, providers);

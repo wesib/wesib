@@ -160,15 +160,15 @@ The feature is a class decorated with `@Feature` decorator:
 import { BootstrapContext, ComponentContext, DefinitionContext, Feature } from '@wesib/wesib';
 
 @Feature({
-  require: [
+  need: [
     OtherFeature1, // Requires other features to be enabled.
     MyComponent, // The required component will be defined too.  
   ], 
-  prebootstrap: [
+  set: [
     { a: GlobalService, by: () => new GlobalService() }, // Provide a `GlobalService` available globally
                                                            // in all IoC contexts
   ],
-  bootstrap(context: BootstrapContext) {
+  init(context: BootstrapContext) {
     // Bootstrap the feature by calling methods of provided context.
 
     context.forDefinitions({
@@ -227,7 +227,7 @@ import { bootstrapComponents } from '@wesib/wesib';
 bootstrapComponents(MyFeature);
 ```
 
-Note that components are kind of features that, when passed to this function (or enabled with `require` option),
+Note that components are kind of features that, when passed to this function (or enabled with `need` option),
 register themselves as components.
 
 
