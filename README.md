@@ -77,7 +77,7 @@ import { Attribute, AttributeChanged, Attributes, Component } from '@wesib/wesib
 export class MyComponent {
 
   @Attribute('attribute-two') // Attribute name. When omitted the property name is used
-  attribute2!: string | null; // Attribute value is accesses instead.
+  attribute2!: string | null; // Attribute value is accessed instead.
 
   @AttributeChanged('attribute-three') // Attribute name. When omitted the method name is used  
   setAttribute3(newValue: string, oldValue: string | null) {
@@ -273,9 +273,9 @@ It is possible to attach shadow root to custom element by decorating the compone
 
 If shadow DOM is supported, then a shadow root will be attached to element. Otherwise an element itself will be used
 as shadow root. In both cases the shadow root will be available in component context under
-`[ComponentContext.shadowRootKey]` key.
+`[ShadowContentRoot.key]` key.
 
-The `@AttachShadow` decorator automatically enables an `ShadowDomSupport` feature.
+The `@AttachShadow` decorator automatically enables a `ShadowDomSupport` feature.
 
 A `ComponentContext.contentRoot` property is always available. It either contains a shadow root, or element itself.
 This is a DOM node to use to insert the DOM nodes to component.
