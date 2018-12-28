@@ -2,8 +2,8 @@ import { SingleContextKey } from 'context-values';
 import { EventInterest } from 'fun-events';
 import { JSDOM } from 'jsdom';
 import { Class } from '../../common';
-import { ComponentClass, ComponentContext, ComponentDef } from '../../component';
-import { DefinitionContext, ElementBaseClass } from '../../component/definition';
+import { ComponentClass, ComponentContext, ComponentDef, ComponentMount } from '../../component';
+import { ComponentFactory, DefinitionContext, ElementBaseClass } from '../../component/definition';
 import { BootstrapWindow } from '../bootstrap-window';
 import { ComponentValueRegistry } from './component-value-registry';
 import { DefinitionValueRegistry } from './definition-value-registry';
@@ -41,8 +41,11 @@ describe('kit/definition/element-builder', () => {
     });
 
     describe('buildElement', () => {
+      it('builds component factory', () => {
+        expect(builder.buildElement(TestComponent)).toBeInstanceOf(ComponentFactory);
+      });
       it('builds custom element', () => {
-        expect(builder.buildElement(TestComponent).prototype).toBeInstanceOf(dom.window.HTMLElement);
+        expect(builder.buildElement(TestComponent).elementType.prototype).toBeInstanceOf(dom.window.HTMLElement);
       });
       it('extends HTML element', () => {
         ComponentDef.define(TestComponent, {
@@ -52,9 +55,23 @@ describe('kit/definition/element-builder', () => {
           },
         });
 
-        expect(builder.buildElement(TestComponent).prototype).toBeInstanceOf(dom.window.HTMLInputElement);
+        expect(builder.buildElement(TestComponent).elementType.prototype).toBeInstanceOf(dom.window.HTMLInputElement);
       });
     });
+
+    describe('component factory', () => {
+
+      let factory: ComponentFactory;
+
+      beforeEach(() => {
+        factory = builder.buildElement(TestComponent);
+      });
+
+      it('refers the component type', () => {
+        expect(factory.componentType).toBe(TestComponent);
+      });
+    });
+
     describe('component definition listener', () => {
 
       let listenerSpy: Mock;
@@ -109,12 +126,38 @@ describe('kit/definition/element-builder', () => {
         });
       });
     });
-    describe('definition context value', () => {
+
+    describe('definition context', () => {
+
+      let definitionContext: DefinitionContext<any>;
+
+      beforeEach(() => {
+        builder.definitions.on((ctx: DefinitionContext<any>) => {
+          definitionContext = ctx;
+        });
+      });
+      beforeEach(() => {
+        definitionValueRegistry.provide({ a: ElementBaseClass, is: Object });
+      });
+
+      let factory: ComponentFactory;
+
+      beforeEach(() => {
+        factory = builder.buildElement(TestComponent);
+      });
+
+      it('contains itself', () => {
+        expect(definitionContext.get(DefinitionContext)).toBe(definitionContext);
+      });
+      it('contains component factory', () => {
+        expect(definitionContext.get(ComponentFactory)).toBe(factory);
+      });
+    });
+
+    describe('constructed element', () => {
 
       const key = new SingleContextKey<string>('test-key');
       let value: string;
-      const key2 = new SingleContextKey<string>('another-key');
-      let value2: string;
       let definitionContext: DefinitionContext<any>;
       let componentContext: ComponentContext;
 
@@ -128,33 +171,23 @@ describe('kit/definition/element-builder', () => {
         });
       });
       beforeEach(() => {
-        value2 = 'other value';
-        ComponentDef.define(TestComponent, {
-          define(context: DefinitionContext<any>) {
-            context.forComponents({ a: key2, is: value2 });
-          }
-        });
-      });
-      beforeEach(() => {
         definitionValueRegistry.provide({ a: ElementBaseClass, is: Object });
       });
+
       beforeEach(() => {
 
-        const element = new (builder.buildElement(TestComponent));
+        const element = new (builder.buildElement(TestComponent).elementType);
 
         componentContext = ComponentContext.of(element);
       });
 
-      describe('DefinitionContext', () => {
-        it('is available as context value', () => {
-          expect(definitionContext.get(DefinitionContext)).toBe(definitionContext);
-        });
-      });
-      it('is available to component', () => {
+      it('has access to definition context value', () => {
         expect(componentContext.get(key)).toBe(value);
-        expect(componentContext.get(key2)).toBe(value2);
       });
-      it('is not available to another component', () => {
+      it('is not mounted', () => {
+        expect(componentContext.mount).toBeUndefined();
+      });
+      it('can not access values of another component type', () => {
 
         class AnotherComponent {
           static [ComponentDef.symbol]: ComponentDef = {
@@ -162,13 +195,110 @@ describe('kit/definition/element-builder', () => {
           };
         }
 
-        const otherElement = new (builder.buildElement(AnotherComponent));
+        const otherElement = new (builder.buildElement(AnotherComponent).elementType);
         const otherContext = ComponentContext.of(otherElement);
 
         expect(otherContext.get(key, { or: null })).toBeNull();
-        expect(otherContext.get(key2, { or: null })).toBeNull();
       });
     });
+
+    describe('mounted element', () => {
+
+      let factory: ComponentFactory;
+      let element: any;
+      let mount: ComponentMount;
+      let context: ComponentContext;
+
+      beforeEach(() => {
+        factory = builder.buildElement(TestComponent);
+
+        class Element {
+          get property() {
+            return 'overridden';
+          }
+        }
+
+        element = new Element();
+        mount = factory.mountTo(element);
+        context = mount.context;
+      });
+
+      it('has context reference', () => {
+        expect(ComponentContext.of(element)).toBe(context);
+      });
+      it('has access ot overridden element properties', () => {
+        expect(context.elementSuper('property')).toBe('overridden');
+      });
+      it('is mounted', () => {
+        expect(context.mount).toBe(mount);
+      });
+      it('fails is already bound', () => {
+         expect(() => factory.mountTo(element)).toThrow('already bound');
+      });
+      describe('component mount', () => {
+        it('refers to element', () => {
+          expect(mount.element).toBe(element);
+        });
+        it('refers to component', () => {
+          expect(mount.component).toBe(context.component);
+        });
+        it('is not connected by default', () => {
+          expect(mount.connected).toBe(false);
+        });
+        it('connects element', () => {
+
+          const connected = jest.fn();
+
+          context.onConnect(connected);
+          mount.connected = true;
+
+          expect(connected).toHaveBeenCalledWith();
+          expect(connected.mock.instances[0]).toBe(context);
+        });
+        it('does not disconnect not connected element', () => {
+
+          const disconnected = jest.fn();
+
+          context.onDisconnect(disconnected);
+          mount.connected = false;
+
+          expect(disconnected).not.toHaveBeenCalled();
+        });
+      });
+    });
+
+    describe('connected element', () => {
+
+      let factory: ComponentFactory;
+      let element: any;
+      let mount: ComponentMount;
+      let context: ComponentContext;
+
+      beforeEach(() => {
+        factory = builder.buildElement(TestComponent);
+
+        class Element {}
+
+        element = new Element();
+        mount = factory.connectTo(element);
+        context = mount.context;
+      });
+
+      it('is connected by default', () => {
+        expect(mount.connected).toBe(true);
+      });
+      it('disconnects element', () => {
+
+        const disconnected = jest.fn();
+
+        context.onDisconnect(disconnected);
+        mount.connected = false;
+
+        expect(disconnected).toHaveBeenCalledWith();
+        expect(disconnected.mock.instances[0]).toBe(context);
+      });
+    });
+
     describe('component listener', () => {
 
       let componentContext: ComponentContext;
@@ -187,7 +317,7 @@ describe('kit/definition/element-builder', () => {
       });
       beforeEach(() => {
 
-        const element = new (builder.buildElement(TestComponent));
+        const element = new (builder.buildElement(TestComponent).elementType);
 
         componentContext = ComponentContext.of(element);
       });
