@@ -1,25 +1,6 @@
-import { ContextKey, SingleContextKey } from 'context-values';
-import { Class } from '../../common';
 import { Feature } from '../feature.decorator';
 import { DomPropertyRegistrar } from './dom-property-registrar';
-
-class DomPropertyRegistry {
-
-  static readonly key: ContextKey<DomPropertyRegistry> = new SingleContextKey('dom-property-registry');
-
-  private readonly _props = new Map<PropertyKey, PropertyDescriptor>();
-
-  domProperty(propertyKey: PropertyKey, descriptor: PropertyDescriptor): void {
-    this._props.set(propertyKey, descriptor);
-  }
-
-  apply(elementType: Class) {
-    this._props.forEach((desc, key) => {
-      Object.defineProperty(elementType.prototype, key, desc);
-    });
-  }
-
-}
+import { DomPropertyRegistry } from './dom-property-registry';
 
 /**
  * A feature adding properties to custom elements.
@@ -33,11 +14,23 @@ class DomPropertyRegistry {
       a: DomPropertyRegistrar,
       by(registry: DomPropertyRegistry) {
         return (propertyKey: PropertyKey, descriptor: PropertyDescriptor) =>
-            registry.domProperty(propertyKey, descriptor);
+            registry.add(propertyKey, descriptor);
       },
       with: [DomPropertyRegistry],
     });
-    context.onDefinition(ctx => ctx.whenReady(elementType => ctx.get(DomPropertyRegistry).apply(elementType)));
+    context.onDefinition(definitionContext => {
+      // Define element prototype properties
+      definitionContext.whenReady(elementType => definitionContext.get(DomPropertyRegistry).define(elementType));
+    });
+    context.onComponent(componentContext => {
+
+      const mount = componentContext.mount;
+
+      if (mount) {
+        // Mount element properties
+        componentContext.get(DomPropertyRegistry).mount(mount);
+      }
+    });
   }
 })
 export class DomPropertiesSupport {}

@@ -68,7 +68,7 @@ describe('feature/attributes', () => {
       expect(attrChangedSpy).not.toHaveBeenCalled();
       expect(attr2ChangedSpy).not.toHaveBeenCalled();
     });
-    it('does not apply attributes when not defined', async () => {
+    it('does not define attributes when not defined', async () => {
 
       @Component({
         extend: {

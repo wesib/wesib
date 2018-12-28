@@ -1,8 +1,36 @@
 import { Class } from '../common';
 import { ComponentClass, ComponentDef } from '../component';
-import { CustomElements } from '../component/definition';
+import { ComponentFactory, CustomElements } from '../component/definition';
 import { Feature } from '../feature';
 import { bootstrapComponents } from '../kit/bootstrap';
+
+export function testComponentFactory<T extends object>(componentType: Class<T>): Promise<ComponentFactory<T>> {
+  ComponentDef.define(componentType);
+
+  let result!: Class;
+
+  const customElements: CustomElements = {
+
+    define(compType: ComponentClass<any>, elementType: Class<any>): void {
+      result = elementType;
+    },
+
+    whenDefined(): Promise<void> {
+      return Promise.resolve();
+    }
+
+  };
+
+  @Feature({
+    set: { a: CustomElements, is: customElements },
+    need: componentType,
+  })
+  class TestFeature {}
+
+  const kit = bootstrapComponents(TestFeature);
+
+  return kit.whenDefined(componentType);
+}
 
 export function testElement(componentType: Class<any>): Class<any> {
   ComponentDef.define(componentType);

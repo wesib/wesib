@@ -102,30 +102,7 @@ export class ElementBuilder {
           throw new Error(`Element ${element} already bound to component`);
         }
 
-        let context: ComponentContext_<T>;
-
-        class ComponentMount extends ComponentMount_<T> {
-
-          get context() {
-            return context;
-          }
-
-          get connected() {
-            return element[CONNECTED];
-          }
-
-          set connected(value: boolean) {
-            if (this.connected === value) {
-              return;
-            }
-            element[CONNECT](value);
-          }
-
-        }
-
-        const mount = new ComponentMount();
-
-        context = builder._createComponent({
+        return builder._createComponent({
           definitionContext,
           onComponent,
           valueRegistry: createValueRegistry(),
@@ -133,10 +110,30 @@ export class ElementBuilder {
           elementSuper(key) {
             return element[key];
           },
-          mount,
-        });
+          createMount(context: ComponentContext_<T>) {
 
-        return mount;
+            class ComponentMount extends ComponentMount_<T> {
+
+              get context() {
+                return context;
+              }
+
+              get connected() {
+                return element[CONNECTED];
+              }
+
+              set connected(value: boolean) {
+                if (this.connected === value) {
+                  return;
+                }
+                element[CONNECT](value);
+              }
+
+            }
+
+            return new ComponentMount();
+          },
+        }).mount as ComponentMount_<T>;
       }
 
     }
@@ -223,6 +220,7 @@ export class ElementBuilder {
           onComponent,
           valueRegistry,
           element: this,
+          createMount: noop,
           elementSuper: (key) => {
             // @ts-ignore
             return super[key] as any;
@@ -251,13 +249,14 @@ export class ElementBuilder {
         onComponent,
         valueRegistry,
         element,
-        mount,
+        createMount,
         elementSuper,
       }: ComponentMeta<T>): ComponentContext_<T> {
 
     let whenReady: (this: ComponentContext, component: T) => void = noop;
     const connectEvents = new EventEmitter<(this: any) => void>();
     const disconnectEvents = new EventEmitter<(this: any) => void>();
+    let mount: ComponentMount_<T> | undefined;
 
     class ComponentContext extends ComponentContext_<T> {
 
@@ -272,8 +271,11 @@ export class ElementBuilder {
         throw new Error('The component is not constructed yet. Consider to use a `whenReady()` callback');
       }
 
-      get mount() {
-        return mount;
+      get mount(): ComponentMount_<T> | undefined {
+        if (mount) {
+          return mount;
+        }
+        return mount = createMount(this);
       }
 
       get connected() {
@@ -328,6 +330,6 @@ interface ComponentMeta<T extends object> {
   onComponent: EventEmitter<ComponentListener>;
   valueRegistry: ComponentValueRegistry;
   element: any;
-  elementSuper: (name: PropertyKey) => any;
-  mount?: ComponentMount_<T>;
+  elementSuper(name: PropertyKey): any;
+  createMount(context: ComponentContext_<T>): ComponentMount_<T> | undefined;
 }
