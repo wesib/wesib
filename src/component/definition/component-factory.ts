@@ -38,7 +38,7 @@ export abstract class ComponentFactory<C extends object = object> {
    *
    * @param element Target element to mount new component to.
    *
-   * @throws Error If target element is already associated with another component, or mount failed.
+   * @throws Error If target element is already bound to some component.
    */
   abstract mountTo(element: any): ComponentMount<C>;
 

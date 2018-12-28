@@ -99,6 +99,9 @@ export class ElementBuilder {
       }
 
       mountTo(element: any): ComponentMount_<T> {
+        if (element[ComponentContext_.symbol]) {
+          throw new Error(`Element ${element} already bound to component`);
+        }
 
         let context: ComponentContext_<T>;
 

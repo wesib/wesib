@@ -232,6 +232,9 @@ describe('kit/definition/element-builder', () => {
       it('is mounted', () => {
         expect(context.mount).toBe(mount);
       });
+      it('fails is already bound', () => {
+         expect(() => factory.mountTo(element)).toThrow('already bound');
+      });
       describe('component mount', () => {
         it('refers to element', () => {
           expect(mount.element).toBe(element);
