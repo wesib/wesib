@@ -1,15 +1,21 @@
 import { StatePath } from 'fun-events';
 import { Component, ComponentClass, ComponentContext } from '../../component';
-import { MockElement, testElement } from '../../spec/test-element';
+import { ComponentFactory } from '../../component/definition';
+import { BootstrapWindow } from '../../kit';
+import { MockElement, testComponentFactory, testElement } from '../../spec/test-element';
 import { Feature } from '../feature.decorator';
 import { AttributeChanged } from './attribute-changed.decorator';
 import { Attribute } from './attribute.decorator';
 import { AttributesSupport } from './attributes-support.feature';
 import Mock = jest.Mock;
+import Mocked = jest.Mocked;
 
 describe('feature/attributes', () => {
   describe('Attributes usage', () => {
 
+    let Observer: Mock<MutationObserver>;
+    let observer: Mocked<MutationObserver>;
+    let observe: (records: MutationRecord[]) => void;
     let testComponent: ComponentClass;
     let context: ComponentContext;
     let element: any;
@@ -17,10 +23,27 @@ describe('feature/attributes', () => {
     let attr2ChangedSpy: Mock;
 
     beforeEach(() => {
+      observer = {
+        observe: jest.fn(),
+      } as any;
+      Observer = jest.fn((listener: (records: MutationRecord[]) => void) => {
+        observe = listener;
+        return observer;
+      });
+
       context = undefined!;
       attrChangedSpy = jest.fn();
       attr2ChangedSpy = jest.fn();
 
+      @Feature({
+        set: { a: BootstrapWindow, is: { MutationObserver: Observer } as any},
+      })
+      class TestWindowFeature {
+      }
+
+      @Feature({
+        need: TestWindowFeature,
+      })
       @Component({
         extend: {
           type: MockElement,
@@ -46,75 +69,150 @@ describe('feature/attributes', () => {
 
       testComponent = TestComponent;
     });
-    beforeEach(() => {
-      element = new (testElement(testComponent))();
-    });
 
-    it('notifies on attribute change', () => {
-      element.setAttribute('custom-attribute', 'value1');
-      expect(attrChangedSpy).toHaveBeenCalledWith('value1', null);
+    describe('defined attribute', () => {
+      beforeEach(() => {
+        element = new (testElement(testComponent))();
+      });
 
-      attrChangedSpy.mockClear();
-      element.setAttribute('custom-attribute', 'value2');
-      expect(attrChangedSpy).toHaveBeenCalledWith('value2', 'value1');
-    });
-    it('does not notify on other attribute change', () => {
-      element.setAttribute('custom-attribute-2', 'value');
-      expect(attrChangedSpy).not.toHaveBeenCalled();
-      expect(attr2ChangedSpy).toHaveBeenCalled();
-    });
-    it('does not notify on non-declared attribute change', () => {
-      element.setAttribute('title', 'test title');
-      expect(attrChangedSpy).not.toHaveBeenCalled();
-      expect(attr2ChangedSpy).not.toHaveBeenCalled();
-    });
-    it('does not define attributes when not defined', async () => {
+      it('notifies on attribute change', () => {
+        element.setAttribute('custom-attribute', 'value1');
+        expect(attrChangedSpy).toHaveBeenCalledWith('value1', null);
 
-      @Component({
-        extend: {
-          type: Object,
-        },
-        name: 'no-attr-component'
-      })
-      @Feature({
-        need: AttributesSupport,
-      })
-      class NoAttrComponent {
-      }
+        attrChangedSpy.mockClear();
+        element.setAttribute('custom-attribute', 'value2');
+        expect(attrChangedSpy).toHaveBeenCalledWith('value2', 'value1');
+      });
+      it('does not notify on other attribute change', () => {
+        element.setAttribute('custom-attribute-2', 'value');
+        expect(attrChangedSpy).not.toHaveBeenCalled();
+        expect(attr2ChangedSpy).toHaveBeenCalled();
+      });
+      it('does not notify on non-declared attribute change', () => {
+        element.setAttribute('title', 'test title');
+        expect(attrChangedSpy).not.toHaveBeenCalled();
+        expect(attr2ChangedSpy).not.toHaveBeenCalled();
+      });
+      it('does not define attributes when not defined', () => {
 
-      const noAttrElement = new (testElement(NoAttrComponent))();
+        @Component({
+          extend: {
+            type: Object,
+          },
+          name: 'no-attr-component'
+        })
+        @Feature({
+          need: AttributesSupport,
+        })
+        class NoAttrComponent {
+        }
 
-      expect(noAttrElement.constructor).not.toEqual(expect.objectContaining({
-        observedAttributes: expect.anything(),
-      }));
-      expect<any>(noAttrElement).not.toMatchObject({
-        attributeChangedCallback: expect.anything(),
+        const noAttrElement = new (testElement(NoAttrComponent))();
+
+        expect(noAttrElement.constructor).not.toEqual(expect.objectContaining({
+          observedAttributes: expect.anything(),
+        }));
+        expect<any>(noAttrElement).not.toMatchObject({
+          attributeChangedCallback: expect.anything(),
+        });
+      });
+      it('accesses attribute value', () => {
+
+        const value = 'new value';
+
+        element.setAttribute('attr3', value);
+
+        expect((ComponentContext.of(element).component as any).attr3).toBe(value);
+      });
+      it('updates attribute value', () => {
+
+        const value = 'new value';
+
+        (ComponentContext.of(element).component as any).attr3 = value;
+
+        expect(element.getAttribute('attr3')).toBe(value);
+      });
+      it('notifies on attribute update', () => {
+
+        const updateStateSpy = jest.spyOn(context, 'updateState');
+        const value = 'new value';
+
+        (ComponentContext.of(element).component as any).attr3 = value;
+
+        expect(updateStateSpy).toHaveBeenCalledWith([StatePath.attribute, 'attr3'], value, null);
       });
     });
-    it('accesses attribute value', () => {
 
-      const value = 'new value';
+    describe('mounted attribute', () => {
 
-      element.setAttribute('attr3', value);
+      let factory: ComponentFactory;
 
-      expect((ComponentContext.of(element).component as any).attr3).toBe(value);
-    });
-    it('updates attribute value', () => {
+      beforeEach(async () => {
+        factory = await testComponentFactory(testComponent);
+        element = new MockElement();
+        factory.mountTo(element);
+      });
 
-      const value = 'new value';
+      it('creates mutation observer', () => {
+        expect(Observer).toHaveBeenCalledWith(observe);
+      });
+      it('observes attribute mutations', () => {
+        expect(observer.observe).toHaveBeenCalledWith(
+            element,
+            {
+              attributes: true,
+              attributeFilter: expect.arrayContaining(['custom-attribute', 'custom-attribute-2', 'attr3']),
+              attributeOldValue: true,
+            });
+      });
+      it('updates attribute', () => {
+        element.setAttribute('custom-attribute', 'value1');
 
-      (ComponentContext.of(element).component as any).attr3 = value;
+        const record1 = {
+          type: 'attributes',
+          attributeName: 'custom-attribute',
+          oldValue: null,
+        } as MutationRecord;
 
-      expect(element.getAttribute('attr3')).toBe(value);
-    });
-    it('notifies on attribute update', () => {
+        observe([record1]);
 
-      const updateStateSpy = jest.spyOn(context, 'updateState');
-      const value = 'new value';
+        expect(attrChangedSpy).toHaveBeenCalledWith('value1', null);
 
-      (ComponentContext.of(element).component as any).attr3 = value;
+        attrChangedSpy.mockClear();
 
-      expect(updateStateSpy).toHaveBeenCalledWith([StatePath.attribute, 'attr3'], value, null);
+        element.setAttribute('custom-attribute', 'value2');
+
+        const record2 = {
+          type: 'attributes',
+          attributeName: 'custom-attribute',
+          oldValue: 'value1',
+        } as MutationRecord;
+
+        observe([record2]);
+        expect(attrChangedSpy).toHaveBeenCalledWith('value2', 'value1');
+      });
+      it('does not observe attributes when not defined', async () => {
+        Observer.mockClear();
+
+        @Component({
+          extend: {
+            type: Object,
+          },
+          name: 'no-attr-component'
+        })
+        @Feature({
+          need: AttributesSupport,
+        })
+        class NoAttrComponent {
+        }
+
+        const noAttrElement = new MockElement();
+        const noAttrFactory = await testComponentFactory(NoAttrComponent);
+
+        noAttrFactory.mountTo(noAttrElement);
+
+        expect(Observer).not.toHaveBeenCalled();
+      });
     });
   });
 });
