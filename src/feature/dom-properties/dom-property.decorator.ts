@@ -1,5 +1,5 @@
 import { StatePath } from 'fun-events';
-import { decoratePropertyAccessor, TypedPropertyDecorator } from '../../common';
+import { decoratePropertyAccessor, PropertyAccessorDescriptor, TypedPropertyDecorator } from '../../common';
 import { Component, ComponentClass, ComponentContext, ComponentDef } from '../../component';
 import { FeatureDef } from '../feature-def';
 import { DomPropertiesSupport } from './dom-properties-support.feature';
@@ -148,7 +148,7 @@ function domPropertyDescriptor<V>(
       configurable,
       enumerable,
       writable,
-    }: DomProperty.Opts<any>): PropertyDescriptor {
+    }: DomProperty.Opts<any>): PropertyAccessorDescriptor<V> {
   if (!propertyDesc) {
     // Component object property
     if (enumerable == null) {
@@ -177,7 +177,7 @@ function domPropertyDescriptor<V>(
     }
   }
 
-  const desc: TypedPropertyDescriptor<V> = {
+  const desc: PropertyAccessorDescriptor<V> = {
     configurable,
     enumerable,
     get: function (this: HTMLElement) {
