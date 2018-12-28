@@ -43,8 +43,7 @@ function newComponent<T extends object>(type: ComponentClass<T>, context: Compon
 }
 
 const CONNECTED = Symbol('connected');
-const CONNECTED_CALLBACK = Symbol('connectedCallback');
-const DISCONNECTED_CALLBACK = Symbol('disconnectedCallback');
+const CONNECT = Symbol('connect');
 
 /**
  * @internal
@@ -109,6 +108,17 @@ export class ElementBuilder {
 
           get context() {
             return context;
+          }
+
+          get connected() {
+            return element[CONNECTED];
+          }
+
+          set connected(value: boolean) {
+            if (this.connected === value) {
+              return;
+            }
+            element[CONNECT](value);
           }
 
         }
@@ -203,9 +213,8 @@ export class ElementBuilder {
       // Component context reference
       [ComponentContext_.symbol]: ComponentContext_<T>;
 
-      private readonly [CONNECTED_CALLBACK]!: () => void;
-      private readonly [DISCONNECTED_CALLBACK]!: () => void;
-      private [CONNECTED] = false;
+      private readonly [CONNECT]: ((value: boolean) => void);
+      private [CONNECTED]: boolean;
 
       constructor() {
         super();
@@ -223,14 +232,12 @@ export class ElementBuilder {
 
       // noinspection JSUnusedGlobalSymbols
       connectedCallback() {
-        this[CONNECTED] = true;
-        this[CONNECTED_CALLBACK]();
+        this[CONNECT](true);
       }
 
       // noinspection JSUnusedGlobalSymbols
       disconnectedCallback() {
-        this[CONNECTED] = false;
-        this[DISCONNECTED_CALLBACK]();
+        this[CONNECT](false);
       }
 
     }
@@ -284,11 +291,12 @@ export class ElementBuilder {
     valueRegistry.provide({ a: ComponentContext_, is: context });
 
     Object.defineProperty(element, ComponentContext_.symbol, { value: context });
-    Object.defineProperty(element, CONNECTED_CALLBACK, {
-      value: () => connectEvents.forEach(listener => listener.call(context)),
-    });
-    Object.defineProperty(element, DISCONNECTED_CALLBACK, {
-      value: () => disconnectEvents.forEach(listener => listener.call(context)),
+    Object.defineProperty(element, CONNECTED, { writable: true, value: false });
+    Object.defineProperty(element, CONNECT, {
+      value(value: boolean) {
+        this[CONNECTED] = value;
+        (value ? connectEvents : disconnectEvents).forEach(listener => listener.call(context));
+      },
     });
 
     this.components.forEach(consumer => consumer(context));

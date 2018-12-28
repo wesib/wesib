@@ -242,6 +242,60 @@ describe('kit/definition/element-builder', () => {
         it('refers to component', () => {
           expect(mount.component).toBe(context.component);
         });
+        it('is not connected by default', () => {
+          expect(mount.connected).toBe(false);
+        });
+        it('connects element', () => {
+
+          const connected = jest.fn();
+
+          context.onConnect(connected);
+          mount.connected = true;
+
+          expect(connected).toHaveBeenCalledWith();
+          expect(connected.mock.instances[0]).toBe(context);
+        });
+        it('does not disconnect not connected element', () => {
+
+          const disconnected = jest.fn();
+
+          context.onDisconnect(disconnected);
+          mount.connected = false;
+
+          expect(disconnected).not.toHaveBeenCalled();
+        });
+      });
+    });
+
+    describe('connected element', () => {
+
+      let factory: ComponentFactory;
+      let element: any;
+      let mount: ComponentMount;
+      let context: ComponentContext;
+
+      beforeEach(() => {
+        factory = builder.buildElement(TestComponent);
+
+        class Element {}
+
+        element = new Element();
+        mount = factory.connectTo(element);
+        context = mount.context;
+      });
+
+      it('is connected by default', () => {
+        expect(mount.connected).toBe(true);
+      });
+      it('disconnects element', () => {
+
+        const disconnected = jest.fn();
+
+        context.onDisconnect(disconnected);
+        mount.connected = false;
+
+        expect(disconnected).toHaveBeenCalledWith();
+        expect(disconnected.mock.instances[0]).toBe(context);
       });
     });
 
