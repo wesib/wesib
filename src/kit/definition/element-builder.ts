@@ -2,14 +2,19 @@ import { noop } from 'call-thru';
 import { ContextKey, ContextValueSpec } from 'context-values';
 import { EventEmitter } from 'fun-events';
 import { Class, mergeFunctions } from '../../common';
-import { ComponentClass, ComponentDef, ComponentMount as ComponentMount_ } from '../../component';
-import { ComponentContext as ComponentContext_, ComponentListener } from '../../component/component-context';
-import { ComponentFactory as ComponentFactory_ } from '../../component/definition';
 import {
+  ComponentClass,
+  ComponentContext as ComponentContext_,
+  ComponentDef,
+  ComponentListener,
+  ComponentMount as ComponentMount_,
+} from '../../component';
+import {
+  ComponentFactory as ComponentFactory_,
   DefinitionContext as DefinitionContext_,
   DefinitionListener,
   ElementBaseClass,
-} from '../../component/definition/definition-context';
+} from '../../component/definition';
 import { ComponentValueRegistry } from './component-value-registry';
 import { DefinitionValueRegistry } from './definition-value-registry';
 
