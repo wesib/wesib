@@ -1,4 +1,4 @@
-import { SingleContextKey } from 'context-values';
+import { ContextKey, SingleContextKey } from 'context-values';
 import { EventInterest } from 'fun-events';
 import { JSDOM } from 'jsdom';
 import { Class } from '../../common';
@@ -136,8 +136,12 @@ describe('kit/definition/element-builder', () => {
           definitionContext = ctx;
         });
       });
+
+      let key: ContextKey<string>;
+
       beforeEach(() => {
-        definitionValueRegistry.provide({ a: ElementBaseClass, is: Object });
+        key = new SingleContextKey('definition-key');
+        ComponentDef.define(TestComponent, { set: { a: key, is: 'definition value' } });
       });
 
       let factory: ComponentFactory;
@@ -152,26 +156,38 @@ describe('kit/definition/element-builder', () => {
       it('contains component factory', () => {
         expect(definitionContext.get(ComponentFactory)).toBe(factory);
       });
+      it('contains definition context values', () => {
+        expect(definitionContext.get(key)).toBe('definition value');
+      });
     });
 
     describe('constructed element', () => {
 
-      const key = new SingleContextKey<string>('test-key');
-      let value: string;
+      const key1 = new SingleContextKey<string>('test-key-1');
+      let value1: string;
+      const key2 = new SingleContextKey<string>('test-key-2');
+      let value2: string;
       let definitionContext: DefinitionContext<any>;
       let componentContext: ComponentContext;
 
       beforeEach(() => {
-        value = 'some value';
+        value1 = 'some value';
+        value2 = 'other value';
         builder.definitions.on((ctx: DefinitionContext<any>) => {
           definitionContext = ctx;
           if (ctx.componentType === TestComponent) {
-            ctx.forComponents({ a: key, is: value });
+            ctx.forComponents({ a: key1, is: value1 });
           }
         });
       });
       beforeEach(() => {
-        definitionValueRegistry.provide({ a: ElementBaseClass, is: Object });
+        ComponentDef.define(
+            TestComponent, {
+              extend: {
+                type: Object,
+              },
+              forComponents: { a: key2, is: value2, }
+            });
       });
 
       beforeEach(() => {
@@ -182,7 +198,10 @@ describe('kit/definition/element-builder', () => {
       });
 
       it('has access to definition context value', () => {
-        expect(componentContext.get(key)).toBe(value);
+        expect(componentContext.get(key1)).toBe(value1);
+      });
+      it('has access to component context value', () => {
+        expect(componentContext.get(key2)).toBe(value2);
       });
       it('is not mounted', () => {
         expect(componentContext.mount).toBeUndefined();
@@ -192,13 +211,17 @@ describe('kit/definition/element-builder', () => {
         class AnotherComponent {
           static [ComponentDef.symbol]: ComponentDef = {
             name: 'another-component',
+            extend: {
+              type: Object,
+            }
           };
         }
 
         const otherElement = new (builder.buildElement(AnotherComponent).elementType);
         const otherContext = ComponentContext.of(otherElement);
 
-        expect(otherContext.get(key, { or: null })).toBeNull();
+        expect(otherContext.get(key1, { or: null })).toBeNull();
+        expect(otherContext.get(key2, { or: null })).toBeNull();
       });
     });
 

@@ -1,7 +1,7 @@
 import { noop } from 'call-thru';
 import { ContextKey, ContextValueSpec } from 'context-values';
 import { EventEmitter } from 'fun-events';
-import { Class, mergeFunctions } from '../../common';
+import { ArraySet, Class, mergeFunctions } from '../../common';
 import {
   ComponentClass,
   ComponentContext as ComponentContext_,
@@ -158,8 +158,10 @@ export class ElementBuilder {
 
         definitionRegistry.provide({ a: DefinitionContext_, is: this });
         definitionRegistry.provide({ a: ComponentFactory_, is: componentFactory });
+        new ArraySet(def.set).forEach(spec => definitionRegistry.provide(spec));
 
         typeValueRegistry = ComponentValueRegistry.create(definitionRegistry.bindSources(this));
+        new ArraySet(def.forComponents).forEach(spec => typeValueRegistry.provide(spec));
 
         this.get = definitionRegistry.newValues().get;
       }
