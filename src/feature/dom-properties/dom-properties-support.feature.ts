@@ -8,16 +8,18 @@ import { DomPropertyRegistry } from './dom-property-registry';
  * This feature is enabled automatically whenever an `@DomProperty decorator applied to component.
  */
 @Feature({
-  init(context) {
-    context.forDefinitions({ as: DomPropertyRegistry });
-    context.forDefinitions({
+  forDefinitions: [
+    { as: DomPropertyRegistry },
+    {
       a: DomPropertyRegistrar,
       by(registry: DomPropertyRegistry) {
         return (propertyKey: PropertyKey, descriptor: PropertyDescriptor) =>
             registry.add(propertyKey, descriptor);
       },
       with: [DomPropertyRegistry],
-    });
+    },
+  ],
+  init(context) {
     context.onDefinition(definitionContext => {
       // Define element prototype properties
       definitionContext.whenReady(elementType => definitionContext.get(DomPropertyRegistry).define(elementType));

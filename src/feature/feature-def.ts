@@ -1,5 +1,7 @@
 import { ContextValueSpec } from 'context-values';
 import { ArraySet, Class, mergeFunctions, MetaAccessor } from '../common';
+import { ComponentContext } from '../component';
+import { DefinitionContext } from '../component/definition';
 import { BootstrapContext } from '../kit';
 
 /**
@@ -22,7 +24,8 @@ export interface FeatureDef {
   /**
    * Bootstrap context values to declare prior to bootstrap.
    */
-  set?: ContextValueSpec<BootstrapContext, any, any> | ContextValueSpec<BootstrapContext, any, any>[];
+  set?: ContextValueSpec<BootstrapContext, any, any[], any>
+      | ContextValueSpec<BootstrapContext, any, any[], any>[];
 
   /**
    * Bootstraps this feature by calling the given bootstrap context methods.
@@ -30,6 +33,18 @@ export interface FeatureDef {
    * @param context Components bootstrap context.
    */
   init?: (this: Class, context: BootstrapContext) => void;
+
+  /**
+   * Definition context values to declare prior to component class definition.
+   */
+  forDefinitions?: ContextValueSpec<DefinitionContext<any>, any, any[], any>
+      | ContextValueSpec<DefinitionContext<any>, any, any[], any>[];
+
+  /**
+   * Component context values to declare prior to component construction.
+   */
+  forComponents?: ContextValueSpec<ComponentContext<any>, any, any[], any>
+      | ContextValueSpec<ComponentContext<any>, any, any[], any>[];
 
 }
 
@@ -55,6 +70,8 @@ export namespace FeatureDef {
             const need = new ArraySet(prev.need).merge(def.need);
             const has = new ArraySet(prev.has).merge(def.has);
             const init = mergeFunctions<[BootstrapContext], void, Class>(prev.init, def.init);
+            const forDefinitions = new ArraySet(prev.forDefinitions).merge(def.forDefinitions);
+            const forComponents = new ArraySet(prev.forComponents).merge(def.forComponents);
 
             if (set.size) {
               result.set = set.value;
@@ -67,6 +84,12 @@ export namespace FeatureDef {
             }
             if (init) {
               result.init = init;
+            }
+            if (forDefinitions.size) {
+              result.forDefinitions = forDefinitions.value;
+            }
+            if (forComponents.size) {
+              result.forComponents = forComponents.value;
             }
 
             return result;

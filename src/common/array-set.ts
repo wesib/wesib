@@ -1,8 +1,11 @@
-export class ArraySet<T> implements Iterable<T> {
+import { AIterable } from 'a-iterable';
+
+export class ArraySet<T> extends AIterable<T> {
 
   readonly items: Set<T>;
 
   constructor(value?: T | T[]) {
+    super();
     this.items = value == null ? new Set() : Array.isArray(value) ? new Set(value) : new Set([value]);
   }
 

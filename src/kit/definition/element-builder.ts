@@ -1,15 +1,20 @@
 import { noop } from 'call-thru';
 import { ContextKey, ContextValueSpec } from 'context-values';
 import { EventEmitter } from 'fun-events';
-import { Class, mergeFunctions } from '../../common';
-import { ComponentClass, ComponentDef, ComponentMount as ComponentMount_ } from '../../component';
-import { ComponentContext as ComponentContext_, ComponentListener } from '../../component/component-context';
-import { ComponentFactory as ComponentFactory_ } from '../../component/definition';
+import { ArraySet, Class, mergeFunctions } from '../../common';
 import {
+  ComponentClass,
+  ComponentContext as ComponentContext_,
+  ComponentDef,
+  ComponentListener,
+  ComponentMount as ComponentMount_,
+} from '../../component';
+import {
+  ComponentFactory as ComponentFactory_,
   DefinitionContext as DefinitionContext_,
   DefinitionListener,
   ElementBaseClass,
-} from '../../component/definition/definition-context';
+} from '../../component/definition';
 import { ComponentValueRegistry } from './component-value-registry';
 import { DefinitionValueRegistry } from './definition-value-registry';
 
@@ -148,13 +153,17 @@ export class ElementBuilder {
 
       constructor() {
         super();
-        typeValueRegistry = ComponentValueRegistry.create(builder._definitionValueRegistry.bindSources(this));
-        typeValueRegistry.provide({ a: DefinitionContext_, is: this });
-        typeValueRegistry.provide({ a: ComponentFactory_, is: componentFactory });
 
-        const values = typeValueRegistry.newValues();
+        const definitionRegistry = DefinitionValueRegistry.create(builder._definitionValueRegistry.bindSources(this));
 
-        this.get = values.get;
+        definitionRegistry.provide({ a: DefinitionContext_, is: this });
+        definitionRegistry.provide({ a: ComponentFactory_, is: componentFactory });
+        new ArraySet(def.set).forEach(spec => definitionRegistry.provide(spec));
+
+        typeValueRegistry = ComponentValueRegistry.create(definitionRegistry.bindSources(this));
+        new ArraySet(def.forComponents).forEach(spec => typeValueRegistry.provide(spec));
+
+        this.get = definitionRegistry.newValues().get;
       }
 
       get elementType(): Class {

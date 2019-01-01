@@ -1,4 +1,5 @@
 import { noop } from 'call-thru';
+import { SingleContextKey } from 'context-values';
 import { FeatureDef } from '../feature';
 import { BootstrapContext } from '../kit';
 import { ComponentClass } from './component-class';
@@ -88,6 +89,21 @@ describe('component/component-def', () => {
             { extend: { name: 'input', type: Base2 } }))
             .toEqual({ extend: { name: 'input', type: Base2 } });
       });
+      it('merges `set`', () => {
+
+        const key1 = new SingleContextKey<string>('a');
+        const key2 = new SingleContextKey<string>('b');
+
+        expect(ComponentDef.merge(
+            { set: { a: key1, is: 'a' } },
+            { set: { a: key2, is: 'b' } })
+        ).toEqual({
+          set: [
+            { a: key1, is: 'a' },
+            { a: key2, is: 'b' },
+          ]
+        });
+      });
       it('merges `define`', () => {
 
         const define1spy = jest.fn();
@@ -105,6 +121,21 @@ describe('component/component-def', () => {
         expect(define1spy.mock.instances[0]).toBe(Component);
         expect(define2spy).toHaveBeenCalledWith(context);
         expect(define2spy.mock.instances[0]).toBe(Component);
+      });
+      it('merges `forComponents`', () => {
+
+        const key1 = new SingleContextKey<string>('a');
+        const key2 = new SingleContextKey<string>('b');
+
+        expect(ComponentDef.merge(
+            { forComponents: { a: key1, is: 'a' } },
+            { forComponents: { a: key2, is: 'b' } })
+        ).toEqual({
+          forComponents: [
+            { a: key1, is: 'a' },
+            { a: key2, is: 'b' },
+          ]
+        });
       });
       it('does not merge empty definitions', () => {
         expect(ComponentDef.merge({}, {})).toEqual({});

@@ -9,16 +9,18 @@ import { AttributeRegistry } from './attribute-registry';
  * applied to component.
  */
 @Feature({
-  init(context) {
-    context.forDefinitions({ as: AttributeRegistry });
-    context.forDefinitions({
+  forDefinitions: [
+    { as: AttributeRegistry },
+    {
       a: AttributeRegistrar,
       by(registry: AttributeRegistry<any>) {
         return <T extends object>(name: string, callback: AttributeChangedCallback<T>) =>
             registry.add(name, callback);
       },
       with: [AttributeRegistry],
-    });
+    },
+  ],
+  init(context) {
     context.onDefinition(definitionContext => {
       // Define element prototype attributes
       definitionContext.whenReady(elementType => definitionContext.get(AttributeRegistry).define(elementType));

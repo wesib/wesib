@@ -2,6 +2,7 @@ import { SingleContextKey } from 'context-values';
 import { Class } from '../common';
 import { BootstrapContext } from '../kit';
 import { BootstrapValueRegistry } from '../kit/bootstrap/bootstrap-value-registry';
+import { DefinitionValueRegistry } from '../kit/definition/definition-value-registry';
 import { FeatureDef } from './feature-def';
 import { FeatureRegistry } from './feature-registry';
 import Mock = jest.Mock;
@@ -37,6 +38,8 @@ describe('feature/feature-registry', () => {
       } as any;
       registry = FeatureRegistry.create({ valueRegistry: valueRegistrySpy });
       contextSpy = {
+        forDefinitions: jest.fn(),
+        forComponents: jest.fn(),
         define: jest.fn(),
       } as any;
       addSpy = jest.spyOn(registry, 'add');
@@ -147,7 +150,7 @@ describe('feature/feature-registry', () => {
 
       expect(() => registry.bootstrap(contextSpy)).toThrow(/Circular dependency/);
     });
-    it('bootstraps value providers', () => {
+    it('provides bootstrap values', () => {
 
       const key = new SingleContextKey('test-key');
       const provider = jest.fn();
@@ -159,6 +162,32 @@ describe('feature/feature-registry', () => {
       registry.bootstrap(contextSpy);
 
       expect(valueRegistrySpy.provide).toHaveBeenCalledWith({ a: key, by: provider });
+    });
+    it('provides definition values', () => {
+
+      const key = new SingleContextKey('test-key');
+      const provider = jest.fn();
+      class Feature {}
+
+      FeatureDef.define(Feature, { forDefinitions: { a: key, by: provider } });
+
+      registry.add(Feature);
+      registry.bootstrap(contextSpy);
+
+      expect(contextSpy.forDefinitions).toHaveBeenCalledWith({ a: key, by: provider });
+    });
+    it('provides component values', () => {
+
+      const key = new SingleContextKey('test-key');
+      const provider = jest.fn();
+      class Feature {}
+
+      FeatureDef.define(Feature, { forComponents: { a: key, by: provider } });
+
+      registry.add(Feature);
+      registry.bootstrap(contextSpy);
+
+      expect(contextSpy.forComponents).toHaveBeenCalledWith({ a: key, by: provider });
     });
   });
 });

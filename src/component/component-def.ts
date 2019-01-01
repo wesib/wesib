@@ -1,6 +1,8 @@
-import { Class, mergeFunctions, MetaAccessor, superClassOf } from '../common';
+import { ContextValueSpec } from 'context-values';
+import { ArraySet, Class, mergeFunctions, MetaAccessor, superClassOf } from '../common';
 import { FeatureDef } from '../feature';
 import { ComponentClass } from './component-class';
+import { ComponentContext } from './component-context';
 import { DefinitionContext } from './definition';
 
 /**
@@ -23,6 +25,12 @@ export interface ComponentDef<T extends object = object> {
   extend?: ExtendedElementDef;
 
   /**
+   * Definition context values to declare prior to component class definition.
+   */
+  set?: ContextValueSpec<DefinitionContext<T>, any, any[], any>
+      | ContextValueSpec<DefinitionContext<T>, any, any[], any>[];
+
+  /**
    * Defines this component by calling the given component definition context methods.
    *
    * This function is called before the custom element is defined.
@@ -30,6 +38,12 @@ export interface ComponentDef<T extends object = object> {
    * @param context Component definition context.
    */
   define?: (this: Class<T>, context: DefinitionContext<T>) => void;
+
+  /**
+   * Component context values to declare prior to component construction.
+   */
+  forComponents?: ContextValueSpec<ComponentContext<T>, any, any[], any>
+      | ContextValueSpec<ComponentContext<T>, any, any[], any>[];
 
 }
 
@@ -77,10 +91,18 @@ export namespace ComponentDef {
           (prev, def) => {
 
             const merged: PartialComponentDef<T> = { ...prev, ...def };
+            const set = new ArraySet(prev.set).merge(def.set);
             const newDefine = mergeFunctions<[DefinitionContext<T>], void, Class<T>>(prev.define, def.define);
+            const forComponents = new ArraySet(prev.forComponents).merge(def.forComponents);
 
+            if (set.size) {
+              merged.set = set.value;
+            }
             if (newDefine) {
               merged.define = newDefine;
+            }
+            if (forComponents.size) {
+              merged.forComponents = forComponents.value;
             }
 
             return merged;
