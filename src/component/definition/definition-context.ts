@@ -59,15 +59,13 @@ export abstract class DefinitionContext<T extends object = object> extends Conte
   abstract whenReady(callback: (this: this, elementType: Class) => void): void;
 
   /**
-   * Registers provider that associates a value with the given key with components of the defined component type.
-   *
-   * The given provider will be requested for the value at most once per component.
+   * Provides a value available in the context of each component of the defined component type.
    *
    * @param <D> A type of dependencies.
    * @param <S> The type of context value sources.
    * @param spec Component context value specifier.
    */
-  abstract forComponents<S>(spec: ContextValueSpec<ComponentContext<any>, any, any[], S>): void;
+  abstract forComponents<S>(spec: ContextValueSpec<ComponentContext<T>, any, any[], S>): void;
 
 }
 

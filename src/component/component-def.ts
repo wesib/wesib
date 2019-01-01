@@ -27,7 +27,8 @@ export interface ComponentDef<T extends object = object> {
   /**
    * Definition context values to declare prior to component class definition.
    */
-  set?: ContextValueSpec<DefinitionContext<T>, any, any> | ContextValueSpec<DefinitionContext<T>, any, any>[];
+  set?: ContextValueSpec<DefinitionContext<T>, any, any[], any>
+      | ContextValueSpec<DefinitionContext<T>, any, any[], any>[];
 
   /**
    * Defines this component by calling the given component definition context methods.
@@ -41,7 +42,8 @@ export interface ComponentDef<T extends object = object> {
   /**
    * Component context values to declare prior to component construction.
    */
-  forComponents?: ContextValueSpec<ComponentContext<T>, any, any> | ContextValueSpec<ComponentContext<T>, any, any>[];
+  forComponents?: ContextValueSpec<ComponentContext<T>, any, any[], any>
+      | ContextValueSpec<ComponentContext<T>, any, any[], any>[];
 
 }
 
