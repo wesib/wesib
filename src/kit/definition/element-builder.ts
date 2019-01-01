@@ -148,13 +148,15 @@ export class ElementBuilder {
 
       constructor() {
         super();
-        typeValueRegistry = ComponentValueRegistry.create(builder._definitionValueRegistry.bindSources(this));
-        typeValueRegistry.provide({ a: DefinitionContext_, is: this });
-        typeValueRegistry.provide({ a: ComponentFactory_, is: componentFactory });
 
-        const values = typeValueRegistry.newValues();
+        const definitionRegistry = DefinitionValueRegistry.create(builder._definitionValueRegistry.bindSources(this));
 
-        this.get = values.get;
+        definitionRegistry.provide({ a: DefinitionContext_, is: this });
+        definitionRegistry.provide({ a: ComponentFactory_, is: componentFactory });
+
+        typeValueRegistry = ComponentValueRegistry.create(definitionRegistry.bindSources(this));
+
+        this.get = definitionRegistry.newValues().get;
       }
 
       get elementType(): Class {
