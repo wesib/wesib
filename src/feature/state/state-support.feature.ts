@@ -1,5 +1,4 @@
 import { StateTracker, StateUpdater } from 'fun-events';
-import { BootstrapContext } from '../../kit';
 import { Feature } from '../feature.decorator';
 
 /**
@@ -14,18 +13,15 @@ import { Feature } from '../feature.decorator';
  * features issue state updates when needed.
  */
 @Feature({
-  init: enableStateSupport,
-})
-export class StateSupport {
-}
-
-function enableStateSupport(context: BootstrapContext) {
-  context.forComponents({ as: StateTracker });
-  context.forComponents({
-    a: StateUpdater,
-    by(tracker: StateTracker) {
-      return tracker.update;
+  forComponents: [
+    { as: StateTracker },
+    {
+      a: StateUpdater,
+      by(tracker: StateTracker) {
+        return tracker.update;
+      },
+      with: [StateTracker],
     },
-    with: [StateTracker],
-  });
-}
+  ],
+})
+export class StateSupport {}

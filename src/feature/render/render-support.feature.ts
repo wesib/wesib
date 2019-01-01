@@ -9,16 +9,13 @@ import { RenderScheduler as RenderScheduler_ } from './render-scheduler';
  * This feature is automatically enabled when `@Render` decorator is used.
  */
 @Feature({
-  init(context) {
-    context.forComponents({
-      a: RenderScheduler_,
-      by: createRenderScheduler,
-      with: [BootstrapWindow],
-    });
+  forComponents: {
+    a: RenderScheduler_,
+    by: createRenderScheduler,
+    with: [BootstrapWindow],
   }
 })
-export class RenderSupport {
-}
+export class RenderSupport {}
 
 function createRenderScheduler<T extends object>(window: BootstrapWindow) {
 
