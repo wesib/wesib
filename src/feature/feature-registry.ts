@@ -108,15 +108,19 @@ export class FeatureRegistry {
   }
 
   bootstrap(context: BootstrapContext) {
-    this._provideValues();
+    this._provideValues(context);
     this._bootstrapFeatures(context);
   }
 
-  private _provideValues() {
+  private _provideValues(context: BootstrapContext) {
     this._providers.forEach((providers, feature) => {
       if (feature === providers.provider(this._providers)) {
-        new ArraySet(FeatureDef.of(feature).set)
-            .items.forEach(spec => this._valueRegistry.provide(spec));
+
+        const def = FeatureDef.of(feature);
+
+        new ArraySet(def.set).forEach(spec => this._valueRegistry.provide(spec));
+        new ArraySet(def.forDefinitions).forEach(spec => context.forDefinitions(spec));
+        new ArraySet(def.forComponents).forEach(spec => context.forComponents(spec));
       }
     });
   }
