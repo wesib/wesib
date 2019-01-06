@@ -1,5 +1,4 @@
 import { ContextRegistry } from 'context-values';
-import { JSDOM } from 'jsdom';
 import { Class } from '../../common';
 import { BootstrapContext, BootstrapWindow } from '../../kit';
 import { ComponentClass } from '../component-class';
@@ -8,13 +7,6 @@ import { CustomElements } from './custom-elements';
 import Mocked = jest.Mocked;
 
 describe('kit/custom-elements', () => {
-
-  let dom: JSDOM;
-
-  beforeEach(() => {
-    dom = new JSDOM();
-  });
-
   describe('CustomElements', () => {
 
     let context: BootstrapContext;
@@ -53,7 +45,7 @@ describe('kit/custom-elements', () => {
         };
       };
 
-      elementType = dom.window.HTMLElement;
+      elementType = HTMLElement;
     });
 
     describe('define', () => {

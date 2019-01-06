@@ -1,23 +1,14 @@
 import { ContextKey, SingleContextKey } from 'context-values';
 import { EventInterest } from 'fun-events';
-import { JSDOM } from 'jsdom';
 import { Class } from '../../common';
 import { ComponentClass, ComponentContext, ComponentDef, ComponentMount } from '../../component';
 import { ComponentFactory, DefinitionContext, ElementBaseClass } from '../../component/definition';
-import { BootstrapWindow } from '../bootstrap-window';
 import { ComponentValueRegistry } from './component-value-registry';
 import { DefinitionValueRegistry } from './definition-value-registry';
 import { ElementBuilder } from './element-builder';
 import Mock = jest.Mock;
 
 describe('kit/definition/element-builder', () => {
-
-  let dom: JSDOM;
-
-  beforeEach(() => {
-    dom = new JSDOM();
-  });
-
   describe('ElementBuilder', () => {
 
     let definitionValueRegistry: DefinitionValueRegistry;
@@ -27,7 +18,6 @@ describe('kit/definition/element-builder', () => {
 
     beforeEach(() => {
       definitionValueRegistry = DefinitionValueRegistry.create();
-      definitionValueRegistry.provide({ a: BootstrapWindow, is: dom.window });
       componentValueRegistry = ComponentValueRegistry.create();
       builder = ElementBuilder.create({ definitionValueRegistry, componentValueRegistry });
     });
@@ -45,17 +35,17 @@ describe('kit/definition/element-builder', () => {
         expect(builder.buildElement(TestComponent)).toBeInstanceOf(ComponentFactory);
       });
       it('builds custom element', () => {
-        expect(builder.buildElement(TestComponent).elementType.prototype).toBeInstanceOf(dom.window.HTMLElement);
+        expect(builder.buildElement(TestComponent).elementType.prototype).toBeInstanceOf(HTMLElement);
       });
       it('extends HTML element', () => {
         ComponentDef.define(TestComponent, {
           extend: {
             name: 'input',
-            type: dom.window.HTMLInputElement,
+            type: HTMLInputElement,
           },
         });
 
-        expect(builder.buildElement(TestComponent).elementType.prototype).toBeInstanceOf(dom.window.HTMLInputElement);
+        expect(builder.buildElement(TestComponent).elementType.prototype).toBeInstanceOf(HTMLInputElement);
       });
     });
 
@@ -104,14 +94,14 @@ describe('kit/definition/element-builder', () => {
 
           builder.buildElement(TestComponent);
 
-          expect(await promise).toBeInstanceOf(Function);
+          expect(typeof await promise).toBe('function');
         });
         it('is present when element built', () => {
           builder.buildElement(TestComponent);
 
           const context: DefinitionContext<any> = listenerSpy.mock.calls[0][0];
 
-          expect(context.elementType).toBeInstanceOf(Function);
+          expect(typeof context.elementType).toBe('function');
         });
         it('is reported immediately by callback when element built', () => {
           builder.buildElement(TestComponent);

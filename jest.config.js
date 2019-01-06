@@ -1,6 +1,5 @@
 module.exports = {
   preset: 'ts-jest',
-  testEnvironment: 'node',
   collectCoverage: true,
   collectCoverageFrom: [
     'src/**/*.ts',
@@ -37,6 +36,5 @@ module.exports = {
     'ts-jest': {
       tsConfig: 'tsconfig.spec.json',
     },
-    window: { name: 'window' },
   },
 };
