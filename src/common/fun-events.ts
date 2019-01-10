@@ -1,5 +1,5 @@
 import { ContextKey, SingleContextKey } from 'context-values';
-import { EventProducer, StatePath, StateTracker, StateUpdater } from 'fun-events';
+import { EventProducer, EventSource, StatePath, StateTracker, StateUpdateProducer, StateUpdater } from 'fun-events';
 
 declare module 'fun-events' {
 
@@ -54,10 +54,9 @@ declare module 'fun-events' {
      */
     static readonly key: ContextKey<StateTracker>;
 
-    readonly onUpdate: EventProducer<StateUpdater>;
-
+    readonly onUpdate: StateUpdateProducer;
+    readonly [EventSource.on]: StateUpdateProducer;
     readonly update: StateUpdater;
-
     track(path: StatePath): StateTracker;
 
   }

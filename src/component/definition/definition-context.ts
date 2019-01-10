@@ -3,7 +3,7 @@ import { EventProducer } from 'fun-events';
 import { Class } from '../../common';
 import { BootstrapWindow } from '../../kit';
 import { ComponentClass } from '../component-class';
-import { ComponentContext, ComponentListener } from '../component-context';
+import { ComponentContext } from '../component-context';
 import { ComponentDef } from '../component-def';
 
 /**
@@ -44,7 +44,7 @@ export abstract class DefinitionContext<T extends object = object> extends Conte
    *
    * @return An event interest instance.
    */
-  abstract readonly onComponent: EventProducer<ComponentListener>;
+  abstract readonly onComponent: EventProducer<[ComponentContext<any>]>;
 
   /**
    * Registers component definition readiness callback.
@@ -95,14 +95,3 @@ export namespace ElementBaseClass {
       });
 
 }
-
-/**
- * Component definition listener.
- *
- * It is notified on new component definitions when registered with `BootstrapContext.onDefinition()` method.
- *
- * The listener may alter the component class.
- *
- * @param context Component definition context.
- */
-export type DefinitionListener = <T extends object>(this: void, context: DefinitionContext<T>) => void;

@@ -265,8 +265,7 @@ describe('kit/definition/element-builder', () => {
           context.onConnect(connected);
           mount.connected = true;
 
-          expect(connected).toHaveBeenCalledWith();
-          expect(connected.mock.instances[0]).toBe(context);
+          expect(connected).toHaveBeenCalledWith(context);
         });
         it('does not disconnect not connected element', () => {
 
@@ -307,8 +306,7 @@ describe('kit/definition/element-builder', () => {
         context.onDisconnect(disconnected);
         mount.connected = false;
 
-        expect(disconnected).toHaveBeenCalledWith();
-        expect(disconnected.mock.instances[0]).toBe(context);
+        expect(disconnected).toHaveBeenCalledWith(context);
       });
     });
 

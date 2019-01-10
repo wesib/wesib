@@ -76,7 +76,7 @@ export abstract class ComponentContext<T extends object = object> extends Contex
    *
    * @return An event interest instance.
    */
-  abstract readonly onConnect: EventProducer<(this: this) => void>;
+  abstract readonly onConnect: EventProducer<[ComponentContext<T>]>;
 
   /**
    * Registers custom element disconnection listener.
@@ -88,7 +88,7 @@ export abstract class ComponentContext<T extends object = object> extends Contex
    *
    * @return An event interest instance.
    */
-  abstract readonly onDisconnect: EventProducer<(this: this) => void>;
+  abstract readonly onDisconnect: EventProducer<[ComponentContext<T>]>;
 
   /**
    * Updates component's state.
@@ -173,13 +173,3 @@ export namespace ContentRoot {
   export const key = contentRootKey;
 
 }
-
-/**
- * Component construction listener.
- *
- * It is notified on new component instance construction when registered with `BootstrapContext.onComponent()`
- * method.
- *
- * @param context Component context.
- */
-export type ComponentListener = <T extends object>(this: void, context: ComponentContext<T>) => void;

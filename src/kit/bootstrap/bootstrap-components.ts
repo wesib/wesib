@@ -1,8 +1,8 @@
 import { ContextValueSpec } from 'context-values';
 import { EventProducer } from 'fun-events';
 import { Class } from '../../common';
-import { ComponentClass, ComponentContext, ComponentListener } from '../../component';
-import { ComponentFactory, DefinitionContext, DefinitionListener } from '../../component/definition';
+import { ComponentClass, ComponentContext } from '../../component';
+import { DefinitionContext } from '../../component/definition';
 import { FeatureRegistry } from '../../feature/feature-registry';
 import { BootstrapContext as BootstrapContext_ } from '../bootstrap-context';
 import { ComponentKit as ComponentKit_ } from '../component-kit';
@@ -54,8 +54,8 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
 
   class BootstrapContext extends BootstrapContext_ {
 
-    readonly onDefinition: EventProducer<DefinitionListener>;
-    readonly onComponent: EventProducer<ComponentListener>;
+    readonly onDefinition: EventProducer<[DefinitionContext<any>]>;
+    readonly onComponent: EventProducer<[ComponentContext<any>]>;
     readonly get = valueRegistry.values.get;
 
     constructor() {

@@ -1,7 +1,7 @@
 import { ContextValues, ContextValueSpec } from 'context-values';
 import { EventProducer } from 'fun-events';
-import { ComponentClass, ComponentContext, ComponentListener } from '../component';
-import { ComponentFactory, DefinitionContext, DefinitionListener } from '../component/definition';
+import { ComponentClass, ComponentContext } from '../component';
+import { ComponentFactory, DefinitionContext } from '../component/definition';
 import { ComponentKit } from './component-kit';
 
 /**
@@ -23,7 +23,7 @@ export abstract class BootstrapContext extends ContextValues {
    *
    * @return An event interest instance.
    */
-  abstract readonly onDefinition: EventProducer<DefinitionListener>;
+  abstract readonly onDefinition: EventProducer<[DefinitionContext<any>]>;
 
   /**
    * Registers component construction listener.
@@ -34,7 +34,7 @@ export abstract class BootstrapContext extends ContextValues {
    *
    * @return An event interest instance.
    */
-  abstract readonly onComponent: EventProducer<ComponentListener>;
+  abstract readonly onComponent: EventProducer<[ComponentContext<any>]>;
 
   /**
    * Defines a component.

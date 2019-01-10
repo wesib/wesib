@@ -6,13 +6,11 @@ import {
   ComponentClass,
   ComponentContext as ComponentContext_,
   ComponentDef,
-  ComponentListener,
   ComponentMount as ComponentMount_,
 } from '../../component';
 import {
   ComponentFactory as ComponentFactory_,
   DefinitionContext as DefinitionContext_,
-  DefinitionListener,
   ElementBaseClass,
 } from '../../component/definition';
 import { ComponentValueRegistry } from './component-value-registry';
@@ -57,8 +55,8 @@ export class ElementBuilder {
 
   private readonly _definitionValueRegistry: DefinitionValueRegistry;
   private readonly _componentValueRegistry: ComponentValueRegistry;
-  readonly definitions = new EventEmitter<DefinitionListener>();
-  readonly components = new EventEmitter<ComponentListener>();
+  readonly definitions = new EventEmitter<[DefinitionContext_<any>]>();
+  readonly components = new EventEmitter<[ComponentContext_<any>]>();
 
   static create(opts: {
     definitionValueRegistry: DefinitionValueRegistry;
@@ -83,7 +81,7 @@ export class ElementBuilder {
 
     const def = ComponentDef.of(componentType);
     const builder = this;
-    const onComponent = new EventEmitter<ComponentListener>();
+    const onComponent = new EventEmitter<[ComponentContext_<any>]>();
     let typeValueRegistry!: ComponentValueRegistry;
     let whenReady: (this: DefinitionContext, elementType: Class) => void = noop;
     let definitionContext: DefinitionContext;
@@ -208,7 +206,7 @@ export class ElementBuilder {
 
   private _elementType<T extends object>(
       definitionContext: DefinitionContext_<T>,
-      onComponent: EventEmitter<ComponentListener>,
+      onComponent: EventEmitter<[ComponentContext_<T>]>,
       valueRegistry: ComponentValueRegistry) {
 
     const builder = this;
@@ -263,8 +261,8 @@ export class ElementBuilder {
       }: ComponentMeta<T>): ComponentContext_<T> {
 
     let whenReady: (this: ComponentContext, component: T) => void = noop;
-    const connectEvents = new EventEmitter<(this: any) => void>();
-    const disconnectEvents = new EventEmitter<(this: any) => void>();
+    const connectEvents = new EventEmitter<[ComponentContext_<any>]>();
+    const disconnectEvents = new EventEmitter<[ComponentContext_<any>]>();
     let mount: ComponentMount_<T> | undefined;
 
     class ComponentContext extends ComponentContext_<T> {
@@ -306,7 +304,7 @@ export class ElementBuilder {
     Object.defineProperty(element, CONNECT, {
       value(value: boolean) {
         this[CONNECTED] = value;
-        (value ? connectEvents : disconnectEvents).forEach(listener => listener.call(context));
+        (value ? connectEvents : disconnectEvents).notify(context);
       },
     });
 
@@ -336,7 +334,7 @@ export class ElementBuilder {
 
 interface ComponentMeta<T extends object> {
   definitionContext: DefinitionContext_<T>;
-  onComponent: EventEmitter<ComponentListener>;
+  onComponent: EventEmitter<[ComponentContext_<T>]>;
   valueRegistry: ComponentValueRegistry;
   element: any;
   elementSuper(name: PropertyKey): any;
