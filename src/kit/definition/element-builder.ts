@@ -105,7 +105,7 @@ export class ElementBuilder {
           throw new Error(`Element ${element} already bound to component`);
         }
 
-        return builder._createComponent({
+        const mount = builder._createComponent({
           definitionContext,
           onComponent,
           valueRegistry: createValueRegistry(),
@@ -132,11 +132,23 @@ export class ElementBuilder {
                 element[CONNECT](value);
               }
 
+              checkConnected(): boolean {
+
+                const el: Element = element;
+                const doc = el.ownerDocument;
+
+                return this.connected = doc != null && doc.contains(el);
+              }
+
             }
 
             return new ComponentMount();
           },
         }).mount as ComponentMount_<T>;
+
+        mount.checkConnected();
+
+        return mount;
       }
 
     }

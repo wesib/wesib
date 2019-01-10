@@ -232,33 +232,64 @@ describe('kit/definition/element-builder', () => {
         }
 
         element = new Element();
-        mount = factory.mountTo(element);
-        context = mount.context;
       });
 
+      function doMount() {
+        mount = factory.mountTo(element);
+        context = mount.context;
+      }
+
       it('has context reference', () => {
+        doMount();
         expect(ComponentContext.of(element)).toBe(context);
       });
       it('has access ot overridden element properties', () => {
+        doMount();
         expect(context.elementSuper('property')).toBe('overridden');
       });
       it('is mounted', () => {
+        doMount();
         expect(context.mount).toBe(mount);
       });
       it('fails is already bound', () => {
-         expect(() => factory.mountTo(element)).toThrow('already bound');
+        doMount();
+        expect(() => factory.mountTo(element)).toThrow('already bound');
       });
       describe('component mount', () => {
         it('refers to element', () => {
+          doMount();
           expect(mount.element).toBe(element);
         });
         it('refers to component', () => {
+          doMount();
           expect(mount.component).toBe(context.component);
         });
         it('is not connected by default', () => {
+          doMount();
+          expect(mount.connected).toBe(false);
+        });
+        it('is connected initially when element is in document', () => {
+
+          element.ownerDocument = {
+            contains: jest.fn(() => true),
+          };
+
+          doMount();
+
+          expect(mount.connected).toBe(true);
+        });
+        it('is not connected initially when element is not in document', () => {
+
+          element.ownerDocument = {
+            contains: jest.fn(() => false),
+          };
+
+          doMount();
+
           expect(mount.connected).toBe(false);
         });
         it('connects element', () => {
+          doMount();
 
           const connected = jest.fn();
 
@@ -268,6 +299,7 @@ describe('kit/definition/element-builder', () => {
           expect(connected).toHaveBeenCalledWith(context);
         });
         it('does not disconnect not connected element', () => {
+          doMount();
 
           const disconnected = jest.fn();
 
