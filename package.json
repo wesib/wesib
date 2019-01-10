@@ -27,7 +27,7 @@
   },
   "peerDependencies": {
     "context-values": "^1.1.0",
-    "fun-events": "^2.2.0"
+    "fun-events": "^3.0.0"
   },
   "devDependencies": {
     "@types/fs-extra": "^5.0.4",
