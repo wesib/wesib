@@ -1,7 +1,8 @@
 import Mock = jest.Mock;
 import Mocked = jest.Mocked;
-import { Component } from '../../component';
+import { Component, ComponentMount } from '../../component';
 import { ComponentFactory } from '../../component/definition';
+import { ElementAdapter } from '../../kit';
 import { MockElement, testComponentFactory } from '../../spec/test-element';
 import { Feature } from '../feature.decorator';
 import { AutoConnectSupport } from './auto-connect-support.feature';
@@ -25,16 +26,24 @@ describe('feature/autoconnect', () => {
     });
 
     let element: Element;
-    let factory: ComponentFactory;
 
     beforeEach(() => {
       element = document.createElement('div');
     });
 
+    let adapter: Mock;
+
+    beforeEach(() => {
+      adapter = jest.fn();
+    });
+
+    let factory: ComponentFactory;
+
     beforeEach(async () => {
 
       @Feature({
         need: AutoConnectSupport,
+        set: { a: ElementAdapter, is: adapter },
       })
       @Component({
         name: 'test-component',
@@ -60,6 +69,27 @@ describe('feature/autoconnect', () => {
       document.body.appendChild(element);
       update([{ type: 'childList', addedNodes: [element] as any, removedNodes: [] as any }]);
 
+      expect(mount.connected).toBe(true);
+    });
+    it('consults element adapter', () => {
+      document.body.appendChild(element);
+      update([{ type: 'childList', addedNodes: [element] as any, removedNodes: [] as any }]);
+
+      expect(adapter).toHaveBeenCalledWith(element);
+    });
+    it('adapts added element', () => {
+
+      let mount: ComponentMount = undefined!;
+
+      adapter.mockImplementation((el: any) => {
+        mount = factory.mountTo(el);
+        return mount.context;
+      });
+
+      document.body.appendChild(element);
+      update([{ type: 'childList', addedNodes: [element] as any, removedNodes: [] as any }]);
+
+      expect(adapter).toHaveBeenCalledWith(element);
       expect(mount.connected).toBe(true);
     });
     it('disconnects when element is removed from document', async () => {

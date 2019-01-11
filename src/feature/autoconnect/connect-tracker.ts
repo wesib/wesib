@@ -1,7 +1,7 @@
 import { AIterable, overArray } from 'a-iterable';
 import { ContextKey, SingleContextKey } from 'context-values';
-import { ComponentContext, ComponentMount } from '../../component';
-import { BootstrapContext, BootstrapRoot, BootstrapWindow } from '../../kit';
+import { ComponentMount } from '../../component';
+import { BootstrapContext, BootstrapRoot, BootstrapWindow, ElementAdapter } from '../../kit';
 
 /**
  * @internal
@@ -10,7 +10,10 @@ export class ConnectTracker {
 
   static readonly key: ContextKey<ConnectTracker> = new SingleContextKey('connect-tracker');
 
+  private readonly _adapter: ElementAdapter;
+
   constructor(private readonly _context: BootstrapContext) {
+    this._adapter = _context.get(ElementAdapter);
   }
 
   track() {
@@ -25,13 +28,13 @@ export class ConnectTracker {
   private _update(records: MutationRecord[]) {
     records.forEach(record => {
       AIterable.from(overArray(record.removedNodes))
-          .map(mountOf)
+          .map(node => this._mountOf(node))
           .filter<ComponentMount>(isPresent)
           .forEach(mount => {
             mount.connected = false;
           });
       AIterable.from(overArray(record.addedNodes))
-          .map(mountOf)
+          .map(node => this._mountOf(node))
           .filter<ComponentMount>(isPresent)
           .forEach(mount => {
             mount.connected = true;
@@ -39,13 +42,13 @@ export class ConnectTracker {
     });
   }
 
-}
+  private _mountOf(node: Node): ComponentMount | undefined {
 
-function mountOf(node: Node): ComponentMount | undefined {
+    const context = this._adapter(node);
 
-  const context = (node as any)[ComponentContext.symbol] as ComponentContext | undefined;
+    return context && context.mount;
+  }
 
-  return context && context.mount;
 }
 
 function isPresent<T>(value: T | undefined): value is T {
