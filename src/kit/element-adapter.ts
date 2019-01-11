@@ -8,14 +8,13 @@ import {
 import { ComponentContext } from '../component';
 
 /**
- * Element adapter.
+ * Element adapter is a function able to convert a raw element to component. E.g. mount a component to it.
  *
- * It is a function that able convert arbitrary element to component. Features may use it internally. E.g. an
- * `AutoConnectFeature` applies it to each added DOM element.
+ * Features may use it internally. E.g. an `AutoConnectFeature` applies it to each added DOM element.
  *
  * Multiple element adapters can be registered in bootstrap context.
  *
- * @param element Target element to adapt.
+ * @param element Target raw element to adapt.
  *
  * @returns An adapted component's context, or `null` if the element can not be adapted.
  */
