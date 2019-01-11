@@ -3,6 +3,8 @@ import { Component, ComponentClass, ComponentContext } from '../../component';
 import { CustomElements } from '../../component/definition';
 import { BootstrapWindow } from '../../kit';
 import { bootstrapComponents } from '../../kit/bootstrap';
+import { testElement } from '../../spec/test-element';
+import { FeatureDef } from '../feature-def';
 import { Feature } from '../feature.decorator';
 import { RenderScheduler } from './render-scheduler';
 import { RenderSupport } from './render-support.feature';
@@ -46,7 +48,7 @@ describe('feature/render/render-support.feature', () => {
     beforeEach(() => {
 
       @Feature({
-        need: [RenderSupport, testComponent],
+        need: [RenderSupport],
         set: [
           { a: BootstrapWindow, is: windowSpy },
           { a: CustomElements, is: customElementsSpy },
@@ -54,7 +56,9 @@ describe('feature/render/render-support.feature', () => {
       })
       class TestFeature {}
 
-      bootstrapComponents(TestFeature);
+      FeatureDef.define(testComponent, { need: TestFeature });
+
+      testElement(testComponent);
     });
 
     describe('RenderScheduler', () => {
