@@ -5,7 +5,7 @@ import { ArraySet, Class, mergeFunctions } from '../../common';
 import {
   ComponentClass,
   ComponentContext as ComponentContext_,
-  ComponentDef,
+  ComponentDef, ComponentEvent,
   ComponentMount as ComponentMount_,
 } from '../../component';
 import {
@@ -147,6 +147,7 @@ export class ElementBuilder {
         }).mount as ComponentMount_<T>;
 
         mount.checkConnected();
+        componentCreated(mount.context);
 
         return mount;
       }
@@ -234,7 +235,8 @@ export class ElementBuilder {
 
       constructor() {
         super();
-        builder._createComponent({
+
+        const context = builder._createComponent({
           definitionContext,
           onComponent,
           valueRegistry,
@@ -245,6 +247,8 @@ export class ElementBuilder {
             return super[key] as any;
           }
         });
+
+        componentCreated(context);
       }
 
       // noinspection JSUnusedGlobalSymbols
@@ -351,4 +355,8 @@ interface ComponentMeta<T extends object> {
   element: any;
   elementSuper(name: PropertyKey): any;
   createMount(context: ComponentContext_<T>): ComponentMount_<T> | undefined;
+}
+
+function componentCreated(context: ComponentContext_<any>) {
+  context.dispatchEvent(new ComponentEvent('wesib:component', { bubbles: true }));
 }

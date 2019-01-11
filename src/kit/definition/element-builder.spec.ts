@@ -1,8 +1,15 @@
 import { ContextKey, SingleContextKey } from 'context-values';
 import { EventInterest } from 'fun-events';
 import { Class } from '../../common';
-import { ComponentClass, ComponentContext, ComponentDef, ComponentMount } from '../../component';
+import {
+  ComponentClass,
+  ComponentContext,
+  ComponentDef, ComponentEvent,
+  ComponentEventDispatcher,
+  ComponentMount,
+} from '../../component';
 import { ComponentFactory, DefinitionContext, ElementBaseClass } from '../../component/definition';
+import { MockElement } from '../../spec/test-element';
 import { ComponentValueRegistry } from './component-value-registry';
 import { DefinitionValueRegistry } from './definition-value-registry';
 import { ElementBuilder } from './element-builder';
@@ -28,6 +35,16 @@ describe('kit/definition/element-builder', () => {
           name: 'test-component',
         };
       };
+    });
+
+    let dispatchEventSpy: Mock;
+
+    beforeEach(() => {
+      dispatchEventSpy = jest.fn();
+
+      ComponentDef.define(TestComponent, {
+        forComponents: { a: ComponentEventDispatcher, is: dispatchEventSpy },
+      });
     });
 
     describe('buildElement', () => {
@@ -196,13 +213,21 @@ describe('kit/definition/element-builder', () => {
       it('is not mounted', () => {
         expect(componentContext.mount).toBeUndefined();
       });
+      it('dispatches component event', () => {
+        expect(dispatchEventSpy).toHaveBeenCalledWith(expect.any(ComponentEvent));
+        expect(dispatchEventSpy).toHaveBeenCalledWith(expect.objectContaining({
+          type: 'wesib:component',
+          cancelable: false,
+          bubbles: true,
+        }));
+      });
       it('can not access values of another component type', () => {
 
         class AnotherComponent {
           static [ComponentDef.symbol]: ComponentDef = {
             name: 'another-component',
             extend: {
-              type: Object,
+              type: MockElement,
             }
           };
         }
@@ -254,6 +279,15 @@ describe('kit/definition/element-builder', () => {
       it('fails is already bound', () => {
         doMount();
         expect(() => factory.mountTo(element)).toThrow('already bound');
+      });
+      it('dispatches component event', () => {
+        doMount();
+        expect(dispatchEventSpy).toHaveBeenCalledWith(expect.any(ComponentEvent));
+        expect(dispatchEventSpy).toHaveBeenCalledWith(expect.objectContaining({
+          type: 'wesib:component',
+          cancelable: false,
+          bubbles: true,
+        }));
       });
       describe('component mount', () => {
         it('refers to element', () => {

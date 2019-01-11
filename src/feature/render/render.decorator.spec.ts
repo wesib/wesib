@@ -1,6 +1,7 @@
-import { Component, ComponentClass, ComponentContext } from '../../component';
+import { Component, ComponentClass, ComponentContext, ComponentDef } from '../../component';
 import { CustomElements, DefinitionContext } from '../../component/definition';
 import { bootstrapComponents } from '../../kit/bootstrap';
+import { testElement } from '../../spec/test-element';
 import { DomProperty } from '../dom-properties';
 import { FeatureDef } from '../feature-def';
 import { Feature } from '../feature.decorator';
@@ -55,7 +56,6 @@ describe('feature/render/render.decorator', () => {
       } as any;
 
       @Feature({
-        need: testComponent,
         set: [
           { a: RenderScheduler, is: renderSchedulerSpy },
           { a: CustomElements, is: customElementsSpy },
@@ -64,7 +64,11 @@ describe('feature/render/render.decorator', () => {
       })
       class TestFeature {}
 
-      bootstrapComponents(TestFeature);
+      FeatureDef.define(testComponent, {
+        need: TestFeature,
+      });
+
+      testElement(testComponent);
     });
 
     it('requires state support', () => {

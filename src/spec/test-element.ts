@@ -1,11 +1,14 @@
+import { noop } from 'call-thru';
 import { Class } from '../common';
-import { ComponentClass, ComponentDef } from '../component';
+import { ComponentClass, ComponentDef, ComponentEventDispatcher } from '../component';
 import { ComponentFactory, CustomElements } from '../component/definition';
 import { Feature } from '../feature';
 import { bootstrapComponents } from '../kit/bootstrap';
 
 export function testComponentFactory<T extends object>(componentType: Class<T>): Promise<ComponentFactory<T>> {
-  ComponentDef.define(componentType);
+  ComponentDef.define(componentType, {
+    forComponents: { a: ComponentEventDispatcher, is: noop },
+  });
 
   let result!: Class;
 
@@ -22,8 +25,8 @@ export function testComponentFactory<T extends object>(componentType: Class<T>):
   };
 
   @Feature({
-    set: { a: CustomElements, is: customElements },
     need: componentType,
+    set: { a: CustomElements, is: customElements },
   })
   class TestFeature {}
 
@@ -33,7 +36,9 @@ export function testComponentFactory<T extends object>(componentType: Class<T>):
 }
 
 export function testElement(componentType: Class<any>): Class<any> {
-  ComponentDef.define(componentType);
+  ComponentDef.define(componentType, {
+    forComponents: { a: ComponentEventDispatcher, is: noop },
+  });
 
   let result!: Class;
 
@@ -50,8 +55,8 @@ export function testElement(componentType: Class<any>): Class<any> {
   };
 
   @Feature({
-    set: { a: CustomElements, is: customElements },
     need: componentType,
+    set: { a: CustomElements, is: customElements },
   })
   class TestFeature {}
 
@@ -62,6 +67,7 @@ export function testElement(componentType: Class<any>): Class<any> {
 
 export class MockElement {
 
+  readonly dispatchEvent = jest.fn();
   private _target: any;
   private _attributes: { [name: string]: string | null } = {};
 
