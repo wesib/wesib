@@ -156,6 +156,19 @@ export abstract class ComponentContext<T extends object = object> extends Contex
    */
   abstract elementSuper(key: PropertyKey): any;
 
+  /**
+   * Dispatches an event to component element.
+   *
+   * This is a shorthand for invoking a component event dispatcher function available under
+   * `[ComponentEventDispatcher.key]` key.
+   *
+   * @param event An event to dispatch.
+   */
+  dispatchEvent(event: Event): void {
+    // tslint:disable-next-line:no-use-before-declare
+    this.get(ComponentEventDispatcher)(event);
+  }
+
 }
 
 /**
@@ -171,5 +184,23 @@ export namespace ContentRoot {
    * This is an element itself by default. But can be overridden e.g. by `@AttachShadow` decorator.
    */
   export const key = contentRootKey;
+
+}
+
+/**
+ * Component event dispatcher function is used to dispatch component events.
+ *
+ * It is available in each component context.
+ */
+export type ComponentEventDispatcher = (event: Event) => void;
+
+export namespace ComponentEventDispatcher {
+
+  /**
+   * A key of component context value containing component event dispatcher.
+   */
+  export const key: ContextKey<ComponentEventDispatcher> = new SingleContextKey(
+      'component-event-dispatcher',
+      ctx => (event: Event) => ctx.get(ComponentContext).element.dispatchEvent(event));
 
 }
