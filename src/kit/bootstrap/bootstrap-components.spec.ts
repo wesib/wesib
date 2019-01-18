@@ -58,9 +58,9 @@ describe('kit/bootstrap/bootstrap-components', () => {
     it('constructs definition value registry', () => {
       bootstrapComponents();
 
-      const bootstrapValueRegistry = createBootstrapValueRegistrySpy.mock.results[0].value.valueSources;
+      const bootstrapValues = createBootstrapValueRegistrySpy.mock.results[0].value.values;
 
-      expect(createDefinitionValueRegistrySpy).toHaveBeenCalledWith(bootstrapValueRegistry);
+      expect(createDefinitionValueRegistrySpy).toHaveBeenCalledWith(bootstrapValues);
     });
     it('constructs component value registry', () => {
       bootstrapComponents();

@@ -1,4 +1,4 @@
-import { ContextRegistry, ContextSources, ContextTarget, ContextValues } from 'context-values';
+import { ContextRegistry, ContextSources, ContextSourcesProvider, ContextTarget, ContextValues } from 'context-values';
 import { BootstrapContext } from '../bootstrap-context';
 
 /**
@@ -7,7 +7,6 @@ import { BootstrapContext } from '../bootstrap-context';
 export class BootstrapValueRegistry extends ContextRegistry<BootstrapContext> {
 
   readonly values: ContextValues;
-  readonly valueSources: <S>(this: void, request: ContextTarget<S>) => ContextSources<S>;
 
   static create(): BootstrapValueRegistry {
     return new BootstrapValueRegistry();
@@ -16,8 +15,6 @@ export class BootstrapValueRegistry extends ContextRegistry<BootstrapContext> {
   private constructor() {
     super();
     this.values = this.newValues();
-    this.valueSources =
-        <S>(request: ContextTarget<S>) => this.values.get.call(this.values, request) as ContextSources<S>;
   }
 
 }
