@@ -1,4 +1,4 @@
-import { ContextValues, ContextValueSpec } from 'context-values';
+import { ContextKey, ContextValues, ContextValueSpec, SingleContextKey } from 'context-values';
 import { EventProducer } from 'fun-events';
 import { ComponentClass, ComponentContext } from '../component';
 import { ComponentFactory, DefinitionContext } from '../component/definition';
@@ -13,6 +13,11 @@ import { ComponentKit } from './component-kit';
  * definitions as `FeatureDef.prebootstrap`.
  */
 export abstract class BootstrapContext extends ContextValues {
+
+  /**
+   * A key of bootstrap context value containing the bootstrap context itself.
+   */
+  static readonly key: ContextKey<BootstrapContext> = new SingleContextKey('bootstrap-context');
 
   /**
    * Registers component definition listener.

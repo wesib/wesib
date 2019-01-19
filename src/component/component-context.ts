@@ -26,9 +26,7 @@ export abstract class ComponentContext<T extends object = object> extends Contex
   static readonly symbol = Symbol('component-context');
 
   /**
-   * A key of component context value containing a component context instance itself.
-   *
-   * It is useful e.g. when constructing default context values relying on context instance.
+   * A key of component context value containing the component context instance itself.
    */
   static readonly key = componentContextKey;
 

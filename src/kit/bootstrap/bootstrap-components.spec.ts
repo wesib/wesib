@@ -167,6 +167,12 @@ describe('kit/bootstrap/bootstrap-components', () => {
                 }));
       });
 
+      it('provides `ComponentKit` context value', () => {
+        expect(bootstrapContext.get(ComponentKit)).toBe(kit);
+      });
+      it('provides `BootstrapContext` context value', () => {
+        expect(bootstrapContext.get(BootstrapContext)).toBe(bootstrapContext);
+      });
       it('proxies define() method', () => {
 
         @Component({ name: 'test-component', extend: { name: 'div', type: Base } })

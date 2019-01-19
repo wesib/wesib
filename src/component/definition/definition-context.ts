@@ -17,7 +17,7 @@ import { ComponentDef } from '../component-def';
 export abstract class DefinitionContext<T extends object = object> extends ContextValues {
 
   /**
-   * A key of definition context value containing a definition context itself.
+   * A key of definition context value containing the definition context itself.
    */
   static readonly key: ContextKey<DefinitionContext<any>> = new SingleContextKey('definition-context');
 

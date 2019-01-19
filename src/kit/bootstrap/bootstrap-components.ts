@@ -66,6 +66,7 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
       componentRegistry = ComponentRegistry.create({ bootstrapContext: this, elementBuilder });
       this.onDefinition = elementBuilder.definitions.on;
       this.onComponent = elementBuilder.components.on;
+      valueRegistry.provide({ a: BootstrapContext, is: this });
       valueRegistry.provide({ a: ComponentKit_, as: ComponentKit });
     }
 
