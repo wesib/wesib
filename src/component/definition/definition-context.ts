@@ -1,10 +1,9 @@
-import { ContextKey, ContextValues, ContextValueSpec, SingleContextKey } from 'context-values';
+import { ContextKey, ContextValues, ContextValueSpec } from 'context-values';
 import { EventProducer } from 'fun-events';
 import { Class } from '../../common';
-import { BootstrapWindow } from '../../kit';
 import { ComponentClass } from '../component-class';
 import { ComponentContext } from '../component-context';
-import { ComponentDef } from '../component-def';
+import { definitionContextKey } from './definition-context.key';
 
 /**
  * Component definition context.
@@ -19,7 +18,7 @@ export abstract class DefinitionContext<T extends object = object> extends Conte
   /**
    * A key of definition context value containing the definition context itself.
    */
-  static readonly key: ContextKey<DefinitionContext<any>> = new SingleContextKey('definition-context');
+  static readonly key: ContextKey<DefinitionContext<any>> = definitionContextKey;
 
   /**
    * Component class constructor.
@@ -66,32 +65,5 @@ export abstract class DefinitionContext<T extends object = object> extends Conte
    * @param spec Component context value specifier.
    */
   abstract forComponents<S>(spec: ContextValueSpec<ComponentContext<T>, any, any[], S>): void;
-
-}
-
-/**
- * Base element class constructor.
- */
-export type ElementBaseClass<T extends object = object> = Class<T>;
-
-export namespace ElementBaseClass {
-
-  /**
-   * A key of definition context value containing a base element class constructor.
-   *
-   * This value is the class the custom elements are inherited from.
-   *
-   * Target value defaults to `HTMLElement` from the window provided under `[BootstrapWindow.key]`,
-   * unless `ComponentDef.extend.type` is specified.
-   */
-  export const key = new SingleContextKey<ElementBaseClass>(
-      'element-base-class',
-      values => {
-
-        const componentType = values.get(DefinitionContext).componentType;
-        const extend = ComponentDef.of(componentType).extend;
-
-        return extend && extend.type ||  (values.get(BootstrapWindow) as any).HTMLElement;
-      });
 
 }
