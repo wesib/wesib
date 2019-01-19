@@ -189,17 +189,20 @@ export namespace ContentRoot {
 /**
  * Component event dispatcher function is used to dispatch component events.
  *
- * It is available in each component context.
+ * It is available in bootstrap context context.
+ *
+ * @param context A context of component to dispatch an `event` for.
+ * @param event An event to dispatch.
  */
-export type ComponentEventDispatcher = (event: Event) => void;
+export type ComponentEventDispatcher = (context: ComponentContext<any>, event: Event) => void;
 
 export namespace ComponentEventDispatcher {
 
   /**
-   * A key of component context value containing component event dispatcher.
+   * A key of bootstrap context value containing component event dispatcher.
    */
   export const key: ContextKey<ComponentEventDispatcher> = new SingleContextKey(
       'component-event-dispatcher',
-      ctx => (event: Event) => ctx.get(ComponentContext).element.dispatchEvent(event));
+      () => (context: ComponentContext<any>, event: Event) => context.element.dispatchEvent(event));
 
 }

@@ -1,7 +1,7 @@
 import { StatePath } from 'fun-events';
 import { Component, ComponentClass, ComponentContext } from '../../component';
 import { ComponentFactory } from '../../component/definition';
-import { testComponentFactory, testElement } from '../../spec/test-element';
+import { MockElement, testComponentFactory, testElement } from '../../spec/test-element';
 import { DomMethod, DomProperty } from './dom-property.decorator';
 import Mock = jest.Mock;
 
@@ -23,7 +23,7 @@ describe('feature/dom-properties', () => {
 
       @Component({
         extend: {
-          type: Object,
+          type: MockElement,
         },
         name: 'test-component',
       })
@@ -84,7 +84,9 @@ describe('feature/dom-properties', () => {
 
       beforeEach(async () => {
         factory = await testComponentFactory(testComponent);
-        element = {};
+        element = {
+          dispatchEvent: jest.fn(),
+        };
         factory.mountTo(element);
       });
 

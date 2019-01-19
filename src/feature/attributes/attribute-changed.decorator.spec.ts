@@ -1,7 +1,7 @@
 import { noop } from 'call-thru';
 import { StatePath } from 'fun-events';
 import { Component, ComponentContext } from '../../component';
-import { testElement } from '../../spec/test-element';
+import { MockElement, testElement } from '../../spec/test-element';
 import { AttributeChanged } from './attribute-changed.decorator';
 
 describe('feature/attributes/attribute-changed', () => {
@@ -13,7 +13,7 @@ describe('feature/attributes/attribute-changed', () => {
       @Component({
         name: 'test-component',
         extend: {
-          type: Object,
+          type: MockElement,
         }
       })
       class TestComponent {
@@ -36,7 +36,7 @@ describe('feature/attributes/attribute-changed', () => {
       @Component({
         name: 'test-component',
         extend: {
-          type: Object,
+          type: MockElement,
         }
       })
       class TestComponent {
@@ -60,7 +60,7 @@ describe('feature/attributes/attribute-changed', () => {
       @Component({
         name: 'test-component',
         extend: {
-          type: Object,
+          type: MockElement,
         }
       })
       class TestComponent {
@@ -87,7 +87,7 @@ describe('feature/attributes/attribute-changed', () => {
       @Component({
         name: 'test-component',
         extend: {
-          type: Object,
+          type: MockElement,
         }
       })
       class TestComponent {
@@ -111,7 +111,7 @@ describe('feature/attributes/attribute-changed', () => {
       @Component({
         name: 'test-component',
         extend: {
-          type: Object,
+          type: MockElement,
         }
       })
       class TestComponent {
@@ -138,7 +138,7 @@ describe('feature/attributes/attribute-changed', () => {
       @Component({
         name: 'test-component',
         extend: {
-          type: Object,
+          type: MockElement,
         }
       })
       class TestComponent {
@@ -162,7 +162,7 @@ describe('feature/attributes/attribute-changed', () => {
       const attrSpy = jest.fn();
 
       expect(() => {
-        @Component({ name: 'test-component' })
+        @Component('test-component')
         class TestComponent {
           @AttributeChanged()
           [key] = attrSpy;

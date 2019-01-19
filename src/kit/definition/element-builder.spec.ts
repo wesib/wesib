@@ -4,19 +4,34 @@ import { Class } from '../../common';
 import {
   ComponentClass,
   ComponentContext,
-  ComponentDef, ComponentEvent,
+  ComponentDef,
+  ComponentEvent,
   ComponentEventDispatcher,
   ComponentMount,
 } from '../../component';
 import { ComponentFactory, DefinitionContext, ElementBaseClass } from '../../component/definition';
 import { MockElement } from '../../spec/test-element';
+import { BootstrapContext } from '../bootstrap-context';
+import { BootstrapValueRegistry } from '../bootstrap/bootstrap-value-registry';
 import { ComponentValueRegistry } from './component-value-registry';
 import { DefinitionValueRegistry } from './definition-value-registry';
 import { ElementBuilder } from './element-builder';
 import Mock = jest.Mock;
+import Mocked = jest.Mocked;
 
 describe('kit/definition/element-builder', () => {
   describe('ElementBuilder', () => {
+
+    let bootstrapValueRegistry: BootstrapValueRegistry;
+    let bootstrapContextSpy: Mocked<BootstrapContext>;
+
+    beforeEach(() => {
+      bootstrapValueRegistry = BootstrapValueRegistry.create();
+      bootstrapContextSpy = {
+        get: bootstrapValueRegistry.values.get,
+      } as any;
+      bootstrapValueRegistry.provide({ a: BootstrapContext, is: bootstrapContextSpy });
+    });
 
     let definitionValueRegistry: DefinitionValueRegistry;
     let componentValueRegistry: ComponentValueRegistry;
@@ -24,7 +39,7 @@ describe('kit/definition/element-builder', () => {
     let TestComponent: ComponentClass;
 
     beforeEach(() => {
-      definitionValueRegistry = DefinitionValueRegistry.create();
+      definitionValueRegistry = DefinitionValueRegistry.create(bootstrapValueRegistry.values);
       componentValueRegistry = ComponentValueRegistry.create();
       builder = ElementBuilder.create({ definitionValueRegistry, componentValueRegistry });
     });
@@ -41,10 +56,7 @@ describe('kit/definition/element-builder', () => {
 
     beforeEach(() => {
       dispatchEventSpy = jest.fn();
-
-      ComponentDef.define(TestComponent, {
-        forComponents: { a: ComponentEventDispatcher, is: dispatchEventSpy },
-      });
+      bootstrapValueRegistry.provide({ a: ComponentEventDispatcher, is: dispatchEventSpy });
     });
 
     describe('buildElement', () => {
@@ -214,8 +226,8 @@ describe('kit/definition/element-builder', () => {
         expect(componentContext.mount).toBeUndefined();
       });
       it('dispatches component event', () => {
-        expect(dispatchEventSpy).toHaveBeenCalledWith(expect.any(ComponentEvent));
-        expect(dispatchEventSpy).toHaveBeenCalledWith(expect.objectContaining({
+        expect(dispatchEventSpy).toHaveBeenCalledWith(componentContext, expect.any(ComponentEvent));
+        expect(dispatchEventSpy).toHaveBeenCalledWith(componentContext, expect.objectContaining({
           type: 'wesib:component',
           cancelable: false,
           bubbles: true,
@@ -282,8 +294,8 @@ describe('kit/definition/element-builder', () => {
       });
       it('dispatches component event', () => {
         doMount();
-        expect(dispatchEventSpy).toHaveBeenCalledWith(expect.any(ComponentEvent));
-        expect(dispatchEventSpy).toHaveBeenCalledWith(expect.objectContaining({
+        expect(dispatchEventSpy).toHaveBeenCalledWith(context, expect.any(ComponentEvent));
+        expect(dispatchEventSpy).toHaveBeenCalledWith(context, expect.objectContaining({
           type: 'wesib:component',
           cancelable: false,
           bubbles: true,

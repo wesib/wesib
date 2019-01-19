@@ -97,7 +97,7 @@ describe('feature/attributes', () => {
 
         @Component({
           extend: {
-            type: Object,
+            type: MockElement,
           },
           name: 'no-attr-component'
         })

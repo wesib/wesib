@@ -1,6 +1,6 @@
 import { StateTracker, StateUpdater } from 'fun-events';
 import { Component, ComponentClass, ComponentContext } from '../../component';
-import { testElement } from '../../spec/test-element';
+import { MockElement, testElement } from '../../spec/test-element';
 import { Feature } from '../feature.decorator';
 import { StateSupport } from './state-support.feature';
 
@@ -20,7 +20,7 @@ describe('feature/state', () => {
       @Component({
         name: 'test-component',
         extend: {
-          type: Object,
+          type: MockElement,
         },
       })
       @Feature({ need: StateSupport })

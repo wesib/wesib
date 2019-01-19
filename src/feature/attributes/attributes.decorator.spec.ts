@@ -1,6 +1,6 @@
 import { StatePath } from 'fun-events';
 import { Component, ComponentContext } from '../../component';
-import { testElement } from '../../spec/test-element';
+import { MockElement, testElement } from '../../spec/test-element';
 import { Attributes } from './attributes.decorator';
 
 describe('feature/attributes/attributes', () => {
@@ -10,7 +10,7 @@ describe('feature/attributes/attributes', () => {
       @Component({
         name: 'test-component',
         extend: {
-          type: Object,
+          type: MockElement,
         }
       })
       @Attributes({
@@ -33,7 +33,7 @@ describe('feature/attributes/attributes', () => {
       @Component({
         name: 'test-component',
         extend: {
-          type: Object,
+          type: MockElement,
         }
       })
       @Attributes({
@@ -59,7 +59,7 @@ describe('feature/attributes/attributes', () => {
       @Component({
         name: 'test-component',
         extend: {
-          type: Object,
+          type: MockElement,
         }
       })
       @Attributes({
@@ -80,7 +80,7 @@ describe('feature/attributes/attributes', () => {
       @Component({
         name: 'test-component',
         extend: {
-          type: Object,
+          type: MockElement,
         }
       })
       @Attributes({

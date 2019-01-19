@@ -1,7 +1,7 @@
 import { EventInterest } from 'fun-events';
 import { Component, ComponentClass, ComponentContext } from '../component';
 import { Feature } from '../feature';
-import { testElement } from './test-element';
+import { MockElement, testElement } from './test-element';
 import Mock = jest.Mock;
 
 describe('component instantiation', () => {
@@ -22,7 +22,7 @@ describe('component instantiation', () => {
       @Component({
         name: 'test-component',
         extend: {
-          type: class {
+          type: class extends MockElement {
             get inheritedProperty() {
               return 'inherited-value';
             }
@@ -136,7 +136,7 @@ describe('component instantiation', () => {
         @Component({
           name: 'test-component',
           extend: {
-            type: Object,
+            type: MockElement,
           },
         })
         @Feature({
@@ -166,7 +166,7 @@ describe('component instantiation', () => {
         @Component({
           name: 'test-component',
           extend: {
-            type: Object,
+            type: MockElement,
           },
         })
         @Feature({

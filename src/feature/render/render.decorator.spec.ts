@@ -1,7 +1,7 @@
 import { Component, ComponentClass, ComponentContext, ComponentDef } from '../../component';
 import { CustomElements, DefinitionContext } from '../../component/definition';
 import { bootstrapComponents } from '../../kit/bootstrap';
-import { testElement } from '../../spec/test-element';
+import { MockElement, testElement } from '../../spec/test-element';
 import { DomProperty } from '../dom-properties';
 import { FeatureDef } from '../feature-def';
 import { Feature } from '../feature.decorator';
@@ -27,7 +27,7 @@ describe('feature/render/render.decorator', () => {
       @Component({
         name: 'test-component',
         extend: {
-          type: Object,
+          type: MockElement,
         },
         define(ctx) {
           definitionContext = ctx;

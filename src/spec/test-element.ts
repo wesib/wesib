@@ -1,14 +1,10 @@
-import { noop } from 'call-thru';
 import { Class } from '../common';
-import { ComponentClass, ComponentDef, ComponentEventDispatcher } from '../component';
+import { ComponentClass } from '../component';
 import { ComponentFactory, CustomElements } from '../component/definition';
 import { Feature } from '../feature';
 import { bootstrapComponents } from '../kit/bootstrap';
 
 export function testComponentFactory<T extends object>(componentType: Class<T>): Promise<ComponentFactory<T>> {
-  ComponentDef.define(componentType, {
-    forComponents: { a: ComponentEventDispatcher, is: noop },
-  });
 
   let result!: Class;
 
@@ -36,9 +32,6 @@ export function testComponentFactory<T extends object>(componentType: Class<T>):
 }
 
 export function testElement(componentType: Class<any>): Class<any> {
-  ComponentDef.define(componentType, {
-    forComponents: { a: ComponentEventDispatcher, is: noop },
-  });
 
   let result!: Class;
 

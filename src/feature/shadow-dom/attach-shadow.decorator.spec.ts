@@ -1,5 +1,5 @@
 import { Component, ComponentClass, ComponentContext } from '../../component';
-import { testElement } from '../../spec/test-element';
+import { MockElement, testElement } from '../../spec/test-element';
 import { FeatureDef } from '../feature-def';
 import { AttachShadow } from './attach-shadow.decorator';
 import { ShadowContentRoot } from './shadow-content-root';
@@ -23,7 +23,7 @@ describe('feature/shadow-dom/attach-shadow.decorator', () => {
       @Component({
         name: 'test-component',
         extend: {
-          type: class {
+          type: class extends MockElement {
             attachShadow = attachShadowSpy;
           },
         }
@@ -64,7 +64,7 @@ describe('feature/shadow-dom/attach-shadow.decorator', () => {
       @Component({
         name: 'other-component',
         extend: {
-          type: class {
+          type: class extends MockElement {
             attachShadow = attachShadowSpy;
           },
         }
@@ -87,7 +87,7 @@ describe('feature/shadow-dom/attach-shadow.decorator', () => {
       @Component({
         name: 'other-component',
         extend: {
-          type: Object,
+          type: MockElement,
         }
       })
       class OtherComponent {

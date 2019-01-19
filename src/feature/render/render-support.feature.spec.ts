@@ -2,8 +2,7 @@ import { Class } from '../../common';
 import { Component, ComponentClass, ComponentContext } from '../../component';
 import { CustomElements } from '../../component/definition';
 import { BootstrapWindow } from '../../kit';
-import { bootstrapComponents } from '../../kit/bootstrap';
-import { testElement } from '../../spec/test-element';
+import { MockElement, testElement } from '../../spec/test-element';
 import { FeatureDef } from '../feature-def';
 import { Feature } from '../feature.decorator';
 import { RenderScheduler } from './render-scheduler';
@@ -32,7 +31,7 @@ describe('feature/render/render-support.feature', () => {
       @Component({
         name: 'test-component',
         extend: {
-          type: Object,
+          type: MockElement,
         },
         define(ctx) {
           ctx.whenReady(() => {
