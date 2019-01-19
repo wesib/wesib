@@ -92,7 +92,7 @@ export namespace ComponentDef {
 
             const merged: PartialComponentDef<T> = { ...prev, ...def };
             const set = new ArraySet(prev.set).merge(def.set);
-            const newDefine = mergeFunctions<[DefinitionContext<T>], void, Class<T>>(prev.define, def.define);
+            const newDefine = mergeFunctions(prev.define, def.define);
             const forComponents = new ArraySet(prev.forComponents).merge(def.forComponents);
 
             if (set.size) {

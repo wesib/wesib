@@ -199,11 +199,20 @@ describe('kit/definition/element-builder', () => {
           }
         });
       });
+
+      let addEventListenerSpy: Mock;
+      let removeEventListenerSpy: Mock;
+
       beforeEach(() => {
+        addEventListenerSpy = jest.fn();
+        removeEventListenerSpy = jest.fn();
         ComponentDef.define(
             TestComponent, {
               extend: {
-                type: Object,
+                type: class {
+                  addEventListener = addEventListenerSpy;
+                  removeEventListener = removeEventListenerSpy;
+                },
               },
               forComponents: { a: key2, is: value2, }
             });
@@ -232,6 +241,19 @@ describe('kit/definition/element-builder', () => {
           cancelable: false,
           bubbles: true,
         }));
+      });
+      it('allows to listen for component events', () => {
+
+        const listener = jest.fn().mockName('event listener');
+        const interest = componentContext.on('test-event')(listener);
+
+        expect(addEventListenerSpy).toHaveBeenCalledWith('test-event', expect.any(Function), undefined);
+
+        const actualListener = addEventListenerSpy.mock.calls[0][1];
+
+        interest.off();
+
+        expect(removeEventListenerSpy).toHaveBeenCalledWith('test-event', actualListener);
       });
       it('can not access values of another component type', () => {
 
