@@ -1,5 +1,6 @@
 import { ContextKey, ContextValues, SingleContextKey } from 'context-values';
 import { EventProducer, StatePath, StateUpdater } from 'fun-events';
+import { bootstrapContextKey } from '../kit/bootstrap-context.key';
 import { ComponentClass } from './component-class';
 import { ComponentMount } from './component-mount';
 
@@ -164,7 +165,7 @@ export abstract class ComponentContext<T extends object = object> extends Contex
    */
   dispatchEvent(event: Event): void {
     // tslint:disable-next-line:no-use-before-declare
-    this.get(ComponentEventDispatcher)(event);
+    this.get(bootstrapContextKey).get(ComponentEventDispatcher)(this, event);
   }
 
 }
