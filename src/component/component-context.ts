@@ -1,13 +1,11 @@
-import { ContextKey, ContextValues, SingleContextKey } from 'context-values';
+import { ContextValues } from 'context-values';
 import { EventProducer, StatePath, StateUpdater } from 'fun-events';
 import { bootstrapContextKey } from '../kit/bootstrap-context.key';
 import { ComponentClass } from './component-class';
+import { componentContextKey } from './component-context.key';
+import { componentEventDispatcherKey } from './component-event.key';
 import { ComponentMount } from './component-mount';
-
-const componentContextKey: ContextKey<ComponentContext<any>> = new SingleContextKey('component-context');
-const contentRootKey: ContextKey<ContentRoot> = new SingleContextKey(
-    'content-root',
-    ctx => ctx.get(componentContextKey).element);
+import { contentRootKey } from './content-root.key';
 
 /**
  * Component context.
@@ -164,45 +162,7 @@ export abstract class ComponentContext<T extends object = object> extends Contex
    * @param event An event to dispatch.
    */
   dispatchEvent(event: Event): void {
-    // tslint:disable-next-line:no-use-before-declare
-    this.get(bootstrapContextKey).get(ComponentEventDispatcher)(this, event);
+    this.get(bootstrapContextKey).get(componentEventDispatcherKey)(this, event);
   }
-
-}
-
-/**
- * Component content root node.
- */
-export type ContentRoot = ParentNode;
-
-export namespace ContentRoot {
-
-  /**
-   * A key of component context value containing a component root element.
-   *
-   * This is an element itself by default. But can be overridden e.g. by `@AttachShadow` decorator.
-   */
-  export const key = contentRootKey;
-
-}
-
-/**
- * Component event dispatcher function is used to dispatch component events.
- *
- * It is available in bootstrap context context.
- *
- * @param context A context of component to dispatch an `event` for.
- * @param event An event to dispatch.
- */
-export type ComponentEventDispatcher = (context: ComponentContext<any>, event: Event) => void;
-
-export namespace ComponentEventDispatcher {
-
-  /**
-   * A key of bootstrap context value containing component event dispatcher.
-   */
-  export const key: ContextKey<ComponentEventDispatcher> = new SingleContextKey(
-      'component-event-dispatcher',
-      () => (context: ComponentContext<any>, event: Event) => context.element.dispatchEvent(event));
 
 }
