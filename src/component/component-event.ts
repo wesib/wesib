@@ -1,6 +1,7 @@
 import { ContextKey } from 'context-values';
+import { DomEventProducer } from 'fun-events';
 import { ComponentContext } from './component-context';
-import { componentEventDispatcherKey } from './component-event.key';
+import { componentEventDispatcherKey, componentEventProducerKey } from './component-event.key';
 
 /**
  * Component event.
@@ -51,5 +52,28 @@ export namespace ComponentEventDispatcher {
    * A key of bootstrap context value containing component event dispatcher.
    */
   export const key: ContextKey<ComponentEventDispatcher> = componentEventDispatcherKey;
+
+}
+
+/**
+ * A producer of DOM component events is a function accepting event type as its only argument and returning DOM event
+ * producer for that event type.
+ *
+ * It is available in each component context.
+ *
+ * By default treats a component element as event target.
+ *
+ * @param type An event type to listen for.
+ *
+ * @returns A producer of DOM event events of the given type.
+ */
+export type ComponentEventProducer = <E extends Event>(type: string) => DomEventProducer<E>;
+
+export namespace ComponentEventProducer {
+
+  /**
+   * A key of component context value containing component event producer.
+   */
+  export const key: ContextKey<ComponentEventProducer> = componentEventProducerKey;
 
 }

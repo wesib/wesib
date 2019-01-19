@@ -1,9 +1,9 @@
 import { ContextValues } from 'context-values';
-import { EventProducer, StatePath, StateUpdater } from 'fun-events';
+import { DomEventDispatcher, DomEventProducer, EventProducer, StatePath, StateUpdater } from 'fun-events';
 import { bootstrapContextKey } from '../kit/bootstrap-context.key';
 import { ComponentClass } from './component-class';
 import { componentContextKey } from './component-context.key';
-import { componentEventDispatcherKey } from './component-event.key';
+import { componentEventDispatcherKey, componentEventProducerKey } from './component-event.key';
 import { ComponentMount } from './component-mount';
 import { contentRootKey } from './content-root.key';
 
@@ -152,6 +152,20 @@ export abstract class ComponentContext<T extends object = object> extends Contex
    * @param key Target property key.
    */
   abstract elementSuper(key: PropertyKey): any;
+
+  /**
+   * Returns a DOM event producer for the given event type.
+   *
+   * This is a shorthand for invoking a component event producer function available under
+   * `[ComponentEventProducer.key]` key.
+   *
+   * @param type An event type to listen for.
+   *
+   * @returns A producer of DOM event events of the given type.
+   */
+  on<E extends Event>(type: string): DomEventProducer<E> {
+    return this.get(componentEventProducerKey)(type);
+  }
 
   /**
    * Dispatches an event to component element.
