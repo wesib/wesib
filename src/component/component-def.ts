@@ -1,5 +1,5 @@
 import { ContextValueSpec } from 'context-values';
-import { ArraySet, Class, mergeFunctions, MetaAccessor, superClassOf } from '../common';
+import { ArraySet, Class, mergeFunctions, MetaAccessor } from '../common';
 import { FeatureDef } from '../feature';
 import { ComponentClass } from './component-class';
 import { ComponentContext } from './component-context';
@@ -127,14 +127,12 @@ export namespace ComponentDef {
   export function of<T extends object>(componentType: ComponentClass<T>): ComponentDef<T> {
 
     const def = meta.of(componentType) as ComponentDef<T>;
-    const superType = superClassOf(componentType, st => ComponentDef.symbol in st) as Class<T>;
-    const superDef = superType && ComponentDef.of(superType);
 
     if (!def) {
       throw TypeError(`Not a component type: ${componentType.name}`);
     }
 
-    return superDef && superDef !== def ? ComponentDef.merge(superDef, def) as ComponentDef<T> : def;
+    return def;
   }
 
   /**
