@@ -4,7 +4,7 @@ import { FeatureDef } from '../feature';
 import { BootstrapContext } from '../kit';
 import { ObjectMock } from '../spec/mocks';
 import { ComponentClass } from './component-class';
-import { ComponentDef, PartialComponentDef } from './component-def';
+import { ComponentDef } from './component-def';
 import { DefinitionContext } from './definition';
 
 describe('component/component-def', () => {
@@ -20,12 +20,12 @@ describe('component/component-def', () => {
 
         expect(ComponentDef.of(TestComponent)).toEqual(TestComponent[ComponentDef.symbol]);
       });
-      it('fails when there is no component definition', () => {
+      it('returns empty definition when absent', () => {
 
         class TestComponent {
         }
 
-        expect(() => ComponentDef.of(TestComponent)).toThrow(TypeError);
+        expect(ComponentDef.of(TestComponent)).toEqual({});
       });
       it('requests inherited definition', () => {
 
@@ -70,6 +70,7 @@ describe('component/component-def', () => {
         expect(ComponentDef.merge({ name: 'name1' }, { name: 'name2' })).toEqual({ name: 'name2' });
         expect(ComponentDef.merge({ name: 'name1' }, {})).toEqual({ name: 'name1' });
         expect(ComponentDef.merge({}, { name: 'name2' })).toEqual({ name: 'name2' });
+        expect(ComponentDef.merge({ name: 'name1' }, { name: undefined })).toEqual({ name: undefined });
       });
       it('merges `extend`', () => {
 
@@ -166,7 +167,7 @@ describe('component/component-def', () => {
 
         ComponentDef.define(TestComponent, initialDef);
 
-        const def: PartialComponentDef = {
+        const def: ComponentDef = {
           extend: {
             name: 'span',
             type: Base,
@@ -174,7 +175,7 @@ describe('component/component-def', () => {
         };
         const componentType = ComponentDef.define(TestComponent, def);
 
-        expect<PartialComponentDef>(ComponentDef.of(componentType)).toEqual(ComponentDef.merge(initialDef, def));
+        expect<ComponentDef>(ComponentDef.of(componentType)).toEqual(ComponentDef.merge(initialDef, def));
       });
       describe('created component feature', () => {
         it('registers the component', () => {
