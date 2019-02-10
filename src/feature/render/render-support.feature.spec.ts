@@ -2,18 +2,18 @@ import { Class } from '../../common';
 import { Component, ComponentClass, ComponentContext } from '../../component';
 import { CustomElements } from '../../component/definition';
 import { BootstrapWindow } from '../../kit';
+import { ObjectMock } from '../../spec/mocks';
 import { MockElement, testElement } from '../../spec/test-element';
 import { FeatureDef } from '../feature-def';
 import { Feature } from '../feature.decorator';
 import { RenderScheduler } from './render-scheduler';
 import { RenderSupport } from './render-support.feature';
-import Mocked = jest.Mocked;
 
 describe('feature/render/render-support.feature', () => {
   describe('RenderSupport', () => {
 
-    let windowSpy: Mocked<Window>;
-    let customElementsSpy: Mocked<CustomElements>;
+    let windowSpy: ObjectMock<Window>;
+    let customElementsSpy: ObjectMock<CustomElements>;
 
     beforeEach(() => {
       windowSpy = {
@@ -87,7 +87,7 @@ describe('feature/render/render-support.feature', () => {
           expect(windowSpy.requestAnimationFrame).toHaveBeenCalledWith(expect.any(Function));
           expect(renderSpy).not.toHaveBeenCalled();
 
-          windowSpy.requestAnimationFrame.mock.calls[0][0]();
+          windowSpy.requestAnimationFrame.mock.calls[0][0](0);
 
           expect(renderSpy).toHaveBeenCalled();
         });
@@ -109,7 +109,7 @@ describe('feature/render/render-support.feature', () => {
           renderScheduler.scheduleRender(render1spy);
           renderScheduler.scheduleRender(render2spy);
 
-          windowSpy.requestAnimationFrame.mock.calls[0][0]();
+          windowSpy.requestAnimationFrame.mock.calls[0][0](0);
 
           expect(render1spy).not.toHaveBeenCalled();
           expect(render2spy).toHaveBeenCalled();
@@ -120,7 +120,7 @@ describe('feature/render/render-support.feature', () => {
 
           renderScheduler.scheduleRender(render1spy);
 
-          windowSpy.requestAnimationFrame.mock.calls[0][0]();
+          windowSpy.requestAnimationFrame.mock.calls[0][0](0);
 
           expect(render1spy).toHaveBeenCalled();
 
@@ -128,7 +128,7 @@ describe('feature/render/render-support.feature', () => {
 
           renderScheduler.scheduleRender(render2spy);
 
-          windowSpy.requestAnimationFrame.mock.calls[0][0]();
+          windowSpy.requestAnimationFrame.mock.calls[0][0](0);
 
           expect(render2spy).toHaveBeenCalled();
         });

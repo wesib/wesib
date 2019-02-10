@@ -2,10 +2,10 @@ import { noop } from 'call-thru';
 import { SingleContextKey } from 'context-values';
 import { FeatureDef } from '../feature';
 import { BootstrapContext } from '../kit';
+import { ObjectMock } from '../spec/mocks';
 import { ComponentClass } from './component-class';
 import { ComponentDef, PartialComponentDef } from './component-def';
 import { DefinitionContext } from './definition';
-import Mocked = jest.Mocked;
 
 describe('component/component-def', () => {
   describe('ComponentDef', () => {
@@ -188,7 +188,7 @@ describe('component/component-def', () => {
 
           expect(init).toBeDefined();
 
-          const bootstrapContextSpy: Mocked<BootstrapContext> = {
+          const bootstrapContextSpy: ObjectMock<BootstrapContext> = {
             define: jest.fn(),
           } as any;
 
@@ -211,7 +211,7 @@ describe('component/component-def', () => {
 
           expect(init).toBeDefined();
 
-          const bootstrapContextSpy: Mocked<BootstrapContext> = {
+          const bootstrapContextSpy: ObjectMock<BootstrapContext> = {
             define: jest.fn(),
           } as any;
 
@@ -235,7 +235,7 @@ describe('component/component-def', () => {
 
           expect(init).toBeDefined();
 
-          const bootstrapContextSpy: Mocked<BootstrapContext> = {
+          const bootstrapContextSpy: ObjectMock<BootstrapContext> = {
             define: jest.fn(),
           } as any;
 

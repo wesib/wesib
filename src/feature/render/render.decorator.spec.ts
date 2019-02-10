@@ -1,6 +1,6 @@
-import { Component, ComponentClass, ComponentContext, ComponentDef } from '../../component';
+import { Component, ComponentClass, ComponentContext } from '../../component';
 import { CustomElements, DefinitionContext } from '../../component/definition';
-import { bootstrapComponents } from '../../kit/bootstrap';
+import { ObjectMock } from '../../spec/mocks';
 import { MockElement, testElement } from '../../spec/test-element';
 import { DomProperty } from '../dom-properties';
 import { FeatureDef } from '../feature-def';
@@ -10,13 +10,12 @@ import { RenderScheduler } from './render-scheduler';
 import { RenderSupport } from './render-support.feature';
 import { Render } from './render.decorator';
 import Mock = jest.Mock;
-import Mocked = jest.Mocked;
 
 describe('feature/render/render.decorator', () => {
   describe('@Render', () => {
 
-    let customElementsSpy: Mocked<CustomElements>;
-    let renderSchedulerSpy: Mocked<RenderScheduler>;
+    let customElementsSpy: ObjectMock<CustomElements>;
+    let renderSchedulerSpy: ObjectMock<RenderScheduler>;
     let testComponent: ComponentClass;
     let renderSpy: Mock;
     let definitionContext: DefinitionContext<object>;

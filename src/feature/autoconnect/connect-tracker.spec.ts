@@ -1,8 +1,8 @@
 import Mock = jest.Mock;
-import Mocked = jest.Mocked;
 import { Component, ComponentMount } from '../../component';
 import { ComponentFactory } from '../../component/definition';
 import { ElementAdapter } from '../../kit';
+import { ObjectMock } from '../../spec/mocks';
 import { MockElement, testComponentFactory } from '../../spec/test-element';
 import { Feature } from '../feature.decorator';
 import { AutoConnectSupport } from './auto-connect-support.feature';
@@ -11,7 +11,7 @@ describe('feature/autoconnect', () => {
   describe('ConnectTracker', () => {
 
     let MockObserver: Mock;
-    let observer: Mocked<MutationObserver>;
+    let observer: ObjectMock<MutationObserver>;
     let update: (records: Partial<MutationRecord>[]) => void;
 
     beforeEach(() => {

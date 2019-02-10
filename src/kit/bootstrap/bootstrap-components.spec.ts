@@ -2,6 +2,7 @@ import { SingleContextKey } from 'context-values';
 import { Component } from '../../component';
 import { FeatureDef } from '../../feature';
 import { FeatureRegistry } from '../../feature/feature-registry';
+import { MethodSpy, ObjectMock } from '../../spec/mocks';
 import { BootstrapContext } from '../bootstrap-context';
 import { ComponentKit } from '../component-kit';
 import { ComponentRegistry } from '../definition/component-registry';
@@ -11,23 +12,24 @@ import { ElementBuilder } from '../definition/element-builder';
 import { bootstrapComponents } from './bootstrap-components';
 import { BootstrapValueRegistry } from './bootstrap-value-registry';
 import Mock = jest.Mock;
-import Mocked = jest.Mocked;
-import SpyInstance = jest.SpyInstance;
 
 describe('kit/bootstrap/bootstrap-components', () => {
 
-  let createBootstrapValueRegistrySpy: SpyInstance<() => BootstrapValueRegistry>;
-  let createDefinitionValueRegistrySpy: SpyInstance<() => DefinitionValueRegistry>;
-  let createComponentValueRegistrySpy: SpyInstance<() => ComponentValueRegistry>;
+  let createBootstrapValueRegistrySpy: MethodSpy<typeof BootstrapValueRegistry, 'create'>;
+  let createDefinitionValueRegistrySpy: MethodSpy<typeof DefinitionValueRegistry, 'create'>;
+  let createComponentValueRegistrySpy: MethodSpy<typeof ComponentValueRegistry, 'create'>;
   let createElementBuilderSpy: Mock;
-  let elementBuilderSpy: Mocked<ElementBuilder>;
+  let elementBuilderSpy: ObjectMock<ElementBuilder>;
   let createComponentRegistrySpy: Mock;
-  let componentRegistrySpy: Mocked<ComponentRegistry>;
+  let componentRegistrySpy: {
+    define: Mock<void, [string, Function, ElementDefinitionOptions?]>;
+    whenDefined: Mock<Promise<void>, [string]>;
+  };
 
   beforeEach(() => {
     createBootstrapValueRegistrySpy = jest.spyOn(BootstrapValueRegistry, 'create');
-    createComponentValueRegistrySpy = jest.spyOn(ComponentValueRegistry, 'create');
     createDefinitionValueRegistrySpy = jest.spyOn(DefinitionValueRegistry, 'create');
+    createComponentValueRegistrySpy = jest.spyOn(ComponentValueRegistry, 'create');
 
     elementBuilderSpy = {
       buildElement: jest.fn(),
@@ -39,7 +41,7 @@ describe('kit/bootstrap/bootstrap-components', () => {
       },
     } as any;
     createElementBuilderSpy = jest.spyOn(ElementBuilder, 'create')
-        .mockReturnValue(elementBuilderSpy);
+        .mockReturnValue(elementBuilderSpy as any);
 
     componentRegistrySpy = {
       define: jest.fn(),
@@ -47,7 +49,7 @@ describe('kit/bootstrap/bootstrap-components', () => {
       whenDefined: jest.fn(),
     } as any;
     createComponentRegistrySpy = jest.spyOn(ComponentRegistry, 'create')
-        .mockReturnValue(componentRegistrySpy);
+        .mockReturnValue(componentRegistrySpy as any);
   });
 
   describe('bootstrapComponents', () => {
@@ -106,7 +108,7 @@ describe('kit/bootstrap/bootstrap-components', () => {
 
     describe('FeatureRegistry', () => {
 
-      let featureRegistrySpy: Mocked<Pick<FeatureRegistry, 'add' | 'bootstrap'>>;
+      let featureRegistrySpy: ObjectMock<FeatureRegistry, 'add' | 'bootstrap'>;
       let createFeatureRegistrySpy: Mock;
 
       beforeEach(() => {
@@ -115,7 +117,7 @@ describe('kit/bootstrap/bootstrap-components', () => {
           bootstrap: jest.fn(),
         };
         createFeatureRegistrySpy = jest.spyOn(FeatureRegistry, 'create')
-            .mockReturnValue(featureRegistrySpy);
+            .mockReturnValue(featureRegistrySpy as any);
       });
 
       it('creates feature registry', () => {

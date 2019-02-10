@@ -2,12 +2,10 @@ import { SingleContextKey } from 'context-values';
 import { Class } from '../common';
 import { BootstrapContext } from '../kit';
 import { BootstrapValueRegistry } from '../kit/bootstrap/bootstrap-value-registry';
-import { DefinitionValueRegistry } from '../kit/definition/definition-value-registry';
+import { MethodSpy, ObjectMock } from '../spec/mocks';
 import { FeatureDef } from './feature-def';
 import { FeatureRegistry } from './feature-registry';
 import Mock = jest.Mock;
-import Mocked = jest.Mocked;
-import SpyInstance = jest.SpyInstance;
 
 describe('feature/feature-registry', () => {
   describe('FeatureRegistry', () => {
@@ -16,10 +14,10 @@ describe('feature/feature-registry', () => {
     let configure1spy: Mock;
     let feature2: Class;
     let configure2spy: Mock;
-    let valueRegistrySpy: Mocked<BootstrapValueRegistry>;
+    let valueRegistrySpy: ObjectMock<BootstrapValueRegistry>;
     let registry: FeatureRegistry;
-    let contextSpy: Mocked<BootstrapContext>;
-    let addSpy: SpyInstance;
+    let contextSpy: ObjectMock<BootstrapContext>;
+    let addSpy: MethodSpy<FeatureRegistry, 'add'>;
 
     beforeEach(() => {
       configure1spy = jest.fn();

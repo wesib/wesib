@@ -10,6 +10,7 @@ import {
   ComponentMount,
 } from '../../component';
 import { ComponentFactory, DefinitionContext, ElementBaseClass } from '../../component/definition';
+import { FnMock, ObjectMock } from '../../spec/mocks';
 import { MockElement } from '../../spec/test-element';
 import { BootstrapContext } from '../bootstrap-context';
 import { BootstrapValueRegistry } from '../bootstrap/bootstrap-value-registry';
@@ -17,13 +18,12 @@ import { ComponentValueRegistry } from './component-value-registry';
 import { DefinitionValueRegistry } from './definition-value-registry';
 import { ElementBuilder } from './element-builder';
 import Mock = jest.Mock;
-import Mocked = jest.Mocked;
 
 describe('kit/definition/element-builder', () => {
   describe('ElementBuilder', () => {
 
     let bootstrapValueRegistry: BootstrapValueRegistry;
-    let bootstrapContextSpy: Mocked<BootstrapContext>;
+    let bootstrapContextSpy: ObjectMock<BootstrapContext>;
 
     beforeEach(() => {
       bootstrapValueRegistry = BootstrapValueRegistry.create();
@@ -52,7 +52,7 @@ describe('kit/definition/element-builder', () => {
       };
     });
 
-    let dispatchEventSpy: Mock;
+    let dispatchEventSpy: FnMock<ComponentEventDispatcher>;
 
     beforeEach(() => {
       dispatchEventSpy = jest.fn();

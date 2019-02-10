@@ -1,12 +1,12 @@
 import { Component, ComponentContext } from '../../component';
+import { ObjectMock } from '../../spec/mocks';
 import { Attribute } from './attribute.decorator';
-import Mocked = jest.Mocked;
 
 describe('feature/attributes/attribute.decorator', () => {
   describe('@Attribute', () => {
 
-    let contextSpy: Mocked<ComponentContext<any>>;
-    let elementSpy: Mocked<HTMLElement>;
+    let contextSpy: ObjectMock<ComponentContext<any>>;
+    let elementSpy: ObjectMock<HTMLElement>;
 
     beforeEach(() => {
       elementSpy = {

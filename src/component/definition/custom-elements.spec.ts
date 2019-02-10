@@ -1,16 +1,20 @@
 import { ContextRegistry } from 'context-values';
 import { Class } from '../../common';
 import { BootstrapContext, BootstrapWindow } from '../../kit';
+import { ComponentRegistry } from '../../kit/definition/component-registry';
+import { MethodSpy } from '../../spec/mocks';
 import { ComponentClass } from '../component-class';
 import { ComponentDef } from '../component-def';
 import { CustomElements } from './custom-elements';
-import Mocked = jest.Mocked;
 
 describe('kit/custom-elements', () => {
   describe('CustomElements', () => {
 
     let context: BootstrapContext;
-    let registrySpy: Mocked<CustomElementRegistry>;
+    let registrySpy: {
+      define: MethodSpy<ComponentRegistry, 'define'>;
+      whenDefined: MethodSpy<ComponentRegistry, 'whenDefined'>;
+    };
     let customElements: CustomElements;
     let TestComponent: ComponentClass;
     let elementType: Class;

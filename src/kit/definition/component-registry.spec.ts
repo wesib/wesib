@@ -1,20 +1,21 @@
 import { ContextRequest } from 'context-values';
+import { Class } from '../../common';
 import { ComponentClass, ComponentDef } from '../../component';
 import { CustomElements } from '../../component/definition';
+import { ObjectMock } from '../../spec/mocks';
 import { BootstrapContext } from '../bootstrap-context';
 import { COMPONENT_FACTORY, ComponentRegistry } from './component-registry';
 import { ElementBuilder } from './element-builder';
-import Mocked = jest.Mocked;
 
 describe('kit/definition/component-registry', () => {
   describe('ComponentRegistry', () => {
 
-    let customElementsSpy: Mocked<Pick<CustomElements, 'define' | 'whenDefined'>>;
-    let bootstrapContextSpy: Mocked<BootstrapContext>;
-    let builderSpy: Mocked<ElementBuilder>;
+    let customElementsSpy: ObjectMock<CustomElements, 'define' | 'whenDefined'>;
+    let bootstrapContextSpy: ObjectMock<BootstrapContext>;
+    let builderSpy: ObjectMock<ElementBuilder> & ElementBuilder;
     let registry: ComponentRegistry;
     let TestComponent: ComponentClass;
-    let ElementSpy: Mocked<HTMLElement>;
+    let ElementSpy: Class;
 
     beforeEach(() => {
       bootstrapContextSpy = {
@@ -48,10 +49,8 @@ describe('kit/definition/component-registry', () => {
         };
       };
 
-      ElementSpy = {
-        addEventListener: jest.fn(),
-      } as any;
-      builderSpy.buildElement.mockReturnValue({ elementType: ElementSpy });
+      ElementSpy = { name: 'Element' } as any;
+      builderSpy.buildElement.mockReturnValue({ elementType: ElementSpy } as any);
     });
 
     describe('define', () => {
