@@ -16,8 +16,11 @@ export interface ComponentDef<T extends object = object> {
 
   /**
    * Custom element name.
+   *
+   * When omitted an anonymous component will be registered. Such component is not bound to custom element, but it
+   * still can be mounted.
    */
-  name: string;
+  name?: string;
 
   /**
    * Existing element to extend by custom one.
@@ -48,13 +51,6 @@ export interface ComponentDef<T extends object = object> {
 }
 
 /**
- * Partial component definition.
- *
- * @param <T> A type of component.
- */
-export type PartialComponentDef<T extends object = object> = Partial<ComponentDef<T>>;
-
-/**
  * The definition of element to extend by custom one.
  */
 export interface ExtendedElementDef {
@@ -80,17 +76,17 @@ export namespace ComponentDef {
    */
   export const symbol = Symbol('component-def');
 
-  class ComponentMeta extends MetaAccessor<PartialComponentDef<any>> {
+  class ComponentMeta extends MetaAccessor<ComponentDef<any>> {
 
     constructor() {
       super(ComponentDef.symbol);
     }
 
-    merge<T extends object>(...defs: PartialComponentDef<T>[]): PartialComponentDef<T> {
+    merge<T extends object>(...defs: ComponentDef<T>[]): ComponentDef<T> {
       return defs.reduce(
           (prev, def) => {
 
-            const merged: PartialComponentDef<T> = { ...prev, ...def };
+            const merged: ComponentDef<T> = { ...prev, ...def };
             const set = new ArraySet(prev.set).merge(def.set);
             const newDefine = mergeFunctions(prev.define, def.define);
             const forComponents = new ArraySet(prev.forComponents).merge(def.forComponents);
@@ -120,19 +116,10 @@ export namespace ComponentDef {
    * @param <T> A type of component.
    * @param componentType Target component class constructor.
    *
-   * @returns Component definition.
-   *
-   * @throws TypeError If target `componentType` does not contain a component definition.
+   * @returns Component definition. May be empty if there is not definition attached to component type.
    */
   export function of<T extends object>(componentType: ComponentClass<T>): ComponentDef<T> {
-
-    const def = meta.of(componentType) as ComponentDef<T>;
-
-    if (!def) {
-      throw TypeError(`Not a component type: ${componentType.name}`);
-    }
-
-    return def;
+    return meta.of(componentType) as ComponentDef<T> || {};
   }
 
   /**
@@ -143,7 +130,7 @@ export namespace ComponentDef {
    *
    * @returns Merged component definition.
    */
-  export function merge<T extends object>(...defs: PartialComponentDef<T>[]): PartialComponentDef<T> {
+  export function merge<T extends object>(...defs: ComponentDef<T>[]): ComponentDef<T> {
     return meta.merge(...defs);
   }
 
@@ -163,7 +150,7 @@ export namespace ComponentDef {
    */
   export function define<T extends ComponentClass>(
       type: T,
-      ...defs: PartialComponentDef<InstanceType<T>>[]): T {
+      ...defs: ComponentDef<InstanceType<T>>[]): T {
 
     const prevDef = meta.of(type);
 
