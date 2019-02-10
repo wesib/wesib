@@ -58,6 +58,22 @@ describe('kit/custom-elements', () => {
 
         expect(registrySpy.define).toHaveBeenCalledWith('test-component', elementType);
       });
+      it('defines non-component custom element', () => {
+        customElements.define('test-component', elementType);
+
+        expect(registrySpy.define).toHaveBeenCalledWith('test-component', elementType);
+      });
+      it('does not define custom element for anonymous component', () => {
+
+        class AnonymousComponent {
+        }
+
+        ComponentDef.define(AnonymousComponent);
+
+        customElements.define(AnonymousComponent, elementType);
+
+        expect(registrySpy.define).not.toHaveBeenCalled();
+      });
       it('defines custom element extending another one', () => {
 
         class BaseElement {
@@ -102,6 +118,26 @@ describe('kit/custom-elements', () => {
 
         expect(customElements.whenDefined(TestComponent)).toBe(promise);
         expect(registrySpy.whenDefined).toHaveBeenCalledWith('test-component');
+      });
+      it('awaits for non-component element definition', () => {
+
+        const promise = Promise.resolve<any>('defined');
+
+        registrySpy.whenDefined.mockReturnValue(promise);
+
+        expect(customElements.whenDefined('test-component')).toBe(promise);
+        expect(registrySpy.whenDefined).toHaveBeenCalledWith('test-component');
+      });
+      it('does not wait for anonymous component definition', async () => {
+
+        class AnonymousComponent {
+        }
+
+        ComponentDef.define(AnonymousComponent);
+
+        await customElements.whenDefined(AnonymousComponent);
+
+        expect(registrySpy.whenDefined).not.toHaveBeenCalled();
       });
     });
   });

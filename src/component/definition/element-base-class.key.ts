@@ -14,5 +14,5 @@ export const elementBaseClassKey = new SingleContextKey<ElementBaseClass>(
       const componentType = values.get(definitionContextKey).componentType;
       const extend = ComponentDef.of(componentType).extend;
 
-      return extend && extend.type ||  (values.get(BootstrapWindow) as any).HTMLElement;
+      return extend && extend.type || (values.get(BootstrapWindow) as any).HTMLElement;
     });
