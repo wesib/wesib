@@ -1,5 +1,5 @@
 import { ContextKey, SingleContextKey } from 'context-values';
-import { Class } from '../../common';
+import { Class, PromiseResolver } from '../../common';
 import { BootstrapWindow } from '../../kit';
 import { ComponentClass } from '../component-class';
 import { ComponentDef } from '../component-def';
@@ -36,6 +36,7 @@ export abstract class CustomElements {
             const def = ComponentDef.of(componentTypeOrName);
 
             if (!def.name) {
+              componentResolver(componentTypeOrName).resolve(undefined);
               return; // Anonymous component.
             }
 
@@ -61,7 +62,7 @@ export abstract class CustomElements {
             const def = ComponentDef.of(componentTypeOrName);
 
             if (!def.name) {
-              return Promise.resolve();
+              return componentResolver(componentTypeOrName).promise;
             }
 
             return customElements.whenDefined(def.name);
@@ -93,4 +94,11 @@ export abstract class CustomElements {
    */
   abstract whenDefined(componentTypeOrName: ComponentClass<any> | string): Promise<void>;
 
+}
+
+const COMPONENT_RESOLVER = Symbol('component-resolver');
+
+function componentResolver(componentType: ComponentClass): PromiseResolver<void> {
+  return (componentType as any)[COMPONENT_RESOLVER]
+      || ((componentType as any)[COMPONENT_RESOLVER] = new PromiseResolver());
 }

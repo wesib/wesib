@@ -128,12 +128,16 @@ describe('kit/custom-elements', () => {
         expect(customElements.whenDefined('test-component')).toBe(promise);
         expect(registrySpy.whenDefined).toHaveBeenCalledWith('test-component');
       });
-      it('does not wait for anonymous component definition', async () => {
+      it('waits for anonymous component definition', async () => {
 
         class AnonymousComponent {
         }
-
         ComponentDef.define(AnonymousComponent);
+
+        class Element {
+        }
+
+        customElements.define(AnonymousComponent, Element);
 
         await customElements.whenDefined(AnonymousComponent);
 
