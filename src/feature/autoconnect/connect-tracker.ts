@@ -1,6 +1,6 @@
 import { AIterable, overArray } from 'a-iterable';
 import { ContextKey, SingleContextKey } from 'context-values';
-import { DomEventDispatcher } from 'fun-events';
+import { DomEventDispatcher, EventInterest } from 'fun-events';
 import { ComponentMount } from '../../component';
 import { BootstrapContext, BootstrapRoot, BootstrapWindow, ElementAdapter } from '../../kit';
 import { ShadowDomEvent } from '../shadow-dom';
@@ -15,6 +15,7 @@ export class ConnectTracker {
   static readonly key: ContextKey<ConnectTracker> = new SingleContextKey('connect-tracker');
 
   private readonly _adapter: ElementAdapter;
+  private _interest = EventInterest.none;
   private _observer!: MutationObserver;
 
   constructor(private readonly _context: BootstrapContext) {
@@ -22,7 +23,7 @@ export class ConnectTracker {
   }
 
   track(root: Node = this._context.get(BootstrapRoot)) {
-    new DomEventDispatcher(root)
+    this._interest = new DomEventDispatcher(root)
         .on<ShadowDomEvent>('wesib:shadowAttached')(event => this._trackShadow(event.shadowRoot));
 
     const Observer: typeof MutationObserver = (this._context.get(BootstrapWindow) as any).MutationObserver;
@@ -100,8 +101,14 @@ export class ConnectTracker {
 
     if (shadowTracker) {
       delete (shadowRoot as any)[SHADOW_CONNECT_TRACKER];
-      shadowTracker._observer.disconnect();
+      shadowTracker._untrack();
     }
+  }
+
+  private _untrack() {
+    this._observer.disconnect();
+    this._interest.off();
+    this._interest = EventInterest.none;
   }
 
 }
