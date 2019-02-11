@@ -18,20 +18,20 @@ import { componentEventDispatcherKey, componentEventProducerKey } from './compon
 export class ComponentEvent extends Event {
 
   /**
+   * Constructs component event.
+   *
+   * @param type Event type.
+   * @param eventInitDict Event initialization dictionary.
+   */
+  constructor(type: string, eventInitDict?: EventInit) {
+    super(type, eventInitDict);
+  }
+
+  /**
    * Target component context.
    */
   get context(): ComponentContext {
     return ComponentContext.of(this.target);
-  }
-
-  /**
-   * Constructs component event.
-   *
-   * @param type
-   * @param eventInitDict
-   */
-  constructor(type: string, eventInitDict?: EventInit) {
-    super(type, eventInitDict);
   }
 
 }
