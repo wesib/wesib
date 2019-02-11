@@ -9,7 +9,7 @@ import { ShadowRootBuilder } from './shadow-root-builder';
 /**
  * Component class decorator that attaches shadow root to decorated component instance.
  *
- * @param init Shadow root initialization options. Uses `mode: "open"` by default.
+ * @param init Shadow root initialization options. Uses `mode: 'open'` by default.
  *
  * @return Component class decorator.
  */
@@ -21,8 +21,10 @@ export function AttachShadow<T extends ComponentClass<any> = any>(
         type,
         {
           define(this: ComponentClass<InstanceType<T>>, context: DefinitionContext<InstanceType<T>>) {
-            // Attach shadow root eagerly on element instantiation.
-            context.onComponent(ctx => ctx.get(ShadowContentRoot));
+            // Attach shadow root eagerly when component is ready.
+            context.onComponent(ctx =>
+                ctx.whenReady(() =>
+                    ctx.get(ShadowContentRoot)));
           },
           forComponents: [
             {

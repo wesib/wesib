@@ -1,8 +1,10 @@
-import { Component, ComponentClass, ComponentContext } from '../../component';
+import { Component, ComponentClass, ComponentContext, ComponentEventDispatcher } from '../../component';
 import { MockElement, testElement } from '../../spec/test-element';
 import { FeatureDef } from '../feature-def';
+import { Feature } from '../feature.decorator';
 import { AttachShadow } from './attach-shadow.decorator';
 import { ShadowContentRoot } from './shadow-content-root';
+import { ShadowDomEvent } from './shadow-dom-event';
 import { ShadowDomSupport } from './shadow-dom-support.feature';
 import Mock = jest.Mock;
 
@@ -12,12 +14,14 @@ describe('feature/shadow-dom/attach-shadow.decorator', () => {
     let testComponent: ComponentClass;
     let attachShadowSpy: Mock;
     let shadowRoot: ShadowContentRoot;
+    let dispatchEventSpy: Mock;
     let element: any;
     let context: ComponentContext;
 
     beforeEach(() => {
       shadowRoot = { name: 'shadowRoot' } as any;
       attachShadowSpy = jest.fn(() => shadowRoot);
+      dispatchEventSpy = jest.fn();
 
       @AttachShadow()
       @Component({
@@ -27,6 +31,9 @@ describe('feature/shadow-dom/attach-shadow.decorator', () => {
             attachShadow = attachShadowSpy;
           },
         }
+      })
+      @Feature({
+        set: { a: ComponentEventDispatcher, is: dispatchEventSpy },
       })
       class TestComponent {
       }
@@ -53,6 +60,10 @@ describe('feature/shadow-dom/attach-shadow.decorator', () => {
     it('attaches open shadow root by default', () => {
       expect(attachShadowSpy).toHaveBeenCalledWith({ mode: 'open' });
     });
+    it('dispatches shadow DOM event', () => {
+      expect(dispatchEventSpy).toHaveBeenCalledWith(context, expect.any(ShadowDomEvent));
+      expect(dispatchEventSpy).toHaveBeenCalledWith(context, expect.objectContaining({ type: 'wesib:shadowAttached' }));
+    });
     it('attaches shadow root', () => {
       attachShadowSpy.mockClear();
 
@@ -75,6 +86,33 @@ describe('feature/shadow-dom/attach-shadow.decorator', () => {
       element = new (testElement(OtherComponent))();
 
       expect(attachShadowSpy).toHaveBeenCalledWith(init);
+    });
+    it('uses existing shadow root', () => {
+      attachShadowSpy.mockClear();
+
+      const mockShadowRoot: ShadowRoot = { name: 'shadow root' } as any;
+
+      @AttachShadow()
+      @Component({
+        name: 'other-component',
+        extend: {
+          type: class extends MockElement {
+            attachShadow = attachShadowSpy;
+          },
+        }
+      })
+      class OtherComponent {
+
+        constructor(ctx: ComponentContext) {
+          ctx.element.shadowRoot = mockShadowRoot;
+        }
+
+      }
+
+      element = new (testElement(OtherComponent))();
+
+      expect(ComponentContext.of(element).get(ShadowContentRoot)).toBe(mockShadowRoot);
+      expect(attachShadowSpy).not.toHaveBeenCalled();
     });
     it('uses element as shadow root if shadow DOM is not supported', () => {
       attachShadowSpy.mockClear();
