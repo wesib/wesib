@@ -99,7 +99,7 @@ export class ConnectTracker {
     const shadowTracker: ConnectTracker = (shadowRoot as any)[SHADOW_CONNECT_TRACKER];
 
     if (shadowTracker) {
-      delete (shadowRoot as any)[SHADOW_CONNECT_TRACKER]
+      delete (shadowRoot as any)[SHADOW_CONNECT_TRACKER];
       shadowTracker._observer.disconnect();
     }
   }
