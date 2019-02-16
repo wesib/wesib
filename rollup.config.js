@@ -1,9 +1,7 @@
 import nodeResolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import sourcemaps from 'rollup-plugin-sourcemaps';
-import { terser } from 'rollup-plugin-terser';
 import typescript from 'rollup-plugin-typescript2';
-import { uglify } from 'rollup-plugin-uglify';
 import pkg from './package.json';
 
 function makeConfig(baseConfig, ...configs) {
@@ -16,28 +14,6 @@ function makeConfig(baseConfig, ...configs) {
       }),
       baseConfig);
 }
-
-const uglifyConfig = {
-  plugins: [
-    uglify({
-      compress: {
-        typeofs: false,
-      },
-      output: {
-        ascii_only: true,
-      },
-    }),
-  ]
-};
-
-const terserConfig = {
-  plugins: [
-    terser({
-      module: true,
-      keep_classnames: true,
-    }),
-  ],
-};
 
 function baseConfig(tsconfig) {
   return {
@@ -85,8 +61,7 @@ const mainConfig = makeConfig(
       output: {
         file: pkg.main,
       },
-    },
-    terserConfig);
+    });
 
 const umdConfig = makeConfig(
     baseConfig('tsconfig.umd.json'),
@@ -94,8 +69,7 @@ const umdConfig = makeConfig(
       output: {
         file: pkg.browser,
       },
-    },
-    uglifyConfig);
+    });
 
 const esmConfig = makeConfig(
     baseConfig('tsconfig.esm.json'),
@@ -104,8 +78,7 @@ const esmConfig = makeConfig(
         format: 'esm',
         file: pkg.module,
       },
-    },
-    terserConfig);
+    });
 
 const esm5Config = makeConfig(
     baseConfig('tsconfig.umd.json'),
@@ -114,8 +87,7 @@ const esm5Config = makeConfig(
         format: 'esm',
         file: pkg.esm5,
       },
-    },
-    terserConfig);
+    });
 
 export default [
   mainConfig,
