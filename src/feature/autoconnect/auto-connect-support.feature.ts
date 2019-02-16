@@ -1,5 +1,12 @@
-import { Feature } from '../feature.decorator';
+import { FeatureDef } from '../feature-def';
 import { ConnectTracker } from './connect-tracker';
+
+const DEF: FeatureDef = {
+  set: { as: ConnectTracker },
+  init(bootstrapContext) {
+    bootstrapContext.get(ConnectTracker).track();
+  }
+};
 
 /**
  * A feature responsible for mounted components connection state tracking.
@@ -10,10 +17,10 @@ import { ConnectTracker } from './connect-tracker';
  * This feature tracks the DOM tree manipulation within `BootstrapRoot` and updates the mounted component connection
  * when its element is added or removed from the document.
  */
-@Feature({
-  set: { as: ConnectTracker },
-  init(bootstrapContext) {
-    bootstrapContext.get(ConnectTracker).track();
+export class AutoConnectSupport {
+
+  static get [FeatureDef.symbol](): FeatureDef {
+    return DEF;
   }
-})
-export class AutoConnectSupport {}
+
+}

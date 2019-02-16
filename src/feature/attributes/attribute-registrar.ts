@@ -1,4 +1,4 @@
-import { SingleContextKey } from 'context-values';
+import { ContextKey, SingleContextKey } from 'context-values';
 import { StatePath } from 'fun-events';
 
 /**
@@ -31,8 +31,12 @@ export type AttributeUpdateConsumer<T extends object> = (
 
 export type AttributeRegistrar<T extends object> = (name: string, callback: AttributeChangedCallback<T>) => void;
 
-export namespace AttributeRegistrar {
+const KEY = /*#__PURE__*/ new SingleContextKey<AttributeRegistrar<any>>('attribute-registrar');
 
-  export const key = new SingleContextKey<AttributeRegistrar<any>>('attribute-registrar');
+export const AttributeRegistrar = {
 
-}
+  get key(): ContextKey<AttributeRegistrar<any>> {
+    return KEY;
+  }
+
+};

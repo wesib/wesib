@@ -1,19 +1,26 @@
 import { ComponentContext, ComponentEventDispatcher } from '../../component';
-import { Feature } from '../feature.decorator';
+import { FeatureDef } from '../feature-def';
 import { ShadowDomEvent } from './shadow-dom-event';
 import { ShadowRootBuilder } from './shadow-root-builder';
+
+const DEF: FeatureDef = {
+  set: [
+    { a: ShadowRootBuilder, is: attachShadow },
+  ],
+};
 
 /**
  * Shadow root support feature.
  *
  * This feature is automatically enabled when `@AttachShadow()` decorator is used.
  */
-@Feature({
-  set: [
-    { a: ShadowRootBuilder, is: attachShadow },
-  ],
-})
-export class ShadowDomSupport {}
+export class ShadowDomSupport {
+
+  static get [FeatureDef.symbol](): FeatureDef {
+    return DEF;
+  }
+
+}
 
 function attachShadow(context: ComponentContext, init: ShadowRootInit): ShadowRoot {
 

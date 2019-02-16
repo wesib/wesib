@@ -5,14 +5,17 @@ import { ComponentMount } from '../../component';
 import { BootstrapContext, BootstrapRoot, BootstrapWindow, ElementAdapter } from '../../kit';
 import { ShadowDomEvent } from '../shadow-dom';
 
-const SHADOW_CONNECT_TRACKER = Symbol('shadow-connect-tracker');
+const SHADOW_CONNECT_TRACKER = /*#__PURE__*/ Symbol('shadow-connect-tracker');
+const KEY = /*#__PURE__*/ new SingleContextKey<ConnectTracker>('connect-tracker');
 
 /**
  * @internal
  */
 export class ConnectTracker {
 
-  static readonly key: ContextKey<ConnectTracker> = new SingleContextKey('connect-tracker');
+  static get key(): ContextKey<ConnectTracker> {
+    return KEY;
+  }
 
   private readonly _adapter: ElementAdapter;
   private _interest = EventInterest.none;

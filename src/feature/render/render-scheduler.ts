@@ -1,5 +1,7 @@
 import { ContextKey, SingleContextKey } from 'context-values';
 
+const KEY = /*#__PURE__*/ new SingleContextKey<RenderScheduler>('render-scheduler');
+
 /**
  * Rendering scheduler.
  *
@@ -10,7 +12,9 @@ export abstract class RenderScheduler {
   /**
    * A `RenderScheduler` component context value key.
    */
-  static readonly key: ContextKey<RenderScheduler> = new SingleContextKey('render-scheduler');
+  static get key(): ContextKey<RenderScheduler> {
+    return KEY;
+  }
 
   /**
    * Schedules component rendering.

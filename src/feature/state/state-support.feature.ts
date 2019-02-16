@@ -1,5 +1,18 @@
 import { StateTracker, StateUpdater } from 'fun-events';
-import { Feature } from '../feature.decorator';
+import { FeatureDef } from '../feature-def';
+
+const DEF: FeatureDef = {
+  forComponents: [
+    { as: StateTracker },
+    {
+      a: StateUpdater,
+      by(tracker: StateTracker) {
+        return tracker.update;
+      },
+      with: [StateTracker],
+    },
+  ],
+};
 
 /**
  * Component state support feature.
@@ -12,16 +25,10 @@ import { Feature } from '../feature.decorator';
  * Other features would use this to notify when the state changes. E.g. `DomPropertiesSupport` and `AttributesSupport`
  * features issue state updates when needed.
  */
-@Feature({
-  forComponents: [
-    { as: StateTracker },
-    {
-      a: StateUpdater,
-      by(tracker: StateTracker) {
-        return tracker.update;
-      },
-      with: [StateTracker],
-    },
-  ],
-})
-export class StateSupport {}
+export class StateSupport {
+
+  static get [FeatureDef.symbol](): FeatureDef {
+    return DEF;
+  }
+
+}
