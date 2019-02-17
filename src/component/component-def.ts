@@ -8,7 +8,7 @@ import { DefinitionContext } from './definition';
 /**
  * A key of a property holding a component definition within its class constructor.
  */
-export const componentDefSymbol = Symbol('component-def');
+export const componentDefSymbol = /*#__PURE__*/ Symbol('component-def');
 
 class ComponentMeta extends MetaAccessor<ComponentDef<any>> {
 
