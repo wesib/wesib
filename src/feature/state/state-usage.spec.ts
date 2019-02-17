@@ -1,7 +1,7 @@
-import { StateTracker, StateUpdater } from 'fun-events';
-import { Component, ComponentClass, ComponentContext } from '../../component';
+import { Component, ComponentClass, ComponentContext, StateUpdater } from '../../component';
 import { MockElement, testElement } from '../../spec/test-element';
 import { Feature } from '../feature.decorator';
+import { ComponentState } from './component-state';
 import { StateSupport } from './state-support.feature';
 
 describe('feature/state', () => {
@@ -10,12 +10,12 @@ describe('feature/state', () => {
     let testComponent: ComponentClass;
     let context: ComponentContext;
     let updateState: StateUpdater;
-    let stateTracker: StateTracker;
+    let componentState: ComponentState;
 
     beforeEach(() => {
       context = undefined!;
       updateState = undefined!;
-      stateTracker = undefined!;
+      componentState = undefined!;
 
       @Component({
         name: 'test-component',
@@ -28,7 +28,7 @@ describe('feature/state', () => {
         constructor(ctx: ComponentContext) {
           context = ctx;
           updateState = ctx.get(StateUpdater);
-          stateTracker = ctx.get(StateTracker);
+          componentState = ctx.get(ComponentState);
         }
       }
 
@@ -42,13 +42,13 @@ describe('feature/state', () => {
     it('provides state update', () => {
       expect(updateState).toBeInstanceOf(Function);
     });
-    it('provides state tracker', () => {
-      expect(stateTracker).toBeInstanceOf(Object);
+    it('provides component state', () => {
+      expect(componentState).toBeInstanceOf(Object);
     });
     it('notifies on state update', () => {
 
       const listenerSpy = jest.fn();
-      const interest = stateTracker.onUpdate(listenerSpy);
+      const interest = componentState.onUpdate(listenerSpy);
 
       updateState(['key'], 'new', 'old');
 
@@ -63,7 +63,7 @@ describe('feature/state', () => {
     it('notifies on state update with `updateState()` method' , () => {
 
       const listenerSpy = jest.fn();
-      const interest = stateTracker.onUpdate(listenerSpy);
+      const interest = componentState.onUpdate(listenerSpy);
 
       context.updateState(['key'], 'new', 'old');
 

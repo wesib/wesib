@@ -1,4 +1,3 @@
-import { StatePath } from 'fun-events';
 import { Component, ComponentClass, ComponentContext } from '../../component';
 import { ComponentFactory } from '../../component/definition';
 import { BootstrapWindow } from '../../kit';
@@ -6,6 +5,7 @@ import { ObjectMock } from '../../spec/mocks';
 import { MockElement, testComponentFactory, testElement } from '../../spec/test-element';
 import { Feature } from '../feature.decorator';
 import { AttributeChanged } from './attribute-changed.decorator';
+import { attributePathRoot } from './attribute-path';
 import { Attribute } from './attribute.decorator';
 import { AttributesSupport } from './attributes-support.feature';
 import Mock = jest.Mock;
@@ -139,7 +139,7 @@ describe('feature/attributes', () => {
 
         (ComponentContext.of(element).component as any).attr3 = value;
 
-        expect(updateStateSpy).toHaveBeenCalledWith([StatePath.attribute, 'attr3'], value, null);
+        expect(updateStateSpy).toHaveBeenCalledWith([attributePathRoot, 'attr3'], value, null);
       });
     });
 

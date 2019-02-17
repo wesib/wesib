@@ -1,11 +1,12 @@
 import { ContextValues } from 'context-values';
-import { DomEventDispatcher, DomEventProducer, EventProducer, StatePath, StateUpdater } from 'fun-events';
+import { DomEventProducer, EventProducer, StatePath } from 'fun-events';
 import { bootstrapContextKey } from '../kit/bootstrap-context.key';
 import { ComponentClass } from './component-class';
 import { componentContextKey } from './component-context.key';
 import { componentEventDispatcherKey, componentEventProducerKey } from './component-event.key';
 import { ComponentMount } from './component-mount';
 import { contentRootKey } from './content-root.key';
+import { StateUpdater } from './state-updater';
 
 /**
  * Component context.

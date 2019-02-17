@@ -1,8 +1,8 @@
 import { noop } from 'call-thru';
-import { StatePath } from 'fun-events';
 import { Component, ComponentContext } from '../../component';
 import { MockElement, testElement } from '../../spec/test-element';
 import { AttributeChanged } from './attribute-changed.decorator';
+import { attributePath } from './attribute-path';
 
 describe('feature/attributes/attribute-changed', () => {
   describe('@AttributeChanged', () => {
@@ -51,7 +51,7 @@ describe('feature/attributes/attribute-changed', () => {
 
       element.attributeChangedCallback('attr', 'old', 'new');
 
-      expect(updateStateSpy).toHaveBeenCalledWith(StatePath.ofAttribute('attr'), 'new', 'old');
+      expect(updateStateSpy).toHaveBeenCalledWith(attributePath('attr'), 'new', 'old');
     });
     it('updates the state with custom function', () => {
 
@@ -77,7 +77,7 @@ describe('feature/attributes/attribute-changed', () => {
       element.attributeChangedCallback('attr', 'old', 'new');
 
       expect(updateStateSpy).not.toHaveBeenCalled();
-      expect(updateSpy).toHaveBeenCalledWith(StatePath.ofAttribute('attr'), 'new', 'old');
+      expect(updateSpy).toHaveBeenCalledWith(attributePath('attr'), 'new', 'old');
       expect(updateSpy.mock.instances[0]).toBe(component);
     });
     it('updates the state with custom key', () => {

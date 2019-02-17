@@ -1,6 +1,7 @@
 import { noop } from 'call-thru';
 import { StatePath } from 'fun-events';
 import { ComponentContext } from '../../component';
+import { attributePath, attributePathRoot } from './attribute-path';
 import { AttributeChangedCallback, AttributeUpdateConsumer } from './attribute-registrar';
 
 /**
@@ -14,7 +15,7 @@ export function attributeStateUpdate<T extends object>(
   }
   if (updateState === true || typeof updateState === 'function') {
 
-    const key = StatePath.ofAttribute(name);
+    const key = attributePath(name);
     const update: AttributeUpdateConsumer<T> = updateState === true ? defaultUpdateState : updateState;
 
     return function (this: T, newValue, oldValue) {
@@ -28,7 +29,7 @@ export function attributeStateUpdate<T extends object>(
 
 function defaultUpdateState<T extends object>(
     this: T,
-    key: [typeof StatePath.attribute, string],
+    key: [typeof attributePathRoot, string],
     newValue: string,
     oldValue: string | null) {
   ComponentContext.of(this).updateState(key, newValue, oldValue);

@@ -1,6 +1,6 @@
 import { AIterable, overArray } from 'a-iterable';
 import { ContextKey, SingleContextKey } from 'context-values';
-import { DomEventDispatcher, EventInterest } from 'fun-events';
+import { DomEventDispatcher, noEventInterest } from 'fun-events';
 import { ComponentMount } from '../../component';
 import { BootstrapContext, BootstrapRoot, BootstrapWindow, ElementAdapter } from '../../kit';
 import { ShadowDomEvent } from '../shadow-dom';
@@ -18,7 +18,7 @@ export class ConnectTracker {
   }
 
   private readonly _adapter: ElementAdapter;
-  private _interest = EventInterest.none;
+  private _interest = noEventInterest();
   private _observer!: MutationObserver;
 
   constructor(private readonly _context: BootstrapContext) {
@@ -111,7 +111,7 @@ export class ConnectTracker {
   private _untrack() {
     this._observer.disconnect();
     this._interest.off();
-    this._interest = EventInterest.none;
+    this._interest = noEventInterest();
   }
 
 }
