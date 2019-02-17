@@ -4,6 +4,31 @@ import sourcemaps from 'rollup-plugin-sourcemaps';
 import typescript from 'rollup-plugin-typescript2';
 import pkg from './package.json';
 
+const mainConfig = makeConfig(
+    baseConfig('tsconfig.main.json'),
+    {
+      output: {
+        format: 'umd',
+        file: pkg.main,
+      },
+    });
+
+const esmConfig = makeConfig(
+    baseConfig('tsconfig.esm.json'),
+    {
+      output: {
+        file: pkg.module,
+      },
+    });
+
+const esm5Config = makeConfig(
+    baseConfig('tsconfig.umd.json'),
+    {
+      output: {
+        file: pkg.esm5,
+      },
+    });
+
 function makeConfig(baseConfig, ...configs) {
   return configs.reduce(
       (prev, config) => ({
@@ -21,7 +46,7 @@ function baseConfig(tsconfig) {
       commonjs(),
       typescript({
         typescript: require('typescript'),
-        tsconfig: tsconfig,
+        tsconfig,
         cacheRoot: 'target/.rts2_cache',
         useTsconfigDeclarationDir: true,
       }),
@@ -41,7 +66,7 @@ function baseConfig(tsconfig) {
       'tslib',
     ],
     output: {
-      format: 'umd',
+      format: 'esm',
       sourcemap: true,
       name: 'wesib',
       globals: {
@@ -55,43 +80,8 @@ function baseConfig(tsconfig) {
   };
 }
 
-const mainConfig = makeConfig(
-    baseConfig('tsconfig.main.json'),
-    {
-      output: {
-        file: pkg.main,
-      },
-    });
-
-const umdConfig = makeConfig(
-    baseConfig('tsconfig.umd.json'),
-    {
-      output: {
-        file: pkg.browser,
-      },
-    });
-
-const esmConfig = makeConfig(
-    baseConfig('tsconfig.esm.json'),
-    {
-      output: {
-        format: 'esm',
-        file: pkg.module,
-      },
-    });
-
-const esm5Config = makeConfig(
-    baseConfig('tsconfig.umd.json'),
-    {
-      output: {
-        format: 'esm',
-        file: pkg.esm5,
-      },
-    });
-
 export default [
   mainConfig,
-  umdConfig,
   esmConfig,
   esm5Config,
 ]

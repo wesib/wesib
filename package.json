@@ -18,7 +18,6 @@
     "url": "https://github.com/wesib/wesib/issues"
   },
   "main": "dist/wesib.js",
-  "browser": "dist/wesib.umd.js",
   "module": "dist/wesib.mjs",
   "esm5": "dist/wesib.esm5.js",
   "typings": "index.d.ts",
