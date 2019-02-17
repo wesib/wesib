@@ -1,4 +1,4 @@
-import { FeatureDef } from '../feature-def';
+import { FeatureDef, featureDefSymbol } from '../feature-def';
 import { AttributeChangedCallback, AttributeRegistrar } from './attribute-registrar';
 import { AttributeRegistry } from './attribute-registry';
 
@@ -39,7 +39,7 @@ const DEF: FeatureDef = {
  */
 export class AttributesSupport {
 
-  static get [FeatureDef.symbol](): FeatureDef {
+  static get [featureDefSymbol](): FeatureDef {
     return DEF;
   }
 

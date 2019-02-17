@@ -1,5 +1,5 @@
 import { StateUpdater } from '../../component';
-import { FeatureDef } from '../feature-def';
+import { FeatureDef, featureDefSymbol } from '../feature-def';
 import { ComponentState } from './component-state';
 
 const DEF: FeatureDef = {
@@ -28,7 +28,7 @@ const DEF: FeatureDef = {
  */
 export class StateSupport {
 
-  static get [FeatureDef.symbol](): FeatureDef {
+  static get [featureDefSymbol](): FeatureDef {
     return DEF;
   }
 

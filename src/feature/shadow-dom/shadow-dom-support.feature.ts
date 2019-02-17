@@ -1,5 +1,5 @@
 import { ComponentContext, componentContextSymbol, ComponentEventDispatcher } from '../../component';
-import { FeatureDef } from '../feature-def';
+import { FeatureDef, featureDefSymbol } from '../feature-def';
 import { ShadowDomEvent } from './shadow-dom-event';
 import { ShadowRootBuilder } from './shadow-root-builder';
 
@@ -16,7 +16,7 @@ const DEF: FeatureDef = {
  */
 export class ShadowDomSupport {
 
-  static get [FeatureDef.symbol](): FeatureDef {
+  static get [featureDefSymbol](): FeatureDef {
     return DEF;
   }
 
