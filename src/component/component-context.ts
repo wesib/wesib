@@ -1,11 +1,17 @@
-import { ContextValues } from 'context-values';
-import { DomEventDispatcher, DomEventProducer, EventProducer, StatePath, StateUpdater } from 'fun-events';
+import { ContextKey, ContextValues } from 'context-values';
+import { DomEventProducer, EventProducer, StatePath } from 'fun-events';
 import { bootstrapContextKey } from '../kit/bootstrap-context.key';
 import { ComponentClass } from './component-class';
 import { componentContextKey } from './component-context.key';
 import { componentEventDispatcherKey, componentEventProducerKey } from './component-event.key';
 import { ComponentMount } from './component-mount';
 import { contentRootKey } from './content-root.key';
+import { StateUpdater } from './state-updater';
+
+/**
+ * A key of a custom element and component properties containing a reference to component context.
+ */
+export const componentContextSymbol = /*#__PURE__*/ Symbol('component-context');
 
 /**
  * Component context.
@@ -20,14 +26,11 @@ import { contentRootKey } from './content-root.key';
 export abstract class ComponentContext<T extends object = object> extends ContextValues {
 
   /**
-   * A key of a custom element and component properties containing a reference to component context.
-   */
-  static readonly symbol = Symbol('component-context');
-
-  /**
    * A key of component context value containing the component context instance itself.
    */
-  static readonly key = componentContextKey;
+  static get key(): ContextKey<ComponentContext<any>> {
+    return componentContextKey;
+  }
 
   /**
    * Component class constructor.
@@ -109,13 +112,13 @@ export abstract class ComponentContext<T extends object = object> extends Contex
    *
    * @param element Custom element instance created for the component or the component itself.
    *
-   * @return Component context reference stored under `[ComponentContext.symbol]` key.
+   * @return Component context reference stored under `[componentContextSymbol]` key.
    *
    * @throws TypeError When the given `element` does not contain component context reference.
    */
   static of<T extends object>(element: any): ComponentContext<T> {
 
-    const context = element[ComponentContext.symbol];
+    const context = element[componentContextSymbol];
 
     if (!context) {
       throw TypeError(`No component context found in ${element}`);

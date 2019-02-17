@@ -19,11 +19,15 @@ import { ComponentContext } from '../../component';
  */
 export type ShadowRootBuilder = <T extends object>(context: ComponentContext<T>, init: ShadowRootInit) => ShadowRoot;
 
-export namespace ShadowRootBuilder {
+const KEY = /*#__PURE__*/ new SingleContextKey<ShadowRootBuilder>('shadow-root-builder');
+
+export const ShadowRootBuilder = {
 
   /**
    * A key of component context value containing a shadow root builder instance.
    */
-  export const key: ContextKey<ShadowRootBuilder> = new SingleContextKey('shadow-root-builder');
+  get key(): ContextKey<ShadowRootBuilder> {
+    return KEY;
+  }
 
-}
+};

@@ -1,6 +1,6 @@
 import { ContextRequest } from 'context-values';
 import { Class } from '../../common';
-import { ComponentClass, ComponentDef } from '../../component';
+import { ComponentClass, ComponentDef, componentDefSymbol } from '../../component';
 import { CustomElements } from '../../component/definition';
 import { ObjectMock } from '../../spec/mocks';
 import { BootstrapContext } from '../bootstrap-context';
@@ -44,7 +44,7 @@ describe('kit/definition/component-registry', () => {
     });
     beforeEach(() => {
       TestComponent = class {
-        static [ComponentDef.symbol]: ComponentDef = {
+        static [componentDefSymbol]: ComponentDef = {
           name: 'test-component',
         };
       };

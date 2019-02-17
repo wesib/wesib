@@ -2,8 +2,12 @@ import { ContextKey, SingleContextKey } from 'context-values';
 
 export type DomPropertyRegistrar = (propertyKey: PropertyKey, descriptor: PropertyDescriptor) => void;
 
-export namespace DomPropertyRegistrar {
+const KEY = /*#__PURE__*/ new SingleContextKey<DomPropertyRegistrar>('dom-property-registrar');
 
-  export const key: ContextKey<DomPropertyRegistrar> = new SingleContextKey('dom-property-registrar');
+export const DomPropertyRegistrar = {
 
-}
+  get key(): ContextKey<DomPropertyRegistrar> {
+    return KEY;
+  }
+
+};

@@ -1,7 +1,7 @@
-import { ContextKey, SingleContextKey } from 'context-values';
+import { SingleContextKey } from 'context-values';
 import { ComponentContext } from './component-context';
 
 /**
  * @internal
  */
-export const componentContextKey: ContextKey<ComponentContext<any>> = new SingleContextKey('component-context');
+export const componentContextKey = /*#__PURE__*/ new SingleContextKey<ComponentContext<any>>('component-context');

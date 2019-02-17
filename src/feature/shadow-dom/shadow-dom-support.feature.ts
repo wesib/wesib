@@ -1,19 +1,26 @@
-import { ComponentContext, ComponentEventDispatcher } from '../../component';
-import { Feature } from '../feature.decorator';
+import { ComponentContext, componentContextSymbol, ComponentEventDispatcher } from '../../component';
+import { FeatureDef, featureDefSymbol } from '../feature-def';
 import { ShadowDomEvent } from './shadow-dom-event';
 import { ShadowRootBuilder } from './shadow-root-builder';
+
+const DEF: FeatureDef = {
+  set: [
+    { a: ShadowRootBuilder, is: attachShadow },
+  ],
+};
 
 /**
  * Shadow root support feature.
  *
  * This feature is automatically enabled when `@AttachShadow()` decorator is used.
  */
-@Feature({
-  set: [
-    { a: ShadowRootBuilder, is: attachShadow },
-  ],
-})
-export class ShadowDomSupport {}
+export class ShadowDomSupport {
+
+  static get [featureDefSymbol](): FeatureDef {
+    return DEF;
+  }
+
+}
 
 function attachShadow(context: ComponentContext, init: ShadowRootInit): ShadowRoot {
 
@@ -21,7 +28,7 @@ function attachShadow(context: ComponentContext, init: ShadowRootInit): ShadowRo
   const shadowRoot = shadowRootOf(element, init);
 
   if (shadowRoot) {
-    (shadowRoot as any)[ComponentContext.symbol] = context;
+    (shadowRoot as any)[componentContextSymbol] = context;
     context.get(ComponentEventDispatcher)(context, new ShadowDomEvent('wesib:shadowAttached', { bubbles: true }));
     return shadowRoot;
   }

@@ -1,5 +1,5 @@
 import { ContextRegistry, ContextValues } from 'context-values';
-import { ComponentContext } from '../component';
+import { ComponentContext, componentContextSymbol } from '../component';
 import { ElementAdapter } from './element-adapter';
 import Mock = jest.Mock;
 
@@ -41,7 +41,7 @@ describe('kit/element-adapter', () => {
 
         const componentContextSpy: ComponentContext = { name: 'component context' } as any;
 
-        element[ComponentContext.symbol] = componentContextSpy;
+        element[componentContextSymbol] = componentContextSpy;
 
         expect(adapter(element)).toBe(componentContextSpy);
       });
@@ -75,7 +75,7 @@ describe('kit/element-adapter', () => {
 
         const componentContextSpy: ComponentContext = { name: 'component context' } as any;
 
-        element[ComponentContext.symbol] = componentContextSpy;
+        element[componentContextSymbol] = componentContextSpy;
 
         expect(adapter(element)).toBe(componentContextSpy);
         expect(adapter1).not.toHaveBeenCalled();

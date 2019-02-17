@@ -1,16 +1,20 @@
-import { SingleContextKey } from 'context-values';
+import { ContextKey, SingleContextKey } from 'context-values';
 import { Class, mergeFunctions } from '../../common';
 import { ComponentContext, ComponentMount } from '../../component';
 import { DefinitionContext } from '../../component/definition';
 import { BootstrapWindow } from '../../kit';
 import { AttributeChangedCallback } from './attribute-registrar';
 
+const KEY = /*#__PURE__*/ new SingleContextKey<AttributeRegistry<any>>('attribute-registry');
+
 /**
  * @internal
  */
 export class AttributeRegistry<T extends object> {
 
-  static readonly key = new SingleContextKey<AttributeRegistry<any>>('attribute-registry');
+  static get key(): ContextKey<AttributeRegistry<any>> {
+    return KEY;
+  }
 
   private readonly _MutationObserver: typeof MutationObserver;
   private readonly _attrs: { [name: string]: AttributeChangedCallback<T> } = {};

@@ -1,21 +1,28 @@
 import { noop } from 'call-thru';
 import { BootstrapWindow } from '../../kit';
-import { Feature } from '../feature.decorator';
+import { FeatureDef, featureDefSymbol } from '../feature-def';
 import { RenderScheduler as RenderScheduler_ } from './render-scheduler';
+
+const DEF: FeatureDef = {
+  forComponents: {
+    a: RenderScheduler_,
+    by: createRenderScheduler,
+    with: [BootstrapWindow],
+  },
+};
 
 /**
  * Rendering support feature.
  *
  * This feature is automatically enabled when `@Render` decorator is used.
  */
-@Feature({
-  forComponents: {
-    a: RenderScheduler_,
-    by: createRenderScheduler,
-    with: [BootstrapWindow],
+export class RenderSupport {
+
+  static get [featureDefSymbol](): FeatureDef {
+    return DEF;
   }
-})
-export class RenderSupport {}
+
+}
 
 function createRenderScheduler<T extends object>(window: BootstrapWindow) {
 

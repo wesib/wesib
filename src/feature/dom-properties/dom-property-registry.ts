@@ -2,12 +2,16 @@ import { ContextKey, SingleContextKey } from 'context-values';
 import { Class } from '../../common';
 import { ComponentMount } from '../../component';
 
+const KEY = /*#__PURE__*/ new SingleContextKey<DomPropertyRegistry>('dom-property-registry');
+
 /**
  * @internal
  */
 export class DomPropertyRegistry {
 
-  static readonly key: ContextKey<DomPropertyRegistry> = new SingleContextKey('dom-property-registry');
+  static get key(): ContextKey<DomPropertyRegistry> {
+    return KEY;
+  }
 
   private readonly _props = new Map<PropertyKey, PropertyDescriptor>();
 

@@ -7,14 +7,14 @@ import { ComponentEventDispatcher, ComponentEventProducer } from './component-ev
 /**
  * @internal
  */
-export const componentEventDispatcherKey = new SingleContextKey<ComponentEventDispatcher>(
+export const componentEventDispatcherKey = /*#__PURE__*/ new SingleContextKey<ComponentEventDispatcher>(
     'component-event-dispatcher',
     () => (context: ComponentContext<any>, event: Event) => context.element.dispatchEvent(event));
 
 /**
  * @internal
  */
-export const componentEventProducerKey = new SingleContextKey<ComponentEventProducer>(
+export const componentEventProducerKey = /*#__PURE__*/ new SingleContextKey<ComponentEventProducer>(
     'component-event-producer',
     (values: ContextValues) => {
 

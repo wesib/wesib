@@ -1,13 +1,8 @@
-import { Feature } from '../feature.decorator';
+import { FeatureDef, featureDefSymbol } from '../feature-def';
 import { DomPropertyRegistrar } from './dom-property-registrar';
 import { DomPropertyRegistry } from './dom-property-registry';
 
-/**
- * A feature adding properties to custom elements.
- *
- * This feature is enabled automatically whenever an `@DomProperty decorator applied to component.
- */
-@Feature({
+const DEF: FeatureDef = {
   forDefinitions: [
     { as: DomPropertyRegistry },
     {
@@ -33,6 +28,18 @@ import { DomPropertyRegistry } from './dom-property-registry';
         componentContext.get(DomPropertyRegistry).mount(mount);
       }
     });
+  },
+};
+
+/**
+ * A feature adding properties to custom elements.
+ *
+ * This feature is enabled automatically whenever an `@DomProperty decorator applied to component.
+ */
+export class DomPropertiesSupport {
+
+  static get [featureDefSymbol]() {
+    return DEF;
   }
-})
-export class DomPropertiesSupport {}
+
+}

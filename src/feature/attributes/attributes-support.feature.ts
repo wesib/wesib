@@ -1,14 +1,8 @@
-import { Feature } from '../feature.decorator';
+import { FeatureDef, featureDefSymbol } from '../feature-def';
 import { AttributeChangedCallback, AttributeRegistrar } from './attribute-registrar';
 import { AttributeRegistry } from './attribute-registry';
 
-/**
- * A feature adding attributes to custom elements.
- *
- * This feature is enabled automatically whenever an `@Attribute`, `@Attributes`, or `@AttributeChanged` decorator
- * applied to component.
- */
-@Feature({
+const DEF: FeatureDef = {
   forDefinitions: [
     { as: AttributeRegistry },
     {
@@ -35,5 +29,18 @@ import { AttributeRegistry } from './attribute-registry';
       }
     });
   },
-})
-export class AttributesSupport {}
+};
+
+/**
+ * A feature adding attributes to custom elements.
+ *
+ * This feature is enabled automatically whenever an `@Attribute`, `@Attributes`, or `@AttributeChanged` decorator
+ * applied to component.
+ */
+export class AttributesSupport {
+
+  static get [featureDefSymbol](): FeatureDef {
+    return DEF;
+  }
+
+}

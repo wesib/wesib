@@ -1,5 +1,19 @@
-import { StateTracker, StateUpdater } from 'fun-events';
-import { Feature } from '../feature.decorator';
+import { StateUpdater } from '../../component';
+import { FeatureDef, featureDefSymbol } from '../feature-def';
+import { ComponentState } from './component-state';
+
+const DEF: FeatureDef = {
+  forComponents: [
+    { as: ComponentState },
+    {
+      a: StateUpdater,
+      by(tracker: ComponentState) {
+        return tracker.update;
+      },
+      with: [ComponentState],
+    },
+  ],
+};
 
 /**
  * Component state support feature.
@@ -7,21 +21,15 @@ import { Feature } from '../feature.decorator';
  * When enabled, it registers context values for each component with the following keys:
  *
  * - `[StateUpdater.key]` that allows to update the component state, and
- * - `[StateTracker.key]` containing a `StateTracker` instance to track the state changes.
+ * - `[ComponentState.key]` containing a `ComponentState` instance to track the state changes.
  *
  * Other features would use this to notify when the state changes. E.g. `DomPropertiesSupport` and `AttributesSupport`
  * features issue state updates when needed.
  */
-@Feature({
-  forComponents: [
-    { as: StateTracker },
-    {
-      a: StateUpdater,
-      by(tracker: StateTracker) {
-        return tracker.update;
-      },
-      with: [StateTracker],
-    },
-  ],
-})
-export class StateSupport {}
+export class StateSupport {
+
+  static get [featureDefSymbol](): FeatureDef {
+    return DEF;
+  }
+
+}

@@ -1,5 +1,5 @@
-import { SingleContextKey } from 'context-values';
-import { StatePath } from 'fun-events';
+import { ContextKey, SingleContextKey } from 'context-values';
+import { attributePathRoot } from './attribute-path';
 
 /**
  * Custom element attribute change callback.
@@ -19,20 +19,24 @@ export type AttributeChangedCallback<T extends object = object> =
  *
  * @param <T> A type of component.
  * @param this Component instance.
- * @param path The changed attribute state path in the form of `[StatePath.attribute, attributeName]`.
+ * @param path The changed attribute state path in the form of `[attributePathRoot, attributeName]`.
  * @param newValue New attribute value.
  * @param oldValue Previous attribute value, or `null` if there were no value assigned.
  */
 export type AttributeUpdateConsumer<T extends object> = (
     this: T,
-    path: [typeof StatePath.attribute, string],
+    path: [typeof attributePathRoot, string],
     newValue: string,
     oldValue: string | null) => void;
 
 export type AttributeRegistrar<T extends object> = (name: string, callback: AttributeChangedCallback<T>) => void;
 
-export namespace AttributeRegistrar {
+const KEY = /*#__PURE__*/ new SingleContextKey<AttributeRegistrar<any>>('attribute-registrar');
 
-  export const key = new SingleContextKey<AttributeRegistrar<any>>('attribute-registrar');
+export const AttributeRegistrar = {
 
-}
+  get key(): ContextKey<AttributeRegistrar<any>> {
+    return KEY;
+  }
+
+};

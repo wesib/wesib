@@ -1,7 +1,7 @@
-import { ContextKey, SingleContextKey } from 'context-values';
+import { SingleContextKey } from 'context-values';
 import { BootstrapContext } from './bootstrap-context';
 
 /**
  * @internal
  */
-export const bootstrapContextKey: ContextKey<BootstrapContext> = new SingleContextKey('bootstrap-context');
+export const bootstrapContextKey = /*#__PURE__*/ new SingleContextKey<BootstrapContext>('bootstrap-context');

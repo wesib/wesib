@@ -1,4 +1,4 @@
-import { ComponentContext } from './component-context';
+import { ComponentContext, componentContextSymbol } from './component-context';
 
 describe('component/component-context', () => {
   describe('ComponentContext', () => {
@@ -10,14 +10,14 @@ describe('component/component-context', () => {
       beforeEach(() => {
         element = { name: 'HTML element' } as any;
         context = { name: 'component context' } as any;
-        (element as any)[ComponentContext.symbol] = context;
+        (element as any)[componentContextSymbol] = context;
       });
 
       it('extracts component context from custom element', () => {
         expect(ComponentContext.of(element)).toBe(context);
       });
       it('fails when there is no context defined', () => {
-        delete (element as any)[ComponentContext.symbol];
+        delete (element as any)[componentContextSymbol];
 
         expect(() => ComponentContext.of(element)).toThrowError(TypeError);
       });

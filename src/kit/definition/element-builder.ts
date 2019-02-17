@@ -5,7 +5,9 @@ import { ArraySet, Class, mergeFunctions } from '../../common';
 import {
   ComponentClass,
   ComponentContext as ComponentContext_,
-  ComponentDef, ComponentEvent,
+  componentContextSymbol,
+  ComponentDef,
+  ComponentEvent,
   ComponentMount as ComponentMount_,
 } from '../../component';
 import {
@@ -19,7 +21,7 @@ import { DefinitionValueRegistry } from './definition-value-registry';
 /**
  * Creates new component of the given type.
  *
- * It makes component context available under `[ComponentContext.symbol]` key in constructed component.
+ * It makes component context available under `[componentContextSymbol]` key in constructed component.
  * The component context is also available inside component constructor by temporarily assigning it to component
  * prototype.
  *
@@ -30,18 +32,18 @@ import { DefinitionValueRegistry } from './definition-value-registry';
 function newComponent<T extends object>(type: ComponentClass<T>, context: ComponentContext_<T>): T {
 
   const proto = type.prototype as any;
-  const prevContext = proto[ComponentContext_.symbol];
+  const prevContext = proto[componentContextSymbol];
 
-  proto[ComponentContext_.symbol] = context;
+  proto[componentContextSymbol] = context;
   try {
 
     const component = new type(context);
 
-    Object.defineProperty(component, ComponentContext_.symbol, { value: context });
+    Object.defineProperty(component, componentContextSymbol, { value: context });
 
     return component;
   } finally {
-    proto[ComponentContext_.symbol] = prevContext;
+    proto[componentContextSymbol] = prevContext;
   }
 }
 
@@ -101,7 +103,7 @@ export class ElementBuilder {
       }
 
       mountTo(element: any): ComponentMount_<T> {
-        if (element[ComponentContext_.symbol]) {
+        if (element[componentContextSymbol]) {
           throw new Error(`Element ${element} already bound to component`);
         }
 
@@ -228,7 +230,7 @@ export class ElementBuilder {
     class Element extends elementBaseClass {
 
       // Component context reference
-      [ComponentContext_.symbol]: ComponentContext_<T>;
+      [componentContextSymbol]: ComponentContext_<T>;
 
       private readonly [CONNECT]: ((value: boolean) => void);
       private [CONNECTED]: boolean;
@@ -315,7 +317,7 @@ export class ElementBuilder {
 
     valueRegistry.provide({ a: ComponentContext_, is: context });
 
-    Object.defineProperty(element, ComponentContext_.symbol, { value: context });
+    Object.defineProperty(element, componentContextSymbol, { value: context });
     Object.defineProperty(element, CONNECTED, { writable: true, value: false });
     Object.defineProperty(element, CONNECT, {
       value(value: boolean) {

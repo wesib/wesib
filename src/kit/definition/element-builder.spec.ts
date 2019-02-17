@@ -5,6 +5,7 @@ import {
   ComponentClass,
   ComponentContext,
   ComponentDef,
+  componentDefSymbol,
   ComponentEvent,
   ComponentEventDispatcher,
   ComponentMount,
@@ -46,7 +47,7 @@ describe('kit/definition/element-builder', () => {
 
     beforeEach(() => {
       TestComponent = class {
-        static [ComponentDef.symbol]: ComponentDef = {
+        static [componentDefSymbol]: ComponentDef = {
           name: 'test-component',
         };
       };
@@ -258,7 +259,7 @@ describe('kit/definition/element-builder', () => {
       it('can not access values of another component type', () => {
 
         class AnotherComponent {
-          static [ComponentDef.symbol]: ComponentDef = {
+          static [componentDefSymbol]: ComponentDef = {
             name: 'another-component',
             extend: {
               type: MockElement,

@@ -4,7 +4,7 @@ import { FeatureDef } from '../feature';
 import { BootstrapContext } from '../kit';
 import { ObjectMock } from '../spec/mocks';
 import { ComponentClass } from './component-class';
-import { ComponentDef } from './component-def';
+import { ComponentDef, componentDefSymbol } from './component-def';
 import { DefinitionContext } from './definition';
 
 describe('component/component-def', () => {
@@ -13,12 +13,12 @@ describe('component/component-def', () => {
       it('returns component definition', () => {
 
         class TestComponent {
-          static [ComponentDef.symbol]: ComponentDef = {
+          static [componentDefSymbol]: ComponentDef = {
             name: 'test-component',
           };
         }
 
-        expect(ComponentDef.of(TestComponent)).toEqual(TestComponent[ComponentDef.symbol]);
+        expect(ComponentDef.of(TestComponent)).toEqual(TestComponent[componentDefSymbol]);
       });
       it('returns empty definition when absent', () => {
 
@@ -30,20 +30,20 @@ describe('component/component-def', () => {
       it('requests inherited definition', () => {
 
         class A {
-          static [ComponentDef.symbol]: ComponentDef = {
+          static [componentDefSymbol]: ComponentDef = {
             name: 'test-component',
           };
         }
         class B extends A {}
 
-        expect(ComponentDef.of(B)).toEqual(A[ComponentDef.symbol]);
+        expect(ComponentDef.of(B)).toEqual(A[componentDefSymbol]);
       });
       it('merges with inherited definition', () => {
 
         class BaseA {}
         class BaseB {}
         class A {
-          static [ComponentDef.symbol]: ComponentDef = {
+          static [componentDefSymbol]: ComponentDef = {
             name: 'component-a',
             extend: {
               name: 'div',
@@ -52,7 +52,7 @@ describe('component/component-def', () => {
           };
         }
         class B extends A {
-          static [ComponentDef.symbol]: ComponentDef = {
+          static [componentDefSymbol]: ComponentDef = {
             name: 'component-b',
             extend: {
               name: 'span',
@@ -62,7 +62,7 @@ describe('component/component-def', () => {
         }
 
         expect<any>(ComponentDef.of(B))
-            .toEqual(ComponentDef.merge(A[ComponentDef.symbol], B[ComponentDef.symbol]));
+            .toEqual(ComponentDef.merge(A[componentDefSymbol], B[componentDefSymbol]));
       });
     });
     describe('merge', () => {

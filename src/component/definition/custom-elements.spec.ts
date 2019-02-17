@@ -4,7 +4,7 @@ import { BootstrapContext, BootstrapWindow } from '../../kit';
 import { ComponentRegistry } from '../../kit/definition/component-registry';
 import { MethodSpy } from '../../spec/mocks';
 import { ComponentClass } from '../component-class';
-import { ComponentDef } from '../component-def';
+import { ComponentDef, componentDefSymbol } from '../component-def';
 import { CustomElements } from './custom-elements';
 
 describe('kit/custom-elements', () => {
@@ -44,7 +44,7 @@ describe('kit/custom-elements', () => {
 
     beforeEach(() => {
       TestComponent = class {
-        static [ComponentDef.symbol]: ComponentDef = {
+        static [componentDefSymbol]: ComponentDef = {
           name: 'test-component',
         };
       };

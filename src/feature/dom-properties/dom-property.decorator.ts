@@ -3,6 +3,7 @@ import { decoratePropertyAccessor, PropertyAccessorDescriptor, TypedPropertyDeco
 import { Component, ComponentClass, ComponentContext, ComponentDef } from '../../component';
 import { FeatureDef } from '../feature-def';
 import { DomPropertiesSupport } from './dom-properties-support.feature';
+import { domPropertyPathRoot } from './dom-property-path';
 import { DomPropertyRegistrar } from './dom-property-registrar';
 import { propertyStateUpdate } from './property-state-update';
 
@@ -131,13 +132,13 @@ export namespace DomProperty {
  * @param <T> A type of component.
  * @param <K> A type of component property keys.
  * @param this Component instance.
- * @param path The changed property state path in the form of `[StatePath.property, propertyKey]`.
+ * @param path The changed property state path in the form of `[domPropertyPathRoot, propertyKey]`.
  * @param newValue New property value.
  * @param oldValue Previous property value.
  */
 export type DomPropertyUpdateConsumer<T extends object> = <K extends keyof T>(
     this: T,
-    path: [typeof StatePath.property, K],
+    path: [typeof domPropertyPathRoot, K],
     newValue: T[K],
     oldValue: T[K]) => void;
 

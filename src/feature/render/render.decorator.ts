@@ -1,8 +1,7 @@
-import { StateTracker } from 'fun-events';
 import { TypedPropertyDecorator } from '../../common';
 import { ComponentClass, ComponentDef } from '../../component';
 import { FeatureDef } from '../feature-def';
-import { StateSupport } from '../state';
+import { ComponentState, StateSupport } from '../state';
 import { RenderScheduler } from './render-scheduler';
 import { RenderSupport } from './render-support.feature';
 
@@ -30,7 +29,7 @@ export function Render<T extends ComponentClass>(): TypedPropertyDecorator<T> {
               compContext.whenReady(() => {
 
                 const component = compContext.component as any;
-                const stateTracker = compContext.get(StateTracker);
+                const stateTracker = compContext.get(ComponentState);
                 const renderScheduler = compContext.get(RenderScheduler);
 
                 stateTracker.onUpdate(() => {
