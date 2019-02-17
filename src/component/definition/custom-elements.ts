@@ -4,6 +4,55 @@ import { BootstrapWindow } from '../../kit';
 import { ComponentClass } from '../component-class';
 import { ComponentDef } from '../component-def';
 
+/**
+ * Custom elements registry.
+ *
+ * This is used to register custom elements.
+ *
+ * Typically implemented by `window.customElements`.
+ */
+export abstract class CustomElements {
+
+  /**
+   * A key of bootstrap context value containing a `CustomElements` instance used to register custom
+   * elements.
+   *
+   * Target value defaults to `window.customElements` from the window provided under `[BootstrapWindow.key]`.
+   */
+  static get key(): ContextKey<CustomElements> {
+    return KEY; // tslint:disable-line:no-use-before-declare
+  }
+
+  /**
+   * Defines custom element.
+   *
+   * @param componentTypeOrName A component class constructor or custom element name.
+   * @param elementType A constructor of custom element to define.
+   */
+  abstract define(componentTypeOrName: ComponentClass<any> | string, elementType: Class<any>): void;
+
+  /**
+   * Allows to wait for component definition.
+   *
+   * This corresponds to `window.customElements.whenDefined()` method.
+   *
+   * @param componentTypeOrName Component class constructor or custom element name.
+   *
+   * @return A promise that is resolved when custom element is registered.
+   *
+   * @throws TypeError If `componentType` does not contain a component definition.
+   */
+  abstract whenDefined(componentTypeOrName: ComponentClass<any> | string): Promise<void>;
+
+}
+
+const COMPONENT_RESOLVER = Symbol('component-resolver');
+
+function componentResolver(componentType: ComponentClass): PromiseResolver<void> {
+  return (componentType as any)[COMPONENT_RESOLVER]
+      || ((componentType as any)[COMPONENT_RESOLVER] = new PromiseResolver());
+}
+
 const KEY = /*#__PURE__*/ new SingleContextKey<CustomElements>(
     'custom-elements',
     values => {
@@ -57,52 +106,3 @@ const KEY = /*#__PURE__*/ new SingleContextKey<CustomElements>(
 
       return new WindowCustomElements();
     });
-
-/**
- * Custom elements registry.
- *
- * This is used to register custom elements.
- *
- * Typically implemented by `window.customElements`.
- */
-export abstract class CustomElements {
-
-  /**
-   * A key of bootstrap context value containing a `CustomElements` instance used to register custom
-   * elements.
-   *
-   * Target value defaults to `window.customElements` from the window provided under `[BootstrapWindow.key]`.
-   */
-  static get key(): ContextKey<CustomElements> {
-    return KEY;
-  }
-
-  /**
-   * Defines custom element.
-   *
-   * @param componentTypeOrName A component class constructor or custom element name.
-   * @param elementType A constructor of custom element to define.
-   */
-  abstract define(componentTypeOrName: ComponentClass<any> | string, elementType: Class<any>): void;
-
-  /**
-   * Allows to wait for component definition.
-   *
-   * This corresponds to `window.customElements.whenDefined()` method.
-   *
-   * @param componentTypeOrName Component class constructor or custom element name.
-   *
-   * @return A promise that is resolved when custom element is registered.
-   *
-   * @throws TypeError If `componentType` does not contain a component definition.
-   */
-  abstract whenDefined(componentTypeOrName: ComponentClass<any> | string): Promise<void>;
-
-}
-
-const COMPONENT_RESOLVER = Symbol('component-resolver');
-
-function componentResolver(componentType: ComponentClass): PromiseResolver<void> {
-  return (componentType as any)[COMPONENT_RESOLVER]
-      || ((componentType as any)[COMPONENT_RESOLVER] = new PromiseResolver());
-}
