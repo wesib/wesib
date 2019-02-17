@@ -4,6 +4,60 @@ import { BootstrapWindow } from '../../kit';
 import { ComponentClass } from '../component-class';
 import { ComponentDef } from '../component-def';
 
+const KEY = /*#__PURE__*/ new SingleContextKey<CustomElements>(
+    'custom-elements',
+    values => {
+
+      const customElements = values.get(BootstrapWindow).customElements;
+
+      class WindowCustomElements extends CustomElements {
+
+        define(componentTypeOrName: ComponentClass<any> | string, elementType: Class): void {
+          if (typeof componentTypeOrName === 'string') {
+            customElements.define(componentTypeOrName, elementType);
+            return;
+          }
+
+          const def = ComponentDef.of(componentTypeOrName);
+
+          if (!def.name) {
+            componentResolver(componentTypeOrName).resolve(undefined);
+            return; // Anonymous component.
+          }
+
+          const ext = def.extend;
+
+          if (ext && ext.name) {
+            customElements.define(
+                def.name,
+                elementType,
+                {
+                  extends: ext.name,
+                });
+          } else {
+            customElements.define(def.name, elementType);
+          }
+        }
+
+        whenDefined(componentTypeOrName: ComponentClass<any> | string): Promise<void> {
+          if (typeof componentTypeOrName === 'string') {
+            return customElements.whenDefined(componentTypeOrName);
+          }
+
+          const def = ComponentDef.of(componentTypeOrName);
+
+          if (!def.name) {
+            return componentResolver(componentTypeOrName).promise;
+          }
+
+          return customElements.whenDefined(def.name);
+        }
+
+      }
+
+      return new WindowCustomElements();
+    });
+
 /**
  * Custom elements registry.
  *
@@ -19,59 +73,9 @@ export abstract class CustomElements {
    *
    * Target value defaults to `window.customElements` from the window provided under `[BootstrapWindow.key]`.
    */
-  static readonly key: ContextKey<CustomElements> = new SingleContextKey<CustomElements>(
-      'custom-elements',
-      values => {
-
-        const customElements = values.get(BootstrapWindow).customElements;
-
-        class WindowCustomElements extends CustomElements {
-
-          define(componentTypeOrName: ComponentClass<any> | string, elementType: Class): void {
-            if (typeof componentTypeOrName === 'string') {
-              customElements.define(componentTypeOrName, elementType);
-              return;
-            }
-
-            const def = ComponentDef.of(componentTypeOrName);
-
-            if (!def.name) {
-              componentResolver(componentTypeOrName).resolve(undefined);
-              return; // Anonymous component.
-            }
-
-            const ext = def.extend;
-
-            if (ext && ext.name) {
-              customElements.define(
-                  def.name,
-                  elementType,
-                  {
-                    extends: ext.name,
-                  });
-            } else {
-              customElements.define(def.name, elementType);
-            }
-          }
-
-          whenDefined(componentTypeOrName: ComponentClass<any> | string): Promise<void> {
-            if (typeof componentTypeOrName === 'string') {
-              return customElements.whenDefined(componentTypeOrName);
-            }
-
-            const def = ComponentDef.of(componentTypeOrName);
-
-            if (!def.name) {
-              return componentResolver(componentTypeOrName).promise;
-            }
-
-            return customElements.whenDefined(def.name);
-          }
-
-        }
-
-        return new WindowCustomElements();
-      });
+  static get key(): ContextKey<CustomElements> {
+    return KEY;
+  }
 
   /**
    * Defines custom element.

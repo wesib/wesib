@@ -1,4 +1,4 @@
-import { ContextValues } from 'context-values';
+import { ContextKey, ContextValues } from 'context-values';
 import { DomEventProducer, EventProducer, StatePath } from 'fun-events';
 import { bootstrapContextKey } from '../kit/bootstrap-context.key';
 import { ComponentClass } from './component-class';
@@ -28,7 +28,9 @@ export abstract class ComponentContext<T extends object = object> extends Contex
   /**
    * A key of component context value containing the component context instance itself.
    */
-  static readonly key = componentContextKey;
+  static get key(): ContextKey<ComponentContext<any>> {
+    return componentContextKey;
+  }
 
   /**
    * Component class constructor.

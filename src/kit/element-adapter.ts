@@ -20,42 +20,35 @@ import { ComponentContext } from '../component';
  */
 export type ElementAdapter = (element: any) => ComponentContext<any> | undefined;
 
-export namespace ElementAdapter {
+class Key extends AbstractContextKey<ElementAdapter> {
 
-  class Key extends AbstractContextKey<ElementAdapter> {
-
-    constructor() {
-      super('element-adapter');
-    }
-
-    merge(
-        context: ContextValues,
-        sources: ContextSources<ElementAdapter>,
-        handleDefault: DefaultContextValueHandler<ElementAdapter>): ElementAdapter | null | undefined {
-
-      const result = sources.reduce(
-          (prev, adapter) => (element: any) => prev(element) || adapter(element),
-          defaultElementAdapter);
-
-      return result !== defaultElementAdapter ? result : handleDefault(() => defaultElementAdapter);
-    }
-
+  constructor() {
+    super('element-adapter');
   }
 
-  /**
-   * A key of bootstrap context value containing an element adapter.
-   *
-   * Multiple adapters can be registered. They are consulted in order of their registration, until one of them
-   * return a `ComponentContext`.
-   *
-   * The registered adapters won't be called for elements with components bound to them.
-   *
-   * Bootstrap context always contains an element adapter. By default it returns a context of a component bound to the
-   * given element, if any.
-   */
-  export const key: ContextKey<ElementAdapter> = new Key();
+  merge(
+      context: ContextValues,
+      sources: ContextSources<ElementAdapter>,
+      handleDefault: DefaultContextValueHandler<ElementAdapter>): ElementAdapter | null | undefined {
+
+    const result = sources.reduce(
+        (prev, adapter) => (element: any) => prev(element) || adapter(element),
+        defaultElementAdapter);
+
+    return result !== defaultElementAdapter ? result : handleDefault(() => defaultElementAdapter);
+  }
 
 }
+
+const KEY = /*#__PURE__*/ new Key();
+
+export const ElementAdapter = {
+
+  get key(): ContextKey<ElementAdapter> {
+    return KEY;
+  }
+
+};
 
 function defaultElementAdapter(element: any): ComponentContext<any> | undefined {
   return element[ComponentContext.symbol];

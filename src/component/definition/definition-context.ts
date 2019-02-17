@@ -18,7 +18,9 @@ export abstract class DefinitionContext<T extends object = object> extends Conte
   /**
    * A key of definition context value containing the definition context itself.
    */
-  static readonly key: ContextKey<DefinitionContext<any>> = definitionContextKey;
+  static get key(): ContextKey<DefinitionContext<any>> {
+    return definitionContextKey;
+  }
 
   /**
    * Component class constructor.

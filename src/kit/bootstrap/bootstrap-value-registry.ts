@@ -1,4 +1,4 @@
-import { ContextRegistry, ContextSources, ContextSourcesProvider, ContextTarget, ContextValues } from 'context-values';
+import { ContextRegistry, ContextValues } from 'context-values';
 import { BootstrapContext } from '../bootstrap-context';
 
 /**

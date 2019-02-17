@@ -6,14 +6,17 @@ import { BootstrapWindow } from './bootstrap-window';
  */
 export type BootstrapRoot = any;
 
-export namespace BootstrapRoot {
+const KEY = /*#__PURE__*/ new SingleContextKey('bootstrap-root', ctx => ctx.get(BootstrapWindow).document.body);
+
+export const BootstrapRoot = {
 
   /**
    * A key of bootstrap context value containing a bootstrap root.
    *
    * Target value defaults to document body of `BootstrapWindow`.
    */
-  export const key: ContextKey<BootstrapRoot> =
-      new SingleContextKey('bootstrap-root', ctx => ctx.get(BootstrapWindow).document.body);
+  get key(): ContextKey<BootstrapRoot> {
+    return KEY;
+  }
 
-}
+};

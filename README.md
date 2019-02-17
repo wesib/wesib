@@ -262,8 +262,8 @@ export class MyComponent {
 ```
 
 However, the component state update notification is no-op by default. To enable state tracking changes
-a `StateSupport` feature must be enabled. Then a `StateTracker` instance will be available in component context.
-The state tracker allows to subscribe for component state updates.
+a `StateSupport` feature must be enabled. Then a `ComponentState` instance will be available in component context.
+The component state allows to track the component state updates.
 
 
 Shadow DOM

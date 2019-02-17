@@ -5,13 +5,17 @@ import { ContextKey, SingleContextKey } from 'context-values';
  */
 export type BootstrapWindow = Window;
 
-export namespace BootstrapWindow {
+const KEY = /*#__PURE__*/ new SingleContextKey('window', () => window);
+
+export const BootstrapWindow = {
 
   /**
    * A key of bootstrap context value containing a window instance the bootstrap is performed against.
    *
    * Target value defaults to current window.
    */
-  export const key: ContextKey<BootstrapWindow> = new SingleContextKey('window', () => window);
+  get key(): ContextKey<BootstrapWindow> {
+    return KEY;
+  }
 
-}
+};

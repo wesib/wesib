@@ -3,6 +3,8 @@ import { Class } from '../../common';
 import { ComponentClass } from '../component-class';
 import { ComponentMount } from '../component-mount';
 
+const KEY = /*#__PURE__*/ new SingleContextKey<ComponentFactory<any>>('component-factory');
+
 /**
  * A factory of components of particular type.
  */
@@ -11,7 +13,9 @@ export abstract class ComponentFactory<C extends object = object> {
   /**
    * A key of definition context value containing a component factory.
    */
-  static readonly key: ContextKey<ComponentFactory<any>> = new SingleContextKey('component-factory');
+  static get key(): ContextKey<ComponentFactory<any>> {
+    return KEY;
+  }
 
   /**
    * Component class constructor.
