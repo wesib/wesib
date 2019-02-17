@@ -1,4 +1,4 @@
-import { ComponentContext } from './component-context';
+import { ComponentContext, componentContextSymbol } from './component-context';
 import { ComponentEvent } from './component-event';
 
 describe('component/component-event', () => {
@@ -9,7 +9,7 @@ describe('component/component-event', () => {
 
     beforeEach(() => {
       componentContext = { name: 'component context' } as any;
-      element = { [ComponentContext.symbol]: componentContext };
+      element = { [componentContextSymbol]: componentContext };
     });
 
     let event: ComponentEvent;

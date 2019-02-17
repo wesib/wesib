@@ -9,6 +9,11 @@ import { contentRootKey } from './content-root.key';
 import { StateUpdater } from './state-updater';
 
 /**
+ * A key of a custom element and component properties containing a reference to component context.
+ */
+export const componentContextSymbol = /*#__PURE__*/ Symbol('component-context');
+
+/**
  * Component context.
  *
  * Passed to component constructor as its only parameter.
@@ -19,11 +24,6 @@ import { StateUpdater } from './state-updater';
  * @param <T> A type of component.
  */
 export abstract class ComponentContext<T extends object = object> extends ContextValues {
-
-  /**
-   * A key of a custom element and component properties containing a reference to component context.
-   */
-  static readonly symbol = Symbol('component-context');
 
   /**
    * A key of component context value containing the component context instance itself.
@@ -112,13 +112,13 @@ export abstract class ComponentContext<T extends object = object> extends Contex
    *
    * @param element Custom element instance created for the component or the component itself.
    *
-   * @return Component context reference stored under `[ComponentContext.symbol]` key.
+   * @return Component context reference stored under `[componentContextSymbol]` key.
    *
    * @throws TypeError When the given `element` does not contain component context reference.
    */
   static of<T extends object>(element: any): ComponentContext<T> {
 
-    const context = element[ComponentContext.symbol];
+    const context = element[componentContextSymbol];
 
     if (!context) {
       throw TypeError(`No component context found in ${element}`);

@@ -1,4 +1,4 @@
-import { ComponentContext, ComponentEventDispatcher } from '../../component';
+import { ComponentContext, componentContextSymbol, ComponentEventDispatcher } from '../../component';
 import { FeatureDef } from '../feature-def';
 import { ShadowDomEvent } from './shadow-dom-event';
 import { ShadowRootBuilder } from './shadow-root-builder';
@@ -28,7 +28,7 @@ function attachShadow(context: ComponentContext, init: ShadowRootInit): ShadowRo
   const shadowRoot = shadowRootOf(element, init);
 
   if (shadowRoot) {
-    (shadowRoot as any)[ComponentContext.symbol] = context;
+    (shadowRoot as any)[componentContextSymbol] = context;
     context.get(ComponentEventDispatcher)(context, new ShadowDomEvent('wesib:shadowAttached', { bubbles: true }));
     return shadowRoot;
   }

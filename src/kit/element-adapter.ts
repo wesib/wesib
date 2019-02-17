@@ -5,7 +5,7 @@ import {
   ContextValues,
   DefaultContextValueHandler,
 } from 'context-values';
-import { ComponentContext } from '../component';
+import { ComponentContext, componentContextSymbol } from '../component';
 
 /**
  * Element adapter is a function able to convert a raw element to component. E.g. mount a component to it.
@@ -51,5 +51,5 @@ export const ElementAdapter = {
 };
 
 function defaultElementAdapter(element: any): ComponentContext<any> | undefined {
-  return element[ComponentContext.symbol];
+  return element[componentContextSymbol];
 }
