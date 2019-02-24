@@ -44,6 +44,9 @@ const KEY = /*#__PURE__*/ new Key();
 
 export const ElementAdapter = {
 
+  /**
+   * A key of bootstrap context value containing an `ElementAdapter` instance.
+   */
   get key(): ContextKey<ElementAdapter> {
     return KEY;
   }
