@@ -1,3 +1,4 @@
+import { noop } from 'call-thru';
 import { ContextValueSpec } from 'context-values';
 import { EventProducer } from 'fun-events';
 import { Class } from '../../common';
@@ -28,11 +29,10 @@ export function bootstrapComponents(...features: Class[]): ComponentKit_ {
 
   features.forEach(feature => featureRegistry.add(feature));
 
-  const { componentRegistry, bootstrapContext } = initBootstrap(valueRegistry);
+  const { bootstrapContext, complete } = initBootstrap(valueRegistry);
 
   featureRegistry.bootstrap(bootstrapContext);
-
-  componentRegistry.complete();
+  complete();
 
   return bootstrapContext.get(ComponentKit_);
 }
@@ -43,6 +43,8 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
   let componentValueRegistry: ComponentValueRegistry;
   let elementBuilder: ElementBuilder;
   let componentRegistry: ComponentRegistry;
+  let whenReady: (this: BootstrapContext_) => void = noop;
+  let ready = false;
 
   class ComponentKit extends ComponentKit_ {
 
@@ -82,13 +84,30 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
       componentValueRegistry.provide(spec);
     }
 
+    whenReady(callback: (this: BootstrapContext_) => void): void {
+      if (ready) {
+        callback.call(this);
+      } else {
+
+        const prev = whenReady;
+
+        whenReady = function () {
+          prev.call(this);
+          callback.call(this);
+        };
+      }
+    }
+
   }
 
   const bootstrapContext = new BootstrapContext();
 
   return {
-    // @ts-ignore
-    componentRegistry,
     bootstrapContext,
+    complete() {
+      componentRegistry.complete();
+      ready = true;
+      whenReady.call(bootstrapContext);
+    },
   };
 }

@@ -93,4 +93,15 @@ export abstract class BootstrapContext extends ContextValues {
    */
   abstract forComponents<D extends any[], S>(spec: ContextValueSpec<ComponentContext<any>, any, D, S>): void;
 
+  /**
+   * Registers bootstrap readiness callback.
+   *
+   * The registered callback function will be called once bootstrap is complete.
+   *
+   * If bootstrap is complete already, the callback will be notified immediately.
+   *
+   * @param callback A callback to notify on bootstrap completion.
+   */
+  abstract whenReady(callback: (this: this) => void): void;
+
 }

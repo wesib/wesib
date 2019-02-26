@@ -151,9 +151,11 @@ describe('kit/bootstrap/bootstrap-components', () => {
       }
 
       let bootstrapContext: BootstrapContext;
+      let whenReady: Mock;
       let kit: ComponentKit;
 
       beforeEach(() => {
+        whenReady = jest.fn();
         createBootstrapValueRegistrySpy.mockRestore();
         bootstrapContext = undefined!;
 
@@ -165,6 +167,8 @@ describe('kit/bootstrap/bootstrap-components', () => {
                 {
                   init(ctx) {
                     bootstrapContext = ctx;
+                    bootstrapContext.whenReady(whenReady);
+                    expect(whenReady).not.toHaveBeenCalled();
                   }
                 }));
       });
@@ -234,6 +238,20 @@ describe('kit/bootstrap/bootstrap-components', () => {
         bootstrapContext.get(someKey, opts);
 
         expect(spy).toHaveBeenCalledWith(someKey, { or: 'default' });
+      });
+      describe('whenReady()', () => {
+        it('invokes callback once bootstrap is complete', () => {
+          expect(whenReady).toHaveBeenCalledWith();
+          expect(whenReady.mock.instances[0]).toBe(bootstrapContext);
+        });
+        it('invokes callback immediately when bootstrap is complete already', () => {
+
+          const callback = jest.fn();
+
+          bootstrapContext.whenReady(callback);
+          expect(callback).toHaveBeenCalledWith();
+          expect(callback.mock.instances[0]).toBe(bootstrapContext);
+        });
       });
     });
   });
