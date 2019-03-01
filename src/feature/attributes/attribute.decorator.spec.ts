@@ -1,4 +1,4 @@
-import { Component, ComponentContext, componentContextSymbol } from '../../component';
+import { Component, ComponentContext, ComponentContext__symbol } from '../../component';
 import { ObjectMock } from '../../spec/mocks';
 import { Attribute } from './attribute.decorator';
 
@@ -24,7 +24,7 @@ describe('feature/attributes/attribute.decorator', () => {
       @Component('test-component')
       class TestComponent {
 
-        [componentContextSymbol] = contextSpy;
+        [ComponentContext__symbol] = contextSpy;
 
         @Attribute()
         attr!: string;
@@ -45,7 +45,7 @@ describe('feature/attributes/attribute.decorator', () => {
       @Component('test-component')
       class TestComponent {
 
-        [componentContextSymbol] = contextSpy;
+        [ComponentContext__symbol] = contextSpy;
 
         @Attribute()
         get attr(): string {

@@ -1,6 +1,6 @@
 import { StatePath } from 'fun-events';
 import { ComponentContext } from '../../component';
-import { domPropertyPath, domPropertyPathRoot } from './dom-property-path';
+import { domPropertyPath, domPropertyPath__root } from './dom-property-path';
 import { DomPropertyUpdateConsumer } from './dom-property.decorator';
 
 /**
@@ -33,7 +33,7 @@ export function propertyStateUpdate<T extends object>(
 
 function defaultUpdateState<T extends object, K extends keyof T>(
     this: T,
-    path: [typeof domPropertyPathRoot, K],
+    path: [typeof domPropertyPath__root, K],
     newValue: T[K],
     oldValue: T[K]) {
   ComponentContext.of(this).updateState(path, newValue, oldValue);

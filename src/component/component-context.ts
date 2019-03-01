@@ -11,7 +11,7 @@ import { StateUpdater } from './state-updater';
 /**
  * A key of a custom element and component properties containing a reference to component context.
  */
-export const componentContextSymbol = /*#__PURE__*/ Symbol('component-context');
+export const ComponentContext__symbol = /*#__PURE__*/ Symbol('component-context');
 
 /**
  * Component context.
@@ -118,7 +118,7 @@ export abstract class ComponentContext<T extends object = object> extends Contex
    */
   static of<T extends object>(element: any): ComponentContext<T> {
 
-    const context = element[componentContextSymbol];
+    const context = element[ComponentContext__symbol];
 
     if (!context) {
       throw TypeError(`No component context found in ${element}`);

@@ -1,4 +1,4 @@
-import { FeatureDef, featureDefSymbol } from '../feature-def';
+import { FeatureDef, FeatureDef__symbol } from '../feature-def';
 import { ConnectTracker } from './connect-tracker';
 
 const DEF: FeatureDef = {
@@ -19,7 +19,7 @@ const DEF: FeatureDef = {
  */
 export class AutoConnectSupport {
 
-  static get [featureDefSymbol](): FeatureDef {
+  static get [FeatureDef__symbol](): FeatureDef {
     return DEF;
   }
 

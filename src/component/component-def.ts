@@ -3,18 +3,17 @@ import { ArraySet, Class, mergeFunctions, MetaAccessor } from '../common';
 import { FeatureDef } from '../feature';
 import { ComponentClass } from './component-class';
 import { ComponentContext } from './component-context';
-import { DefinitionContext } from './definition';
-import { ElementDef } from './definition/element-def';
+import { DefinitionContext, ElementDef } from './definition';
 
 /**
  * A key of a property holding a component definition within its class constructor.
  */
-export const componentDefSymbol = /*#__PURE__*/ Symbol('component-def');
+export const ComponentDef__symbol = /*#__PURE__*/ Symbol('component-def');
 
 class ComponentMeta extends MetaAccessor<ComponentDef<any>> {
 
   constructor() {
-    super(componentDefSymbol);
+    super(ComponentDef__symbol);
   }
 
   merge<T extends object>(...defs: ComponentDef<T>[]): ComponentDef<T> {

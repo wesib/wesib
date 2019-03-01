@@ -7,12 +7,12 @@ import { BootstrapContext } from '../kit';
 /**
  * A key of a property holding a feature definition within its class constructor.
  */
-export const featureDefSymbol = /*#__PURE__*/ Symbol('feature-def');
+export const FeatureDef__symbol = /*#__PURE__*/ Symbol('feature-def');
 
 class FeatureMeta extends MetaAccessor<FeatureDef> {
 
   constructor() {
-    super(featureDefSymbol);
+    super(FeatureDef__symbol);
   }
 
   merge(...defs: FeatureDef[]): FeatureDef {

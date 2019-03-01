@@ -5,7 +5,7 @@ import { ContextKey, SingleContextKey } from 'context-values';
  */
 export type BootstrapWindow = Window;
 
-const KEY = /*#__PURE__*/ new SingleContextKey('window', () => window);
+const BootstrapWindow__key = /*#__PURE__*/ new SingleContextKey('window', () => window);
 
 export const BootstrapWindow = {
 
@@ -15,7 +15,7 @@ export const BootstrapWindow = {
    * Target value defaults to current window.
    */
   get key(): ContextKey<BootstrapWindow> {
-    return KEY;
+    return BootstrapWindow__key;
   }
 
 };

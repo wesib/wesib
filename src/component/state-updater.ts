@@ -7,7 +7,7 @@ import { StateConsumer } from 'fun-events';
  */
 export type StateUpdater = StateConsumer;
 
-const KEY = /*#__PURE__*/ new SingleContextKey('state-updater', () => noop);
+const StateUpdater__key = /*#__PURE__*/ new SingleContextKey('state-updater', () => noop);
 
 export const StateUpdater = {
 
@@ -20,7 +20,7 @@ export const StateUpdater = {
    * Note that this value is not provided, unless the `StateSupport` feature is enabled.
    */
   get key(): ContextKey<StateUpdater> {
-    return KEY;
+    return StateUpdater__key;
   }
 
 };

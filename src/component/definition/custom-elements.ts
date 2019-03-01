@@ -46,11 +46,11 @@ export abstract class CustomElements {
 
 }
 
-const COMPONENT_RESOLVER = /*#__PURE__*/ Symbol('component-resolver');
+const ComponentResolver__symbol = /*#__PURE__*/ Symbol('component-resolver');
 
 function componentResolver(componentType: ComponentClass): PromiseResolver<void> {
-  return (componentType as any)[COMPONENT_RESOLVER]
-      || ((componentType as any)[COMPONENT_RESOLVER] = new PromiseResolver());
+  return (componentType as any)[ComponentResolver__symbol]
+      || ((componentType as any)[ComponentResolver__symbol] = new PromiseResolver());
 }
 
 const KEY = /*#__PURE__*/ new SingleContextKey<CustomElements>(

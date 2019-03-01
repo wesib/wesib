@@ -2,7 +2,7 @@ import { noop } from 'call-thru';
 import { ContextValueSpec, SingleContextKey } from 'context-values';
 import { Class } from '../common';
 import { BootstrapContext } from '../kit';
-import { FeatureDef, featureDefSymbol } from './feature-def';
+import { FeatureDef, FeatureDef__symbol } from './feature-def';
 
 describe('feature/feature-def', () => {
 
@@ -14,10 +14,10 @@ describe('feature/feature-def', () => {
       it('extracts feature definition', () => {
 
         class TestFeature {
-          static [featureDefSymbol]: FeatureDef = { name: 'feature definition' } as any;
+          static [FeatureDef__symbol]: FeatureDef = { name: 'feature definition' } as any;
         }
 
-        expect(FeatureDef.of(TestFeature)).toBe(TestFeature[featureDefSymbol]);
+        expect(FeatureDef.of(TestFeature)).toBe(TestFeature[FeatureDef__symbol]);
       });
       it('builds empty feature definition if it is absent', () => {
 
@@ -28,29 +28,29 @@ describe('feature/feature-def', () => {
       it('requests inherited definition', () => {
 
         class A {
-          static [featureDefSymbol]: FeatureDef = {
+          static [FeatureDef__symbol]: FeatureDef = {
             need: Feature1,
           };
         }
         class B extends A {}
 
-        expect(FeatureDef.of(B)).toEqual(A[featureDefSymbol]);
+        expect(FeatureDef.of(B)).toEqual(A[FeatureDef__symbol]);
       });
       it('merges with inherited definition', () => {
 
         class A {
-          static [featureDefSymbol]: FeatureDef = {
+          static [FeatureDef__symbol]: FeatureDef = {
             need: Feature1,
           };
         }
         class B extends A {
-          static [featureDefSymbol]: FeatureDef = {
+          static [FeatureDef__symbol]: FeatureDef = {
             need: Feature2,
           };
         }
 
         expect<any>(FeatureDef.of(B))
-            .toEqual(FeatureDef.merge(A[featureDefSymbol], B[featureDefSymbol]));
+            .toEqual(FeatureDef.merge(A[FeatureDef__symbol], B[FeatureDef__symbol]));
       });
     });
     describe('merge', () => {

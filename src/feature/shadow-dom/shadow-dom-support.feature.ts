@@ -1,5 +1,5 @@
-import { ComponentContext, componentContextSymbol, ComponentEventDispatcher } from '../../component';
-import { FeatureDef, featureDefSymbol } from '../feature-def';
+import { ComponentContext, ComponentContext__symbol, ComponentEventDispatcher } from '../../component';
+import { FeatureDef, FeatureDef__symbol } from '../feature-def';
 import { ShadowDomEvent } from './shadow-dom-event';
 import { ShadowRootBuilder } from './shadow-root-builder';
 
@@ -16,7 +16,7 @@ const DEF: FeatureDef = {
  */
 export class ShadowDomSupport {
 
-  static get [featureDefSymbol](): FeatureDef {
+  static get [FeatureDef__symbol](): FeatureDef {
     return DEF;
   }
 
@@ -28,7 +28,7 @@ function attachShadow(context: ComponentContext, init: ShadowRootInit): ShadowRo
   const shadowRoot = shadowRootOf(element, init);
 
   if (shadowRoot) {
-    (shadowRoot as any)[componentContextSymbol] = context;
+    (shadowRoot as any)[ComponentContext__symbol] = context;
     context.get(ComponentEventDispatcher)(context, new ShadowDomEvent('wesib:shadowAttached', { bubbles: true }));
     return shadowRoot;
   }

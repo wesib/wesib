@@ -5,7 +5,7 @@ import { ArraySet, Class, mergeFunctions } from '../../common';
 import {
   ComponentClass,
   ComponentContext as ComponentContext_,
-  componentContextSymbol,
+  ComponentContext__symbol,
   ComponentDef,
   ComponentEvent,
   ComponentMount as ComponentMount_,
@@ -31,23 +31,23 @@ import { DefinitionValueRegistry } from './definition-value-registry';
 function newComponent<T extends object>(type: ComponentClass<T>, context: ComponentContext_<T>): T {
 
   const proto = type.prototype as any;
-  const prevContext = proto[componentContextSymbol];
+  const prevContext = proto[ComponentContext__symbol];
 
-  proto[componentContextSymbol] = context;
+  proto[ComponentContext__symbol] = context;
   try {
 
     const component = new type(context);
 
-    Object.defineProperty(component, componentContextSymbol, { value: context });
+    Object.defineProperty(component, ComponentContext__symbol, { value: context });
 
     return component;
   } finally {
-    proto[componentContextSymbol] = prevContext;
+    proto[ComponentContext__symbol] = prevContext;
   }
 }
 
-const CONNECTED = Symbol('connected');
-const CONNECT = Symbol('connect');
+const connected__symbol = /*#__PURE__*/ Symbol('connected');
+const connect__symbol = /*#__PURE__*/ Symbol('connect');
 
 /**
  * @internal
@@ -106,7 +106,7 @@ export class ElementBuilder {
       }
 
       mountTo(element: any): ComponentMount_<T> {
-        if (element[componentContextSymbol]) {
+        if (element[ComponentContext__symbol]) {
           throw new Error(`Element ${element} already bound to component`);
         }
 
@@ -127,14 +127,14 @@ export class ElementBuilder {
               }
 
               get connected() {
-                return element[CONNECTED];
+                return element[connected__symbol];
               }
 
               set connected(value: boolean) {
                 if (this.connected === value) {
                   return;
                 }
-                element[CONNECT](value);
+                element[connect__symbol](value);
               }
 
               checkConnected(): boolean {
@@ -233,10 +233,10 @@ export class ElementBuilder {
     class Element extends elementDef.extend.type {
 
       // Component context reference
-      [componentContextSymbol]: ComponentContext_<T>;
+      [ComponentContext__symbol]: ComponentContext_<T>;
 
-      private readonly [CONNECT]: ((value: boolean) => void);
-      private [CONNECTED]: boolean;
+      private readonly [connect__symbol]: ((value: boolean) => void);
+      private [connected__symbol]: boolean;
 
       constructor() {
         super();
@@ -258,12 +258,12 @@ export class ElementBuilder {
 
       // noinspection JSUnusedGlobalSymbols
       connectedCallback() {
-        this[CONNECT](true);
+        this[connect__symbol](true);
       }
 
       // noinspection JSUnusedGlobalSymbols
       disconnectedCallback() {
-        this[CONNECT](false);
+        this[connect__symbol](false);
       }
 
     }
@@ -307,7 +307,7 @@ export class ElementBuilder {
       }
 
       get connected() {
-        return element[CONNECTED];
+        return element[connected__symbol];
       }
 
       whenReady(callback: (this: ComponentContext, component: T) => void) {
@@ -320,11 +320,11 @@ export class ElementBuilder {
 
     valueRegistry.provide({ a: ComponentContext_, is: context });
 
-    Object.defineProperty(element, componentContextSymbol, { value: context });
-    Object.defineProperty(element, CONNECTED, { writable: true, value: false });
-    Object.defineProperty(element, CONNECT, {
+    Object.defineProperty(element, ComponentContext__symbol, { value: context });
+    Object.defineProperty(element, connected__symbol, { writable: true, value: false });
+    Object.defineProperty(element, connect__symbol, {
       value(value: boolean) {
-        this[CONNECTED] = value;
+        this[connected__symbol] = value;
         (value ? connectEvents : disconnectEvents).notify(context);
       },
     });

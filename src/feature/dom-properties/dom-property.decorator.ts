@@ -3,7 +3,7 @@ import { decoratePropertyAccessor, PropertyAccessorDescriptor, TypedPropertyDeco
 import { Component, ComponentClass, ComponentContext, ComponentDef } from '../../component';
 import { FeatureDef } from '../feature-def';
 import { DomPropertiesSupport } from './dom-properties-support.feature';
-import { domPropertyPathRoot } from './dom-property-path';
+import { domPropertyPath__root } from './dom-property-path';
 import { DomPropertyRegistrar } from './dom-property-registrar';
 import { propertyStateUpdate } from './property-state-update';
 
@@ -138,7 +138,7 @@ export namespace DomProperty {
  */
 export type DomPropertyUpdateConsumer<T extends object> = <K extends keyof T>(
     this: T,
-    path: [typeof domPropertyPathRoot, K],
+    path: [typeof domPropertyPath__root, K],
     newValue: T[K],
     oldValue: T[K]) => void;
 

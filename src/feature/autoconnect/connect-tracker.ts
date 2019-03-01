@@ -5,8 +5,8 @@ import { ComponentMount } from '../../component';
 import { BootstrapContext, BootstrapRoot, BootstrapWindow, ElementAdapter } from '../../kit';
 import { ShadowDomEvent } from '../shadow-dom';
 
-const SHADOW_CONNECT_TRACKER = /*#__PURE__*/ Symbol('shadow-connect-tracker');
-const KEY = /*#__PURE__*/ new SingleContextKey<ConnectTracker>('connect-tracker');
+const shadowConnectTracker__symbol = /*#__PURE__*/ Symbol('shadow-connect-tracker');
+const ConnectTracker__key = /*#__PURE__*/ new SingleContextKey<ConnectTracker>('connect-tracker');
 
 /**
  * @internal
@@ -14,7 +14,7 @@ const KEY = /*#__PURE__*/ new SingleContextKey<ConnectTracker>('connect-tracker'
 export class ConnectTracker {
 
   static get key(): ContextKey<ConnectTracker> {
-    return KEY;
+    return ConnectTracker__key;
   }
 
   private readonly _adapter: ElementAdapter;
@@ -77,14 +77,14 @@ export class ConnectTracker {
   }
 
   private _trackShadow(shadowRoot: ShadowRoot) {
-    if ((shadowRoot as any)[SHADOW_CONNECT_TRACKER]) {
+    if ((shadowRoot as any)[shadowConnectTracker__symbol]) {
       // Already tracked
       return;
     }
 
     const shadowTracker = new ConnectTracker(this._context);
 
-    (shadowRoot as any)[SHADOW_CONNECT_TRACKER] = shadowTracker;
+    (shadowRoot as any)[shadowConnectTracker__symbol] = shadowTracker;
 
     shadowTracker.track(shadowRoot);
   }
@@ -100,10 +100,10 @@ export class ConnectTracker {
 
   private _untrackShadow(shadowRoot: ShadowRoot) {
 
-    const shadowTracker: ConnectTracker = (shadowRoot as any)[SHADOW_CONNECT_TRACKER];
+    const shadowTracker: ConnectTracker = (shadowRoot as any)[shadowConnectTracker__symbol];
 
     if (shadowTracker) {
-      delete (shadowRoot as any)[SHADOW_CONNECT_TRACKER];
+      delete (shadowRoot as any)[shadowConnectTracker__symbol];
       shadowTracker._untrack();
     }
   }

@@ -1,6 +1,6 @@
 import { noop } from 'call-thru';
 import { BootstrapWindow } from '../../kit';
-import { FeatureDef, featureDefSymbol } from '../feature-def';
+import { FeatureDef, FeatureDef__symbol } from '../feature-def';
 import { RenderScheduler as RenderScheduler_ } from './render-scheduler';
 
 const DEF: FeatureDef = {
@@ -18,7 +18,7 @@ const DEF: FeatureDef = {
  */
 export class RenderSupport {
 
-  static get [featureDefSymbol](): FeatureDef {
+  static get [FeatureDef__symbol](): FeatureDef {
     return DEF;
   }
 

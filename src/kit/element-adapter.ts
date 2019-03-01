@@ -5,7 +5,7 @@ import {
   ContextValues,
   DefaultContextValueHandler,
 } from 'context-values';
-import { ComponentContext, componentContextSymbol } from '../component';
+import { ComponentContext, ComponentContext__symbol } from '../component';
 
 /**
  * Element adapter is a function able to convert a raw element to component. E.g. mount a component to it.
@@ -40,7 +40,7 @@ class Key extends AbstractContextKey<ElementAdapter> {
 
 }
 
-const KEY = /*#__PURE__*/ new Key();
+const ElementAdapter__key = /*#__PURE__*/ new Key();
 
 export const ElementAdapter = {
 
@@ -48,11 +48,11 @@ export const ElementAdapter = {
    * A key of bootstrap context value containing an `ElementAdapter` instance.
    */
   get key(): ContextKey<ElementAdapter> {
-    return KEY;
+    return ElementAdapter__key;
   }
 
 };
 
 function defaultElementAdapter(element: any): ComponentContext<any> | undefined {
-  return element[componentContextSymbol];
+  return element[ComponentContext__symbol];
 }

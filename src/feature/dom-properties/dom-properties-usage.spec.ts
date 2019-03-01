@@ -2,7 +2,7 @@ import { StatePath } from 'fun-events';
 import { Component, ComponentClass, ComponentContext } from '../../component';
 import { ComponentFactory } from '../../component/definition';
 import { MockElement, testComponentFactory, testElement } from '../../spec/test-element';
-import { domPropertyPathRoot } from './dom-property-path';
+import { domPropertyPath__root } from './dom-property-path';
 import { DomMethod, DomProperty } from './dom-property.decorator';
 import Mock = jest.Mock;
 
@@ -112,7 +112,7 @@ describe('feature/dom-properties', () => {
 
         element.writableProperty = 1;
 
-        expect(updateStateSpy).toHaveBeenCalledWith([domPropertyPathRoot, 'writableProperty'], 1, 11);
+        expect(updateStateSpy).toHaveBeenCalledWith([domPropertyPath__root, 'writableProperty'], 1, 11);
       });
       it('reads component field', () => {
         expect(element.field).toBe('initial');
@@ -127,7 +127,7 @@ describe('feature/dom-properties', () => {
 
         element.field = 'new';
 
-        expect(updateStateSpy).toHaveBeenCalledWith([domPropertyPathRoot, 'field'], 'new', 'initial');
+        expect(updateStateSpy).toHaveBeenCalledWith([domPropertyPath__root, 'field'], 'new', 'initial');
       });
       it('does not update the component state when disabled', () => {
 
@@ -146,7 +146,7 @@ describe('feature/dom-properties', () => {
 
         expect(element.customStateUpdatingField).toEqual(19);
         expect(updateStateSpy).not.toHaveBeenCalled();
-        expect(customUpdateStateSpy).toHaveBeenCalledWith([domPropertyPathRoot, 'customStateUpdatingField'], 19, 91);
+        expect(customUpdateStateSpy).toHaveBeenCalledWith([domPropertyPath__root, 'customStateUpdatingField'], 19, 91);
         expect(customUpdateStateSpy.mock.instances[0]).toBe(ComponentContext.of(element).component);
       });
       it('updates the component state with custom path', () => {

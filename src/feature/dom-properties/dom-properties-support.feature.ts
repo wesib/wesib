@@ -1,4 +1,4 @@
-import { FeatureDef, featureDefSymbol } from '../feature-def';
+import { FeatureDef, FeatureDef__symbol } from '../feature-def';
 import { DomPropertyRegistrar } from './dom-property-registrar';
 import { DomPropertyRegistry } from './dom-property-registry';
 
@@ -38,7 +38,7 @@ const DEF: FeatureDef = {
  */
 export class DomPropertiesSupport {
 
-  static get [featureDefSymbol]() {
+  static get [FeatureDef__symbol]() {
     return DEF;
   }
 
