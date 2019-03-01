@@ -26,6 +26,46 @@ describe('feature/attributes/attributes', () => {
 
       expect(updateStateSpy).toHaveBeenCalledWith([attributePathRoot, 'attr'], 'new', 'old');
     });
+    it('updates the state when listed', () => {
+
+      @Component({
+        name: 'test-component',
+        extend: {
+          type: MockElement,
+        }
+      })
+      @Attributes([
+        'attr',
+      ])
+      class TestComponent {
+      }
+
+      const element = new (testElement(TestComponent));
+      const updateStateSpy = jest.spyOn(ComponentContext.of(element), 'updateState');
+
+      element.attributeChangedCallback('attr', 'old', 'new');
+
+      expect(updateStateSpy).toHaveBeenCalledWith([attributePathRoot, 'attr'], 'new', 'old');
+    });
+    it('updates the state when single', () => {
+
+      @Component({
+        name: 'test-component',
+        extend: {
+          type: MockElement,
+        }
+      })
+      @Attributes('attr')
+      class TestComponent {
+      }
+
+      const element = new (testElement(TestComponent));
+      const updateStateSpy = jest.spyOn(ComponentContext.of(element), 'updateState');
+
+      element.attributeChangedCallback('attr', 'old', 'new');
+
+      expect(updateStateSpy).toHaveBeenCalledWith([attributePathRoot, 'attr'], 'new', 'old');
+    });
     it('updates the state with custom function', () => {
 
       const updateSpy = jest.fn();

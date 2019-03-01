@@ -11,13 +11,13 @@ import { AttributesSupport } from './attributes-support.feature';
  *
  * This decorator automatically enables `AttributesSupport` feature.
  *
- * @param opts Attributes definition options.
+ * @param opts Attributes definition options. Either an attribute definition item, or an array of such items.
  *
  * @return New component class decorator.
  */
-export function Attributes<
-    T extends ComponentClass = any,
-    E extends HTMLElement = HTMLElement>(opts: Attributes.Opts<T>): TypedClassDecorator<T> {
+export function Attributes<T extends ComponentClass = any>(
+    opts: Attributes.Item<T> | Attributes.Item<T>[]):
+    TypedClassDecorator<T> {
   return componentType => {
     FeatureDef.define(componentType, { need: AttributesSupport });
     ComponentDef.define(
@@ -27,9 +27,21 @@ export function Attributes<
 
             const registrar = defContext.get(AttributeRegistrar);
 
-            Object.keys(opts).forEach(name => {
-              registrar(name, attributeStateUpdate(name, opts[name]));
-            });
+            if (Array.isArray(opts)) {
+              opts.forEach(defineByItem);
+            } else {
+              defineByItem(opts);
+            }
+
+            function defineByItem(item: Attributes.Item<T>) {
+              if (typeof item === 'string') {
+                registrar(item, attributeStateUpdate(item));
+              } else {
+                Object.keys(item).forEach(name => {
+                  registrar(name, attributeStateUpdate(name, item[name]));
+                });
+              }
+            }
           },
         });
   };
@@ -38,7 +50,14 @@ export function Attributes<
 export namespace Attributes {
 
   /**
-   * Attributes definition options.
+   * Attribute definition item.
+   *
+   * This is either an attribute name, or a per-attribute options map.
+   */
+  export type Item<T extends object> = Map<T> | string;
+
+  /**
+   * Per-attribute definition options.
    *
    * This is a map with attribute names as keys and their state update instructions as values.
    *
@@ -48,7 +67,7 @@ export namespace Attributes {
    * - a state value key to update, or
    * - an attribute update consumer function with custom state update logic.
    */
-  export interface Opts<T extends object> {
+  export interface Map<T extends object> {
     [name: string]: boolean | StatePath | AttributeUpdateConsumer<T>;
   }
 
