@@ -1,10 +1,10 @@
 import { ContextKey, SingleContextKey } from 'context-values';
-import { componentContextKey } from './component-context.key';
+import { ComponentContext__key } from './component-context.key';
 import { ContentRoot } from './content-root';
 
 /**
  * @internal
  */
-export const contentRootKey: ContextKey<ContentRoot> = new SingleContextKey(
+export const ContentRoot__key: ContextKey<ContentRoot> = new SingleContextKey(
     'content-root',
-    ctx => ctx.get(componentContextKey).element);
+    ctx => ctx.get(ComponentContext__key).element);

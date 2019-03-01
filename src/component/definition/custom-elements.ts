@@ -1,8 +1,8 @@
 import { ContextKey, SingleContextKey } from 'context-values';
 import { Class, PromiseResolver } from '../../common';
 import { BootstrapWindow } from '../../kit';
+import { componentFactoryOf } from '../../kit/definition/component-factory.symbol';
 import { ComponentClass } from '../component-class';
-import { ComponentDef } from '../component-def';
 
 /**
  * Custom elements registry.
@@ -46,7 +46,7 @@ export abstract class CustomElements {
 
 }
 
-const COMPONENT_RESOLVER = Symbol('component-resolver');
+const COMPONENT_RESOLVER = /*#__PURE__*/ Symbol('component-resolver');
 
 function componentResolver(componentType: ComponentClass): PromiseResolver<void> {
   return (componentType as any)[COMPONENT_RESOLVER]
@@ -67,24 +67,22 @@ const KEY = /*#__PURE__*/ new SingleContextKey<CustomElements>(
             return;
           }
 
-          const def = ComponentDef.of(componentTypeOrName);
+          const factory = componentFactoryOf(componentTypeOrName);
+          const { name, extend } = factory.elementDef;
 
-          if (!def.name) {
+          if (!name) {
             componentResolver(componentTypeOrName).resolve(undefined);
             return; // Anonymous component.
           }
-
-          const ext = def.extend;
-
-          if (ext && ext.name) {
+          if (extend && extend.name) {
             customElements.define(
-                def.name,
+                name,
                 elementType,
                 {
-                  extends: ext.name,
+                  extends: extend.name,
                 });
           } else {
-            customElements.define(def.name, elementType);
+            customElements.define(name, elementType);
           }
         }
 
@@ -93,13 +91,14 @@ const KEY = /*#__PURE__*/ new SingleContextKey<CustomElements>(
             return customElements.whenDefined(componentTypeOrName);
           }
 
-          const def = ComponentDef.of(componentTypeOrName);
+          const factory = componentFactoryOf(componentTypeOrName);
+          const { name } = factory.elementDef;
 
-          if (!def.name) {
+          if (!name) {
             return componentResolver(componentTypeOrName).promise;
           }
 
-          return customElements.whenDefined(def.name);
+          return customElements.whenDefined(name);
         }
 
       }

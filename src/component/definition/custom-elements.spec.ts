@@ -1,10 +1,11 @@
 import { ContextRegistry } from 'context-values';
 import { Class } from '../../common';
 import { BootstrapContext, BootstrapWindow } from '../../kit';
+import { ComponentFactory__symbol } from '../../kit/definition/component-factory.symbol';
 import { ComponentRegistry } from '../../kit/definition/component-registry';
 import { MethodSpy } from '../../spec/mocks';
 import { ComponentClass } from '../component-class';
-import { ComponentDef, componentDefSymbol } from '../component-def';
+import { ComponentFactory } from './component-factory';
 import { CustomElements } from './custom-elements';
 
 describe('kit/custom-elements', () => {
@@ -44,8 +45,15 @@ describe('kit/custom-elements', () => {
 
     beforeEach(() => {
       TestComponent = class {
-        static [componentDefSymbol]: ComponentDef = {
-          name: 'test-component',
+        static [ComponentFactory__symbol]: Partial<ComponentFactory> = {
+          elementDef: {
+            name: 'test-component',
+            extend: {
+              get type() {
+                return elementType;
+              },
+            }
+          },
         };
       };
 
@@ -66,9 +74,16 @@ describe('kit/custom-elements', () => {
       it('does not define custom element for anonymous component', () => {
 
         class AnonymousComponent {
+          static [ComponentFactory__symbol]: Partial<ComponentFactory> = {
+            elementDef: {
+              extend: {
+                get type() {
+                  return elementType;
+                },
+              },
+            },
+          };
         }
-
-        ComponentDef.define(AnonymousComponent);
 
         customElements.define(AnonymousComponent, elementType);
 
@@ -77,13 +92,23 @@ describe('kit/custom-elements', () => {
       it('defines custom element extending another one', () => {
 
         class BaseElement {
+          static [ComponentFactory__symbol]: Partial<ComponentFactory> = {
+            elementDef: {
+              extend: {
+                type: BaseElement,
+              }
+            },
+          };
         }
 
-        ComponentDef.define(TestComponent, {
-          extend: {
-            type: BaseElement,
-          }
-        });
+        (TestComponent as any)[ComponentFactory__symbol] = {
+          elementDef: {
+            name: 'test-component',
+            extend: {
+              type: BaseElement,
+            },
+          },
+        };
 
         customElements.define(TestComponent, elementType);
 
@@ -94,12 +119,15 @@ describe('kit/custom-elements', () => {
         class BaseElement {
         }
 
-        ComponentDef.define(TestComponent, {
-          extend: {
-            name: 'input',
-            type: BaseElement,
-          }
-        });
+        (TestComponent as any)[ComponentFactory__symbol] = {
+          elementDef: {
+            name: 'test-component',
+            extend: {
+              name: 'input',
+              type: BaseElement,
+            },
+          },
+        };
 
         customElements.define(TestComponent, elementType);
 
@@ -131,8 +159,16 @@ describe('kit/custom-elements', () => {
       it('waits for anonymous component definition', async () => {
 
         class AnonymousComponent {
+          static [ComponentFactory__symbol]: Partial<ComponentFactory> = {
+            elementDef: {
+              extend: {
+                get type() {
+                  return elementType;
+                },
+              },
+            },
+          };
         }
-        ComponentDef.define(AnonymousComponent);
 
         class Element {
         }

@@ -12,8 +12,7 @@ import {
 } from '../../component';
 import {
   ComponentFactory as ComponentFactory_,
-  DefinitionContext as DefinitionContext_,
-  ElementBaseClass,
+  DefinitionContext as DefinitionContext_, ElementDef,
 } from '../../component/definition';
 import { ComponentValueRegistry } from './component-value-registry';
 import { DefinitionValueRegistry } from './definition-value-registry';
@@ -102,6 +101,10 @@ export class ElementBuilder {
         return definitionContext.elementType;
       }
 
+      get elementDef() {
+        return definitionContext.elementDef;
+      }
+
       mountTo(element: any): ComponentMount_<T> {
         if (element[componentContextSymbol]) {
           throw new Error(`Element ${element} already bound to component`);
@@ -162,7 +165,7 @@ export class ElementBuilder {
 
       readonly componentType: ComponentClass<T> = componentType;
       readonly onComponent = onComponent.on;
-      readonly get: <V, S>(key: ContextKey<V, S>, defaultValue: V | null | undefined) => V | null | undefined;
+      readonly get: <V, S>(key: ContextKey<V, S>, defaultValue?: V | null | undefined) => V | null | undefined;
 
       constructor() {
         super();
@@ -225,9 +228,9 @@ export class ElementBuilder {
       valueRegistry: ComponentValueRegistry) {
 
     const builder = this;
-    const elementBaseClass = definitionContext.get(ElementBaseClass);
+    const elementDef = definitionContext.get(ElementDef);
 
-    class Element extends elementBaseClass {
+    class Element extends elementDef.extend.type {
 
       // Component context reference
       [componentContextSymbol]: ComponentContext_<T>;

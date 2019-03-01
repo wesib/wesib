@@ -4,6 +4,7 @@ import { FeatureDef } from '../feature';
 import { ComponentClass } from './component-class';
 import { ComponentContext } from './component-context';
 import { DefinitionContext } from './definition';
+import { ElementDef } from './definition/element-def';
 
 /**
  * A key of a property holding a component definition within its class constructor.
@@ -64,7 +65,7 @@ export abstract class ComponentDef<T extends object = object> {
   /**
    * Existing element to extend by custom one.
    */
-  abstract extend?: ExtendedElementDef;
+  abstract extend?: ElementDef.Extend;
 
   /**
    * Definition context values to declare prior to component class definition.
@@ -145,23 +146,4 @@ export abstract class ComponentDef<T extends object = object> {
           },
         });
   }
-}
-
-/**
- * The definition of element to extend by custom one.
- */
-export interface ExtendedElementDef {
-
-  /**
-   * The class constructor of element to extend.
-   */
-  type: Class;
-
-  /**
-   * The name of element to extend.
-   *
-   * This is to support `as` attribute of standard HTML element. Note that this is not supported by polyfills.
-   */
-  name?: string;
-
 }

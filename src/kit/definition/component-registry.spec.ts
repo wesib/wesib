@@ -4,7 +4,8 @@ import { ComponentClass, ComponentDef, componentDefSymbol } from '../../componen
 import { CustomElements } from '../../component/definition';
 import { ObjectMock } from '../../spec/mocks';
 import { BootstrapContext } from '../bootstrap-context';
-import { COMPONENT_FACTORY, ComponentRegistry } from './component-registry';
+import { ComponentFactory__symbol } from './component-factory.symbol';
+import { ComponentRegistry } from './component-registry';
 import { ElementBuilder } from './element-builder';
 
 describe('kit/definition/component-registry', () => {
@@ -72,7 +73,7 @@ describe('kit/definition/component-registry', () => {
 
         class Element {}
 
-        (TestComponent as any)[COMPONENT_FACTORY] = { elementType: Element, componentType: TestComponent };
+        (TestComponent as any)[ComponentFactory__symbol] = { elementType: Element, componentType: TestComponent };
 
         customElementsSpy.whenDefined.mockReturnValue(Promise.resolve());
 

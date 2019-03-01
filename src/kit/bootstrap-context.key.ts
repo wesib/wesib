@@ -4,4 +4,4 @@ import { BootstrapContext } from './bootstrap-context';
 /**
  * @internal
  */
-export const bootstrapContextKey = /*#__PURE__*/ new SingleContextKey<BootstrapContext>('bootstrap-context');
+export const BootstrapContext__key = /*#__PURE__*/ new SingleContextKey<BootstrapContext>('bootstrap-context');

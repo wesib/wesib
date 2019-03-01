@@ -10,7 +10,7 @@ import {
   ComponentEventDispatcher,
   ComponentMount,
 } from '../../component';
-import { ComponentFactory, DefinitionContext, ElementBaseClass } from '../../component/definition';
+import { ComponentFactory, DefinitionContext, ElementDef } from '../../component/definition';
 import { FnMock, ObjectMock } from '../../spec/mocks';
 import { MockElement } from '../../spec/test-element';
 import { BootstrapContext } from '../bootstrap-context';
@@ -65,7 +65,16 @@ describe('kit/definition/element-builder', () => {
         expect(builder.buildElement(TestComponent)).toBeInstanceOf(ComponentFactory);
       });
       it('builds custom element', () => {
-        expect(builder.buildElement(TestComponent).elementType.prototype).toBeInstanceOf(HTMLElement);
+
+        const factory = builder.buildElement(TestComponent);
+
+        expect(factory.elementType.prototype).toBeInstanceOf(HTMLElement);
+        expect(factory.elementDef).toEqual({
+          name: 'test-component',
+          extend: {
+            type: HTMLElement,
+          },
+        });
       });
       it('extends HTML element', () => {
         ComponentDef.define(TestComponent, {
@@ -75,7 +84,16 @@ describe('kit/definition/element-builder', () => {
           },
         });
 
-        expect(builder.buildElement(TestComponent).elementType.prototype).toBeInstanceOf(HTMLInputElement);
+        const factory = builder.buildElement(TestComponent);
+
+        expect(factory.elementType.prototype).toBeInstanceOf(HTMLInputElement);
+        expect(factory.elementDef).toEqual({
+          name: 'test-component',
+          extend: {
+            name: 'input',
+            type: HTMLInputElement,
+          },
+        });
       });
     });
 
@@ -425,7 +443,7 @@ describe('kit/definition/element-builder', () => {
         });
       });
       beforeEach(() => {
-        definitionValueRegistry.provide({ a: ElementBaseClass, is: Object });
+        definitionValueRegistry.provide({ a: ElementDef, is: { extend: { type: Object } } });
       });
       beforeEach(() => {
 

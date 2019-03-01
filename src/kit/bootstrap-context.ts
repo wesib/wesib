@@ -2,7 +2,7 @@ import { ContextKey, ContextValues, ContextValueSpec } from 'context-values';
 import { EventProducer } from 'fun-events';
 import { ComponentClass, ComponentContext } from '../component';
 import { ComponentFactory, DefinitionContext } from '../component/definition';
-import { bootstrapContextKey } from './bootstrap-context.key';
+import { BootstrapContext__key } from './bootstrap-context.key';
 import { ComponentKit } from './component-kit';
 
 /**
@@ -19,7 +19,7 @@ export abstract class BootstrapContext extends ContextValues {
    * A key of bootstrap context value containing the bootstrap context itself.
    */
   static get key(): ContextKey<BootstrapContext> {
-    return bootstrapContextKey;
+    return BootstrapContext__key;
   }
 
   /**

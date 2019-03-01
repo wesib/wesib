@@ -1,11 +1,11 @@
 import { ContextKey, ContextValues } from 'context-values';
 import { DomEventProducer, EventProducer, StatePath } from 'fun-events';
-import { bootstrapContextKey } from '../kit/bootstrap-context.key';
+import { BootstrapContext__key } from '../kit/bootstrap-context.key';
 import { ComponentClass } from './component-class';
-import { componentContextKey } from './component-context.key';
-import { componentEventDispatcherKey, componentEventProducerKey } from './component-event.key';
+import { ComponentContext__key } from './component-context.key';
+import { ComponentEventDispatcher__key, ComponentEventProducer__key } from './component-event.key';
 import { ComponentMount } from './component-mount';
-import { contentRootKey } from './content-root.key';
+import { ContentRoot__key } from './content-root.key';
 import { StateUpdater } from './state-updater';
 
 /**
@@ -29,7 +29,7 @@ export abstract class ComponentContext<T extends object = object> extends Contex
    * A key of component context value containing the component context instance itself.
    */
   static get key(): ContextKey<ComponentContext<any>> {
-    return componentContextKey;
+    return ComponentContext__key;
   }
 
   /**
@@ -133,7 +133,7 @@ export abstract class ComponentContext<T extends object = object> extends Contex
    * This is a shorthand for requesting content root instance available under `[ContentRoot.key]` key.
    */
   get contentRoot(): ParentNode {
-    return this.get(contentRootKey);
+    return this.get(ContentRoot__key);
   }
 
   /**
@@ -167,7 +167,7 @@ export abstract class ComponentContext<T extends object = object> extends Contex
    * @returns A producer of DOM event events of the given type.
    */
   on<E extends Event>(type: string): DomEventProducer<E> {
-    return this.get(componentEventProducerKey)(type);
+    return this.get(ComponentEventProducer__key)(type);
   }
 
   /**
@@ -179,7 +179,7 @@ export abstract class ComponentContext<T extends object = object> extends Contex
    * @param event An event to dispatch.
    */
   dispatchEvent(event: Event): void {
-    this.get(bootstrapContextKey).get(componentEventDispatcherKey)(this, event);
+    this.get(BootstrapContext__key).get(ComponentEventDispatcher__key)(this, event);
   }
 
 }
