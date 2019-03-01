@@ -3,7 +3,8 @@ import { EventProducer } from 'fun-events';
 import { Class } from '../../common';
 import { ComponentClass } from '../component-class';
 import { ComponentContext } from '../component-context';
-import { definitionContextKey } from './definition-context.key';
+import { DefinitionContext__key } from './definition.context.key';
+import { ElementDef } from './element-def';
 
 /**
  * Component definition context.
@@ -19,7 +20,7 @@ export abstract class DefinitionContext<T extends object = object> extends Conte
    * A key of definition context value containing the definition context itself.
    */
   static get key(): ContextKey<DefinitionContext<any>> {
-    return definitionContextKey;
+    return DefinitionContext__key;
   }
 
   /**
@@ -35,6 +36,13 @@ export abstract class DefinitionContext<T extends object = object> extends Conte
    * callback.
    */
   abstract readonly elementType: Class;
+
+  /**
+   * Custom element definition.
+   */
+  get elementDef(): ElementDef {
+    return this.get(ElementDef);
+  }
 
   /**
    * Registers component construction listener.

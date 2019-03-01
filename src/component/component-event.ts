@@ -1,7 +1,7 @@
 import { ContextKey } from 'context-values';
 import { DomEventProducer } from 'fun-events';
 import { ComponentContext } from './component-context';
-import { componentEventDispatcherKey, componentEventProducerKey } from './component-event.key';
+import { ComponentEventDispatcher__key, ComponentEventProducer__key } from './component-event.key';
 
 /**
  * Component event.
@@ -51,7 +51,7 @@ export namespace ComponentEventDispatcher {
   /**
    * A key of bootstrap context value containing component event dispatcher.
    */
-  export const key: ContextKey<ComponentEventDispatcher> = componentEventDispatcherKey;
+  export const key: ContextKey<ComponentEventDispatcher> = ComponentEventDispatcher__key;
 
 }
 
@@ -74,6 +74,6 @@ export namespace ComponentEventProducer {
   /**
    * A key of component context value containing component event producer.
    */
-  export const key: ContextKey<ComponentEventProducer> = componentEventProducerKey;
+  export const key: ContextKey<ComponentEventProducer> = ComponentEventProducer__key;
 
 }

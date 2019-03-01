@@ -2,6 +2,7 @@ import { ContextKey, SingleContextKey } from 'context-values';
 import { Class } from '../../common';
 import { ComponentClass } from '../component-class';
 import { ComponentMount } from '../component-mount';
+import { ElementDef } from './element-def';
 
 const KEY = /*#__PURE__*/ new SingleContextKey<ComponentFactory<any>>('component-factory');
 
@@ -30,6 +31,11 @@ export abstract class ComponentFactory<C extends object = object> {
    * callback.
    */
   abstract readonly elementType: Class;
+
+  /**
+   * Custom element definition.
+   */
+  abstract readonly elementDef: ElementDef;
 
   /**
    * Mounts a component to arbitrary element.

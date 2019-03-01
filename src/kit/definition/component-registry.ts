@@ -1,12 +1,8 @@
 import { ComponentClass } from '../../component';
 import { ComponentFactory, CustomElements } from '../../component/definition';
 import { BootstrapContext } from '../bootstrap-context';
+import { ComponentFactory__symbol, componentFactoryOf } from './component-factory.symbol';
 import { ElementBuilder } from './element-builder';
-
-/**
- * @internal
- */
-export const COMPONENT_FACTORY = Symbol('component-factory');
 
 /**
  * @internal
@@ -44,7 +40,7 @@ export class ComponentRegistry {
     this._definitionQueue.push(() => {
 
       const factory = this.elementBuilder.buildElement(componentType);
-      (componentType as any)[COMPONENT_FACTORY] = factory;
+      (componentType as any)[ComponentFactory__symbol] = factory;
 
       this.customElements.define(componentType, factory.elementType);
     });
@@ -57,14 +53,7 @@ export class ComponentRegistry {
 
   async whenDefined<C extends object>(componentType: ComponentClass<C>): Promise<ComponentFactory<C>> {
     await this.customElements.whenDefined(componentType);
-
-    const factory = (componentType as any)[COMPONENT_FACTORY];
-
-    if (!factory) {
-      throw new TypeError(`Component is not defined: ${componentType}`);
-    }
-
-    return factory;
+    return componentFactoryOf(componentType);
   }
 
 }
