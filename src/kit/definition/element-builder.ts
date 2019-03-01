@@ -20,7 +20,7 @@ import { DefinitionValueRegistry } from './definition-value-registry';
 /**
  * Creates new component of the given type.
  *
- * It makes component context available under `[componentContextSymbol]` key in constructed component.
+ * It makes component context available under `[ComponentContext__symbol]` key in constructed component.
  * The component context is also available inside component constructor by temporarily assigning it to component
  * prototype.
  *

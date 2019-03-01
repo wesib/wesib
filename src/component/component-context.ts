@@ -112,7 +112,7 @@ export abstract class ComponentContext<T extends object = object> extends Contex
    *
    * @param element Custom element instance created for the component or the component itself.
    *
-   * @return Component context reference stored under `[componentContextSymbol]` key.
+   * @return Component context reference stored under `[ComponentContext__symbol]` key.
    *
    * @throws TypeError When the given `element` does not contain component context reference.
    */

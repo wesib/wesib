@@ -122,7 +122,7 @@ export abstract class FeatureDef {
   /**
    * Defines a feature.
    *
-   * Either creates new or extends an existing feature definition and stores it under `[featureDefSymbol]` key.
+   * Either creates new or extends an existing feature definition and stores it under `[FeatureDef__symbol]` key.
    *
    * @param type Feature class constructor.
    * @param defs Feature definitions.

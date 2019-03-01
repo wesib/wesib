@@ -114,7 +114,7 @@ export abstract class ComponentDef<T extends object = object> {
   /**
    * Defines a component.
    *
-   * Either assigns new or extends an existing component definition and stores it under `[componentDefSymbol]` key.
+   * Either assigns new or extends an existing component definition and stores it under `[ComponentDef__symbol]` key.
    *
    * Note that each `ComponentClass` is also a feature able to register itself, so it can be passed directly to
    * `bootstrapComponents()` function or added as a requirement of another feature.
