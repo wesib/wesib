@@ -54,20 +54,28 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
 
   }
 
+  const values = valueRegistry.values;
+
   class BootstrapContext extends BootstrapContext_ {
 
-    readonly onDefinition: EventProducer<[DefinitionContext<any>]>;
-    readonly onComponent: EventProducer<[ComponentContext<any>]>;
-    readonly get = valueRegistry.values.get;
+    get onDefinition() {
+      return elementBuilder.definitions.on;
+    }
+
+    get onComponent() {
+      return elementBuilder.components.on;
+    }
+
+    get get() {
+      return values.get;
+    }
 
     constructor() {
       super();
-      definitionValueRegistry = DefinitionValueRegistry.create(valueRegistry.values);
+      definitionValueRegistry = DefinitionValueRegistry.create(values);
       componentValueRegistry = ComponentValueRegistry.create();
       elementBuilder = ElementBuilder.create({ definitionValueRegistry, componentValueRegistry });
       componentRegistry = ComponentRegistry.create({ bootstrapContext: this, elementBuilder });
-      this.onDefinition = elementBuilder.definitions.on;
-      this.onComponent = elementBuilder.components.on;
       valueRegistry.provide({ a: BootstrapContext, is: this });
       valueRegistry.provide({ a: ComponentKit_, as: ComponentKit });
     }

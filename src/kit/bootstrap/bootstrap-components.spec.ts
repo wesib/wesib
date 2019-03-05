@@ -231,7 +231,10 @@ describe('kit/bootstrap/bootstrap-components', () => {
       });
       it('proxies get() method', () => {
 
-        const spy = jest.spyOn(bootstrapContext, 'get');
+        const spy = jest.fn();
+
+        jest.spyOn(bootstrapContext as any, 'get', 'get').mockImplementation(() => spy);
+
         const someKey = new SingleContextKey<string>('some');
         const opts = { or: 'default' };
 
