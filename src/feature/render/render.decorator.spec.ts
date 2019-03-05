@@ -1,5 +1,3 @@
-import { noop } from 'call-thru';
-import { EventEmitter, EventProducer } from 'fun-events';
 import { Component, ComponentClass, ComponentContext } from '../../component';
 import { CustomElements, DefinitionContext } from '../../component/definition';
 import { ObjectMock } from '../../spec/mocks';
