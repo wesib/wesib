@@ -14,14 +14,16 @@ import Mock = jest.Mock;
 describe('feature/render/render.decorator', () => {
   describe('@Render', () => {
 
-    let customElementsSpy: ObjectMock<CustomElements>;
-    let renderSchedulerSpy: ObjectMock<RenderScheduler>;
     let testComponent: ComponentClass;
     let renderSpy: Mock;
+    let offlineRenderSpy: Mock;
+    let delegateRenderSpy: Mock;
     let definitionContext: DefinitionContext<object>;
 
     beforeEach(() => {
       renderSpy = jest.fn();
+      offlineRenderSpy = jest.fn();
+      delegateRenderSpy = jest.fn();
 
       @Component({
         name: 'test-component',
@@ -37,18 +39,32 @@ describe('feature/render/render.decorator', () => {
         @Render()
         readonly render = renderSpy;
 
+        @Render({ offline: true })
+        readonly offlineRender = offlineRenderSpy;
+
         @DomProperty()
         property = 'value';
+
+        @Render({ offline: true })
+        nestRender() {
+          return delegateRenderSpy;
+        }
 
       }
 
       testComponent = TestComponent;
     });
+
+    let renderSchedulerSpy: ObjectMock<RenderScheduler>;
+
     beforeEach(() => {
       renderSchedulerSpy = {
-        scheduleRender: jest.fn(),
+        scheduleRender: jest.fn((fn: () => void) => fn()),
       };
     });
+
+    let customElementsSpy: ObjectMock<CustomElements>;
+
     beforeEach(() => {
       customElementsSpy = {
         define: jest.fn(),
@@ -80,23 +96,100 @@ describe('feature/render/render.decorator', () => {
     describe('Rendering', () => {
 
       let element: any;
+      let context: ComponentContext;
       let component: any;
 
       beforeEach(() => {
         element = new definitionContext.elementType;
-        component = ComponentContext.of(element).component as any;
+        context = ComponentContext.of(element);
+        component = context.component as any;
       });
 
+      let connected: boolean;
+
+      beforeEach(() => {
+        connected = true;
+        jest.spyOn(context, 'connected', 'get').mockImplementation(() => connected);
+      });
+
+      it('is not scheduled initially', () => {
+        expect(renderSpy).not.toHaveBeenCalled();
+      });
       it('is scheduled on state update', () => {
         component.property = 'other';
-        expect(renderSchedulerSpy.scheduleRender).toHaveBeenCalled();
+        expect(renderSpy).toHaveBeenCalled();
+      });
+      it('is not scheduled on state update while offline', () => {
+        connected = false;
+        component.property = 'other';
+        expect(renderSpy).not.toHaveBeenCalled();
+      });
+      it('is scheduled when connected', () => {
+        connected = true;
+        element.connectedCallback();
+        expect(renderSpy).toHaveBeenCalled();
+      });
+      it('is re-scheduled when connected after state update', () => {
+        connected = true;
+        element.connectedCallback();
+        component.property = 'other';
+        element.connectedCallback();
+        expect(renderSpy).toHaveBeenCalledTimes(2);
+      });
+      it('is not re-scheduled when connected without state update', () => {
+        connected = true;
+        element.connectedCallback();
+        element.connectedCallback();
+        expect(renderSpy).toHaveBeenCalledTimes(1);
       });
       it('uses decorated method', () => {
+        renderSchedulerSpy.scheduleRender.mockRestore();
         component.property = 'other';
         renderSchedulerSpy.scheduleRender.mock.calls[0][0]();
 
         expect(renderSpy).toHaveBeenCalledWith();
         expect(renderSpy.mock.instances[0]).toBe(component);
+      });
+
+      describe('Offline', () => {
+        it('is scheduled initially', () => {
+          expect(offlineRenderSpy).toHaveBeenCalled();
+        });
+        it('is scheduled on state update', () => {
+          renderSchedulerSpy.scheduleRender.mockClear();
+          component.property = 'other';
+          expect(offlineRenderSpy).toHaveBeenCalled();
+        });
+        it('is scheduled on state update while offline', () => {
+          renderSchedulerSpy.scheduleRender.mockClear();
+          connected = false;
+          component.property = 'other';
+          expect(offlineRenderSpy).toHaveBeenCalled();
+        });
+      });
+
+      describe('Delegated', () => {
+        it('is scheduled', () => {
+          expect(delegateRenderSpy).toHaveBeenCalled();
+        });
+        it('is re-scheduled on state update', () => {
+          component.property = 'other';
+          expect(delegateRenderSpy).toHaveBeenCalledTimes(2);
+        });
+        it('is scheduled with a replacement function', () => {
+
+          const replacement = jest.fn();
+
+          delegateRenderSpy.mockImplementation(() => replacement);
+
+          component.property = 'other';
+          expect(delegateRenderSpy).toHaveBeenCalledTimes(2);
+          expect(replacement).toHaveBeenCalled();
+
+          component.property = 'third';
+          expect(delegateRenderSpy).toHaveBeenCalledTimes(2);
+          expect(replacement).toHaveBeenCalledTimes(2);
+        });
       });
     });
   });

@@ -1,5 +1,5 @@
 import { noop } from 'call-thru';
-import { ContextKey, ContextValueSpec } from 'context-values';
+import { ContextKey, ContextValues, ContextValueSpec } from 'context-values';
 import { EventEmitter } from 'fun-events';
 import { ArraySet, Class, mergeFunctions } from '../../common';
 import {
@@ -160,12 +160,25 @@ export class ElementBuilder {
     }
 
     const componentFactory = new ComponentFactory();
+    let values: ContextValues;
 
     class DefinitionContext extends DefinitionContext_<T> {
 
-      readonly componentType: ComponentClass<T> = componentType;
-      readonly onComponent = onComponent.on;
-      readonly get: <V, S>(key: ContextKey<V, S>, defaultValue?: V | null | undefined) => V | null | undefined;
+      get componentType() {
+        return componentType;
+      }
+
+      get onComponent() {
+        return onComponent.on;
+      }
+
+      get get() {
+        return values.get;
+      }
+
+      get elementType(): Class {
+        throw new Error('Custom element class is not constructed yet. Consider to use a `whenReady()` callback');
+      }
 
       constructor() {
         super();
@@ -174,16 +187,11 @@ export class ElementBuilder {
 
         definitionRegistry.provide({ a: DefinitionContext_, is: this });
         definitionRegistry.provide({ a: ComponentFactory_, is: componentFactory });
+        values = definitionRegistry.newValues();
         new ArraySet(def.set).forEach(spec => definitionRegistry.provide(spec));
 
         typeValueRegistry = ComponentValueRegistry.create(definitionRegistry.bindSources(this));
         new ArraySet(def.forComponents).forEach(spec => typeValueRegistry.provide(spec));
-
-        this.get = definitionRegistry.newValues().get;
-      }
-
-      get elementType(): Class {
-        throw new Error('Custom element class is not constructed yet. Consider to use a `whenReady()` callback');
       }
 
       whenReady(callback: (this: DefinitionContext, elementType: Class) => void) {
@@ -285,15 +293,33 @@ export class ElementBuilder {
     const connectEvents = new EventEmitter<[ComponentContext_<any>]>();
     const disconnectEvents = new EventEmitter<[ComponentContext_<any>]>();
     let mount: ComponentMount_<T> | undefined;
+    const values = valueRegistry.newValues();
 
     class ComponentContext extends ComponentContext_<T> {
 
-      readonly componentType = definitionContext.componentType;
-      readonly element = element;
-      readonly elementSuper = elementSuper;
-      readonly get = valueRegistry.newValues().get;
-      readonly onConnect = connectEvents.on;
-      readonly onDisconnect = disconnectEvents.on;
+      get componentType() {
+        return definitionContext.componentType;
+      }
+
+      get element() {
+        return element;
+      }
+
+      get elementSuper() {
+        return elementSuper;
+      }
+
+      get get() {
+        return values.get;
+      }
+
+      get onConnect() {
+        return connectEvents.on;
+      }
+
+      get onDisconnect() {
+        return disconnectEvents.on;
+      }
 
       get component(): T {
         throw new Error('The component is not constructed yet. Consider to use a `whenReady()` callback');
