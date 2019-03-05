@@ -19,11 +19,13 @@ describe('feature/render/render.decorator', () => {
     let testComponent: ComponentClass;
     let renderSpy: Mock;
     let offlineRenderSpy: Mock;
+    let delegateRenderSpy: Mock;
     let definitionContext: DefinitionContext<object>;
 
     beforeEach(() => {
       renderSpy = jest.fn();
       offlineRenderSpy = jest.fn();
+      delegateRenderSpy = jest.fn();
 
       @Component({
         name: 'test-component',
@@ -44,6 +46,11 @@ describe('feature/render/render.decorator', () => {
 
         @DomProperty()
         property = 'value';
+
+        @Render({ offline: true })
+        nestRender() {
+          return delegateRenderSpy;
+        }
 
       }
 
@@ -160,6 +167,30 @@ describe('feature/render/render.decorator', () => {
           connected = false;
           component.property = 'other';
           expect(offlineRenderSpy).toHaveBeenCalled();
+        });
+      });
+
+      describe('Delegated', () => {
+        it('is scheduled', () => {
+          expect(delegateRenderSpy).toHaveBeenCalled();
+        });
+        it('is re-scheduled on state update', () => {
+          component.property = 'other';
+          expect(delegateRenderSpy).toHaveBeenCalledTimes(2);
+        });
+        it('is scheduled with a replacement function', () => {
+
+          const replacement = jest.fn();
+
+          delegateRenderSpy.mockImplementation(() => replacement);
+
+          component.property = 'other';
+          expect(delegateRenderSpy).toHaveBeenCalledTimes(2);
+          expect(replacement).toHaveBeenCalled();
+
+          component.property = 'third';
+          expect(delegateRenderSpy).toHaveBeenCalledTimes(2);
+          expect(replacement).toHaveBeenCalledTimes(2);
         });
       });
     });

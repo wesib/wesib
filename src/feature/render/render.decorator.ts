@@ -10,6 +10,10 @@ import { RenderSupport } from './render-support.feature';
  *
  * The decorated method call will be scheduled by `RenderScheduler` once component state updated.
  *
+ * The decorated method should have no arguments. It may return either nothing, or a function. In the latter case the
+ * returned function will be called immediately to render the element. It may, in turn, return a renderer function,
+ * and so on.
+ *
  * This decorator automatically enables `StateSupport` and `RenderSupport` features.
  *
  * @param opts Non-mandatory rendering options.
@@ -30,8 +34,9 @@ export function Render<T extends ComponentClass>({ offline }: Render.Opts = {}):
             defContext.onComponent(componentContext => {
               componentContext.whenReady(() => {
 
-                let rendered = false;
                 const component = componentContext.component as any;
+                let renderer: () => any = component[propertyKey];
+                let rendered = false;
                 const stateTracker = componentContext.get(ComponentState);
                 const renderScheduler = componentContext.get(RenderScheduler);
 
@@ -54,7 +59,20 @@ export function Render<T extends ComponentClass>({ offline }: Render.Opts = {}):
 
                 function scheduleRender() {
                   rendered = true;
-                  renderScheduler.scheduleRender(() => component[propertyKey]());
+                  renderScheduler.scheduleRender(render);
+                }
+
+                function render() {
+                  for (;;) {
+
+                    const newRenderer = renderer.call(component);
+
+                    if (newRenderer === renderer || typeof newRenderer !== 'function') {
+                      break;
+                    }
+
+                    renderer = newRenderer;
+                  }
                 }
               });
             });
