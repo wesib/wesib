@@ -12,9 +12,11 @@ import { RenderSupport } from './render-support.feature';
  *
  * This decorator automatically enables `StateSupport` and `RenderSupport` features.
  *
- * @returns Component property decorator.
+ * @param opts Non-mandatory rendering options.
+ *
+ * @returns Component method decorator.
  */
-export function Render<T extends ComponentClass>(): TypedPropertyDecorator<T> {
+export function Render<T extends ComponentClass>({ offline }: Render.Opts = {}): TypedPropertyDecorator<T> {
   return <V>(target: InstanceType<T>, propertyKey: string | symbol) => {
 
     const componentType = target.constructor as T;
@@ -25,19 +27,59 @@ export function Render<T extends ComponentClass>(): TypedPropertyDecorator<T> {
         componentType,
         {
           define(defContext) {
-            defContext.onComponent(compContext => {
-              compContext.whenReady(() => {
+            defContext.onComponent(componentContext => {
+              componentContext.whenReady(() => {
 
-                const component = compContext.component as any;
-                const stateTracker = compContext.get(ComponentState);
-                const renderScheduler = compContext.get(RenderScheduler);
+                let rendered = false;
+                const component = componentContext.component as any;
+                const stateTracker = componentContext.get(ComponentState);
+                const renderScheduler = componentContext.get(RenderScheduler);
 
                 stateTracker.onUpdate(() => {
-                  renderScheduler.scheduleRender(() => component[propertyKey]());
+                  if (offline || componentContext.connected) {
+                    scheduleRender();
+                  } else {
+                    rendered = false;
+                  }
                 });
+                if (offline) {
+                  scheduleRender();
+                } else {
+                  componentContext.onConnect(() => {
+                    if (!rendered) {
+                      scheduleRender();
+                    }
+                  });
+                }
+
+                function scheduleRender() {
+                  rendered = true;
+                  renderScheduler.scheduleRender(() => component[propertyKey]());
+                }
               });
             });
           },
         });
   };
+}
+
+export namespace Render {
+
+  /**
+   * Rendering options.
+   */
+  export interface Opts {
+
+    /**
+     * Whether to render element contents while disconnected.
+     *
+     * When offline rendering is disabled the rendering will be scheduled whenever element is connected.
+     *
+     * `false` by default. Which means the element contents won't be rendered while disconnected. Rendering will
+     * be initiated once element is connected.
+     */
+    offline?: boolean;
+
+  }
+
 }
