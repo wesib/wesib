@@ -1,9 +1,14 @@
 /**
  * A path to sub-state containing element an attributes.
  *
- * Thus, an attribute state path is always something like `[attributePath__root, 'attribute-name']`.
+ * Thus, an attribute state path is always something like `[AttributePath__root, 'attribute-name']`.
  */
-export const attributePath__root = /*#__PURE__*/ Symbol('attribute');
+export const AttributePath__root = /*#__PURE__*/ Symbol('attribute');
+
+/**
+ * A path to the named attribute state.
+ */
+export type AttributePath = [keyof AttributePath.RootMap, string];
 
 /**
  * Constructs a named attribute state path.
@@ -12,6 +17,14 @@ export const attributePath__root = /*#__PURE__*/ Symbol('attribute');
  *
  * @return Attribute state path.
  */
-export function attributePath(name: string): [typeof attributePath__root, string] {
-  return [attributePath__root, name];
+export function attributePathTo(name: string): AttributePath {
+  return [AttributePath__root, name];
+}
+
+export namespace AttributePath {
+
+  export interface RootMap {
+    [AttributePath__root]: true;
+  }
+
 }

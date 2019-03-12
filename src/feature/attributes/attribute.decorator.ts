@@ -2,7 +2,7 @@ import { StatePath } from 'fun-events';
 import { TypedPropertyDecorator } from '../../common';
 import { ComponentClass, ComponentContext, ComponentDef } from '../../component';
 import { FeatureDef } from '../feature-def';
-import { AttributeChangedCallback, AttributeRegistrar, AttributeUpdateConsumer } from './attribute-registrar';
+import { AttributeChangedCallback, AttributeRegistrar, AttributeUpdateReceiver } from './attribute-registrar';
 import { attributeStateUpdate } from './attribute-state-update';
 import { AttributesSupport } from './attributes-support.feature';
 
@@ -75,9 +75,9 @@ export namespace Attribute {
      * - `false` to not update the component state,
      * - `true` (the default value) to update the component state with changed attribute key,
      * - a state value key to update, or
-     * - an attribute update consumer function with custom state update logic.
+     * - an attribute update receiver function with custom state update logic.
      */
-    updateState?: boolean | StatePath | AttributeUpdateConsumer<T>;
+    updateState?: boolean | StatePath | AttributeUpdateReceiver<T>;
 
   }
 

@@ -2,7 +2,7 @@ import { StatePath } from 'fun-events';
 import { TypedClassDecorator } from '../../common';
 import { ComponentClass, ComponentDef } from '../../component';
 import { FeatureDef } from '../feature-def';
-import { AttributeRegistrar, AttributeUpdateConsumer } from './attribute-registrar';
+import { AttributeRegistrar, AttributeUpdateReceiver } from './attribute-registrar';
 import { attributeStateUpdate } from './attribute-state-update';
 import { AttributesSupport } from './attributes-support.feature';
 
@@ -65,10 +65,10 @@ export namespace Attributes {
    * - `false` to not update the component state,
    * - `true` to update the component state with changed attribute key,
    * - a state value key to update, or
-   * - an attribute update consumer function with custom state update logic.
+   * - an attribute update receiver function with custom state update logic.
    */
   export interface Map<T extends object> {
-    [name: string]: boolean | StatePath | AttributeUpdateConsumer<T>;
+    [name: string]: boolean | StatePath | AttributeUpdateReceiver<T>;
   }
 
 }

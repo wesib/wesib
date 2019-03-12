@@ -1,6 +1,6 @@
 import { Component, ComponentContext } from '../../component';
 import { MockElement, testElement } from '../../spec/test-element';
-import { attributePath__root } from './attribute-path';
+import { AttributePath__root } from './attribute-path';
 import { Attributes } from './attributes.decorator';
 
 describe('feature/attributes/attributes', () => {
@@ -24,7 +24,7 @@ describe('feature/attributes/attributes', () => {
 
       element.attributeChangedCallback('attr', 'old', 'new');
 
-      expect(updateStateSpy).toHaveBeenCalledWith([attributePath__root, 'attr'], 'new', 'old');
+      expect(updateStateSpy).toHaveBeenCalledWith([AttributePath__root, 'attr'], 'new', 'old');
     });
     it('updates the state when listed', () => {
 
@@ -45,7 +45,7 @@ describe('feature/attributes/attributes', () => {
 
       element.attributeChangedCallback('attr', 'old', 'new');
 
-      expect(updateStateSpy).toHaveBeenCalledWith([attributePath__root, 'attr'], 'new', 'old');
+      expect(updateStateSpy).toHaveBeenCalledWith([AttributePath__root, 'attr'], 'new', 'old');
     });
     it('updates the state when single', () => {
 
@@ -64,7 +64,7 @@ describe('feature/attributes/attributes', () => {
 
       element.attributeChangedCallback('attr', 'old', 'new');
 
-      expect(updateStateSpy).toHaveBeenCalledWith([attributePath__root, 'attr'], 'new', 'old');
+      expect(updateStateSpy).toHaveBeenCalledWith([AttributePath__root, 'attr'], 'new', 'old');
     });
     it('updates the state with custom function', () => {
 
@@ -89,7 +89,7 @@ describe('feature/attributes/attributes', () => {
       element.attributeChangedCallback('attr', 'old', 'new');
 
       expect(updateStateSpy).not.toHaveBeenCalled();
-      expect(updateSpy).toHaveBeenCalledWith([attributePath__root, 'attr'], 'new', 'old');
+      expect(updateSpy).toHaveBeenCalledWith([AttributePath__root, 'attr'], 'new', 'old');
       expect(updateSpy.mock.instances[0]).toBe(component);
     });
     it('updates the state with custom key', () => {

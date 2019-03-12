@@ -1,5 +1,5 @@
 import { ContextKey, SingleContextKey } from 'context-values';
-import { attributePath__root } from './attribute-path';
+import { AttributePath } from './attribute-path';
 
 /**
  * Custom element attribute change callback.
@@ -15,7 +15,7 @@ export type AttributeChangedCallback<T extends object = object> =
     (this: T, newValue: string, oldValue: string | null) => void;
 
 /**
- * Attribute updates consumer invoked after custom element attribute change.
+ * Attribute updates receiver invoked after custom element attribute change.
  *
  * @param <T> A type of component.
  * @param this Component instance.
@@ -23,9 +23,9 @@ export type AttributeChangedCallback<T extends object = object> =
  * @param newValue New attribute value.
  * @param oldValue Previous attribute value, or `null` if there were no value assigned.
  */
-export type AttributeUpdateConsumer<T extends object> = (
+export type AttributeUpdateReceiver<T extends object> = (
     this: T,
-    path: [typeof attributePath__root, string],
+    path: AttributePath,
     newValue: string,
     oldValue: string | null) => void;
 

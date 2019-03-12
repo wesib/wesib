@@ -1,6 +1,5 @@
 import { noop } from 'call-thru';
 import { ContextValueSpec } from 'context-values';
-import { EventProducer } from 'fun-events';
 import { Class } from '../../common';
 import { ComponentClass, ComponentContext } from '../../component';
 import { DefinitionContext } from '../../component/definition';

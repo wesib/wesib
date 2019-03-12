@@ -1,5 +1,5 @@
 import { ContextKey, ContextValues, ContextValueSpec } from 'context-values';
-import { EventProducer } from 'fun-events';
+import { OnEvent } from 'fun-events';
 import { Class } from '../../common';
 import { ComponentClass } from '../component-class';
 import { ComponentContext } from '../component-context';
@@ -53,7 +53,7 @@ export abstract class DefinitionContext<T extends object = object> extends Conte
    *
    * @return An event interest instance.
    */
-  abstract readonly onComponent: EventProducer<[ComponentContext<any>]>;
+  abstract readonly onComponent: OnEvent<[ComponentContext<any>]>;
 
   /**
    * Registers component definition readiness callback.

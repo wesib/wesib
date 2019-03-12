@@ -1,5 +1,5 @@
 import { ContextKey, SingleContextKey } from 'context-values';
-import { EventInterest } from 'fun-events';
+import { DomEventDispatcher, EventInterest } from 'fun-events';
 import { Class } from '../../common';
 import {
   ComponentClass,
@@ -11,7 +11,7 @@ import {
   ComponentMount,
 } from '../../component';
 import { ComponentFactory, DefinitionContext, ElementDef } from '../../component/definition';
-import { FnMock, ObjectMock } from '../../spec/mocks';
+import { ObjectMock } from '../../spec/mocks';
 import { MockElement } from '../../spec/test-element';
 import { BootstrapContext } from '../bootstrap-context';
 import { BootstrapValueRegistry } from '../bootstrap/bootstrap-value-registry';
@@ -51,13 +51,6 @@ describe('kit/definition/element-builder', () => {
           name: 'test-component',
         };
       };
-    });
-
-    let dispatchEventSpy: FnMock<ComponentEventDispatcher>;
-
-    beforeEach(() => {
-      dispatchEventSpy = jest.fn();
-      bootstrapValueRegistry.provide({ a: ComponentEventDispatcher, is: dispatchEventSpy });
     });
 
     describe('buildElement', () => {
@@ -219,6 +212,17 @@ describe('kit/definition/element-builder', () => {
         });
       });
 
+      let mockDispatcher: ObjectMock<ComponentEventDispatcher>;
+
+      beforeEach(() => {
+        mockDispatcher = {
+          dispatch: jest.fn(),
+          on: jest.fn((context: ComponentContext<any>, type: string) =>
+              new DomEventDispatcher(context.element).on<any>(type)),
+        };
+        bootstrapValueRegistry.provide({ a: ComponentEventDispatcher, is: mockDispatcher });
+      });
+
       let addEventListenerSpy: Mock;
       let removeEventListenerSpy: Mock;
 
@@ -254,8 +258,8 @@ describe('kit/definition/element-builder', () => {
         expect(componentContext.mount).toBeUndefined();
       });
       it('dispatches component event', () => {
-        expect(dispatchEventSpy).toHaveBeenCalledWith(componentContext, expect.any(ComponentEvent));
-        expect(dispatchEventSpy).toHaveBeenCalledWith(componentContext, expect.objectContaining({
+        expect(mockDispatcher.dispatch).toHaveBeenCalledWith(componentContext, expect.any(ComponentEvent));
+        expect(mockDispatcher.dispatch).toHaveBeenCalledWith(componentContext, expect.objectContaining({
           type: 'wesib:component',
           cancelable: false,
           bubbles: true,
@@ -294,6 +298,17 @@ describe('kit/definition/element-builder', () => {
     });
 
     describe('mounted element', () => {
+
+      let mockDispatcher: ObjectMock<ComponentEventDispatcher>;
+
+      beforeEach(() => {
+        mockDispatcher = {
+          dispatch: jest.fn(),
+          on: jest.fn((ctx: ComponentContext<any>, type: string) =>
+              new DomEventDispatcher(ctx.element).on<any>(type)),
+        };
+        bootstrapValueRegistry.provide({ a: ComponentEventDispatcher, is: mockDispatcher });
+      });
 
       let factory: ComponentFactory;
       let element: any;
@@ -335,8 +350,8 @@ describe('kit/definition/element-builder', () => {
       });
       it('dispatches component event', () => {
         doMount();
-        expect(dispatchEventSpy).toHaveBeenCalledWith(context, expect.any(ComponentEvent));
-        expect(dispatchEventSpy).toHaveBeenCalledWith(context, expect.objectContaining({
+        expect(mockDispatcher.dispatch).toHaveBeenCalledWith(context, expect.any(ComponentEvent));
+        expect(mockDispatcher.dispatch).toHaveBeenCalledWith(context, expect.objectContaining({
           type: 'wesib:component',
           cancelable: false,
           bubbles: true,
@@ -408,9 +423,7 @@ describe('kit/definition/element-builder', () => {
       beforeEach(() => {
         factory = builder.buildElement(TestComponent);
 
-        class Element {}
-
-        element = new Element();
+        element = new MockElement();
         mount = factory.connectTo(element);
         context = mount.context;
       });
@@ -443,7 +456,7 @@ describe('kit/definition/element-builder', () => {
         });
       });
       beforeEach(() => {
-        definitionValueRegistry.provide({ a: ElementDef, is: { extend: { type: Object } } });
+        definitionValueRegistry.provide({ a: ElementDef, is: { extend: { type: MockElement } } });
       });
       beforeEach(() => {
 

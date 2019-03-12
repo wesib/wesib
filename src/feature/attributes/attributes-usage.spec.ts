@@ -5,7 +5,7 @@ import { ObjectMock } from '../../spec/mocks';
 import { MockElement, testComponentFactory, testElement } from '../../spec/test-element';
 import { Feature } from '../feature.decorator';
 import { AttributeChanged } from './attribute-changed.decorator';
-import { attributePath__root } from './attribute-path';
+import { AttributePath__root } from './attribute-path';
 import { Attribute } from './attribute.decorator';
 import { AttributesSupport } from './attributes-support.feature';
 import Mock = jest.Mock;
@@ -139,7 +139,7 @@ describe('feature/attributes', () => {
 
         (ComponentContext.of(element).component as any).attr3 = value;
 
-        expect(updateStateSpy).toHaveBeenCalledWith([attributePath__root, 'attr3'], value, null);
+        expect(updateStateSpy).toHaveBeenCalledWith([AttributePath__root, 'attr3'], value, null);
       });
     });
 
