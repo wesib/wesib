@@ -1,5 +1,5 @@
 import { ContextKey, SingleContextKey } from 'context-values';
-import { attributePath__root } from './attribute-path';
+import { AttributePath } from './attribute-path';
 
 /**
  * Custom element attribute change callback.
@@ -25,7 +25,7 @@ export type AttributeChangedCallback<T extends object = object> =
  */
 export type AttributeUpdateReceiver<T extends object> = (
     this: T,
-    path: [typeof attributePath__root, string],
+    path: AttributePath,
     newValue: string,
     oldValue: string | null) => void;
 
