@@ -1,7 +1,7 @@
 import { StatePath } from 'fun-events';
 import { ComponentContext } from '../../component';
 import { domPropertyPath, domPropertyPath__root } from './dom-property-path';
-import { DomPropertyUpdateConsumer } from './dom-property.decorator';
+import { DomPropertyUpdateReceiver } from './dom-property.decorator';
 
 /**
  * @internal
@@ -16,7 +16,7 @@ export type DomPropertyUpdateCallback<T extends object> = <K extends keyof T>(
  */
 export function propertyStateUpdate<T extends object>(
     propertyKey: PropertyKey,
-    updateState: true | DomPropertyUpdateConsumer<T> | StatePath = true): DomPropertyUpdateCallback<T> {
+    updateState: true | DomPropertyUpdateReceiver<T> | StatePath = true): DomPropertyUpdateCallback<T> {
   if (updateState === true || typeof updateState === 'function') {
 
     const path = domPropertyPath(propertyKey);

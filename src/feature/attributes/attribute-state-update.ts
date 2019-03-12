@@ -2,21 +2,21 @@ import { noop } from 'call-thru';
 import { StatePath } from 'fun-events';
 import { ComponentContext } from '../../component';
 import { attributePath, attributePath__root } from './attribute-path';
-import { AttributeChangedCallback, AttributeUpdateConsumer } from './attribute-registrar';
+import { AttributeChangedCallback, AttributeUpdateReceiver } from './attribute-registrar';
 
 /**
  * @internal
  */
 export function attributeStateUpdate<T extends object>(
     name: string,
-    updateState: boolean | AttributeUpdateConsumer<T> | StatePath = true): AttributeChangedCallback<T> {
+    updateState: boolean | AttributeUpdateReceiver<T> | StatePath = true): AttributeChangedCallback<T> {
   if (updateState === false) {
     return noop;
   }
   if (updateState === true || typeof updateState === 'function') {
 
     const key = attributePath(name);
-    const update: AttributeUpdateConsumer<T> = updateState === true ? defaultUpdateState : updateState;
+    const update: AttributeUpdateReceiver<T> = updateState === true ? defaultUpdateState : updateState;
 
     return function (this: T, newValue, oldValue) {
       update.call(this, key, newValue, oldValue);

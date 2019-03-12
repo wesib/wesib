@@ -116,18 +116,20 @@ export namespace DomProperty {
     /**
      * Whether to update the component state after this property changed.
      *
-     * Either a DOM property updates consumer to call, or boolean value:
-     * - when `false` the component state will not be updated.
-     * - when `true` (the default value), then the component state will be updated with changed property key.
+     * Can be one of:
+     * - `false` to not update the component state,
+     * - `true` (the default value) to update the component state with changed property key,
+     * - a state value key to update, or
+     * - an DOM property update receiver function with custom state update logic.
      */
-    updateState?: boolean | StatePath | DomPropertyUpdateConsumer<T>;
+    updateState?: boolean | StatePath | DomPropertyUpdateReceiver<T>;
 
   }
 
 }
 
 /**
- * DOM property updates consumer invoked after custom element property change.
+ * DOM property updates receiver invoked after custom element property change.
  *
  * @param <T> A type of component.
  * @param <K> A type of component property keys.
@@ -136,7 +138,7 @@ export namespace DomProperty {
  * @param newValue New property value.
  * @param oldValue Previous property value.
  */
-export type DomPropertyUpdateConsumer<T extends object> = <K extends keyof T>(
+export type DomPropertyUpdateReceiver<T extends object> = <K extends keyof T>(
     this: T,
     path: [typeof domPropertyPath__root, K],
     newValue: T[K],

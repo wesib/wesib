@@ -12,7 +12,7 @@ const StateUpdater__key = /*#__PURE__*/ new SingleContextKey('state-updater', ()
 export const StateUpdater = {
 
   /**
-   * A key of component context value containing a component state updates consumer function.
+   * A key of component context value containing a component state updates receiver function.
    *
    * Features are calling this function by default when component state changes, e.g. attribute value or DOM property
    * modified.
