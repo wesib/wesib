@@ -1,5 +1,5 @@
 import { ContextKey, ContextValues } from 'context-values';
-import { DomEventProducer, EventProducer, StatePath } from 'fun-events';
+import { OnDomEvent, OnEvent, StatePath } from 'fun-events';
 import { BootstrapContext__key } from '../kit/bootstrap-context.key';
 import { ComponentClass } from './component-class';
 import { ComponentContext__key } from './component-context.key';
@@ -76,7 +76,7 @@ export abstract class ComponentContext<T extends object = object> extends Contex
    *
    * @return An event interest instance.
    */
-  abstract readonly onConnect: EventProducer<[ComponentContext<T>]>;
+  abstract readonly onConnect: OnEvent<[ComponentContext<T>]>;
 
   /**
    * Registers custom element disconnection listener.
@@ -88,7 +88,7 @@ export abstract class ComponentContext<T extends object = object> extends Contex
    *
    * @return An event interest instance.
    */
-  abstract readonly onDisconnect: EventProducer<[ComponentContext<T>]>;
+  abstract readonly onDisconnect: OnEvent<[ComponentContext<T>]>;
 
   /**
    * Updates component's state.
@@ -166,7 +166,7 @@ export abstract class ComponentContext<T extends object = object> extends Contex
    *
    * @returns A producer of DOM event events of the given type.
    */
-  on<E extends Event>(type: string): DomEventProducer<E> {
+  on<E extends Event>(type: string): OnDomEvent<E> {
     return this.get(ComponentEventProducer__key)(type);
   }
 

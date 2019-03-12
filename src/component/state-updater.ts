@@ -1,11 +1,11 @@
 import { noop } from 'call-thru';
 import { ContextKey, SingleContextKey } from 'context-values';
-import { StateConsumer } from 'fun-events';
+import { StateUpdateReceiver } from 'fun-events';
 
 /**
  * Component state updater function.
  */
-export type StateUpdater = StateConsumer;
+export type StateUpdater = StateUpdateReceiver;
 
 const StateUpdater__key = /*#__PURE__*/ new SingleContextKey('state-updater', () => noop);
 

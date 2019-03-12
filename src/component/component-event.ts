@@ -1,5 +1,5 @@
 import { ContextKey } from 'context-values';
-import { DomEventProducer } from 'fun-events';
+import { OnDomEvent } from 'fun-events';
 import { ComponentContext } from './component-context';
 import { ComponentEventDispatcher__key, ComponentEventProducer__key } from './component-event.key';
 
@@ -67,7 +67,7 @@ export namespace ComponentEventDispatcher {
  *
  * @returns A producer of DOM event events of the given type.
  */
-export type ComponentEventProducer = <E extends Event>(type: string) => DomEventProducer<E>;
+export type ComponentEventProducer = <E extends Event>(type: string) => OnDomEvent<E>;
 
 export namespace ComponentEventProducer {
 

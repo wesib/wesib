@@ -26,7 +26,7 @@
   },
   "peerDependencies": {
     "context-values": "^1.2.0",
-    "fun-events": "^3.3.0"
+    "fun-events": "^4.0.0"
   },
   "devDependencies": {
     "@types/jest": "^24.0.9",
@@ -36,7 +36,7 @@
     "codecov": "^3.2.0",
     "context-values": "^1.2.0",
     "fs-extra": "^7.0.0",
-    "fun-events": "^3.3.0",
+    "fun-events": "^4.0.0",
     "jest": "^24.1.0",
     "jest-junit": "^6.3.0",
     "rollup": "^1.4.1",

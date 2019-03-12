@@ -1,5 +1,5 @@
 import { noop } from 'call-thru';
-import { ContextKey, ContextValues, ContextValueSpec } from 'context-values';
+import { ContextValues, ContextValueSpec } from 'context-values';
 import { EventEmitter } from 'fun-events';
 import { ArraySet, Class, mergeFunctions } from '../../common';
 import {
@@ -12,7 +12,8 @@ import {
 } from '../../component';
 import {
   ComponentFactory as ComponentFactory_,
-  DefinitionContext as DefinitionContext_, ElementDef,
+  DefinitionContext as DefinitionContext_,
+  ElementDef,
 } from '../../component/definition';
 import { ComponentValueRegistry } from './component-value-registry';
 import { DefinitionValueRegistry } from './definition-value-registry';
@@ -209,7 +210,7 @@ export class ElementBuilder {
     if (def.define) {
       def.define.call(componentType, definitionContext);
     }
-    this.definitions.forEach(listener => listener(definitionContext));
+    this.definitions.send(definitionContext);
 
     const elementType = this._elementType(definitionContext, onComponent, createValueRegistry());
 
@@ -351,12 +352,12 @@ export class ElementBuilder {
     Object.defineProperty(element, connect__symbol, {
       value(value: boolean) {
         this[connected__symbol] = value;
-        (value ? connectEvents : disconnectEvents).notify(context);
+        (value ? connectEvents : disconnectEvents).send(context);
       },
     });
 
-    this.components.forEach(consumer => consumer(context));
-    onComponent.forEach(consumer => consumer(context));
+    this.components.send(context);
+    onComponent.send(context);
 
     const component = newComponent(definitionContext.componentType, context);
 
