@@ -1,7 +1,7 @@
 import { ContextKey } from 'context-values';
 import { OnDomEvent } from 'fun-events';
 import { ComponentContext } from './component-context';
-import { ComponentEventDispatcher__key, ComponentEventProducer__key } from './component-event.key';
+import { ComponentEventDispatcher__key } from './component-event.key';
 
 /**
  * Component event.
@@ -37,43 +37,44 @@ export class ComponentEvent extends Event {
 }
 
 /**
- * Component event dispatcher function is used to dispatch component events.
+ * Component event dispatcher is used to listen for and dispatch component events.
  *
  * It is available in bootstrap context context.
+ *
+ * By default treats a component element as event target.
  *
  * @param context A context of component to dispatch an `event` for.
  * @param event An event to dispatch.
  */
-export type ComponentEventDispatcher = (context: ComponentContext<any>, event: Event) => void;
+export interface ComponentEventDispatcher {
 
-export namespace ComponentEventDispatcher {
+  /**
+   * Dispatches the DOM event for the given component.
+   *
+   * @param context Target component context.
+   * @param event An event to dispatch.
+   */
+  dispatch(context: ComponentContext<any>, event: Event): void;
+
+  /**
+   * Returns a registrar of DOM event listeners for the given DOM event type.
+   *
+   * @param context Target component context.
+   * @param type An event type to listen for.
+   *
+   * @returns A producer of DOM event events of the given type.
+   */
+  on<E extends Event>(context: ComponentContext<any>, type: string): OnDomEvent<E>;
+
+}
+
+export const ComponentEventDispatcher = {
 
   /**
    * A key of bootstrap context value containing component event dispatcher.
    */
-  export const key: ContextKey<ComponentEventDispatcher> = ComponentEventDispatcher__key;
+  get key(): ContextKey<ComponentEventDispatcher> {
+    return ComponentEventDispatcher__key;
+  }
 
-}
-
-/**
- * A producer of DOM component events is a function accepting event type as its only argument and returning DOM event
- * producer for that event type.
- *
- * It is available in each component context.
- *
- * By default treats a component element as event target.
- *
- * @param type An event type to listen for.
- *
- * @returns A producer of DOM event events of the given type.
- */
-export type ComponentEventProducer = <E extends Event>(type: string) => OnDomEvent<E>;
-
-export namespace ComponentEventProducer {
-
-  /**
-   * A key of component context value containing component event producer.
-   */
-  export const key: ContextKey<ComponentEventProducer> = ComponentEventProducer__key;
-
-}
+};

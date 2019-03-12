@@ -61,6 +61,8 @@ export function testElement(componentType: Class<any>): Class<any> {
 export class MockElement {
 
   readonly dispatchEvent = jest.fn();
+  readonly addEventListener = jest.fn();
+  readonly removeEventListener = jest.fn();
   private _target: any;
   private _attributes: { [name: string]: string | null } = {};
 

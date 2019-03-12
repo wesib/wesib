@@ -1,4 +1,6 @@
+import { DomEventDispatcher } from 'fun-events';
 import { Component, ComponentClass, ComponentContext, ComponentEventDispatcher } from '../../component';
+import { ObjectMock } from '../../spec/mocks';
 import { MockElement, testElement } from '../../spec/test-element';
 import { FeatureDef } from '../feature-def';
 import { Feature } from '../feature.decorator';
@@ -14,14 +16,18 @@ describe('feature/shadow-dom/attach-shadow.decorator', () => {
     let testComponent: ComponentClass;
     let attachShadowSpy: Mock;
     let shadowRoot: ShadowContentRoot;
-    let dispatchEventSpy: Mock;
+    let mockDispatcher: ObjectMock<ComponentEventDispatcher>;
     let element: any;
     let context: ComponentContext;
 
     beforeEach(() => {
       shadowRoot = { name: 'shadowRoot' } as any;
       attachShadowSpy = jest.fn(() => shadowRoot);
-      dispatchEventSpy = jest.fn();
+      mockDispatcher = {
+        dispatch: jest.fn(),
+        on: jest.fn((ctx: ComponentContext<any>, type: string) =>
+            new DomEventDispatcher(ctx.element).on<any>(type)),
+      };
 
       @AttachShadow()
       @Component({
@@ -33,7 +39,7 @@ describe('feature/shadow-dom/attach-shadow.decorator', () => {
         }
       })
       @Feature({
-        set: { a: ComponentEventDispatcher, is: dispatchEventSpy },
+        set: { a: ComponentEventDispatcher, is: mockDispatcher },
       })
       class TestComponent {
       }
@@ -61,8 +67,12 @@ describe('feature/shadow-dom/attach-shadow.decorator', () => {
       expect(attachShadowSpy).toHaveBeenCalledWith({ mode: 'open' });
     });
     it('dispatches shadow DOM event', () => {
-      expect(dispatchEventSpy).toHaveBeenCalledWith(context, expect.any(ShadowDomEvent));
-      expect(dispatchEventSpy).toHaveBeenCalledWith(context, expect.objectContaining({ type: 'wesib:shadowAttached' }));
+      expect(mockDispatcher.dispatch).toHaveBeenCalledWith(
+          context,
+          expect.any(ShadowDomEvent));
+      expect(mockDispatcher.dispatch).toHaveBeenCalledWith(
+          context,
+          expect.objectContaining({ type: 'wesib:shadowAttached' }));
     });
     it('attaches shadow root', () => {
       attachShadowSpy.mockClear();

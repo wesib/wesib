@@ -29,7 +29,7 @@ function attachShadow(context: ComponentContext, init: ShadowRootInit): ShadowRo
 
   if (shadowRoot) {
     (shadowRoot as any)[ComponentContext__symbol] = context;
-    context.get(ComponentEventDispatcher)(context, new ShadowDomEvent('wesib:shadowAttached', { bubbles: true }));
+    context.dispatchEvent(new ShadowDomEvent('wesib:shadowAttached', { bubbles: true }));
     return shadowRoot;
   }
 
