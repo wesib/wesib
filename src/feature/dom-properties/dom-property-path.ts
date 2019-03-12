@@ -23,6 +23,6 @@ export function domPropertyPathTo<K extends PropertyKey = PropertyKey>(key: K): 
 
 export namespace DomPropertyPath {
   export interface RootMap {
-    [DomPropertyPath__root]: true,
+    [DomPropertyPath__root]: true;
   }
 }
