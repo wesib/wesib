@@ -17,7 +17,9 @@ import { AttributesSupport } from './attributes-support.feature';
  *
  * @return Component property decorator.
  */
-export function Attribute<T extends ComponentClass>(opts?: Attribute.Opts<T> | string): TypedPropertyDecorator<T> {
+export function Attribute<T extends ComponentClass>(
+    opts?: Attribute.Opts<InstanceType<T>> | string):
+    TypedPropertyDecorator<T> {
   return <V>(target: InstanceType<T>, propertyKey: string | symbol, descriptor?: TypedPropertyDescriptor<V>) => {
 
     const { name, updateState } = parseAttributeOpts(target, propertyKey, opts);
@@ -89,7 +91,7 @@ export namespace Attribute {
 export function parseAttributeOpts<T extends ComponentClass>(
     target: InstanceType<T>,
     propertyKey: string | symbol,
-    opts?: Attribute.Opts<T> | string) {
+    opts?: Attribute.Opts<InstanceType<T>> | string) {
 
   let name: string;
   let updateState: AttributeChangedCallback<InstanceType<T>>;

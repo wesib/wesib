@@ -32,7 +32,7 @@ import { AttributesSupport } from './attributes-support.feature';
  *
  * @return Component method decorator.
  */
-export function AttributeChanged<T extends ComponentClass>(opts?: Attribute.Opts<T> | string):
+export function AttributeChanged<T extends ComponentClass>(opts?: Attribute.Opts<InstanceType<T>> | string):
     TypedPropertyDecorator<T> {
   return <V>(target: InstanceType<T>, propertyKey: string | symbol) => {
 
