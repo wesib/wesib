@@ -1,4 +1,4 @@
-import { ContextKey } from 'context-values';
+import { ContextRequest, ContextTarget } from 'context-values';
 import { OnDomEvent } from 'fun-events';
 import { ComponentContext } from './component-context';
 import { ComponentEventDispatcher__key } from './component-event.key';
@@ -68,13 +68,9 @@ export interface ComponentEventDispatcher {
 
 }
 
-export const ComponentEventDispatcher = {
-
-  /**
-   * A key of bootstrap context value containing component event dispatcher.
-   */
-  get key(): ContextKey<ComponentEventDispatcher> {
-    return ComponentEventDispatcher__key;
-  }
-
-};
+/**
+ * A key of bootstrap context value containing component event dispatcher.
+ */
+export const ComponentEventDispatcher:
+    ContextTarget<ComponentEventDispatcher> & ContextRequest<ComponentEventDispatcher> =
+    /*#__PURE__*/ ComponentEventDispatcher__key;

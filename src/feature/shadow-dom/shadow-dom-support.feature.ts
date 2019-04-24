@@ -1,4 +1,4 @@
-import { ComponentContext, ComponentContext__symbol, ComponentEventDispatcher } from '../../component';
+import { ComponentContext, ComponentContext__symbol } from '../../component';
 import { FeatureDef, FeatureDef__symbol } from '../feature-def';
 import { ShadowDomEvent } from './shadow-dom-event';
 import { ShadowRootBuilder } from './shadow-root-builder';

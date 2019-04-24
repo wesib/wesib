@@ -1,4 +1,4 @@
-import { ContextKey, SingleContextKey } from 'context-values';
+import { ContextRequest, ContextTarget, SingleContextKey } from 'context-values';
 import { AttributePath } from './attribute-path';
 
 /**
@@ -31,12 +31,5 @@ export type AttributeUpdateReceiver<T extends object> = (
 
 export type AttributeRegistrar<T extends object> = (name: string, callback: AttributeChangedCallback<T>) => void;
 
-const KEY = /*#__PURE__*/ new SingleContextKey<AttributeRegistrar<any>>('attribute-registrar');
-
-export const AttributeRegistrar = {
-
-  get key(): ContextKey<AttributeRegistrar<any>> {
-    return KEY;
-  }
-
-};
+export const AttributeRegistrar: ContextTarget<AttributeRegistrar<any>> & ContextRequest<AttributeRegistrar<any>> =
+    /*#__PURE__*/ new SingleContextKey<AttributeRegistrar<any>>('attribute-registrar');

@@ -1,21 +1,14 @@
-import { ContextKey, SingleContextKey } from 'context-values';
+import { ContextRequest, ContextTarget, SingleContextKey } from 'context-values';
 
 /**
  * A window the components bootstrap is performed against.
  */
 export type BootstrapWindow = Window;
 
-const BootstrapWindow__key = /*#__PURE__*/ new SingleContextKey('window', () => window);
-
-export const BootstrapWindow = {
-
-  /**
-   * A key of bootstrap context value containing a window instance the bootstrap is performed against.
-   *
-   * Target value defaults to current window.
-   */
-  get key(): ContextKey<BootstrapWindow> {
-    return BootstrapWindow__key;
-  }
-
-};
+/**
+ * A key of bootstrap context value containing a window instance the bootstrap is performed against.
+ *
+ * Target value defaults to current window.
+ */
+export const BootstrapWindow: ContextTarget<BootstrapWindow> & ContextRequest<BootstrapWindow> =
+    /*#__PURE__*/ new SingleContextKey('window', () => window);

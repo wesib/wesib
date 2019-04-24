@@ -5,7 +5,7 @@ import { ComponentClass } from './component-class';
 import { ComponentContext__key } from './component-context.key';
 import { ComponentEventDispatcher__key } from './component-event.key';
 import { ComponentMount } from './component-mount';
-import { ContentRoot__key } from './content-root.key';
+import { ContentRoot } from './content-root';
 import { StateUpdater } from './state-updater';
 
 /**
@@ -133,7 +133,7 @@ export abstract class ComponentContext<T extends object = object> extends Contex
    * This is a shorthand for requesting content root instance available under `[ContentRoot.key]` key.
    */
   get contentRoot(): ParentNode {
-    return this.get(ContentRoot__key);
+    return this.get(ContentRoot);
   }
 
   /**

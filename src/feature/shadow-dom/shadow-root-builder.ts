@@ -1,4 +1,4 @@
-import { ContextKey, SingleContextKey } from 'context-values';
+import { ContextRequest, ContextTarget, SingleContextKey } from 'context-values';
 import { ComponentContext } from '../../component';
 
 /**
@@ -19,15 +19,8 @@ import { ComponentContext } from '../../component';
  */
 export type ShadowRootBuilder = <T extends object>(context: ComponentContext<T>, init: ShadowRootInit) => ShadowRoot;
 
-const KEY = /*#__PURE__*/ new SingleContextKey<ShadowRootBuilder>('shadow-root-builder');
-
-export const ShadowRootBuilder = {
-
-  /**
-   * A key of component context value containing a shadow root builder instance.
-   */
-  get key(): ContextKey<ShadowRootBuilder> {
-    return KEY;
-  }
-
-};
+/**
+ * A key of component context value containing a shadow root builder instance.
+ */
+export const ShadowRootBuilder: ContextTarget<ShadowRootBuilder> & ContextRequest<ShadowRootBuilder> =
+    /*#__PURE__*/ new SingleContextKey<ShadowRootBuilder>('shadow-root-builder');

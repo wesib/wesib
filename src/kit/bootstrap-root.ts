@@ -1,4 +1,4 @@
-import { ContextKey, SingleContextKey } from 'context-values';
+import { ContextRequest, ContextTarget, SingleContextKey } from 'context-values';
 import { BootstrapWindow } from './bootstrap-window';
 
 /**
@@ -6,19 +6,10 @@ import { BootstrapWindow } from './bootstrap-window';
  */
 export type BootstrapRoot = any;
 
-const BootstrapRoot__key = /*#__PURE__*/ new SingleContextKey(
-    'bootstrap-root',
-    ctx => ctx.get(BootstrapWindow).document.body);
-
-export const BootstrapRoot = {
-
-  /**
-   * A key of bootstrap context value containing a bootstrap root.
-   *
-   * Target value defaults to document body of `BootstrapWindow`.
-   */
-  get key(): ContextKey<BootstrapRoot> {
-    return BootstrapRoot__key;
-  }
-
-};
+/**
+ * A key of bootstrap context value containing a bootstrap root.
+ *
+ * Target value defaults to document body of `BootstrapWindow`.
+ */
+export const BootstrapRoot: ContextTarget<BootstrapRoot> & ContextRequest<BootstrapRoot> =
+    /*#__PURE__*/ new SingleContextKey('bootstrap-root', ctx => ctx.get(BootstrapWindow).document.body);
