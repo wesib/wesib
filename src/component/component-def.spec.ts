@@ -138,6 +138,34 @@ describe('component/component-def', () => {
           ]
         });
       });
+      it('merges `feature`', () => {
+
+        const key1 = new SingleContextKey<string>('a');
+        const key2 = new SingleContextKey<string>('b');
+        const feature1: FeatureDef = { perComponent: { a: key1, is: 'a' } };
+        const feature2: FeatureDef = { perComponent: { a: key2, is: 'b' } };
+
+        expect(ComponentDef.merge(
+            { feature: feature1 },
+            { feature: feature2 })
+        ).toEqual({
+          feature: FeatureDef.merge(feature1, feature2),
+        });
+        expect(ComponentDef.merge(
+            { feature: feature1 },
+            { perComponent: { a: key2, is: 'b' } })
+        ).toEqual({
+          perComponent: { a: key2, is: 'b' },
+          feature: feature1,
+        });
+        expect(ComponentDef.merge(
+            { perComponent: { a: key1, is: 'a' } },
+            { feature: feature2 })
+        ).toEqual({
+          perComponent: { a: key1, is: 'a' },
+          feature: feature2,
+        });
+      });
       it('does not merge empty definitions', () => {
         expect(ComponentDef.merge({}, {})).toEqual({});
       });
@@ -178,6 +206,26 @@ describe('component/component-def', () => {
         expect<ComponentDef>(ComponentDef.of(componentType)).toEqual(ComponentDef.merge(initialDef, def));
       });
       describe('created component feature', () => {
+        it('applies feature options', () => {
+
+          const key1 = new SingleContextKey<string>('a');
+          const key2 = new SingleContextKey<string>('b');
+          const feature: FeatureDef = {
+            set: [
+              { a: key1, is: 'a' },
+              { a: key2, is: 'b' },
+            ],
+          };
+          const def: ComponentDef = { name: 'test-component', feature };
+          const componentType = ComponentDef.define(TestComponent, def);
+
+          expect(ComponentDef.of(componentType)).toEqual(def);
+
+          const featureDef = FeatureDef.of(componentType)!;
+
+          expect(featureDef).toBeDefined();
+          expect(featureDef).toMatchObject(feature);
+        });
         it('registers the component', () => {
 
           const componentType = ComponentDef.define(TestComponent, { name: 'test-component' });

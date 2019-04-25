@@ -53,6 +53,11 @@ export interface ComponentDef<T extends object = object> {
   readonly perComponent?: ContextValueSpec<ComponentContext<T>, any, any[], any>
       | ContextValueSpec<ComponentContext<T>, any, any[], any>[];
 
+  /**
+   * Additional feature definition options.
+   */
+  readonly feature?: FeatureDef;
+
 }
 
 class ComponentMeta extends MetaAccessor<ComponentDef<any>> {
@@ -69,6 +74,9 @@ class ComponentMeta extends MetaAccessor<ComponentDef<any>> {
           set: new ArraySet(prev.set).merge(def.set).value,
           define: mergeFunctions(prev.define, def.define),
           perComponent: new ArraySet(prev.perComponent).merge(def.perComponent).value,
+          feature: prev.feature
+              ? def.feature ? FeatureDef.merge(prev.feature, def.feature) : prev.feature
+              : def.feature,
         }),
         {});
   }
@@ -121,10 +129,16 @@ export const ComponentDef = {
       type: T,
       ...defs: ComponentDef<InstanceType<T>>[]): T {
 
+    const def = this.merge(...defs);
     const prevDef = meta.of(type);
 
-    meta.define(type, ...defs);
+    meta.define(type, def);
 
+    const { feature } = def;
+
+    if (feature) {
+      FeatureDef.define(type, feature);
+    }
     if (prevDef) {
       return type; // Define component only once.
     }

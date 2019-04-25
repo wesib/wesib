@@ -59,7 +59,7 @@ class FeatureMeta extends MetaAccessor<FeatureDef> {
     super(FeatureDef__symbol);
   }
 
-  merge(...defs: FeatureDef[]): FeatureDef {
+  merge(...defs: readonly FeatureDef[]): FeatureDef {
     return defs.reduce<FeatureDef>(
         (prev, def) => ({
           set: new ArraySet(prev.set).merge(def.set).value,
@@ -96,7 +96,7 @@ export const FeatureDef = {
    *
    * @returns Merged feature definition.
    */
-  merge(...defs: FeatureDef[]): FeatureDef {
+  merge(...defs: readonly FeatureDef[]): FeatureDef {
     return meta.merge(...defs);
   },
 
@@ -111,7 +111,7 @@ export const FeatureDef = {
    *
    * @returns The `type` instance.
    */
-  define<T extends Class>(type: T, ...defs: FeatureDef[]): T {
+  define<T extends Class>(type: T, ...defs: readonly FeatureDef[]): T {
     return meta.define(type, ...defs);
   },
 
