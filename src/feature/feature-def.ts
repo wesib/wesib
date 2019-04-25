@@ -9,6 +9,59 @@ import { BootstrapContext } from '../kit';
  */
 export const FeatureDef__symbol = /*#__PURE__*/ Symbol('feature-def');
 
+/**
+ * Feature definition.
+ */
+export interface FeatureDef {
+
+  /**
+   * Features this one requires.
+   */
+  readonly need?: Class | readonly Class[];
+
+  /**
+   * Features this one provides.
+   *
+   * The feature always provides itself.
+   */
+  readonly has?: Class | Class[];
+
+  /**
+   * Bootstrap context values to declare prior to bootstrap.
+   */
+  readonly set?: ContextValueSpec<BootstrapContext, any, any[], any>
+      | ContextValueSpec<BootstrapContext, any, any[], any>[];
+
+  /**
+   * Bootstraps this feature by calling the given bootstrap context methods.
+   *
+   * @param context Components bootstrap context.
+   */
+  readonly init?: (this: Class, context: BootstrapContext) => void;
+
+  /**
+   * Definition context values to declare prior to component class definition.
+   */
+  readonly forDefinitions?: ContextValueSpec<DefinitionContext<any>, any, any[], any>
+      | ContextValueSpec<DefinitionContext<any>, any, any[], any>[];
+
+  /**
+   * Component context values to declare prior to component construction.
+   */
+  readonly forComponents?: ContextValueSpec<ComponentContext<any>, any, any[], any>
+      | ContextValueSpec<ComponentContext<any>, any, any[], any>[];
+
+}
+
+export namespace FeatureDef {
+
+  /**
+   * Mutable feature definition.
+   */
+  export type Mutable = { -readonly [K in keyof FeatureDef]: FeatureDef[K] };
+
+}
+
 class FeatureMeta extends MetaAccessor<FeatureDef> {
 
   constructor() {
@@ -16,10 +69,10 @@ class FeatureMeta extends MetaAccessor<FeatureDef> {
   }
 
   merge(...defs: FeatureDef[]): FeatureDef {
-    return defs.reduce(
+    return defs.reduce<FeatureDef.Mutable>(
         (prev, def) => {
 
-          const result: FeatureDef = {};
+          const result: FeatureDef.Mutable = {};
           const set = new ArraySet(prev.set).merge(def.set);
           const need = new ArraySet(prev.need).merge(def.need);
           const has = new ArraySet(prev.has).merge(def.has);
@@ -50,50 +103,6 @@ class FeatureMeta extends MetaAccessor<FeatureDef> {
         },
         {});
   }
-
-}
-
-/**
- * Feature definition.
- */
-export interface FeatureDef {
-
-  /**
-   * Features this one requires.
-   */
-  need?: Class | Class[];
-
-  /**
-   * Features this one provides.
-   *
-   * The feature always provides itself.
-   */
-  has?: Class | Class[];
-
-  /**
-   * Bootstrap context values to declare prior to bootstrap.
-   */
-  set?: ContextValueSpec<BootstrapContext, any, any[], any>
-      | ContextValueSpec<BootstrapContext, any, any[], any>[];
-
-  /**
-   * Bootstraps this feature by calling the given bootstrap context methods.
-   *
-   * @param context Components bootstrap context.
-   */
-  init?: (this: Class, context: BootstrapContext) => void;
-
-  /**
-   * Definition context values to declare prior to component class definition.
-   */
-  forDefinitions?: ContextValueSpec<DefinitionContext<any>, any, any[], any>
-      | ContextValueSpec<DefinitionContext<any>, any, any[], any>[];
-
-  /**
-   * Component context values to declare prior to component construction.
-   */
-  forComponents?: ContextValueSpec<ComponentContext<any>, any, any[], any>
-      | ContextValueSpec<ComponentContext<any>, any, any[], any>[];
 
 }
 

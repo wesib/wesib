@@ -1,12 +1,13 @@
 import { AIterable } from 'a-iterable';
+import { isArray } from './types';
 
 export class ArraySet<T> extends AIterable<T> {
 
   readonly items: Set<T>;
 
-  constructor(value?: T | T[]) {
+  constructor(value?: T | readonly T[]) {
     super();
-    this.items = value == null ? new Set() : Array.isArray(value) ? new Set(value) : new Set([value]);
+    this.items = value == null ? new Set() : isArray(value) ? new Set(value) : new Set([value]);
   }
 
   get value(): T | T[] | undefined {
@@ -30,11 +31,11 @@ export class ArraySet<T> extends AIterable<T> {
     return this.items.size;
   }
 
-  merge(items: T[] | T | undefined): this {
+  merge(items: readonly T[] | T | undefined): this {
     if (items == null) {
       return this;
     }
-    if (Array.isArray(items)) {
+    if (isArray(items)) {
       return this.add(...items);
     }
     return this.add(items);
