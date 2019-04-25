@@ -10,6 +10,60 @@ import { DefinitionContext, ElementDef } from './definition';
  */
 export const ComponentDef__symbol = /*#__PURE__*/ Symbol('component-def');
 
+/**
+ * Component definition.
+ *
+ * A custom element class will be created for each registered component in accordance to this definition.
+ *
+ * @typeparam T A type of component.
+ */
+export interface ComponentDef<T extends object = object> {
+
+  /**
+   * Custom element name.
+   *
+   * When omitted an anonymous component will be registered. Such component is not bound to custom element, but it
+   * still can be mounted.
+   */
+  readonly name?: string;
+
+  /**
+   * Existing element to extend by custom one.
+   */
+  readonly extend?: ElementDef.Extend;
+
+  /**
+   * Definition context values to declare prior to component class definition.
+   */
+  readonly set?: ContextValueSpec<DefinitionContext<T>, any, any[], any>
+      | ContextValueSpec<DefinitionContext<T>, any, any[], any>[];
+
+  /**
+   * Defines this component by calling the given component definition context methods.
+   *
+   * This function is called before the custom element is defined.
+   *
+   * @param context Component definition context.
+   */
+  readonly define?: (this: Class<T>, context: DefinitionContext<T>) => void;
+
+  /**
+   * Component context values to declare prior to component construction.
+   */
+  readonly forComponents?: ContextValueSpec<ComponentContext<T>, any, any[], any>
+      | ContextValueSpec<ComponentContext<T>, any, any[], any>[];
+
+}
+
+export namespace ComponentDef {
+
+  /**
+   * Mutable component definition.
+   */
+  export type Mutable<T extends object = object> = { -readonly [K in keyof ComponentDef<T>]: ComponentDef<T>[K] };
+
+}
+
 class ComponentMeta extends MetaAccessor<ComponentDef<any>> {
 
   constructor() {
@@ -20,7 +74,7 @@ class ComponentMeta extends MetaAccessor<ComponentDef<any>> {
     return defs.reduce(
         (prev, def) => {
 
-          const merged: ComponentDef<T> = { ...prev, ...def };
+          const merged: ComponentDef.Mutable<T> = { ...prev, ...def };
           const set = new ArraySet(prev.set).merge(def.set);
           const newDefine = mergeFunctions(prev.define, def.define);
           const forComponents = new ArraySet(prev.forComponents).merge(def.forComponents);
@@ -39,51 +93,6 @@ class ComponentMeta extends MetaAccessor<ComponentDef<any>> {
         },
         {});
   }
-
-}
-
-/**
- * Component definition.
- *
- * A custom element class will be created for each registered component in accordance to this definition.
- *
- * @typeparam T A type of component.
- */
-export interface ComponentDef<T extends object = object> {
-
-  /**
-   * Custom element name.
-   *
-   * When omitted an anonymous component will be registered. Such component is not bound to custom element, but it
-   * still can be mounted.
-   */
-  name?: string;
-
-  /**
-   * Existing element to extend by custom one.
-   */
-  extend?: ElementDef.Extend;
-
-  /**
-   * Definition context values to declare prior to component class definition.
-   */
-  set?: ContextValueSpec<DefinitionContext<T>, any, any[], any>
-      | ContextValueSpec<DefinitionContext<T>, any, any[], any>[];
-
-  /**
-   * Defines this component by calling the given component definition context methods.
-   *
-   * This function is called before the custom element is defined.
-   *
-   * @param context Component definition context.
-   */
-  define?: (this: Class<T>, context: DefinitionContext<T>) => void;
-
-  /**
-   * Component context values to declare prior to component construction.
-   */
-  forComponents?: ContextValueSpec<ComponentContext<T>, any, any[], any>
-      | ContextValueSpec<ComponentContext<T>, any, any[], any>[];
 
 }
 
