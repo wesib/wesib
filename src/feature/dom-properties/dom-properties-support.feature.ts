@@ -2,7 +2,7 @@ import { FeatureDef, FeatureDef__symbol } from '../feature-def';
 import { DomPropertyRegistrar } from './dom-property-registrar';
 import { DomPropertyRegistry } from './dom-property-registry';
 
-const DEF: FeatureDef = {
+const DomPropertiesSupport__feature: FeatureDef = {
   perDefinition: [
     { as: DomPropertyRegistry },
     {
@@ -39,7 +39,7 @@ const DEF: FeatureDef = {
 export class DomPropertiesSupport {
 
   static get [FeatureDef__symbol]() {
-    return DEF;
+    return DomPropertiesSupport__feature;
   }
 
 }

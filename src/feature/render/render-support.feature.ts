@@ -3,7 +3,7 @@ import { BootstrapWindow } from '../../kit';
 import { FeatureDef, FeatureDef__symbol } from '../feature-def';
 import { RenderScheduler as RenderScheduler_ } from './render-scheduler';
 
-const DEF: FeatureDef = {
+const RenderSupport__feature: FeatureDef = {
   perComponent: {
     a: RenderScheduler_,
     by: createRenderScheduler,
@@ -19,7 +19,7 @@ const DEF: FeatureDef = {
 export class RenderSupport {
 
   static get [FeatureDef__symbol](): FeatureDef {
-    return DEF;
+    return RenderSupport__feature;
   }
 
 }

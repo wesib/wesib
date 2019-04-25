@@ -2,7 +2,7 @@ import { ContextKey, SingleContextKey } from 'context-values';
 import { Class } from '../../common';
 import { ComponentMount } from '../../component';
 
-const KEY = /*#__PURE__*/ new SingleContextKey<DomPropertyRegistry>('dom-property-registry');
+const DomPropertyRegistry__key = /*#__PURE__*/ new SingleContextKey<DomPropertyRegistry>('dom-property-registry');
 
 /**
  * @internal
@@ -10,7 +10,7 @@ const KEY = /*#__PURE__*/ new SingleContextKey<DomPropertyRegistry>('dom-propert
 export class DomPropertyRegistry {
 
   static get key(): ContextKey<DomPropertyRegistry> {
-    return KEY;
+    return DomPropertyRegistry__key;
   }
 
   private readonly _props = new Map<PropertyKey, PropertyDescriptor>();

@@ -3,7 +3,7 @@ import { FeatureDef, FeatureDef__symbol } from '../feature-def';
 import { ShadowDomEvent } from './shadow-dom-event';
 import { ShadowRootBuilder } from './shadow-root-builder';
 
-const ShadowDomSupport__def: FeatureDef = {
+const ShadowDomSupport__feature: FeatureDef = {
   set: [
     { a: ShadowRootBuilder, is: attachShadow },
   ],
@@ -17,7 +17,7 @@ const ShadowDomSupport__def: FeatureDef = {
 export class ShadowDomSupport {
 
   static get [FeatureDef__symbol](): FeatureDef {
-    return ShadowDomSupport__def;
+    return ShadowDomSupport__feature;
   }
 
 }
