@@ -1,9 +1,7 @@
-import { StatePath } from 'fun-events';
 import { decoratePropertyAccessor, PropertyAccessorDescriptor, TypedPropertyDecorator } from '../../common';
 import { Component, ComponentClass, ComponentContext, ComponentDef } from '../../component';
-import { FeatureDef } from '../feature-def';
 import { DomPropertiesSupport } from './dom-properties-support.feature';
-import { DomPropertyPath } from './dom-property-path';
+import { DomPropertyDef } from './dom-property-def';
 import { DomPropertyRegistrar } from './dom-property-registrar';
 import { propertyStateUpdate } from './property-state-update';
 
@@ -14,22 +12,20 @@ import { propertyStateUpdate } from './property-state-update';
  *
  * This decorator can be applied both to plain properties and to property accessors.
  *
- * @param opts Custom element property options.
+ * @param def Custom element property definition.
  *
  * @returns Component property decorator.
  */
-export function DomProperty<T extends ComponentClass>(opts: DomProperty.Opts<T> = {}): TypedPropertyDecorator<T> {
+export function DomProperty<T extends ComponentClass>(def: DomPropertyDef<T> = {}): TypedPropertyDecorator<T> {
   return <V>(target: InstanceType<T>, propertyKey: string | symbol, propertyDesc?: TypedPropertyDescriptor<V>) => {
 
     const componentType = target.constructor as T;
 
-    FeatureDef.define(componentType, { needs: DomPropertiesSupport });
-
     let result: TypedPropertyDescriptor<V> | undefined;
 
-    if (opts.updateState !== false) {
+    if (def.updateState !== false) {
 
-      const updateState: any = propertyStateUpdate(propertyKey, opts.updateState);
+      const updateState: any = propertyStateUpdate(propertyKey, def.updateState);
 
       result = decoratePropertyAccessor(target, propertyKey, propertyDesc, dsc => {
 
@@ -52,15 +48,18 @@ export function DomProperty<T extends ComponentClass>(opts: DomProperty.Opts<T> 
       });
     }
 
-    const name = opts.propertyKey || propertyKey;
-    const desc = domPropertyDescriptor(propertyKey, propertyDesc, opts);
+    const name = def.propertyKey || propertyKey;
+    const desc = domPropertyDescriptor(propertyKey, propertyDesc, def);
 
     ComponentDef.define(
         componentType,
         {
           define(definitionContext) {
             definitionContext.get(DomPropertyRegistrar)(name, desc);
-          }
+          },
+          feature: {
+            needs: DomPropertiesSupport,
+          },
         });
 
     return result;
@@ -74,76 +73,6 @@ export function DomProperty<T extends ComponentClass>(opts: DomProperty.Opts<T> 
  */
 export { DomProperty as DomMethod };
 
-export namespace DomProperty {
-
-  /**
-   * Custom element property options.
-   *
-   * This is an parameter to `@DomProperty` decorator applied to component property.
-   */
-  export interface Opts<T extends object> {
-
-    /**
-     * Property key.
-     *
-     * Decorated property key is used by default.
-     */
-    propertyKey?: PropertyKey;
-
-    /**
-     * Whether the declared property should be configurable.
-     *
-     * Defaults to `configurable` attribute of decorated property.
-     */
-    configurable?: boolean;
-
-    /**
-     * Whether the declared property should be enumerable.
-     *
-     * Defaults to `enumerable` attribute of decorated property.
-     */
-    enumerable?: boolean;
-
-    /**
-     * Whether the declared property should accept new values.
-     *
-     * The property can not be writable if the decorated property is not writable.
-     *
-     * Defaults to `writable` attribute of decorated property.
-     */
-    writable?: boolean;
-
-    /**
-     * Whether to update the component state after this property changed.
-     *
-     * Can be one of:
-     * - `false` to not update the component state,
-     * - `true` (the default value) to update the component state with changed property key,
-     * - a state value key to update, or
-     * - an DOM property update receiver function with custom state update logic.
-     */
-    updateState?: boolean | StatePath | DomPropertyUpdateReceiver<T>;
-
-  }
-
-}
-
-/**
- * DOM property updates receiver invoked after custom element property change.
- *
- * @typeparam T A type of component.
- * @typeparam K A type of component property keys.
- * @param this Component instance.
- * @param path The changed property state path in the form of `[domPropertyPathRoot, propertyKey]`.
- * @param newValue New property value.
- * @param oldValue Previous property value.
- */
-export type DomPropertyUpdateReceiver<T extends object> = <K extends keyof T>(
-    this: T,
-    path: DomPropertyPath<K>,
-    newValue: T[K],
-    oldValue: T[K]) => void;
-
 function domPropertyDescriptor<V>(
     propertyKey: string | symbol,
     propertyDesc: TypedPropertyDescriptor<V> | undefined,
@@ -151,7 +80,7 @@ function domPropertyDescriptor<V>(
       configurable,
       enumerable,
       writable,
-    }: DomProperty.Opts<any>): PropertyAccessorDescriptor<V> {
+    }: DomPropertyDef<any>): PropertyAccessorDescriptor<V> {
   if (!propertyDesc) {
     // Component object property
     if (enumerable == null) {
