@@ -55,15 +55,6 @@ export interface ComponentDef<T extends object = object> {
 
 }
 
-export namespace ComponentDef {
-
-  /**
-   * Mutable component definition.
-   */
-  export type Mutable<T extends object = object> = { -readonly [K in keyof ComponentDef<T>]: ComponentDef<T>[K] };
-
-}
-
 class ComponentMeta extends MetaAccessor<ComponentDef<any>> {
 
   constructor() {
@@ -72,25 +63,13 @@ class ComponentMeta extends MetaAccessor<ComponentDef<any>> {
 
   merge<T extends object>(...defs: ComponentDef<T>[]): ComponentDef<T> {
     return defs.reduce(
-        (prev, def) => {
-
-          const merged: ComponentDef.Mutable<T> = { ...prev, ...def };
-          const set = new ArraySet(prev.set).merge(def.set);
-          const newDefine = mergeFunctions(prev.define, def.define);
-          const perComponent = new ArraySet(prev.perComponent).merge(def.perComponent);
-
-          if (set.size) {
-            merged.set = set.value;
-          }
-          if (newDefine) {
-            merged.define = newDefine;
-          }
-          if (perComponent.size) {
-            merged.perComponent = perComponent.value;
-          }
-
-          return merged;
-        },
+        (prev, def) => ({
+          ...prev,
+          ...def,
+          set: new ArraySet(prev.set).merge(def.set).value,
+          define: mergeFunctions(prev.define, def.define),
+          perComponent: new ArraySet(prev.perComponent).merge(def.perComponent).value,
+        }),
         {});
   }
 
