@@ -53,15 +53,6 @@ export interface FeatureDef {
 
 }
 
-export namespace FeatureDef {
-
-  /**
-   * Mutable feature definition.
-   */
-  export type Mutable = { -readonly [K in keyof FeatureDef]: FeatureDef[K] };
-
-}
-
 class FeatureMeta extends MetaAccessor<FeatureDef> {
 
   constructor() {
@@ -69,38 +60,15 @@ class FeatureMeta extends MetaAccessor<FeatureDef> {
   }
 
   merge(...defs: FeatureDef[]): FeatureDef {
-    return defs.reduce<FeatureDef.Mutable>(
-        (prev, def) => {
-
-          const result: FeatureDef.Mutable = {};
-          const set = new ArraySet(prev.set).merge(def.set);
-          const needs = new ArraySet(prev.needs).merge(def.needs);
-          const has = new ArraySet(prev.has).merge(def.has);
-          const init = mergeFunctions<[BootstrapContext], void, Class>(prev.init, def.init);
-          const perDefinitions = new ArraySet(prev.perDefinition).merge(def.perDefinition);
-          const perComponent = new ArraySet(prev.perComponent).merge(def.perComponent);
-
-          if (set.size) {
-            result.set = set.value;
-          }
-          if (needs.size) {
-            result.needs = needs.value;
-          }
-          if (has.size) {
-            result.has = has.value;
-          }
-          if (init) {
-            result.init = init;
-          }
-          if (perDefinitions.size) {
-            result.perDefinition = perDefinitions.value;
-          }
-          if (perComponent.size) {
-            result.perComponent = perComponent.value;
-          }
-
-          return result;
-        },
+    return defs.reduce<FeatureDef>(
+        (prev, def) => ({
+          set: new ArraySet(prev.set).merge(def.set).value,
+          needs: new ArraySet(prev.needs).merge(def.needs).value,
+          has: new ArraySet(prev.has).merge(def.has).value,
+          init: mergeFunctions<[BootstrapContext], void, Class>(prev.init, def.init),
+          perDefinition: new ArraySet(prev.perDefinition).merge(def.perDefinition).value,
+          perComponent: new ArraySet(prev.perComponent).merge(def.perComponent).value,
+        }),
         {});
   }
 
