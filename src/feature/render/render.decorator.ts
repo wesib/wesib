@@ -1,8 +1,8 @@
 import { TypedPropertyDecorator } from '../../common';
 import { ComponentClass, ComponentDef } from '../../component';
-import { ComponentState, StateSupport } from '../state';
+import { StateSupport } from '../state';
+import { ElementRender } from './element-render';
 import { RenderDef } from './render-def';
-import { RenderScheduler } from './render-scheduler';
 import { RenderSupport } from './render-support.feature';
 
 /**
@@ -16,14 +16,13 @@ import { RenderSupport } from './render-support.feature';
  *
  * This decorator automatically enables `StateSupport` and `RenderSupport` features.
  *
+ * Utilizes `ElementRender.render()` function to define rendering.
+ *
  * @param def Non-mandatory render definition.
  *
  * @returns Component method decorator.
  */
 export function Render<T extends ComponentClass>(def: RenderDef = {}): TypedPropertyDecorator<T> {
-
-  const { offline } = def;
-
   return <V>(target: InstanceType<T>, propertyKey: string | symbol) => {
 
     const componentType = target.constructor as T;
@@ -36,45 +35,9 @@ export function Render<T extends ComponentClass>(def: RenderDef = {}): TypedProp
               componentContext.whenReady(() => {
 
                 const component = componentContext.component as any;
-                let renderer: () => any = component[propertyKey];
-                let rendered = false;
-                const stateTracker = componentContext.get(ComponentState);
-                const renderScheduler = componentContext.get(RenderScheduler);
+                const render: () => any = component[propertyKey].bind(component);
 
-                stateTracker.onUpdate(() => {
-                  if (offline || componentContext.connected) {
-                    scheduleRender();
-                  } else {
-                    rendered = false;
-                  }
-                });
-                if (offline) {
-                  scheduleRender();
-                } else {
-                  componentContext.onConnect(() => {
-                    if (!rendered) {
-                      scheduleRender();
-                    }
-                  });
-                }
-
-                function scheduleRender() {
-                  rendered = true;
-                  renderScheduler.scheduleRender(render);
-                }
-
-                function render() {
-                  for (;;) {
-
-                    const newRenderer = renderer.call(component);
-
-                    if (newRenderer === renderer || typeof newRenderer !== 'function') {
-                      break;
-                    }
-
-                    renderer = newRenderer;
-                  }
-                }
+                ElementRender.render(componentContext, render, def);
               });
             });
           },

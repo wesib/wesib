@@ -1,5 +1,5 @@
 /**
- * Render definition.
+ * Element render definition.
  */
 export interface RenderDef {
 
