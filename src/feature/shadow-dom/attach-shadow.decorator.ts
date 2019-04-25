@@ -2,19 +2,23 @@ import { TypedClassDecorator } from '../../common';
 import { ComponentClass, ComponentContext, ComponentDef, ContentRoot } from '../../component';
 import { DefinitionContext } from '../../component/definition';
 import { FeatureDef } from '../feature-def';
+import { ShadowContentDef } from './shadow-content-def';
 import { ShadowContentRoot } from './shadow-content-root';
 import { ShadowDomSupport } from './shadow-dom-support.feature';
 import { ShadowRootBuilder } from './shadow-root-builder';
 
+const defaultShadowContentDef: ShadowContentDef = { mode: 'open' };
+
 /**
  * Component class decorator that attaches shadow root to decorated component instance.
  *
+ * @typeparam T A type of component.
  * @param init Shadow root initialization options. Uses `mode: 'open'` by default.
  *
  * @return Component class decorator.
  */
 export function AttachShadow<T extends ComponentClass<any> = any>(
-    init: ShadowRootInit = { mode: 'open' }): TypedClassDecorator<T> {
+    init: ShadowContentDef = defaultShadowContentDef): TypedClassDecorator<T> {
   return (type: T) => {
     FeatureDef.define(type, { needs: [ShadowDomSupport] });
     ComponentDef.define(
