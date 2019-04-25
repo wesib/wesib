@@ -80,17 +80,17 @@ describe('feature/render/render.decorator', () => {
       class TestFeature {}
 
       FeatureDef.define(testComponent, {
-        need: TestFeature,
+        needs: TestFeature,
       });
 
       testElement(testComponent);
     });
 
     it('requires state support', () => {
-      expect(FeatureDef.of(testComponent).need).toContain(StateSupport);
+      expect(FeatureDef.of(testComponent).needs).toContain(StateSupport);
     });
     it('requires rendering support', () => {
-      expect(FeatureDef.of(testComponent).need).toContain(RenderSupport);
+      expect(FeatureDef.of(testComponent).needs).toContain(RenderSupport);
     });
 
     describe('Rendering', () => {

@@ -58,7 +58,7 @@ describe('feature/feature-registry', () => {
       class Feature {}
 
       registry.add(FeatureDef.define(FeatureDef.define(Feature, {
-        need: [feature1, feature2],
+        needs: [feature1, feature2],
       })));
 
       expect(addSpy).toHaveBeenCalledWith(feature1);

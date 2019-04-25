@@ -14,7 +14,7 @@ import { ComponentDef } from './component-def';
  * ```
  *
  * Such component can be registered with `BootstrapContext.define()` method, or used as a feature, e.g. passed to
- * `bootstrapComponents()` method, or added to `FeatureDef.need` property of another feature.
+ * `bootstrapComponents()` method, or added to `FeatureDef.needs` property of another feature.
  *
  * This is an alternative to direct call to `ComponentDef.define()` method.
  *

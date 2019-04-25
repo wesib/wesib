@@ -39,7 +39,7 @@ export function AttributeChanged<T extends ComponentClass>(opts?: Attribute.Opts
     const { name, updateState } = parseAttributeOpts(target, propertyKey, opts);
     const componentType = target.constructor as T;
 
-    FeatureDef.define(componentType, { need: AttributesSupport });
+    FeatureDef.define(componentType, { needs: AttributesSupport });
     ComponentDef.define(
         componentType,
         {

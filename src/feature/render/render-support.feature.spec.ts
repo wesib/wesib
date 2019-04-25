@@ -47,7 +47,7 @@ describe('feature/render/render-support.feature', () => {
     beforeEach(() => {
 
       @Feature({
-        need: [RenderSupport],
+        needs: [RenderSupport],
         set: [
           { a: BootstrapWindow, is: windowSpy },
           { a: CustomElements, is: customElementsSpy },
@@ -55,7 +55,7 @@ describe('feature/render/render-support.feature', () => {
       })
       class TestFeature {}
 
-      FeatureDef.define(testComponent, { need: TestFeature });
+      FeatureDef.define(testComponent, { needs: TestFeature });
 
       testElement(testComponent);
     });

@@ -17,7 +17,7 @@ export interface FeatureDef {
   /**
    * Features this one requires.
    */
-  readonly need?: Class | readonly Class[];
+  readonly needs?: Class | readonly Class[];
 
   /**
    * Features this one provides.
@@ -74,7 +74,7 @@ class FeatureMeta extends MetaAccessor<FeatureDef> {
 
           const result: FeatureDef.Mutable = {};
           const set = new ArraySet(prev.set).merge(def.set);
-          const need = new ArraySet(prev.need).merge(def.need);
+          const needs = new ArraySet(prev.needs).merge(def.needs);
           const has = new ArraySet(prev.has).merge(def.has);
           const init = mergeFunctions<[BootstrapContext], void, Class>(prev.init, def.init);
           const perDefinitions = new ArraySet(prev.perDefinition).merge(def.perDefinition);
@@ -83,8 +83,8 @@ class FeatureMeta extends MetaAccessor<FeatureDef> {
           if (set.size) {
             result.set = set.value;
           }
-          if (need.size) {
-            result.need = need.value;
+          if (needs.size) {
+            result.needs = needs.value;
           }
           if (has.size) {
             result.has = has.value;

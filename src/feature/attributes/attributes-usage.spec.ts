@@ -42,7 +42,7 @@ describe('feature/attributes', () => {
       }
 
       @Feature({
-        need: TestWindowFeature,
+        needs: TestWindowFeature,
       })
       @Component({
         extend: {
@@ -102,7 +102,7 @@ describe('feature/attributes', () => {
           name: 'no-attr-component'
         })
         @Feature({
-          need: AttributesSupport,
+          needs: AttributesSupport,
         })
         class NoAttrComponent {
         }
@@ -201,7 +201,7 @@ describe('feature/attributes', () => {
           name: 'no-attr-component'
         })
         @Feature({
-          need: AttributesSupport,
+          needs: AttributesSupport,
         })
         class NoAttrComponent {
         }

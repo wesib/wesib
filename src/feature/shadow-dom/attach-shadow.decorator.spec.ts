@@ -52,7 +52,7 @@ describe('feature/shadow-dom/attach-shadow.decorator', () => {
     });
 
     it('enables shadow root support', () => {
-      expect(FeatureDef.of(testComponent).need).toBe(ShadowDomSupport);
+      expect(FeatureDef.of(testComponent).needs).toBe(ShadowDomSupport);
     });
     it('provides shadow root', () => {
       expect(context.get(ShadowContentRoot)).toBe(shadowRoot);

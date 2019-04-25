@@ -6,7 +6,7 @@ import { FeatureDef } from './feature-def';
  *
  * Decorate a class with this decorator to define it as a feature like this:
  * ```TypeScript
- * @Feature({ need: [OtherFeature, MyComponent] })
+ * @Feature({ needs: [OtherFeature, MyComponent] })
  * class MyFeature {
  *   // ...
  * }
@@ -16,7 +16,7 @@ import { FeatureDef } from './feature-def';
  *
  * This is an alternative to direct call to `FeatureDef.define()` method.
  *
- * @param <T> A type of feature.
+ * @typeparam T A type of feature.
  * @param def Feature definition.
  *
  * @returns A feature class decorator.

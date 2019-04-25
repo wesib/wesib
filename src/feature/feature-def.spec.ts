@@ -29,7 +29,7 @@ describe('feature/feature-def', () => {
 
         class A {
           static [FeatureDef__symbol]: FeatureDef = {
-            need: Feature1,
+            needs: Feature1,
           };
         }
         class B extends A {}
@@ -40,12 +40,12 @@ describe('feature/feature-def', () => {
 
         class A {
           static [FeatureDef__symbol]: FeatureDef = {
-            need: Feature1,
+            needs: Feature1,
           };
         }
         class B extends A {
           static [FeatureDef__symbol]: FeatureDef = {
-            need: Feature2,
+            needs: Feature2,
           };
         }
 
@@ -54,12 +54,12 @@ describe('feature/feature-def', () => {
       });
     });
     describe('merge', () => {
-      it('merges `need`', () => {
+      it('merges `needs`', () => {
 
-        const first: FeatureDef = { need: Feature1 };
-        const second: FeatureDef = { need: Feature2 };
+        const first: FeatureDef = { needs: Feature1 };
+        const second: FeatureDef = { needs: Feature2 };
 
-        expect(FeatureDef.merge(first, second)).toEqual({ need: [Feature1, Feature2]});
+        expect(FeatureDef.merge(first, second)).toEqual({ needs: [Feature1, Feature2]});
       });
       it('merges `has`', () => {
 
@@ -149,7 +149,7 @@ describe('feature/feature-def', () => {
 
       it('assigns feature definition', () => {
 
-        const def: FeatureDef = { need: Feature1 };
+        const def: FeatureDef = { needs: Feature1 };
         const componentType = FeatureDef.define(TestFeature, def);
 
         expect(FeatureDef.of(componentType)).toEqual(def);
@@ -157,13 +157,13 @@ describe('feature/feature-def', () => {
       it('updates component definition', () => {
 
         const initialDef: FeatureDef = {
-          need: Feature1,
+          needs: Feature1,
         };
 
         FeatureDef.define(TestFeature, initialDef);
 
         const def: FeatureDef = {
-          need: Feature2,
+          needs: Feature2,
         };
         const featureType = FeatureDef.define(TestFeature, def);
 

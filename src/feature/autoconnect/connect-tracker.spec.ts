@@ -44,7 +44,7 @@ describe('feature/autoconnect', () => {
     beforeEach(async () => {
 
       @Feature({
-        need: AutoConnectSupport,
+        needs: AutoConnectSupport,
         set: { a: ElementAdapter, is: adapter },
       })
       @Component({

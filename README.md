@@ -161,7 +161,7 @@ The feature is a class decorated with `@Feature` decorator:
 import { BootstrapContext, ComponentContext, DefinitionContext, Feature } from '@wesib/wesib';
 
 @Feature({
-  need: [
+  needs: [
     OtherFeature1, // Requires other features to be enabled.
     MyComponent, // The required component will be defined too.  
   ], 
@@ -228,7 +228,7 @@ import { bootstrapComponents } from '@wesib/wesib';
 bootstrapComponents(MyFeature);
 ```
 
-Note that components are kind of features that, when passed to this function (or enabled with `need` option),
+Note that components are kind of features that, when passed to this function (or enabled with `needs` option),
 register themselves as components.
 
 

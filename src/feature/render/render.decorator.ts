@@ -25,7 +25,7 @@ export function Render<T extends ComponentClass>({ offline }: Render.Opts = {}):
 
     const componentType = target.constructor as T;
 
-    FeatureDef.define(componentType, { need: [StateSupport, RenderSupport] });
+    FeatureDef.define(componentType, { needs: [StateSupport, RenderSupport] });
 
     ComponentDef.define(
         componentType,
