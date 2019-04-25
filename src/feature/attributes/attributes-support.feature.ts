@@ -3,7 +3,7 @@ import { AttributeChangedCallback, AttributeRegistrar } from './attribute-regist
 import { AttributeRegistry } from './attribute-registry';
 
 const DEF: FeatureDef = {
-  forDefinitions: [
+  perDefinition: [
     { as: AttributeRegistry },
     {
       a: AttributeRegistrar,

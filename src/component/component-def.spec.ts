@@ -123,16 +123,16 @@ describe('component/component-def', () => {
         expect(define2spy).toHaveBeenCalledWith(context);
         expect(define2spy.mock.instances[0]).toBe(Component);
       });
-      it('merges `forComponents`', () => {
+      it('merges `perComponent`', () => {
 
         const key1 = new SingleContextKey<string>('a');
         const key2 = new SingleContextKey<string>('b');
 
         expect(ComponentDef.merge(
-            { forComponents: { a: key1, is: 'a' } },
-            { forComponents: { a: key2, is: 'b' } })
+            { perComponent: { a: key1, is: 'a' } },
+            { perComponent: { a: key2, is: 'b' } })
         ).toEqual({
-          forComponents: [
+          perComponent: [
             { a: key1, is: 'a' },
             { a: key2, is: 'b' },
           ]

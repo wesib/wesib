@@ -3,7 +3,7 @@ import { DomPropertyRegistrar } from './dom-property-registrar';
 import { DomPropertyRegistry } from './dom-property-registry';
 
 const DEF: FeatureDef = {
-  forDefinitions: [
+  perDefinition: [
     { as: DomPropertyRegistry },
     {
       a: DomPropertyRegistrar,

@@ -199,7 +199,7 @@ describe('kit/bootstrap/bootstrap-components', () => {
         expect(bootstrapContext.whenDefined(TestComponent)).toBe(promise);
         expect(componentRegistrySpy.whenDefined).toHaveBeenCalledWith(TestComponent);
       });
-      it('proxies forDefinitions() method', () => {
+      it('proxies perDefinition() method', () => {
 
         const definitionValueRegistry = createDefinitionValueRegistrySpy.mock.results[0].value;
         const spy = jest.spyOn(definitionValueRegistry, 'provide');
@@ -207,11 +207,11 @@ describe('kit/bootstrap/bootstrap-components', () => {
         const key = new SingleContextKey<string>('test-value-key');
         const provider = () => 'test-value';
 
-        bootstrapContext.forDefinitions({ a: key, by: provider });
+        bootstrapContext.perDefinition({ a: key, by: provider });
 
         expect(spy).toHaveBeenCalledWith({ a: key, by: provider });
       });
-      it('proxies forComponents() method', () => {
+      it('proxies perComponent() method', () => {
 
         const componentValueRegistry = createComponentValueRegistrySpy.mock.results[0].value;
         const spy = jest.spyOn(componentValueRegistry, 'provide');
@@ -219,7 +219,7 @@ describe('kit/bootstrap/bootstrap-components', () => {
         const key = new SingleContextKey<string>('test-value-key');
         const provider = () => 'test-value';
 
-        bootstrapContext.forComponents({ a: key, by: provider });
+        bootstrapContext.perComponent({ a: key, by: provider });
 
         expect(spy).toHaveBeenCalledWith({ a: key, by: provider });
       });

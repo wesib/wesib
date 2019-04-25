@@ -3,7 +3,7 @@ import { FeatureDef, FeatureDef__symbol } from '../feature-def';
 import { ComponentState } from './component-state';
 
 const DEF: FeatureDef = {
-  forComponents: [
+  perComponent: [
     { as: ComponentState },
     {
       a: StateUpdater,

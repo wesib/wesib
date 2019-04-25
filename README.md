@@ -169,7 +169,7 @@ import { BootstrapContext, ComponentContext, DefinitionContext, Feature } from '
     { a: GlobalService, by: () => new GlobalService() }, // Provide a `GlobalService` available globally
                                                          // in all IoC contexts
   ],
-  forDefinitions: {
+  perDefinition: {
     a: DefinitionService,
     by: (definitionContext: DefinitionContext) => {
       // Provide a `DefinitionService` available during component definition.
@@ -179,7 +179,7 @@ import { BootstrapContext, ComponentContext, DefinitionContext, Feature } from '
       return new DefinitionService(definitionContext);
     }
   },
-  forComponents: {
+  perComponent: {
     a: MyService,
     by: (componentContext: ComponentContext) => {
       // Provide a `MyService` available to components.
@@ -194,7 +194,7 @@ import { BootstrapContext, ComponentContext, DefinitionContext, Feature } from '
     context.onDefinition((definitionContext: DefinitionContext) => {
       // Notified on each component definition.
 
-      // The service provided with `forDefinitions()` method above is available here      
+      // The service provided with `perDefinition()` method above is available here      
       const definitionService = definitionContext.get(DefinitionService);
       
       definitionContext.whenReady(() => {
@@ -207,7 +207,7 @@ import { BootstrapContext, ComponentContext, DefinitionContext, Feature } from '
     context.onComponent((componentContext: ComponentContext) => {
       // Notified on each component instantiation.
       
-      // The service provided with `forComponents()` method above is available here      
+      // The service provided with `perComponent()` method above is available here      
       const myService = componentContext.get(MyService);
       
       componentContext.whenReady(() => {

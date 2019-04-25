@@ -26,7 +26,7 @@ export function AttachShadow<T extends ComponentClass<any> = any>(
                 ctx.whenReady(() =>
                     ctx.get(ShadowContentRoot)));
           },
-          forComponents: [
+          perComponent: [
             {
               a: ShadowContentRoot,
               by(ctx: ComponentContext<InstanceType<T>>) {

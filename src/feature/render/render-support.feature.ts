@@ -4,7 +4,7 @@ import { FeatureDef, FeatureDef__symbol } from '../feature-def';
 import { RenderScheduler as RenderScheduler_ } from './render-scheduler';
 
 const DEF: FeatureDef = {
-  forComponents: {
+  perComponent: {
     a: RenderScheduler_,
     by: createRenderScheduler,
     with: [BootstrapWindow],

@@ -192,14 +192,14 @@ export class ElementBuilder {
         new ArraySet(def.set).forEach(spec => definitionRegistry.provide(spec));
 
         typeValueRegistry = ComponentValueRegistry.create(definitionRegistry.bindSources(this));
-        new ArraySet(def.forComponents).forEach(spec => typeValueRegistry.provide(spec));
+        new ArraySet(def.perComponent).forEach(spec => typeValueRegistry.provide(spec));
       }
 
       whenReady(callback: (this: DefinitionContext, elementType: Class) => void) {
         whenReady = mergeFunctions<[Class], void, DefinitionContext>(whenReady, callback);
       }
 
-      forComponents<S>(spec: ContextValueSpec<ComponentContext_<any>, any, any[], S>): void {
+      perComponent<S>(spec: ContextValueSpec<ComponentContext_<any>, any, any[], S>): void {
         typeValueRegistry.provide(spec);
       }
 

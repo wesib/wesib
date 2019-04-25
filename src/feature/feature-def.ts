@@ -40,15 +40,15 @@ export interface FeatureDef {
   readonly init?: (this: Class, context: BootstrapContext) => void;
 
   /**
-   * Definition context values to declare prior to component class definition.
+   * Definition context values to declare per each component class definition.
    */
-  readonly forDefinitions?: ContextValueSpec<DefinitionContext<any>, any, any[], any>
+  readonly perDefinition?: ContextValueSpec<DefinitionContext<any>, any, any[], any>
       | ContextValueSpec<DefinitionContext<any>, any, any[], any>[];
 
   /**
-   * Component context values to declare prior to component construction.
+   * Component context values to declare per each component construction.
    */
-  readonly forComponents?: ContextValueSpec<ComponentContext<any>, any, any[], any>
+  readonly perComponent?: ContextValueSpec<ComponentContext<any>, any, any[], any>
       | ContextValueSpec<ComponentContext<any>, any, any[], any>[];
 
 }
@@ -77,8 +77,8 @@ class FeatureMeta extends MetaAccessor<FeatureDef> {
           const need = new ArraySet(prev.need).merge(def.need);
           const has = new ArraySet(prev.has).merge(def.has);
           const init = mergeFunctions<[BootstrapContext], void, Class>(prev.init, def.init);
-          const forDefinitions = new ArraySet(prev.forDefinitions).merge(def.forDefinitions);
-          const forComponents = new ArraySet(prev.forComponents).merge(def.forComponents);
+          const perDefinitions = new ArraySet(prev.perDefinition).merge(def.perDefinition);
+          const perComponent = new ArraySet(prev.perComponent).merge(def.perComponent);
 
           if (set.size) {
             result.set = set.value;
@@ -92,11 +92,11 @@ class FeatureMeta extends MetaAccessor<FeatureDef> {
           if (init) {
             result.init = init;
           }
-          if (forDefinitions.size) {
-            result.forDefinitions = forDefinitions.value;
+          if (perDefinitions.size) {
+            result.perDefinition = perDefinitions.value;
           }
-          if (forComponents.size) {
-            result.forComponents = forComponents.value;
+          if (perComponent.size) {
+            result.perComponent = perComponent.value;
           }
 
           return result;

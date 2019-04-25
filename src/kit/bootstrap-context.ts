@@ -82,7 +82,7 @@ export abstract class BootstrapContext extends ContextValues {
    * @param <S> The type of context value sources.
    * @param spec Component definition context value specifier.
    */
-  abstract forDefinitions<D extends any[], S>(spec: ContextValueSpec<DefinitionContext<any>, any, D, S>): void;
+  abstract perDefinition<D extends any[], S>(spec: ContextValueSpec<DefinitionContext<any>, any, D, S>): void;
 
   /**
    * Provides a value available in each component context.
@@ -91,7 +91,7 @@ export abstract class BootstrapContext extends ContextValues {
    * @param <S> The type of context value sources.
    * @param spec Component context value specifier.
    */
-  abstract forComponents<D extends any[], S>(spec: ContextValueSpec<ComponentContext<any>, any, D, S>): void;
+  abstract perComponent<D extends any[], S>(spec: ContextValueSpec<ComponentContext<any>, any, D, S>): void;
 
   /**
    * Registers bootstrap readiness callback.

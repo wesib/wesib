@@ -48,9 +48,9 @@ export interface ComponentDef<T extends object = object> {
   readonly define?: (this: Class<T>, context: DefinitionContext<T>) => void;
 
   /**
-   * Component context values to declare prior to component construction.
+   * Component context values to declare per each component construction.
    */
-  readonly forComponents?: ContextValueSpec<ComponentContext<T>, any, any[], any>
+  readonly perComponent?: ContextValueSpec<ComponentContext<T>, any, any[], any>
       | ContextValueSpec<ComponentContext<T>, any, any[], any>[];
 
 }
@@ -77,7 +77,7 @@ class ComponentMeta extends MetaAccessor<ComponentDef<any>> {
           const merged: ComponentDef.Mutable<T> = { ...prev, ...def };
           const set = new ArraySet(prev.set).merge(def.set);
           const newDefine = mergeFunctions(prev.define, def.define);
-          const forComponents = new ArraySet(prev.forComponents).merge(def.forComponents);
+          const perComponent = new ArraySet(prev.perComponent).merge(def.perComponent);
 
           if (set.size) {
             merged.set = set.value;
@@ -85,8 +85,8 @@ class ComponentMeta extends MetaAccessor<ComponentDef<any>> {
           if (newDefine) {
             merged.define = newDefine;
           }
-          if (forComponents.size) {
-            merged.forComponents = forComponents.value;
+          if (perComponent.size) {
+            merged.perComponent = perComponent.value;
           }
 
           return merged;
