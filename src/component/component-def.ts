@@ -42,16 +42,14 @@ class ComponentMeta extends MetaAccessor<ComponentDef<any>> {
 
 }
 
-const meta = /*#__PURE__*/ new ComponentMeta();
-
 /**
  * Component definition.
  *
  * A custom element class will be created for each registered component in accordance to this definition.
  *
- * @param <T> A type of component.
+ * @typeparam T A type of component.
  */
-export abstract class ComponentDef<T extends object = object> {
+export interface ComponentDef<T extends object = object> {
 
   /**
    * Custom element name.
@@ -59,17 +57,17 @@ export abstract class ComponentDef<T extends object = object> {
    * When omitted an anonymous component will be registered. Such component is not bound to custom element, but it
    * still can be mounted.
    */
-  abstract name?: string;
+  name?: string;
 
   /**
    * Existing element to extend by custom one.
    */
-  abstract extend?: ElementDef.Extend;
+  extend?: ElementDef.Extend;
 
   /**
    * Definition context values to declare prior to component class definition.
    */
-  abstract set?: ContextValueSpec<DefinitionContext<T>, any, any[], any>
+  set?: ContextValueSpec<DefinitionContext<T>, any, any[], any>
       | ContextValueSpec<DefinitionContext<T>, any, any[], any>[];
 
   /**
@@ -79,37 +77,43 @@ export abstract class ComponentDef<T extends object = object> {
    *
    * @param context Component definition context.
    */
-  abstract define?: (this: Class<T>, context: DefinitionContext<T>) => void;
+  define?: (this: Class<T>, context: DefinitionContext<T>) => void;
 
   /**
    * Component context values to declare prior to component construction.
    */
-  abstract forComponents?: ContextValueSpec<ComponentContext<T>, any, any[], any>
+  forComponents?: ContextValueSpec<ComponentContext<T>, any, any[], any>
       | ContextValueSpec<ComponentContext<T>, any, any[], any>[];
+
+}
+
+const meta = /*#__PURE__*/ new ComponentMeta();
+
+export const ComponentDef = {
 
   /**
    * Extracts a component definition from its type.
    *
-   * @param <T> A type of component.
+   * @typeparam T A type of component.
    * @param componentType Target component class constructor.
    *
    * @returns Component definition. May be empty if there is not definition attached to component type.
    */
-  static of<T extends object>(componentType: ComponentClass<T>): ComponentDef<T> {
+  of<T extends object>(componentType: ComponentClass<T>): ComponentDef<T> {
     return meta.of(componentType) as ComponentDef<T> || {};
-  }
+  },
 
   /**
    * Merges multiple (partial) component definitions.
    *
-   * @param <T> A type of component.
+   * @typeparam T A type of component.
    * @param defs Partial component definitions to merge.
    *
    * @returns Merged component definition.
    */
-  static merge<T extends object>(...defs: ComponentDef<T>[]): ComponentDef<T> {
+  merge<T extends object>(...defs: ComponentDef<T>[]): ComponentDef<T> {
     return meta.merge(...defs);
-  }
+  },
 
   /**
    * Defines a component.
@@ -119,13 +123,13 @@ export abstract class ComponentDef<T extends object = object> {
    * Note that each `ComponentClass` is also a feature able to register itself, so it can be passed directly to
    * `bootstrapComponents()` function or added as a requirement of another feature.
    *
-   * @param <T> A type of component.
+   * @typeparam T A type of component.
    * @param type Component class constructor.
    * @param defs Component definitions.
    *
    * @returns The `type` instance.
    */
-  static define<T extends ComponentClass>(
+  define<T extends ComponentClass>(
       type: T,
       ...defs: ComponentDef<InstanceType<T>>[]): T {
 
@@ -144,5 +148,6 @@ export abstract class ComponentDef<T extends object = object> {
             context.define(this);
           },
         });
-  }
-}
+  },
+
+};
