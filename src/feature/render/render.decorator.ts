@@ -1,7 +1,7 @@
 import { TypedPropertyDecorator } from '../../common';
 import { ComponentClass, ComponentDef } from '../../component';
-import { FeatureDef } from '../feature-def';
 import { ComponentState, StateSupport } from '../state';
+import { RenderDef } from './render-def';
 import { RenderScheduler } from './render-scheduler';
 import { RenderSupport } from './render-support.feature';
 
@@ -16,16 +16,17 @@ import { RenderSupport } from './render-support.feature';
  *
  * This decorator automatically enables `StateSupport` and `RenderSupport` features.
  *
- * @param opts Non-mandatory rendering options.
+ * @param def Non-mandatory render definition.
  *
  * @returns Component method decorator.
  */
-export function Render<T extends ComponentClass>({ offline }: Render.Opts = {}): TypedPropertyDecorator<T> {
+export function Render<T extends ComponentClass>(def: RenderDef = {}): TypedPropertyDecorator<T> {
+
+  const { offline } = def;
+
   return <V>(target: InstanceType<T>, propertyKey: string | symbol) => {
 
     const componentType = target.constructor as T;
-
-    FeatureDef.define(componentType, { needs: [StateSupport, RenderSupport] });
 
     ComponentDef.define(
         componentType,
@@ -77,27 +78,9 @@ export function Render<T extends ComponentClass>({ offline }: Render.Opts = {}):
               });
             });
           },
+          feature: {
+            needs: [StateSupport, RenderSupport],
+          },
         });
   };
-}
-
-export namespace Render {
-
-  /**
-   * Rendering options.
-   */
-  export interface Opts {
-
-    /**
-     * Whether to render element contents while disconnected.
-     *
-     * When offline rendering is disabled the rendering will be scheduled whenever element is connected.
-     *
-     * `false` by default. Which means the element contents won't be rendered while disconnected. Rendering will
-     * be initiated once element is connected for the first time, or if it is connected after state update.
-     */
-    offline?: boolean;
-
-  }
-
 }
