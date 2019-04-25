@@ -97,7 +97,7 @@ export class FeatureRegistry {
     const def = FeatureDef.of(feature);
 
     // Add requirements before the feature itself.
-    new ArraySet(def.need).items.forEach(needed => this.add(needed));
+    new ArraySet(def.needs).items.forEach(needed => this.add(needed));
 
     if (!existing) {
       this._providers.set(feature, providers);
@@ -119,8 +119,8 @@ export class FeatureRegistry {
         const def = FeatureDef.of(feature);
 
         new ArraySet(def.set).forEach(spec => this._valueRegistry.provide(spec));
-        new ArraySet(def.forDefinitions).forEach(spec => context.forDefinitions(spec));
-        new ArraySet(def.forComponents).forEach(spec => context.forComponents(spec));
+        new ArraySet(def.perDefinition).forEach(spec => context.perDefinition(spec));
+        new ArraySet(def.perComponent).forEach(spec => context.perComponent(spec));
       }
     });
   }

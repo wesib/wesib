@@ -1,8 +1,9 @@
 import { TypedPropertyDecorator } from '../../common';
 import { ComponentClass, ComponentDef } from '../../component';
 import { FeatureDef } from '../feature-def';
+import { AttributeDef } from './attribute-def';
+import { parseAttributeDef } from './attribute-def.impl';
 import { AttributeChangedCallback, AttributeRegistrar } from './attribute-registrar';
-import { Attribute, parseAttributeOpts } from './attribute.decorator';
 import { AttributesSupport } from './attributes-support.feature';
 
 /**
@@ -28,18 +29,18 @@ import { AttributesSupport } from './attributes-support.feature';
  *
  * This decorator automatically enables `AttributesSupport` feature.
  *
- * @param opts Attribute definition options, or just an attribute name.
+ * @param def Attribute definition or just an attribute name.
  *
  * @return Component method decorator.
  */
-export function AttributeChanged<T extends ComponentClass>(opts?: Attribute.Opts<InstanceType<T>> | string):
+export function AttributeChanged<T extends ComponentClass>(def?: AttributeDef<InstanceType<T>> | string):
     TypedPropertyDecorator<T> {
   return <V>(target: InstanceType<T>, propertyKey: string | symbol) => {
 
-    const { name, updateState } = parseAttributeOpts(target, propertyKey, opts);
+    const { name, updateState } = parseAttributeDef(target, propertyKey, def);
     const componentType = target.constructor as T;
 
-    FeatureDef.define(componentType, { need: AttributesSupport });
+    FeatureDef.define(componentType, { needs: AttributesSupport });
     ComponentDef.define(
         componentType,
         {

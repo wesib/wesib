@@ -2,7 +2,7 @@ import { ContextKey, SingleContextKey } from 'context-values';
 import { ComponentClass } from '../component';
 import { ComponentFactory } from '../component/definition';
 
-const KEY = /*#__PURE__*/ new SingleContextKey<ComponentKit>('component-kit');
+const ComponentKit__key = /*#__PURE__*/ new SingleContextKey<ComponentKit>('component-kit');
 
 /**
  * A component kit.
@@ -16,7 +16,7 @@ export abstract class ComponentKit {
    * A key of bootstrap context value containing a constructing component kit instance.
    */
   static get key(): ContextKey<ComponentKit> {
-    return KEY;
+    return ComponentKit__key;
   }
 
   /**

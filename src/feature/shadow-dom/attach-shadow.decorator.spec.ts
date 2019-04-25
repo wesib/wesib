@@ -1,10 +1,11 @@
 import { DomEventDispatcher } from 'fun-events';
-import { Component, ComponentClass, ComponentContext, ComponentEventDispatcher } from '../../component';
+import { Component, ComponentClass, ComponentContext, ComponentEventDispatcher, ContentRoot } from '../../component';
 import { ObjectMock } from '../../spec/mocks';
 import { MockElement, testElement } from '../../spec/test-element';
 import { FeatureDef } from '../feature-def';
 import { Feature } from '../feature.decorator';
 import { AttachShadow } from './attach-shadow.decorator';
+import { ShadowContentDef } from './shadow-content-def';
 import { ShadowContentRoot } from './shadow-content-root';
 import { ShadowDomEvent } from './shadow-dom-event';
 import { ShadowDomSupport } from './shadow-dom-support.feature';
@@ -52,7 +53,7 @@ describe('feature/shadow-dom/attach-shadow.decorator', () => {
     });
 
     it('enables shadow root support', () => {
-      expect(FeatureDef.of(testComponent).need).toBe(ShadowDomSupport);
+      expect(FeatureDef.of(testComponent).needs).toBe(ShadowDomSupport);
     });
     it('provides shadow root', () => {
       expect(context.get(ShadowContentRoot)).toBe(shadowRoot);
@@ -63,10 +64,15 @@ describe('feature/shadow-dom/attach-shadow.decorator', () => {
     it('provides shadow root as content root', () => {
       expect(context.contentRoot).toBe(shadowRoot);
     });
+    it('does not eagerly attaches shadow root', () => {
+      expect(attachShadowSpy).not.toHaveBeenCalled();
+    });
     it('attaches open shadow root by default', () => {
+      context.get(ShadowContentRoot);
       expect(attachShadowSpy).toHaveBeenCalledWith({ mode: 'open' });
     });
     it('dispatches shadow DOM event', () => {
+      context.get(ShadowContentRoot);
       expect(mockDispatcher.dispatch).toHaveBeenCalledWith(
           context,
           expect.any(ShadowDomEvent));
@@ -75,13 +81,12 @@ describe('feature/shadow-dom/attach-shadow.decorator', () => {
           expect.objectContaining({ type: 'wesib:shadowAttached' }));
     });
     it('attaches shadow root', () => {
-      attachShadowSpy.mockClear();
 
-      const init: ShadowRootInit = {
+      const shadowDef: ShadowContentDef = {
         mode: 'closed',
       };
 
-      @AttachShadow(init)
+      @AttachShadow(shadowDef)
       @Component({
         name: 'other-component',
         extend: {
@@ -94,8 +99,9 @@ describe('feature/shadow-dom/attach-shadow.decorator', () => {
       }
 
       element = new (testElement(OtherComponent))();
+      ComponentContext.of(element).get(ShadowContentRoot);
 
-      expect(attachShadowSpy).toHaveBeenCalledWith(init);
+      expect(attachShadowSpy).toHaveBeenCalledWith(shadowDef);
     });
     it('uses existing shadow root', () => {
       attachShadowSpy.mockClear();
@@ -124,14 +130,14 @@ describe('feature/shadow-dom/attach-shadow.decorator', () => {
       expect(ComponentContext.of(element).get(ShadowContentRoot)).toBe(mockShadowRoot);
       expect(attachShadowSpy).not.toHaveBeenCalled();
     });
-    it('uses element as shadow root if shadow DOM is not supported', () => {
+    it('uses element as content root if shadow DOM is not supported', () => {
       attachShadowSpy.mockClear();
 
-      const init: ShadowRootInit = {
+      const shadowDef: ShadowContentDef = {
         mode: 'closed',
       };
 
-      @AttachShadow(init)
+      @AttachShadow(shadowDef)
       @Component({
         name: 'other-component',
         extend: {
@@ -144,7 +150,8 @@ describe('feature/shadow-dom/attach-shadow.decorator', () => {
       element = new (testElement(OtherComponent))();
       context = ComponentContext.of(element);
 
-      expect(context.get(ShadowContentRoot)).toBe(element);
+      expect(context.get(ShadowContentRoot, { or: null })).toBeNull();
+      expect(context.get(ContentRoot)).toBe(element);
     });
   });
 });

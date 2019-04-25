@@ -29,7 +29,7 @@ describe('feature/feature-def', () => {
 
         class A {
           static [FeatureDef__symbol]: FeatureDef = {
-            need: Feature1,
+            needs: Feature1,
           };
         }
         class B extends A {}
@@ -40,12 +40,12 @@ describe('feature/feature-def', () => {
 
         class A {
           static [FeatureDef__symbol]: FeatureDef = {
-            need: Feature1,
+            needs: Feature1,
           };
         }
         class B extends A {
           static [FeatureDef__symbol]: FeatureDef = {
-            need: Feature2,
+            needs: Feature2,
           };
         }
 
@@ -54,12 +54,12 @@ describe('feature/feature-def', () => {
       });
     });
     describe('merge', () => {
-      it('merges `need`', () => {
+      it('merges `needs`', () => {
 
-        const first: FeatureDef = { need: Feature1 };
-        const second: FeatureDef = { need: Feature2 };
+        const first: FeatureDef = { needs: Feature1 };
+        const second: FeatureDef = { needs: Feature2 };
 
-        expect(FeatureDef.merge(first, second)).toEqual({ need: [Feature1, Feature2]});
+        expect(FeatureDef.merge(first, second)).toEqual({ needs: [Feature1, Feature2]});
       });
       it('merges `has`', () => {
 
@@ -102,7 +102,7 @@ describe('feature/feature-def', () => {
         expect(bootstrap2spy).toHaveBeenCalledWith(context);
         expect(bootstrap2spy.mock.instances[0]).toBe(Feature);
       });
-      it('merges `forDefinitions`', () => {
+      it('merges `perDefinition`', () => {
 
         const v1: ContextValueSpec<BootstrapContext, string> = {
           a: new SingleContextKey<string>('1'),
@@ -113,12 +113,12 @@ describe('feature/feature-def', () => {
           is: '2',
         };
 
-        const first: FeatureDef = { forDefinitions: v1 };
-        const second: FeatureDef = { forDefinitions: v2 };
+        const first: FeatureDef = { perDefinition: v1 };
+        const second: FeatureDef = { perDefinition: v2 };
 
-        expect(FeatureDef.merge(first, second)).toEqual({ forDefinitions: [v1, v2]});
+        expect(FeatureDef.merge(first, second)).toEqual({ perDefinition: [v1, v2]});
       });
-      it('merges `forComponents`', () => {
+      it('merges `perComponent`', () => {
 
         const v1: ContextValueSpec<BootstrapContext, string> = {
           a: new SingleContextKey<string>('1'),
@@ -129,10 +129,10 @@ describe('feature/feature-def', () => {
           is: '2',
         };
 
-        const first: FeatureDef = { forComponents: v1 };
-        const second: FeatureDef = { forComponents: v2 };
+        const first: FeatureDef = { perComponent: v1 };
+        const second: FeatureDef = { perComponent: v2 };
 
-        expect(FeatureDef.merge(first, second)).toEqual({ forComponents: [v1, v2]});
+        expect(FeatureDef.merge(first, second)).toEqual({ perComponent: [v1, v2]});
       });
       it('does not merge empty definitions', () => {
         expect(FeatureDef.merge({}, {})).toEqual({});
@@ -149,7 +149,7 @@ describe('feature/feature-def', () => {
 
       it('assigns feature definition', () => {
 
-        const def: FeatureDef = { need: Feature1 };
+        const def: FeatureDef = { needs: Feature1 };
         const componentType = FeatureDef.define(TestFeature, def);
 
         expect(FeatureDef.of(componentType)).toEqual(def);
@@ -157,13 +157,13 @@ describe('feature/feature-def', () => {
       it('updates component definition', () => {
 
         const initialDef: FeatureDef = {
-          need: Feature1,
+          needs: Feature1,
         };
 
         FeatureDef.define(TestFeature, initialDef);
 
         const def: FeatureDef = {
-          need: Feature2,
+          needs: Feature2,
         };
         const featureType = FeatureDef.define(TestFeature, def);
 

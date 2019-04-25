@@ -5,7 +5,7 @@ import { DefinitionContext } from '../../component/definition';
 import { BootstrapWindow } from '../../kit';
 import { AttributeChangedCallback } from './attribute-registrar';
 
-const KEY = /*#__PURE__*/ new SingleContextKey<AttributeRegistry<any>>('attribute-registry');
+const AttributeRegistry__key = /*#__PURE__*/ new SingleContextKey<AttributeRegistry<any>>('attribute-registry');
 
 /**
  * @internal
@@ -13,7 +13,7 @@ const KEY = /*#__PURE__*/ new SingleContextKey<AttributeRegistry<any>>('attribut
 export class AttributeRegistry<T extends object> {
 
   static get key(): ContextKey<AttributeRegistry<any>> {
-    return KEY;
+    return AttributeRegistry__key;
   }
 
   private readonly _MutationObserver: typeof MutationObserver;

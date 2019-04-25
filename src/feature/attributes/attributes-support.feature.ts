@@ -2,8 +2,8 @@ import { FeatureDef, FeatureDef__symbol } from '../feature-def';
 import { AttributeChangedCallback, AttributeRegistrar } from './attribute-registrar';
 import { AttributeRegistry } from './attribute-registry';
 
-const DEF: FeatureDef = {
-  forDefinitions: [
+const AttributesSupport__feature: FeatureDef = {
+  perDefinition: [
     { as: AttributeRegistry },
     {
       a: AttributeRegistrar,
@@ -40,7 +40,7 @@ const DEF: FeatureDef = {
 export class AttributesSupport {
 
   static get [FeatureDef__symbol](): FeatureDef {
-    return DEF;
+    return AttributesSupport__feature;
   }
 
 }

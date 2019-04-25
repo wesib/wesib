@@ -25,7 +25,7 @@ import { DefinitionValueRegistry } from './definition-value-registry';
  * The component context is also available inside component constructor by temporarily assigning it to component
  * prototype.
  *
- * @param <T> A type of component.
+ * @typeparam T A type of component.
  * @param type Component class constructor.
  * @param context Target component context.
  */
@@ -192,14 +192,14 @@ export class ElementBuilder {
         new ArraySet(def.set).forEach(spec => definitionRegistry.provide(spec));
 
         typeValueRegistry = ComponentValueRegistry.create(definitionRegistry.bindSources(this));
-        new ArraySet(def.forComponents).forEach(spec => typeValueRegistry.provide(spec));
+        new ArraySet(def.perComponent).forEach(spec => typeValueRegistry.provide(spec));
       }
 
       whenReady(callback: (this: DefinitionContext, elementType: Class) => void) {
         whenReady = mergeFunctions<[Class], void, DefinitionContext>(whenReady, callback);
       }
 
-      forComponents<S>(spec: ContextValueSpec<ComponentContext_<any>, any, any[], S>): void {
+      perComponent<S>(spec: ContextValueSpec<ComponentContext_<any>, any, any[], S>): void {
         typeValueRegistry.provide(spec);
       }
 

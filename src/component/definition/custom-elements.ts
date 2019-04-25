@@ -1,8 +1,11 @@
-import { ContextKey, SingleContextKey } from 'context-values';
+import { ContextKey, ContextValues, SingleContextKey } from 'context-values';
 import { Class, PromiseResolver } from '../../common';
 import { BootstrapWindow } from '../../kit';
 import { componentFactoryOf } from '../../kit/definition/component-factory.symbol';
 import { ComponentClass } from '../component-class';
+
+const CustomElements__key =
+    /*#__PURE__*/ new SingleContextKey<CustomElements>('custom-elements', createCustomElements);
 
 /**
  * Custom elements registry.
@@ -20,7 +23,7 @@ export abstract class CustomElements {
    * Target value defaults to `window.customElements` from the window provided under `[BootstrapWindow.key]`.
    */
   static get key(): ContextKey<CustomElements> {
-    return KEY; // tslint:disable-line:no-use-before-declare
+    return CustomElements__key;
   }
 
   /**
@@ -46,62 +49,60 @@ export abstract class CustomElements {
 
 }
 
+function createCustomElements(values: ContextValues) {
+
+  const customElements = values.get(BootstrapWindow).customElements;
+
+  class WindowCustomElements extends CustomElements {
+
+    define(componentTypeOrName: ComponentClass<any> | string, elementType: Class): void {
+      if (typeof componentTypeOrName === 'string') {
+        customElements.define(componentTypeOrName, elementType);
+        return;
+      }
+
+      const factory = componentFactoryOf(componentTypeOrName);
+      const { name, extend } = factory.elementDef;
+
+      if (!name) {
+        componentResolver(componentTypeOrName).resolve(undefined);
+        return; // Anonymous component.
+      }
+      if (extend && extend.name) {
+        customElements.define(
+            name,
+            elementType,
+            {
+              extends: extend.name,
+            });
+      } else {
+        customElements.define(name, elementType);
+      }
+    }
+
+    whenDefined(componentTypeOrName: ComponentClass<any> | string): Promise<void> {
+      if (typeof componentTypeOrName === 'string') {
+        return customElements.whenDefined(componentTypeOrName);
+      }
+
+      const factory = componentFactoryOf(componentTypeOrName);
+      const { name } = factory.elementDef;
+
+      if (!name) {
+        return componentResolver(componentTypeOrName).promise;
+      }
+
+      return customElements.whenDefined(name);
+    }
+
+  }
+
+  return new WindowCustomElements();
+}
+
 const ComponentResolver__symbol = /*#__PURE__*/ Symbol('component-resolver');
 
 function componentResolver(componentType: ComponentClass): PromiseResolver<void> {
   return (componentType as any)[ComponentResolver__symbol]
       || ((componentType as any)[ComponentResolver__symbol] = new PromiseResolver());
 }
-
-const KEY = /*#__PURE__*/ new SingleContextKey<CustomElements>(
-    'custom-elements',
-    values => {
-
-      const customElements = values.get(BootstrapWindow).customElements;
-
-      class WindowCustomElements extends CustomElements {
-
-        define(componentTypeOrName: ComponentClass<any> | string, elementType: Class): void {
-          if (typeof componentTypeOrName === 'string') {
-            customElements.define(componentTypeOrName, elementType);
-            return;
-          }
-
-          const factory = componentFactoryOf(componentTypeOrName);
-          const { name, extend } = factory.elementDef;
-
-          if (!name) {
-            componentResolver(componentTypeOrName).resolve(undefined);
-            return; // Anonymous component.
-          }
-          if (extend && extend.name) {
-            customElements.define(
-                name,
-                elementType,
-                {
-                  extends: extend.name,
-                });
-          } else {
-            customElements.define(name, elementType);
-          }
-        }
-
-        whenDefined(componentTypeOrName: ComponentClass<any> | string): Promise<void> {
-          if (typeof componentTypeOrName === 'string') {
-            return customElements.whenDefined(componentTypeOrName);
-          }
-
-          const factory = componentFactoryOf(componentTypeOrName);
-          const { name } = factory.elementDef;
-
-          if (!name) {
-            return componentResolver(componentTypeOrName).promise;
-          }
-
-          return customElements.whenDefined(name);
-        }
-
-      }
-
-      return new WindowCustomElements();
-    });

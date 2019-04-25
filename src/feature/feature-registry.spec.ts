@@ -36,8 +36,8 @@ describe('feature/feature-registry', () => {
       } as any;
       registry = FeatureRegistry.create({ valueRegistry: valueRegistrySpy });
       contextSpy = {
-        forDefinitions: jest.fn(),
-        forComponents: jest.fn(),
+        perDefinition: jest.fn(),
+        perComponent: jest.fn(),
         define: jest.fn(),
       } as any;
       addSpy = jest.spyOn(registry, 'add');
@@ -58,7 +58,7 @@ describe('feature/feature-registry', () => {
       class Feature {}
 
       registry.add(FeatureDef.define(FeatureDef.define(Feature, {
-        need: [feature1, feature2],
+        needs: [feature1, feature2],
       })));
 
       expect(addSpy).toHaveBeenCalledWith(feature1);
@@ -167,12 +167,12 @@ describe('feature/feature-registry', () => {
       const provider = jest.fn();
       class Feature {}
 
-      FeatureDef.define(Feature, { forDefinitions: { a: key, by: provider } });
+      FeatureDef.define(Feature, { perDefinition: { a: key, by: provider } });
 
       registry.add(Feature);
       registry.bootstrap(contextSpy);
 
-      expect(contextSpy.forDefinitions).toHaveBeenCalledWith({ a: key, by: provider });
+      expect(contextSpy.perDefinition).toHaveBeenCalledWith({ a: key, by: provider });
     });
     it('provides component values', () => {
 
@@ -180,12 +180,12 @@ describe('feature/feature-registry', () => {
       const provider = jest.fn();
       class Feature {}
 
-      FeatureDef.define(Feature, { forComponents: { a: key, by: provider } });
+      FeatureDef.define(Feature, { perComponent: { a: key, by: provider } });
 
       registry.add(Feature);
       registry.bootstrap(contextSpy);
 
-      expect(contextSpy.forComponents).toHaveBeenCalledWith({ a: key, by: provider });
+      expect(contextSpy.perComponent).toHaveBeenCalledWith({ a: key, by: provider });
     });
   });
 });

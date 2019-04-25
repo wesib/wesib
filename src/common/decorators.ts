@@ -4,14 +4,14 @@ import { fieldAccessorDescriptor, PropertyAccessorDescriptor, toPropertyAccessor
 /**
  * Typed class decorator.
  *
- * @param <T> A type of class to decorate.
+ * @typeparam T A type of class to decorate.
  */
 export type TypedClassDecorator<T extends Class> = (type: T) => T | void;
 
 /**
  * Typed property decorator.
  *
- * @param <T> A type of class the decorated property belongs to.
+ * @typeparam T A type of class the decorated property belongs to.
  */
 export type TypedPropertyDecorator<T extends Class> =
     <V>(target: InstanceType<T>, propertyKey: string | symbol, descriptor?: TypedPropertyDescriptor<V>) => any | void;
@@ -19,8 +19,8 @@ export type TypedPropertyDecorator<T extends Class> =
 /**
  * Property decorator helper converting a field or property to the one with accessor (`get` and optionally `set`).
  *
- * @param <T> A type of target object.
- * @param <V> A property value type.
+ * @typeparam T A type of target object.
+ * @typeparam V A property value type.
  * @param target Target object containing the property.
  * @param propertyKey Target property key.
  * @param desc Target property descriptor, or `undefined` for object fields.

@@ -5,8 +5,8 @@
  *
  * The converted descriptor is always configurable, enumerable, and writable.
  *
- * @param <T> The type of target object.
- * @param <K> Target object property keys type.
+ * @typeparam T The type of target object.
+ * @typeparam K Target object property keys type.
  * @param target The object containing target field.
  * @param fieldKey Target field key.
  *
@@ -24,8 +24,8 @@ export function field2accessor<T, K extends keyof T>(target: T, fieldKey: K): Pr
 /**
  * Creates an property accessor descriptor for the given field.
  *
- * @param <T> The type of target object.
- * @param <K> Target object property keys type.
+ * @typeparam T The type of target object.
+ * @typeparam K Target object property keys type.
  * @param target The object containing target field.
  * @param fieldKey Target field key.
  */

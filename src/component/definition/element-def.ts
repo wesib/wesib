@@ -1,6 +1,8 @@
-import { ContextKey } from 'context-values';
+import { ContextRequest, ContextTarget, SingleContextKey } from 'context-values';
 import { Class } from '../../common';
-import { ElementDef__key } from './element-def.key';
+import { BootstrapWindow } from '../../kit';
+import { ComponentDef } from '../component-def';
+import { DefinitionContext__key } from './definition.context.key';
 
 /**
  * Custom element definition meta.
@@ -22,19 +24,38 @@ export interface ElementDef {
 
 }
 
-export const ElementDef = {
+/**
+ * A key of definition context value containing a custom element definition.
+ *
+ * Target value defaults to `HTMLElement` from the window provided under `[BootstrapWindow.key]`,
+ * unless `ComponentDef.extend.type` is specified.
+ */
+export const ElementDef: ContextTarget<ElementDef> & ContextRequest<ElementDef> =
+    /*#__PURE__*/ new SingleContextKey<ElementDef>(
+    'element-def',
+    values => {
 
-  /**
-   * A key of definition context value containing a custom element definition.
-   *
-   * Target value defaults to `HTMLElement` from the window provided under `[BootstrapWindow.key]`,
-   * unless `ComponentDef.extend.type` is specified.
-   */
-  get key(): ContextKey<ElementDef> {
-    return ElementDef__key;
-  }
+      const componentType = values.get(DefinitionContext__key).componentType;
+      const { name, extend } = ComponentDef.of(componentType);
 
-};
+      const elementExtend: ElementDef.Extend = {
+        get type() {
+          return extend && extend.type || (values.get(BootstrapWindow) as any).HTMLElement;
+        },
+        get name() {
+          return extend && extend.name;
+        }
+      };
+
+      return {
+        get name() {
+          return name;
+        },
+        get extend() {
+          return elementExtend;
+        },
+      };
+    });
 
 export namespace ElementDef {
 
@@ -46,14 +67,14 @@ export namespace ElementDef {
     /**
      * The class constructor of element to extend.
      */
-    type: Class;
+    readonly type: Class;
 
     /**
      * The name of element to extend.
      *
      * This is to support `as` attribute of standard HTML element. Note that this is not supported by polyfills.
      */
-    name?: string;
+    readonly name?: string;
 
   }
 

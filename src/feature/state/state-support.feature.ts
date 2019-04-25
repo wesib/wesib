@@ -2,8 +2,8 @@ import { StateUpdater } from '../../component';
 import { FeatureDef, FeatureDef__symbol } from '../feature-def';
 import { ComponentState } from './component-state';
 
-const DEF: FeatureDef = {
-  forComponents: [
+const StateSupport__feature: FeatureDef = {
+  perComponent: [
     { as: ComponentState },
     {
       a: StateUpdater,
@@ -29,7 +29,7 @@ const DEF: FeatureDef = {
 export class StateSupport {
 
   static get [FeatureDef__symbol](): FeatureDef {
-    return DEF;
+    return StateSupport__feature;
   }
 
 }

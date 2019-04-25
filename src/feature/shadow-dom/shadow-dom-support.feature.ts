@@ -3,7 +3,7 @@ import { FeatureDef, FeatureDef__symbol } from '../feature-def';
 import { ShadowDomEvent } from './shadow-dom-event';
 import { ShadowRootBuilder } from './shadow-root-builder';
 
-const DEF: FeatureDef = {
+const ShadowDomSupport__feature: FeatureDef = {
   set: [
     { a: ShadowRootBuilder, is: attachShadow },
   ],
@@ -17,12 +17,12 @@ const DEF: FeatureDef = {
 export class ShadowDomSupport {
 
   static get [FeatureDef__symbol](): FeatureDef {
-    return DEF;
+    return ShadowDomSupport__feature;
   }
 
 }
 
-function attachShadow(context: ComponentContext, init: ShadowRootInit): ShadowRoot {
+function attachShadow(context: ComponentContext, init: ShadowRootInit): ShadowRoot | undefined {
 
   const element = context.element;
   const shadowRoot = shadowRootOf(element, init);
@@ -33,7 +33,7 @@ function attachShadow(context: ComponentContext, init: ShadowRootInit): ShadowRo
     return shadowRoot;
   }
 
-  return element;
+  return;
 }
 
 function shadowRootOf(element: Element, init: ShadowRootInit): ShadowRoot | undefined {
@@ -48,5 +48,5 @@ function shadowRootOf(element: Element, init: ShadowRootInit): ShadowRoot | unde
     return element.attachShadow(init);
   }
 
-  return;
+  return; // Unable to attach shadow root.
 }

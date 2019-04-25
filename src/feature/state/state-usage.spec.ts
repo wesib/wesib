@@ -23,7 +23,7 @@ describe('feature/state', () => {
           type: MockElement,
         },
       })
-      @Feature({ need: StateSupport })
+      @Feature({ needs: StateSupport })
       class TestComponent {
         constructor(ctx: ComponentContext) {
           context = ctx;

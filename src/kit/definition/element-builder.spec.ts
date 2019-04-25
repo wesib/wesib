@@ -207,7 +207,7 @@ describe('kit/definition/element-builder', () => {
         builder.definitions.on((ctx: DefinitionContext<any>) => {
           definitionContext = ctx;
           if (ctx.componentType === TestComponent) {
-            ctx.forComponents({ a: key1, is: value1 });
+            ctx.perComponent({ a: key1, is: value1 });
           }
         });
       });
@@ -237,7 +237,7 @@ describe('kit/definition/element-builder', () => {
                   removeEventListener = removeEventListenerSpy;
                 },
               },
-              forComponents: { a: key2, is: value2, }
+              perComponent: { a: key2, is: value2, }
             });
       });
 

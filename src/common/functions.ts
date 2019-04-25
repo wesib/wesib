@@ -18,9 +18,9 @@ export function mergeFunctions<P extends any[], R, T>(
  *
  * Optionally merges function call results.
  *
- * @param <P> Function parameter types as tuple.
- * @param <R> A type of function result.
- * @param <T> A type if `this` object expected by function.
+ * @typeparam P Function parameter types as tuple.
+ * @typeparam R A type of function result.
+ * @typeparam T A type if `this` object expected by function.
  * @param first The first function to call.
  * @param second The second function to call.
  * @param merge Optional function call results merger. Accepts two function results as arguments and returns the final

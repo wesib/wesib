@@ -1,7 +1,7 @@
 import { FeatureDef, FeatureDef__symbol } from '../feature-def';
 import { ConnectTracker } from './connect-tracker';
 
-const DEF: FeatureDef = {
+const AutoConnectSupport__feature: FeatureDef = {
   set: { as: ConnectTracker },
   init(bootstrapContext) {
     bootstrapContext.get(ConnectTracker).track();
@@ -20,7 +20,7 @@ const DEF: FeatureDef = {
 export class AutoConnectSupport {
 
   static get [FeatureDef__symbol](): FeatureDef {
-    return DEF;
+    return AutoConnectSupport__feature;
   }
 
 }

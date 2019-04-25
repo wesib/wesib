@@ -10,9 +10,9 @@ import { ElementDef } from './element-def';
  * Component definition context.
  *
  * Extends `ContextValues` interface. The values are provided by corresponding providers registered with
- * `BootstrapContext.forDefinitions()` method. All `BootstrapContext` values are available too.
+ * `BootstrapContext.perDefinition()` method. All `BootstrapContext` values are available too.
  *
- * @param <T> A type of component.
+ * @typeparam T A type of component.
  */
 export abstract class DefinitionContext<T extends object = object> extends ContextValues {
 
@@ -70,10 +70,10 @@ export abstract class DefinitionContext<T extends object = object> extends Conte
   /**
    * Provides a value available in the context of each component of the defined component type.
    *
-   * @param <D> A type of dependencies.
-   * @param <S> The type of context value sources.
+   * @typeparam D A type of dependencies.
+   * @typeparam S The type of context value sources.
    * @param spec Component context value specifier.
    */
-  abstract forComponents<S>(spec: ContextValueSpec<ComponentContext<T>, any, any[], S>): void;
+  abstract perComponent<S>(spec: ContextValueSpec<ComponentContext<T>, any, any[], S>): void;
 
 }

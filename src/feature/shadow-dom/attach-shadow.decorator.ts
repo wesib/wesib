@@ -1,46 +1,22 @@
 import { TypedClassDecorator } from '../../common';
-import { ComponentClass, ComponentContext, ComponentDef, ContentRoot } from '../../component';
-import { DefinitionContext } from '../../component/definition';
-import { FeatureDef } from '../feature-def';
-import { ShadowContentRoot } from './shadow-content-root';
-import { ShadowDomSupport } from './shadow-dom-support.feature';
-import { ShadowRootBuilder } from './shadow-root-builder';
+import { ComponentClass, ComponentDef } from '../../component';
+import { ShadowContentDef } from './shadow-content-def';
 
 /**
  * Component class decorator that attaches shadow root to decorated component instance.
  *
- * @param init Shadow root initialization options. Uses `mode: 'open'` by default.
+ * Applies component definition created by `ShadowContentDef.componentDef()` function.
+ *
+ * @typeparam T A type of component.
+ * @param def Shadow content root definition. Uses `mode: 'open'` by default.
  *
  * @return Component class decorator.
  */
 export function AttachShadow<T extends ComponentClass<any> = any>(
-    init: ShadowRootInit = { mode: 'open' }): TypedClassDecorator<T> {
+    def?: ShadowContentDef): TypedClassDecorator<T> {
   return (type: T) => {
-    FeatureDef.define(type, { need: [ShadowDomSupport] });
     ComponentDef.define(
         type,
-        {
-          define(this: ComponentClass<InstanceType<T>>, context: DefinitionContext<InstanceType<T>>) {
-            // Attach shadow root eagerly when component is ready.
-            context.onComponent(ctx =>
-                ctx.whenReady(() =>
-                    ctx.get(ShadowContentRoot)));
-          },
-          forComponents: [
-            {
-              a: ShadowContentRoot,
-              by(ctx: ComponentContext<InstanceType<T>>) {
-                return ctx.get(ShadowRootBuilder)(ctx, init);
-              },
-            },
-            { // Content root is an alias of shadow root.
-              a: ContentRoot,
-              by(shadowRoot: ShadowContentRoot) {
-                return shadowRoot;
-              },
-              with: [ShadowContentRoot],
-            },
-          ],
-        });
+        ShadowContentDef.componentDef(def));
   };
 }

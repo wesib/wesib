@@ -83,11 +83,11 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
       componentRegistry.define(componentType);
     }
 
-    forDefinitions<D extends any[], S>(spec: ContextValueSpec<DefinitionContext<any>, any, D, S>) {
+    perDefinition<D extends any[], S>(spec: ContextValueSpec<DefinitionContext<any>, any, D, S>) {
       definitionValueRegistry.provide(spec);
     }
 
-    forComponents<D extends any[], S>(spec: ContextValueSpec<ComponentContext<any>, any, D, S>) {
+    perComponent<D extends any[], S>(spec: ContextValueSpec<ComponentContext<any>, any, D, S>) {
       componentValueRegistry.provide(spec);
     }
 

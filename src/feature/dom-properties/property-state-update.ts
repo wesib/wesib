@@ -1,7 +1,7 @@
 import { StatePath } from 'fun-events';
 import { ComponentContext } from '../../component';
+import { DomPropertyUpdateReceiver } from './dom-property-def';
 import { DomPropertyPath, domPropertyPathTo } from './dom-property-path';
-import { DomPropertyUpdateReceiver } from './dom-property.decorator';
 
 /**
  * @internal
