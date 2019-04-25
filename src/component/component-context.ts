@@ -21,7 +21,7 @@ export const ComponentContext__symbol = /*#__PURE__*/ Symbol('component-context'
  * Extends `ContextValues` interface. The values are provided by corresponding providers registered with
  * `BootstrapContext.perComponent()` method.
  *
- * @param <T> A type of component.
+ * @typeparam T A type of component.
  */
 export abstract class ComponentContext<T extends object = object> extends ContextValues {
 
@@ -98,7 +98,7 @@ export abstract class ComponentContext<T extends object = object> extends Contex
    * Note that state update has no effect unless `StateSupport` feature is enabled or `[StateUpdater.key]` context value
    * is provided by other means.
    *
-   * @param <V> A type of changed value.
+   * @typeparam V A type of changed value.
    * @param key Changed value key.
    * @param newValue New value.
    * @param oldValue Previous value.

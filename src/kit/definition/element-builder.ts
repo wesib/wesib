@@ -25,7 +25,7 @@ import { DefinitionValueRegistry } from './definition-value-registry';
  * The component context is also available inside component constructor by temporarily assigning it to component
  * prototype.
  *
- * @param <T> A type of component.
+ * @typeparam T A type of component.
  * @param type Component class constructor.
  * @param context Target component context.
  */

@@ -131,8 +131,8 @@ export namespace DomProperty {
 /**
  * DOM property updates receiver invoked after custom element property change.
  *
- * @param <T> A type of component.
- * @param <K> A type of component property keys.
+ * @typeparam T A type of component.
+ * @typeparam K A type of component property keys.
  * @param this Component instance.
  * @param path The changed property state path in the form of `[domPropertyPathRoot, propertyKey]`.
  * @param newValue New property value.

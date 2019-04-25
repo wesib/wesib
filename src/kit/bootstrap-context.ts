@@ -51,7 +51,7 @@ export abstract class BootstrapContext extends ContextValues {
    *
    * Note that custom element definition will happen only when all features configuration complete.
    *
-   * @param <T> A type of component.
+   * @typeparam T A type of component.
    * @param componentType Component class constructor.
    *
    * @return Custom element class constructor registered as custom element.
@@ -78,8 +78,8 @@ export abstract class BootstrapContext extends ContextValues {
   /**
    * Provides a value available in each component definition context.
    *
-   * @param <D> A type of dependencies.
-   * @param <S> The type of context value sources.
+   * @typeparam D A type of dependencies.
+   * @typeparam S The type of context value sources.
    * @param spec Component definition context value specifier.
    */
   abstract perDefinition<D extends any[], S>(spec: ContextValueSpec<DefinitionContext<any>, any, D, S>): void;
@@ -87,8 +87,8 @@ export abstract class BootstrapContext extends ContextValues {
   /**
    * Provides a value available in each component context.
    *
-   * @param <D> A type of dependencies.
-   * @param <S> The type of context value sources.
+   * @typeparam D A type of dependencies.
+   * @typeparam S The type of context value sources.
    * @param spec Component context value specifier.
    */
   abstract perComponent<D extends any[], S>(spec: ContextValueSpec<ComponentContext<any>, any, D, S>): void;

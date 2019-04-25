@@ -6,7 +6,7 @@ import { AttributePath } from './attribute-path';
  *
  * This function is called whenever a new attribute value assigned.
  *
- * @param <T> A type of component.
+ * @typeparam T A type of component.
  * @param this Component instance.
  * @param newValue New attribute value.
  * @param oldValue Previous attribute value, or `null` if there were no value assigned.
@@ -17,7 +17,7 @@ export type AttributeChangedCallback<T extends object = object> =
 /**
  * Attribute updates receiver invoked after custom element attribute change.
  *
- * @param <T> A type of component.
+ * @typeparam T A type of component.
  * @param this Component instance.
  * @param path The changed attribute state path in the form of `[attributePathRoot, attributeName]`.
  * @param newValue New attribute value.
