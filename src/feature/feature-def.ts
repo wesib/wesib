@@ -53,29 +53,27 @@ class FeatureMeta extends MetaAccessor<FeatureDef> {
 
 }
 
-const meta = /*#__PURE__*/ new FeatureMeta();
-
 /**
  * Feature definition.
  */
-export abstract class FeatureDef {
+export interface FeatureDef {
 
   /**
    * Features this one requires.
    */
-  abstract need?: Class | Class[];
+  need?: Class | Class[];
 
   /**
    * Features this one provides.
    *
    * The feature always provides itself.
    */
-  abstract has?: Class | Class[];
+  has?: Class | Class[];
 
   /**
    * Bootstrap context values to declare prior to bootstrap.
    */
-  abstract set?: ContextValueSpec<BootstrapContext, any, any[], any>
+  set?: ContextValueSpec<BootstrapContext, any, any[], any>
       | ContextValueSpec<BootstrapContext, any, any[], any>[];
 
   /**
@@ -83,19 +81,25 @@ export abstract class FeatureDef {
    *
    * @param context Components bootstrap context.
    */
-  abstract init?: (this: Class, context: BootstrapContext) => void;
+  init?: (this: Class, context: BootstrapContext) => void;
 
   /**
    * Definition context values to declare prior to component class definition.
    */
-  abstract forDefinitions?: ContextValueSpec<DefinitionContext<any>, any, any[], any>
+  forDefinitions?: ContextValueSpec<DefinitionContext<any>, any, any[], any>
       | ContextValueSpec<DefinitionContext<any>, any, any[], any>[];
 
   /**
    * Component context values to declare prior to component construction.
    */
-  abstract forComponents?: ContextValueSpec<ComponentContext<any>, any, any[], any>
+  forComponents?: ContextValueSpec<ComponentContext<any>, any, any[], any>
       | ContextValueSpec<ComponentContext<any>, any, any[], any>[];
+
+}
+
+const meta = /*#__PURE__*/ new FeatureMeta();
+
+export const FeatureDef = {
 
   /**
    * Extracts a feature definition from its type.
@@ -104,9 +108,9 @@ export abstract class FeatureDef {
    *
    * @returns A feature definition. May be empty when there is no feature definition found in the given `featureType`.
    */
-  static of(featureType: Class): FeatureDef {
+  of(featureType: Class): FeatureDef {
     return meta.of(featureType) || {};
-  }
+  },
 
   /**
    * Merges multiple feature definitions.
@@ -115,22 +119,23 @@ export abstract class FeatureDef {
    *
    * @returns Merged feature definition.
    */
-  static merge(...defs: FeatureDef[]): FeatureDef {
+  merge(...defs: FeatureDef[]): FeatureDef {
     return meta.merge(...defs);
-  }
+  },
 
   /**
    * Defines a feature.
    *
    * Either creates new or extends an existing feature definition and stores it under `[FeatureDef__symbol]` key.
    *
+   * @typeparam T Feature type.
    * @param type Feature class constructor.
    * @param defs Feature definitions.
    *
    * @returns The `type` instance.
    */
-  static define<T extends Class>(type: T, ...defs: FeatureDef[]): T {
+  define<T extends Class>(type: T, ...defs: FeatureDef[]): T {
     return meta.define(type, ...defs);
-  }
+  },
 
-}
+};
