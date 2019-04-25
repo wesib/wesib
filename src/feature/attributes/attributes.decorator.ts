@@ -1,8 +1,10 @@
 import { StatePath } from 'fun-events';
 import { TypedClassDecorator } from '../../common';
+import { isArray } from '../../common/types';
 import { ComponentClass, ComponentDef } from '../../component';
 import { FeatureDef } from '../feature-def';
-import { AttributeRegistrar, AttributeUpdateReceiver } from './attribute-registrar';
+import { AttributeUpdateReceiver } from './attribute-def';
+import { AttributeRegistrar } from './attribute-registrar';
 import { attributeStateUpdate } from './attribute-state-update';
 import { AttributesSupport } from './attributes-support.feature';
 
@@ -11,12 +13,12 @@ import { AttributesSupport } from './attributes-support.feature';
  *
  * This decorator automatically enables `AttributesSupport` feature.
  *
- * @param opts Attributes definition options. Either an attribute definition item, or an array of such items.
+ * @param items Attributes definition options. Either an attribute definition item, or an array of such items.
  *
  * @return New component class decorator.
  */
 export function Attributes<T extends ComponentClass = any>(
-    opts: Attributes.Item<T> | Attributes.Item<T>[]):
+    items: Attributes.Item<T> | readonly Attributes.Item<T>[]):
     TypedClassDecorator<T> {
   return componentType => {
     FeatureDef.define(componentType, { needs: AttributesSupport });
@@ -27,10 +29,10 @@ export function Attributes<T extends ComponentClass = any>(
 
             const registrar = defContext.get(AttributeRegistrar);
 
-            if (Array.isArray(opts)) {
-              opts.forEach(defineByItem);
+            if (isArray<Attributes.Item<T>>(items)) {
+              items.forEach(defineByItem);
             } else {
-              defineByItem(opts);
+              defineByItem(items);
             }
 
             function defineByItem(item: Attributes.Item<T>) {
@@ -68,7 +70,7 @@ export namespace Attributes {
    * - an attribute update receiver function with custom state update logic.
    */
   export interface Map<T extends object> {
-    [name: string]: boolean | StatePath | AttributeUpdateReceiver<T>;
+    readonly [name: string]: boolean | StatePath | AttributeUpdateReceiver<T>;
   }
 
 }
