@@ -17,98 +17,81 @@ export class ConnectTracker {
     return ConnectTracker__key;
   }
 
-  private readonly _adapter: ElementAdapter;
   private _interest = noEventInterest();
   private _observer!: MutationObserver;
 
   constructor(private readonly _context: BootstrapContext) {
-    this._adapter = _context.get(ElementAdapter);
   }
 
   track(root: Node = this._context.get(BootstrapRoot)) {
+
+    const { _context } = this;
+    const adapter = _context.get(ElementAdapter);
+
     this._interest = new DomEventDispatcher(root)
-        .on<ShadowDomEvent>('wesib:shadowAttached')(event => this._trackShadow(event.shadowRoot));
+        .on<ShadowDomEvent>('wesib:shadowAttached')(event => trackShadow(event.shadowRoot));
 
     const Observer: typeof MutationObserver = (this._context.get(BootstrapWindow) as any).MutationObserver;
-    const observer = this._observer = new Observer(records => this._update(records));
+    const observer = this._observer = new Observer(records => updateConnections(records));
 
     observer.observe(root, { childList: true, subtree: true });
-  }
 
-  private _update(records: MutationRecord[]) {
-    records.forEach(record => {
-      AIterable.from(overArray(record.removedNodes))
-          .filter<Element>(isElement)
-          .map(element => {
-            this._untrackNested(element);
-            return this._mountOf(element);
-          })
-          .filter<ComponentMount>(isPresent)
-          .forEach(mount => {
-            mount.connected = false;
-          });
-      AIterable.from(overArray(record.addedNodes))
-          .filter<Element>(isElement)
-          .map(element => {
-            this._trackNested(element);
-            return this._mountOf(element);
-          })
-          .filter<ComponentMount>(isPresent)
-          .forEach(mount => {
-            mount.connected = true;
-          });
-    });
-  }
+    function updateConnections(records: MutationRecord[]) {
+      records.forEach(record => {
+        AIterable.from(overArray(record.removedNodes))
+            .filter<Element>(isElement)
+            .map(element => {
+              untrackNested(element);
+              return mountOf(element);
+            })
+            .filter<ComponentMount>(isPresent)
+            .forEach(mount => {
+              mount.connected = false;
+            });
+        AIterable.from(overArray(record.addedNodes))
+            .filter<Element>(isElement)
+            .map(element => {
+              trackNested(element);
+              return mountOf(element);
+            })
+            .filter<ComponentMount>(isPresent)
+            .forEach(mount => {
+              mount.connected = true;
+            });
+      });
+    }
 
-  private _mountOf(element: Element): ComponentMount | undefined {
+    function mountOf(element: Element): ComponentMount | undefined {
 
-    const context = this._adapter(element);
+      const context = adapter(element);
 
-    return context && context.mount;
-  }
+      return context && context.mount;
+    }
 
-  private _trackNested(element: Element) {
+    function trackNested(element: Element) {
 
-    const shadowRoot = element.shadowRoot;
+      const shadowRoot = element.shadowRoot;
 
-    if (shadowRoot) {
-      this._trackShadow(shadowRoot);
+      if (shadowRoot) {
+        trackShadow(shadowRoot);
+      }
+    }
+
+    function trackShadow(shadowRoot: ShadowRoot) {
+      if ((shadowRoot as any)[shadowConnectTracker__symbol]) {
+        // Already tracked
+        return;
+      }
+
+      const shadowTracker = new ConnectTracker(_context);
+
+      (shadowRoot as any)[shadowConnectTracker__symbol] = shadowTracker;
+
+      shadowTracker.track(shadowRoot);
     }
   }
 
-  private _trackShadow(shadowRoot: ShadowRoot) {
-    if ((shadowRoot as any)[shadowConnectTracker__symbol]) {
-      // Already tracked
-      return;
-    }
-
-    const shadowTracker = new ConnectTracker(this._context);
-
-    (shadowRoot as any)[shadowConnectTracker__symbol] = shadowTracker;
-
-    shadowTracker.track(shadowRoot);
-  }
-
-  private _untrackNested(element: Element) {
-
-    const shadowRoot = element.shadowRoot;
-
-    if (shadowRoot) {
-      this._untrackShadow(shadowRoot);
-    }
-  }
-
-  private _untrackShadow(shadowRoot: ShadowRoot) {
-
-    const shadowTracker: ConnectTracker = (shadowRoot as any)[shadowConnectTracker__symbol];
-
-    if (shadowTracker) {
-      delete (shadowRoot as any)[shadowConnectTracker__symbol];
-      shadowTracker._untrack();
-    }
-  }
-
-  private _untrack() {
+  _untrack() {
     this._observer.disconnect();
     this._interest.off();
     this._interest = noEventInterest();
@@ -122,4 +105,23 @@ function isElement(node: Node): node is Element {
 
 function isPresent<T>(value: T | undefined): value is T {
   return value != null;
+}
+
+function untrackNested(element: Element) {
+
+  const shadowRoot = element.shadowRoot;
+
+  if (shadowRoot) {
+    untrackShadow(shadowRoot);
+  }
+}
+
+function untrackShadow(shadowRoot: ShadowRoot) {
+
+  const shadowTracker: ConnectTracker = (shadowRoot as any)[shadowConnectTracker__symbol];
+
+  if (shadowTracker) {
+    delete (shadowRoot as any)[shadowConnectTracker__symbol];
+    shadowTracker._untrack();
+  }
 }
