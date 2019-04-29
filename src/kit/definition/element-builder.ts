@@ -1,6 +1,6 @@
 import { noop } from 'call-thru';
 import { ContextValues, ContextValueSpec } from 'context-values';
-import { EventEmitter } from 'fun-events';
+import { EventEmitter, onEventBy } from 'fun-events';
 import { ArraySet, Class, mergeFunctions } from '../../common';
 import {
   ComponentClass,
@@ -290,13 +290,36 @@ export class ElementBuilder {
         elementSuper,
       }: ComponentMeta<T>): ComponentContext_<T> {
 
+    let ready = false;
     let whenReady: (this: ComponentContext, component: T) => void = noop;
-    const connectEvents = new EventEmitter<[ComponentContext_]>();
-    const disconnectEvents = new EventEmitter<[ComponentContext_]>();
+    const connectEvents = new EventEmitter<[ComponentContext_<T>]>();
+    const disconnectEvents = new EventEmitter<[ComponentContext_<T>]>();
     let mount: ComponentMount_<T> | undefined;
     const values = valueRegistry.newValues();
 
     class ComponentContext extends ComponentContext_<T> {
+
+      readonly whenOn = onEventBy<[ComponentContext_<T>]>(receiver => {
+
+        const interest = connectEvents.on(receiver);
+
+        if (this.connected) {
+          receiver(this);
+        }
+
+        return interest;
+      });
+
+      readonly whenOff = onEventBy<[ComponentContext_<T>]>(receiver => {
+
+        const interest = disconnectEvents.on(receiver);
+
+        if (!this.connected && ready) {
+          receiver(this);
+        }
+
+        return interest;
+      });
 
       get componentType() {
         return definitionContext.componentType;
@@ -312,14 +335,6 @@ export class ElementBuilder {
 
       get get() {
         return values.get;
-      }
-
-      get onConnect() {
-        return connectEvents.on;
-      }
-
-      get onDisconnect() {
-        return disconnectEvents.on;
       }
 
       get component(): T {
@@ -366,13 +381,14 @@ export class ElementBuilder {
       enumerable: true,
       value: component,
     });
+
+    ready = true;
     Object.defineProperty(context, 'whenReady', {
       configurable: true,
       value(callback: (component: T) => void) {
         callback.call(context, component);
       },
     });
-
     whenReady.call(context, component);
 
     return context;

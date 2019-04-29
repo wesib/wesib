@@ -142,8 +142,8 @@ describe('component instantiation', () => {
         @Feature({
           init(bootCtx) {
             bootCtx.onComponent(ctx => {
-              ctx.onConnect(listenerSpy);
-              ctx.onConnect(() => expect(ctx.connected).toBe(true));
+              ctx.whenOn(listenerSpy);
+              ctx.whenOn(() => expect(ctx.connected).toBe(true));
             });
           }
         })
@@ -172,8 +172,8 @@ describe('component instantiation', () => {
         @Feature({
           init(bootCtx) {
             bootCtx.onComponent(ctx => {
-              ctx.onDisconnect(listenerSpy);
-              ctx.onDisconnect(() => expect(ctx.connected).toBe(false));
+              ctx.whenOff(listenerSpy);
+              ctx.whenOff(() => expect(ctx.connected).toBe(false));
             });
           }
         })
