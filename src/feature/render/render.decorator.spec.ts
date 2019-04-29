@@ -130,16 +130,23 @@ describe('feature/render/render.decorator', () => {
         expect(renderSpy).toHaveBeenCalled();
       });
       it('is re-scheduled when connected after state update', () => {
+        component.property = 'other';
         connected = true;
         element.connectedCallback();
-        component.property = 'other';
-        element.connectedCallback();
-        expect(renderSpy).toHaveBeenCalledTimes(2);
+        expect(renderSpy).toHaveBeenCalledTimes(1);
       });
       it('is not re-scheduled when connected without state update', () => {
         connected = true;
         element.connectedCallback();
         element.connectedCallback();
+        expect(renderSpy).toHaveBeenCalledTimes(1);
+      });
+      it('is not re-scheduled after component destruction', () => {
+        connected = true;
+        element.connectedCallback();
+        context.destroy();
+        connected = false;
+        component.property = 'other';
         expect(renderSpy).toHaveBeenCalledTimes(1);
       });
       it('uses decorated method', () => {

@@ -1,6 +1,6 @@
 import { noop } from 'call-thru';
 import { ContextValues, ContextValueSpec } from 'context-values';
-import { EventEmitter, onEventBy } from 'fun-events';
+import { EventEmitter, OnEvent, onEventBy } from 'fun-events';
 import { ArraySet, Class, mergeFunctions } from '../../common';
 import {
   ComponentClass,
@@ -85,7 +85,10 @@ export class ElementBuilder {
     const builder = this;
     const onComponent = new EventEmitter<[ComponentContext_]>();
     let typeValueRegistry!: ComponentValueRegistry;
-    let whenReady: (this: DefinitionContext, elementType: Class) => void = noop;
+    let whenReady: (this: void, elementType: Class) => void = noop;
+    let registerWhenReady = (callback: (this: void, elementType: Class) => void) => {
+      whenReady = mergeFunctions(whenReady, callback);
+    };
     let definitionContext: DefinitionContext;
 
     function createValueRegistry() {
@@ -195,8 +198,8 @@ export class ElementBuilder {
         new ArraySet(def.perComponent).forEach(spec => typeValueRegistry.provide(spec));
       }
 
-      whenReady(callback: (this: DefinitionContext, elementType: Class) => void) {
-        whenReady = mergeFunctions<[Class], void, DefinitionContext>(whenReady, callback);
+      whenReady(callback: (this: void, elementType: Class) => void) {
+        registerWhenReady(callback);
       }
 
       perComponent<S>(spec: ContextValueSpec<ComponentContext_, any, any[], S>): void {
@@ -219,16 +222,19 @@ export class ElementBuilder {
       enumerable: true,
       value: elementType,
     });
-    Object.defineProperty(definitionContext, 'whenReady', {
-      configurable: true,
-      value(callback: (elementType: Class) => void) {
-        callback.call(definitionContext, elementType);
-      },
-    });
 
-    whenReady.call(definitionContext, elementType);
+    definitionIsReady();
 
     return componentFactory;
+
+    function definitionIsReady() {
+
+      const _whenReady = whenReady;
+
+      registerWhenReady = callback => callback(elementType);
+      whenReady = noop;
+      _whenReady(elementType);
+    }
   }
 
   private _elementType<T extends object>(
@@ -259,7 +265,7 @@ export class ElementBuilder {
           elementSuper: (key) => {
             // @ts-ignore
             return super[key] as any;
-          }
+          },
         });
 
         componentCreated(context);
@@ -291,35 +297,45 @@ export class ElementBuilder {
       }: ComponentMeta<T>): ComponentContext_<T> {
 
     let ready = false;
-    let whenReady: (this: ComponentContext, component: T) => void = noop;
-    const connectEvents = new EventEmitter<[ComponentContext_<T>]>();
-    const disconnectEvents = new EventEmitter<[ComponentContext_<T>]>();
+    let whenReady: (this: void, component: T) => void = noop;
+    let registerWhenReady = (callback: (this: void, component: T) => void) => {
+      whenReady = mergeFunctions(whenReady, callback);
+    };
+    const connectEvents = new EventEmitter<[]>();
+    const whenOn = onEventBy<[]>(receiver => {
+
+      const interest = connectEvents.on(receiver);
+
+      if (isConnected()) {
+        receiver();
+      }
+
+      return interest;
+    });
+    const disconnectEvents = new EventEmitter<[]>();
+    const whenOff = onEventBy<[]>(receiver => {
+
+      const interest = disconnectEvents.on(receiver);
+
+      if (!isConnected() && ready) {
+        receiver();
+      }
+
+      return interest;
+    });
     let mount: ComponentMount_<T> | undefined;
     const values = valueRegistry.newValues();
 
+    let whenDestroyed = (reason: any) => {
+      disconnectEvents.done(reason);
+      connectEvents.done(reason);
+    };
+    let registerWhenDestroyed = (callback: (this: void, reason: any) => void) => {
+      whenDestroyed = mergeFunctions(callback, whenDestroyed);
+    };
+    let destroy = destroyComponent;
+
     class ComponentContext extends ComponentContext_<T> {
-
-      readonly whenOn = onEventBy<[ComponentContext_<T>]>(receiver => {
-
-        const interest = connectEvents.on(receiver);
-
-        if (this.connected) {
-          receiver(this);
-        }
-
-        return interest;
-      });
-
-      readonly whenOff = onEventBy<[ComponentContext_<T>]>(receiver => {
-
-        const interest = disconnectEvents.on(receiver);
-
-        if (!this.connected && ready) {
-          receiver(this);
-        }
-
-        return interest;
-      });
 
       get componentType() {
         return definitionContext.componentType;
@@ -342,18 +358,31 @@ export class ElementBuilder {
       }
 
       get mount(): ComponentMount_<T> | undefined {
-        if (mount) {
-          return mount;
-        }
-        return mount = createMount(this);
+        return mount || (mount = createMount(this));
       }
 
-      get connected() {
-        return element[connected__symbol];
+      get connected(): boolean {
+        return isConnected();
       }
 
-      whenReady(callback: (this: ComponentContext, component: T) => void) {
-        whenReady = mergeFunctions<[T], void, ComponentContext>(whenReady, callback);
+      get whenOn(): OnEvent<[]> {
+        return whenOn;
+      }
+
+      get whenOff(): OnEvent<[]> {
+        return whenOff;
+      }
+
+      whenReady(callback: (this: void, component: T) => void) {
+        registerWhenReady(callback);
+      }
+
+      whenDestroyed(callback: (this: void, reason: any) => void): void {
+        registerWhenDestroyed(callback);
+      }
+
+      destroy(reason?: any): void {
+        destroy(reason);
       }
 
     }
@@ -362,14 +391,7 @@ export class ElementBuilder {
 
     valueRegistry.provide({ a: ComponentContext_, is: context });
 
-    Object.defineProperty(element, ComponentContext__symbol, { value: context });
-    Object.defineProperty(element, connected__symbol, { writable: true, value: false });
-    Object.defineProperty(element, connect__symbol, {
-      value(value: boolean) {
-        this[connected__symbol] = value;
-        (value ? connectEvents : disconnectEvents).send(context);
-      },
-    });
+    augmentElement();
 
     this.components.send(context);
     onComponent.send(context);
@@ -382,16 +404,47 @@ export class ElementBuilder {
       value: component,
     });
 
-    ready = true;
-    Object.defineProperty(context, 'whenReady', {
-      configurable: true,
-      value(callback: (component: T) => void) {
-        callback.call(context, component);
-      },
-    });
-    whenReady.call(context, component);
+    componentIsReady();
 
     return context;
+
+    function augmentElement() {
+
+      Object.defineProperty(element, ComponentContext__symbol, { value: context });
+      Object.defineProperty(element, connected__symbol, { writable: true, value: false });
+      Object.defineProperty(element, connect__symbol, {
+        value(value: boolean) {
+          this[connected__symbol] = value;
+          (value ? connectEvents : disconnectEvents).send();
+        },
+      });
+    }
+
+    function isConnected(): boolean {
+      return element[connected__symbol];
+    }
+
+    function componentIsReady() {
+
+      const _whenReady = whenReady;
+
+      ready = true;
+      registerWhenReady = callback => callback(component);
+      whenReady = noop;
+      _whenReady(component);
+    }
+
+    function destroyComponent(reason?: any) {
+
+      const _whenDestroyed = whenDestroyed;
+
+      whenDestroyed = noop;
+      destroy = noop;
+
+      registerWhenDestroyed = callback => callback(reason);
+      removeElement(context);
+      _whenDestroyed(reason);
+    }
   }
 
 }
@@ -401,10 +454,27 @@ interface ComponentMeta<T extends object> {
   onComponent: EventEmitter<[ComponentContext_<T>]>;
   valueRegistry: ComponentValueRegistry;
   element: any;
+
   elementSuper(name: PropertyKey): any;
+
   createMount(context: ComponentContext_<T>): ComponentMount_<T> | undefined;
 }
 
 function componentCreated(context: ComponentContext_) {
   context.dispatchEvent(new ComponentEvent('wesib:component', { bubbles: true }));
+}
+
+function removeElement(context: ComponentContext_) {
+
+  const { element, mount } = context;
+
+  if (mount) {
+    mount.connected = false; // Disconnect mounted element
+  }
+
+  const parentNode: Element = element.parentElement;
+
+  if (parentNode) {
+    parentNode.removeChild(element);
+  }
 }
