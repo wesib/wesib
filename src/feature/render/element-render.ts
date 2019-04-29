@@ -29,18 +29,19 @@ export const ElementRender = {
       render: ElementRender,
       def: RenderDef = {}) {
 
-    const { offline } = def;
-    let rendered = false;
     const stateTracker = context.get(ComponentState);
     const renderScheduler = context.get(RenderScheduler);
 
-    stateTracker.onUpdate(() => {
+    const { offline } = def;
+    let rendered = false;
+    const stateInterest = stateTracker.onUpdate(() => {
       if (offline || context.connected) {
         scheduleRender();
       } else {
         rendered = false;
       }
     });
+
     if (offline) {
       scheduleRender();
     } else {
@@ -48,6 +49,9 @@ export const ElementRender = {
         if (!rendered) {
           scheduleRender();
         }
+      }).whenDone(reason => {
+        stateInterest.off(reason);
+        rendered = true;
       });
     }
 
