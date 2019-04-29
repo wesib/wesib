@@ -65,7 +65,7 @@ export abstract class DefinitionContext<T extends object = any> extends ContextV
    *
    * @param callback A callback to notify on custom element class construction.
    */
-  abstract whenReady(callback: (this: this, elementType: Class) => void): void;
+  abstract whenReady(callback: (this: void, elementType: Class) => void): void;
 
   /**
    * Provides a value available in the context of each component of the defined component type.

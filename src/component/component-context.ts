@@ -75,7 +75,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    *
    * @param listener A listener to notify on element connection.
    *
-   * @return An event interest instance.
+   * @returns An event interest instance.
    */
   abstract readonly whenOn: OnEvent<[ComponentContext<T>]>;
 
@@ -83,11 +83,11 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    * Registers custom element disconnection listener.
    *
    * This listener is called when custom element is disconnected, i.e. its `disconnectedCallback()` method is called.
-   * If component is ready, but disconnected the listener is called immediately.
+   * If component is ready but disconnected, the listener is called immediately.
    *
    * @param listener A listener to notify on element disconnection.
    *
-   * @return An event interest instance.
+   * @returns An event interest instance.
    */
   abstract readonly whenOff: OnEvent<[ComponentContext<T>]>;
 
@@ -148,7 +148,19 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    *
    * @param callback A callback to notify on component construction.
    */
-  abstract whenReady(callback: (this: this, component: T) => void): void;
+  abstract whenReady(callback: (this: void, component: T) => void): void;
+
+  /**
+   * Registers component destruction callback.
+   *
+   * This callback is notified when `destroy()` method is called. If the component is destroyed already the callback
+   * is notified immediately.
+   *
+   * Multiple callbacks will be called in the order reverse to their registration order.
+   *
+   * @param callback A callback to notify on component destruction.
+   */
+  abstract whenDestroyed(callback: (this: void, reason: any) => void): void;
 
   /**
    * Returns a `super` property value inherited from custom element parent.
@@ -182,5 +194,18 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   dispatchEvent(event: Event): void {
     this.get(BootstrapContext__key).get(ComponentEventDispatcher__key).dispatch(this, event);
   }
+
+  /**
+   * Destroys the component.
+   *
+   * Removes element from the DOM tree. I.e. disconnects custom element first.
+   *
+   * After this method call the component should no longer be used.
+   *
+   * Note that component destruction is virtual. It is up to the developer to decide when component is no longer needed.
+   *
+   * @param reason Optional reason of destruction.
+   */
+  abstract destroy(reason?: any): void;
 
 }
