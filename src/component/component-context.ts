@@ -71,24 +71,25 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    * Registers custom element connection listener.
    *
    * This listener is called when custom element is connected, i.e. its `connectedCallback()` method is called.
+   * If component is connected already the listener is called immediately.
    *
    * @param listener A listener to notify on element connection.
    *
    * @return An event interest instance.
    */
-  abstract readonly onConnect: OnEvent<[ComponentContext<T>]>;
+  abstract readonly whenOn: OnEvent<[ComponentContext<T>]>;
 
   /**
    * Registers custom element disconnection listener.
    *
-   * This listener will be called when custom element is disconnected, i.e. its `disconnectedCallback()` method is
-   * called.
+   * This listener is called when custom element is disconnected, i.e. its `disconnectedCallback()` method is called.
+   * If component is ready, but disconnected the listener is called immediately.
    *
    * @param listener A listener to notify on element disconnection.
    *
    * @return An event interest instance.
    */
-  abstract readonly onDisconnect: OnEvent<[ComponentContext<T>]>;
+  abstract readonly whenOff: OnEvent<[ComponentContext<T>]>;
 
   /**
    * Updates component's state.

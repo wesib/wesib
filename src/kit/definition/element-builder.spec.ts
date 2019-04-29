@@ -395,17 +395,37 @@ describe('kit/definition/element-builder', () => {
 
           const connected = jest.fn();
 
-          context.onConnect(connected);
+          context.whenOn(connected);
           mount.connected = true;
 
           expect(connected).toHaveBeenCalledWith(context);
+        });
+        it('reports connected element', () => {
+          doMount();
+
+          mount.connected = true;
+
+          const connected = jest.fn();
+
+          context.whenOn(connected);
+          expect(connected).toHaveBeenCalledWith(context);
+        });
+        it('reports disconnected element', () => {
+          doMount();
+
+          const disconnected = jest.fn();
+
+          context.whenOff(disconnected);
+
+          expect(disconnected).toHaveBeenCalledWith(context);
         });
         it('does not disconnect not connected element', () => {
           doMount();
 
           const disconnected = jest.fn();
 
-          context.onDisconnect(disconnected);
+          context.whenOff(disconnected);
+          disconnected.mockClear();
           mount.connected = false;
 
           expect(disconnected).not.toHaveBeenCalled();
@@ -435,7 +455,7 @@ describe('kit/definition/element-builder', () => {
 
         const disconnected = jest.fn();
 
-        context.onDisconnect(disconnected);
+        context.whenOff(disconnected);
         mount.connected = false;
 
         expect(disconnected).toHaveBeenCalledWith(context);

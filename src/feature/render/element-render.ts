@@ -44,7 +44,7 @@ export const ElementRender = {
     if (offline) {
       scheduleRender();
     } else {
-      context.onConnect(() => {
+      context.whenOn(() => {
         if (!rendered) {
           scheduleRender();
         }
