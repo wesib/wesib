@@ -80,7 +80,7 @@ function domPropertyDescriptor<V>(
       configurable,
       enumerable,
       writable,
-    }: DomPropertyDef<any>): PropertyAccessorDescriptor<V> {
+    }: DomPropertyDef): PropertyAccessorDescriptor<V> {
   if (!propertyDesc) {
     // Component object property
     if (enumerable == null) {

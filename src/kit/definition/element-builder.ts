@@ -57,8 +57,8 @@ export class ElementBuilder {
 
   private readonly _definitionValueRegistry: DefinitionValueRegistry;
   private readonly _componentValueRegistry: ComponentValueRegistry;
-  readonly definitions = new EventEmitter<[DefinitionContext_<any>]>();
-  readonly components = new EventEmitter<[ComponentContext_<any>]>();
+  readonly definitions = new EventEmitter<[DefinitionContext_]>();
+  readonly components = new EventEmitter<[ComponentContext_]>();
 
   static create(opts: {
     definitionValueRegistry: DefinitionValueRegistry;
@@ -83,7 +83,7 @@ export class ElementBuilder {
 
     const def = ComponentDef.of(componentType);
     const builder = this;
-    const onComponent = new EventEmitter<[ComponentContext_<any>]>();
+    const onComponent = new EventEmitter<[ComponentContext_]>();
     let typeValueRegistry!: ComponentValueRegistry;
     let whenReady: (this: DefinitionContext, elementType: Class) => void = noop;
     let definitionContext: DefinitionContext;
@@ -199,7 +199,7 @@ export class ElementBuilder {
         whenReady = mergeFunctions<[Class], void, DefinitionContext>(whenReady, callback);
       }
 
-      perComponent<S>(spec: ContextValueSpec<ComponentContext_<any>, any, any[], S>): void {
+      perComponent<S>(spec: ContextValueSpec<ComponentContext_, any, any[], S>): void {
         typeValueRegistry.provide(spec);
       }
 
@@ -291,8 +291,8 @@ export class ElementBuilder {
       }: ComponentMeta<T>): ComponentContext_<T> {
 
     let whenReady: (this: ComponentContext, component: T) => void = noop;
-    const connectEvents = new EventEmitter<[ComponentContext_<any>]>();
-    const disconnectEvents = new EventEmitter<[ComponentContext_<any>]>();
+    const connectEvents = new EventEmitter<[ComponentContext_]>();
+    const disconnectEvents = new EventEmitter<[ComponentContext_]>();
     let mount: ComponentMount_<T> | undefined;
     const values = valueRegistry.newValues();
 
@@ -389,6 +389,6 @@ interface ComponentMeta<T extends object> {
   createMount(context: ComponentContext_<T>): ComponentMount_<T> | undefined;
 }
 
-function componentCreated(context: ComponentContext_<any>) {
+function componentCreated(context: ComponentContext_) {
   context.dispatchEvent(new ComponentEvent('wesib:component', { bubbles: true }));
 }

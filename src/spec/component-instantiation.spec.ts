@@ -87,7 +87,7 @@ describe('component instantiation', () => {
     describe('component', () => {
       it('is resolved on component instantiation', async () => {
 
-        let context: ComponentContext<any> = { name: 'component context' } as any;
+        let context: ComponentContext = { name: 'component context' } as any;
 
         const promise = new Promise(resolve => {
 

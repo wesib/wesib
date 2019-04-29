@@ -4,13 +4,13 @@ import { DefinitionContext } from '../../component/definition';
 /**
  * @internal
  */
-export class DefinitionValueRegistry extends ContextRegistry<DefinitionContext<any>> {
+export class DefinitionValueRegistry extends ContextRegistry<DefinitionContext> {
 
-  static create(initial?: ContextSourcesProvider<DefinitionContext<any>> | ContextValues): DefinitionValueRegistry {
+  static create(initial?: ContextSourcesProvider<DefinitionContext> | ContextValues): DefinitionValueRegistry {
     return new DefinitionValueRegistry(initial);
   }
 
-  constructor(initial?: ContextSourcesProvider<DefinitionContext<any>> | ContextValues) {
+  constructor(initial?: ContextSourcesProvider<DefinitionContext> | ContextValues) {
     super(initial);
   }
 

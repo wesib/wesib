@@ -25,7 +25,7 @@ export const ShadowContentDef = {
    *
    * @returns Component definition.
    */
-  componentDef<T extends object = object>(def: ShadowContentDef = defaultShadowContentDef): ComponentDef<T> {
+  componentDef<T extends object>(def: ShadowContentDef = defaultShadowContentDef): ComponentDef<T> {
     return {
       perComponent: [
         {

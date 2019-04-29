@@ -54,7 +54,7 @@ export interface ComponentEventDispatcher {
    * @param context Target component context.
    * @param event An event to dispatch.
    */
-  dispatch(context: ComponentContext<any>, event: Event): void;
+  dispatch(context: ComponentContext, event: Event): void;
 
   /**
    * Returns a registrar of DOM event listeners for the given DOM event type.
@@ -64,7 +64,7 @@ export interface ComponentEventDispatcher {
    *
    * @returns A producer of DOM event events of the given type.
    */
-  on<E extends Event>(context: ComponentContext<any>, type: string): OnDomEvent<E>;
+  on<E extends Event>(context: ComponentContext, type: string): OnDomEvent<E>;
 
 }
 

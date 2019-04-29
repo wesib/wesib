@@ -31,7 +31,7 @@ export abstract class BootstrapContext extends ContextValues {
    *
    * @return An event interest instance.
    */
-  abstract readonly onDefinition: OnEvent<[DefinitionContext<any>]>;
+  abstract readonly onDefinition: OnEvent<[DefinitionContext]>;
 
   /**
    * Registers component construction listener.
@@ -42,7 +42,7 @@ export abstract class BootstrapContext extends ContextValues {
    *
    * @return An event interest instance.
    */
-  abstract readonly onComponent: OnEvent<[ComponentContext<any>]>;
+  abstract readonly onComponent: OnEvent<[ComponentContext]>;
 
   /**
    * Defines a component.
@@ -82,7 +82,7 @@ export abstract class BootstrapContext extends ContextValues {
    * @typeparam S The type of context value sources.
    * @param spec Component definition context value specifier.
    */
-  abstract perDefinition<D extends any[], S>(spec: ContextValueSpec<DefinitionContext<any>, any, D, S>): void;
+  abstract perDefinition<D extends any[], S>(spec: ContextValueSpec<DefinitionContext, any, D, S>): void;
 
   /**
    * Provides a value available in each component context.
@@ -91,7 +91,7 @@ export abstract class BootstrapContext extends ContextValues {
    * @typeparam S The type of context value sources.
    * @param spec Component context value specifier.
    */
-  abstract perComponent<D extends any[], S>(spec: ContextValueSpec<ComponentContext<any>, any, D, S>): void;
+  abstract perComponent<D extends any[], S>(spec: ContextValueSpec<ComponentContext, any, D, S>): void;
 
   /**
    * Registers bootstrap readiness callback.

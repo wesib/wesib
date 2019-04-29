@@ -121,7 +121,7 @@ describe('kit/definition/element-builder', () => {
 
       describe('element type', () => {
         it('is absent when listener notified', () => {
-          listenerSpy.mockImplementation((context: DefinitionContext<any>) => {
+          listenerSpy.mockImplementation((context: DefinitionContext) => {
             expect(() => context.elementType).toThrowError(/not constructed yet/);
           });
 
@@ -130,7 +130,7 @@ describe('kit/definition/element-builder', () => {
         it('is reported when ready', async () => {
 
           const promise = new Promise<Class>(resolve => {
-            listenerSpy.mockImplementation((context: DefinitionContext<any>) => context.whenReady(resolve));
+            listenerSpy.mockImplementation((context: DefinitionContext) => context.whenReady(resolve));
           });
 
           builder.buildElement(TestComponent);
@@ -140,14 +140,14 @@ describe('kit/definition/element-builder', () => {
         it('is present when element built', () => {
           builder.buildElement(TestComponent);
 
-          const context: DefinitionContext<any> = listenerSpy.mock.calls[0][0];
+          const context: DefinitionContext = listenerSpy.mock.calls[0][0];
 
           expect(typeof context.elementType).toBe('function');
         });
         it('is reported immediately by callback when element built', () => {
           builder.buildElement(TestComponent);
 
-          const context: DefinitionContext<any> = listenerSpy.mock.calls[0][0];
+          const context: DefinitionContext = listenerSpy.mock.calls[0][0];
 
           let elementType: Class | undefined;
 
@@ -160,10 +160,10 @@ describe('kit/definition/element-builder', () => {
 
     describe('definition context', () => {
 
-      let definitionContext: DefinitionContext<any>;
+      let definitionContext: DefinitionContext;
 
       beforeEach(() => {
-        builder.definitions.on((ctx: DefinitionContext<any>) => {
+        builder.definitions.on((ctx: DefinitionContext) => {
           definitionContext = ctx;
         });
       });
@@ -198,13 +198,13 @@ describe('kit/definition/element-builder', () => {
       let value1: string;
       const key2 = new SingleContextKey<string>('test-key-2');
       let value2: string;
-      let definitionContext: DefinitionContext<any>;
+      let definitionContext: DefinitionContext;
       let componentContext: ComponentContext;
 
       beforeEach(() => {
         value1 = 'some value';
         value2 = 'other value';
-        builder.definitions.on((ctx: DefinitionContext<any>) => {
+        builder.definitions.on((ctx: DefinitionContext) => {
           definitionContext = ctx;
           if (ctx.componentType === TestComponent) {
             ctx.perComponent({ a: key1, is: value1 });
@@ -217,7 +217,7 @@ describe('kit/definition/element-builder', () => {
       beforeEach(() => {
         mockDispatcher = {
           dispatch: jest.fn(),
-          on: jest.fn((context: ComponentContext<any>, type: string) =>
+          on: jest.fn((context: ComponentContext, type: string) =>
               new DomEventDispatcher(context.element).on<any>(type)),
         };
         bootstrapValueRegistry.provide({ a: ComponentEventDispatcher, is: mockDispatcher });
@@ -304,7 +304,7 @@ describe('kit/definition/element-builder', () => {
       beforeEach(() => {
         mockDispatcher = {
           dispatch: jest.fn(),
-          on: jest.fn((ctx: ComponentContext<any>, type: string) =>
+          on: jest.fn((ctx: ComponentContext, type: string) =>
               new DomEventDispatcher(ctx.element).on<any>(type)),
         };
         bootstrapValueRegistry.provide({ a: ComponentEventDispatcher, is: mockDispatcher });

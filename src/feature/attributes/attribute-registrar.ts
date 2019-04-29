@@ -10,10 +10,10 @@ import { ContextRequest, ContextTarget, SingleContextKey } from 'context-values'
  * @param newValue New attribute value.
  * @param oldValue Previous attribute value, or `null` if there were no value assigned.
  */
-export type AttributeChangedCallback<T extends object = object> =
+export type AttributeChangedCallback<T extends object = any> =
     (this: T, newValue: string, oldValue: string | null) => void;
 
-export type AttributeRegistrar<T extends object> = (name: string, callback: AttributeChangedCallback<T>) => void;
+export type AttributeRegistrar<T extends object = any> = (name: string, callback: AttributeChangedCallback<T>) => void;
 
-export const AttributeRegistrar: ContextTarget<AttributeRegistrar<any>> & ContextRequest<AttributeRegistrar<any>> =
-    /*#__PURE__*/ new SingleContextKey<AttributeRegistrar<any>>('attribute-registrar');
+export const AttributeRegistrar: ContextTarget<AttributeRegistrar> & ContextRequest<AttributeRegistrar> =
+    /*#__PURE__*/ new SingleContextKey<AttributeRegistrar>('attribute-registrar');

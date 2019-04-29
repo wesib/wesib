@@ -7,7 +7,7 @@ import { ComponentContext } from './component-context';
  *
  * @typeparam T A type of component.
  */
-export interface ComponentClass<T extends object = object> extends Function {
+export interface ComponentClass<T extends object = any> extends Function {
   new (context: ComponentContext<T>): T;
   prototype: T;
 }

@@ -5,7 +5,7 @@ import { Attribute } from './attribute.decorator';
 describe('feature/attributes/attribute.decorator', () => {
   describe('@Attribute', () => {
 
-    let contextSpy: ObjectMock<ComponentContext<any>>;
+    let contextSpy: ObjectMock<ComponentContext>;
     let elementSpy: ObjectMock<HTMLElement>;
 
     beforeEach(() => {

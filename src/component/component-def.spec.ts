@@ -61,7 +61,7 @@ describe('component/component-def', () => {
           };
         }
 
-        expect<any>(ComponentDef.of(B))
+        expect(ComponentDef.of(B))
             .toEqual(ComponentDef.merge(A[ComponentDef__symbol], B[ComponentDef__symbol]));
       });
     });
@@ -112,7 +112,7 @@ describe('component/component-def', () => {
         const merged = ComponentDef.merge(
             { define: define1spy },
             { define: define2spy }).define || noop;
-        const context: DefinitionContext<any> = { name: 'definition context' } as any;
+        const context: DefinitionContext = { name: 'definition context' } as any;
 
         class Component {}
 

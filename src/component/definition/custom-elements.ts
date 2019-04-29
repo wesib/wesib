@@ -32,7 +32,7 @@ export abstract class CustomElements {
    * @param componentTypeOrName A component class constructor or custom element name.
    * @param elementType A constructor of custom element to define.
    */
-  abstract define(componentTypeOrName: ComponentClass<any> | string, elementType: Class<any>): void;
+  abstract define(componentTypeOrName: ComponentClass | string, elementType: Class): void;
 
   /**
    * Allows to wait for component definition.
@@ -45,7 +45,7 @@ export abstract class CustomElements {
    *
    * @throws TypeError If `componentType` does not contain a component definition.
    */
-  abstract whenDefined(componentTypeOrName: ComponentClass<any> | string): Promise<void>;
+  abstract whenDefined(componentTypeOrName: ComponentClass | string): Promise<void>;
 
 }
 
@@ -55,7 +55,7 @@ function createCustomElements(values: ContextValues) {
 
   class WindowCustomElements extends CustomElements {
 
-    define(componentTypeOrName: ComponentClass<any> | string, elementType: Class): void {
+    define(componentTypeOrName: ComponentClass | string, elementType: Class): void {
       if (typeof componentTypeOrName === 'string') {
         customElements.define(componentTypeOrName, elementType);
         return;
@@ -80,7 +80,7 @@ function createCustomElements(values: ContextValues) {
       }
     }
 
-    whenDefined(componentTypeOrName: ComponentClass<any> | string): Promise<void> {
+    whenDefined(componentTypeOrName: ComponentClass | string): Promise<void> {
       if (typeof componentTypeOrName === 'string') {
         return customElements.whenDefined(componentTypeOrName);
       }

@@ -7,7 +7,7 @@ const AttributesSupport__feature: FeatureDef = {
     { as: AttributeRegistry },
     {
       a: AttributeRegistrar,
-      by(registry: AttributeRegistry<any>) {
+      by(registry: AttributeRegistry) {
         return <T extends object>(name: string, callback: AttributeChangedCallback<T>) =>
             registry.add(name, callback);
       },

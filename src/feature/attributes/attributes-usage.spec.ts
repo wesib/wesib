@@ -112,7 +112,7 @@ describe('feature/attributes', () => {
         expect(noAttrElement.constructor).not.toEqual(expect.objectContaining({
           observedAttributes: expect.anything(),
         }));
-        expect<any>(noAttrElement).not.toMatchObject({
+        expect(noAttrElement).not.toMatchObject({
           attributeChangedCallback: expect.anything(),
         });
       });

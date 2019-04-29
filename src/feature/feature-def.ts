@@ -42,14 +42,14 @@ export interface FeatureDef {
   /**
    * Definition context values to declare per each component class definition.
    */
-  readonly perDefinition?: ContextValueSpec<DefinitionContext<any>, any, any[], any>
-      | ContextValueSpec<DefinitionContext<any>, any, any[], any>[];
+  readonly perDefinition?: ContextValueSpec<DefinitionContext, any, any[], any>
+      | ContextValueSpec<DefinitionContext, any, any[], any>[];
 
   /**
    * Component context values to declare per each component construction.
    */
-  readonly perComponent?: ContextValueSpec<ComponentContext<any>, any, any[], any>
-      | ContextValueSpec<ComponentContext<any>, any, any[], any>[];
+  readonly perComponent?: ContextValueSpec<ComponentContext, any, any[], any>
+      | ContextValueSpec<ComponentContext, any, any[], any>[];
 
 }
 

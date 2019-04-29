@@ -9,7 +9,7 @@ import { ComponentContext } from './component-context';
  * their connection status by updating `ComponentMount.connected` property. E.g. by periodically calling a
  * `checkConnected()` method, or using `AutoConnectionSupport` feature.
  */
-export abstract class ComponentMount<T extends object = object> {
+export abstract class ComponentMount<T extends object = any> {
 
   /**
    * Mounted component context.

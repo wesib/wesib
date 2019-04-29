@@ -12,7 +12,7 @@ import { ShadowContentDef } from './shadow-content-def';
  *
  * @return Component class decorator.
  */
-export function AttachShadow<T extends ComponentClass<any> = any>(
+export function AttachShadow<T extends ComponentClass = any>(
     def?: ShadowContentDef): TypedClassDecorator<T> {
   return (type: T) => {
     ComponentDef.define(

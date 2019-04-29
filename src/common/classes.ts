@@ -3,7 +3,7 @@
  *
  * @typeparam T A type of object.
  */
-export interface Class<T extends object = object> extends Function {
+export interface Class<T extends object = any> extends Function {
   new(...args: any[]): T;
   prototype: T;
 }

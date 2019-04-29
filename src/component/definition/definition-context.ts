@@ -14,12 +14,12 @@ import { ElementDef } from './element-def';
  *
  * @typeparam T A type of component.
  */
-export abstract class DefinitionContext<T extends object = object> extends ContextValues {
+export abstract class DefinitionContext<T extends object = any> extends ContextValues {
 
   /**
    * A key of definition context value containing the definition context itself.
    */
-  static get key(): ContextKey<DefinitionContext<any>> {
+  static get key(): ContextKey<DefinitionContext> {
     return DefinitionContext__key;
   }
 
@@ -53,7 +53,7 @@ export abstract class DefinitionContext<T extends object = object> extends Conte
    *
    * @return An event interest instance.
    */
-  abstract readonly onComponent: OnEvent<[ComponentContext<any>]>;
+  abstract readonly onComponent: OnEvent<[ComponentContext]>;
 
   /**
    * Registers component definition readiness callback.

@@ -5,14 +5,14 @@ import { DefinitionContext } from '../../component/definition';
 import { BootstrapWindow } from '../../kit';
 import { AttributeChangedCallback } from './attribute-registrar';
 
-const AttributeRegistry__key = /*#__PURE__*/ new SingleContextKey<AttributeRegistry<any>>('attribute-registry');
+const AttributeRegistry__key = /*#__PURE__*/ new SingleContextKey<AttributeRegistry>('attribute-registry');
 
 /**
  * @internal
  */
-export class AttributeRegistry<T extends object> {
+export class AttributeRegistry<T extends object = any> {
 
-  static get key(): ContextKey<AttributeRegistry<any>> {
+  static get key(): ContextKey<AttributeRegistry> {
     return AttributeRegistry__key;
   }
 

@@ -49,7 +49,7 @@ describe('feature/feature-def', () => {
           };
         }
 
-        expect<any>(FeatureDef.of(B))
+        expect(FeatureDef.of(B))
             .toEqual(FeatureDef.merge(A[FeatureDef__symbol], B[FeatureDef__symbol]));
       });
     });

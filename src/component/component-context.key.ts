@@ -4,4 +4,4 @@ import { ComponentContext } from './component-context';
 /**
  * @internal
  */
-export const ComponentContext__key = /*#__PURE__*/ new SingleContextKey<ComponentContext<any>>('component-context');
+export const ComponentContext__key = /*#__PURE__*/ new SingleContextKey<ComponentContext>('component-context');

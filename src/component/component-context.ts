@@ -23,12 +23,12 @@ export const ComponentContext__symbol = /*#__PURE__*/ Symbol('component-context'
  *
  * @typeparam T A type of component.
  */
-export abstract class ComponentContext<T extends object = object> extends ContextValues {
+export abstract class ComponentContext<T extends object = any> extends ContextValues {
 
   /**
    * A key of component context value containing the component context instance itself.
    */
-  static get key(): ContextKey<ComponentContext<any>> {
+  static get key(): ContextKey<ComponentContext> {
     return ComponentContext__key;
   }
 

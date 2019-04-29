@@ -18,7 +18,7 @@ import { ComponentContext, ComponentContext__symbol } from '../component';
  *
  * @returns An adapted component's context, or `null` if the element can not be adapted.
  */
-export type ElementAdapter = (element: any) => ComponentContext<any> | undefined;
+export type ElementAdapter = (element: any) => ComponentContext | undefined;
 
 class Key extends AbstractContextKey<ElementAdapter> {
 
@@ -53,6 +53,6 @@ export const ElementAdapter = {
 
 };
 
-function defaultElementAdapter(element: any): ComponentContext<any> | undefined {
+function defaultElementAdapter(element: any): ComponentContext | undefined {
   return element[ComponentContext__symbol];
 }

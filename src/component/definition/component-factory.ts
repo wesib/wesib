@@ -4,17 +4,17 @@ import { ComponentClass } from '../component-class';
 import { ComponentMount } from '../component-mount';
 import { ElementDef } from './element-def';
 
-const ComponentFactory__key = /*#__PURE__*/ new SingleContextKey<ComponentFactory<any>>('component-factory');
+const ComponentFactory__key = /*#__PURE__*/ new SingleContextKey<ComponentFactory>('component-factory');
 
 /**
  * A factory of components of particular type.
  */
-export abstract class ComponentFactory<C extends object = object> {
+export abstract class ComponentFactory<C extends object = any> {
 
   /**
    * A key of definition context value containing a component factory.
    */
-  static get key(): ContextKey<ComponentFactory<any>> {
+  static get key(): ContextKey<ComponentFactory> {
     return ComponentFactory__key;
   }
 

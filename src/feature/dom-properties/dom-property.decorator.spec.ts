@@ -226,7 +226,7 @@ describe('feature/dom-properties/dom-property', () => {
 
         const elementType = testElement(TestComponent);
 
-        expect<any>(Object.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
+        expect(Object.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: true,
           enumerable: false,
           get: expect.any(Function),

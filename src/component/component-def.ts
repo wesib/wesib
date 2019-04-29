@@ -17,7 +17,7 @@ export const ComponentDef__symbol = /*#__PURE__*/ Symbol('component-def');
  *
  * @typeparam T A type of component.
  */
-export interface ComponentDef<T extends object = object> {
+export interface ComponentDef<T extends object = any> {
 
   /**
    * Custom element name.
@@ -60,7 +60,7 @@ export interface ComponentDef<T extends object = object> {
 
 }
 
-class ComponentMeta extends MetaAccessor<ComponentDef<any>> {
+class ComponentMeta extends MetaAccessor<ComponentDef> {
 
   constructor() {
     super(ComponentDef__symbol);

@@ -6,7 +6,7 @@ import { DomPropertyPath } from './dom-property-path';
  *
  * This is an parameter to `@DomProperty` decorator applied to component property.
  */
-export interface DomPropertyDef<T extends object> {
+export interface DomPropertyDef<T extends object = any> {
 
   /**
    * Property key.

@@ -4,13 +4,13 @@ import { ComponentContext } from '../../component';
 /**
  * @internal
  */
-export class ComponentValueRegistry extends ContextRegistry<ComponentContext<any>> {
+export class ComponentValueRegistry extends ContextRegistry<ComponentContext> {
 
-  static create(initial?: ContextSourcesProvider<ComponentContext<any>>): ComponentValueRegistry {
+  static create(initial?: ContextSourcesProvider<ComponentContext>): ComponentValueRegistry {
     return new ComponentValueRegistry(initial);
   }
 
-  private constructor(initial?: ContextSourcesProvider<ComponentContext<any>>) {
+  private constructor(initial?: ContextSourcesProvider<ComponentContext>) {
     super(initial);
   }
 

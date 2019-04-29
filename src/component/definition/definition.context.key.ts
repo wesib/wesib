@@ -4,4 +4,4 @@ import { DefinitionContext } from './definition-context';
 /**
  * @internal
  */
-export const DefinitionContext__key = /*#__PURE__*/ new SingleContextKey<DefinitionContext<any>>('definition-context');
+export const DefinitionContext__key = /*#__PURE__*/ new SingleContextKey<DefinitionContext>('definition-context');

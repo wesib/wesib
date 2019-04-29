@@ -9,10 +9,10 @@ import { ComponentEventDispatcher } from './component-event';
 export const ComponentEventDispatcher__key = /*#__PURE__*/ new SingleContextKey<ComponentEventDispatcher>(
     'component-event-dispatcher',
     () => ({
-      dispatch(context: ComponentContext<any>, event: Event) {
+      dispatch(context: ComponentContext, event: Event) {
         context.element.dispatchEvent(event);
       },
-      on<E extends Event>(context: ComponentContext<any>, type: string): OnDomEvent<E> {
+      on<E extends Event>(context: ComponentContext, type: string): OnDomEvent<E> {
 
         const dispatcher = new DomEventDispatcher(context.element);
 

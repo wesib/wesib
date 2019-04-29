@@ -10,7 +10,7 @@ export function testComponentFactory<T extends object>(componentType: Class<T>):
 
   const customElements: CustomElements = {
 
-    define(compType: ComponentClass<any>, elementType: Class<any>): void {
+    define(compType: ComponentClass, elementType: Class): void {
       result = elementType;
     },
 
@@ -31,13 +31,13 @@ export function testComponentFactory<T extends object>(componentType: Class<T>):
   return kit.whenDefined(componentType);
 }
 
-export function testElement(componentType: Class<any>): Class<any> {
+export function testElement(componentType: Class): Class {
 
   let result!: Class;
 
   const customElements: CustomElements = {
 
-    define(compType: ComponentClass<any>, elementType: Class<any>): void {
+    define(compType: ComponentClass, elementType: Class): void {
       result = elementType;
     },
 
