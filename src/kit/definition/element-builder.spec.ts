@@ -308,6 +308,30 @@ describe('kit/definition/element-builder', () => {
 
           expect(destroyed).toHaveBeenCalledWith(reason);
         });
+        it('notifies destruction callbacks only once', () => {
+
+          const destroyed = jest.fn();
+          const reason1 = 'Destruction reason 1';
+          const reason2 = 'Destruction reason 2';
+
+          componentContext.whenDestroyed(destroyed);
+          componentContext.destroy(reason1);
+          componentContext.destroy(reason2);
+
+          expect(destroyed).toHaveBeenCalledWith(reason1);
+          expect(destroyed).not.toHaveBeenCalledWith(reason2);
+          expect(destroyed).toHaveBeenCalledTimes(1);
+        });
+        it('notifies destruction callbacks immediately when destroyed already', () => {
+
+          const destroyed = jest.fn();
+          const reason = 'Destruction reason';
+
+          componentContext.destroy(reason);
+          componentContext.whenDestroyed(destroyed);
+
+          expect(destroyed).toHaveBeenCalledWith(reason);
+        });
         it('removes element', () => {
 
           const element = componentContext.element;
@@ -445,7 +469,7 @@ describe('kit/definition/element-builder', () => {
           context.whenOn(connected);
           mount.connected = true;
 
-          expect(connected).toHaveBeenCalledWith(context);
+          expect(connected).toHaveBeenCalledWith();
         });
         it('reports connected element', () => {
           doMount();
@@ -455,7 +479,7 @@ describe('kit/definition/element-builder', () => {
           const connected = jest.fn();
 
           context.whenOn(connected);
-          expect(connected).toHaveBeenCalledWith(context);
+          expect(connected).toHaveBeenCalledWith();
         });
         it('reports disconnected element', () => {
           doMount();
@@ -464,7 +488,7 @@ describe('kit/definition/element-builder', () => {
 
           context.whenOff(disconnected);
 
-          expect(disconnected).toHaveBeenCalledWith(context);
+          expect(disconnected).toHaveBeenCalledWith();
         });
         it('does not disconnect not connected element', () => {
           doMount();
@@ -488,7 +512,7 @@ describe('kit/definition/element-builder', () => {
             context.whenOff(disconnected);
             context.destroy();
 
-            expect(disconnected).toHaveBeenCalledWith(context);
+            expect(disconnected).toHaveBeenCalledWith();
           });
         });
       });
@@ -519,7 +543,7 @@ describe('kit/definition/element-builder', () => {
         context.whenOff(disconnected);
         mount.connected = false;
 
-        expect(disconnected).toHaveBeenCalledWith(context);
+        expect(disconnected).toHaveBeenCalledWith();
       });
     });
 

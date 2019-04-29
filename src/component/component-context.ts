@@ -77,7 +77,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    *
    * @returns An event interest instance.
    */
-  abstract readonly whenOn: OnEvent<[ComponentContext<T>]>;
+  abstract readonly whenOn: OnEvent<[]>;
 
   /**
    * Registers custom element disconnection listener.
@@ -89,7 +89,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    *
    * @returns An event interest instance.
    */
-  abstract readonly whenOff: OnEvent<[ComponentContext<T>]>;
+  abstract readonly whenOff: OnEvent<[]>;
 
   /**
    * Updates component's state.
