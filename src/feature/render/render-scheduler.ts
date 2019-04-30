@@ -17,6 +17,20 @@ export abstract class RenderScheduler {
   }
 
   /**
+   * Creates new render schedule.
+   *
+   * @returns New render schedule instance.
+   */
+  abstract newSchedule(): RenderSchedule;
+
+}
+
+/**
+ * Render schedule.
+ */
+export interface RenderSchedule {
+
+  /**
    * Schedules component rendering.
    *
    * Only the latest rendering request has affect. I.e. if multiple rendering have been scheduled then the rendering
@@ -24,6 +38,6 @@ export abstract class RenderScheduler {
    *
    * @param render A rendering function.
    */
-  abstract scheduleRender(render: (this: void) => void): void;
+  schedule(render: (this: void) => void): void;
 
 }

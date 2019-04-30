@@ -30,7 +30,7 @@ export const ElementRender = {
       def: RenderDef = {}) {
 
     const stateTracker = context.get(ComponentState);
-    const renderScheduler = context.get(RenderScheduler);
+    const schedule = context.get(RenderScheduler).newSchedule();
 
     const { offline } = def;
     let rendered = false;
@@ -57,7 +57,7 @@ export const ElementRender = {
 
     function scheduleRender() {
       rendered = true;
-      renderScheduler.scheduleRender(renderElement);
+      schedule.schedule(renderElement);
     }
 
     function renderElement() {

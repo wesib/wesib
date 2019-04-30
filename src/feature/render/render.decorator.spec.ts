@@ -1,29 +1,29 @@
 import { Component, ComponentClass, ComponentContext } from '../../component';
 import { CustomElements, DefinitionContext } from '../../component/definition';
-import { ObjectMock } from '../../spec/mocks';
 import { MockElement, testElement } from '../../spec/test-element';
 import { DomProperty } from '../dom-properties';
 import { FeatureDef } from '../feature-def';
 import { Feature } from '../feature.decorator';
 import { StateSupport } from '../state';
-import { RenderScheduler } from './render-scheduler';
+import { RenderSchedule, RenderScheduler } from './render-scheduler';
 import { RenderSupport } from './render-support.feature';
 import { Render } from './render.decorator';
 import Mock = jest.Mock;
+import Mocked = jest.Mocked;
 
 describe('feature/render/render.decorator', () => {
   describe('@Render', () => {
 
     let testComponent: ComponentClass;
-    let renderSpy: Mock;
-    let offlineRenderSpy: Mock;
-    let delegateRenderSpy: Mock;
+    let mockRender: Mock;
+    let mockOfflineRender: Mock;
+    let mockDelegateRender: Mock;
     let definitionContext: DefinitionContext<object>;
 
     beforeEach(() => {
-      renderSpy = jest.fn();
-      offlineRenderSpy = jest.fn();
-      delegateRenderSpy = jest.fn();
+      mockRender = jest.fn();
+      mockOfflineRender = jest.fn();
+      mockDelegateRender = jest.fn();
 
       @Component({
         name: 'test-component',
@@ -37,17 +37,17 @@ describe('feature/render/render.decorator', () => {
       class TestComponent {
 
         @Render()
-        readonly render = renderSpy;
+        readonly render = mockRender;
 
         @Render({ offline: true })
-        readonly offlineRender = offlineRenderSpy;
+        readonly offlineRender = mockOfflineRender;
 
         @DomProperty()
         property = 'value';
 
         @Render({ offline: true })
         nestRender() {
-          return delegateRenderSpy;
+          return mockDelegateRender;
         }
 
       }
@@ -55,25 +55,29 @@ describe('feature/render/render.decorator', () => {
       testComponent = TestComponent;
     });
 
-    let renderSchedulerSpy: ObjectMock<RenderScheduler>;
+    let mockRenderScheduler: Mocked<RenderScheduler>;
+    let mockRenderSchedule: Mocked<RenderSchedule>;
 
     beforeEach(() => {
-      renderSchedulerSpy = {
-        scheduleRender: jest.fn((fn: () => void) => fn()),
+      mockRenderSchedule = {
+        schedule: jest.fn((fn: () => void) => fn()),
+      };
+      mockRenderScheduler = {
+        newSchedule: jest.fn(() => mockRenderSchedule),
       };
     });
 
-    let customElementsSpy: ObjectMock<CustomElements>;
+    let mockCustomElements: Mocked<CustomElements>;
 
     beforeEach(() => {
-      customElementsSpy = {
+      mockCustomElements = {
         define: jest.fn(),
       } as any;
 
       @Feature({
         set: [
-          { a: RenderScheduler, is: renderSchedulerSpy },
-          { a: CustomElements, is: customElementsSpy },
+          { a: RenderScheduler, is: mockRenderScheduler },
+          { a: CustomElements, is: mockCustomElements },
         ],
         has: RenderSupport,
       })
@@ -113,33 +117,33 @@ describe('feature/render/render.decorator', () => {
       });
 
       it('is not scheduled initially', () => {
-        expect(renderSpy).not.toHaveBeenCalled();
+        expect(mockRender).not.toHaveBeenCalled();
       });
       it('is scheduled on state update', () => {
         component.property = 'other';
-        expect(renderSpy).toHaveBeenCalled();
+        expect(mockRender).toHaveBeenCalled();
       });
       it('is not scheduled on state update while offline', () => {
         connected = false;
         component.property = 'other';
-        expect(renderSpy).not.toHaveBeenCalled();
+        expect(mockRender).not.toHaveBeenCalled();
       });
       it('is scheduled when connected', () => {
         connected = true;
         element.connectedCallback();
-        expect(renderSpy).toHaveBeenCalled();
+        expect(mockRender).toHaveBeenCalled();
       });
       it('is re-scheduled when connected after state update', () => {
         component.property = 'other';
         connected = true;
         element.connectedCallback();
-        expect(renderSpy).toHaveBeenCalledTimes(1);
+        expect(mockRender).toHaveBeenCalledTimes(1);
       });
       it('is not re-scheduled when connected without state update', () => {
         connected = true;
         element.connectedCallback();
         element.connectedCallback();
-        expect(renderSpy).toHaveBeenCalledTimes(1);
+        expect(mockRender).toHaveBeenCalledTimes(1);
       });
       it('is not re-scheduled after component destruction', () => {
         connected = true;
@@ -147,54 +151,61 @@ describe('feature/render/render.decorator', () => {
         context.destroy();
         connected = false;
         component.property = 'other';
-        expect(renderSpy).toHaveBeenCalledTimes(1);
+        expect(mockRender).toHaveBeenCalledTimes(1);
       });
       it('uses decorated method', () => {
-        renderSchedulerSpy.scheduleRender.mockRestore();
+        mockRenderSchedule.schedule.mockRestore();
         component.property = 'other';
-        renderSchedulerSpy.scheduleRender.mock.calls[0][0]();
+        mockRenderSchedule.schedule.mock.calls[0][0]();
 
-        expect(renderSpy).toHaveBeenCalledWith();
-        expect(renderSpy.mock.instances[0]).toBe(component);
+        expect(mockRender).toHaveBeenCalledWith();
+        expect(mockRender.mock.instances[0]).toBe(component);
       });
 
       describe('Offline', () => {
         it('is scheduled initially', () => {
-          expect(offlineRenderSpy).toHaveBeenCalled();
+          expect(mockOfflineRender).toHaveBeenCalled();
         });
         it('is scheduled on state update', () => {
-          renderSchedulerSpy.scheduleRender.mockClear();
+          mockRenderSchedule.schedule.mockClear();
           component.property = 'other';
-          expect(offlineRenderSpy).toHaveBeenCalled();
+          expect(mockOfflineRender).toHaveBeenCalled();
         });
         it('is scheduled on state update while offline', () => {
-          renderSchedulerSpy.scheduleRender.mockClear();
+          mockRenderSchedule.schedule.mockClear();
           connected = false;
           component.property = 'other';
-          expect(offlineRenderSpy).toHaveBeenCalled();
+          expect(mockOfflineRender).toHaveBeenCalled();
         });
       });
 
       describe('Delegated', () => {
         it('is scheduled', () => {
-          expect(delegateRenderSpy).toHaveBeenCalled();
+          expect(mockDelegateRender).toHaveBeenCalledTimes(1);
         });
         it('is re-scheduled on state update', () => {
           component.property = 'other';
-          expect(delegateRenderSpy).toHaveBeenCalledTimes(2);
+          expect(mockDelegateRender).toHaveBeenCalledTimes(2);
+        });
+        it('does not re-create schedule on state update', () => {
+
+          const schedulesCreated = mockRenderScheduler.newSchedule.mock.calls.length;
+
+          component.property = 'other';
+          expect(mockRenderScheduler.newSchedule).toHaveBeenCalledTimes(schedulesCreated);
         });
         it('is scheduled with a replacement function', () => {
 
           const replacement = jest.fn();
 
-          delegateRenderSpy.mockImplementation(() => replacement);
+          mockDelegateRender.mockImplementation(() => replacement);
 
           component.property = 'other';
-          expect(delegateRenderSpy).toHaveBeenCalledTimes(2);
+          expect(mockDelegateRender).toHaveBeenCalledTimes(2);
           expect(replacement).toHaveBeenCalled();
 
           component.property = 'third';
-          expect(delegateRenderSpy).toHaveBeenCalledTimes(2);
+          expect(mockDelegateRender).toHaveBeenCalledTimes(2);
           expect(replacement).toHaveBeenCalledTimes(2);
         });
       });

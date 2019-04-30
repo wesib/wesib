@@ -1,7 +1,7 @@
 import { noop } from 'call-thru';
 import { BootstrapWindow } from '../../kit';
 import { FeatureDef, FeatureDef__symbol } from '../feature-def';
-import { RenderScheduler as RenderScheduler_ } from './render-scheduler';
+import { RenderSchedule as RenderSchedule_, RenderScheduler as RenderScheduler_ } from './render-scheduler';
 
 const RenderSupport__feature: FeatureDef = {
   perComponent: {
@@ -26,23 +26,31 @@ export class RenderSupport {
 
 function createRenderScheduler<T extends object>(window: BootstrapWindow) {
 
-  let scheduled: () => void = noop;
-
   class RenderScheduler extends RenderScheduler_ {
 
-    scheduleRender(render: (this: void) => void): void {
+    newSchedule() {
 
-      const previouslyScheduled = scheduled;
+      let scheduled: () => void = noop;
 
-      scheduled = render;
-      if (previouslyScheduled === noop) {
-        window.requestAnimationFrame(() => {
-          scheduled();
-          scheduled = noop;
-        });
+      class RenderSchedule implements RenderSchedule_ {
+
+        schedule(render: (this: void) => void): void {
+
+          const previouslyScheduled = scheduled;
+
+          scheduled = render;
+          if (previouslyScheduled === noop) {
+            window.requestAnimationFrame(() => {
+              scheduled();
+              scheduled = noop;
+            });
+          }
+        }
+
       }
-    }
 
+      return new RenderSchedule();
+    }
   }
 
   return new RenderScheduler();

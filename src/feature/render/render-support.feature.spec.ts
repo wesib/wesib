@@ -6,7 +6,7 @@ import { ObjectMock } from '../../spec/mocks';
 import { MockElement, testElement } from '../../spec/test-element';
 import { FeatureDef } from '../feature-def';
 import { Feature } from '../feature.decorator';
-import { RenderScheduler } from './render-scheduler';
+import { RenderSchedule, RenderScheduler } from './render-scheduler';
 import { RenderSupport } from './render-support.feature';
 
 describe('feature/render/render-support.feature', () => {
@@ -63,18 +63,14 @@ describe('feature/render/render-support.feature', () => {
     describe('RenderScheduler', () => {
 
       let componentContext: ComponentContext;
-      let renderScheduler: RenderScheduler;
+      let renderSchedule: RenderSchedule;
 
       beforeEach(() => {
 
         const element = new elementType;
 
         componentContext = ComponentContext.of(element);
-        renderScheduler = componentContext.get(RenderScheduler);
-      });
-
-      it('is available to component', () => {
-        expect(renderScheduler).toBeDefined();
+        renderSchedule = componentContext.get(RenderScheduler).newSchedule();
       });
 
       describe('scheduleRender', () => {
@@ -82,7 +78,7 @@ describe('feature/render/render-support.feature', () => {
 
           const renderSpy = jest.fn();
 
-          renderScheduler.scheduleRender(renderSpy);
+          renderSchedule.schedule(renderSpy);
 
           expect(windowSpy.requestAnimationFrame).toHaveBeenCalledWith(expect.any(Function));
           expect(renderSpy).not.toHaveBeenCalled();
@@ -96,8 +92,8 @@ describe('feature/render/render-support.feature', () => {
           const render1spy = jest.fn();
           const render2spy = jest.fn();
 
-          renderScheduler.scheduleRender(render1spy);
-          renderScheduler.scheduleRender(render2spy);
+          renderSchedule.schedule(render1spy);
+          renderSchedule.schedule(render2spy);
 
           expect(windowSpy.requestAnimationFrame).toHaveBeenCalledTimes(1);
         });
@@ -106,8 +102,8 @@ describe('feature/render/render-support.feature', () => {
           const render1spy = jest.fn();
           const render2spy = jest.fn();
 
-          renderScheduler.scheduleRender(render1spy);
-          renderScheduler.scheduleRender(render2spy);
+          renderSchedule.schedule(render1spy);
+          renderSchedule.schedule(render2spy);
 
           windowSpy.requestAnimationFrame.mock.calls[0][0](0);
 
@@ -118,7 +114,7 @@ describe('feature/render/render-support.feature', () => {
 
           const render1spy = jest.fn();
 
-          renderScheduler.scheduleRender(render1spy);
+          renderSchedule.schedule(render1spy);
 
           windowSpy.requestAnimationFrame.mock.calls[0][0](0);
 
@@ -126,7 +122,7 @@ describe('feature/render/render-support.feature', () => {
 
           const render2spy = jest.fn();
 
-          renderScheduler.scheduleRender(render2spy);
+          renderSchedule.schedule(render2spy);
 
           windowSpy.requestAnimationFrame.mock.calls[0][0](0);
 
