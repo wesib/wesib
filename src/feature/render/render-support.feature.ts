@@ -4,7 +4,7 @@ import { FeatureDef, FeatureDef__symbol } from '../feature-def';
 import { RenderSchedule as RenderSchedule_, RenderScheduler as RenderScheduler_ } from './render-scheduler';
 
 const RenderSupport__feature: FeatureDef = {
-  perComponent: {
+  set: {
     a: RenderScheduler_,
     by: createRenderScheduler,
     with: [BootstrapWindow],
@@ -24,7 +24,7 @@ export class RenderSupport {
 
 }
 
-function createRenderScheduler<T extends object>(window: BootstrapWindow) {
+function createRenderScheduler(window: BootstrapWindow) {
 
   class RenderScheduler extends RenderScheduler_ {
 

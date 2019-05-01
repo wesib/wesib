@@ -10,7 +10,7 @@ const RenderScheduler__key = /*#__PURE__*/ new SingleContextKey<RenderScheduler>
 export abstract class RenderScheduler {
 
   /**
-   * A `RenderScheduler` component context value key.
+   * A key of bootstrap, definition, or component context value containing `RenderScheduler` instance.
    */
   static get key(): ContextKey<RenderScheduler> {
     return RenderScheduler__key;

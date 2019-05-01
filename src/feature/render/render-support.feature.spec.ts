@@ -1,7 +1,7 @@
 import { Class } from '../../common';
 import { Component, ComponentClass, ComponentContext } from '../../component';
 import { CustomElements } from '../../component/definition';
-import { BootstrapWindow } from '../../kit';
+import { BootstrapContext, BootstrapWindow } from '../../kit';
 import { ObjectMock } from '../../spec/mocks';
 import { MockElement, testElement } from '../../spec/test-element';
 import { FeatureDef } from '../feature-def';
@@ -60,7 +60,7 @@ describe('feature/render/render-support.feature', () => {
       testElement(testComponent);
     });
 
-    describe('RenderScheduler', () => {
+    describe('RenderSchedule', () => {
 
       let componentContext: ComponentContext;
       let renderSchedule: RenderSchedule;
@@ -70,10 +70,10 @@ describe('feature/render/render-support.feature', () => {
         const element = new elementType;
 
         componentContext = ComponentContext.of(element);
-        renderSchedule = componentContext.get(RenderScheduler).newSchedule();
+        renderSchedule = componentContext.get(BootstrapContext).get(RenderScheduler).newSchedule();
       });
 
-      describe('scheduleRender', () => {
+      describe('schedule', () => {
         it('requests animation frame', () => {
 
           const renderSpy = jest.fn();
