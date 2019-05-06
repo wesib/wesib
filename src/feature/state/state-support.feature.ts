@@ -1,14 +1,24 @@
-import { StateUpdater } from '../../component';
+import { ComponentContext, StateUpdater } from '../../component';
 import { FeatureDef, FeatureDef__symbol } from '../feature-def';
 import { ComponentState } from './component-state';
 
 const StateSupport__feature: FeatureDef = {
   perComponent: [
-    { as: ComponentState },
+    {
+      a: ComponentState,
+      by(context: ComponentContext) {
+
+        const state = new ComponentState();
+
+        context.whenDestroyed(reason => state.done(reason));
+
+        return state;
+      }
+    },
     {
       a: StateUpdater,
-      by(tracker: ComponentState) {
-        return tracker.update;
+      by(state: ComponentState) {
+        return state.update;
       },
       with: [ComponentState],
     },
