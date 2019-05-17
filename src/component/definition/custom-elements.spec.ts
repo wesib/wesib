@@ -1,6 +1,7 @@
 import { ContextRegistry } from 'context-values';
+import { NamespaceDef, newNamespaceAliaser } from 'namespace-aliaser';
 import { Class } from '../../common';
-import { BootstrapContext, BootstrapWindow } from '../../kit';
+import { BootstrapContext, BootstrapWindow, DefaultNamespaceAliaser } from '../../kit';
 import { ComponentFactory__symbol } from '../../kit/definition/component-factory.symbol';
 import { ComponentRegistry } from '../../kit/definition/component-registry';
 import { MethodSpy } from '../../spec/mocks';
@@ -37,6 +38,7 @@ describe('kit/custom-elements', () => {
       } as any;
 
       valueRegistry.provide({ a: BootstrapWindow, is: windowSpy });
+      valueRegistry.provide({ a: DefaultNamespaceAliaser, by: newNamespaceAliaser });
     });
 
     beforeEach(() => {
@@ -65,6 +67,26 @@ describe('kit/custom-elements', () => {
         customElements.define(TestComponent, elementType);
 
         expect(registrySpy.define).toHaveBeenCalledWith('test-component', elementType);
+      });
+      it('defines custom element in namespace', () => {
+
+        const ns = new NamespaceDef('test/url', 'test');
+        class NsComponent {
+          static [ComponentFactory__symbol]: Partial<ComponentFactory> = {
+            elementDef: {
+              name: ['other', ns],
+              extend: {
+                get type() {
+                  return elementType;
+                },
+              },
+            },
+          };
+        }
+
+        customElements.define(NsComponent, elementType);
+
+        expect(registrySpy.define).toHaveBeenCalledWith('test-other', elementType);
       });
       it('defines non-component custom element', () => {
         customElements.define('test-component', elementType);
@@ -147,6 +169,31 @@ describe('kit/custom-elements', () => {
         expect(customElements.whenDefined(TestComponent)).toBe(promise);
         expect(registrySpy.whenDefined).toHaveBeenCalledWith('test-component');
       });
+      it('waits for component definition in namespace', async () => {
+
+        const ns = new NamespaceDef('test/url', 'test');
+        class NsComponent {
+          static [ComponentFactory__symbol]: Partial<ComponentFactory> = {
+            elementDef: {
+              name: ['other', ns],
+              extend: {
+                get type() {
+                  return elementType;
+                },
+              },
+            },
+          };
+        }
+
+        class Element {
+        }
+
+        customElements.define(NsComponent, Element);
+
+        await customElements.whenDefined(NsComponent);
+
+        expect(registrySpy.whenDefined).toHaveBeenCalledWith('test-other');
+      });
       it('awaits for non-component element definition', () => {
 
         const promise = Promise.resolve<any>('defined');
@@ -155,6 +202,16 @@ describe('kit/custom-elements', () => {
 
         expect(customElements.whenDefined('test-component')).toBe(promise);
         expect(registrySpy.whenDefined).toHaveBeenCalledWith('test-component');
+      });
+      it('awaits for non-component element definition in namespace', () => {
+
+        const ns = new NamespaceDef('test/url', 'test');
+        const promise = Promise.resolve<any>('defined');
+
+        registrySpy.whenDefined.mockReturnValue(promise);
+
+        expect(customElements.whenDefined(['other', ns])).toBe(promise);
+        expect(registrySpy.whenDefined).toHaveBeenCalledWith('test-other');
       });
       it('waits for anonymous component definition', async () => {
 

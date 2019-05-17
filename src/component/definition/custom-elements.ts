@@ -1,6 +1,7 @@
 import { ContextKey, ContextValues, SingleContextKey } from 'context-values';
+import { isNameInNamespace, NameInNamespace, qualifyHtmlName } from 'namespace-aliaser';
 import { Class, PromiseResolver } from '../../common';
-import { BootstrapWindow } from '../../kit';
+import { BootstrapWindow, DefaultNamespaceAliaser } from '../../kit';
 import { componentFactoryOf } from '../../kit/definition/component-factory.symbol';
 import { ComponentClass } from '../component-class';
 
@@ -29,35 +30,37 @@ export abstract class CustomElements {
   /**
    * Defines custom element.
    *
-   * @param componentTypeOrName A component class constructor or custom element name.
+   * @param componentTypeOrName A component class constructor or custom element name. The latter may belong to
+   * namespace to avoid naming conflicts.
    * @param elementType A constructor of custom element to define.
    */
-  abstract define(componentTypeOrName: ComponentClass | string, elementType: Class): void;
+  abstract define(componentTypeOrName: ComponentClass | NameInNamespace, elementType: Class): void;
 
   /**
    * Allows to wait for component definition.
    *
    * This corresponds to `window.customElements.whenDefined()` method.
    *
-   * @param componentTypeOrName Component class constructor or custom element name.
+   * @param componentTypeOrName Component class constructor or custom element name possibly belonging to some namespace.
    *
    * @return A promise that is resolved when custom element is registered.
    *
    * @throws TypeError If `componentType` does not contain a component definition.
    */
-  abstract whenDefined(componentTypeOrName: ComponentClass | string): Promise<void>;
+  abstract whenDefined(componentTypeOrName: ComponentClass | NameInNamespace): Promise<void>;
 
 }
 
 function createCustomElements(values: ContextValues) {
 
-  const customElements = values.get(BootstrapWindow).customElements;
+  const customElements: CustomElementRegistry = values.get(BootstrapWindow).customElements;
+  const nsAlias = values.get(DefaultNamespaceAliaser);
 
   class WindowCustomElements extends CustomElements {
 
     define(componentTypeOrName: ComponentClass | string, elementType: Class): void {
-      if (typeof componentTypeOrName === 'string') {
-        customElements.define(componentTypeOrName, elementType);
+      if (isNameInNamespace(componentTypeOrName)) {
+        customElements.define(qualifyHtmlName(componentTypeOrName, nsAlias), elementType);
         return;
       }
 
@@ -70,19 +73,19 @@ function createCustomElements(values: ContextValues) {
       }
       if (extend && extend.name) {
         customElements.define(
-            name,
+            qualifyHtmlName(name, nsAlias),
             elementType,
             {
               extends: extend.name,
             });
       } else {
-        customElements.define(name, elementType);
+        customElements.define(qualifyHtmlName(name, nsAlias), elementType);
       }
     }
 
     whenDefined(componentTypeOrName: ComponentClass | string): Promise<void> {
-      if (typeof componentTypeOrName === 'string') {
-        return customElements.whenDefined(componentTypeOrName);
+      if (isNameInNamespace(componentTypeOrName)) {
+        return customElements.whenDefined(qualifyHtmlName(componentTypeOrName, nsAlias));
       }
 
       const factory = componentFactoryOf(componentTypeOrName);
@@ -92,7 +95,7 @@ function createCustomElements(values: ContextValues) {
         return componentResolver(componentTypeOrName).promise;
       }
 
-      return customElements.whenDefined(name);
+      return customElements.whenDefined(qualifyHtmlName(name, nsAlias));
     }
 
   }
