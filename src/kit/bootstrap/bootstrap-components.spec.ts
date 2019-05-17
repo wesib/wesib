@@ -18,9 +18,9 @@ describe('kit/bootstrap/bootstrap-components', () => {
   let createBootstrapValueRegistrySpy: MethodSpy<typeof BootstrapValueRegistry, 'create'>;
   let createDefinitionValueRegistrySpy: MethodSpy<typeof DefinitionValueRegistry, 'create'>;
   let createComponentValueRegistrySpy: MethodSpy<typeof ComponentValueRegistry, 'create'>;
-  let createElementBuilderSpy: Mock;
+  let createElementBuilderSpy: MethodSpy<typeof ElementBuilder, 'create'>;
   let elementBuilderSpy: ObjectMock<ElementBuilder>;
-  let createComponentRegistrySpy: Mock;
+  let createComponentRegistrySpy: MethodSpy<typeof ComponentRegistry, 'create'>;
   let componentRegistrySpy: {
     define: Mock<void, [string, Function, ElementDefinitionOptions?]>;
     whenDefined: Mock<Promise<void>, [string]>;
@@ -109,7 +109,7 @@ describe('kit/bootstrap/bootstrap-components', () => {
     describe('FeatureRegistry', () => {
 
       let featureRegistrySpy: ObjectMock<FeatureRegistry, 'add' | 'bootstrap'>;
-      let createFeatureRegistrySpy: Mock;
+      let createFeatureRegistrySpy: MethodSpy<typeof FeatureRegistry, 'create'>;
 
       beforeEach(() => {
         featureRegistrySpy = {
