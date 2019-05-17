@@ -1,11 +1,13 @@
 import { noop } from 'call-thru';
 import { ContextValueSpec } from 'context-values';
+import { newNamespaceAliaser } from 'namespace-aliaser';
 import { Class } from '../../common';
 import { ComponentClass, ComponentContext } from '../../component';
 import { DefinitionContext } from '../../component/definition';
 import { FeatureRegistry } from '../../feature/feature-registry';
 import { BootstrapContext as BootstrapContext_ } from '../bootstrap-context';
 import { ComponentKit as ComponentKit_ } from '../component-kit';
+import { DefaultNamespaceAliaser } from '../default-namespace-aliaser';
 import { ComponentRegistry } from '../definition/component-registry';
 import { ComponentValueRegistry } from '../definition/component-value-registry';
 import { DefinitionValueRegistry } from '../definition/definition-value-registry';
@@ -75,6 +77,7 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
       componentValueRegistry = ComponentValueRegistry.create();
       elementBuilder = ElementBuilder.create({ definitionValueRegistry, componentValueRegistry });
       componentRegistry = ComponentRegistry.create({ bootstrapContext: this, elementBuilder });
+      valueRegistry.provide({ a: DefaultNamespaceAliaser, by: newNamespaceAliaser });
       valueRegistry.provide({ a: BootstrapContext, is: this });
       valueRegistry.provide({ a: ComponentKit_, as: ComponentKit });
     }
