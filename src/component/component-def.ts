@@ -1,4 +1,5 @@
 import { ContextValueSpec } from 'context-values';
+import { NameInNamespace } from 'namespace-aliaser';
 import { ArraySet, Class, mergeFunctions, MetaAccessor } from '../common';
 import { FeatureDef } from '../feature';
 import { ComponentClass } from './component-class';
@@ -22,10 +23,13 @@ export interface ComponentDef<T extends object = any> {
   /**
    * Custom element name.
    *
+   * The name may belong to some namespace to avoid naming conflicts. I.e. it can be either a string, or
+   * name/namespace tuple.
+   *
    * When omitted an anonymous component will be registered. Such component is not bound to custom element, but it
    * still can be mounted.
    */
-  readonly name?: string;
+  readonly name?: NameInNamespace;
 
   /**
    * Existing element to extend by custom one.

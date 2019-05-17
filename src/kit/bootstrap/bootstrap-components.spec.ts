@@ -5,6 +5,7 @@ import { FeatureRegistry } from '../../feature/feature-registry';
 import { MethodSpy, ObjectMock } from '../../spec/mocks';
 import { BootstrapContext } from '../bootstrap-context';
 import { ComponentKit } from '../component-kit';
+import { DefaultNamespaceAliaser } from '../default-namespace-aliaser';
 import { ComponentRegistry } from '../definition/component-registry';
 import { ComponentValueRegistry } from '../definition/component-value-registry';
 import { DefinitionValueRegistry } from '../definition/definition-value-registry';
@@ -85,6 +86,13 @@ describe('kit/bootstrap/bootstrap-components', () => {
         bootstrapContext: expect.anything(),
         elementBuilder: elementBuilderSpy,
       });
+    });
+    it('constructs default namespace aliaser', () => {
+      bootstrapComponents();
+
+      const bootstrapValues = createBootstrapValueRegistrySpy.mock.results[0].value.values;
+
+      expect(bootstrapValues.get(DefaultNamespaceAliaser)).toBeInstanceOf(Function);
     });
 
     describe('ComponentKit', () => {
