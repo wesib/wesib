@@ -1,6 +1,6 @@
 import { noop } from 'call-thru';
 import { ContextValues, ContextValueSpec } from 'context-values';
-import { EventEmitter, OnEvent, onEventBy } from 'fun-events';
+import { EventEmitter, OnEvent, onEventBy, receiveEventsBy } from 'fun-events';
 import { ArraySet, Class, mergeFunctions } from '../../common';
 import {
   ComponentClass,
@@ -306,7 +306,7 @@ export class ElementBuilder {
       const interest = connectEvents.on(receiver);
 
       if (isConnected()) {
-        receiver();
+        receiveEventsBy(receiver)();
       }
 
       return interest;
@@ -317,7 +317,7 @@ export class ElementBuilder {
       const interest = disconnectEvents.on(receiver);
 
       if (!isConnected() && ready) {
-        receiver();
+        receiveEventsBy(receiver)();
       }
 
       return interest;

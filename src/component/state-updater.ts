@@ -1,11 +1,11 @@
 import { noop } from 'call-thru';
 import { ContextRequest, ContextTarget, SingleContextKey } from 'context-values';
-import { StateUpdateReceiver } from 'fun-events';
+import { StatePath } from 'fun-events';
 
 /**
  * Component state updater function.
  */
-export type StateUpdater = StateUpdateReceiver;
+export type StateUpdater = <V>(this: void, path: StatePath, newValue: V, oldValue: V) => void;
 
 /**
  * A key of component context value containing a component state updates receiver function.
