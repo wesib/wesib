@@ -23,7 +23,7 @@ import { RenderSupport } from './render-support.feature';
  * @returns Component method decorator.
  */
 export function Render<T extends ComponentClass>(def?: RenderDef): TypedPropertyDecorator<T> {
-  return <V>(target: InstanceType<T>, propertyKey: string | symbol) => {
+  return (target: InstanceType<T>, propertyKey: string | symbol) => {
 
     const componentType = target.constructor as T;
 

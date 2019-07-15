@@ -52,7 +52,7 @@ describe('feature/attributes/attribute.decorator', () => {
           return '';
         }
 
-        set attr(value: string) {
+        set attr(_value: string) {
         }
 
       }

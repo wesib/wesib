@@ -251,7 +251,6 @@ export class ElementBuilder {
       [ComponentContext__symbol]: ComponentContext_<T>;
 
       private readonly [connect__symbol]: ((value: boolean) => void);
-      private [connected__symbol]: boolean;
 
       constructor() {
         super();

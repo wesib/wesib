@@ -1,5 +1,5 @@
 import { decoratePropertyAccessor, PropertyAccessorDescriptor, TypedPropertyDecorator } from '../../common';
-import { Component, ComponentClass, ComponentContext, ComponentDef } from '../../component';
+import { ComponentClass, ComponentContext, ComponentDef } from '../../component';
 import { DomPropertiesSupport } from './dom-properties-support.feature';
 import { DomPropertyDef } from './dom-property-def';
 import { DomPropertyRegistrar } from './dom-property-registrar';

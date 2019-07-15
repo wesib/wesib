@@ -27,7 +27,7 @@ class Key extends AbstractContextKey<ElementAdapter> {
   }
 
   merge(
-      context: ContextValues,
+      _context: ContextValues,
       sources: ContextSources<ElementAdapter>,
       handleDefault: DefaultContextValueHandler<ElementAdapter>): ElementAdapter | null | undefined {
 

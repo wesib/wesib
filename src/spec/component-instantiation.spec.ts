@@ -1,4 +1,3 @@
-import { EventInterest } from 'fun-events';
 import { Component, ComponentClass, ComponentContext } from '../component';
 import { Feature } from '../feature';
 import { MockElement, testElement } from './test-element';
@@ -11,7 +10,6 @@ describe('component instantiation', () => {
     let constructorSpy: Mock;
     let context: ComponentContext;
     let componentListenerSpy: Mock;
-    let elementListenerInterest: EventInterest;
     let element: any;
 
     beforeEach(() => {
@@ -31,7 +29,7 @@ describe('component instantiation', () => {
       })
       @Feature({
         init(bootCtx) {
-          elementListenerInterest = bootCtx.onComponent(componentListenerSpy);
+          bootCtx.onComponent(componentListenerSpy);
         }
       })
       class TestComponent {
@@ -109,7 +107,7 @@ describe('component instantiation', () => {
           class TestComponent {
           }
 
-          const _element = new (testElement(TestComponent))();
+          new (testElement(TestComponent))(); // tslint:disable-line:no-unused-expression
         });
 
         const component = await promise;

@@ -35,7 +35,7 @@ import { AttributesSupport } from './attributes-support.feature';
  */
 export function AttributeChanged<T extends ComponentClass>(def?: AttributeDef<InstanceType<T>> | string):
     TypedPropertyDecorator<T> {
-  return <V>(target: InstanceType<T>, propertyKey: string | symbol) => {
+  return (target: InstanceType<T>, propertyKey: string | symbol) => {
 
     const { name, updateState } = parseAttributeDef(target, propertyKey, def);
     const componentType = target.constructor as T;

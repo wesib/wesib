@@ -32,7 +32,7 @@ export function mergeFunctions<P extends any[], R, T>(
 export function mergeFunctions<P extends any[], R, T>(
     first: ((this: T, ...args: P) => R) | undefined,
     second: ((this: T, ...args: P) => R) | undefined,
-    merge: (first: R, second: R) => R = (f, s) => s): ((this: T, ...args: P) => R) | undefined {
+    merge: (first: R, second: R) => R = (_f, s) => s): ((this: T, ...args: P) => R) | undefined {
   if (!first) {
     return second;
   }

@@ -36,7 +36,7 @@ describe('feature/state', () => {
     });
 
     beforeEach(() => {
-      const _element = new (testElement(testComponent))();
+      new (testElement(testComponent))(); // tslint:disable-line:no-unused-expression
     });
 
     it('provides state update', () => {

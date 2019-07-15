@@ -1,6 +1,6 @@
 import { noop } from 'call-thru';
 import { ContextKey, SingleContextKey } from 'context-values';
-import { DomEventDispatcher, EventInterest } from 'fun-events';
+import { DomEventDispatcher } from 'fun-events';
 import { Class } from '../../common';
 import {
   ComponentClass,
@@ -107,11 +107,10 @@ describe('kit/definition/element-builder', () => {
     describe('component definition listener', () => {
 
       let listenerSpy: Mock;
-      let interest: EventInterest;
 
       beforeEach(() => {
         listenerSpy = jest.fn();
-        interest = builder.definitions.on(listenerSpy);
+        builder.definitions.on(listenerSpy);
       });
 
       it('is notified on component definition', () => {
@@ -199,14 +198,12 @@ describe('kit/definition/element-builder', () => {
       let value1: string;
       const key2 = new SingleContextKey<string>('test-key-2');
       let value2: string;
-      let definitionContext: DefinitionContext;
       let componentContext: ComponentContext;
 
       beforeEach(() => {
         value1 = 'some value';
         value2 = 'other value';
-        builder.definitions.on((ctx: DefinitionContext) => {
-          definitionContext = ctx;
+        builder.definitions.on(ctx => {
           if (ctx.componentType === TestComponent) {
             ctx.perComponent({ a: key1, is: value1 });
           }

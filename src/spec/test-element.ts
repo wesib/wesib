@@ -6,12 +6,9 @@ import { bootstrapComponents } from '../kit/bootstrap';
 
 export function testComponentFactory<T extends object>(componentType: Class<T>): Promise<ComponentFactory<T>> {
 
-  let result!: Class;
-
   const customElements: CustomElements = {
 
-    define(compType: ComponentClass, elementType: Class): void {
-      result = elementType;
+    define(): void {
     },
 
     whenDefined(): Promise<void> {
@@ -37,7 +34,7 @@ export function testElement(componentType: Class): Class {
 
   const customElements: CustomElements = {
 
-    define(compType: ComponentClass, elementType: Class): void {
+    define(_compType: ComponentClass, elementType: Class): void {
       result = elementType;
     },
 
@@ -90,7 +87,7 @@ export class MockElement {
     }
   }
 
-  attributeChangedCallback(name: string, oldValue: string | null, newValue: string) {
+  attributeChangedCallback(_name: string, _oldValue: string | null, _newValue: string) {
   }
 
 }

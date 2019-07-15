@@ -163,6 +163,7 @@ describe('feature/attributes/attribute-changed', () => {
 
       expect(() => {
         @Component('test-component')
+        // @ts-ignore
         class TestComponent {
           @AttributeChanged()
           [key] = attrSpy;
