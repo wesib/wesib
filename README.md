@@ -4,6 +4,8 @@ Wesib: Web Components Building Blocks
 [![NPM][npm-image]][npm-url]
 [![CircleCI][ci-image]][ci-url]
 [![codecov][codecov-image]][codecov-url]
+[![GitHub Project][github-image]][github-url]
+[![API Documentation][api-docs-image]][api-docs-url]
 
 
 [Wesib] provides a lightweight base for web components definition.
@@ -23,12 +25,16 @@ The examples can be found in [@wesib/examples].
 [Wesib]: https://github.com/wesib/wesib 
 [@wesib/generic]: https://github.com/wesib/generic
 [@wesib/examples]: https://github.com/wesib/examples
-[npm-image]: https://img.shields.io/npm/v/@wesib/wesib.svg
+[npm-image]: https://img.shields.io/npm/v/@wesib/wesib.svg?logo=npm
 [npm-url]: https://www.npmjs.com/package/@wesib/wesib
-[ci-image]:https://circleci.com/gh/wesib/wesib.svg?style=shield
-[ci-url]:https://circleci.com/gh/wesib/wesib  
+[ci-image]: https://img.shields.io/circleci/build/github/wesib/wesib?logo=circleci
+[ci-url]: https://circleci.com/gh/wesib/wesib
 [codecov-image]: https://codecov.io/gh/wesib/wesib/branch/master/graph/badge.svg
-[codecov-url]: https://codecov.io/gh/wesib/wesib 
+[codecov-url]: https://codecov.io/gh/wesib/wesib
+[github-image]: https://img.shields.io/static/v1?logo=github&label=GitHub&message=project&color=informational
+[github-url]: https://github.com/wesib/wesib
+[api-docs-image]: https://img.shields.io/static/v1?logo=typescript&label=API&message=docs&color=informational
+[api-docs-url]: https://wesib.github.io/wesib/ 
 
 
 Components
