@@ -1,6 +1,9 @@
+/**
+ * @module @wesib/wesib
+ */
 import { ArraySet, Class } from '../common';
 import { BootstrapContext } from '../kit';
-import { BootstrapValueRegistry } from '../kit/bootstrap/bootstrap-value-registry';
+import { BootstrapValueRegistry } from '../kit/bootstrap/bootstrap-value-registry.impl';
 import { FeatureDef } from './feature-def';
 
 class FeatureProviders {

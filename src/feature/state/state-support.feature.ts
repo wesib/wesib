@@ -1,3 +1,6 @@
+/**
+ * @module @wesib/wesib
+ */
 import { ComponentContext, StateUpdater } from '../../component';
 import { FeatureDef, FeatureDef__symbol } from '../feature-def';
 import { ComponentState } from './component-state';

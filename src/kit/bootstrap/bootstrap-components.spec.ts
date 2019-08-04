@@ -6,12 +6,12 @@ import { MethodSpy, ObjectMock } from '../../spec/mocks';
 import { BootstrapContext } from '../bootstrap-context';
 import { ComponentKit } from '../component-kit';
 import { DefaultNamespaceAliaser } from '../default-namespace-aliaser';
-import { ComponentRegistry } from '../definition/component-registry';
-import { ComponentValueRegistry } from '../definition/component-value-registry';
-import { DefinitionValueRegistry } from '../definition/definition-value-registry';
-import { ElementBuilder } from '../definition/element-builder';
+import { ComponentRegistry } from '../definition/component-registry.impl';
+import { ComponentValueRegistry } from '../definition/component-value-registry.impl';
+import { DefinitionValueRegistry } from '../definition/definition-value-registry.impl';
+import { ElementBuilder } from '../definition/element-builder.impl';
 import { bootstrapComponents } from './bootstrap-components';
-import { BootstrapValueRegistry } from './bootstrap-value-registry';
+import { BootstrapValueRegistry } from './bootstrap-value-registry.impl';
 import Mock = jest.Mock;
 
 describe('kit/bootstrap/bootstrap-components', () => {

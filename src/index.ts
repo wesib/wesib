@@ -1,3 +1,6 @@
+/**
+ * @module @wesib/wesib
+ */
 export * from './common';
 export * from './component';
 export * from './component/definition';

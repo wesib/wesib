@@ -1,8 +1,11 @@
+/**
+ * @module @wesib/wesib
+ */
 import { ContextKey, ContextValues, SingleContextKey } from 'context-values';
 import { html__naming, isQualifiedName, QualifiedName } from 'namespace-aliaser';
 import { Class, PromiseResolver } from '../../common';
 import { BootstrapWindow, DefaultNamespaceAliaser } from '../../kit';
-import { componentFactoryOf } from '../../kit/definition/component-factory.symbol';
+import { componentFactoryOf } from '../../kit/definition/component-factory.symbol.impl';
 import { ComponentClass } from '../component-class';
 
 const CustomElements__key =
@@ -30,9 +33,9 @@ export abstract class CustomElements {
   /**
    * Defines custom element.
    *
-   * @param componentTypeOrName A component class constructor or custom element name. The latter may belong to
+   * @param componentTypeOrName  A component class constructor or custom element name. The latter may belong to
    * namespace to avoid naming conflicts.
-   * @param elementType A constructor of custom element to define.
+   * @param elementType  A constructor of custom element to define.
    */
   abstract define(componentTypeOrName: ComponentClass | QualifiedName, elementType: Class): void;
 
@@ -41,7 +44,8 @@ export abstract class CustomElements {
    *
    * This corresponds to `window.customElements.whenDefined()` method.
    *
-   * @param componentTypeOrName Component class constructor or custom element name possibly belonging to some namespace.
+   * @param componentTypeOrName  Component class constructor or custom element name possibly belonging to some
+   * namespace.
    *
    * @return A promise that is resolved when custom element is registered.
    *

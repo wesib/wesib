@@ -1,3 +1,6 @@
+/**
+ * @module @wesib/wesib
+ */
 import { noop } from 'call-thru';
 import { StatePath } from 'fun-events';
 import { ComponentContext } from '../../component';

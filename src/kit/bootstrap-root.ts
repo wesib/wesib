@@ -1,3 +1,6 @@
+/**
+ * @module @wesib/wesib
+ */
 import { ContextRequest, ContextTarget, SingleContextKey } from 'context-values';
 import { BootstrapWindow } from './bootstrap-window';
 

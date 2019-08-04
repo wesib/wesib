@@ -1,3 +1,6 @@
+/**
+ * @module @wesib/wesib
+ */
 import { ComponentContext, ComponentDef, ContentRoot } from '../../component';
 import { ShadowContentRoot } from './shadow-content-root';
 import { ShadowDomSupport } from './shadow-dom-support.feature';
@@ -20,8 +23,8 @@ export const ShadowContentDef = {
    * The returned component definition enables `ShadowDomSupport` feature and attaches shadow content root to the
    * component.
    *
-   * @typeparam T A type of component.
-   * @param def Shadow content root definition. Uses `mode: 'open'` by default.
+   * @typeparam T  A type of component.
+   * @param def  Shadow content root definition. Uses `mode: 'open'` by default.
    *
    * @returns Component definition.
    */

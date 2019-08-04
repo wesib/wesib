@@ -1,5 +1,8 @@
+/**
+ * @module @wesib/wesib
+ */
 import { ContextRequest, ContextTarget, SingleContextKey } from 'context-values';
-import { ComponentContext__key } from './component-context.key';
+import { ComponentContext__key } from './component-context.key.impl';
 
 /**
  * Component content root node.

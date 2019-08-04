@@ -1,3 +1,6 @@
+/**
+ * @module @wesib/wesib
+ */
 import { Class, superClassOf } from './classes';
 
 export abstract class MetaAccessor<M> {

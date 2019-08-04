@@ -1,3 +1,6 @@
+/**
+ * @module @wesib/wesib
+ */
 import {
   AbstractContextKey,
   ContextKey,
@@ -14,7 +17,7 @@ import { ComponentContext, ComponentContext__symbol } from '../component';
  *
  * Multiple element adapters can be registered in bootstrap context.
  *
- * @param element Target raw element to adapt.
+ * @param element  Target raw element to adapt.
  *
  * @returns An adapted component's context, or `null` if the element can not be adapted.
  */

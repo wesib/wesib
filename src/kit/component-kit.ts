@@ -1,3 +1,6 @@
+/**
+ * @module @wesib/wesib
+ */
 import { ContextKey, SingleContextKey } from 'context-values';
 import { ComponentClass } from '../component';
 import { ComponentFactory } from '../component/definition';
@@ -24,7 +27,7 @@ export abstract class ComponentKit {
    *
    * This corresponds to `window.customElements.whenDefined()` method.
    *
-   * @param componentType Component class constructor.
+   * @param componentType  Component class constructor.
    *
    * @return A promise that is resolved to component factory when the given `componentType` is registered.
    *

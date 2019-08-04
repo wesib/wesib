@@ -1,3 +1,6 @@
+/**
+ * @module @wesib/wesib
+ */
 import { TypedPropertyDecorator } from '../../common';
 import { ComponentClass, ComponentContext, ComponentDef } from '../../component';
 import { FeatureDef } from '../feature-def';
@@ -13,7 +16,7 @@ import { AttributesSupport } from './attributes-support.feature';
  *
  * This decorator automatically enables `AttributesSupport` feature.
  *
- * @param def Attribute definition or just an attribute name.
+ * @param def  Attribute definition or just an attribute name.
  *
  * @return Component property decorator.
  */

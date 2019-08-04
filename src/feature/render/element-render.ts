@@ -1,3 +1,6 @@
+/**
+ * @module @wesib/wesib
+ */
 import { ComponentContext } from '../../component';
 import { ComponentState } from '../state';
 import { RenderDef } from './render-def';
@@ -20,9 +23,9 @@ export const ElementRender = {
    *
    * The `render` call will be scheduled by `RenderScheduler` once component state updated.
    *
-   * @param context Target component context.
-   * @param render Element render function.
-   * @param def Optional element render definition.
+   * @param context  Target component context.
+   * @param render  Element render function.
+   * @param def  Optional element render definition.
    */
   render(
       context: ComponentContext,

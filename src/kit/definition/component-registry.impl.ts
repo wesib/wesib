@@ -1,8 +1,8 @@
 import { ComponentClass } from '../../component';
 import { ComponentFactory, CustomElements } from '../../component/definition';
 import { BootstrapContext } from '../bootstrap-context';
-import { ComponentFactory__symbol, componentFactoryOf } from './component-factory.symbol';
-import { ElementBuilder } from './element-builder';
+import { ComponentFactory__symbol, componentFactoryOf } from './component-factory.symbol.impl';
+import { ElementBuilder } from './element-builder.impl';
 
 /**
  * @internal

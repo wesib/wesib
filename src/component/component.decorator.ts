@@ -1,3 +1,6 @@
+/**
+ * @module @wesib/wesib
+ */
 import { TypedClassDecorator } from '../common';
 import { ComponentClass } from './component-class';
 import { ComponentDef } from './component-def';
@@ -18,8 +21,8 @@ import { ComponentDef } from './component-def';
  *
  * This is an alternative to direct call to `ComponentDef.define()` method.
  *
- * @typeparam T A type of component.
- * @param def A component definition or just custom element name.
+ * @typeparam T  A type of component.
+ * @param def  A component definition or just custom element name.
  *
  * @returns A component class decorator.
  */

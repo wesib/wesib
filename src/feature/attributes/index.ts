@@ -1,3 +1,6 @@
+/**
+ * @module @wesib/wesib
+ */
 export * from './attribute.decorator';
 export * from './attribute-changed.decorator';
 export * from './attribute-def';

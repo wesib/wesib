@@ -1,3 +1,6 @@
+/**
+ * @module @wesib/wesib
+ */
 import { Class, TypedClassDecorator } from '../common';
 import { FeatureDef } from './feature-def';
 
@@ -16,8 +19,8 @@ import { FeatureDef } from './feature-def';
  *
  * This is an alternative to direct call to `FeatureDef.define()` method.
  *
- * @typeparam T A type of feature.
- * @param def Feature definition.
+ * @typeparam T  A type of feature.
+ * @param def  Feature definition.
  *
  * @returns A feature class decorator.
  */

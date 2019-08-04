@@ -1,3 +1,6 @@
+/**
+ * @module @wesib/wesib
+ */
 import { StatePath } from 'fun-events';
 import { TypedClassDecorator } from '../../common';
 import { isArray } from '../../common/types';
@@ -13,7 +16,7 @@ import { AttributesSupport } from './attributes-support.feature';
  *
  * This decorator automatically enables `AttributesSupport` feature.
  *
- * @param items Attributes definition options. Either an attribute definition item, or an array of such items.
+ * @param items  Attributes definition options. Either an attribute definition item, or an array of such items.
  *
  * @return New component class decorator.
  */

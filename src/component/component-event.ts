@@ -1,7 +1,10 @@
+/**
+ * @module @wesib/wesib
+ */
 import { ContextRequest, ContextTarget } from 'context-values';
 import { OnDomEvent } from 'fun-events';
 import { ComponentContext } from './component-context';
-import { ComponentEventDispatcher__key } from './component-event.key';
+import { ComponentEventDispatcher__key } from './component-event.key.impl';
 
 /**
  * Component event.
@@ -20,8 +23,8 @@ export class ComponentEvent extends Event {
   /**
    * Constructs component event.
    *
-   * @param type Event type.
-   * @param eventInitDict Event initialization dictionary.
+   * @param type  Event type.
+   * @param eventInitDict  Event initialization dictionary.
    */
   constructor(type: string, eventInitDict?: EventInit) {
     super(type, eventInitDict);
@@ -43,24 +46,24 @@ export class ComponentEvent extends Event {
  *
  * By default treats a component element as event target.
  *
- * @param context A context of component to dispatch an `event` for.
- * @param event An event to dispatch.
+ * @param context  A context of component to dispatch an `event` for.
+ * @param event  An event to dispatch.
  */
 export interface ComponentEventDispatcher {
 
   /**
    * Dispatches the DOM event for the given component.
    *
-   * @param context Target component context.
-   * @param event An event to dispatch.
+   * @param context  Target component context.
+   * @param event  An event to dispatch.
    */
   dispatch(context: ComponentContext, event: Event): void;
 
   /**
    * Returns a registrar of DOM event listeners for the given DOM event type.
    *
-   * @param context Target component context.
-   * @param type An event type to listen for.
+   * @param context  Target component context.
+   * @param type  An event type to listen for.
    *
    * @returns A producer of DOM event events of the given type.
    */

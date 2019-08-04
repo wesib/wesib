@@ -1,14 +1,17 @@
 /**
+ * @module @wesib/wesib
+ */
+/**
  * Converts an object field to property accessor.
  *
  * Defines a new property with the given name in the target object and returns its descriptor.
  *
  * The converted descriptor is always configurable, enumerable, and writable.
  *
- * @typeparam T The type of target object.
- * @typeparam K Target object property keys type.
- * @param target The object containing target field.
- * @param fieldKey Target field key.
+ * @typeparam T  The type of target object.
+ * @typeparam K  Target object property keys type.
+ * @param target  The object containing target field.
+ * @param fieldKey  Target field key.
  *
  * @return New property accessor descriptor.
  */
@@ -24,10 +27,10 @@ export function field2accessor<T, K extends keyof T>(target: T, fieldKey: K): Pr
 /**
  * Creates an property accessor descriptor for the given field.
  *
- * @typeparam T The type of target object.
- * @typeparam K Target object property keys type.
- * @param target The object containing target field.
- * @param fieldKey Target field key.
+ * @typeparam T  The type of target object.
+ * @typeparam K  Target object property keys type.
+ * @param target  The object containing target field.
+ * @param fieldKey  Target field key.
  */
 export function fieldAccessorDescriptor<T, K extends keyof T>(
     target: T,
@@ -63,7 +66,7 @@ export interface PropertyAccessorDescriptor<V> extends TypedPropertyDescriptor<V
 /**
  * Detects whether the given property descriptor is the one of property accessor.
  *
- * @param desc Target property descriptor.
+ * @param desc  Target property descriptor.
  *
  * @return `true` if the descriptor has no `value` or `writable` attributes set.
  */
@@ -75,7 +78,7 @@ export function isPropertyAccessorDescriptor<V>(
 /**
  * Converts a property descriptor to property accessor descriptor.
  *
- * @param desc Target property descriptor.
+ * @param desc  Target property descriptor.
  *
  * @return Either an accessor descriptor constructed from data descriptor, or `desc` if it is an accessor descriptor
  * already.

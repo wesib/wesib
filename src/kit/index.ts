@@ -1,3 +1,6 @@
+/**
+ * @module @wesib/wesib
+ */
 export * from './bootstrap-context';
 export * from './bootstrap-root';
 export * from './bootstrap-window';

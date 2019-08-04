@@ -1,3 +1,6 @@
+/**
+ * @module @wesib/wesib
+ */
 import { ContextKey, SingleContextKey } from 'context-values';
 import { Class } from '../../common';
 import { ComponentClass } from '../component-class';
@@ -49,7 +52,7 @@ export abstract class ComponentFactory<C extends object = any> {
    * The constructed component will be in disconnected state. To update its connection state either update a
    * `ComponentMount.connected` property, or use a `connectTo()` method.
    *
-   * @param element Target element to mount new component to.
+   * @param element  Target element to mount new component to.
    *
    * @returns New component mount.
    *
@@ -62,7 +65,7 @@ export abstract class ComponentFactory<C extends object = any> {
    *
    * This method does the same as `mountTo()`, but also marks the mounted component as connected.
    *
-   * @param element Target element to mount new component to.
+   * @param element  Target element to mount new component to.
    *
    * @returns New component mount.
    *

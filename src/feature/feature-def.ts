@@ -1,3 +1,6 @@
+/**
+ * @module @wesib/wesib
+ */
 import { ContextValueSpec } from 'context-values';
 import { ArraySet, Class, mergeFunctions, MetaAccessor } from '../common';
 import { ComponentContext } from '../component';
@@ -35,7 +38,7 @@ export interface FeatureDef {
   /**
    * Bootstraps this feature by calling the given bootstrap context methods.
    *
-   * @param context Components bootstrap context.
+   * @param context  Components bootstrap context.
    */
   readonly init?: (this: Class, context: BootstrapContext) => void;
 
@@ -81,7 +84,7 @@ export const FeatureDef = {
   /**
    * Extracts a feature definition from its type.
    *
-   * @param featureType Target feature class constructor.
+   * @param featureType  Target feature class constructor.
    *
    * @returns A feature definition. May be empty when there is no feature definition found in the given `featureType`.
    */
@@ -92,7 +95,7 @@ export const FeatureDef = {
   /**
    * Merges multiple feature definitions.
    *
-   * @param defs Feature definitions to merge.
+   * @param defs  Feature definitions to merge.
    *
    * @returns Merged feature definition.
    */
@@ -105,9 +108,9 @@ export const FeatureDef = {
    *
    * Either creates new or extends an existing feature definition and stores it under `[FeatureDef__symbol]` key.
    *
-   * @typeparam T Feature type.
-   * @param type Feature class constructor.
-   * @param defs Feature definitions.
+   * @typeparam T  Feature type.
+   * @param type  Feature class constructor.
+   * @param defs  Feature definitions.
    *
    * @returns The `type` instance.
    */

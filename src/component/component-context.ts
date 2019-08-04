@@ -1,9 +1,12 @@
+/**
+ * @module @wesib/wesib
+ */
 import { ContextKey, ContextValues } from 'context-values';
 import { OnDomEvent, OnEvent, StatePath } from 'fun-events';
-import { BootstrapContext__key } from '../kit/bootstrap-context.key';
+import { BootstrapContext__key } from '../kit/bootstrap-context.key.impl';
 import { ComponentClass } from './component-class';
-import { ComponentContext__key } from './component-context.key';
-import { ComponentEventDispatcher__key } from './component-event.key';
+import { ComponentContext__key } from './component-context.key.impl';
+import { ComponentEventDispatcher__key } from './component-event.key.impl';
 import { ComponentMount } from './component-mount';
 import { ContentRoot } from './content-root';
 import { StateUpdater } from './state-updater';
@@ -21,7 +24,7 @@ export const ComponentContext__symbol = /*#__PURE__*/ Symbol('component-context'
  * Extends `ContextValues` interface. The values are provided by corresponding providers registered with
  * `BootstrapContext.perComponent()` method.
  *
- * @typeparam T A type of component.
+ * @typeparam T  A type of component.
  */
 export abstract class ComponentContext<T extends object = any> extends ContextValues {
 
@@ -73,7 +76,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    * This listener is called when custom element is connected, i.e. its `connectedCallback()` method is called.
    * If component is connected already the listener is called immediately.
    *
-   * @param listener A listener to notify on element connection.
+   * @param listener  A listener to notify on element connection.
    *
    * @returns An event interest instance.
    */
@@ -85,7 +88,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    * This listener is called when custom element is disconnected, i.e. its `disconnectedCallback()` method is called.
    * If component is ready but disconnected, the listener is called immediately.
    *
-   * @param listener A listener to notify on element disconnection.
+   * @param listener  A listener to notify on element disconnection.
    *
    * @returns An event interest instance.
    */
@@ -99,10 +102,10 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    * Note that state update has no effect unless `StateSupport` feature is enabled or `[StateUpdater.key]` context value
    * is provided by other means.
    *
-   * @typeparam V A type of changed value.
-   * @param key Changed value key.
-   * @param newValue New value.
-   * @param oldValue Previous value.
+   * @typeparam V  A type of changed value.
+   * @param key  Changed value key.
+   * @param newValue  New value.
+   * @param oldValue  Previous value.
    */
   readonly updateState: StateUpdater = (<V>(key: StatePath, newValue: V, oldValue: V) => {
     this.get(StateUpdater)(key, newValue, oldValue);
@@ -111,7 +114,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   /**
    * Extracts component context from its custom element or from component itself.
    *
-   * @param element Custom element instance created for the component or the component itself.
+   * @param element  Custom element instance created for the component or the component itself.
    *
    * @return Component context reference stored under `[ComponentContext__symbol]` key.
    *
@@ -146,7 +149,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    *
    * If the component is constructed already, the callback will be notified immediately.
    *
-   * @param callback A callback to notify on component construction.
+   * @param callback  A callback to notify on component construction.
    */
   abstract whenReady(callback: (this: void, component: T) => void): void;
 
@@ -158,14 +161,14 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    *
    * Multiple callbacks will be called in the order reverse to their registration order.
    *
-   * @param callback A callback to notify on component destruction.
+   * @param callback  A callback to notify on component destruction.
    */
   abstract whenDestroyed(callback: (this: void, reason: any) => void): void;
 
   /**
    * Returns a `super` property value inherited from custom element parent.
    *
-   * @param key Target property key.
+   * @param key  Target property key.
    */
   abstract elementSuper(key: PropertyKey): any;
 
@@ -175,7 +178,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    * This is a shorthand for invoking a component event producer function available under
    * `[ComponentEventProducer.key]` key.
    *
-   * @param type An event type to listen for.
+   * @param type  An event type to listen for.
    *
    * @returns A producer of DOM event events of the given type.
    */
@@ -189,7 +192,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    * This is a shorthand for invoking a component event dispatcher function available under
    * `[ComponentEventDispatcher.key]` key.
    *
-   * @param event An event to dispatch.
+   * @param event  An event to dispatch.
    */
   dispatchEvent(event: Event): void {
     this.get(BootstrapContext__key).get(ComponentEventDispatcher__key).dispatch(this, event);
@@ -204,7 +207,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    *
    * Note that component destruction is virtual. It is up to the developer to decide when component is no longer needed.
    *
-   * @param reason Optional reason of destruction.
+   * @param reason  Optional reason of destruction.
    */
   abstract destroy(reason?: any): void;
 

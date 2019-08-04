@@ -1,9 +1,12 @@
+/**
+ * @module @wesib/wesib
+ */
 import { ContextRequest, ContextTarget, SingleContextKey } from 'context-values';
 import { QualifiedName } from 'namespace-aliaser';
 import { Class } from '../../common';
 import { BootstrapWindow } from '../../kit';
 import { ComponentDef } from '../component-def';
-import { DefinitionContext__key } from './definition.context.key';
+import { DefinitionContext__key } from './definition.context.key.impl';
 
 /**
  * Custom element definition meta.

@@ -1,6 +1,9 @@
+/**
+ * @module @wesib/wesib
+ */
 import { FeatureDef, FeatureDef__symbol } from '../feature-def';
 import { DomPropertyRegistrar } from './dom-property-registrar';
-import { DomPropertyRegistry } from './dom-property-registry';
+import { DomPropertyRegistry } from './dom-property-registry.impl';
 
 const DomPropertiesSupport__feature: FeatureDef = {
   perDefinition: [

@@ -1,3 +1,6 @@
+/**
+ * @module @wesib/wesib
+ */
 import { ContextKey, SingleContextKey } from 'context-values';
 
 const RenderScheduler__key = /*#__PURE__*/ new SingleContextKey<RenderScheduler>('render-scheduler');
@@ -36,7 +39,7 @@ export interface RenderSchedule {
    * Only the latest rendering request has affect. I.e. if multiple rendering have been scheduled then the rendering
    * will be performed by the latest one.
    *
-   * @param render A rendering function.
+   * @param render  A rendering function.
    */
   schedule(render: (this: void) => void): void;
 

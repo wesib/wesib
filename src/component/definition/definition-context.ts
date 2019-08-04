@@ -1,9 +1,12 @@
+/**
+ * @module @wesib/wesib
+ */
 import { ContextKey, ContextValues, ContextValueSpec } from 'context-values';
 import { OnEvent } from 'fun-events';
 import { Class } from '../../common';
 import { ComponentClass } from '../component-class';
 import { ComponentContext } from '../component-context';
-import { DefinitionContext__key } from './definition.context.key';
+import { DefinitionContext__key } from './definition.context.key.impl';
 import { ElementDef } from './element-def';
 
 /**
@@ -12,7 +15,7 @@ import { ElementDef } from './element-def';
  * Extends `ContextValues` interface. The values are provided by corresponding providers registered with
  * `BootstrapContext.perDefinition()` method. All `BootstrapContext` values are available too.
  *
- * @typeparam T A type of component.
+ * @typeparam T  A type of component.
  */
 export abstract class DefinitionContext<T extends object = any> extends ContextValues {
 
@@ -49,7 +52,7 @@ export abstract class DefinitionContext<T extends object = any> extends ContextV
    *
    * This listener will be called right before the defined component is constructed.
    *
-   * @param listener A listener to notify on each defined component construction.
+   * @param listener  A listener to notify on each defined component construction.
    *
    * @return An event interest instance.
    */
@@ -63,16 +66,16 @@ export abstract class DefinitionContext<T extends object = any> extends ContextV
    *
    * If the custom element class is constructed already, the callback will be notified immediately.
    *
-   * @param callback A callback to notify on custom element class construction.
+   * @param callback  A callback to notify on custom element class construction.
    */
   abstract whenReady(callback: (this: void, elementType: Class) => void): void;
 
   /**
    * Provides a value available in the context of each component of the defined component type.
    *
-   * @typeparam D A type of dependencies.
-   * @typeparam S The type of context value sources.
-   * @param spec Component context value specifier.
+   * @typeparam D  A type of dependencies.
+   * @typeparam S  The type of context value sources.
+   * @param spec  Component context value specifier.
    */
   abstract perComponent<S>(spec: ContextValueSpec<ComponentContext<T>, any, any[], S>): void;
 

@@ -4,9 +4,9 @@ import { ComponentClass, ComponentDef, ComponentDef__symbol } from '../../compon
 import { CustomElements } from '../../component/definition';
 import { ObjectMock } from '../../spec/mocks';
 import { BootstrapContext } from '../bootstrap-context';
-import { ComponentFactory__symbol } from './component-factory.symbol';
-import { ComponentRegistry } from './component-registry';
-import { ElementBuilder } from './element-builder';
+import { ComponentFactory__symbol } from './component-factory.symbol.impl';
+import { ComponentRegistry } from './component-registry.impl';
+import { ElementBuilder } from './element-builder.impl';
 
 describe('kit/definition/component-registry', () => {
   describe('ComponentRegistry', () => {

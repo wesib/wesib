@@ -1,3 +1,6 @@
+/**
+ * @module @wesib/wesib
+ */
 import { ContextRequest, ContextTarget, SingleContextKey } from 'context-values';
 import { NamespaceAliaser } from 'namespace-aliaser';
 
@@ -6,7 +9,7 @@ import { NamespaceAliaser } from 'namespace-aliaser';
  *
  * Maps namespaces to their unique aliases.
  *
- * @param ns A definition of namespace to find alias for.
+ * @param ns  A definition of namespace to find alias for.
  *
  * @returns Namespace alias.
  */

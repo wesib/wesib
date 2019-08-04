@@ -1,3 +1,6 @@
+/**
+ * @module @wesib/wesib
+ */
 import { ContextKey, SingleContextKey } from 'context-values';
 import { StateTracker } from 'fun-events';
 

@@ -1,3 +1,6 @@
+/**
+ * @module @wesib/wesib
+ */
 import { StatePath } from 'fun-events';
 import { DomPropertyPath } from './dom-property-path';
 
@@ -54,12 +57,12 @@ export interface DomPropertyDef<T extends object = any> {
 /**
  * DOM property updates receiver invoked after custom element property change.
  *
- * @typeparam T A type of component.
- * @typeparam K A type of component property keys.
- * @param this Component instance.
- * @param path The changed property state path in the form of `[domPropertyPathRoot, propertyKey]`.
- * @param newValue New property value.
- * @param oldValue Previous property value.
+ * @typeparam T  A type of component.
+ * @typeparam K  A type of component property keys.
+ * @param this  Component instance.
+ * @param path  The changed property state path in the form of `[domPropertyPathRoot, propertyKey]`.
+ * @param newValue  New property value.
+ * @param oldValue  Previous property value.
  */
 export type DomPropertyUpdateReceiver<T extends object> = <K extends keyof T>(
     this: T,

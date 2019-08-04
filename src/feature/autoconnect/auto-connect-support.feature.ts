@@ -1,5 +1,8 @@
+/**
+ * @module @wesib/wesib
+ */
 import { FeatureDef, FeatureDef__symbol } from '../feature-def';
-import { ConnectTracker } from './connect-tracker';
+import { ConnectTracker } from './connect-tracker.impl';
 
 const AutoConnectSupport__feature: FeatureDef = {
   set: { as: ConnectTracker },

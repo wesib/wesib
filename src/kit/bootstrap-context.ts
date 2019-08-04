@@ -1,8 +1,11 @@
+/**
+ * @module @wesib/wesib
+ */
 import { ContextKey, ContextValues, ContextValueSpec } from 'context-values';
 import { OnEvent } from 'fun-events';
 import { ComponentClass, ComponentContext } from '../component';
 import { ComponentFactory, DefinitionContext } from '../component/definition';
-import { BootstrapContext__key } from './bootstrap-context.key';
+import { BootstrapContext__key } from './bootstrap-context.key.impl';
 import { ComponentKit } from './component-kit';
 
 /**
@@ -27,7 +30,7 @@ export abstract class BootstrapContext extends ContextValues {
    *
    * This listener will be called when new component class is defined, but before its custom element class constructed.
    *
-   * @param listener A listener to notify on each component definition.
+   * @param listener  A listener to notify on each component definition.
    *
    * @return An event interest instance.
    */
@@ -38,7 +41,7 @@ export abstract class BootstrapContext extends ContextValues {
    *
    * This listener will be called right before component is constructed.
    *
-   * @param listener A listener to notify on each component construction.
+   * @param listener  A listener to notify on each component construction.
    *
    * @return An event interest instance.
    */
@@ -51,8 +54,8 @@ export abstract class BootstrapContext extends ContextValues {
    *
    * Note that custom element definition will happen only when all features configuration complete.
    *
-   * @typeparam T A type of component.
-   * @param componentType Component class constructor.
+   * @typeparam T  A type of component.
+   * @param componentType  Component class constructor.
    *
    * @return Custom element class constructor registered as custom element.
    *
@@ -65,7 +68,7 @@ export abstract class BootstrapContext extends ContextValues {
    *
    * This corresponds to `window.customElements.whenDefined()` method.
    *
-   * @param componentType Component class constructor.
+   * @param componentType  Component class constructor.
    *
    * @return A promise that is resolved to component factory when the given `componentType` is registered.
    *
@@ -78,18 +81,18 @@ export abstract class BootstrapContext extends ContextValues {
   /**
    * Provides a value available in each component definition context.
    *
-   * @typeparam D A type of dependencies.
-   * @typeparam S The type of context value sources.
-   * @param spec Component definition context value specifier.
+   * @typeparam D  A type of dependencies.
+   * @typeparam S  The type of context value sources.
+   * @param spec  Component definition context value specifier.
    */
   abstract perDefinition<D extends any[], S>(spec: ContextValueSpec<DefinitionContext, any, D, S>): void;
 
   /**
    * Provides a value available in each component context.
    *
-   * @typeparam D A type of dependencies.
-   * @typeparam S The type of context value sources.
-   * @param spec Component context value specifier.
+   * @typeparam D  A type of dependencies.
+   * @typeparam S  The type of context value sources.
+   * @param spec  Component context value specifier.
    */
   abstract perComponent<D extends any[], S>(spec: ContextValueSpec<ComponentContext, any, D, S>): void;
 
@@ -100,7 +103,7 @@ export abstract class BootstrapContext extends ContextValues {
    *
    * If bootstrap is complete already, the callback will be notified immediately.
    *
-   * @param callback A callback to notify on bootstrap completion.
+   * @param callback  A callback to notify on bootstrap completion.
    */
   abstract whenReady(callback: (this: this) => void): void;
 

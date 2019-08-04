@@ -1,3 +1,6 @@
+/**
+ * @module @wesib/wesib
+ */
 import { noop } from 'call-thru';
 import { ContextValueSpec } from 'context-values';
 import { newNamespaceAliaser } from 'namespace-aliaser';
@@ -8,18 +11,18 @@ import { FeatureRegistry } from '../../feature/feature-registry';
 import { BootstrapContext as BootstrapContext_ } from '../bootstrap-context';
 import { ComponentKit as ComponentKit_ } from '../component-kit';
 import { DefaultNamespaceAliaser } from '../default-namespace-aliaser';
-import { ComponentRegistry } from '../definition/component-registry';
-import { ComponentValueRegistry } from '../definition/component-value-registry';
-import { DefinitionValueRegistry } from '../definition/definition-value-registry';
-import { ElementBuilder } from '../definition/element-builder';
-import { BootstrapValueRegistry } from './bootstrap-value-registry';
+import { ComponentRegistry } from '../definition/component-registry.impl';
+import { ComponentValueRegistry } from '../definition/component-value-registry.impl';
+import { DefinitionValueRegistry } from '../definition/definition-value-registry.impl';
+import { ElementBuilder } from '../definition/element-builder.impl';
+import { BootstrapValueRegistry } from './bootstrap-value-registry.impl';
 
 /**
  * Bootstraps components.
  *
  * Note that both features and components can be passed as parameters to this function, as components are features too.
  *
- * @param features Features and components to enable.
+ * @param features  Features and components to enable.
  *
  * @returns New component kit instance.
  */

@@ -1,9 +1,12 @@
+/**
+ * @module @wesib/wesib
+ */
 import { decoratePropertyAccessor, PropertyAccessorDescriptor, TypedPropertyDecorator } from '../../common';
 import { ComponentClass, ComponentContext, ComponentDef } from '../../component';
 import { DomPropertiesSupport } from './dom-properties-support.feature';
 import { DomPropertyDef } from './dom-property-def';
 import { DomPropertyRegistrar } from './dom-property-registrar';
-import { propertyStateUpdate } from './property-state-update';
+import { propertyStateUpdate } from './property-state-update.impl';
 
 /**
  * Component property decorator that declares a property to add to custom element created for this component.
@@ -12,7 +15,7 @@ import { propertyStateUpdate } from './property-state-update';
  *
  * This decorator can be applied both to plain properties and to property accessors.
  *
- * @param def Custom element property definition.
+ * @param def  Custom element property definition.
  *
  * @returns Component property decorator.
  */

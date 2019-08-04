@@ -1,4 +1,7 @@
 /**
+ * @module @wesib/wesib
+ */
+/**
  * An event related to element's shadow DOM.
  *
  * The following event types supported:
@@ -11,8 +14,8 @@ export class ShadowDomEvent extends Event {
   /**
    * Constructs shadow DOM event.
    *
-   * @param type Event type.
-   * @param eventInitDict Event initialization dictionary.
+   * @param type  Event type.
+   * @param eventInitDict  Event initialization dictionary.
    */
   constructor(type: string, eventInitDict?: EventInit) {
     super(type, eventInitDict);

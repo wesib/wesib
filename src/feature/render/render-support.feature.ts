@@ -1,3 +1,6 @@
+/**
+ * @module @wesib/wesib
+ */
 import { noop } from 'call-thru';
 import { BootstrapWindow } from '../../kit';
 import { FeatureDef, FeatureDef__symbol } from '../feature-def';

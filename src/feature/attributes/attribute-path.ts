@@ -1,4 +1,7 @@
 /**
+ * @module @wesib/wesib
+ */
+/**
  * A path to sub-state containing element an attributes.
  *
  * Thus, an attribute state path is always something like `[AttributePath__root, 'attribute-name']`.
@@ -13,7 +16,7 @@ export type AttributePath = [keyof AttributePath.RootMap, string];
 /**
  * Constructs a named attribute state path.
  *
- * @param name Target attribute name.
+ * @param name  Target attribute name.
  *
  * @return Attribute state path.
  */

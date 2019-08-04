@@ -1,7 +1,10 @@
 /**
+ * @module @wesib/wesib
+ */
+/**
  * Arbitrary class constructor.
  *
- * @typeparam T A type of object.
+ * @typeparam T  A type of object.
  */
 export interface Class<T extends object = any> extends Function {
   new(...args: any[]): T;
@@ -14,8 +17,8 @@ export interface Class<T extends object = any> extends Function {
  * Traverses all class ancestors until reaches the one satisfying the given criteria, or stops when there is no more
  * ancestors.
  *
- * @param type The class constructor to find super class of.
- * @param satisfying The criteria of super class matching. It is a function accepting a super class constructor
+ * @param type  The class constructor to find super class of.
+ * @param satisfying  The criteria of super class matching. It is a function accepting a super class constructor
  * as the only parameter and returning `true` if the given super class matches, or `false` otherwise. Always returns
  * `true` by default.
  *

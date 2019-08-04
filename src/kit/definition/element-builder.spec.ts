@@ -15,10 +15,10 @@ import { ComponentFactory, DefinitionContext, ElementDef } from '../../component
 import { ObjectMock } from '../../spec/mocks';
 import { MockElement } from '../../spec/test-element';
 import { BootstrapContext } from '../bootstrap-context';
-import { BootstrapValueRegistry } from '../bootstrap/bootstrap-value-registry';
-import { ComponentValueRegistry } from './component-value-registry';
-import { DefinitionValueRegistry } from './definition-value-registry';
-import { ElementBuilder } from './element-builder';
+import { BootstrapValueRegistry } from '../bootstrap/bootstrap-value-registry.impl';
+import { ComponentValueRegistry } from './component-value-registry.impl';
+import { DefinitionValueRegistry } from './definition-value-registry.impl';
+import { ElementBuilder } from './element-builder.impl';
 import Mock = jest.Mock;
 
 describe('kit/definition/element-builder', () => {

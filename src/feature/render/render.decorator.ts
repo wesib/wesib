@@ -1,3 +1,6 @@
+/**
+ * @module @wesib/wesib
+ */
 import { TypedPropertyDecorator } from '../../common';
 import { ComponentClass, ComponentDef } from '../../component';
 import { StateSupport } from '../state';
@@ -18,7 +21,7 @@ import { RenderSupport } from './render-support.feature';
  *
  * Utilizes `ElementRender.render()` function to define rendering.
  *
- * @param def Non-mandatory render definition.
+ * @param def  Non-mandatory render definition.
  *
  * @returns Component method decorator.
  */

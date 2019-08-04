@@ -1,3 +1,6 @@
+/**
+ * @module @wesib/wesib
+ */
 import { ContextValueSpec } from 'context-values';
 import { QualifiedName } from 'namespace-aliaser';
 import { ArraySet, Class, mergeFunctions, MetaAccessor } from '../common';
@@ -16,7 +19,7 @@ export const ComponentDef__symbol = /*#__PURE__*/ Symbol('component-def');
  *
  * A custom element class will be created for each registered component in accordance to this definition.
  *
- * @typeparam T A type of component.
+ * @typeparam T  A type of component.
  */
 export interface ComponentDef<T extends object = any> {
 
@@ -47,7 +50,7 @@ export interface ComponentDef<T extends object = any> {
    *
    * This function is called before the custom element is defined.
    *
-   * @param context Component definition context.
+   * @param context  Component definition context.
    */
   readonly define?: (this: Class<T>, context: DefinitionContext<T>) => void;
 
@@ -94,8 +97,8 @@ export const ComponentDef = {
   /**
    * Extracts a component definition from its type.
    *
-   * @typeparam T A type of component.
-   * @param componentType Target component class constructor.
+   * @typeparam T  A type of component.
+   * @param componentType  Target component class constructor.
    *
    * @returns Component definition. May be empty if there is not definition attached to component type.
    */
@@ -106,8 +109,8 @@ export const ComponentDef = {
   /**
    * Merges multiple (partial) component definitions.
    *
-   * @typeparam T A type of component.
-   * @param defs Partial component definitions to merge.
+   * @typeparam T  A type of component.
+   * @param defs  Partial component definitions to merge.
    *
    * @returns Merged component definition.
    */
@@ -123,9 +126,9 @@ export const ComponentDef = {
    * Note that each `ComponentClass` is also a feature able to register itself, so it can be passed directly to
    * `bootstrapComponents()` function or added as a requirement of another feature.
    *
-   * @typeparam T A type of component.
-   * @param type Component class constructor.
-   * @param defs Component definitions.
+   * @typeparam T  A type of component.
+   * @param type  Component class constructor.
+   * @param defs  Component definitions.
    *
    * @returns The `type` instance.
    */

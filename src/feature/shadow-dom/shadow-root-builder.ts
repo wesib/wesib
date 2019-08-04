@@ -1,3 +1,6 @@
+/**
+ * @module @wesib/wesib
+ */
 import { ContextRequest, ContextTarget, SingleContextKey } from 'context-values';
 import { ComponentContext } from '../../component';
 import { ShadowContentDef } from './shadow-content-def';
@@ -12,8 +15,8 @@ import { ShadowContentDef } from './shadow-content-def';
  *
  * Dispatches a `wesib:shadowAttached` event for the found or attached shadow root.
  *
- * @param context Target component context.
- * @param init Shadow root initialization options.
+ * @param context  Target component context.
+ * @param init  Shadow root initialization options.
  *
  * @returns A shadow root instance for target component, or `null`/`undefined` if one can not be attached.
  */

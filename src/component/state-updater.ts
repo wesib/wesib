@@ -1,3 +1,6 @@
+/**
+ * @module @wesib/wesib
+ */
 import { noop } from 'call-thru';
 import { ContextRequest, ContextTarget, SingleContextKey } from 'context-values';
 import { StatePath } from 'fun-events';

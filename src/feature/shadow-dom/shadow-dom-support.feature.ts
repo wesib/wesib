@@ -1,3 +1,6 @@
+/**
+ * @module @wesib/wesib
+ */
 import { ComponentContext, ComponentContext__symbol } from '../../component';
 import { FeatureDef, FeatureDef__symbol } from '../feature-def';
 import { ShadowDomEvent } from './shadow-dom-event';

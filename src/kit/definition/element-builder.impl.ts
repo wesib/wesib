@@ -15,8 +15,8 @@ import {
   DefinitionContext as DefinitionContext_,
   ElementDef,
 } from '../../component/definition';
-import { ComponentValueRegistry } from './component-value-registry';
-import { DefinitionValueRegistry } from './definition-value-registry';
+import { ComponentValueRegistry } from './component-value-registry.impl';
+import { DefinitionValueRegistry } from './definition-value-registry.impl';
 
 /**
  * Creates new component of the given type.
@@ -25,9 +25,9 @@ import { DefinitionValueRegistry } from './definition-value-registry';
  * The component context is also available inside component constructor by temporarily assigning it to component
  * prototype.
  *
- * @typeparam T A type of component.
- * @param type Component class constructor.
- * @param context Target component context.
+ * @typeparam T  A type of component.
+ * @param type  Component class constructor.
+ * @param context  Target component context.
  */
 function newComponent<T extends object>(type: ComponentClass<T>, context: ComponentContext_<T>): T {
 

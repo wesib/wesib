@@ -1,4 +1,7 @@
 /**
+ * @module @wesib/wesib
+ */
+/**
  * A path to sub-state containing DOM properties.
  *
  * Thus a property state path is always something like `[DomPropertyPath__root, 'property-name']`.
@@ -13,7 +16,7 @@ export type DomPropertyPath<K extends PropertyKey = PropertyKey> = [keyof DomPro
 /**
  * Constructs a named DOM property state path.
  *
- * @param key Target property key.
+ * @param key  Target property key.
  *
  * @return DOM property state path.
  */

@@ -1,3 +1,6 @@
+/**
+ * @module @wesib/wesib
+ */
 import { AIterable } from 'a-iterable';
 import { isArray } from './types';
 

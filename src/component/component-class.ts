@@ -1,3 +1,6 @@
+/**
+ * @module @wesib/wesib
+ */
 import { ComponentContext } from './component-context';
 
 /**
@@ -5,7 +8,7 @@ import { ComponentContext } from './component-context';
  *
  * Constructor may accept a component context instance as the only parameter.
  *
- * @typeparam T A type of component.
+ * @typeparam T  A type of component.
  */
 export interface ComponentClass<T extends object = any> extends Function {
   new (context: ComponentContext<T>): T;

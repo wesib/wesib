@@ -1,4 +1,7 @@
 /**
+ * @module @wesib/wesib
+ */
+/**
  * Element render definition.
  */
 export interface RenderDef {
