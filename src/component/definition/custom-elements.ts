@@ -1,5 +1,5 @@
 import { ContextKey, ContextValues, SingleContextKey } from 'context-values';
-import { isNameInNamespace, NameInNamespace, qualifyHtmlName } from 'namespace-aliaser';
+import { html__naming, isQualifiedName, QualifiedName } from 'namespace-aliaser';
 import { Class, PromiseResolver } from '../../common';
 import { BootstrapWindow, DefaultNamespaceAliaser } from '../../kit';
 import { componentFactoryOf } from '../../kit/definition/component-factory.symbol';
@@ -34,7 +34,7 @@ export abstract class CustomElements {
    * namespace to avoid naming conflicts.
    * @param elementType A constructor of custom element to define.
    */
-  abstract define(componentTypeOrName: ComponentClass | NameInNamespace, elementType: Class): void;
+  abstract define(componentTypeOrName: ComponentClass | QualifiedName, elementType: Class): void;
 
   /**
    * Allows to wait for component definition.
@@ -47,7 +47,7 @@ export abstract class CustomElements {
    *
    * @throws TypeError If `componentType` does not contain a component definition.
    */
-  abstract whenDefined(componentTypeOrName: ComponentClass | NameInNamespace): Promise<void>;
+  abstract whenDefined(componentTypeOrName: ComponentClass | QualifiedName): Promise<void>;
 
 }
 
@@ -59,8 +59,8 @@ function createCustomElements(values: ContextValues) {
   class WindowCustomElements extends CustomElements {
 
     define(componentTypeOrName: ComponentClass | string, elementType: Class): void {
-      if (isNameInNamespace(componentTypeOrName)) {
-        customElements.define(qualifyHtmlName(componentTypeOrName, nsAlias), elementType);
+      if (isQualifiedName(componentTypeOrName)) {
+        customElements.define(html__naming.name(componentTypeOrName, nsAlias), elementType);
         return;
       }
 
@@ -73,19 +73,19 @@ function createCustomElements(values: ContextValues) {
       }
       if (extend && extend.name) {
         customElements.define(
-            qualifyHtmlName(name, nsAlias),
+            html__naming.name(name, nsAlias),
             elementType,
             {
               extends: extend.name,
             });
       } else {
-        customElements.define(qualifyHtmlName(name, nsAlias), elementType);
+        customElements.define(html__naming.name(name, nsAlias), elementType);
       }
     }
 
     whenDefined(componentTypeOrName: ComponentClass | string): Promise<void> {
-      if (isNameInNamespace(componentTypeOrName)) {
-        return customElements.whenDefined(qualifyHtmlName(componentTypeOrName, nsAlias));
+      if (isQualifiedName(componentTypeOrName)) {
+        return customElements.whenDefined(html__naming.name(componentTypeOrName, nsAlias));
       }
 
       const factory = componentFactoryOf(componentTypeOrName);
@@ -95,7 +95,7 @@ function createCustomElements(values: ContextValues) {
         return componentResolver(componentTypeOrName).promise;
       }
 
-      return customElements.whenDefined(qualifyHtmlName(name, nsAlias));
+      return customElements.whenDefined(html__naming.name(name, nsAlias));
     }
 
   }

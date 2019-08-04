@@ -1,5 +1,5 @@
 import { ContextRequest, ContextTarget, SingleContextKey } from 'context-values';
-import { NameInNamespace } from 'namespace-aliaser';
+import { QualifiedName } from 'namespace-aliaser';
 import { Class } from '../../common';
 import { BootstrapWindow } from '../../kit';
 import { ComponentDef } from '../component-def';
@@ -19,7 +19,7 @@ export interface ElementDef {
    * When omitted an anonymous component will be registered. Such component is not bound to custom element, but it
    * still can be mounted.
    */
-  readonly name?: NameInNamespace;
+  readonly name?: QualifiedName;
 
   /**
    * Existing element to extend by custom one.

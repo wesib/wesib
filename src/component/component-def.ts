@@ -1,5 +1,5 @@
 import { ContextValueSpec } from 'context-values';
-import { NameInNamespace } from 'namespace-aliaser';
+import { QualifiedName } from 'namespace-aliaser';
 import { ArraySet, Class, mergeFunctions, MetaAccessor } from '../common';
 import { FeatureDef } from '../feature';
 import { ComponentClass } from './component-class';
@@ -29,7 +29,7 @@ export interface ComponentDef<T extends object = any> {
    * When omitted an anonymous component will be registered. Such component is not bound to custom element, but it
    * still can be mounted.
    */
-  readonly name?: NameInNamespace;
+  readonly name?: QualifiedName;
 
   /**
    * Existing element to extend by custom one.
