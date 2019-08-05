@@ -1,0 +1,663 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Wesib: Web Components Building Blocks</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">Wesib: Web Components Building Blocks</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1> Wesib: Web Components Building Blocks</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<a href="#wesib-web-components-building-blocks" id="wesib-web-components-building-blocks" style="color: inherit; text-decoration: none;">
+					<h1>Wesib: Web Components Building Blocks</h1>
+				</a>
+				<p><a href="https://www.npmjs.com/package/@wesib/wesib"><img src="https://img.shields.io/npm/v/@wesib/wesib.svg?logo=npm" alt="NPM"></a>
+					<a href="https://circleci.com/gh/wesib/wesib"><img src="https://img.shields.io/circleci/build/github/wesib/wesib?logo=circleci" alt="CircleCI"></a>
+					<a href="https://codecov.io/gh/wesib/wesib"><img src="https://codecov.io/gh/wesib/wesib/branch/master/graph/badge.svg" alt="codecov"></a>
+					<a href="https://github.com/wesib/wesib"><img src="https://img.shields.io/static/v1?logo=github&label=GitHub&message=project&color=informational" alt="GitHub Project"></a>
+				<a href="https://wesib.github.io/wesib/"><img src="https://img.shields.io/static/v1?logo=typescript&label=API&message=docs&color=informational" alt="API Documentation"></a></p>
+				<p><a href="https://github.com/wesib/wesib">Wesib</a> provides a lightweight base for web components definition.</p>
+				<p>Primarily, it provides a way to define custom elements. But instead of inheriting <code>HTMLElement</code>, it allows to define
+				your own type hierarchy and define custom elements programmatically in a very flexible manner.</p>
+				<p>Wesib provides an IoC container, a component definition and lifecycle callbacks, and an infrastructure for opt-in
+				features that can involve in component definition process and thus alter the resulting components in very flexible way.</p>
+				<p>This package provides a core API.</p>
+				<p>The <a href="https://github.com/wesib/generic">@wesib/generic</a> package provides generic web components and features.</p>
+				<p>The examples can be found in <a href="https://github.com/wesib/examples">@wesib/examples</a>.  </p>
+				<a href="#components" id="components" style="color: inherit; text-decoration: none;">
+					<h2>Components</h2>
+				</a>
+				<p>Wesib allows to define custom components by decorating a component class with <code>@Component</code> decorator:</p>
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'@wesib/wesib'</span>;
+
+<span class="hljs-meta">@Component</span>(<span class="hljs-string">'my-component'</span>) <span class="hljs-comment">// Custom element name</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> MyComponent {
+  <span class="hljs-comment">// ...component definition</span>
+}</code></pre>
+				<p>No need to extend <code>HTMLElement</code> or any other class. Instead Wesib creates custom element accordingly to its definition
+				built either programmatically or using component decorators.</p>
+				<p>To register custom component(s) call <code>bootstrapComponents()</code> function like this:</p>
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { bootstrapComponents } <span class="hljs-keyword">from</span> <span class="hljs-string">'@wesib/wesib'</span>;
+
+bootstrapComponents(MyComponent);</code></pre>
+				<p>After that the custom element can be used anywhere in the document:</p>
+				<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">my-component</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">my-component</span>&gt;</span></code></pre>
+				<p>The component instance is created along with custom element and bound to it. All the logic of custom element is
+				delegated to bound component instance.</p>
+				<a href="#element-attributes" id="element-attributes" style="color: inherit; text-decoration: none;">
+					<h2>Element Attributes</h2>
+				</a>
+				<p>To define custom element attributes use <code>@Attribute</code> or <code>@AttributeChanged</code> component property decorators,
+				or <code>@Attributes</code> component class decorator.</p>
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { Attribute, AttributeChanged, Attributes, Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'@wesib/wesib'</span>;
+
+<span class="hljs-meta">@Component</span>(<span class="hljs-string">'my-component'</span>) <span class="hljs-comment">// Custom element name</span>
+<span class="hljs-meta">@Attributes</span>([
+  <span class="hljs-string">'attribute-one'</span>,
+  <span class="hljs-string">'another-attribute'</span>,   
+])
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> MyComponent {
+
+  <span class="hljs-meta">@Attribute</span>(<span class="hljs-string">'attribute-two'</span>) <span class="hljs-comment">// Attribute name. When omitted the property name is used</span>
+  attribute2!: <span class="hljs-built_in">string</span> | <span class="hljs-literal">null</span>; <span class="hljs-comment">// Attribute value is accessed instead.</span>
+
+  <span class="hljs-meta">@AttributeChanged</span>(<span class="hljs-string">'attribute-three'</span>) <span class="hljs-comment">// Attribute name. When omitted the method name is used  </span>
+  setAttribute3(newValue: <span class="hljs-built_in">string</span>, oldValue: <span class="hljs-built_in">string</span> | <span class="hljs-literal">null</span>) {
+    <span class="hljs-comment">// This is called on attribute value modification with new and old values</span>
+  }
+
+}</code></pre>
+				<pre><code class="language-HTML">&lt;my-component
+  attribute-one="1"  &lt;!-- Can be accessed with element's `element.getAttribute("attribute-one")` --&gt;
+  attribute-two="2"  &lt;!-- Can be accessed as `attribute2` property of `MyComponent` --&gt;
+  attribute-three"3" &lt;!-- Triggers `setAttribute3()` method call --&gt;
+&gt;&lt;/my-component&gt;</code></pre>
+				<a href="#element-properties" id="element-properties" style="color: inherit; text-decoration: none;">
+					<h2>Element Properties</h2>
+				</a>
+				<p>To define the properties of custom element use a <code>@DomProperty</code> component property decorator.</p>
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { DomProperty, Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'@wesib/wesib'</span>;
+
+<span class="hljs-meta">@Component</span>(<span class="hljs-string">'my-component'</span>) <span class="hljs-comment">// Custom element name</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> MyComponent {
+
+  <span class="hljs-meta">@DomProperty</span>(<span class="hljs-string">'elementProperty'</span>) <span class="hljs-comment">// Element property name. The decorated property name is used if omitted.</span>
+  customProperty = <span class="hljs-number">12</span>; <span class="hljs-comment">// Element's `elementProperty` is backed by this one.</span>
+
+}</code></pre>
+				<p>The same can be done for element methods with <code>@DomMethod</code> decorator, which is just a convenient alias for
+				<code>@DomProperty</code>.</p>
+				<a href="#ioc-container" id="ioc-container" style="color: inherit; text-decoration: none;">
+					<h2>IoC Container</h2>
+				</a>
+				<p>Wesib provides contexts for each component and feature (see below). This context can be used to access provided values.</p>
+				<p>For example, each component class constructor accepts a <code>ComponentContext</code> instance as its only argument.</p>
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { ComponentContext, Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'@wesib/wesib'</span>;
+
+<span class="hljs-meta">@Component</span>(<span class="hljs-string">'my-component'</span>) <span class="hljs-comment">// Custom element name</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> MyComponent {
+
+  <span class="hljs-keyword">private</span> readonly _service: MyService;
+
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params">context: ComponentContext</span>) {
+    <span class="hljs-keyword">this</span>._service = context.get(MyService); <span class="hljs-comment">// Obtain a `MyService` instance provided by some feature elsewhere.</span>
+  }
+
+}</code></pre>
+				<p>IoC container implementation is based on <a href="https://npmjs.com/package/context-values">context-values</a>.</p>
+				<a href="#features" id="features" style="color: inherit; text-decoration: none;">
+					<h2>Features</h2>
+				</a>
+				<p>Apart from custom elements definition and IoC container, everything in Wesib is an opt-in feature.</p>
+				<p>Some features are built-in and enabled when appropriate decorator is used. E.g. <code>AttributesSupport</code> feature is enabled
+					when one of element attribute decorators used, <code>DomPropertiesSupport</code> is enabled when one of element property decorators
+				used, etc.</p>
+				<p>It is possible to define custom features too to extend Wesib. E.g. to augment the components, extend custom elements
+				(like <code>@Attribute</code> or <code>@DomProperty</code> decorators do), or provide some context values.</p>
+				<p>The feature is a class decorated with <code>@Feature</code> decorator:</p>
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { BootstrapContext, ComponentContext, DefinitionContext, Feature } <span class="hljs-keyword">from</span> <span class="hljs-string">'@wesib/wesib'</span>;
+
+<span class="hljs-meta">@Feature</span>({
+  needs: [
+    OtherFeature1, <span class="hljs-comment">// Requires other features to be enabled.</span>
+    MyComponent, <span class="hljs-comment">// The required component will be defined too.  </span>
+  ], 
+  <span class="hljs-keyword">set</span>: [
+    { a: GlobalService, by: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-keyword">new</span> GlobalService() }, <span class="hljs-comment">// Provide a `GlobalService` available globally</span>
+                                                         <span class="hljs-comment">// in all IoC contexts</span>
+  ],
+  perDefinition: {
+    a: DefinitionService,
+    by: <span class="hljs-function">(<span class="hljs-params">definitionContext: DefinitionContext</span>) =&gt;</span> {
+      <span class="hljs-comment">// Provide a `DefinitionService` available during component definition.</span>
+      <span class="hljs-comment">// Such service will be provided per component class</span>
+      <span class="hljs-comment">// and will be available during custom element construction,</span>
+      <span class="hljs-comment">// e.g. to `onDefinition()` listeners.</span>
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> DefinitionService(definitionContext);
+    }
+  },
+  perComponent: {
+    a: MyService,
+    by: <span class="hljs-function">(<span class="hljs-params">componentContext: ComponentContext</span>) =&gt;</span> {
+      <span class="hljs-comment">// Provide a `MyService` available to components.</span>
+      <span class="hljs-comment">// Such service will be provided per component instance</span>
+      <span class="hljs-comment">// and will be available to component instance and `onComponent()` listeners.</span>
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> MyService(componentContext.component);
+    }
+  },
+  init(context: BootstrapContext) {
+    <span class="hljs-comment">// Bootstrap the feature by calling methods of provided context.</span>
+
+    context.onDefinition(<span class="hljs-function">(<span class="hljs-params">definitionContext: DefinitionContext</span>) =&gt;</span> {
+      <span class="hljs-comment">// Notified on each component definition.</span>
+
+      <span class="hljs-comment">// The service provided with `perDefinition()` method above is available here      </span>
+      <span class="hljs-keyword">const</span> definitionService = definitionContext.get(DefinitionService);
+
+      definitionContext.whenReady(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+        <span class="hljs-comment">// This is called when element class is defined.</span>
+        <span class="hljs-built_in">console</span>.log(
+          <span class="hljs-string">`Define element class <span class="hljs-subst">${definitionContext.elementType.name}</span>`</span>
+          + <span class="hljs-string">` for component of <span class="hljs-subst">${definitionContext.componentType.name}</span> type`</span>)        
+      });
+    });
+    context.onComponent(<span class="hljs-function">(<span class="hljs-params">componentContext: ComponentContext</span>) =&gt;</span> {
+      <span class="hljs-comment">// Notified on each component instantiation.</span>
+
+      <span class="hljs-comment">// The service provided with `perComponent()` method above is available here      </span>
+      <span class="hljs-keyword">const</span> myService = componentContext.get(MyService);
+
+      componentContext.whenReady(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+        <span class="hljs-comment">// This is called when component is instantiated,</span>
+        <span class="hljs-comment">// which happens right after custom element instantiation.</span>
+        <span class="hljs-built_in">console</span>.log(componentContext.element, <span class="hljs-string">` is instantiated for`</span>, componentContext.component);
+      });
+    });
+  }  
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> MyFeature {} </code></pre>
+				<p>To enable custom feature just pass it to <code>bootstrapComponents()</code> like this:</p>
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { bootstrapComponents } <span class="hljs-keyword">from</span> <span class="hljs-string">'@wesib/wesib'</span>;
+
+bootstrapComponents(MyFeature);</code></pre>
+				<p>Note that components are kind of features that, when passed to this function (or enabled with <code>needs</code> option),
+				register themselves as components.</p>
+				<a href="#component-state" id="component-state" style="color: inherit; text-decoration: none;">
+					<h2>Component State</h2>
+				</a>
+				<p>Whenever a component state changes, e.g. when element attribute or property value changes, a state update notification
+				is issued.</p>
+				<p>A state update notification can also be issued by calling a <code>ComponentContext.updateState()</code> method:</p>
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { Component, ComponentContext } <span class="hljs-keyword">from</span> <span class="hljs-string">'@wesib/wesib'</span>;
+
+<span class="hljs-meta">@Component</span>(<span class="hljs-string">'my-component'</span>) <span class="hljs-comment">// Custom element name</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> MyComponent {
+
+  data: <span class="hljs-built_in">any</span>;
+
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> readonly _context: ComponentContext</span>) {
+  }
+
+  <span class="hljs-keyword">async</span> loadData() {
+
+    <span class="hljs-keyword">const</span> newData = <span class="hljs-keyword">await</span> fetch(<span class="hljs-string">'/api/data'</span>).then(<span class="hljs-function"><span class="hljs-params">response</span> =&gt;</span> response.json());
+    <span class="hljs-keyword">const</span> oldData = <span class="hljs-keyword">this</span>.data;
+
+    <span class="hljs-keyword">this</span>.data = newData;
+    <span class="hljs-keyword">this</span>._context.updateState(<span class="hljs-string">'data'</span>, newData, oldData); <span class="hljs-comment">// Update the state</span>
+  }
+
+}</code></pre>
+				<p>However, the component state update notification is no-op by default. To enable state tracking changes
+					a <code>StateSupport</code> feature must be enabled. Then a <code>ComponentState</code> instance will be available in component context.
+				The component state allows to track the component state updates.</p>
+				<a href="#shadow-dom" id="shadow-dom" style="color: inherit; text-decoration: none;">
+					<h2>Shadow DOM</h2>
+				</a>
+				<p>It is possible to attach shadow root to custom element by decorating the component with <code>@AttachShadow</code> decorator.</p>
+				<p>If shadow DOM is supported, then a shadow root will be attached to element. Otherwise an element itself will be used
+					as shadow root. In both cases the shadow root will be available in component context under
+				<code>[ShadowContentRoot.key]</code> key.</p>
+				<p>The <code>@AttachShadow</code> decorator automatically enables a <code>ShadowDomSupport</code> feature.</p>
+				<p>A <code>ComponentContext.contentRoot</code> property is always available. It either contains a shadow root, or element itself.
+				This is a DOM node to use to insert the DOM nodes to component.</p>
+				<a href="#rendering" id="rendering" style="color: inherit; text-decoration: none;">
+					<h2>Rendering</h2>
+				</a>
+				<p>Wesib core does not provide any mechanics for component rendering. It is completely up to the developer which rendering
+				mechanics to use: direct DOM manipulations, template processing, virtual DOM, etc.</p>
+				<p>However, Wesib is able to notify the renderer on component state updates and trigger its rendering. For that a <code>@Render</code>
+				decorator can be applied to component renderer method:</p>
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { Attribute, Component, ComponentContext, Render } <span class="hljs-keyword">from</span> <span class="hljs-string">'@wesib/wesib'</span>;
+
+<span class="hljs-meta">@Component</span>(<span class="hljs-string">'greet-text'</span>)
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> GreetTextComponent {
+
+  <span class="hljs-meta">@Attribute</span>()
+  name: <span class="hljs-built_in">string</span> | <span class="hljs-literal">null</span>;
+
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> readonly _context: ComponentContext</span>) {
+  }
+
+  <span class="hljs-meta">@Render</span>()
+  render() {
+    <span class="hljs-keyword">this</span>._context.contentRoot.innerText = <span class="hljs-string">`Hello, <span class="hljs-subst">${this.name}</span>!`</span>;
+  }
+
+}</code></pre>
+				<p>The <code>@Render</code>-decorated method will be called from <code>requestAnimationFrame()</code> callback. So, it won&#39;t be called too
+				frequently.</p>
+				<p>The <code>@Render</code> decorator enables <code>StateSupport</code> and <code>RenderSupport</code> features. The latter provides a per-component
+				<code>RenderScheduler</code> service that is used to schedule component renderer calls.</p>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-module tsd-has-type-parameter">
+						<a href="modules/attributes.html">Attributes</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/elementdef.html">Element<wbr>Def</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="classes/arrayset.html" class="tsd-kind-icon">Array<wbr>Set</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/attributessupport.html" class="tsd-kind-icon">Attributes<wbr>Support</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/autoconnectsupport.html" class="tsd-kind-icon">Auto<wbr>Connect<wbr>Support</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/bootstrapcontext.html" class="tsd-kind-icon">Bootstrap<wbr>Context</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="classes/componentcontext.html" class="tsd-kind-icon">Component<wbr>Context</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/componentevent.html" class="tsd-kind-icon">Component<wbr>Event</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="classes/componentfactory.html" class="tsd-kind-icon">Component<wbr>Factory</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/componentkit.html" class="tsd-kind-icon">Component<wbr>Kit</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="classes/componentmount.html" class="tsd-kind-icon">Component<wbr>Mount</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/componentstate.html" class="tsd-kind-icon">Component<wbr>State</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/customelements.html" class="tsd-kind-icon">Custom<wbr>Elements</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="classes/definitioncontext.html" class="tsd-kind-icon">Definition<wbr>Context</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/dompropertiessupport.html" class="tsd-kind-icon">Dom<wbr>Properties<wbr>Support</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="classes/metaaccessor.html" class="tsd-kind-icon">Meta<wbr>Accessor</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="classes/promiseresolver.html" class="tsd-kind-icon">Promise<wbr>Resolver</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/renderscheduler.html" class="tsd-kind-icon">Render<wbr>Scheduler</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/rendersupport.html" class="tsd-kind-icon">Render<wbr>Support</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/shadowdomevent.html" class="tsd-kind-icon">Shadow<wbr>Dom<wbr>Event</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/shadowdomsupport.html" class="tsd-kind-icon">Shadow<wbr>Dom<wbr>Support</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/statesupport.html" class="tsd-kind-icon">State<wbr>Support</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/attributedef.html" class="tsd-kind-icon">Attribute<wbr>Def</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/attributepath__root_keys.html" class="tsd-kind-icon">Attribute<wbr>Path__root_<wbr><wbr>Keys</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/class.html" class="tsd-kind-icon">Class</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/componentclass.html" class="tsd-kind-icon">Component<wbr>Class</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/componentdef.html" class="tsd-kind-icon">Component<wbr>Def</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/componenteventdispatcher.html" class="tsd-kind-icon">Component<wbr>Event<wbr>Dispatcher</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/dompropertydef.html" class="tsd-kind-icon">Dom<wbr>Property<wbr>Def</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/dompropertypath__root_keys.html" class="tsd-kind-icon">Dom<wbr>Property<wbr>Path__root_<wbr><wbr>Keys</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/elementdef.html" class="tsd-kind-icon">Element<wbr>Def</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/featuredef.html" class="tsd-kind-icon">Feature<wbr>Def</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/propertyaccessordescriptor.html" class="tsd-kind-icon">Property<wbr>Accessor<wbr>Descriptor</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/renderdef.html" class="tsd-kind-icon">Render<wbr>Def</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/renderschedule.html" class="tsd-kind-icon">Render<wbr>Schedule</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="globals.html#attributechangedcallback" class="tsd-kind-icon">Attribute<wbr>Changed<wbr>Callback</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#attributepath" class="tsd-kind-icon">Attribute<wbr>Path</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="globals.html#attributeregistrar" class="tsd-kind-icon">Attribute<wbr>Registrar</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="globals.html#attributeupdatereceiver" class="tsd-kind-icon">Attribute<wbr>Update<wbr>Receiver</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#bootstraproot" class="tsd-kind-icon">Bootstrap<wbr>Root</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#bootstrapwindow" class="tsd-kind-icon">Bootstrap<wbr>Window</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#contentroot" class="tsd-kind-icon">Content<wbr>Root</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#defaultnamespacealiaser" class="tsd-kind-icon">Default<wbr>Namespace<wbr>Aliaser</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="globals.html#dompropertypath" class="tsd-kind-icon">Dom<wbr>Property<wbr>Path</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#dompropertyregistrar" class="tsd-kind-icon">Dom<wbr>Property<wbr>Registrar</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="globals.html#dompropertyupdatereceiver" class="tsd-kind-icon">Dom<wbr>Property<wbr>Update<wbr>Receiver</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#elementadapter" class="tsd-kind-icon">Element<wbr>Adapter</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#elementrender" class="tsd-kind-icon">Element<wbr>Render</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#shadowcontentdef" class="tsd-kind-icon">Shadow<wbr>Content<wbr>Def</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#shadowcontentroot" class="tsd-kind-icon">Shadow<wbr>Content<wbr>Root</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#shadowrootbuilder" class="tsd-kind-icon">Shadow<wbr>Root<wbr>Builder</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#stateupdater" class="tsd-kind-icon">State<wbr>Updater</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="globals.html#typedclassdecorator" class="tsd-kind-icon">Typed<wbr>Class<wbr>Decorator</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="globals.html#typedpropertydecorator" class="tsd-kind-icon">Typed<wbr>Property<wbr>Decorator</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#attributepath__root" class="tsd-kind-icon">Attribute<wbr>Path__root</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#attributeregistrar" class="tsd-kind-icon">Attribute<wbr>Registrar</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#bootstraproot" class="tsd-kind-icon">Bootstrap<wbr>Root</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#bootstrapwindow" class="tsd-kind-icon">Bootstrap<wbr>Window</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#componentcontext__symbol" class="tsd-kind-icon">Component<wbr>Context__symbol</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#componentdef__symbol" class="tsd-kind-icon">Component<wbr>Def__symbol</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#componenteventdispatcher" class="tsd-kind-icon">Component<wbr>Event<wbr>Dispatcher</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#contentroot" class="tsd-kind-icon">Content<wbr>Root</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#defaultnamespacealiaser" class="tsd-kind-icon">Default<wbr>Namespace<wbr>Aliaser</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#dompropertypath__root" class="tsd-kind-icon">Dom<wbr>Property<wbr>Path__root</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#dompropertyregistrar" class="tsd-kind-icon">Dom<wbr>Property<wbr>Registrar</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#elementadapter" class="tsd-kind-icon">Element<wbr>Adapter</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#featuredef__symbol" class="tsd-kind-icon">Feature<wbr>Def__symbol</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#shadowcontentroot" class="tsd-kind-icon">Shadow<wbr>Content<wbr>Root</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#shadowrootbuilder" class="tsd-kind-icon">Shadow<wbr>Root<wbr>Builder</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#stateupdater" class="tsd-kind-icon">State<wbr>Updater</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="globals.html#attachshadow" class="tsd-kind-icon">Attach<wbr>Shadow</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="globals.html#attribute" class="tsd-kind-icon">Attribute</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="globals.html#attributechanged" class="tsd-kind-icon">Attribute<wbr>Changed</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="globals.html#component" class="tsd-kind-icon">Component</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="globals.html#domproperty" class="tsd-kind-icon">Dom<wbr>Property</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="globals.html#feature" class="tsd-kind-icon">Feature</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="globals.html#render" class="tsd-kind-icon">Render</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#attributepathto" class="tsd-kind-icon">attribute<wbr>Path<wbr>To</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#bootstrapcomponents" class="tsd-kind-icon">bootstrap<wbr>Components</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="globals.html#decoratepropertyaccessor" class="tsd-kind-icon">decorate<wbr>Property<wbr>Accessor</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="globals.html#dompropertypathto" class="tsd-kind-icon">dom<wbr>Property<wbr>Path<wbr>To</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="globals.html#field2accessor" class="tsd-kind-icon">field2accessor</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="globals.html#fieldaccessordescriptor" class="tsd-kind-icon">field<wbr>Accessor<wbr>Descriptor</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="globals.html#ispropertyaccessordescriptor" class="tsd-kind-icon">is<wbr>Property<wbr>Accessor<wbr>Descriptor</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="globals.html#mergefunctions" class="tsd-kind-icon">merge<wbr>Functions</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#superclassof" class="tsd-kind-icon">super<wbr>Class<wbr>Of</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="globals.html#topropertyaccessordescriptor" class="tsd-kind-icon">to<wbr>Property<wbr>Accessor<wbr>Descriptor</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#componentdef" class="tsd-kind-icon">Component<wbr>Def</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#elementrender" class="tsd-kind-icon">Element<wbr>Render</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#featuredef" class="tsd-kind-icon">Feature<wbr>Def</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#shadowcontentdef" class="tsd-kind-icon">Shadow<wbr>Content<wbr>Def</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>
