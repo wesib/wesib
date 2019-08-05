@@ -15,10 +15,12 @@ const AutoConnectSupport__feature: FeatureDef = {
  * A feature responsible for mounted components connection state tracking.
  *
  * By default, a mounted component connection state is not tracked automatically. So, a
- * `ComponentMount.checkConnected()` should be called to update it.
+ * [[ComponentMount.checkConnected]] should be called to update it.
  *
- * This feature tracks the DOM tree manipulation within `BootstrapRoot` and updates the mounted component connection
+ * This feature tracks the DOM tree manipulation within [[BootstrapRoot]] and updates the mounted component connection
  * when its element is added or removed from the document.
+ *
+ * @category Feature
  */
 export class AutoConnectSupport {
 

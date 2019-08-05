@@ -15,6 +15,8 @@ import { propertyStateUpdate } from './property-state-update.impl';
  *
  * This decorator can be applied both to plain properties and to property accessors.
  *
+ * @category Feature
+ * @typeparam T  A type of decorated component class.
  * @param def  Custom element property definition.
  *
  * @returns Component property decorator.
@@ -72,7 +74,9 @@ export function DomProperty<T extends ComponentClass>(def: DomPropertyDef<T> = {
 /**
  * Component method decorator that declares a method to add to custom element created for this component.
  *
- * This is just an alias of `@DomProperty` decorator.
+ * This is just an alias of {@link DomProperty @DomProperty} decorator.
+ *
+ * @category Feature
  */
 export { DomProperty as DomMethod };
 

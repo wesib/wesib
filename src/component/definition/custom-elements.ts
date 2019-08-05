@@ -17,6 +17,8 @@ const CustomElements__key =
  * This is used to register custom elements.
  *
  * Typically implemented by `window.customElements`.
+ *
+ * @category Core
  */
 export abstract class CustomElements {
 

@@ -1,6 +1,9 @@
 /**
  * @module @wesib/wesib
  */
+/**
+ * @category Utility
+ */
 export class PromiseResolver<T = void> {
 
   readonly promise: Promise<T>;

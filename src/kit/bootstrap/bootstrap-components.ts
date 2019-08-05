@@ -7,9 +7,9 @@ import { newNamespaceAliaser } from 'namespace-aliaser';
 import { Class } from '../../common';
 import { ComponentClass, ComponentContext } from '../../component';
 import { DefinitionContext } from '../../component/definition';
-import { FeatureRegistry } from '../../feature/feature-registry';
-import { BootstrapContext as BootstrapContext_ } from '../bootstrap-context';
-import { ComponentKit as ComponentKit_ } from '../component-kit';
+import { FeatureRegistry } from '../../feature/feature-registry.impl';
+import { BootstrapContext } from '../bootstrap-context';
+import { ComponentKit } from '../component-kit';
 import { DefaultNamespaceAliaser } from '../default-namespace-aliaser';
 import { ComponentRegistry } from '../definition/component-registry.impl';
 import { ComponentValueRegistry } from '../definition/component-value-registry.impl';
@@ -22,11 +22,12 @@ import { BootstrapValueRegistry } from './bootstrap-value-registry.impl';
  *
  * Note that both features and components can be passed as parameters to this function, as components are features too.
  *
+ * @category Core
  * @param features  Features and components to enable.
  *
  * @returns New component kit instance.
  */
-export function bootstrapComponents(...features: Class[]): ComponentKit_ {
+export function bootstrapComponents(...features: Class[]): ComponentKit {
 
   const valueRegistry = BootstrapValueRegistry.create();
   const featureRegistry = FeatureRegistry.create({ valueRegistry });
@@ -38,7 +39,7 @@ export function bootstrapComponents(...features: Class[]): ComponentKit_ {
   featureRegistry.bootstrap(bootstrapContext);
   complete();
 
-  return bootstrapContext.get(ComponentKit_);
+  return bootstrapContext.get(ComponentKit);
 }
 
 function initBootstrap(valueRegistry: BootstrapValueRegistry) {
@@ -47,10 +48,10 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
   let componentValueRegistry: ComponentValueRegistry;
   let elementBuilder: ElementBuilder;
   let componentRegistry: ComponentRegistry;
-  let whenReady: (this: BootstrapContext_) => void = noop;
+  let whenReady: (this: BootstrapContext) => void = noop;
   let ready = false;
 
-  class ComponentKit extends ComponentKit_ {
+  class Kit extends ComponentKit {
 
     whenDefined<C extends object>(componentType: ComponentClass<C>) {
       return componentRegistry.whenDefined(componentType);
@@ -60,7 +61,7 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
 
   const values = valueRegistry.values;
 
-  class BootstrapContext extends BootstrapContext_ {
+  class Context extends BootstrapContext {
 
     get onDefinition() {
       return elementBuilder.definitions.on;
@@ -81,8 +82,8 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
       elementBuilder = ElementBuilder.create({ definitionValueRegistry, componentValueRegistry });
       componentRegistry = ComponentRegistry.create({ bootstrapContext: this, elementBuilder });
       valueRegistry.provide({ a: DefaultNamespaceAliaser, by: newNamespaceAliaser });
-      valueRegistry.provide({ a: BootstrapContext, is: this });
-      valueRegistry.provide({ a: ComponentKit_, as: ComponentKit });
+      valueRegistry.provide({ a: Context, is: this });
+      valueRegistry.provide({ a: ComponentKit, as: Kit });
     }
 
     define<T extends object>(componentType: ComponentClass<T>) {
@@ -97,7 +98,7 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
       componentValueRegistry.provide(spec);
     }
 
-    whenReady(callback: (this: BootstrapContext_) => void): void {
+    whenReady(callback: (this: BootstrapContext) => void): void {
       if (ready) {
         callback.call(this);
       } else {
@@ -113,7 +114,7 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
 
   }
 
-  const bootstrapContext = new BootstrapContext();
+  const bootstrapContext = new Context();
 
   return {
     bootstrapContext,

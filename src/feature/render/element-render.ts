@@ -12,16 +12,23 @@ import { RenderScheduler } from './render-scheduler';
  * It has no arguments. It may return either nothing, or a function. In the latter case the returned function will be
  * called immediately to render the element. It may, in turn, return a render function, and so on.
  *
+ * @category Feature
+ */
+export type ElementRender =
+/**
  * @returns Either delegated render, or nothing.
  */
-export type ElementRender = (this: void) => void | ElementRender;
+    (this: void) => void | ElementRender;
 
+/**
+ * @category Feature
+ */
 export const ElementRender = {
 
   /**
    * Enables component element rendering.
    *
-   * The `render` call will be scheduled by `RenderScheduler` once component state updated.
+   * The `render` call will be scheduled by [[RenderScheduler]] once component state updated.
    *
    * @param context  Target component context.
    * @param render  Element render function.
@@ -30,7 +37,8 @@ export const ElementRender = {
   render(
       context: ComponentContext,
       render: ElementRender,
-      def: RenderDef = {}) {
+      def: RenderDef = {},
+  ) {
 
     const stateTracker = context.get(ComponentState);
     const schedule = context.get(RenderScheduler).newSchedule();

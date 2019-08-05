@@ -30,14 +30,17 @@ import { AttributesSupport } from './attributes-support.feature';
  * }
  * ```
  *
- * This decorator automatically enables `AttributesSupport` feature.
+ * This decorator automatically enables [[AttributesSupport]] feature.
  *
+ * @category Feature
+ * @typeparam T  A type of decorated component class.
  * @param def  Attribute definition or just an attribute name.
  *
  * @return Component method decorator.
  */
-export function AttributeChanged<T extends ComponentClass>(def?: AttributeDef<InstanceType<T>> | string):
-    TypedPropertyDecorator<T> {
+export function AttributeChanged<T extends ComponentClass>(
+    def?: AttributeDef<InstanceType<T>> | string,
+): TypedPropertyDecorator<T> {
   return (target: InstanceType<T>, propertyKey: string | symbol) => {
 
     const { name, updateState } = parseAttributeDef(target, propertyKey, def);

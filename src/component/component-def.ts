@@ -11,6 +11,8 @@ import { DefinitionContext, ElementDef } from './definition';
 
 /**
  * A key of a property holding a component definition within its class constructor.
+ *
+ * @category Core
  */
 export const ComponentDef__symbol = /*#__PURE__*/ Symbol('component-def');
 
@@ -19,6 +21,7 @@ export const ComponentDef__symbol = /*#__PURE__*/ Symbol('component-def');
  *
  * A custom element class will be created for each registered component in accordance to this definition.
  *
+ * @category Core
  * @typeparam T  A type of component.
  */
 export interface ComponentDef<T extends object = any> {
@@ -40,24 +43,29 @@ export interface ComponentDef<T extends object = any> {
   readonly extend?: ElementDef.Extend;
 
   /**
-   * Definition context values to declare prior to component class definition.
+   * Definition context value(s) to declare prior to component class definition.
    */
-  readonly set?: ContextValueSpec<DefinitionContext<T>, any, any[], any>
+  readonly set?:
+      | ContextValueSpec<DefinitionContext<T>, any, any[], any>
       | ContextValueSpec<DefinitionContext<T>, any, any[], any>[];
 
   /**
    * Defines this component by calling the given component definition context methods.
    *
    * This function is called before the custom element is defined.
-   *
+   */
+  readonly define?:
+  /**
+   * @param this  This component definition instance.
    * @param context  Component definition context.
    */
-  readonly define?: (this: Class<T>, context: DefinitionContext<T>) => void;
+      (this: Class<T>, context: DefinitionContext<T>) => void;
 
   /**
-   * Component context values to declare per each component construction.
+   * Component context value(s) to declare per each component construction.
    */
-  readonly perComponent?: ContextValueSpec<ComponentContext<T>, any, any[], any>
+  readonly perComponent?:
+      | ContextValueSpec<ComponentContext<T>, any, any[], any>
       | ContextValueSpec<ComponentContext<T>, any, any[], any>[];
 
   /**
@@ -92,6 +100,9 @@ class ComponentMeta extends MetaAccessor<ComponentDef> {
 
 const meta = /*#__PURE__*/ new ComponentMeta();
 
+/**
+ * @category Core
+ */
 export const ComponentDef = {
 
   /**
@@ -121,10 +132,10 @@ export const ComponentDef = {
   /**
    * Defines a component.
    *
-   * Either assigns new or extends an existing component definition and stores it under `[ComponentDef__symbol]` key.
+   * Either assigns new or extends an existing component definition and stores it under [[ComponentDef__symbol]] key.
    *
-   * Note that each `ComponentClass` is also a feature able to register itself, so it can be passed directly to
-   * `bootstrapComponents()` function or added as a requirement of another feature.
+   * Note that each component is also a feature able to register itself, so it can be passed directly to
+   * [[bootstrapComponents]] function or added as a requirement of another feature.
    *
    * @typeparam T  A type of component.
    * @param type  Component class constructor.
@@ -134,7 +145,8 @@ export const ComponentDef = {
    */
   define<T extends ComponentClass>(
       type: T,
-      ...defs: ComponentDef<InstanceType<T>>[]): T {
+      ...defs: ComponentDef<InstanceType<T>>[]
+  ): T {
 
     const def = this.merge(...defs);
     const prevDef = meta.of(type);

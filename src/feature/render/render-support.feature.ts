@@ -17,7 +17,9 @@ const RenderSupport__feature: FeatureDef = {
 /**
  * Rendering support feature.
  *
- * This feature is automatically enabled when `@Render` decorator is used.
+ * This feature is automatically enabled when {@link Render @Render} decorator is used.
+ *
+ * @category Feature
  */
 export class RenderSupport {
 

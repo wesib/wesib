@@ -4,7 +4,7 @@
   "exclude": ["**/spec/**/*.ts", "**/*.impl.ts"],
   "excludeNotExported": true,
   "mode": "file",
-  "name": "Style Producer",
+  "name": "Wesib: Web Components Building Blocks",
   "out": "./target/typedoc",
   "tsconfig": "tsconfig.main.json"
 }

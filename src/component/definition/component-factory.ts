@@ -11,8 +11,11 @@ const ComponentFactory__key = /*#__PURE__*/ new SingleContextKey<ComponentFactor
 
 /**
  * A factory of components of particular type.
+ *
+ * @category Core
+ * @typeparam T  A type of component.
  */
-export abstract class ComponentFactory<C extends object = any> {
+export abstract class ComponentFactory<T extends object = any> {
 
   /**
    * A key of definition context value containing a component factory.
@@ -24,7 +27,7 @@ export abstract class ComponentFactory<C extends object = any> {
   /**
    * Component class constructor.
    */
-  abstract readonly componentType: ComponentClass<C>;
+  abstract readonly componentType: ComponentClass<T>;
 
   /**
    * Custom element class constructor.
@@ -58,7 +61,7 @@ export abstract class ComponentFactory<C extends object = any> {
    *
    * @throws Error If target element is already bound to some component.
    */
-  abstract mountTo(element: any): ComponentMount<C>;
+  abstract mountTo(element: any): ComponentMount<T>;
 
   /**
    * Connects a component to arbitrary element.
@@ -71,7 +74,7 @@ export abstract class ComponentFactory<C extends object = any> {
    *
    * @throws Error If target element is already bound to some component.
    */
-  connectTo(element: any): ComponentMount<C> {
+  connectTo(element: any): ComponentMount<T> {
 
     const mount = this.mountTo(element);
 

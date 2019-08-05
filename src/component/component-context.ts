@@ -13,6 +13,8 @@ import { StateUpdater } from './state-updater';
 
 /**
  * A key of a custom element and component properties containing a reference to component context.
+ *
+ * @category Core
  */
 export const ComponentContext__symbol = /*#__PURE__*/ Symbol('component-context');
 
@@ -22,8 +24,9 @@ export const ComponentContext__symbol = /*#__PURE__*/ Symbol('component-context'
  * Passed to component constructor as its only parameter.
  *
  * Extends `ContextValues` interface. The values are provided by corresponding providers registered with
- * `BootstrapContext.perComponent()` method.
+ * [[BootstrapContext.perComponent]] method.
  *
+ * @category Core
  * @typeparam T  A type of component.
  */
 export abstract class ComponentContext<T extends object = any> extends ContextValues {
@@ -50,15 +53,16 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   /**
    * A component instance.
    *
-   * It is an error accessing this property before the component is created, e.g. from inside of `ComponentListener`
-   * or component constructor. In these cases you may wish to add a `whenReady()` callback.
+   * It is an error accessing this property before the component is created, e.g. from inside of component constructor
+   * or {@link DefinitionContext.onComponent component construction event} receiver. In these cases you may wish to
+   * add a [[whenReady]] callback.
    */
   abstract readonly component: T;
 
   /**
    * Component mount.
    *
-   * This is defined when component is mounted to arbitrary element by `ComponentFactory.mountTo()`. Ot is `undefined`
+   * This is defined when component is mounted to arbitrary element by [[ComponentFactory.mountTo]]. Ot is `undefined`
    * for components created in standard way.
    */
   abstract readonly mount: ComponentMount<T> | undefined;
@@ -66,7 +70,8 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   /**
    * Whether the custom element is connected.
    *
-   * This becomes `true` right before `onConnect` is called, and becomes false right before `onDisconnect` is called.
+   * This becomes `true` right before [[whenOn]] event is sent, and becomes `false` right before [[whenOff]] event is
+   * sent.
    */
   abstract readonly connected: boolean;
 
@@ -97,9 +102,9 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   /**
    * Updates component's state.
    *
-   * This is a shorthand for invoking a component state update function available under `[StateUpdater.key]` key.
+   * This is a shorthand for invoking a component {@link StateUpdater state updater} .
    *
-   * Note that state update has no effect unless `StateSupport` feature is enabled or `[StateUpdater.key]` context value
+   * Note that state update has no effect unless [[StateSupport]] feature is enabled or [[StateUpdater]] context value
    * is provided by other means.
    *
    * @typeparam V  A type of changed value.
@@ -107,18 +112,16 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    * @param newValue  New value.
    * @param oldValue  Previous value.
    */
-  readonly updateState: StateUpdater = (<V>(key: StatePath, newValue: V, oldValue: V) => {
-    this.get(StateUpdater)(key, newValue, oldValue);
-  });
+  readonly updateState: StateUpdater = updateComponentState.bind(this);
 
   /**
    * Extracts component context from its custom element or from component itself.
    *
    * @param element  Custom element instance created for the component or the component itself.
    *
-   * @return Component context reference stored under `[ComponentContext__symbol]` key.
+   * @return Component context reference stored under [[ComponentContext__symbol]] key.
    *
-   * @throws TypeError When the given `element` does not contain component context reference.
+   * @throws TypeError  When the given `element` does not contain component context reference.
    */
   static of<T extends object>(element: any): ComponentContext<T> {
 
@@ -134,9 +137,9 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   /**
    * Component content root.
    *
-   * This is a shorthand for requesting content root instance available under `[ContentRoot.key]` key.
+   * This is a shorthand for requesting a {@link ContentRoot content root} from component context.
    */
-  get contentRoot(): ParentNode {
+  get contentRoot(): ContentRoot {
     return this.get(ContentRoot);
   }
 
@@ -144,8 +147,8 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    * Registers component readiness callback.
    *
    * The component is constructed shortly after custom element. So the component may not exist when requested
-   * e.g. inside component constructor or inside `ComponentListener`. The registered callback will be notified when
-   * the component is constructed.
+   * e.g. inside component constructor or {@link DefinitionContext.onComponent component construction event} receiver.
+   * The registered callback will be notified when the component is constructed.
    *
    * If the component is constructed already, the callback will be notified immediately.
    *
@@ -156,7 +159,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   /**
    * Registers component destruction callback.
    *
-   * This callback is notified when `destroy()` method is called. If the component is destroyed already the callback
+   * This callback is notified when [[destroy]] method is called. If the component is destroyed already the callback
    * is notified immediately.
    *
    * Multiple callbacks will be called in the order reverse to their registration order.
@@ -189,8 +192,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   /**
    * Dispatches an event to component element.
    *
-   * This is a shorthand for invoking a component event dispatcher function available under
-   * `[ComponentEventDispatcher.key]` key.
+   * This is a shorthand for invoking a component {@link ComponentEventDispatcher event dispatcher}.
    *
    * @param event  An event to dispatch.
    */
@@ -205,10 +207,14 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    *
    * After this method call the component should no longer be used.
    *
-   * Note that component destruction is virtual. It is up to the developer to decide when component is no longer needed.
+   * Note that component destruction is virtual. It is up to developer to decide when component is no longer needed.
    *
    * @param reason  Optional reason of destruction.
    */
   abstract destroy(reason?: any): void;
 
+}
+
+function updateComponentState<V>(this: ComponentContext<any>, key: StatePath, newValue: V, oldValue: V) {
+  this.get(StateUpdater)(key, newValue, oldValue);
 }

@@ -1,7 +1,7 @@
 import { SingleContextKey } from 'context-values';
 import { Component } from '../../component';
 import { FeatureDef } from '../../feature';
-import { FeatureRegistry } from '../../feature/feature-registry';
+import { FeatureRegistry } from '../../feature/feature-registry.impl';
 import { MethodSpy, ObjectMock } from '../../spec/mocks';
 import { BootstrapContext } from '../bootstrap-context';
 import { ComponentKit } from '../component-kit';

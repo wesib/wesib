@@ -2,8 +2,11 @@
  * @module @wesib/wesib
  */
 import { AIterable } from 'a-iterable';
-import { isArray } from './types';
+import { isArray } from './types.impl';
 
+/**
+ * @category Utility
+ */
 export class ArraySet<T> extends AIterable<T> {
 
   readonly items: Set<T>;

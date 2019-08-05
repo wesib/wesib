@@ -3,8 +3,9 @@
  */
 import {
   AbstractContextKey,
-  ContextKey,
+  ContextRequest,
   ContextSources,
+  ContextTarget,
   ContextValues,
   DefaultContextValueHandler,
 } from 'context-values';
@@ -17,11 +18,15 @@ import { ComponentContext, ComponentContext__symbol } from '../component';
  *
  * Multiple element adapters can be registered in bootstrap context.
  *
+ * @category Core
+ */
+export type ElementAdapter =
+/**
  * @param element  Target raw element to adapt.
  *
  * @returns An adapted component's context, or `null` if the element can not be adapted.
  */
-export type ElementAdapter = (element: any) => ComponentContext | undefined;
+    (element: any) => ComponentContext | undefined;
 
 class Key extends AbstractContextKey<ElementAdapter> {
 
@@ -43,18 +48,12 @@ class Key extends AbstractContextKey<ElementAdapter> {
 
 }
 
-const ElementAdapter__key = /*#__PURE__*/ new Key();
-
-export const ElementAdapter = {
-
-  /**
-   * A key of bootstrap context value containing an `ElementAdapter` instance.
-   */
-  get key(): ContextKey<ElementAdapter> {
-    return ElementAdapter__key;
-  }
-
-};
+/**
+ * A key of bootstrap context value containing an [[ElementAdapter]] instance.
+ *
+ * @category Core
+ */
+export const ElementAdapter: ContextTarget<ElementAdapter> & ContextRequest<ElementAdapter> = /*#__PURE__*/ new Key();
 
 function defaultElementAdapter(element: any): ComponentContext | undefined {
   return element[ComponentContext__symbol];

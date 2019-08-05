@@ -3,7 +3,7 @@
  */
 import { FeatureDef, FeatureDef__symbol } from '../feature-def';
 import { AttributeChangedCallback, AttributeRegistrar } from './attribute-registrar';
-import { AttributeRegistry } from './attribute-registry';
+import { AttributeRegistry } from './attribute-registry.impl';
 
 const AttributesSupport__feature: FeatureDef = {
   perDefinition: [
@@ -39,6 +39,8 @@ const AttributesSupport__feature: FeatureDef = {
  *
  * This feature is enabled automatically whenever an `@Attribute`, `@Attributes`, or `@AttributeChanged` decorator
  * applied to component.
+ *
+ * @category Feature
  */
 export class AttributesSupport {
 

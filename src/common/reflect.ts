@@ -8,6 +8,7 @@
  *
  * The converted descriptor is always configurable, enumerable, and writable.
  *
+ * @category Utility
  * @typeparam T  The type of target object.
  * @typeparam K  Target object property keys type.
  * @param target  The object containing target field.
@@ -15,7 +16,10 @@
  *
  * @return New property accessor descriptor.
  */
-export function field2accessor<T, K extends keyof T>(target: T, fieldKey: K): PropertyAccessorDescriptor<T[K]> {
+export function field2accessor<T, K extends keyof T>(
+    target: T,
+    fieldKey: K,
+): PropertyAccessorDescriptor<T[K]> {
 
   const desc = fieldAccessorDescriptor(target, fieldKey);
 
@@ -27,6 +31,7 @@ export function field2accessor<T, K extends keyof T>(target: T, fieldKey: K): Pr
 /**
  * Creates an property accessor descriptor for the given field.
  *
+ * @category Utility
  * @typeparam T  The type of target object.
  * @typeparam K  Target object property keys type.
  * @param target  The object containing target field.
@@ -34,7 +39,8 @@ export function field2accessor<T, K extends keyof T>(target: T, fieldKey: K): Pr
  */
 export function fieldAccessorDescriptor<T, K extends keyof T>(
     target: T,
-    fieldKey: K): PropertyAccessorDescriptor<T[K]> {
+    fieldKey: K,
+): PropertyAccessorDescriptor<T[K]> {
 
   const value__symbol = Symbol(`${fieldKey}:value`);
   const initial: T[K] = target[fieldKey];
@@ -53,6 +59,9 @@ export function fieldAccessorDescriptor<T, K extends keyof T>(
 
 /**
  * Property accessor descriptor. I.e. the one with `get` and `set` functions.
+ *
+ * @category Utility
+ * @typeparam V  Property value type.
  */
 export interface PropertyAccessorDescriptor<V> extends TypedPropertyDescriptor<V> {
   enumerable?: boolean;
@@ -66,24 +75,31 @@ export interface PropertyAccessorDescriptor<V> extends TypedPropertyDescriptor<V
 /**
  * Detects whether the given property descriptor is the one of property accessor.
  *
+ * @category Utility
+ * @typeparam V  Property value type.
  * @param desc  Target property descriptor.
  *
  * @return `true` if the descriptor has no `value` or `writable` attributes set.
  */
 export function isPropertyAccessorDescriptor<V>(
-    desc: TypedPropertyDescriptor<V>): desc is PropertyAccessorDescriptor<V> {
+    desc: TypedPropertyDescriptor<V>,
+): desc is PropertyAccessorDescriptor<V> {
   return desc.value === undefined && desc.writable === undefined;
 }
 
 /**
  * Converts a property descriptor to property accessor descriptor.
  *
+ * @category Utility
+ * @typeparam V  Property value type.
  * @param desc  Target property descriptor.
  *
  * @return Either an accessor descriptor constructed from data descriptor, or `desc` if it is an accessor descriptor
  * already.
  */
-export function toPropertyAccessorDescriptor<V>(desc: TypedPropertyDescriptor<V>): PropertyAccessorDescriptor<V> {
+export function toPropertyAccessorDescriptor<V>(
+    desc: TypedPropertyDescriptor<V>,
+): PropertyAccessorDescriptor<V> {
   if (isPropertyAccessorDescriptor(desc)) {
     return desc;
   }

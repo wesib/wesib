@@ -10,6 +10,8 @@ import { DefinitionContext__key } from './definition.context.key.impl';
 
 /**
  * Custom element definition meta.
+ *
+ * @category Core
  */
 export interface ElementDef {
 
@@ -27,7 +29,7 @@ export interface ElementDef {
   /**
    * Existing element to extend by custom one.
    */
-  readonly extend: Readonly<ElementDef.Extend>;
+  readonly extend: ElementDef.Extend;
 
 }
 
@@ -64,6 +66,9 @@ export const ElementDef: ContextTarget<ElementDef> & ContextRequest<ElementDef> 
       };
     });
 
+/**
+ * @category Core
+ */
 export namespace ElementDef {
 
   /**

@@ -10,17 +10,22 @@ import { ShadowRootBuilder } from './shadow-root-builder';
  * Shadow content root definition.
  *
  * This is a readonly component shadow root initialization options.
+ *
+ * @category Feature
  */
 export type ShadowContentDef = Readonly<ShadowRootInit>;
 
 const defaultShadowContentDef: ShadowContentDef = { mode: 'open' };
 
+/**
+ * @category Feature
+ */
 export const ShadowContentDef = {
 
   /**
    * Creates component definition for the given shadow content root definition.
    *
-   * The returned component definition enables `ShadowDomSupport` feature and attaches shadow content root to the
+   * The returned component definition enables [[ShadowDomSupport]] feature and attaches shadow content root to the
    * component.
    *
    * @typeparam T  A type of component.

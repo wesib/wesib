@@ -1,7 +1,7 @@
 import { ComponentClass } from '../../component';
 import { AttributeDef } from './attribute-def';
 import { AttributeChangedCallback } from './attribute-registrar';
-import { attributeStateUpdate } from './attribute-state-update';
+import { attributeStateUpdate } from './attribute-state-update.impl';
 
 /**
  * @internal

@@ -3,6 +3,9 @@
  */
 import { Class, superClassOf } from './classes';
 
+/**
+ * @category Utility
+ */
 export abstract class MetaAccessor<M> {
 
   readonly symbol: symbol;

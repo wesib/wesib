@@ -15,7 +15,9 @@ const ShadowDomSupport__feature: FeatureDef = {
 /**
  * Shadow root support feature.
  *
- * This feature is automatically enabled when `@AttachShadow()` decorator is used.
+ * This feature is automatically enabled when {@link AttachShadow @AttachShadow} decorator is used.
+ *
+ * @category Feature
  */
 export class ShadowDomSupport {
 

@@ -8,6 +8,8 @@ const ComponentState__key = /*#__PURE__*/ new SingleContextKey<ComponentState>('
 
 /**
  * Component state tracker.
+ *
+ * @category Feature
  */
 export class ComponentState extends StateTracker {
 

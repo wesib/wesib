@@ -7,7 +7,9 @@ import { DomPropertyPath } from './dom-property-path';
 /**
  * Custom element property definition.
  *
- * This is an parameter to `@DomProperty` decorator applied to component property.
+ * This is a parameter to {@link DomProperty @DomProperty} decorator applied to component property.
+ *
+ * @category Feature
  */
 export interface DomPropertyDef<T extends object = any> {
 
@@ -57,15 +59,20 @@ export interface DomPropertyDef<T extends object = any> {
 /**
  * DOM property updates receiver invoked after custom element property change.
  *
+ * @category Feature
  * @typeparam T  A type of component.
+ */
+export type DomPropertyUpdateReceiver<T extends object> =
+/**
  * @typeparam K  A type of component property keys.
  * @param this  Component instance.
- * @param path  The changed property state path in the form of `[domPropertyPathRoot, propertyKey]`.
+ * @param path  The changed property state path in the form of `[DomPropertyPath__root, propertyKey]`.
  * @param newValue  New property value.
  * @param oldValue  Previous property value.
  */
-export type DomPropertyUpdateReceiver<T extends object> = <K extends keyof T>(
-    this: T,
-    path: DomPropertyPath<K>,
-    newValue: T[K],
-    oldValue: T[K]) => void;
+    <K extends keyof T>(
+        this: T,
+        path: DomPropertyPath<K>,
+        newValue: T[K],
+        oldValue: T[K],
+    ) => void;

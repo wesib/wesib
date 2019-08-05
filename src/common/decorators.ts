@@ -7,6 +7,7 @@ import { fieldAccessorDescriptor, PropertyAccessorDescriptor, toPropertyAccessor
 /**
  * Typed class decorator.
  *
+ * @category Utility
  * @typeparam T  A type of class to decorate.
  */
 export type TypedClassDecorator<T extends Class> = (type: T) => T | void;
@@ -14,6 +15,7 @@ export type TypedClassDecorator<T extends Class> = (type: T) => T | void;
 /**
  * Typed property decorator.
  *
+ * @category Utility
  * @typeparam T  A type of class the decorated property belongs to.
  */
 export type TypedPropertyDecorator<T extends Class> =
@@ -22,6 +24,7 @@ export type TypedPropertyDecorator<T extends Class> =
 /**
  * Property decorator helper converting a field or property to the one with accessor (`get` and optionally `set`).
  *
+ * @category Utility
  * @typeparam T  A type of target object.
  * @typeparam V  A property value type.
  * @param target  Target object containing the property.
@@ -37,8 +40,8 @@ export function decoratePropertyAccessor<T, V>(
     target: T,
     propertyKey: string | symbol,
     desc: TypedPropertyDescriptor<V> | undefined,
-    updateDescriptor: (desc: PropertyAccessorDescriptor<V>) => PropertyAccessorDescriptor<V> | undefined):
-    PropertyAccessorDescriptor<V> | undefined {
+    updateDescriptor: (desc: PropertyAccessorDescriptor<V>) => PropertyAccessorDescriptor<V> | undefined,
+): PropertyAccessorDescriptor<V> | undefined {
 
   const isField = !desc;
   const accessorDesc: PropertyAccessorDescriptor<V> =

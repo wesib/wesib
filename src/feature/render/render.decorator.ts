@@ -11,16 +11,18 @@ import { RenderSupport } from './render-support.feature';
 /**
  * Component property decorator that declares a rendering method for the component.
  *
- * The decorated method call will be scheduled by `RenderScheduler` once component state updated.
+ * The decorated method call will be scheduled by [[RenderScheduler]] once component state updated.
  *
  * The decorated method should have no arguments. It may return either nothing, or a function. In the latter case the
  * returned function will be called immediately to render the element. It may, in turn, return a renderer function,
  * and so on.
  *
- * This decorator automatically enables `StateSupport` and `RenderSupport` features.
+ * This decorator automatically enables [[StateSupport]] and [[RenderSupport]] features.
  *
- * Utilizes `ElementRender.render()` function to define rendering.
+ * Utilizes [[ElementRender.render]] function to define rendering.
  *
+ * @category Feature
+ * @typeparam T  A type of decorated component class.
  * @param def  Non-mandatory render definition.
  *
  * @returns Component method decorator.

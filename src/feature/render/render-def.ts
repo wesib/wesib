@@ -3,6 +3,8 @@
  */
 /**
  * Element render definition.
+ *
+ * @category Feature
  */
 export interface RenderDef {
 

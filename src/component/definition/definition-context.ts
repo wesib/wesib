@@ -13,8 +13,9 @@ import { ElementDef } from './element-def';
  * Component definition context.
  *
  * Extends `ContextValues` interface. The values are provided by corresponding providers registered with
- * `BootstrapContext.perDefinition()` method. All `BootstrapContext` values are available too.
+ * `BootstrapContext.perDefinition()` method. All [[BootstrapContext]] values are available too.
  *
+ * @category Core
  * @typeparam T  A type of component.
  */
 export abstract class DefinitionContext<T extends object = any> extends ContextValues {

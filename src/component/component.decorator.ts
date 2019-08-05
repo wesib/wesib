@@ -16,18 +16,19 @@ import { ComponentDef } from './component-def';
  * }
  * ```
  *
- * Such component can be registered with `BootstrapContext.define()` method, or used as a feature, e.g. passed to
- * `bootstrapComponents()` method, or added to `FeatureDef.needs` property of another feature.
+ * Such component can be registered with [[BootstrapContext.define]] method, or used as a feature, e.g. passed to
+ * [[bootstrapComponents]] function, or added to [[FeatureDef.needs]] property of another feature.
  *
- * This is an alternative to direct call to `ComponentDef.define()` method.
+ * This is an alternative to direct call to [[ComponentDef.define]] method.
  *
- * @typeparam T  A type of component.
+ * @category Core
+ * @typeparam T  A type of decorated component class.
  * @param def  A component definition or just custom element name.
  *
  * @returns A component class decorator.
  */
 export function Component<T extends ComponentClass = any>(
-    def: ComponentDef<InstanceType<T>> | string):
-    TypedClassDecorator<T> {
+    def: ComponentDef<InstanceType<T>> | string,
+): TypedClassDecorator<T> {
   return (type: T) => ComponentDef.define(type, typeof def === 'string' ? { name: def } : def);
 }

@@ -6,8 +6,10 @@
  *
  * The following event types supported:
  * - `wesib:shadowAttached` is thrown when a shadow root is attached to element.
- *   In particular, it is thrown for components decorated with `@AttachShadow()`.
+ *   In particular, it is thrown for components decorated with {@link AttachShadow @AttachShadow}.
  *   This event bubbles and is not cancelable.
+ *
+ * @category Feature
  */
 export class ShadowDomEvent extends Event {
 

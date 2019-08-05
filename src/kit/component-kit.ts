@@ -10,8 +10,10 @@ const ComponentKit__key = /*#__PURE__*/ new SingleContextKey<ComponentKit>('comp
 /**
  * A component kit.
  *
- * A component kit instance is created by `bootstrapComponents()` function. It is also available in `BootstrapContext`
- * under `ComponentKit.key` key.
+ * A component kit instance is created by [[bootstrapComponents]] function. It is also available
+ * in [[BootstrapContext]].
+ *
+ * @category Core
  */
 export abstract class ComponentKit {
 
@@ -31,7 +33,7 @@ export abstract class ComponentKit {
    *
    * @return A promise that is resolved to component factory when the given `componentType` is registered.
    *
-   * @throws TypeError If `componentType` does not contain a component definition.
+   * @throws TypeError  If `componentType` does not contain a component definition.
    */
   abstract whenDefined<C extends object>(componentType: ComponentClass<C>): Promise<ComponentFactory<C>>;
 

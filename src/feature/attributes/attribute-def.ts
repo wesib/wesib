@@ -7,7 +7,10 @@ import { AttributePath } from './attribute-path';
 /**
  * Attribute definition.
  *
- * This is passed to `@Attribute` and `@AttributeChanged` decorators.
+ * This is passed to {@link Attribute @Attribute} and {@link AttributeChanged @AttributeChanged} decorators.
+ *
+ * @category Feature
+ * @typeparam T  A type of component.
  */
 export interface AttributeDef<T extends object> {
 
@@ -35,14 +38,19 @@ export interface AttributeDef<T extends object> {
 /**
  * Attribute updates receiver invoked after custom element attribute change.
  *
+ * @category Feature
  * @typeparam T  A type of component.
+ */
+export type AttributeUpdateReceiver<T extends object> =
+/**
  * @param this  Component instance.
  * @param path  The changed attribute state path in the form of `[attributePathRoot, attributeName]`.
  * @param newValue  New attribute value.
  * @param oldValue  Previous attribute value, or `null` if there were no value assigned.
  */
-export type AttributeUpdateReceiver<T extends object> = (
-    this: T,
-    path: AttributePath,
-    newValue: string,
-    oldValue: string | null) => void;
+    (
+        this: T,
+        path: AttributePath,
+        newValue: string,
+        oldValue: string | null,
+    ) => void;

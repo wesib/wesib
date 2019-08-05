@@ -37,11 +37,13 @@ const DomPropertiesSupport__feature: FeatureDef = {
 /**
  * A feature adding properties to custom elements.
  *
- * This feature is enabled automatically whenever an `@DomProperty decorator applied to component.
+ * This feature is enabled automatically whenever a {@link DomProperty @DomProperty} decorator applied to component.
+ *
+ * @category Feature
  */
 export class DomPropertiesSupport {
 
-  static get [FeatureDef__symbol]() {
+  static get [FeatureDef__symbol](): FeatureDef {
     return DomPropertiesSupport__feature;
   }
 

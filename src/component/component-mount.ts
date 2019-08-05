@@ -6,11 +6,14 @@ import { ComponentContext } from './component-context';
 /**
  * A mount of the component to an element.
  *
- * This is constructed when a component is mounted to arbitrary element by `ComponentFactory.mountTo()` method.
+ * This is constructed when a component is mounted to arbitrary element by [[ComponentFactory.mountTo]] method.
  *
  * Mounted components do not maintain their connection status automatically. It is a calling code responsibility to set
- * their connection status by updating `ComponentMount.connected` property. E.g. by periodically calling a
- * `checkConnected()` method, or using `AutoConnectionSupport` feature.
+ * their connection status by updating [[ComponentMount.connected]] property. E.g. by periodically calling a
+ * [[ComponentMount.checkConnected]] method, or by using an [[AutoConnectSupport]] feature.
+ *
+ * @category Core
+ * @typeparam T  A type of component.
  */
 export abstract class ComponentMount<T extends object = any> {
 
@@ -22,9 +25,9 @@ export abstract class ComponentMount<T extends object = any> {
   /**
    * Component connection state.
    *
-   * Updating this property triggers appropriate listeners registered in `ComponentContext`.
+   * Updating this property triggers appropriate listeners registered in [[ComponentContext]].
    *
-   * The initial state is set by `checkConnected()` method.
+   * The initial state is set by [[checkConnected]] method.
    */
   abstract connected: boolean;
 

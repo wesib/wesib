@@ -6,6 +6,7 @@
  *
  * Optionally merges function call results.
  *
+ * @category Utility
  * @typeparam P  Function parameter types as tuple.
  * @typeparam R  A type of function result.
  * @typeparam T  A type if `this` object expected by function.

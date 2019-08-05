@@ -9,11 +9,15 @@ import { BootstrapContext } from '../kit';
 
 /**
  * A key of a property holding a feature definition within its class constructor.
+ *
+ * @category Core
  */
 export const FeatureDef__symbol = /*#__PURE__*/ Symbol('feature-def');
 
 /**
  * Feature definition.
+ *
+ * @category Core
  */
 export interface FeatureDef {
 
@@ -27,31 +31,37 @@ export interface FeatureDef {
    *
    * The feature always provides itself.
    */
-  readonly has?: Class | Class[];
+  readonly has?: Class | readonly Class[];
 
   /**
-   * Bootstrap context values to declare prior to bootstrap.
+   * Bootstrap context value(s) to declare prior to bootstrap.
    */
-  readonly set?: ContextValueSpec<BootstrapContext, any, any[], any>
+  readonly set?:
+      | ContextValueSpec<BootstrapContext, any, any[], any>
       | ContextValueSpec<BootstrapContext, any, any[], any>[];
 
   /**
    * Bootstraps this feature by calling the given bootstrap context methods.
-   *
+   */
+  readonly init?:
+  /**
+   * @param this  Feature class.
    * @param context  Components bootstrap context.
    */
-  readonly init?: (this: Class, context: BootstrapContext) => void;
+      (this: Class, context: BootstrapContext) => void;
 
   /**
-   * Definition context values to declare per each component class definition.
+   * Definition context value(s) to declare per each component class definition.
    */
-  readonly perDefinition?: ContextValueSpec<DefinitionContext, any, any[], any>
+  readonly perDefinition?:
+      | ContextValueSpec<DefinitionContext, any, any[], any>
       | ContextValueSpec<DefinitionContext, any, any[], any>[];
 
   /**
-   * Component context values to declare per each component construction.
+   * Component context value(s) to declare per each component construction.
    */
-  readonly perComponent?: ContextValueSpec<ComponentContext, any, any[], any>
+  readonly perComponent?:
+      | ContextValueSpec<ComponentContext, any, any[], any>
       | ContextValueSpec<ComponentContext, any, any[], any>[];
 
 }
@@ -79,6 +89,9 @@ class FeatureMeta extends MetaAccessor<FeatureDef> {
 
 const meta = /*#__PURE__*/ new FeatureMeta();
 
+/**
+ * @category Core
+ */
 export const FeatureDef = {
 
   /**

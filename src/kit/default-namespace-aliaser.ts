@@ -9,14 +9,14 @@ import { NamespaceAliaser } from 'namespace-aliaser';
  *
  * Maps namespaces to their unique aliases.
  *
- * @param ns  A definition of namespace to find alias for.
- *
- * @returns Namespace alias.
+ * @category Core
  */
 export type DefaultNamespaceAliaser = NamespaceAliaser;
 
 /**
  * A key of bootstrap context value containing the default namespace aliaser.
+ *
+ * @category Core
  */
 export const DefaultNamespaceAliaser:
     ContextTarget<DefaultNamespaceAliaser> & ContextRequest<DefaultNamespaceAliaser> =

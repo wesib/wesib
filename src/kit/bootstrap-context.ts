@@ -11,10 +11,11 @@ import { ComponentKit } from './component-kit';
 /**
  * Components bootstrap context.
  *
- * An instance of this class is passed to `FeatureDef.bootstrap()` method so that the feature can configure itself.
+ * An instance of this class is passed to [[FeatureDef.init]] method so that the feature can configure itself.
  *
- * Extends `BootstrapValues` interface. The values are pre-bootstrapped by features. I.e. configured in their
- * definitions as `FeatureDef.prebootstrap`.
+ * Extends `BootstrapValues` interface. The values are {@link FeatureDef.set pre-configured} in feature definitions.
+ *
+ * @category Core
  */
 export abstract class BootstrapContext extends ContextValues {
 
@@ -59,7 +60,7 @@ export abstract class BootstrapContext extends ContextValues {
    *
    * @return Custom element class constructor registered as custom element.
    *
-   * @throws TypeError If `componentType` does not contain a component definition.
+   * @throws TypeError  If `componentType` does not contain a component definition.
    */
   abstract define<T extends object>(componentType: ComponentClass<T>): void;
 
@@ -72,7 +73,7 @@ export abstract class BootstrapContext extends ContextValues {
    *
    * @return A promise that is resolved to component factory when the given `componentType` is registered.
    *
-   * @throws TypeError If `componentType` does not contain a component definition.
+   * @throws TypeError  If `componentType` does not contain a component definition.
    */
   whenDefined<C extends object>(componentType: ComponentClass<C>): Promise<ComponentFactory<C>> {
     return this.get(ComponentKit).whenDefined(componentType);

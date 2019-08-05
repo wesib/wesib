@@ -9,11 +9,13 @@ const RenderScheduler__key = /*#__PURE__*/ new SingleContextKey<RenderScheduler>
  * Rendering scheduler.
  *
  * Schedules components rendering in order to make it less often. E.g. by utilizing `requestAnimationFrame()`.
+ *
+ * @category Feature
  */
 export abstract class RenderScheduler {
 
   /**
-   * A key of bootstrap, definition, or component context value containing `RenderScheduler` instance.
+   * A key of bootstrap, definition, or component context value containing [[RenderScheduler]] instance.
    */
   static get key(): ContextKey<RenderScheduler> {
     return RenderScheduler__key;
@@ -30,6 +32,8 @@ export abstract class RenderScheduler {
 
 /**
  * Render schedule.
+ *
+ * @category Feature
  */
 export interface RenderSchedule {
 

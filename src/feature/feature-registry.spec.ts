@@ -4,7 +4,7 @@ import { BootstrapContext } from '../kit';
 import { BootstrapValueRegistry } from '../kit/bootstrap/bootstrap-value-registry.impl';
 import { MethodSpy, ObjectMock } from '../spec/mocks';
 import { FeatureDef } from './feature-def';
-import { FeatureRegistry } from './feature-registry';
+import { FeatureRegistry } from './feature-registry.impl';
 import Mock = jest.Mock;
 
 describe('feature/feature-registry', () => {
