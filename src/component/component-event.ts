@@ -12,13 +12,14 @@ import { ComponentEventDispatcher__key } from './component-event.key.impl';
  * Events of this type are thrown by various services to inform on component status changes.
  *
  * It is illegal to dispatch such events for elements not bound to components. It is reasonable to dispatch events
- * using `ComponentEventDispatcher` available in component context.
+ * using [[ComponentEventDispatcher]] available in component context.
  *
  * The following event types supported:
  * - `wesib:component` is thrown when component is bound to element. I.e. when HTML element is upgraded to custom one
  *   defined by component, or component is bound to the element. This event bubbles and is not cancelable.
  *
  * @category Core
+ * @event ComponentEvent#wesib:component
  */
 export class ComponentEvent extends Event {
 
@@ -57,8 +58,11 @@ export interface ComponentEventDispatcher {
    *
    * @param context  Target component context.
    * @param event  An event to dispatch.
+   *
+   * @returns `true` if either event's `cancelable` attribute value is `false` or its `preventDefault()` method was not
+   * invoked, or `false` otherwise.
    */
-  dispatch(context: ComponentContext, event: Event): void;
+  dispatch(context: ComponentContext, event: Event): boolean;
 
   /**
    * Returns a registrar of DOM event listeners for the given DOM event type.
