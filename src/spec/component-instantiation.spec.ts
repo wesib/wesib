@@ -86,8 +86,7 @@ describe('component instantiation', () => {
       it('is resolved on component instantiation', async () => {
 
         let context: ComponentContext = { name: 'component context' } as any;
-
-        const promise = new Promise(resolve => {
+        const component = await new Promise(resolve => {
 
           @Component({
             name: 'test-component',
@@ -110,24 +109,19 @@ describe('component instantiation', () => {
           new (testElement(TestComponent))(); // tslint:disable-line:no-unused-expression
         });
 
-        const component = await promise;
-
         expect(component).toBeDefined();
         expect(context.component).toBe(component);
 
-        let callbackInvoked = false;
+        const ready = jest.fn();
 
-        context.whenReady(comp => {
-          callbackInvoked = true;
-          expect(comp).toBe(component);
-        });
+        context.whenReady(ready);
 
-        expect(callbackInvoked).toBe(true);
+        expect(ready).toHaveBeenCalledWith(component);
       });
     });
 
-    describe('onConnect listener', () => {
-      it('is notified on when custom element connected', () => {
+    describe('whenOn listener', () => {
+      it('is notified when custom element connected', () => {
 
         const listenerSpy = jest.fn();
 
@@ -137,15 +131,13 @@ describe('component instantiation', () => {
             type: MockElement,
           },
         })
-        @Feature({
-          init(bootCtx) {
-            bootCtx.onComponent(ctx => {
-              ctx.whenOn(listenerSpy);
-              ctx.whenOn(() => expect(ctx.connected).toBe(true));
-            });
-          }
-        })
         class TestComponent {
+
+          constructor(ctx: ComponentContext) {
+            ctx.whenOn(listenerSpy);
+            ctx.whenOn(() => expect(ctx.connected).toBe(true));
+          }
+
         }
 
         const element: any = new (testElement(TestComponent))();
@@ -156,8 +148,8 @@ describe('component instantiation', () => {
       });
     });
 
-    describe('onDisconnect listener', () => {
-      it('is notified on when custom element disconnected', () => {
+    describe('whenOff listener', () => {
+      it('is notified when custom element disconnected', () => {
 
         const listenerSpy = jest.fn();
 
@@ -167,15 +159,13 @@ describe('component instantiation', () => {
             type: MockElement,
           },
         })
-        @Feature({
-          init(bootCtx) {
-            bootCtx.onComponent(ctx => {
-              ctx.whenOff(listenerSpy);
-              ctx.whenOff(() => expect(ctx.connected).toBe(false));
-            });
-          }
-        })
         class TestComponent {
+
+          constructor(ctx: ComponentContext) {
+            ctx.whenOff(listenerSpy);
+            ctx.whenOff(() => expect(ctx.connected).toBe(false));
+          }
+
         }
 
         const element: any = new (testElement(TestComponent))();

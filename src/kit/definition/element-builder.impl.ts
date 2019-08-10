@@ -1,6 +1,6 @@
-import { noop } from 'call-thru';
+import { nextArgs, nextSkip, noop } from 'call-thru';
 import { ContextValues, ContextValueSpec } from 'context-values';
-import { EventEmitter, OnEvent, onEventBy, receiveEventsBy } from 'fun-events';
+import { EventEmitter, OnEvent, trackValue, ValueTracker } from 'fun-events';
 import { ArraySet, Class, mergeFunctions } from '../../common';
 import {
   ComponentClass,
@@ -47,8 +47,19 @@ function newComponent<T extends object>(type: ComponentClass<T>, context: Compon
   }
 }
 
-const connected__symbol = /*#__PURE__*/ Symbol('connected');
-const connect__symbol = /*#__PURE__*/ Symbol('connect');
+interface ComponentStatus {
+
+  ready?: true;
+
+  on?: boolean;
+
+}
+
+const ComponentStatus__symbol = /*#__PURE__*/ Symbol('component-status');
+
+function elementStatus(element: any): ValueTracker<ComponentStatus> {
+  return element[ComponentStatus__symbol];
+}
 
 /**
  * @internal
@@ -131,14 +142,17 @@ export class ElementBuilder {
               }
 
               get connected() {
-                return element[connected__symbol];
+                return !!elementStatus(element).it.on;
               }
 
               set connected(value: boolean) {
-                if (this.connected === value) {
-                  return;
+
+                const status = elementStatus(element);
+                const current = status.it;
+
+                if (current.on !== value) {
+                  status.it = { ...current, on: value };
                 }
-                element[connect__symbol](value);
               }
 
               checkConnected(): boolean {
@@ -250,8 +264,6 @@ export class ElementBuilder {
       // Component context reference
       [ComponentContext__symbol]: ComponentContext_<T>;
 
-      private readonly [connect__symbol]: ((value: boolean) => void);
-
       constructor() {
         super();
 
@@ -272,12 +284,18 @@ export class ElementBuilder {
 
       // noinspection JSUnusedGlobalSymbols
       connectedCallback() {
-        this[connect__symbol](true);
+
+        const status = elementStatus(this);
+
+        status.it = { ...status.it, on: true };
       }
 
       // noinspection JSUnusedGlobalSymbols
       disconnectedCallback() {
-        this[connect__symbol](false);
+
+        const status = elementStatus(this);
+
+        status.it = { ...status.it, on: false };
       }
 
     }
@@ -295,44 +313,13 @@ export class ElementBuilder {
         elementSuper,
       }: ComponentMeta<T>): ComponentContext_<T> {
 
-    let ready = false;
-    let whenReady: (this: void, component: T) => void = noop;
-    let registerWhenReady = (callback: (this: void, component: T) => void) => {
-      whenReady = mergeFunctions(whenReady, callback);
-    };
-    const connectEvents = new EventEmitter<[]>();
-    const whenOn = onEventBy<[]>(receiver => {
-
-      const interest = connectEvents.on(receiver);
-
-      if (isConnected()) {
-        receiveEventsBy(receiver)();
-      }
-
-      return interest;
-    });
-    const disconnectEvents = new EventEmitter<[]>();
-    const whenOff = onEventBy<[]>(receiver => {
-
-      const interest = disconnectEvents.on(receiver);
-
-      if (!isConnected() && ready) {
-        receiveEventsBy(receiver)();
-      }
-
-      return interest;
-    });
+    const status = trackValue<ComponentStatus>({});
+    const aliveInterest = status.on(noop);
+    const whenReady: OnEvent<[]> = status.read.thru(({ ready }) => ready ? nextArgs() : nextSkip());
+    const whenOn: OnEvent<[]> = status.read.thru(({ ready, on }) => ready && on ? nextArgs() : nextSkip());
+    const whenOff: OnEvent<[]> = status.read.thru(({ ready, on }) => ready && on === false ? nextArgs() : nextSkip());
     let mount: ComponentMount_<T> | undefined;
     const values = valueRegistry.newValues();
-
-    let whenDestroyed = (reason: any) => {
-      disconnectEvents.done(reason);
-      connectEvents.done(reason);
-    };
-    let registerWhenDestroyed = (callback: (this: void, reason: any) => void) => {
-      whenDestroyed = mergeFunctions(callback, whenDestroyed);
-    };
-    let destroy = destroyComponent;
 
     class ComponentContext extends ComponentContext_<T> {
 
@@ -361,7 +348,7 @@ export class ElementBuilder {
       }
 
       get connected(): boolean {
-        return isConnected();
+        return !!status.it.on;
       }
 
       get whenOn(): OnEvent<[]> {
@@ -373,21 +360,22 @@ export class ElementBuilder {
       }
 
       whenReady(callback: (this: void, component: T) => void) {
-        registerWhenReady(callback);
+        whenReady.once(() => callback(this.component));
       }
 
       whenDestroyed(callback: (this: void, reason: any) => void): void {
-        registerWhenDestroyed(callback);
+        aliveInterest.whenDone(callback);
       }
 
       destroy(reason?: any): void {
-        destroy(reason);
+        status.done(reason);
       }
 
     }
 
     const context = new ComponentContext();
 
+    context.whenDestroyed(() => removeElement(context));
     valueRegistry.provide({ a: ComponentContext_, is: context });
 
     augmentElement();
@@ -403,46 +391,13 @@ export class ElementBuilder {
       value: component,
     });
 
-    componentIsReady();
+    status.it = { ...status.it, ready: true };
 
     return context;
 
     function augmentElement() {
-
       Object.defineProperty(element, ComponentContext__symbol, { value: context });
-      Object.defineProperty(element, connected__symbol, { writable: true, value: false });
-      Object.defineProperty(element, connect__symbol, {
-        value(value: boolean) {
-          this[connected__symbol] = value;
-          (value ? connectEvents : disconnectEvents).send();
-        },
-      });
-    }
-
-    function isConnected(): boolean {
-      return element[connected__symbol];
-    }
-
-    function componentIsReady() {
-
-      const _whenReady = whenReady;
-
-      ready = true;
-      registerWhenReady = callback => callback(component);
-      whenReady = noop;
-      _whenReady(component);
-    }
-
-    function destroyComponent(reason?: any) {
-
-      const _whenDestroyed = whenDestroyed;
-
-      whenDestroyed = noop;
-      destroy = noop;
-
-      registerWhenDestroyed = callback => callback(reason);
-      removeElement(context);
-      _whenDestroyed(reason);
+      Object.defineProperty(element, ComponentStatus__symbol, { writable: true, value: status });
     }
   }
 
