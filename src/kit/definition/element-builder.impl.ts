@@ -1,7 +1,7 @@
 import { nextArgs, nextSkip, noop } from 'call-thru';
 import { ContextValues, ContextValueSpec } from 'context-values';
 import { EventEmitter, OnEvent, trackValue, ValueTracker } from 'fun-events';
-import { ArraySet, Class, mergeFunctions } from '../../common';
+import { ArraySet, Class } from '../../common';
 import {
   ComponentClass,
   ComponentContext as ComponentContext_,
@@ -96,10 +96,8 @@ export class ElementBuilder {
     const builder = this;
     const onComponent = new EventEmitter<[ComponentContext_]>();
     let typeValueRegistry!: ComponentValueRegistry;
-    let whenReady: (this: void, elementType: Class) => void = noop;
-    let registerWhenReady = (callback: (this: void, elementType: Class) => void) => {
-      whenReady = mergeFunctions(whenReady, callback);
-    };
+    const ready = trackValue(false);
+    const whenReady: OnEvent<[]> = ready.read.thru(cls => cls ? nextArgs() : nextSkip());
     let definitionContext: DefinitionContext;
 
     function createValueRegistry() {
@@ -213,7 +211,7 @@ export class ElementBuilder {
       }
 
       whenReady(callback: (this: void, elementType: Class) => void) {
-        registerWhenReady(callback);
+        whenReady.once(() => callback(this.elementType));
       }
 
       perComponent<S>(spec: ContextValueSpec<ComponentContext_, any, any[], S>): void {
@@ -237,18 +235,9 @@ export class ElementBuilder {
       value: elementType,
     });
 
-    definitionIsReady();
+    ready.it = true;
 
     return componentFactory;
-
-    function definitionIsReady() {
-
-      const _whenReady = whenReady;
-
-      registerWhenReady = callback => callback(elementType);
-      whenReady = noop;
-      _whenReady(elementType);
-    }
   }
 
   private _elementType<T extends object>(
