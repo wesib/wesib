@@ -19,7 +19,6 @@
   },
   "main": "dist/wesib.js",
   "module": "dist/wesib.mjs",
-  "esm5": "dist/wesib.esm5.js",
   "typings": "index.d.ts",
   "dependencies": {
     "a-iterable": "^2.4.2",
