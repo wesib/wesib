@@ -15,7 +15,7 @@ export const DomPropertyPath__root = /*#__PURE__*/ Symbol('dom-property');
  *
  * @category Feature
  */
-export type DomPropertyPath<K extends PropertyKey = PropertyKey> = [keyof DomPropertyPath__root_Keys, K];
+export type DomPropertyPath<K extends PropertyKey = PropertyKey> = readonly [keyof DomPropertyPath__root_Keys, K];
 
 /**
  * Constructs a named DOM property state path.
