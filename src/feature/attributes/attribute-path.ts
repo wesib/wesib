@@ -15,7 +15,7 @@ export const AttributePath__root = /*#__PURE__*/ Symbol('attribute');
  *
  * @category Feature
  */
-export type AttributePath = [keyof AttributePath__root_Keys, string];
+export type AttributePath = readonly [keyof AttributePath__root_Keys, string];
 
 /**
  * Constructs a named attribute state path.
