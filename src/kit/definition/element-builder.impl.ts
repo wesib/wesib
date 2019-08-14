@@ -47,12 +47,11 @@ function newComponent<T extends object>(type: ComponentClass<T>, context: Compon
   }
 }
 
-interface ComponentStatus {
-
-  ready?: true;
-
-  on?: boolean;
-
+const enum ComponentStatus {
+  Building,
+  Ready,
+  Off,
+  On,
 }
 
 const ComponentStatus__symbol = /*#__PURE__*/ Symbol('component-status');
@@ -140,17 +139,11 @@ export class ElementBuilder {
               }
 
               get connected() {
-                return !!elementStatus(element).it.on;
+                return elementStatus(element).it === ComponentStatus.On;
               }
 
               set connected(value: boolean) {
-
-                const status = elementStatus(element);
-                const current = status.it;
-
-                if (current.on !== value) {
-                  status.it = { ...current, on: value };
-                }
+                elementStatus(element).it = value ? ComponentStatus.On : ComponentStatus.Off;
               }
 
               checkConnected(): boolean {
@@ -273,18 +266,12 @@ export class ElementBuilder {
 
       // noinspection JSUnusedGlobalSymbols
       connectedCallback() {
-
-        const status = elementStatus(this);
-
-        status.it = { ...status.it, on: true };
+        elementStatus(this).it = ComponentStatus.On;
       }
 
       // noinspection JSUnusedGlobalSymbols
       disconnectedCallback() {
-
-        const status = elementStatus(this);
-
-        status.it = { ...status.it, on: false };
+        elementStatus(this).it = ComponentStatus.Off;
       }
 
     }
@@ -302,11 +289,11 @@ export class ElementBuilder {
         elementSuper,
       }: ComponentMeta<T>): ComponentContext_<T> {
 
-    const status = trackValue<ComponentStatus>({});
+    const status = trackValue<ComponentStatus>(ComponentStatus.Building);
     const aliveInterest = status.on(noop);
-    const whenReady: OnEvent<[]> = status.read.thru(({ ready }) => ready ? nextArgs() : nextSkip());
-    const whenOn: OnEvent<[]> = status.read.thru(({ ready, on }) => ready && on ? nextArgs() : nextSkip());
-    const whenOff: OnEvent<[]> = status.read.thru(({ ready, on }) => ready && on === false ? nextArgs() : nextSkip());
+    const whenReady: OnEvent<[]> = status.read.thru(sts => sts ? nextArgs() : nextSkip());
+    const whenOn: OnEvent<[]> = status.read.thru(sts => sts === ComponentStatus.On ? nextArgs() : nextSkip());
+    const whenOff: OnEvent<[]> = status.read.thru(sts => sts === ComponentStatus.Off ? nextArgs() : nextSkip());
     let mount: ComponentMount_<T> | undefined;
     const values = valueRegistry.newValues();
 
@@ -337,7 +324,7 @@ export class ElementBuilder {
       }
 
       get connected(): boolean {
-        return !!status.it.on;
+        return status.it === ComponentStatus.On;
       }
 
       get whenOn(): OnEvent<[]> {
@@ -380,7 +367,7 @@ export class ElementBuilder {
       value: component,
     });
 
-    status.it = { ...status.it, ready: true };
+    status.it = ComponentStatus.Ready;
 
     return context;
 
