@@ -41,28 +41,30 @@ export interface ElementDef {
  */
 export const ElementDef: SingleContextRef<ElementDef> = /*#__PURE__*/ new SingleContextKey<ElementDef>(
     'element-def',
-    values => {
+    {
+      byDefault(values) {
 
-      const componentType = values.get(DefinitionContext__key).componentType;
-      const { name, extend } = ComponentDef.of(componentType);
+        const componentType = values.get(DefinitionContext__key).componentType;
+        const { name, extend } = ComponentDef.of(componentType);
 
-      const elementExtend: ElementDef.Extend = {
-        get type() {
-          return extend && extend.type || (values.get(BootstrapWindow) as any).HTMLElement;
-        },
-        get name() {
-          return extend && extend.name;
-        }
-      };
+        const elementExtend: ElementDef.Extend = {
+          get type() {
+            return extend && extend.type || (values.get(BootstrapWindow) as any).HTMLElement;
+          },
+          get name() {
+            return extend && extend.name;
+          }
+        };
 
-      return {
-        get name() {
-          return name;
-        },
-        get extend() {
-          return elementExtend;
-        },
-      };
+        return {
+          get name() {
+            return name;
+          },
+          get extend() {
+            return elementExtend;
+          },
+        };
+      },
     },
 );
 

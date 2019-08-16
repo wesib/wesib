@@ -8,15 +8,19 @@ import { ComponentEventDispatcher } from './component-event';
  */
 export const ComponentEventDispatcher__key = /*#__PURE__*/ new SingleContextKey<ComponentEventDispatcher>(
     'component-event-dispatcher',
-    () => ({
-      dispatch(context: ComponentContext, event: Event): boolean {
-        return context.element.dispatchEvent(event);
-      },
-      on<E extends Event>(context: ComponentContext, type: string): OnDomEvent<E> {
+    {
+      byDefault() {
+        return {
+          dispatch(context: ComponentContext, event: Event): boolean {
+            return context.element.dispatchEvent(event);
+          },
+          on<E extends Event>(context: ComponentContext, type: string): OnDomEvent<E> {
 
-        const dispatcher = new DomEventDispatcher(context.element);
+            const dispatcher = new DomEventDispatcher(context.element);
 
-        return dispatcher.on(type);
+            return dispatcher.on(type);
+          },
+        };
       },
-    })
+    },
 );

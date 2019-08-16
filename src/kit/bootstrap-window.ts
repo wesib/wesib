@@ -17,5 +17,11 @@ export type BootstrapWindow = Window;
  *
  * @category Core
  */
-export const BootstrapWindow: SingleContextRef<BootstrapWindow> =
-    /*#__PURE__*/ new SingleContextKey('window', () => window);
+export const BootstrapWindow: SingleContextRef<BootstrapWindow> = /*#__PURE__*/ new SingleContextKey(
+    'window',
+    {
+      byDefault() {
+        return window;
+      },
+    },
+);

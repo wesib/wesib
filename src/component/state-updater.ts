@@ -29,5 +29,9 @@ export type StateUpdater =
  *
  * @category Core
  */
-export const StateUpdater: SingleContextRef<StateUpdater> =
-    /*#__PURE__*/ new SingleContextKey('state-updater', valueProvider(noop));
+export const StateUpdater: SingleContextRef<StateUpdater> = /*#__PURE__*/ new SingleContextKey(
+    'state-updater',
+    {
+      byDefault: valueProvider(noop),
+    },
+);

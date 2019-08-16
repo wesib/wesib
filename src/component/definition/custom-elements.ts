@@ -8,8 +8,12 @@ import { BootstrapWindow, DefaultNamespaceAliaser } from '../../kit';
 import { componentFactoryOf } from '../../kit/definition/component-factory.symbol.impl';
 import { ComponentClass } from '../component-class';
 
-const CustomElements__key =
-    /*#__PURE__*/ new SingleContextKey<CustomElements>('custom-elements', createCustomElements);
+const CustomElements__key = /*#__PURE__*/ new SingleContextKey<CustomElements>(
+    'custom-elements',
+    {
+      byDefault: createCustomElements,
+    },
+);
 
 /**
  * Custom elements registry.

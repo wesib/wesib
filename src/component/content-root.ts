@@ -20,5 +20,9 @@ export type ContentRoot = ParentNode;
  */
 export const ContentRoot: SingleContextRef<ContentRoot> = /*#__PURE__*/ new SingleContextKey<ContentRoot>(
     'content-root',
-    ctx => ctx.get(ComponentContext__key).element,
+    {
+      byDefault(ctx) {
+        return ctx.get(ComponentContext__key).element;
+      },
+    },
 );
