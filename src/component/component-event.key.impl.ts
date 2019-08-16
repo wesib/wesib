@@ -18,4 +18,5 @@ export const ComponentEventDispatcher__key = /*#__PURE__*/ new SingleContextKey<
 
         return dispatcher.on(type);
       },
-    }));
+    })
+);

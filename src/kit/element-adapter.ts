@@ -2,12 +2,7 @@
  * @module @wesib/wesib
  */
 import { AIterable } from 'a-iterable';
-import {
-  ContextRequest,
-  ContextTarget, ContextValueOpts,
-  ContextValues,
-  SimpleContextKey,
-} from 'context-values';
+import { ContextValueOpts, ContextValues, SimpleContextKey, SingleContextRef } from 'context-values';
 import { ComponentContext, ComponentContext__symbol } from '../component';
 
 /**
@@ -25,7 +20,7 @@ export type ElementAdapter =
  *
  * @returns An adapted component's context, or `null` if the element can not be adapted.
  */
-    (element: any) => ComponentContext | undefined;
+    (this: void, element: any) => ComponentContext | undefined;
 
 class Key extends SimpleContextKey<ElementAdapter> {
 
@@ -52,7 +47,7 @@ class Key extends SimpleContextKey<ElementAdapter> {
  *
  * @category Core
  */
-export const ElementAdapter: ContextTarget<ElementAdapter> & ContextRequest<ElementAdapter> = /*#__PURE__*/ new Key();
+export const ElementAdapter: SingleContextRef<ElementAdapter> = /*#__PURE__*/ new Key();
 
 function defaultElementAdapter(element: any): ComponentContext | undefined {
   return element[ComponentContext__symbol];

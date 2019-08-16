@@ -1,8 +1,8 @@
 /**
  * @module @wesib/wesib
  */
-import { noop } from 'call-thru';
-import { ContextRequest, ContextTarget, SingleContextKey } from 'context-values';
+import { noop, valueProvider } from 'call-thru';
+import { SingleContextKey, SingleContextRef } from 'context-values';
 import { StatePath } from 'fun-events';
 
 /**
@@ -29,5 +29,5 @@ export type StateUpdater =
  *
  * @category Core
  */
-export const StateUpdater: ContextTarget<StateUpdater> & ContextRequest<StateUpdater> =
-    /*#__PURE__*/ new SingleContextKey('state-updater', () => noop);
+export const StateUpdater: SingleContextRef<StateUpdater> =
+    /*#__PURE__*/ new SingleContextKey('state-updater', valueProvider(noop));

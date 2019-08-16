@@ -1,7 +1,7 @@
 /**
  * @module @wesib/wesib
  */
-import { ContextRequest, ContextTarget, SingleContextKey } from 'context-values';
+import { SingleContextKey, SingleContextRef } from 'context-values';
 import { QualifiedName } from 'namespace-aliaser';
 import { Class } from '../../common';
 import { BootstrapWindow } from '../../kit';
@@ -39,8 +39,7 @@ export interface ElementDef {
  * Target value defaults to `HTMLElement` from the window provided under `[BootstrapWindow.key]`,
  * unless `ComponentDef.extend.type` is specified.
  */
-export const ElementDef: ContextTarget<ElementDef> & ContextRequest<ElementDef> =
-    /*#__PURE__*/ new SingleContextKey<ElementDef>(
+export const ElementDef: SingleContextRef<ElementDef> = /*#__PURE__*/ new SingleContextKey<ElementDef>(
     'element-def',
     values => {
 
@@ -64,7 +63,8 @@ export const ElementDef: ContextTarget<ElementDef> & ContextRequest<ElementDef> 
           return elementExtend;
         },
       };
-    });
+    },
+);
 
 /**
  * @category Core

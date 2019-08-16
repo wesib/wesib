@@ -1,7 +1,7 @@
 /**
  * @module @wesib/wesib
  */
-import { ContextRequest, ContextTarget, SingleContextKey } from 'context-values';
+import { SingleContextKey, SingleContextRef } from 'context-values';
 
 /**
  * @category Feature
@@ -11,5 +11,5 @@ export type DomPropertyRegistrar = (propertyKey: PropertyKey, descriptor: Proper
 /**
  * @category Feature
  */
-export const DomPropertyRegistrar: ContextTarget<DomPropertyRegistrar> & ContextRequest<DomPropertyRegistrar> =
+export const DomPropertyRegistrar: SingleContextRef<DomPropertyRegistrar> =
     /*#__PURE__*/ new SingleContextKey<DomPropertyRegistrar>('dom-property-registrar');

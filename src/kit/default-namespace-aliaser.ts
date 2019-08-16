@@ -1,7 +1,7 @@
 /**
  * @module @wesib/wesib
  */
-import { ContextRequest, ContextTarget, SingleContextKey } from 'context-values';
+import { SingleContextKey, SingleContextRef } from 'context-values';
 import { NamespaceAliaser } from 'namespace-aliaser';
 
 /**
@@ -18,6 +18,5 @@ export type DefaultNamespaceAliaser = NamespaceAliaser;
  *
  * @category Core
  */
-export const DefaultNamespaceAliaser:
-    ContextTarget<DefaultNamespaceAliaser> & ContextRequest<DefaultNamespaceAliaser> =
+export const DefaultNamespaceAliaser: SingleContextRef<DefaultNamespaceAliaser> =
     /*#__PURE__*/ new SingleContextKey<DefaultNamespaceAliaser>('default-namespace-aliaser');

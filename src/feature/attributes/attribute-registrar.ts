@@ -1,7 +1,7 @@
 /**
  * @module @wesib/wesib
  */
-import { ContextRequest, ContextTarget, SingleContextKey } from 'context-values';
+import { SingleContextKey, SingleContextRef } from 'context-values';
 
 /**
  * Custom element attribute change callback.
@@ -27,5 +27,5 @@ export type AttributeRegistrar<T extends object = any> = (name: string, callback
 /**
  * @category Feature
  */
-export const AttributeRegistrar: ContextTarget<AttributeRegistrar> & ContextRequest<AttributeRegistrar> =
+export const AttributeRegistrar: SingleContextRef<AttributeRegistrar> =
     /*#__PURE__*/ new SingleContextKey<AttributeRegistrar>('attribute-registrar');
