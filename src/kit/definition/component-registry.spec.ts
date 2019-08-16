@@ -1,4 +1,4 @@
-import { ContextRequest } from 'context-values';
+import { ContextKey__symbol, ContextRequest } from 'context-values';
 import { Class } from '../../common';
 import { ComponentClass, ComponentDef, ComponentDef__symbol } from '../../component';
 import { CustomElements } from '../../component/definition';
@@ -21,7 +21,7 @@ describe('kit/definition/component-registry', () => {
     beforeEach(() => {
       bootstrapContextSpy = {
         get: jest.fn((request: ContextRequest<any>) => {
-          if (request.key === CustomElements.key) {
+          if (request[ContextKey__symbol] === CustomElements[ContextKey__symbol]) {
             return customElementsSpy;
           }
           return;

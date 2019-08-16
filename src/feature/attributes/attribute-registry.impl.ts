@@ -1,4 +1,4 @@
-import { ContextKey, SingleContextKey } from 'context-values';
+import { ContextKey, ContextKey__symbol, SingleContextKey } from 'context-values';
 import { Class, mergeFunctions } from '../../common';
 import { ComponentContext, ComponentMount } from '../../component';
 import { DefinitionContext } from '../../component/definition';
@@ -12,7 +12,7 @@ const AttributeRegistry__key = /*#__PURE__*/ new SingleContextKey<AttributeRegis
  */
 export class AttributeRegistry<T extends object = any> {
 
-  static get key(): ContextKey<AttributeRegistry> {
+  static get [ContextKey__symbol](): ContextKey<AttributeRegistry> {
     return AttributeRegistry__key;
   }
 

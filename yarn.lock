@@ -895,10 +895,10 @@ console-control-strings@^1.0.0, console-control-strings@~1.1.0:
   resolved "https://registry.yarnpkg.com/console-control-strings/-/console-control-strings-1.1.0.tgz#3d7cf4464db6446ea644bf4b39507f9851008e8e"
   integrity sha1-PXz0Rk22RG6mRL9LOVB/mFEAjo4=
 
-context-values@2.0.0-dev.1:
-  version "2.0.0-dev.1"
-  resolved "https://registry.yarnpkg.com/context-values/-/context-values-2.0.0-dev.1.tgz#9988d1fe7a7c1f94e77ba25d1b85739493d6aac5"
-  integrity sha512-m4yTBrPhoer9tY8/QyAkAqZc9ZG440kQQ/KIU7H4pDwJH1d8gEm97Q5dN9G4C6sOnR3YXHTkF6SBlGRSP29kWQ==
+context-values@2.0.0-dev.2:
+  version "2.0.0-dev.2"
+  resolved "https://registry.yarnpkg.com/context-values/-/context-values-2.0.0-dev.2.tgz#12ee6558beba285aefbb5691681a25b244ee85af"
+  integrity sha512-umqyswex91ksuAXvTC4IUzs3FGLY7UVS9F8cED7H2zY9KE6XeXVI7vzKND1E1v8E+WUTf3IPx6/JRIJwp3oSsQ==
   dependencies:
     a-iterable "^2.4.2"
     call-thru "^2.5.2"

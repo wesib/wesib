@@ -1,5 +1,5 @@
 import { AIterable, overArray } from 'a-iterable';
-import { ContextKey, SingleContextKey } from 'context-values';
+import { ContextKey, ContextKey__symbol, SingleContextKey } from 'context-values';
 import { DomEventDispatcher, noEventInterest } from 'fun-events';
 import { ComponentMount } from '../../component';
 import { BootstrapContext, BootstrapRoot, BootstrapWindow, ElementAdapter } from '../../kit';
@@ -13,7 +13,7 @@ const ConnectTracker__key = /*#__PURE__*/ new SingleContextKey<ConnectTracker>('
  */
 export class ConnectTracker {
 
-  static get key(): ContextKey<ConnectTracker> {
+  static get [ContextKey__symbol](): ContextKey<ConnectTracker> {
     return ConnectTracker__key;
   }
 

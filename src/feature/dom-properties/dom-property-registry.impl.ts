@@ -1,4 +1,4 @@
-import { ContextKey, SingleContextKey } from 'context-values';
+import { ContextKey, ContextKey__symbol, SingleContextKey } from 'context-values';
 import { Class } from '../../common';
 import { ComponentMount } from '../../component';
 
@@ -9,7 +9,7 @@ const DomPropertyRegistry__key = /*#__PURE__*/ new SingleContextKey<DomPropertyR
  */
 export class DomPropertyRegistry {
 
-  static get key(): ContextKey<DomPropertyRegistry> {
+  static get [ContextKey__symbol](): ContextKey<DomPropertyRegistry> {
     return DomPropertyRegistry__key;
   }
 

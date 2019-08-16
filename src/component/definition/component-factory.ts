@@ -1,7 +1,7 @@
 /**
  * @module @wesib/wesib
  */
-import { ContextKey, SingleContextKey } from 'context-values';
+import { ContextKey, ContextKey__symbol, SingleContextKey } from 'context-values';
 import { Class } from '../../common';
 import { ComponentClass } from '../component-class';
 import { ComponentMount } from '../component-mount';
@@ -20,7 +20,7 @@ export abstract class ComponentFactory<T extends object = any> {
   /**
    * A key of definition context value containing a component factory.
    */
-  static get key(): ContextKey<ComponentFactory> {
+  static get [ContextKey__symbol](): ContextKey<ComponentFactory> {
     return ComponentFactory__key;
   }
 

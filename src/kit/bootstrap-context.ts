@@ -1,7 +1,7 @@
 /**
  * @module @wesib/wesib
  */
-import { ContextKey, ContextValues, ContextValueSpec } from 'context-values';
+import { ContextKey, ContextKey__symbol, ContextValues, ContextValueSpec } from 'context-values';
 import { OnEvent } from 'fun-events';
 import { ComponentClass, ComponentContext } from '../component';
 import { ComponentFactory, DefinitionContext } from '../component/definition';
@@ -22,7 +22,7 @@ export abstract class BootstrapContext extends ContextValues {
   /**
    * A key of bootstrap context value containing the bootstrap context itself.
    */
-  static get key(): ContextKey<BootstrapContext> {
+  static get [ContextKey__symbol](): ContextKey<BootstrapContext> {
     return BootstrapContext__key;
   }
 
