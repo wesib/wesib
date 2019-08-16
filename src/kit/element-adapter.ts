@@ -1,13 +1,12 @@
 /**
  * @module @wesib/wesib
  */
+import { AIterable } from 'a-iterable';
 import {
-  AbstractContextKey,
   ContextRequest,
-  ContextSources,
-  ContextTarget,
+  ContextTarget, ContextValueOpts,
   ContextValues,
-  DefaultContextValueHandler,
+  SimpleContextKey,
 } from 'context-values';
 import { ComponentContext, ComponentContext__symbol } from '../component';
 
@@ -28,22 +27,22 @@ export type ElementAdapter =
  */
     (element: any) => ComponentContext | undefined;
 
-class Key extends AbstractContextKey<ElementAdapter> {
+class Key extends SimpleContextKey<ElementAdapter> {
 
   constructor() {
     super('element-adapter');
   }
 
-  merge(
-      _context: ContextValues,
-      sources: ContextSources<ElementAdapter>,
-      handleDefault: DefaultContextValueHandler<ElementAdapter>): ElementAdapter | null | undefined {
+  grow<Ctx extends ContextValues>(
+      opts: ContextValueOpts<Ctx, ElementAdapter, ElementAdapter, AIterable<ElementAdapter>>,
+  ): ElementAdapter | null | undefined {
 
-    const result = sources.reduce(
+    const result = opts.seed.reduce(
         (prev, adapter) => (element: any) => prev(element) || adapter(element),
-        defaultElementAdapter);
+        defaultElementAdapter,
+    );
 
-    return result !== defaultElementAdapter ? result : handleDefault(() => defaultElementAdapter);
+    return result !== defaultElementAdapter ? result : opts.byDefault(() => defaultElementAdapter);
   }
 
 }

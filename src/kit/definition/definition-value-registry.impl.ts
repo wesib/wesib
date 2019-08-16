@@ -1,4 +1,4 @@
-import { ContextRegistry, ContextSourcesProvider, ContextValues } from 'context-values';
+import { ContextRegistry, ContextSeeds, ContextValues } from 'context-values';
 import { DefinitionContext } from '../../component/definition';
 
 /**
@@ -6,11 +6,11 @@ import { DefinitionContext } from '../../component/definition';
  */
 export class DefinitionValueRegistry extends ContextRegistry<DefinitionContext> {
 
-  static create(initial?: ContextSourcesProvider<DefinitionContext> | ContextValues): DefinitionValueRegistry {
+  static create(initial?: ContextSeeds<DefinitionContext> | ContextValues): DefinitionValueRegistry {
     return new DefinitionValueRegistry(initial);
   }
 
-  constructor(initial?: ContextSourcesProvider<DefinitionContext> | ContextValues) {
+  constructor(initial?: ContextSeeds<DefinitionContext> | ContextValues) {
     super(initial);
   }
 
