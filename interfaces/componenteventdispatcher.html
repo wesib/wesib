@@ -101,13 +101,13 @@
 					<a name="dispatch" class="tsd-anchor"></a>
 					<h3>dispatch</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">dispatch<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="../classes/componentcontext.html" class="tsd-signature-type">ComponentContext</a>, event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Event</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">dispatch<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="../classes/componentcontext.html" class="tsd-signature-type">ComponentContext</a>, event<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Event</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/4c6e5f0/src/component/component-event.ts#L61">component/component-event.ts:61</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/e889a70/src/component/component-event.ts#L65">component/component-event.ts:65</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -130,7 +130,9 @@
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+							<p><code>true</code> if either event&#39;s <code>cancelable</code> attribute value is <code>false</code> or its <code>preventDefault()</code> method was not
+							invoked, or <code>false</code> otherwise.</p>
 						</li>
 					</ul>
 				</section>
@@ -144,7 +146,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/4c6e5f0/src/component/component-event.ts#L71">component/component-event.ts:71</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/e889a70/src/component/component-event.ts#L75">component/component-event.ts:75</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
