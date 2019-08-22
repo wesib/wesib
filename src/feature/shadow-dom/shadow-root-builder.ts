@@ -1,7 +1,7 @@
 /**
  * @module @wesib/wesib
  */
-import { ContextRequest, ContextTarget, SingleContextKey } from 'context-values';
+import { FnContextKey, FnContextRef } from 'context-values';
 import { ComponentContext } from '../../component';
 import { ShadowContentDef } from './shadow-content-def';
 
@@ -19,21 +19,17 @@ import { ShadowContentDef } from './shadow-content-def';
  */
 export type ShadowRootBuilder =
 /**
- * @typeparam T  A type of component.
  * @param context  Target component context.
  * @param init  Shadow root initialization options.
  *
  * @returns A shadow root instance for target component, or `null`/`undefined` if one can not be attached.
  */
-    <T extends object>(
-        context: ComponentContext<T>,
-        init: ShadowContentDef,
-    ) => ShadowRoot | null | undefined;
+    (context: ComponentContext<any>, init: ShadowContentDef) => ShadowRoot | null | undefined;
 
 /**
  * A key of component context value containing a shadow root builder instance.
  *
  * @category Feature
  */
-export const ShadowRootBuilder: ContextTarget<ShadowRootBuilder> & ContextRequest<ShadowRootBuilder> =
-    /*#__PURE__*/ new SingleContextKey<ShadowRootBuilder>('shadow-root-builder');
+export const ShadowRootBuilder: FnContextRef<Parameters<ShadowRootBuilder>, ReturnType<ShadowRootBuilder>> =
+    /*#__PURE__*/ new FnContextKey<Parameters<ShadowRootBuilder>, ReturnType<ShadowRootBuilder>>('shadow-root-builder');

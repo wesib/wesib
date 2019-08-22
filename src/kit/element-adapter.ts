@@ -1,14 +1,8 @@
 /**
  * @module @wesib/wesib
  */
-import {
-  AbstractContextKey,
-  ContextRequest,
-  ContextSources,
-  ContextTarget,
-  ContextValues,
-  DefaultContextValueHandler,
-} from 'context-values';
+import { AIterable } from 'a-iterable';
+import { ContextValueOpts, ContextValues, SimpleContextKey, SingleContextRef } from 'context-values';
 import { ComponentContext, ComponentContext__symbol } from '../component';
 
 /**
@@ -26,24 +20,24 @@ export type ElementAdapter =
  *
  * @returns An adapted component's context, or `null` if the element can not be adapted.
  */
-    (element: any) => ComponentContext | undefined;
+    (this: void, element: any) => ComponentContext | undefined;
 
-class Key extends AbstractContextKey<ElementAdapter> {
+class Key extends SimpleContextKey<ElementAdapter> {
 
   constructor() {
     super('element-adapter');
   }
 
-  merge(
-      _context: ContextValues,
-      sources: ContextSources<ElementAdapter>,
-      handleDefault: DefaultContextValueHandler<ElementAdapter>): ElementAdapter | null | undefined {
+  grow<Ctx extends ContextValues>(
+      opts: ContextValueOpts<Ctx, ElementAdapter, ElementAdapter, AIterable<ElementAdapter>>,
+  ): ElementAdapter | null | undefined {
 
-    const result = sources.reduce(
+    const result = opts.seed.reduce(
         (prev, adapter) => (element: any) => prev(element) || adapter(element),
-        defaultElementAdapter);
+        defaultElementAdapter,
+    );
 
-    return result !== defaultElementAdapter ? result : handleDefault(() => defaultElementAdapter);
+    return result !== defaultElementAdapter ? result : opts.byDefault(() => defaultElementAdapter);
   }
 
 }
@@ -53,7 +47,7 @@ class Key extends AbstractContextKey<ElementAdapter> {
  *
  * @category Core
  */
-export const ElementAdapter: ContextTarget<ElementAdapter> & ContextRequest<ElementAdapter> = /*#__PURE__*/ new Key();
+export const ElementAdapter: SingleContextRef<ElementAdapter> = /*#__PURE__*/ new Key();
 
 function defaultElementAdapter(element: any): ComponentContext | undefined {
   return element[ComponentContext__symbol];

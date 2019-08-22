@@ -1,7 +1,7 @@
 /**
  * @module @wesib/wesib
  */
-import { ContextKey, SingleContextKey } from 'context-values';
+import { ContextKey, ContextKey__symbol, SingleContextKey } from 'context-values';
 
 const RenderScheduler__key = /*#__PURE__*/ new SingleContextKey<RenderScheduler>('render-scheduler');
 
@@ -17,7 +17,7 @@ export abstract class RenderScheduler {
   /**
    * A key of bootstrap, definition, or component context value containing [[RenderScheduler]] instance.
    */
-  static get key(): ContextKey<RenderScheduler> {
+  static get [ContextKey__symbol](): ContextKey<RenderScheduler> {
     return RenderScheduler__key;
   }
 

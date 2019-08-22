@@ -192,14 +192,14 @@ export class ElementBuilder {
       constructor() {
         super();
 
-        const definitionRegistry = DefinitionValueRegistry.create(builder._definitionValueRegistry.bindSources(this));
+        const definitionRegistry = DefinitionValueRegistry.create(builder._definitionValueRegistry.seedIn(this));
 
         definitionRegistry.provide({ a: DefinitionContext_, is: this });
         definitionRegistry.provide({ a: ComponentFactory_, is: componentFactory });
         values = definitionRegistry.newValues();
         new ArraySet(def.set).forEach(spec => definitionRegistry.provide(spec));
 
-        typeValueRegistry = ComponentValueRegistry.create(definitionRegistry.bindSources(this));
+        typeValueRegistry = ComponentValueRegistry.create(definitionRegistry.seedIn(this));
         new ArraySet(def.perComponent).forEach(spec => typeValueRegistry.provide(spec));
       }
 

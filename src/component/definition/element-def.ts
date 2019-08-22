@@ -1,7 +1,7 @@
 /**
  * @module @wesib/wesib
  */
-import { ContextRequest, ContextTarget, SingleContextKey } from 'context-values';
+import { SingleContextKey, SingleContextRef } from 'context-values';
 import { QualifiedName } from 'namespace-aliaser';
 import { Class } from '../../common';
 import { BootstrapWindow } from '../../kit';
@@ -39,32 +39,34 @@ export interface ElementDef {
  * Target value defaults to `HTMLElement` from the window provided under `[BootstrapWindow.key]`,
  * unless `ComponentDef.extend.type` is specified.
  */
-export const ElementDef: ContextTarget<ElementDef> & ContextRequest<ElementDef> =
-    /*#__PURE__*/ new SingleContextKey<ElementDef>(
+export const ElementDef: SingleContextRef<ElementDef> = /*#__PURE__*/ new SingleContextKey<ElementDef>(
     'element-def',
-    values => {
+    {
+      byDefault(values) {
 
-      const componentType = values.get(DefinitionContext__key).componentType;
-      const { name, extend } = ComponentDef.of(componentType);
+        const componentType = values.get(DefinitionContext__key).componentType;
+        const { name, extend } = ComponentDef.of(componentType);
 
-      const elementExtend: ElementDef.Extend = {
-        get type() {
-          return extend && extend.type || (values.get(BootstrapWindow) as any).HTMLElement;
-        },
-        get name() {
-          return extend && extend.name;
-        }
-      };
+        const elementExtend: ElementDef.Extend = {
+          get type() {
+            return extend && extend.type || (values.get(BootstrapWindow) as any).HTMLElement;
+          },
+          get name() {
+            return extend && extend.name;
+          }
+        };
 
-      return {
-        get name() {
-          return name;
-        },
-        get extend() {
-          return elementExtend;
-        },
-      };
-    });
+        return {
+          get name() {
+            return name;
+          },
+          get extend() {
+            return elementExtend;
+          },
+        };
+      },
+    },
+);
 
 /**
  * @category Core

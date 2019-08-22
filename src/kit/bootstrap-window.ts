@@ -1,7 +1,7 @@
 /**
  * @module @wesib/wesib
  */
-import { ContextRequest, ContextTarget, SingleContextKey } from 'context-values';
+import { SingleContextKey, SingleContextRef } from 'context-values';
 
 /**
  * A window the components bootstrap is performed against.
@@ -17,5 +17,11 @@ export type BootstrapWindow = Window;
  *
  * @category Core
  */
-export const BootstrapWindow: ContextTarget<BootstrapWindow> & ContextRequest<BootstrapWindow> =
-    /*#__PURE__*/ new SingleContextKey('window', () => window);
+export const BootstrapWindow: SingleContextRef<BootstrapWindow> = /*#__PURE__*/ new SingleContextKey(
+    'window',
+    {
+      byDefault() {
+        return window;
+      },
+    },
+);

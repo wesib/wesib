@@ -1,7 +1,7 @@
 /**
  * @module @wesib/wesib
  */
-import { ContextKey, ContextValues, ContextValueSpec } from 'context-values';
+import { ContextKey, ContextKey__symbol, ContextValues, ContextValueSpec } from 'context-values';
 import { OnEvent } from 'fun-events';
 import { Class } from '../../common';
 import { ComponentClass } from '../component-class';
@@ -23,7 +23,7 @@ export abstract class DefinitionContext<T extends object = any> extends ContextV
   /**
    * A key of definition context value containing the definition context itself.
    */
-  static get key(): ContextKey<DefinitionContext> {
+  static get [ContextKey__symbol](): ContextKey<DefinitionContext> {
     return DefinitionContext__key;
   }
 

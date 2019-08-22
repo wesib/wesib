@@ -1,7 +1,7 @@
 /**
  * @module @wesib/wesib
  */
-import { ContextRequest, ContextTarget } from 'context-values';
+import { SingleContextRef } from 'context-values';
 import { OnDomEvent } from 'fun-events';
 import { ComponentContext } from './component-context';
 import { ComponentEventDispatcher__key } from './component-event.key.impl';
@@ -81,6 +81,5 @@ export interface ComponentEventDispatcher {
  *
  * @category Core
  */
-export const ComponentEventDispatcher:
-    ContextTarget<ComponentEventDispatcher> & ContextRequest<ComponentEventDispatcher> =
+export const ComponentEventDispatcher: SingleContextRef<ComponentEventDispatcher> =
     /*#__PURE__*/ ComponentEventDispatcher__key;

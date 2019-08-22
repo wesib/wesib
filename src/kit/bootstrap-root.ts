@@ -1,7 +1,7 @@
 /**
  * @module @wesib/wesib
  */
-import { ContextRequest, ContextTarget, SingleContextKey } from 'context-values';
+import { SingleContextKey, SingleContextRef } from 'context-values';
 import { BootstrapWindow } from './bootstrap-window';
 
 /**
@@ -18,5 +18,11 @@ export type BootstrapRoot = any;
  *
  * @category Core
  */
-export const BootstrapRoot: ContextTarget<BootstrapRoot> & ContextRequest<BootstrapRoot> =
-    /*#__PURE__*/ new SingleContextKey('bootstrap-root', ctx => ctx.get(BootstrapWindow).document.body);
+export const BootstrapRoot: SingleContextRef<BootstrapRoot> = /*#__PURE__*/ new SingleContextKey(
+    'bootstrap-root',
+    {
+      byDefault(ctx) {
+        return ctx.get(BootstrapWindow).document.body;
+      },
+    },
+);

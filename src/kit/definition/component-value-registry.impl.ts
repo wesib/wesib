@@ -1,4 +1,4 @@
-import { ContextRegistry, ContextSourcesProvider } from 'context-values';
+import { ContextRegistry, ContextSeeds } from 'context-values';
 import { ComponentContext } from '../../component';
 
 /**
@@ -6,11 +6,11 @@ import { ComponentContext } from '../../component';
  */
 export class ComponentValueRegistry extends ContextRegistry<ComponentContext> {
 
-  static create(initial?: ContextSourcesProvider<ComponentContext>): ComponentValueRegistry {
+  static create(initial?: ContextSeeds<ComponentContext>): ComponentValueRegistry {
     return new ComponentValueRegistry(initial);
   }
 
-  private constructor(initial?: ContextSourcesProvider<ComponentContext>) {
+  private constructor(initial?: ContextSeeds<ComponentContext>) {
     super(initial);
   }
 

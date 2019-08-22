@@ -1,7 +1,7 @@
 /**
  * @module @wesib/wesib
  */
-import { ContextRequest, ContextTarget, SingleContextKey } from 'context-values';
+import { SingleContextKey, SingleContextRef } from 'context-values';
 
 /**
  * Component shadow content root.
@@ -17,6 +17,5 @@ export type ShadowContentRoot = ShadowRoot;
  *
  * @category Feature
  */
-export const ShadowContentRoot:
-    ContextTarget<ShadowContentRoot> & ContextRequest<ShadowContentRoot> =
+export const ShadowContentRoot: SingleContextRef<ShadowContentRoot> =
     /*#__PURE__*/ new SingleContextKey<ShadowContentRoot>('shadow-content-root');

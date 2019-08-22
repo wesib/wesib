@@ -1,15 +1,19 @@
 /**
  * @module @wesib/wesib
  */
-import { ContextKey, ContextValues, SingleContextKey } from 'context-values';
+import { ContextKey, ContextKey__symbol, ContextValues, SingleContextKey } from 'context-values';
 import { html__naming, isQualifiedName, QualifiedName } from 'namespace-aliaser';
 import { Class, PromiseResolver } from '../../common';
 import { BootstrapWindow, DefaultNamespaceAliaser } from '../../kit';
 import { componentFactoryOf } from '../../kit/definition/component-factory.symbol.impl';
 import { ComponentClass } from '../component-class';
 
-const CustomElements__key =
-    /*#__PURE__*/ new SingleContextKey<CustomElements>('custom-elements', createCustomElements);
+const CustomElements__key = /*#__PURE__*/ new SingleContextKey<CustomElements>(
+    'custom-elements',
+    {
+      byDefault: createCustomElements,
+    },
+);
 
 /**
  * Custom elements registry.
@@ -28,7 +32,7 @@ export abstract class CustomElements {
    *
    * Target value defaults to `window.customElements` from the window provided under `[BootstrapWindow.key]`.
    */
-  static get key(): ContextKey<CustomElements> {
+  static get [ContextKey__symbol](): ContextKey<CustomElements> {
     return CustomElements__key;
   }
 
