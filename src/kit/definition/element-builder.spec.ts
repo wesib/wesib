@@ -3,7 +3,6 @@ import { ContextKey, SingleContextKey } from 'context-values';
 import { DomEventDispatcher } from 'fun-events';
 import { Class } from '../../common';
 import {
-  ComponentClass,
   ComponentContext,
   ComponentDef,
   ComponentDef__symbol,
@@ -11,7 +10,7 @@ import {
   ComponentEventDispatcher,
   ComponentMount,
 } from '../../component';
-import { ComponentFactory, DefinitionContext, ElementDef } from '../../component/definition';
+import { ComponentClass, ComponentFactory, DefinitionContext, ElementDef } from '../../component/definition';
 import { ObjectMock } from '../../spec/mocks';
 import { MockElement } from '../../spec/test-element';
 import { BootstrapContext } from '../bootstrap-context';
@@ -21,7 +20,7 @@ import { DefinitionValueRegistry } from './definition-value-registry.impl';
 import { ElementBuilder } from './element-builder.impl';
 import Mock = jest.Mock;
 
-describe('kit/definition/element-builder', () => {
+describe('kit', () => {
   describe('ElementBuilder', () => {
 
     let bootstrapValueRegistry: BootstrapValueRegistry;

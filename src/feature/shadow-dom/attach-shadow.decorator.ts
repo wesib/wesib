@@ -2,7 +2,8 @@
  * @module @wesib/wesib
  */
 import { TypedClassDecorator } from '../../common';
-import { ComponentClass, ComponentDef } from '../../component';
+import { ComponentDef } from '../../component';
+import { ComponentClass } from '../../component/definition';
 import { ShadowContentDef } from './shadow-content-def';
 
 /**

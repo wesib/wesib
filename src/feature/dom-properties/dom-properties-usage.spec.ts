@@ -1,6 +1,6 @@
 import { StatePath } from 'fun-events';
-import { Component, ComponentClass, ComponentContext } from '../../component';
-import { ComponentFactory } from '../../component/definition';
+import { Component, ComponentContext } from '../../component';
+import { ComponentClass, ComponentFactory } from '../../component/definition';
 import { MockElement, testComponentFactory, testElement } from '../../spec/test-element';
 import { DomPropertyPath__root } from './dom-property-path';
 import { DomMethod, DomProperty } from './dom-property.decorator';

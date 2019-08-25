@@ -3,7 +3,7 @@ import { MockElement } from '../spec/test-element';
 import { ComponentContext, ComponentContext__symbol } from './component-context';
 import { ComponentEvent, ComponentEventDispatcher } from './component-event';
 
-describe('component/component-event', () => {
+describe('component', () => {
   describe('ComponentEvent', () => {
 
     let element: any;

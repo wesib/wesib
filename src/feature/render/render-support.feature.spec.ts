@@ -1,7 +1,8 @@
 import { Class } from '../../common';
-import { Component, ComponentClass, ComponentContext } from '../../component';
-import { CustomElements } from '../../component/definition';
-import { BootstrapContext, BootstrapWindow } from '../../kit';
+import { Component, ComponentContext } from '../../component';
+import { ComponentClass, CustomElements } from '../../component/definition';
+import { BootstrapContext } from '../../kit';
+import { BootstrapWindow } from '../../kit/globals';
 import { ObjectMock } from '../../spec/mocks';
 import { MockElement, testElement } from '../../spec/test-element';
 import { FeatureDef } from '../feature-def';
@@ -9,7 +10,7 @@ import { Feature } from '../feature.decorator';
 import { RenderSchedule, RenderScheduler } from './render-scheduler';
 import { RenderSupport } from './render-support.feature';
 
-describe('feature/render/render-support.feature', () => {
+describe('feature/render', () => {
   describe('RenderSupport', () => {
 
     let windowSpy: ObjectMock<Window>;

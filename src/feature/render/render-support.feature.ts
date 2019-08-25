@@ -2,7 +2,7 @@
  * @module @wesib/wesib
  */
 import { noop } from 'call-thru';
-import { BootstrapWindow } from '../../kit';
+import { BootstrapWindow } from '../../kit/globals';
 import { FeatureDef, FeatureDef__symbol } from '../feature-def';
 import { RenderSchedule as RenderSchedule_, RenderScheduler as RenderScheduler_ } from './render-scheduler';
 

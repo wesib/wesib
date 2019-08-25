@@ -1,15 +1,16 @@
 import { ContextRegistry } from 'context-values';
 import { NamespaceDef, newNamespaceAliaser } from 'namespace-aliaser';
 import { Class } from '../../common';
-import { BootstrapContext, BootstrapWindow, DefaultNamespaceAliaser } from '../../kit';
+import { BootstrapContext } from '../../kit';
 import { ComponentFactory__symbol } from '../../kit/definition/component-factory.symbol.impl';
 import { ComponentRegistry } from '../../kit/definition/component-registry.impl';
+import { BootstrapWindow, DefaultNamespaceAliaser } from '../../kit/globals';
 import { MethodSpy } from '../../spec/mocks';
-import { ComponentClass } from '../component-class';
+import { ComponentClass } from './component-class';
 import { ComponentFactory } from './component-factory';
 import { CustomElements } from './custom-elements';
 
-describe('kit/custom-elements', () => {
+describe('component', () => {
   describe('CustomElements', () => {
 
     let context: BootstrapContext;

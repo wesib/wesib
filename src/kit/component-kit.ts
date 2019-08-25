@@ -2,8 +2,7 @@
  * @module @wesib/wesib
  */
 import { ContextKey, ContextKey__symbol, SingleContextKey } from 'context-values';
-import { ComponentClass } from '../component';
-import { ComponentFactory } from '../component/definition';
+import { ComponentClass, ComponentFactory } from '../component/definition';
 
 const ComponentKit__key = /*#__PURE__*/ new SingleContextKey<ComponentKit>('component-kit');
 

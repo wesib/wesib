@@ -3,8 +3,8 @@
  */
 import { ContextKey, ContextKey__symbol, ContextValues, ContextValueSpec } from 'context-values';
 import { OnEvent } from 'fun-events';
-import { ComponentClass, ComponentContext } from '../component';
-import { ComponentFactory, DefinitionContext } from '../component/definition';
+import { ComponentContext } from '../component';
+import { ComponentClass, ComponentFactory, DefinitionContext } from '../component/definition';
 import { BootstrapContext__key } from './bootstrap-context.key.impl';
 import { ComponentKit } from './component-kit';
 
@@ -47,22 +47,6 @@ export abstract class BootstrapContext extends ContextValues {
    * @return An event interest instance.
    */
   abstract readonly onComponent: OnEvent<[ComponentContext]>;
-
-  /**
-   * Defines a component.
-   *
-   * Creates a custom element according to component definition, and registers it with custom elements registry.
-   *
-   * Note that custom element definition will happen only when all features configuration complete.
-   *
-   * @typeparam T  A type of component.
-   * @param componentType  Component class constructor.
-   *
-   * @return Custom element class constructor registered as custom element.
-   *
-   * @throws TypeError  If `componentType` does not contain a component definition.
-   */
-  abstract define<T extends object>(componentType: ComponentClass<T>): void;
 
   /**
    * Allows to wait for component definition.

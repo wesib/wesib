@@ -1,6 +1,6 @@
 import { superClassOf } from './classes';
 
-describe('util/classes', () => {
+describe('common', () => {
   describe('superClassOf', () => {
     it('finds object super class', () => {
 

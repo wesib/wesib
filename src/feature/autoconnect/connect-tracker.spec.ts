@@ -1,7 +1,7 @@
 import Mock = jest.Mock;
 import { Component, ComponentMount } from '../../component';
 import { ComponentFactory } from '../../component/definition';
-import { ElementAdapter } from '../../kit';
+import { ElementAdapter } from '../../kit/globals';
 import { ObjectMock } from '../../spec/mocks';
 import { MockElement, testComponentFactory } from '../../spec/test-element';
 import { Feature } from '../feature.decorator';

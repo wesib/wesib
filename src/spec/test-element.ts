@@ -1,6 +1,5 @@
 import { Class } from '../common';
-import { ComponentClass } from '../component';
-import { ComponentFactory, CustomElements } from '../component/definition';
+import { ComponentClass, ComponentFactory, CustomElements } from '../component/definition';
 import { Feature } from '../feature';
 import { bootstrapComponents } from '../kit/bootstrap';
 

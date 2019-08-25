@@ -1,5 +1,4 @@
-import { ComponentClass } from '../../component';
-import { ComponentFactory } from '../../component/definition';
+import { ComponentClass, ComponentFactory } from '../../component/definition';
 
 /**
  * @internal

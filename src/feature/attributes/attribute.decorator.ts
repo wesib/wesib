@@ -2,7 +2,8 @@
  * @module @wesib/wesib
  */
 import { TypedPropertyDecorator } from '../../common';
-import { ComponentClass, ComponentContext, ComponentDef } from '../../component';
+import { ComponentContext, ComponentDef } from '../../component';
+import { ComponentClass } from '../../component/definition';
 import { FeatureDef } from '../feature-def';
 import { AttributeDef } from './attribute-def';
 import { parseAttributeDef } from './attribute-def.impl';

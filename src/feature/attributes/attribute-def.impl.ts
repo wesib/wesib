@@ -1,4 +1,4 @@
-import { ComponentClass } from '../../component';
+import { ComponentClass } from '../../component/definition';
 import { AttributeDef } from './attribute-def';
 import { AttributeChangedCallback } from './attribute-registrar';
 import { attributeStateUpdate } from './attribute-state-update.impl';
