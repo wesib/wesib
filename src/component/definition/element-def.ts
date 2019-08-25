@@ -4,7 +4,7 @@
 import { SingleContextKey, SingleContextRef } from 'context-values';
 import { QualifiedName } from 'namespace-aliaser';
 import { Class } from '../../common';
-import { BootstrapWindow } from '../../kit';
+import { BootstrapWindow } from '../../kit/globals';
 import { ComponentDef } from '../component-def';
 import { DefinitionContext__key } from './definition.context.key.impl';
 

@@ -6,6 +6,7 @@ import { ArraySet, Class, mergeFunctions, MetaAccessor } from '../common';
 import { ComponentContext } from '../component';
 import { DefinitionContext } from '../component/definition';
 import { BootstrapContext } from '../kit';
+import { FeatureContext } from './feature-context';
 
 /**
  * A key of a property holding a feature definition within its class constructor.
@@ -46,9 +47,9 @@ export interface FeatureDef {
   readonly init?:
   /**
    * @param this  Feature class.
-   * @param context  Components bootstrap context.
+   * @param context  Feature initialization context.
    */
-      (this: Class, context: BootstrapContext) => void;
+      (this: Class, context: FeatureContext) => void;
 
   /**
    * Definition context value(s) to declare per each component class definition.
@@ -78,7 +79,7 @@ class FeatureMeta extends MetaAccessor<FeatureDef> {
           set: new ArraySet(prev.set).merge(def.set).value,
           needs: new ArraySet(prev.needs).merge(def.needs).value,
           has: new ArraySet(prev.has).merge(def.has).value,
-          init: mergeFunctions<[BootstrapContext], void, Class>(prev.init, def.init),
+          init: mergeFunctions<[FeatureContext], void, Class>(prev.init, def.init),
           perDefinition: new ArraySet(prev.perDefinition).merge(def.perDefinition).value,
           perComponent: new ArraySet(prev.perComponent).merge(def.perComponent).value,
         }),

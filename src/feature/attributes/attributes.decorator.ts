@@ -4,7 +4,8 @@
 import { StatePath } from 'fun-events';
 import { TypedClassDecorator } from '../../common';
 import { isArray } from '../../common/types.impl';
-import { ComponentClass, ComponentDef } from '../../component';
+import { ComponentDef } from '../../component';
+import { ComponentClass } from '../../component/definition';
 import { FeatureDef } from '../feature-def';
 import { AttributeUpdateReceiver } from './attribute-def';
 import { AttributeRegistrar } from './attribute-registrar';

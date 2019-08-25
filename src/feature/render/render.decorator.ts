@@ -2,7 +2,8 @@
  * @module @wesib/wesib
  */
 import { TypedPropertyDecorator } from '../../common';
-import { ComponentClass, ComponentDef } from '../../component';
+import { ComponentDef } from '../../component';
+import { ComponentClass } from '../../component/definition';
 import { StateSupport } from '../state';
 import { ElementRender } from './element-render';
 import { RenderDef } from './render-def';

@@ -4,7 +4,7 @@ import { MockElement, testElement } from '../../spec/test-element';
 import { AttributeChanged } from './attribute-changed.decorator';
 import { attributePathTo } from './attribute-path';
 
-describe('feature/attributes/attribute-changed', () => {
+describe('feature/attributes', () => {
   describe('@AttributeChanged', () => {
     it('declares attribute change callback', () => {
 

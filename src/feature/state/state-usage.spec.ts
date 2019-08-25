@@ -1,4 +1,5 @@
-import { Component, ComponentClass, ComponentContext, StateUpdater } from '../../component';
+import { Component, ComponentContext, StateUpdater } from '../../component';
+import { ComponentClass } from '../../component/definition';
 import { MockElement, testElement } from '../../spec/test-element';
 import { Feature } from '../feature.decorator';
 import { ComponentState } from './component-state';

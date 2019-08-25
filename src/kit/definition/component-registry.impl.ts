@@ -1,5 +1,4 @@
-import { ComponentClass } from '../../component';
-import { ComponentFactory, CustomElements } from '../../component/definition';
+import { ComponentClass, ComponentFactory, CustomElements } from '../../component/definition';
 import { BootstrapContext } from '../bootstrap-context';
 import { ComponentFactory__symbol, componentFactoryOf } from './component-factory.symbol.impl';
 import { ElementBuilder } from './element-builder.impl';

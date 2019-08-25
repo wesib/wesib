@@ -2,7 +2,7 @@ import { noop } from 'call-thru';
 import { FeatureDef } from './feature-def';
 import { Feature } from './feature.decorator';
 
-describe('decorators/feature', () => {
+describe('feature', () => {
   describe('@Feature', () => {
     it('assigns feature definition', () => {
 

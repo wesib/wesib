@@ -1,4 +1,5 @@
-import { Component, ComponentClass, ComponentContext } from '../component';
+import { Component, ComponentContext } from '../component';
+import { ComponentClass } from '../component/definition';
 import { Feature } from '../feature';
 import { MockElement, testElement } from './test-element';
 import Mock = jest.Mock;

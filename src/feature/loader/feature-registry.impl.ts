@@ -1,10 +1,15 @@
 /**
  * @module @wesib/wesib
  */
-import { ArraySet, Class } from '../common';
-import { BootstrapContext } from '../kit';
-import { BootstrapValueRegistry } from '../kit/bootstrap/bootstrap-value-registry.impl';
-import { FeatureDef } from './feature-def';
+import { itsFirst } from 'a-iterable';
+import { ContextRegistry } from 'context-values';
+import { ArraySet, Class } from '../../common';
+import { ComponentClass } from '../../component/definition';
+import { BootstrapContext } from '../../kit';
+import { BootstrapValueRegistry } from '../../kit/bootstrap/bootstrap-value-registry.impl';
+import { ComponentRegistry } from '../../kit/definition/component-registry.impl';
+import { FeatureContext } from '../feature-context';
+import { FeatureDef } from '../feature-def';
 
 class FeatureProviders {
 
@@ -20,12 +25,14 @@ class FeatureProviders {
 
   provider(
       allProviders: Map<Class, FeatureProviders>,
-      dependencies: Set<Class> = new Set()): Class {
+      dependencies: Set<Class> = new Set(),
+  ): Class {
     if (dependencies.has(this.feature)) {
       throw Error(
           'Circular dependency: '
           + [...dependencies.values()].map(feature => feature.name).join(' -> ')
-          + ` -> ${this.feature.name}`);
+          + ` -> ${this.feature.name}`,
+      );
     }
 
     if (this.providers.size > 1) {
@@ -46,7 +53,8 @@ class FeatureProviders {
 
       const transientProvider = transientProviders.provider(
           allProviders,
-          new Set([...dependencies, this.feature]));
+          new Set([...dependencies, this.feature]),
+      );
 
       if (transientProvider === provider) {
         return;
@@ -61,7 +69,7 @@ class FeatureProviders {
           + [...this.providers.values()].map(feature => feature.name).join(', '));
     }
 
-    return [...this.providers.values()][0];
+    return itsFirst(this.providers.values()) as Class;
   }
 
 }
@@ -73,18 +81,25 @@ export class FeatureRegistry {
 
   private readonly _providers = new Map<Class, FeatureProviders>();
   private readonly _valueRegistry: BootstrapValueRegistry;
+  private readonly _componentRegistry: ComponentRegistry;
 
-  static create(opts: { valueRegistry: BootstrapValueRegistry }): FeatureRegistry {
+  static create(opts: {
+    valueRegistry: BootstrapValueRegistry,
+    componentRegistry: ComponentRegistry,
+  }): FeatureRegistry {
     return new FeatureRegistry(opts);
   }
 
   private constructor(
       {
         valueRegistry,
+        componentRegistry,
       }: {
         valueRegistry: BootstrapValueRegistry;
+        componentRegistry: ComponentRegistry;
       }) {
     this._valueRegistry = valueRegistry;
+    this._componentRegistry = componentRegistry;
   }
 
   add(feature: Class, provider: Class = feature) {
@@ -112,7 +127,7 @@ export class FeatureRegistry {
 
   bootstrap(context: BootstrapContext) {
     this._provideValues(context);
-    this._bootstrapFeatures(context);
+    this._initFeatures(context);
   }
 
   private _provideValues(context: BootstrapContext) {
@@ -128,17 +143,43 @@ export class FeatureRegistry {
     });
   }
 
-  private _bootstrapFeatures(context: BootstrapContext) {
+  private _initFeatures(bsContext: BootstrapContext) {
     this._providers.forEach((providers, feature) => {
       if (feature === providers.provider(this._providers)) {
 
-        const bootstrap = FeatureDef.of(feature).init;
+        const init = FeatureDef.of(feature).init;
 
-        if (bootstrap) {
-          bootstrap.call(feature, context);
+        if (init) {
+          init.call(feature, this._featureContext(bsContext));
         }
       }
     });
+  }
+
+  private _featureContext(bsContext: BootstrapContext): FeatureContext {
+
+    const componentRegistry = this._componentRegistry;
+    const registry = new ContextRegistry<FeatureContext>(bsContext);
+    const values = registry.newValues();
+
+    class Context extends FeatureContext {
+
+      constructor() {
+        super();
+        registry.provide({ a: FeatureContext, is: this });
+      }
+
+      get get() {
+        return values.get;
+      }
+
+      define<T extends object>(componentType: ComponentClass<T>): void {
+        componentRegistry.define(componentType);
+      }
+
+    }
+
+    return new Context();
   }
 
 }

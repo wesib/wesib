@@ -4,11 +4,11 @@
 import { ContextKey, ContextKey__symbol, ContextValues } from 'context-values';
 import { OnDomEvent, OnEvent, StatePath } from 'fun-events';
 import { BootstrapContext__key } from '../kit/bootstrap-context.key.impl';
-import { ComponentClass } from './component-class';
 import { ComponentContext__key } from './component-context.key.impl';
 import { ComponentEventDispatcher__key } from './component-event.key.impl';
 import { ComponentMount } from './component-mount';
 import { ContentRoot } from './content-root';
+import { ComponentClass } from './definition';
 import { StateUpdater } from './state-updater';
 
 /**

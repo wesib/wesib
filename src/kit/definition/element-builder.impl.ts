@@ -3,7 +3,6 @@ import { ContextValues, ContextValueSpec } from 'context-values';
 import { EventEmitter, OnEvent, trackValue, ValueTracker } from 'fun-events';
 import { ArraySet, Class } from '../../common';
 import {
-  ComponentClass,
   ComponentContext as ComponentContext_,
   ComponentContext__symbol,
   ComponentDef,
@@ -11,6 +10,7 @@ import {
   ComponentMount as ComponentMount_,
 } from '../../component';
 import {
+  ComponentClass,
   ComponentFactory as ComponentFactory_,
   DefinitionContext as DefinitionContext_,
   ElementDef,

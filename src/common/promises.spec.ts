@@ -1,6 +1,6 @@
 import { PromiseResolver } from './promises';
 
-describe('common/promises', () => {
+describe('common', () => {
   describe('PromiseResolver', () => {
 
     let resolver: PromiseResolver<number>;

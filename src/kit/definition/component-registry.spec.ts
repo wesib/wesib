@@ -1,14 +1,14 @@
 import { ContextKey__symbol, ContextRequest } from 'context-values';
 import { Class } from '../../common';
-import { ComponentClass, ComponentDef, ComponentDef__symbol } from '../../component';
-import { CustomElements } from '../../component/definition';
+import { ComponentDef, ComponentDef__symbol } from '../../component';
+import { ComponentClass, CustomElements } from '../../component/definition';
 import { ObjectMock } from '../../spec/mocks';
 import { BootstrapContext } from '../bootstrap-context';
 import { ComponentFactory__symbol } from './component-factory.symbol.impl';
 import { ComponentRegistry } from './component-registry.impl';
 import { ElementBuilder } from './element-builder.impl';
 
-describe('kit/definition/component-registry', () => {
+describe('kit', () => {
   describe('ComponentRegistry', () => {
 
     let customElementsSpy: ObjectMock<CustomElements, 'define' | 'whenDefined'>;

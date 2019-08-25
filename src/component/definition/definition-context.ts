@@ -4,7 +4,7 @@
 import { ContextKey, ContextKey__symbol, ContextValues, ContextValueSpec } from 'context-values';
 import { OnEvent } from 'fun-events';
 import { Class } from '../../common';
-import { ComponentClass } from '../component-class';
+import { ComponentClass } from './component-class';
 import { ComponentContext } from '../component-context';
 import { DefinitionContext__key } from './definition.context.key.impl';
 import { ElementDef } from './element-def';

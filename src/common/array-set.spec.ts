@@ -1,6 +1,6 @@
 import { ArraySet } from './array-set';
 
-describe('common/array-set', () => {
+describe('common', () => {
   describe('ArraySet', () => {
     describe('empty value', () => {
 

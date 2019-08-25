@@ -3,7 +3,7 @@
  */
 import { AIterable } from 'a-iterable';
 import { ContextValueOpts, ContextValues, SimpleContextKey, SingleContextRef } from 'context-values';
-import { ComponentContext, ComponentContext__symbol } from '../component';
+import { ComponentContext, ComponentContext__symbol } from '../../component';
 
 /**
  * Element adapter is a function able to convert a raw element to component. E.g. mount a component to it.

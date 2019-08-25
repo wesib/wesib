@@ -1,9 +1,9 @@
 import { ContextRegistry, ContextValues } from 'context-values';
-import { ComponentContext, ComponentContext__symbol } from '../component';
+import { ComponentContext, ComponentContext__symbol } from '../../component';
 import { ElementAdapter } from './element-adapter';
 import Mock = jest.Mock;
 
-describe('kit/element-adapter', () => {
+describe('kit', () => {
   describe('ElementAdapter', () => {
 
     let registry: ContextRegistry;

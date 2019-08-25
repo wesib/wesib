@@ -1,13 +1,11 @@
 import { noop } from 'call-thru';
 import { SingleContextKey } from 'context-values';
-import { FeatureDef } from '../feature';
-import { BootstrapContext } from '../kit';
-import { ObjectMock } from '../spec/mocks';
-import { ComponentClass } from './component-class';
+import { FeatureContext, FeatureDef } from '../feature';
 import { ComponentDef, ComponentDef__symbol } from './component-def';
-import { DefinitionContext } from './definition';
+import { ComponentClass, DefinitionContext } from './definition';
+import Mocked = jest.Mocked;
 
-describe('component/component-def', () => {
+describe('component', () => {
   describe('ComponentDef', () => {
     describe('of', () => {
       it('returns component definition', () => {
@@ -237,13 +235,13 @@ describe('component/component-def', () => {
 
           expect(init).toBeDefined();
 
-          const bootstrapContextSpy: ObjectMock<BootstrapContext> = {
+          const mockFeatureContext: Mocked<FeatureContext> = {
             define: jest.fn(),
           } as any;
 
-          init.call(componentType, bootstrapContextSpy);
+          init.call(componentType, mockFeatureContext);
 
-          expect(bootstrapContextSpy.define).toHaveBeenCalledWith(componentType);
+          expect(mockFeatureContext.define).toHaveBeenCalledWith(componentType);
         });
         it('does not register the base component', () => {
 
@@ -260,14 +258,14 @@ describe('component/component-def', () => {
 
           expect(init).toBeDefined();
 
-          const bootstrapContextSpy: ObjectMock<BootstrapContext> = {
+          const mockFeatureContext: Mocked<FeatureContext> = {
             define: jest.fn(),
           } as any;
 
-          init.call(extType, bootstrapContextSpy);
+          init.call(extType, mockFeatureContext);
 
-          expect(bootstrapContextSpy.define).toHaveBeenCalledWith(extType);
-          expect(bootstrapContextSpy.define).not.toHaveBeenCalledWith(baseType);
+          expect(mockFeatureContext.define).toHaveBeenCalledWith(extType);
+          expect(mockFeatureContext.define).not.toHaveBeenCalledWith(baseType);
         });
         it('registers component only once', () => {
 
@@ -284,14 +282,14 @@ describe('component/component-def', () => {
 
           expect(init).toBeDefined();
 
-          const bootstrapContextSpy: ObjectMock<BootstrapContext> = {
+          const mockFeatureContext: Mocked<FeatureContext> = {
             define: jest.fn(),
           } as any;
 
-          init.call(componentType, bootstrapContextSpy);
+          init.call(componentType, mockFeatureContext);
 
-          expect(bootstrapContextSpy.define).toHaveBeenCalledWith(componentType);
-          expect(bootstrapContextSpy.define).toHaveBeenCalledTimes(1);
+          expect(mockFeatureContext.define).toHaveBeenCalledWith(componentType);
+          expect(mockFeatureContext.define).toHaveBeenCalledTimes(1);
         });
       });
     });

@@ -5,16 +5,16 @@ import { noop } from 'call-thru';
 import { ContextValueSpec } from 'context-values';
 import { newNamespaceAliaser } from 'namespace-aliaser';
 import { Class } from '../../common';
-import { ComponentClass, ComponentContext } from '../../component';
-import { DefinitionContext } from '../../component/definition';
-import { FeatureRegistry } from '../../feature/feature-registry.impl';
+import { ComponentContext } from '../../component';
+import { ComponentClass, DefinitionContext } from '../../component/definition';
+import { FeatureRegistry } from '../../feature/loader';
 import { BootstrapContext } from '../bootstrap-context';
 import { ComponentKit } from '../component-kit';
-import { DefaultNamespaceAliaser } from '../default-namespace-aliaser';
 import { ComponentRegistry } from '../definition/component-registry.impl';
 import { ComponentValueRegistry } from '../definition/component-value-registry.impl';
 import { DefinitionValueRegistry } from '../definition/definition-value-registry.impl';
 import { ElementBuilder } from '../definition/element-builder.impl';
+import { DefaultNamespaceAliaser } from '../globals';
 import { BootstrapValueRegistry } from './bootstrap-value-registry.impl';
 
 /**
@@ -30,11 +30,10 @@ import { BootstrapValueRegistry } from './bootstrap-value-registry.impl';
 export function bootstrapComponents(...features: Class[]): ComponentKit {
 
   const valueRegistry = BootstrapValueRegistry.create();
-  const featureRegistry = FeatureRegistry.create({ valueRegistry });
+  const { bootstrapContext, componentRegistry, complete } = initBootstrap(valueRegistry);
+  const featureRegistry = FeatureRegistry.create({ valueRegistry, componentRegistry });
 
   features.forEach(feature => featureRegistry.add(feature));
-
-  const { bootstrapContext, complete } = initBootstrap(valueRegistry);
 
   featureRegistry.bootstrap(bootstrapContext);
   complete();
@@ -47,7 +46,7 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
   let definitionValueRegistry: DefinitionValueRegistry;
   let componentValueRegistry: ComponentValueRegistry;
   let elementBuilder: ElementBuilder;
-  let componentRegistry: ComponentRegistry;
+  let componentRegistry!: ComponentRegistry;
   let whenReady: (this: BootstrapContext) => void = noop;
   let ready = false;
 
@@ -86,10 +85,6 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
       valueRegistry.provide({ a: ComponentKit, as: Kit });
     }
 
-    define<T extends object>(componentType: ComponentClass<T>) {
-      componentRegistry.define(componentType);
-    }
-
     perDefinition<D extends any[], S>(spec: ContextValueSpec<DefinitionContext, any, D, S>) {
       definitionValueRegistry.provide(spec);
     }
@@ -118,6 +113,7 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
 
   return {
     bootstrapContext,
+    componentRegistry,
     complete() {
       componentRegistry.complete();
       ready = true;

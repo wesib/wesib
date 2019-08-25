@@ -3,7 +3,7 @@ import { MockElement, testElement } from '../../spec/test-element';
 import { AttributePath__root } from './attribute-path';
 import { Attributes } from './attributes.decorator';
 
-describe('feature/attributes/attributes', () => {
+describe('feature/attributes', () => {
   describe('@Attributes', () => {
     it('updates the state', () => {
 

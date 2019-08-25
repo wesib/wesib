@@ -1,7 +1,6 @@
-import { Component, ComponentClass, ComponentContext } from '../../component';
-import { ComponentFactory } from '../../component/definition';
-import { BootstrapWindow } from '../../kit';
-import { ObjectMock } from '../../spec/mocks';
+import { Component, ComponentContext } from '../../component';
+import { ComponentClass, ComponentFactory } from '../../component/definition';
+import { BootstrapWindow } from '../../kit/globals';
 import { MockElement, testComponentFactory, testElement } from '../../spec/test-element';
 import { Feature } from '../feature.decorator';
 import { AttributeChanged } from './attribute-changed.decorator';
@@ -9,12 +8,13 @@ import { AttributePath__root } from './attribute-path';
 import { Attribute } from './attribute.decorator';
 import { AttributesSupport } from './attributes-support.feature';
 import Mock = jest.Mock;
+import Mocked = jest.Mocked;
 
 describe('feature/attributes', () => {
   describe('Attributes usage', () => {
 
     let Observer: Mock<MutationObserver>;
-    let observer: ObjectMock<MutationObserver>;
+    let observer: Mocked<MutationObserver>;
     let observe: (records: MutationRecord[]) => void;
     let testComponent: ComponentClass;
     let context: ComponentContext;

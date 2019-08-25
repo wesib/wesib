@@ -1,7 +1,7 @@
 /**
  * @module @wesib/wesib
  */
-import { ComponentContext } from './component-context';
+import { ComponentContext } from '../component-context';
 
 /**
  * Component class constructor.

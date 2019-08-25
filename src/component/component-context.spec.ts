@@ -1,6 +1,6 @@
 import { ComponentContext, ComponentContext__symbol } from './component-context';
 
-describe('component/component-context', () => {
+describe('component', () => {
   describe('ComponentContext', () => {
     describe('of', () => {
 

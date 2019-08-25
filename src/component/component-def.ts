@@ -5,9 +5,8 @@ import { ContextValueSpec } from 'context-values';
 import { QualifiedName } from 'namespace-aliaser';
 import { ArraySet, Class, mergeFunctions, MetaAccessor } from '../common';
 import { FeatureDef } from '../feature';
-import { ComponentClass } from './component-class';
 import { ComponentContext } from './component-context';
-import { DefinitionContext, ElementDef } from './definition';
+import { ComponentClass, DefinitionContext, ElementDef } from './definition';
 
 /**
  * A key of a property holding a component definition within its class constructor.

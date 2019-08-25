@@ -1,7 +1,7 @@
 import { mergeFunctions } from './functions';
 import Mock = jest.Mock;
 
-describe('common/functions', () => {
+describe('common', () => {
   describe('mergeFunctions', () => {
 
     let firstSpy: Mock;

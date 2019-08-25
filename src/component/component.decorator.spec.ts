@@ -1,7 +1,7 @@
 import { ComponentDef } from './component-def';
 import { Component } from './component.decorator';
 
-describe('decorators/component', () => {
+describe('component', () => {
   describe('@Component', () => {
     it('assigns component definition', () => {
 

@@ -13,3 +13,4 @@ export * from './feature/shadow-dom';
 export * from './feature/state';
 export * from './kit';
 export * from './kit/bootstrap';
+export * from './kit/globals';

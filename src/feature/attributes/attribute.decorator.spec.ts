@@ -2,7 +2,7 @@ import { Component, ComponentContext, ComponentContext__symbol } from '../../com
 import { ObjectMock } from '../../spec/mocks';
 import { Attribute } from './attribute.decorator';
 
-describe('feature/attributes/attribute.decorator', () => {
+describe('feature/attributes', () => {
   describe('@Attribute', () => {
 
     let contextSpy: ObjectMock<ComponentContext>;

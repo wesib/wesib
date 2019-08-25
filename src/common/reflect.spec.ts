@@ -5,7 +5,7 @@ import {
   toPropertyAccessorDescriptor,
 } from './reflect';
 
-describe('common/reflect', () => {
+describe('common', () => {
   describe('field2accessor', () => {
 
     let target: { a: string };

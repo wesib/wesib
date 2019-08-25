@@ -2,7 +2,8 @@
  * @module @wesib/wesib
  */
 import { decoratePropertyAccessor, PropertyAccessorDescriptor, TypedPropertyDecorator } from '../../common';
-import { ComponentClass, ComponentContext, ComponentDef } from '../../component';
+import { ComponentContext, ComponentDef } from '../../component';
+import { ComponentClass } from '../../component/definition';
 import { DomPropertiesSupport } from './dom-properties-support.feature';
 import { DomPropertyDef } from './dom-property-def';
 import { DomPropertyRegistrar } from './dom-property-registrar';

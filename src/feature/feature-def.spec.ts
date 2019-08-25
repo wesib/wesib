@@ -2,9 +2,10 @@ import { noop } from 'call-thru';
 import { ContextValueSpec, SingleContextKey } from 'context-values';
 import { Class } from '../common';
 import { BootstrapContext } from '../kit';
+import { FeatureContext } from './feature-context';
 import { FeatureDef, FeatureDef__symbol } from './feature-def';
 
-describe('feature/feature-def', () => {
+describe('feature', () => {
 
   class Feature1 {}
   class Feature2 {}
@@ -91,7 +92,7 @@ describe('feature/feature-def', () => {
         const merged = FeatureDef.merge(
             { init: bootstrap1spy },
             { init: bootstrap2spy }).init || noop;
-        const context: BootstrapContext = { name: 'bootstrap context' } as any;
+        const context: FeatureContext = { name: 'feature context' } as any;
 
         class Feature {}
 
