@@ -179,7 +179,7 @@ export class FeatureRegistry {
     new ArraySet(def.has).items.forEach(provided => this.add(provided, feature));
   }
 
-  bootstrap() {
+  async bootstrap(): Promise<void> {
     this._provideValues();
     this._initFeatures();
   }

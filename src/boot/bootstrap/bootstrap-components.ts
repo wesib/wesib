@@ -41,8 +41,7 @@ export function bootstrapComponents(...features: Class[]): BootstrapContext {
   });
 
   features.forEach(feature => featureRegistry.add(feature));
-  featureRegistry.bootstrap();
-  complete();
+  featureRegistry.bootstrap().then(complete);
 
   return bootstrapContext;
 }

@@ -48,8 +48,8 @@ describe('feature/shadow-dom', () => {
 
       testComponent = TestComponent;
     });
-    beforeEach(() => {
-      element = new (testElement(testComponent))();
+    beforeEach(async () => {
+      element = new (await testElement(testComponent))();
       context = ComponentContext.of(element);
     });
 
@@ -81,7 +81,7 @@ describe('feature/shadow-dom', () => {
           context,
           expect.objectContaining({ type: 'wesib:shadowAttached' }));
     });
-    it('attaches shadow root', () => {
+    it('attaches shadow root', async () => {
 
       const shadowDef: ShadowContentDef = {
         mode: 'closed',
@@ -99,12 +99,12 @@ describe('feature/shadow-dom', () => {
       class OtherComponent {
       }
 
-      element = new (testElement(OtherComponent))();
+      element = new (await testElement(OtherComponent))();
       ComponentContext.of(element).get(ShadowContentRoot);
 
       expect(attachShadowSpy).toHaveBeenCalledWith(shadowDef);
     });
-    it('uses existing shadow root', () => {
+    it('uses existing shadow root', async () => {
       attachShadowSpy.mockClear();
 
       const mockShadowRoot: ShadowRoot = { name: 'shadow root' } as any;
@@ -126,12 +126,12 @@ describe('feature/shadow-dom', () => {
 
       }
 
-      element = new (testElement(OtherComponent))();
+      element = new (await testElement(OtherComponent))();
 
       expect(ComponentContext.of(element).get(ShadowContentRoot)).toBe(mockShadowRoot);
       expect(attachShadowSpy).not.toHaveBeenCalled();
     });
-    it('uses element as content root if shadow DOM is not supported', () => {
+    it('uses element as content root if shadow DOM is not supported', async () => {
       attachShadowSpy.mockClear();
 
       const shadowDef: ShadowContentDef = {
@@ -148,7 +148,7 @@ describe('feature/shadow-dom', () => {
       class OtherComponent {
       }
 
-      element = new (testElement(OtherComponent))();
+      element = new (await testElement(OtherComponent))();
       context = ComponentContext.of(element);
 
       expect(context.get(ShadowContentRoot, { or: null })).toBeNull();

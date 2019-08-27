@@ -25,7 +25,7 @@ export function testComponentFactory<T extends object>(componentType: Class<T>):
   return bootstrapComponents(TestFeature).whenDefined(componentType);
 }
 
-export function testElement(componentType: Class): Class {
+export async function testElement(componentType: Class): Promise<Class> {
 
   let result!: Class;
 
@@ -47,7 +47,7 @@ export function testElement(componentType: Class): Class {
   })
   class TestFeature {}
 
-  bootstrapComponents(TestFeature);
+  await bootstrapComponents(TestFeature).whenDefined(componentType);
 
   return result;
 }

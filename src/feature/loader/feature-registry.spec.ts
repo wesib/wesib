@@ -1,3 +1,4 @@
+import { asis } from 'call-thru';
 import { SingleContextKey } from 'context-values';
 import { BootstrapContext } from '../../boot';
 import { BootstrapValueRegistry } from '../../boot/bootstrap/bootstrap-value-registry.impl';
@@ -113,14 +114,17 @@ describe('feature', () => {
 
       expect(init1spy).not.toHaveBeenCalled();
     });
-    it('fails when feature provided by different providers', () => {
+    it('fails when feature provided by different providers', async () => {
 
       class Feature {}
 
       registry.add(Feature, feature1);
       registry.add(Feature, feature2);
 
-      expect(() => registry.bootstrap()).toThrow(/multiple providers/);
+      const error: Error = await registry.bootstrap().catch(asis);
+
+      expect(error).toBeInstanceOf(Error);
+      expect(error.message).toMatch(/multiple providers/);
     });
     it('does not fail when feature provided by the same provider', () => {
       registry.add(feature1, feature2);
@@ -154,13 +158,16 @@ describe('feature', () => {
       expect(init1spy).toHaveBeenCalledWith(expect.any(FeatureContext));
       expect(init2spy).not.toHaveBeenCalled();
     });
-    it('fails on circular dependency', () => {
+    it('fails on circular dependency', async () => {
       registry.add(feature1, feature2);
       registry.add(feature2, feature1);
 
-      expect(() => registry.bootstrap()).toThrow(/Circular dependency/);
+      const error: Error = await registry.bootstrap().catch(asis);
+
+      expect(error).toBeInstanceOf(Error);
+      expect(error.message).toMatch(/Circular dependency/);
     });
-    it('fails on deep circular dependency', () => {
+    it('fails on deep circular dependency', async () => {
 
       class Feature {}
 
@@ -168,7 +175,10 @@ describe('feature', () => {
       registry.add(feature1, feature2);
       registry.add(feature2, Feature);
 
-      expect(() => registry.bootstrap()).toThrow(/Circular dependency/);
+      const error: Error = await registry.bootstrap().catch(asis);
+
+      expect(error).toBeInstanceOf(Error);
+      expect(error.message).toMatch(/Circular dependency/);
     });
     it('provides bootstrap values', () => {
 

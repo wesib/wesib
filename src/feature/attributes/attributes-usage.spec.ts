@@ -71,8 +71,8 @@ describe('feature/attributes', () => {
     });
 
     describe('defined attribute', () => {
-      beforeEach(() => {
-        element = new (testElement(testComponent))();
+      beforeEach(async () => {
+        element = new (await testElement(testComponent))();
       });
 
       it('notifies on attribute change', () => {
@@ -93,7 +93,7 @@ describe('feature/attributes', () => {
         expect(attrChangedSpy).not.toHaveBeenCalled();
         expect(attr2ChangedSpy).not.toHaveBeenCalled();
       });
-      it('does not define attributes when not defined', () => {
+      it('does not define attributes when not defined', async () => {
 
         @Component({
           extend: {
@@ -107,7 +107,7 @@ describe('feature/attributes', () => {
         class NoAttrComponent {
         }
 
-        const noAttrElement = new (testElement(NoAttrComponent))();
+        const noAttrElement = new (await testElement(NoAttrComponent))();
 
         expect(noAttrElement.constructor).not.toEqual(expect.objectContaining({
           observedAttributes: expect.anything(),

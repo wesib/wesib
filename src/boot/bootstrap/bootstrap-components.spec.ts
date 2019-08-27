@@ -2,7 +2,7 @@ import { SingleContextKey } from 'context-values';
 import { Component } from '../../component';
 import { FeatureContext, FeatureDef } from '../../feature';
 import { FeatureRegistry } from '../../feature/loader';
-import { MethodSpy, ObjectMock } from '../../spec/mocks';
+import { MethodSpy } from '../../spec/mocks';
 import { BootstrapContext } from '../bootstrap-context';
 import { ComponentRegistry } from '../definition/component-registry.impl';
 import { ComponentValueRegistry } from '../definition/component-value-registry.impl';
@@ -113,31 +113,29 @@ describe('boot', () => {
 
     describe('FeatureRegistry', () => {
 
-      let featureRegistrySpy: ObjectMock<FeatureRegistry, 'add' | 'bootstrap'>;
+      let mockFeatureRegistry: Mocked<FeatureRegistry>;
       let createFeatureRegistrySpy: MethodSpy<typeof FeatureRegistry, 'create'>;
 
       beforeEach(() => {
-        featureRegistrySpy = {
+        mockFeatureRegistry = {
           add: jest.fn(),
-          bootstrap: jest.fn(),
-        };
+          bootstrap: jest.fn(() => Promise.resolve()),
+        } as any;
         createFeatureRegistrySpy = jest.spyOn(FeatureRegistry, 'create')
-            .mockReturnValue(featureRegistrySpy as any);
+            .mockReturnValue(mockFeatureRegistry as any);
       });
 
       it('creates feature registry', () => {
 
         const bootstrapContext = bootstrapComponents();
 
-        expect(createFeatureRegistrySpy).toHaveBeenCalledWith(
-            expect.objectContaining({
-              bootstrapContext: bootstrapContext,
-              componentRegistry: mockComponentRegistry,
-              valueRegistry: createBootstrapValueRegistrySpy.mock.results[0].value,
-              definitionValueRegistry: createDefinitionValueRegistrySpy.mock.results[0].value,
-              componentValueRegistry: createComponentValueRegistrySpy.mock.results[0].value,
-            }),
-        );
+        expect(createFeatureRegistrySpy).toHaveBeenCalledWith({
+          bootstrapContext: bootstrapContext,
+          componentRegistry: mockComponentRegistry,
+          valueRegistry: createBootstrapValueRegistrySpy.mock.results[0].value,
+          definitionValueRegistry: createDefinitionValueRegistrySpy.mock.results[0].value,
+          componentValueRegistry: createComponentValueRegistrySpy.mock.results[0].value,
+        });
       });
       it('receives feature', () => {
 
@@ -145,7 +143,7 @@ describe('boot', () => {
 
         bootstrapComponents(TestFeature);
 
-        expect(featureRegistrySpy.add).toHaveBeenCalledWith(TestFeature);
+        expect(mockFeatureRegistry.add).toHaveBeenCalledWith(TestFeature);
       });
       it('receives feature and applies default config', () => {
 
@@ -153,7 +151,7 @@ describe('boot', () => {
 
         bootstrapComponents(TestFeature);
 
-        expect(featureRegistrySpy.add).toHaveBeenCalledWith(TestFeature);
+        expect(mockFeatureRegistry.add).toHaveBeenCalledWith(TestFeature);
       });
     });
 

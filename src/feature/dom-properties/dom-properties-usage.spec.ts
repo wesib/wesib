@@ -73,8 +73,8 @@ describe('feature/dom-properties', () => {
 
     describe('constructed element', () => {
 
-      beforeEach(() => {
-        element = new (testElement(testComponent))();
+      beforeEach(async () => {
+        element = new (await testElement(testComponent))();
       });
 
       tests();
