@@ -1,8 +1,8 @@
 import { SingleContextKey } from 'context-values';
+import { BootstrapContext } from '../../boot';
+import { BootstrapValueRegistry } from '../../boot/bootstrap/bootstrap-value-registry.impl';
+import { ComponentRegistry } from '../../boot/definition/component-registry.impl';
 import { Class } from '../../common';
-import { BootstrapContext } from '../../kit';
-import { BootstrapValueRegistry } from '../../kit/bootstrap/bootstrap-value-registry.impl';
-import { ComponentRegistry } from '../../kit/definition/component-registry.impl';
 import { MethodSpy } from '../../spec/mocks';
 import { FeatureContext } from '../feature-context';
 import { FeatureDef } from '../feature-def';

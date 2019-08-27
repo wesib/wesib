@@ -15,7 +15,7 @@ import { BootstrapValueRegistry } from './bootstrap-value-registry.impl';
 import Mock = jest.Mock;
 import Mocked = jest.Mocked;
 
-describe('kit', () => {
+describe('boot', () => {
 
   let createBootstrapValueRegistrySpy: MethodSpy<typeof BootstrapValueRegistry, 'create'>;
   let createDefinitionValueRegistrySpy: MethodSpy<typeof DefinitionValueRegistry, 'create'>;

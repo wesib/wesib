@@ -1,7 +1,7 @@
 import { ContextRegistry } from 'context-values';
 import { BootstrapRoot } from './bootstrap-root';
 
-describe('kit', () => {
+describe('boot', () => {
   describe('BootstrapRoot', () => {
     it('defaults to document body', () => {
 

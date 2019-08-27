@@ -8,7 +8,7 @@ import { ComponentFactory__symbol } from './component-factory.symbol.impl';
 import { ComponentRegistry } from './component-registry.impl';
 import { ElementBuilder } from './element-builder.impl';
 
-describe('kit', () => {
+describe('boot', () => {
   describe('ComponentRegistry', () => {
 
     let customElementsSpy: ObjectMock<CustomElements, 'define' | 'whenDefined'>;

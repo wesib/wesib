@@ -3,9 +3,9 @@
  */
 import { ContextKey, ContextKey__symbol, ContextValues, SingleContextKey } from 'context-values';
 import { html__naming, isQualifiedName, QualifiedName } from 'namespace-aliaser';
+import { componentFactoryOf } from '../../boot/definition/component-factory.symbol.impl';
+import { BootstrapWindow, DefaultNamespaceAliaser } from '../../boot/globals';
 import { Class, PromiseResolver } from '../../common';
-import { componentFactoryOf } from '../../kit/definition/component-factory.symbol.impl';
-import { BootstrapWindow, DefaultNamespaceAliaser } from '../../kit/globals';
 import { ComponentClass } from './component-class';
 
 const CustomElements__key = /*#__PURE__*/ new SingleContextKey<CustomElements>(

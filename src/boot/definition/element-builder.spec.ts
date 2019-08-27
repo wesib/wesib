@@ -20,7 +20,7 @@ import { DefinitionValueRegistry } from './definition-value-registry.impl';
 import { ElementBuilder } from './element-builder.impl';
 import Mock = jest.Mock;
 
-describe('kit', () => {
+describe('boot', () => {
   describe('ElementBuilder', () => {
 
     let bootstrapValueRegistry: BootstrapValueRegistry;

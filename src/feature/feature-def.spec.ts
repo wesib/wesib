@@ -1,7 +1,7 @@
 import { noop } from 'call-thru';
 import { ContextValueSpec, SingleContextKey } from 'context-values';
+import { BootstrapContext } from '../boot';
 import { Class } from '../common';
-import { BootstrapContext } from '../kit';
 import { FeatureContext } from './feature-context';
 import { FeatureDef, FeatureDef__symbol } from './feature-def';
 

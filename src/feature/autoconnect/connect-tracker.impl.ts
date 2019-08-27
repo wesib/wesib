@@ -1,9 +1,9 @@
 import { AIterable, overArray } from 'a-iterable';
 import { ContextKey, ContextKey__symbol, SingleContextKey } from 'context-values';
 import { DomEventDispatcher, noEventInterest } from 'fun-events';
+import { BootstrapContext } from '../../boot';
+import { BootstrapRoot, BootstrapWindow, ElementAdapter } from '../../boot/globals';
 import { ComponentMount } from '../../component';
-import { BootstrapContext } from '../../kit';
-import { BootstrapRoot, BootstrapWindow, ElementAdapter } from '../../kit/globals';
 import { ShadowDomEvent } from '../shadow-dom';
 
 const shadowConnectTracker__symbol = /*#__PURE__*/ Symbol('shadow-connect-tracker');

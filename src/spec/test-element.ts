@@ -1,7 +1,7 @@
+import { bootstrapComponents } from '../boot/bootstrap';
 import { Class } from '../common';
 import { ComponentClass, ComponentFactory, CustomElements } from '../component/definition';
 import { Feature } from '../feature';
-import { bootstrapComponents } from '../kit/bootstrap';
 
 export function testComponentFactory<T extends object>(componentType: Class<T>): Promise<ComponentFactory<T>> {
 

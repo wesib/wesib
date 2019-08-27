@@ -3,9 +3,9 @@
  */
 import { ContextKey, ContextKey__symbol, ContextValueSpec, SingleContextKey } from 'context-values';
 import { OnEvent } from 'fun-events';
+import { BootstrapContext, ComponentKit } from '../boot';
 import { ComponentContext } from '../component';
 import { ComponentClass, ComponentFactory, DefinitionContext } from '../component/definition';
-import { BootstrapContext, ComponentKit } from '../kit';
 
 const FeatureContext_key = new SingleContextKey<FeatureContext>('feature-context');
 

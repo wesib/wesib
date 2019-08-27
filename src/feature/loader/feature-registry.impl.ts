@@ -3,11 +3,11 @@
  */
 import { itsFirst } from 'a-iterable';
 import { ContextRegistry } from 'context-values';
+import { BootstrapContext } from '../../boot';
+import { BootstrapValueRegistry } from '../../boot/bootstrap/bootstrap-value-registry.impl';
+import { ComponentRegistry } from '../../boot/definition/component-registry.impl';
 import { ArraySet, Class } from '../../common';
 import { ComponentClass } from '../../component/definition';
-import { BootstrapContext } from '../../kit';
-import { BootstrapValueRegistry } from '../../kit/bootstrap/bootstrap-value-registry.impl';
-import { ComponentRegistry } from '../../kit/definition/component-registry.impl';
 import { FeatureContext } from '../feature-context';
 import { FeatureDef } from '../feature-def';
 

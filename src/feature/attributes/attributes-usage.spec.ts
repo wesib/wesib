@@ -1,6 +1,6 @@
+import { BootstrapWindow } from '../../boot/globals';
 import { Component, ComponentContext } from '../../component';
 import { ComponentClass, ComponentFactory } from '../../component/definition';
-import { BootstrapWindow } from '../../kit/globals';
 import { MockElement, testComponentFactory, testElement } from '../../spec/test-element';
 import { Feature } from '../feature.decorator';
 import { AttributeChanged } from './attribute-changed.decorator';
