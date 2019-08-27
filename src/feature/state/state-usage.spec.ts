@@ -36,8 +36,8 @@ describe('feature/state', () => {
       testComponent = TestComponent;
     });
 
-    beforeEach(() => {
-      new (testElement(testComponent))(); // tslint:disable-line:no-unused-expression
+    beforeEach(async () => {
+      new (await testElement(testComponent))(); // tslint:disable-line:no-unused-expression
     });
 
     it('provides state update', () => {

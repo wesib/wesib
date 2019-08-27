@@ -1,8 +1,8 @@
+import { BootstrapContext } from '../../boot';
+import { BootstrapWindow } from '../../boot/globals';
 import { Class } from '../../common';
 import { Component, ComponentContext } from '../../component';
 import { ComponentClass, CustomElements } from '../../component/definition';
-import { BootstrapContext } from '../../kit';
-import { BootstrapWindow } from '../../kit/globals';
 import { ObjectMock } from '../../spec/mocks';
 import { MockElement, testElement } from '../../spec/test-element';
 import { FeatureDef } from '../feature-def';

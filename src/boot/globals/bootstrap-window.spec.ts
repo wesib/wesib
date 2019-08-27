@@ -1,7 +1,7 @@
 import { ContextRegistry } from 'context-values';
 import { BootstrapWindow } from './bootstrap-window';
 
-describe('kit', () => {
+describe('boot', () => {
   describe('BootstrapWindow', () => {
     it('defaults to window object', () => {
 

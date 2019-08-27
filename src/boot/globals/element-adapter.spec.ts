@@ -3,7 +3,7 @@ import { ComponentContext, ComponentContext__symbol } from '../../component';
 import { ElementAdapter } from './element-adapter';
 import Mock = jest.Mock;
 
-describe('kit', () => {
+describe('boot', () => {
   describe('ElementAdapter', () => {
 
     let registry: ContextRegistry;

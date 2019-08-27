@@ -4,7 +4,7 @@ import { DomProperty } from './dom-property.decorator';
 
 describe('feature/dom-properties', () => {
   describe('@DomProperty', () => {
-    it('declares DOM property', () => {
+    it('declares DOM property', async () => {
 
       @Component({
         name: 'test-component',
@@ -17,7 +17,7 @@ describe('feature/dom-properties', () => {
         customProperty = 'value';
       }
 
-      const element = new (testElement(TestComponent));
+      const element = new (await testElement(TestComponent));
       const component = ComponentContext.of(element).component as TestComponent;
 
       expect(element.customProperty).toBe('value');
@@ -26,7 +26,7 @@ describe('feature/dom-properties', () => {
 
       expect(component.customProperty).toBe('other');
     });
-    it('declares DOM property with specified name', () => {
+    it('declares DOM property with specified name', async () => {
 
       @Component({
         name: 'test-component',
@@ -39,7 +39,7 @@ describe('feature/dom-properties', () => {
         customProperty = 'value';
       }
 
-      const element = new (testElement(TestComponent));
+      const element = new (await testElement(TestComponent));
       const component = ComponentContext.of(element).component as TestComponent;
 
       expect(element.otherProperty).toBe('value');
@@ -50,7 +50,7 @@ describe('feature/dom-properties', () => {
     });
 
     describe('for object property', () => {
-      it('applies defaults', () => {
+      it('applies defaults', async () => {
 
         @Component({
           name: 'test-component',
@@ -63,7 +63,7 @@ describe('feature/dom-properties', () => {
           customProperty = 'value';
         }
 
-        const elementType = testElement(TestComponent);
+        const elementType = await testElement(TestComponent);
 
         expect(Object.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: true,
@@ -72,7 +72,7 @@ describe('feature/dom-properties', () => {
           set: expect.any(Function),
         });
       });
-      it('applies defaults to non-state-updating field', () => {
+      it('applies defaults to non-state-updating field', async () => {
 
         @Component({
           name: 'test-component',
@@ -85,7 +85,7 @@ describe('feature/dom-properties', () => {
           customProperty = 'value';
         }
 
-        const elementType = testElement(TestComponent);
+        const elementType = await testElement(TestComponent);
 
         expect(Object.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: true,
@@ -94,7 +94,7 @@ describe('feature/dom-properties', () => {
           set: expect.any(Function),
         });
       });
-      it('applies custom property attributes', () => {
+      it('applies custom property attributes', async () => {
 
         @Component({
           name: 'test-component',
@@ -111,7 +111,7 @@ describe('feature/dom-properties', () => {
           customProperty = 'value';
         }
 
-        const elementType = testElement(TestComponent);
+        const elementType = await testElement(TestComponent);
 
         expect(Object.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: false,
@@ -120,7 +120,7 @@ describe('feature/dom-properties', () => {
           set: undefined,
         });
       });
-      it('applies custom property attributes to non-state-updating field', () => {
+      it('applies custom property attributes to non-state-updating field', async () => {
 
         @Component({
           name: 'test-component',
@@ -138,7 +138,7 @@ describe('feature/dom-properties', () => {
           customProperty = 'value';
         }
 
-        const elementType = testElement(TestComponent);
+        const elementType = await testElement(TestComponent);
 
         expect(Object.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: false,
@@ -149,7 +149,7 @@ describe('feature/dom-properties', () => {
       });
     });
     describe('for property accessor', () => {
-      it('applies read-only property defaults', () => {
+      it('applies read-only property defaults', async () => {
 
         @Component({
           name: 'test-component',
@@ -164,7 +164,7 @@ describe('feature/dom-properties', () => {
           }
         }
 
-        const elementType = testElement(TestComponent);
+        const elementType = await testElement(TestComponent);
 
         expect(Object.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: true,
@@ -173,7 +173,7 @@ describe('feature/dom-properties', () => {
           set: undefined,
         });
       });
-      it('applies custom read-only property attributes', () => {
+      it('applies custom read-only property attributes', async () => {
 
         @Component({
           name: 'test-component',
@@ -192,7 +192,7 @@ describe('feature/dom-properties', () => {
           }
         }
 
-        const elementType = testElement(TestComponent);
+        const elementType = await testElement(TestComponent);
 
         expect(Object.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: false,
@@ -201,7 +201,7 @@ describe('feature/dom-properties', () => {
           set: undefined,
         });
       });
-      it('applies writable property defaults', () => {
+      it('applies writable property defaults', async () => {
 
         @Component({
           name: 'test-component',
@@ -224,7 +224,7 @@ describe('feature/dom-properties', () => {
 
         }
 
-        const elementType = testElement(TestComponent);
+        const elementType = await testElement(TestComponent);
 
         expect(Object.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: true,
@@ -233,7 +233,7 @@ describe('feature/dom-properties', () => {
           set: expect.any(Function),
         });
       });
-      it('applies custom writable property attributes', () => {
+      it('applies custom writable property attributes', async () => {
 
         @Component({
           name: 'test-component',
@@ -260,7 +260,7 @@ describe('feature/dom-properties', () => {
 
         }
 
-        const elementType = testElement(TestComponent);
+        const elementType = await testElement(TestComponent);
 
         expect(Object.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: false,

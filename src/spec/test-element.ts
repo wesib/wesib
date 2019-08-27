@@ -1,7 +1,7 @@
+import { bootstrapComponents } from '../boot/bootstrap';
 import { Class } from '../common';
 import { ComponentClass, ComponentFactory, CustomElements } from '../component/definition';
 import { Feature } from '../feature';
-import { bootstrapComponents } from '../kit/bootstrap';
 
 export function testComponentFactory<T extends object>(componentType: Class<T>): Promise<ComponentFactory<T>> {
 
@@ -22,12 +22,10 @@ export function testComponentFactory<T extends object>(componentType: Class<T>):
   })
   class TestFeature {}
 
-  const kit = bootstrapComponents(TestFeature);
-
-  return kit.whenDefined(componentType);
+  return bootstrapComponents(TestFeature).whenDefined(componentType);
 }
 
-export function testElement(componentType: Class): Class {
+export async function testElement(componentType: Class): Promise<Class> {
 
   let result!: Class;
 
@@ -49,7 +47,7 @@ export function testElement(componentType: Class): Class {
   })
   class TestFeature {}
 
-  bootstrapComponents(TestFeature);
+  await bootstrapComponents(TestFeature).whenDefined(componentType);
 
   return result;
 }

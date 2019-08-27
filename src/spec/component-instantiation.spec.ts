@@ -43,8 +43,8 @@ describe('component instantiation', () => {
 
       testComponent = TestComponent;
     });
-    beforeEach(() => {
-      element = new (testElement(testComponent))();
+    beforeEach(async () => {
+      element = new (await testElement(testComponent))();
     });
 
     it('instantiates custom element', async () => {
@@ -82,22 +82,21 @@ describe('component instantiation', () => {
   });
 
   describe('context callbacks', () => {
-
     describe('component', () => {
       it('is resolved on component instantiation', async () => {
 
-        let context: ComponentContext = { name: 'component context' } as any;
-        const component = await new Promise(resolve => {
+        let context!: ComponentContext;
+        const component = await new Promise(async resolve => {
 
           @Component({
             name: 'test-component',
             extend: {
-              type: Object,
+              type: MockElement,
             },
           })
           @Feature({
-            init(bootCtx) {
-              bootCtx.onComponent(ctx => {
+            init(featureCtx) {
+              featureCtx.onComponent(ctx => {
                 context = ctx;
                 expect(() => context.component).toThrow(/not constructed yet/);
                 ctx.whenReady(comp => resolve(comp));
@@ -107,7 +106,7 @@ describe('component instantiation', () => {
           class TestComponent {
           }
 
-          new (testElement(TestComponent))(); // tslint:disable-line:no-unused-expression
+          new (await testElement(TestComponent))(); // tslint:disable-line:no-unused-expression
         });
 
         expect(component).toBeDefined();
@@ -122,7 +121,7 @@ describe('component instantiation', () => {
     });
 
     describe('whenOn listener', () => {
-      it('is notified when custom element connected', () => {
+      it('is notified when custom element connected', async () => {
 
         const listenerSpy = jest.fn();
 
@@ -141,7 +140,7 @@ describe('component instantiation', () => {
 
         }
 
-        const element: any = new (testElement(TestComponent))();
+        const element: any = new (await testElement(TestComponent))();
 
         element.connectedCallback();
 
@@ -150,7 +149,7 @@ describe('component instantiation', () => {
     });
 
     describe('whenOff listener', () => {
-      it('is notified when custom element disconnected', () => {
+      it('is notified when custom element disconnected', async () => {
 
         const listenerSpy = jest.fn();
 
@@ -169,7 +168,7 @@ describe('component instantiation', () => {
 
         }
 
-        const element: any = new (testElement(TestComponent))();
+        const element: any = new (await testElement(TestComponent))();
 
         expect(listenerSpy).not.toHaveBeenCalled();
 

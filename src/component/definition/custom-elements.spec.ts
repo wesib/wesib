@@ -1,10 +1,10 @@
 import { ContextRegistry } from 'context-values';
 import { NamespaceDef, newNamespaceAliaser } from 'namespace-aliaser';
+import { BootstrapContext } from '../../boot';
+import { ComponentFactory__symbol } from '../../boot/definition/component-factory.symbol.impl';
+import { ComponentRegistry } from '../../boot/definition/component-registry.impl';
+import { BootstrapWindow, DefaultNamespaceAliaser } from '../../boot/globals';
 import { Class } from '../../common';
-import { BootstrapContext } from '../../kit';
-import { ComponentFactory__symbol } from '../../kit/definition/component-factory.symbol.impl';
-import { ComponentRegistry } from '../../kit/definition/component-registry.impl';
-import { BootstrapWindow, DefaultNamespaceAliaser } from '../../kit/globals';
 import { MethodSpy } from '../../spec/mocks';
 import { ComponentClass } from './component-class';
 import { ComponentFactory } from './component-factory';

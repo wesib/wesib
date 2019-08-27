@@ -1,8 +1,8 @@
 import { ContextKey, ContextKey__symbol, SingleContextKey } from 'context-values';
+import { BootstrapWindow } from '../../boot/globals';
 import { Class, mergeFunctions } from '../../common';
 import { ComponentContext, ComponentMount } from '../../component';
 import { DefinitionContext } from '../../component/definition';
-import { BootstrapWindow } from '../../kit/globals';
 import { AttributeChangedCallback } from './attribute-registrar';
 
 const AttributeRegistry__key = /*#__PURE__*/ new SingleContextKey<AttributeRegistry>('attribute-registry');

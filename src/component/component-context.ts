@@ -3,7 +3,7 @@
  */
 import { ContextKey, ContextKey__symbol, ContextValues } from 'context-values';
 import { OnDomEvent, OnEvent, StatePath } from 'fun-events';
-import { BootstrapContext__key } from '../kit/bootstrap-context.key.impl';
+import { BootstrapContext__key } from '../boot/bootstrap-context.key.impl';
 import { ComponentContext__key } from './component-context.key.impl';
 import { ComponentEventDispatcher__key } from './component-event.key.impl';
 import { ComponentMount } from './component-mount';
