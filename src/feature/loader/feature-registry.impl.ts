@@ -1,146 +1,7 @@
-/**
- * @module @wesib/wesib
- */
-import { itsFirst } from 'a-iterable';
-import { ContextRegistry, ContextValueSpec } from 'context-values';
-import { BootstrapContext } from '../../boot';
-import { BootstrapValueRegistry } from '../../boot/bootstrap/bootstrap-value-registry.impl';
-import { ComponentRegistry } from '../../boot/definition/component-registry.impl';
-import { ComponentValueRegistry } from '../../boot/definition/component-value-registry.impl';
-import { DefinitionValueRegistry } from '../../boot/definition/definition-value-registry.impl';
 import { ArraySet, Class } from '../../common';
-import { ComponentContext } from '../../component';
-import { ComponentClass, DefinitionContext } from '../../component/definition';
-import { FeatureContext } from '../feature-context';
 import { FeatureDef } from '../feature-def';
-
-export interface FeatureRegistryOpts {
-  bootstrapContext: BootstrapContext;
-  componentRegistry: ComponentRegistry;
-  valueRegistry: BootstrapValueRegistry;
-  definitionValueRegistry: DefinitionValueRegistry;
-  componentValueRegistry: ComponentValueRegistry;
-}
-
-class FeatureHandle {
-
-  readonly providers = new Set<Class>();
-  private _context?: FeatureContext;
-
-  constructor(readonly feature: Class, private readonly _opts: FeatureRegistryOpts) {
-    this.add(feature);
-  }
-
-  add(provider: Class) {
-    this.providers.add(provider);
-  }
-
-  provider(
-      allProviders: Map<Class, FeatureHandle>,
-      dependencies: Set<Class> = new Set(),
-  ): Class {
-    if (dependencies.has(this.feature)) {
-      throw Error(
-          'Circular dependency: '
-          + [...dependencies.values()].map(feature => feature.name).join(' -> ')
-          + ` -> ${this.feature.name}`,
-      );
-    }
-
-    if (this.providers.size > 1) {
-      // Remove self if there are other providers
-      this.providers.delete(this.feature);
-    } else if (this.providers.has(this.feature)) {
-      return this.feature; // The feature is provided only by itself.
-    }
-
-    // Replace providers that in turn provided by others
-    this.providers.forEach(provider => {
-
-      const transientProviders = allProviders.get(provider);
-
-      if (!transientProviders) {
-        return;
-      }
-
-      const transientProvider = transientProviders.provider(
-          allProviders,
-          new Set([...dependencies, this.feature]),
-      );
-
-      if (transientProvider === provider) {
-        return;
-      }
-      this.providers.delete(provider);
-      this.providers.add(transientProvider);
-    });
-
-    if (this.providers.size !== 1) {
-      throw Error(
-          `Feature \`${this.feature.name}\` is provided by multiple providers: `
-          + [...this.providers.values()].map(feature => feature.name).join(', '));
-    }
-
-    return itsFirst(this.providers.values()) as Class;
-  }
-
-  provideValues(feature: Class) {
-
-    const def = FeatureDef.of(feature);
-    const context = this.context;
-
-    new ArraySet(def.set).forEach(spec => this._opts.valueRegistry.provide(spec));
-    new ArraySet(def.perDefinition).forEach(spec => context.perDefinition(spec));
-    new ArraySet(def.perComponent).forEach(spec => context.perComponent(spec));
-  }
-
-  init(feature: Class) {
-
-    const init = FeatureDef.of(feature).init;
-
-    if (init) {
-      init.call(feature, this.context);
-    }
-  }
-
-  get context(): FeatureContext {
-    if (this._context) {
-      return this._context;
-    }
-
-    const { componentRegistry, definitionValueRegistry, componentValueRegistry } = this._opts;
-    const registry = new ContextRegistry<FeatureContext>(this._opts.bootstrapContext);
-    const values = registry.newValues();
-
-    class Context extends FeatureContext {
-
-      constructor() {
-        super();
-        registry.provide({ a: FeatureContext, is: this });
-      }
-
-      get get() {
-        return values.get;
-      }
-
-      perDefinition<D extends any[], S>(spec: ContextValueSpec<DefinitionContext, any, D, S>) {
-        definitionValueRegistry.provide(spec);
-      }
-
-      perComponent<D extends any[], S>(spec: ContextValueSpec<ComponentContext, any, D, S>) {
-        componentValueRegistry.provide(spec);
-      }
-
-      define<T extends object>(componentType: ComponentClass<T>): void {
-        componentRegistry.define(componentType);
-      }
-
-    }
-
-    return this._context = new Context();
-  }
-
-}
+import { FeatureHandle } from './feature-handle.impl';
+import { FeatureLoaderDeps } from './feature-loader-deps.impl';
 
 /**
  * @internal
@@ -149,11 +10,11 @@ export class FeatureRegistry {
 
   private readonly _handles = new Map<Class, FeatureHandle>();
 
-  static create(opts: FeatureRegistryOpts): FeatureRegistry {
-    return new FeatureRegistry(opts);
+  static create(deps: FeatureLoaderDeps): FeatureRegistry {
+    return new FeatureRegistry(deps);
   }
 
-  private constructor(private readonly _opts: FeatureRegistryOpts) {
+  private constructor(private readonly _deps: FeatureLoaderDeps) {
   }
 
   add(feature: Class, provider: Class = feature) {
@@ -162,9 +23,9 @@ export class FeatureRegistry {
     let handle = existing;
 
     if (!handle) {
-      handle = new FeatureHandle(feature, this._opts);
+      handle = new FeatureHandle(feature, this._deps);
     }
-    handle.add(provider);
+    handle.provideBy(provider);
 
     const def = FeatureDef.of(feature);
 
