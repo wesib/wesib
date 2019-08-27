@@ -1,15 +1,14 @@
 import { ContextKey, ContextKey__symbol, SingleContextKey } from 'context-values';
 import { ComponentClass, ComponentFactory, CustomElements } from '../../component/definition';
 import { BootstrapContext } from '../bootstrap-context';
+import { bootstrapDefault } from '../bootstrap-default';
 import { ComponentFactory__symbol, componentFactoryOf } from './component-factory.symbol.impl';
 import { ElementBuilder } from './element-builder.impl';
 
 const ComponentRegistry__key = /*#__PURE__*/ new SingleContextKey<ComponentRegistry>(
     'component-registry',
     {
-      byDefault(context) {
-        return new ComponentRegistry(context.get(BootstrapContext));
-      }
+      byDefault: bootstrapDefault(context => new ComponentRegistry(context)),
     },
 );
 

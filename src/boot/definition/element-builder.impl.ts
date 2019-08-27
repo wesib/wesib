@@ -15,6 +15,8 @@ import {
   DefinitionContext as DefinitionContext_,
   ElementDef,
 } from '../../component/definition';
+import { BootstrapContext } from '../bootstrap-context';
+import { bootstrapDefault } from '../bootstrap-default';
 import { ComponentValueRegistry } from './component-value-registry.impl';
 import { DefinitionValueRegistry } from './definition-value-registry.impl';
 
@@ -60,11 +62,12 @@ function elementStatus(element: any): ValueTracker<ComponentStatus> {
   return element[ComponentStatus__symbol];
 }
 
-const ElementBuilder__key = /*#__PURE__*/ new SingleContextKey<ElementBuilder>('element-builder', {
-  byDefault(context: ContextValues) {
-    return new ElementBuilder(context);
-  }
-});
+const ElementBuilder__key = /*#__PURE__*/ new SingleContextKey<ElementBuilder>(
+    'element-builder',
+    {
+      byDefault: bootstrapDefault(context => new ElementBuilder(context)),
+    },
+);
 
 /**
  * @internal
@@ -80,7 +83,7 @@ export class ElementBuilder {
     return ElementBuilder__key;
   }
 
-  constructor(context: ContextValues) {
+  constructor(context: BootstrapContext) {
     this._definitionValueRegistry = context.get(DefinitionValueRegistry);
     this._componentValueRegistry = context.get(ComponentValueRegistry);
   }

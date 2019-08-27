@@ -7,14 +7,14 @@ import {
   SingleContextKey,
 } from 'context-values';
 import { DefinitionContext } from '../../component/definition';
+import { bootstrapDefault } from '../bootstrap-default';
 
 const DefinitionValueRegistry__key = new SingleContextKey<DefinitionValueRegistry>(
     'definition-value-registry',
     {
-      byDefault(context: ContextValues) {
-        return new DefinitionValueRegistry(context);
-      },
-    });
+      byDefault: bootstrapDefault(context => new DefinitionValueRegistry(context)),
+    },
+);
 
 /**
  * @internal

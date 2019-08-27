@@ -1,13 +1,13 @@
 import { ContextKey, ContextKey__symbol, ContextRegistry, ContextSeeds, SingleContextKey } from 'context-values';
 import { ComponentContext } from '../../component';
+import { bootstrapDefault } from '../bootstrap-default';
 
 const ComponentValueRegistry__key = new SingleContextKey<ComponentValueRegistry>(
     'component-value-registry',
     {
-      byDefault() {
-        return new ComponentValueRegistry();
-      },
-    });
+      byDefault: bootstrapDefault(() => new ComponentValueRegistry()),
+    },
+);
 
 /**
  * @internal
