@@ -1,7 +1,7 @@
 /**
  * @module @wesib/wesib
  */
-import { ContextKey, ContextKey__symbol, ContextValues, ContextValueSpec } from 'context-values';
+import { ContextKey, ContextKey__symbol, ContextValues } from 'context-values';
 import { OnEvent } from 'fun-events';
 import { ComponentContext } from '../component';
 import { ComponentClass, ComponentFactory, DefinitionContext } from '../component/definition';
@@ -59,24 +59,6 @@ export abstract class BootstrapContext extends ContextValues {
    * @throws TypeError  If `componentType` does not contain a component definition.
    */
   abstract whenDefined<C extends object>(componentType: ComponentClass<C>): Promise<ComponentFactory<C>>;
-
-  /**
-   * Provides a value available in each component definition context.
-   *
-   * @typeparam D  A type of dependencies.
-   * @typeparam S  The type of context value sources.
-   * @param spec  Component definition context value specifier.
-   */
-  abstract perDefinition<D extends any[], S>(spec: ContextValueSpec<DefinitionContext, any, D, S>): void;
-
-  /**
-   * Provides a value available in each component context.
-   *
-   * @typeparam D  A type of dependencies.
-   * @typeparam S  The type of context value sources.
-   * @param spec  Component context value specifier.
-   */
-  abstract perComponent<D extends any[], S>(spec: ContextValueSpec<ComponentContext, any, D, S>): void;
 
   /**
    * Registers bootstrap readiness callback.

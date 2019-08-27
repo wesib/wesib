@@ -47,7 +47,7 @@ describe('boot', () => {
       whenDefined: jest.fn(),
     } as any;
     createComponentRegistrySpy = jest.spyOn(ComponentRegistry, 'create')
-        .mockReturnValue(mockComponentRegistry as any);
+        .mockReturnValue(mockComponentRegistry);
   });
 
   describe('bootstrapComponents', () => {
@@ -126,12 +126,18 @@ describe('boot', () => {
       });
 
       it('creates feature registry', () => {
-        bootstrapComponents();
 
-        expect(createFeatureRegistrySpy).toHaveBeenCalledWith({
-          valueRegistry: createBootstrapValueRegistrySpy.mock.results[0].value,
-          componentRegistry: mockComponentRegistry,
-        });
+        const bootstrapContext = bootstrapComponents();
+
+        expect(createFeatureRegistrySpy).toHaveBeenCalledWith(
+            expect.objectContaining({
+              bootstrapContext: bootstrapContext,
+              componentRegistry: mockComponentRegistry,
+              valueRegistry: createBootstrapValueRegistrySpy.mock.results[0].value,
+              definitionValueRegistry: createDefinitionValueRegistrySpy.mock.results[0].value,
+              componentValueRegistry: createComponentValueRegistrySpy.mock.results[0].value,
+            }),
+        );
       });
       it('receives feature', () => {
 

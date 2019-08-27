@@ -40,9 +40,7 @@ export abstract class FeatureContext extends BootstrapContext {
    * @typeparam S  The type of context value sources.
    * @param spec  Component definition context value specifier.
    */
-  perDefinition<D extends any[], S>(spec: ContextValueSpec<DefinitionContext, any, D, S>): void {
-    this.get(BootstrapContext).perDefinition(spec);
-  }
+  abstract perDefinition<D extends any[], S>(spec: ContextValueSpec<DefinitionContext, any, D, S>): void;
 
   /**
    * Provides a value available in each component context.
@@ -51,9 +49,7 @@ export abstract class FeatureContext extends BootstrapContext {
    * @typeparam S  The type of context value sources.
    * @param spec  Component context value specifier.
    */
-  perComponent<D extends any[], S>(spec: ContextValueSpec<ComponentContext, any, D, S>): void {
-    this.get(BootstrapContext).perComponent(spec);
-  }
+  abstract perComponent<D extends any[], S>(spec: ContextValueSpec<ComponentContext, any, D, S>): void;
 
   /**
    * Registers bootstrap readiness callback.

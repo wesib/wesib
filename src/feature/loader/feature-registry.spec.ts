@@ -2,6 +2,8 @@ import { SingleContextKey } from 'context-values';
 import { BootstrapContext } from '../../boot';
 import { BootstrapValueRegistry } from '../../boot/bootstrap/bootstrap-value-registry.impl';
 import { ComponentRegistry } from '../../boot/definition/component-registry.impl';
+import { ComponentValueRegistry } from '../../boot/definition/component-value-registry.impl';
+import { DefinitionValueRegistry } from '../../boot/definition/definition-value-registry.impl';
 import { Class } from '../../common';
 import { MethodSpy } from '../../spec/mocks';
 import { FeatureContext } from '../feature-context';
@@ -32,26 +34,34 @@ describe('feature', () => {
 
     let mockValueRegistry: Mocked<BootstrapValueRegistry>;
     let mockComponentRegistry: Mocked<ComponentRegistry>;
+    let mockDefinitionValueRegistry: Mocked<DefinitionValueRegistry>;
+    let mockComponentValueRegistry: Mocked<ComponentValueRegistry>;
     let registry: FeatureRegistry;
     let mockBootstrapContext: Mocked<BootstrapContext>;
     let addSpy: MethodSpy<FeatureRegistry, 'add'>;
 
     beforeEach(() => {
-      mockValueRegistry = {
-        provide: jest.fn(),
-      } as any;
+      mockBootstrapContext = {} as any;
       mockComponentRegistry = {
         define: jest.fn(),
       } as any;
-      registry = FeatureRegistry.create({
-        valueRegistry: mockValueRegistry,
-        componentRegistry: mockComponentRegistry,
-      });
-      mockBootstrapContext = {
-        perDefinition: jest.fn(),
-        perComponent: jest.fn(),
-        define: jest.fn(),
+      mockValueRegistry = {
+        provide: jest.fn(),
       } as any;
+      mockDefinitionValueRegistry = {
+        provide: jest.fn(),
+      } as any;
+      mockComponentValueRegistry = {
+        provide: jest.fn(),
+      } as any;
+      registry = FeatureRegistry.create({
+        bootstrapContext: mockBootstrapContext,
+        componentRegistry: mockComponentRegistry,
+        valueRegistry: mockValueRegistry,
+        definitionValueRegistry: mockDefinitionValueRegistry,
+        componentValueRegistry: mockComponentValueRegistry,
+      });
+
       addSpy = jest.spyOn(registry, 'add');
     });
 
@@ -61,7 +71,7 @@ describe('feature', () => {
       const mockInit = jest.fn();
 
       registry.add(FeatureDef.define(FeatureDef.define(Feature, { init: mockInit })));
-      registry.bootstrap(mockBootstrapContext);
+      registry.bootstrap();
 
       expect(mockInit).toHaveBeenCalledWith(expect.any(FeatureContext));
     });
@@ -87,19 +97,19 @@ describe('feature', () => {
       expect(addSpy).toHaveBeenCalledWith(feature1, Feature);
       expect(addSpy).toHaveBeenCalledWith(feature2, Feature);
 
-      registry.bootstrap(mockBootstrapContext);
+      registry.bootstrap();
     });
     it('prefers feature with dedicated provider', () => {
       registry.add(feature1);
       registry.add(feature1, feature2);
-      registry.bootstrap(mockBootstrapContext);
+      registry.bootstrap();
 
       expect(init1spy).not.toHaveBeenCalled();
     });
     it('prefers feature with dedicated provider when added in reverse order', () => {
       registry.add(feature1, feature2);
       registry.add(feature1);
-      registry.bootstrap(mockBootstrapContext);
+      registry.bootstrap();
 
       expect(init1spy).not.toHaveBeenCalled();
     });
@@ -110,12 +120,12 @@ describe('feature', () => {
       registry.add(Feature, feature1);
       registry.add(Feature, feature2);
 
-      expect(() => registry.bootstrap(mockBootstrapContext)).toThrow(/multiple providers/);
+      expect(() => registry.bootstrap()).toThrow(/multiple providers/);
     });
     it('does not fail when feature provided by the same provider', () => {
       registry.add(feature1, feature2);
       registry.add(feature1, feature2);
-      registry.bootstrap(mockBootstrapContext);
+      registry.bootstrap();
 
       expect(init1spy).not.toHaveBeenCalled();
     });
@@ -126,7 +136,7 @@ describe('feature', () => {
       registry.add(feature1);
       registry.add(feature2, feature1);
       registry.add(Feature, feature2);
-      registry.bootstrap(mockBootstrapContext);
+      registry.bootstrap();
 
       expect(init1spy).toHaveBeenCalledWith(expect.any(FeatureContext));
       expect(init2spy).not.toHaveBeenCalled();
@@ -139,7 +149,7 @@ describe('feature', () => {
       registry.add(feature2, feature1);
       registry.add(Feature, feature1);
       registry.add(Feature, feature2);
-      registry.bootstrap(mockBootstrapContext);
+      registry.bootstrap();
 
       expect(init1spy).toHaveBeenCalledWith(expect.any(FeatureContext));
       expect(init2spy).not.toHaveBeenCalled();
@@ -148,7 +158,7 @@ describe('feature', () => {
       registry.add(feature1, feature2);
       registry.add(feature2, feature1);
 
-      expect(() => registry.bootstrap(mockBootstrapContext)).toThrow(/Circular dependency/);
+      expect(() => registry.bootstrap()).toThrow(/Circular dependency/);
     });
     it('fails on deep circular dependency', () => {
 
@@ -158,7 +168,7 @@ describe('feature', () => {
       registry.add(feature1, feature2);
       registry.add(feature2, Feature);
 
-      expect(() => registry.bootstrap(mockBootstrapContext)).toThrow(/Circular dependency/);
+      expect(() => registry.bootstrap()).toThrow(/Circular dependency/);
     });
     it('provides bootstrap values', () => {
 
@@ -169,7 +179,7 @@ describe('feature', () => {
       FeatureDef.define(Feature, { set: { a: key, by: provider } });
 
       registry.add(Feature);
-      registry.bootstrap(mockBootstrapContext);
+      registry.bootstrap();
 
       expect(mockValueRegistry.provide).toHaveBeenCalledWith({ a: key, by: provider });
     });
@@ -182,9 +192,9 @@ describe('feature', () => {
       FeatureDef.define(Feature, { perDefinition: { a: key, by: provider } });
 
       registry.add(Feature);
-      registry.bootstrap(mockBootstrapContext);
+      registry.bootstrap();
 
-      expect(mockBootstrapContext.perDefinition).toHaveBeenCalledWith({ a: key, by: provider });
+      expect(mockDefinitionValueRegistry.provide).toHaveBeenCalledWith({ a: key, by: provider });
     });
     it('provides component values', () => {
 
@@ -195,9 +205,9 @@ describe('feature', () => {
       FeatureDef.define(Feature, { perComponent: { a: key, by: provider } });
 
       registry.add(Feature);
-      registry.bootstrap(mockBootstrapContext);
+      registry.bootstrap();
 
-      expect(mockBootstrapContext.perComponent).toHaveBeenCalledWith({ a: key, by: provider });
+      expect(mockComponentValueRegistry.provide).toHaveBeenCalledWith({ a: key, by: provider });
     });
   });
 });

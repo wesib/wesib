@@ -2,20 +2,32 @@
  * @module @wesib/wesib
  */
 import { itsFirst } from 'a-iterable';
-import { ContextRegistry } from 'context-values';
+import { ContextRegistry, ContextValueSpec } from 'context-values';
 import { BootstrapContext } from '../../boot';
 import { BootstrapValueRegistry } from '../../boot/bootstrap/bootstrap-value-registry.impl';
 import { ComponentRegistry } from '../../boot/definition/component-registry.impl';
+import { ComponentValueRegistry } from '../../boot/definition/component-value-registry.impl';
+import { DefinitionValueRegistry } from '../../boot/definition/definition-value-registry.impl';
 import { ArraySet, Class } from '../../common';
-import { ComponentClass } from '../../component/definition';
+import { ComponentContext } from '../../component';
+import { ComponentClass, DefinitionContext } from '../../component/definition';
 import { FeatureContext } from '../feature-context';
 import { FeatureDef } from '../feature-def';
 
-class FeatureProviders {
+export interface FeatureRegistryOpts {
+  bootstrapContext: BootstrapContext;
+  componentRegistry: ComponentRegistry;
+  valueRegistry: BootstrapValueRegistry;
+  definitionValueRegistry: DefinitionValueRegistry;
+  componentValueRegistry: ComponentValueRegistry;
+}
+
+class FeatureHandle {
 
   readonly providers = new Set<Class>();
+  private _context?: FeatureContext;
 
-  constructor(readonly feature: Class) {
+  constructor(readonly feature: Class, private readonly _opts: FeatureRegistryOpts) {
     this.add(feature);
   }
 
@@ -24,7 +36,7 @@ class FeatureProviders {
   }
 
   provider(
-      allProviders: Map<Class, FeatureProviders>,
+      allProviders: Map<Class, FeatureHandle>,
       dependencies: Set<Class> = new Set(),
   ): Class {
     if (dependencies.has(this.feature)) {
@@ -72,94 +84,32 @@ class FeatureProviders {
     return itsFirst(this.providers.values()) as Class;
   }
 
-}
-
-/**
- * @internal
- */
-export class FeatureRegistry {
-
-  private readonly _providers = new Map<Class, FeatureProviders>();
-  private readonly _valueRegistry: BootstrapValueRegistry;
-  private readonly _componentRegistry: ComponentRegistry;
-
-  static create(opts: {
-    valueRegistry: BootstrapValueRegistry,
-    componentRegistry: ComponentRegistry,
-  }): FeatureRegistry {
-    return new FeatureRegistry(opts);
-  }
-
-  private constructor(
-      {
-        valueRegistry,
-        componentRegistry,
-      }: {
-        valueRegistry: BootstrapValueRegistry;
-        componentRegistry: ComponentRegistry;
-      }) {
-    this._valueRegistry = valueRegistry;
-    this._componentRegistry = componentRegistry;
-  }
-
-  add(feature: Class, provider: Class = feature) {
-
-    const existing = this._providers.get(feature);
-    let providers = existing;
-
-    if (!providers) {
-      providers = new FeatureProviders(feature);
-    }
-    providers.add(provider);
+  provideValues(feature: Class) {
 
     const def = FeatureDef.of(feature);
+    const context = this.context;
 
-    // Add requirements before the feature itself.
-    new ArraySet(def.needs).items.forEach(needed => this.add(needed));
+    new ArraySet(def.set).forEach(spec => this._opts.valueRegistry.provide(spec));
+    new ArraySet(def.perDefinition).forEach(spec => context.perDefinition(spec));
+    new ArraySet(def.perComponent).forEach(spec => context.perComponent(spec));
+  }
 
-    if (!existing) {
-      this._providers.set(feature, providers);
+  init(feature: Class) {
+
+    const init = FeatureDef.of(feature).init;
+
+    if (init) {
+      init.call(feature, this.context);
+    }
+  }
+
+  get context(): FeatureContext {
+    if (this._context) {
+      return this._context;
     }
 
-    // Add provided features after the feature itself.
-    new ArraySet(def.has).items.forEach(provided => this.add(provided, feature));
-  }
-
-  bootstrap(context: BootstrapContext) {
-    this._provideValues(context);
-    this._initFeatures(context);
-  }
-
-  private _provideValues(context: BootstrapContext) {
-    this._providers.forEach((providers, feature) => {
-      if (feature === providers.provider(this._providers)) {
-
-        const def = FeatureDef.of(feature);
-
-        new ArraySet(def.set).forEach(spec => this._valueRegistry.provide(spec));
-        new ArraySet(def.perDefinition).forEach(spec => context.perDefinition(spec));
-        new ArraySet(def.perComponent).forEach(spec => context.perComponent(spec));
-      }
-    });
-  }
-
-  private _initFeatures(bsContext: BootstrapContext) {
-    this._providers.forEach((providers, feature) => {
-      if (feature === providers.provider(this._providers)) {
-
-        const init = FeatureDef.of(feature).init;
-
-        if (init) {
-          init.call(feature, this._featureContext(bsContext));
-        }
-      }
-    });
-  }
-
-  private _featureContext(bsContext: BootstrapContext): FeatureContext {
-
-    const componentRegistry = this._componentRegistry;
-    const registry = new ContextRegistry<FeatureContext>(bsContext);
+    const { componentRegistry, definitionValueRegistry, componentValueRegistry } = this._opts;
+    const registry = new ContextRegistry<FeatureContext>(this._opts.bootstrapContext);
     const values = registry.newValues();
 
     class Context extends FeatureContext {
@@ -173,13 +123,81 @@ export class FeatureRegistry {
         return values.get;
       }
 
+      perDefinition<D extends any[], S>(spec: ContextValueSpec<DefinitionContext, any, D, S>) {
+        definitionValueRegistry.provide(spec);
+      }
+
+      perComponent<D extends any[], S>(spec: ContextValueSpec<ComponentContext, any, D, S>) {
+        componentValueRegistry.provide(spec);
+      }
+
       define<T extends object>(componentType: ComponentClass<T>): void {
         componentRegistry.define(componentType);
       }
 
     }
 
-    return new Context();
+    return this._context = new Context();
+  }
+
+}
+
+/**
+ * @internal
+ */
+export class FeatureRegistry {
+
+  private readonly _handles = new Map<Class, FeatureHandle>();
+
+  static create(opts: FeatureRegistryOpts): FeatureRegistry {
+    return new FeatureRegistry(opts);
+  }
+
+  private constructor(private readonly _opts: FeatureRegistryOpts) {
+  }
+
+  add(feature: Class, provider: Class = feature) {
+
+    const existing = this._handles.get(feature);
+    let handle = existing;
+
+    if (!handle) {
+      handle = new FeatureHandle(feature, this._opts);
+    }
+    handle.add(provider);
+
+    const def = FeatureDef.of(feature);
+
+    // Add requirements before the feature itself.
+    new ArraySet(def.needs).items.forEach(needed => this.add(needed));
+
+    if (!existing) {
+      this._handles.set(feature, handle);
+    }
+
+    // Add provided features after the feature itself.
+    new ArraySet(def.has).items.forEach(provided => this.add(provided, feature));
+  }
+
+  bootstrap() {
+    this._provideValues();
+    this._initFeatures();
+  }
+
+  private _provideValues() {
+    this._handles.forEach((handle, feature) => {
+      if (feature === handle.provider(this._handles)) {
+        handle.provideValues(feature);
+      }
+    });
+  }
+
+  private _initFeatures() {
+    this._handles.forEach((handle, feature) => {
+      if (feature === handle.provider(this._handles)) {
+        handle.init(feature);
+      }
+    });
   }
 
 }

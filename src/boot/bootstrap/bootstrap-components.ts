@@ -2,11 +2,9 @@
  * @module @wesib/wesib
  */
 import { noop } from 'call-thru';
-import { ContextValueSpec } from 'context-values';
 import { newNamespaceAliaser } from 'namespace-aliaser';
 import { Class } from '../../common';
-import { ComponentContext } from '../../component';
-import { ComponentClass, DefinitionContext } from '../../component/definition';
+import { ComponentClass } from '../../component/definition';
 import { FeatureRegistry } from '../../feature/loader';
 import { BootstrapContext } from '../bootstrap-context';
 import { ComponentRegistry } from '../definition/component-registry.impl';
@@ -29,22 +27,36 @@ import { BootstrapValueRegistry } from './bootstrap-value-registry.impl';
 export function bootstrapComponents(...features: Class[]): BootstrapContext {
 
   const valueRegistry = BootstrapValueRegistry.create();
-  const { bootstrapContext, componentRegistry, complete } = initBootstrap(valueRegistry);
-  const featureRegistry = FeatureRegistry.create({ valueRegistry, componentRegistry });
+  const values = valueRegistry.values;
+  const definitionValueRegistry = DefinitionValueRegistry.create(values);
+  const componentValueRegistry = ComponentValueRegistry.create();
+  const elementBuilder = ElementBuilder.create({ definitionValueRegistry, componentValueRegistry });
+  const { bootstrapContext, componentRegistry, complete } = initBootstrap({ elementBuilder, valueRegistry });
+  const featureRegistry = FeatureRegistry.create({
+    bootstrapContext,
+    componentRegistry,
+    valueRegistry,
+    definitionValueRegistry,
+    componentValueRegistry,
+  });
 
   features.forEach(feature => featureRegistry.add(feature));
-
-  featureRegistry.bootstrap(bootstrapContext);
+  featureRegistry.bootstrap();
   complete();
 
   return bootstrapContext;
 }
 
-function initBootstrap(valueRegistry: BootstrapValueRegistry) {
+function initBootstrap(
+    {
+      elementBuilder,
+      valueRegistry,
+    }: {
+      elementBuilder: ElementBuilder;
+      valueRegistry: BootstrapValueRegistry;
+    },
+) {
 
-  let definitionValueRegistry: DefinitionValueRegistry;
-  let componentValueRegistry: ComponentValueRegistry;
-  let elementBuilder: ElementBuilder;
   let componentRegistry!: ComponentRegistry;
   let whenReady: (this: BootstrapContext) => void = noop;
   let ready = false;
@@ -67,24 +79,14 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
 
     constructor() {
       super();
-      definitionValueRegistry = DefinitionValueRegistry.create(values);
-      componentValueRegistry = ComponentValueRegistry.create();
-      elementBuilder = ElementBuilder.create({ definitionValueRegistry, componentValueRegistry });
-      componentRegistry = ComponentRegistry.create({ bootstrapContext: this, elementBuilder });
       valueRegistry.provide({ a: DefaultNamespaceAliaser, by: newNamespaceAliaser });
       valueRegistry.provide({ a: Context, is: this });
+      componentRegistry = ComponentRegistry.create({ bootstrapContext: this, elementBuilder });
+      this.whenReady(() => componentRegistry.complete());
     }
 
     whenDefined<C extends object>(componentType: ComponentClass<C>) {
       return componentRegistry.whenDefined(componentType);
-    }
-
-    perDefinition<D extends any[], S>(spec: ContextValueSpec<DefinitionContext, any, D, S>) {
-      definitionValueRegistry.provide(spec);
-    }
-
-    perComponent<D extends any[], S>(spec: ContextValueSpec<ComponentContext, any, D, S>) {
-      componentValueRegistry.provide(spec);
     }
 
     whenReady(callback: (this: BootstrapContext) => void): void {
@@ -109,7 +111,6 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
     bootstrapContext,
     componentRegistry,
     complete() {
-      componentRegistry.complete();
       ready = true;
       whenReady.call(bootstrapContext);
     },

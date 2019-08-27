@@ -164,7 +164,7 @@ It is possible to define custom features too to extend Wesib. E.g. to augment th
 
 The feature is a class decorated with `@Feature` decorator:
 ```typescript
-import { BootstrapContext, ComponentContext, DefinitionContext, Feature } from '@wesib/wesib';
+import { ComponentContext, DefinitionContext, Feature, FeatureContext } from '@wesib/wesib';
 
 @Feature({
   needs: [
@@ -194,7 +194,7 @@ import { BootstrapContext, ComponentContext, DefinitionContext, Feature } from '
       return new MyService(componentContext.component);
     }
   },
-  init(context: BootstrapContext) {
+  init(context: FeatureContext) {
     // Bootstrap the feature by calling methods of provided context.
 
     context.onDefinition((definitionContext: DefinitionContext) => {
