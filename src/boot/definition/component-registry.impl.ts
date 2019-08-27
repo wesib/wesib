@@ -1,44 +1,42 @@
+import { ContextKey, ContextKey__symbol, SingleContextKey } from 'context-values';
 import { ComponentClass, ComponentFactory, CustomElements } from '../../component/definition';
 import { BootstrapContext } from '../bootstrap-context';
 import { ComponentFactory__symbol, componentFactoryOf } from './component-factory.symbol.impl';
 import { ElementBuilder } from './element-builder.impl';
+
+const ComponentRegistry__key = /*#__PURE__*/ new SingleContextKey<ComponentRegistry>(
+    'component-registry',
+    {
+      byDefault(context) {
+        return new ComponentRegistry(context.get(BootstrapContext));
+      }
+    },
+);
 
 /**
  * @internal
  */
 export class ComponentRegistry {
 
-  readonly bootstrapContext: BootstrapContext;
-  readonly elementBuilder: ElementBuilder;
-  private _definitionQueue: (() => void)[] = [];
-
-  static create(opts: {
-    bootstrapContext: BootstrapContext;
-    elementBuilder: ElementBuilder;
-  }): ComponentRegistry {
-    return new ComponentRegistry(opts);
+  static get [ContextKey__symbol](): ContextKey<ComponentRegistry> {
+    return ComponentRegistry__key;
   }
 
-  private constructor(
-      {
-        bootstrapContext,
-        elementBuilder,
-      }: {
-        bootstrapContext: BootstrapContext;
-        elementBuilder: ElementBuilder;
-      }) {
-    this.bootstrapContext = bootstrapContext;
-    this.elementBuilder = elementBuilder;
+  private _definitionQueue: (() => void)[] = [];
+
+  constructor(private readonly _bootstrapContext: BootstrapContext) {
   }
 
   get customElements(): CustomElements {
-    return this.bootstrapContext.get(CustomElements);
+    return this._bootstrapContext.get(CustomElements);
   }
 
   define<T extends object>(componentType: ComponentClass<T>) {
     this._definitionQueue.push(() => {
 
-      const factory = this.elementBuilder.buildElement(componentType);
+      const elementBuilder = this._bootstrapContext.get(ElementBuilder);
+      const factory = elementBuilder.buildElement(componentType);
+
       (componentType as any)[ComponentFactory__symbol] = factory;
 
       this.customElements.define(componentType, factory.elementType);

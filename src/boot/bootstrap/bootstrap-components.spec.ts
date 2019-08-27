@@ -1,3 +1,4 @@
+import { noop } from 'call-thru';
 import { SingleContextKey } from 'context-values';
 import { Component } from '../../component';
 import { FeatureContext, FeatureDef } from '../../feature';
@@ -17,37 +18,9 @@ import Mocked = jest.Mocked;
 describe('boot', () => {
 
   let createBootstrapValueRegistrySpy: MethodSpy<typeof BootstrapValueRegistry, 'create'>;
-  let createDefinitionValueRegistrySpy: MethodSpy<typeof DefinitionValueRegistry, 'create'>;
-  let createComponentValueRegistrySpy: MethodSpy<typeof ComponentValueRegistry, 'create'>;
-  let createElementBuilderSpy: MethodSpy<typeof ElementBuilder, 'create'>;
-  let mockElementBuilder: Mocked<ElementBuilder>;
-  let createComponentRegistrySpy: MethodSpy<typeof ComponentRegistry, 'create'>;
-  let mockComponentRegistry: Mocked<ComponentRegistry>;
 
   beforeEach(() => {
     createBootstrapValueRegistrySpy = jest.spyOn(BootstrapValueRegistry, 'create');
-    createDefinitionValueRegistrySpy = jest.spyOn(DefinitionValueRegistry, 'create');
-    createComponentValueRegistrySpy = jest.spyOn(ComponentValueRegistry, 'create');
-
-    mockElementBuilder = {
-      buildElement: jest.fn(),
-      components: {
-        on: jest.fn(),
-      },
-      definitions: {
-        on: jest.fn(),
-      },
-    } as any;
-    createElementBuilderSpy = jest.spyOn(ElementBuilder, 'create')
-        .mockReturnValue(mockElementBuilder as any);
-
-    mockComponentRegistry = {
-      define: jest.fn(),
-      complete: jest.fn(),
-      whenDefined: jest.fn(),
-    } as any;
-    createComponentRegistrySpy = jest.spyOn(ComponentRegistry, 'create')
-        .mockReturnValue(mockComponentRegistry);
   });
 
   describe('bootstrapComponents', () => {
@@ -55,34 +28,18 @@ describe('boot', () => {
       bootstrapComponents();
       expect(createBootstrapValueRegistrySpy).toHaveBeenCalledWith();
     });
-    it('constructs definition value registry', () => {
-      bootstrapComponents();
-
-      const bootstrapValues = createBootstrapValueRegistrySpy.mock.results[0].value.values;
-
-      expect(createDefinitionValueRegistrySpy).toHaveBeenCalledWith(bootstrapValues);
+    it('provides definition value registry', () => {
+      expect(bootstrapComponents().get(DefinitionValueRegistry)).toBeInstanceOf(DefinitionValueRegistry);
     });
-    it('constructs component value registry', () => {
-      bootstrapComponents();
-      expect(createComponentValueRegistrySpy).toHaveBeenCalledWith();
+    it('provides component value registry', () => {
+      bootstrapComponents().get(ComponentValueRegistry);
+      expect(bootstrapComponents().get(ComponentValueRegistry)).toBeInstanceOf(ComponentValueRegistry);
     });
-    it('constructs element builder', () => {
-      bootstrapComponents();
-
-      const definitionValueRegistry = createDefinitionValueRegistrySpy.mock.results[0].value;
-      const componentValueRegistry = createComponentValueRegistrySpy.mock.results[0].value;
-
-      expect(createElementBuilderSpy).toHaveBeenCalledWith({
-        definitionValueRegistry,
-        componentValueRegistry,
-      });
+    it('provides element builder', () => {
+      expect(bootstrapComponents().get(ElementBuilder)).toBeInstanceOf(ElementBuilder);
     });
-    it('constructs component registry', () => {
-      bootstrapComponents();
-      expect(createComponentRegistrySpy).toHaveBeenCalledWith({
-        bootstrapContext: expect.anything(),
-        elementBuilder: mockElementBuilder,
-      });
+    it('provides component registry', () => {
+      expect(bootstrapComponents().get(ComponentRegistry)).toBeInstanceOf(ComponentRegistry);
     });
     it('constructs default namespace aliaser', () => {
       bootstrapComponents();
@@ -96,18 +53,18 @@ describe('boot', () => {
       it('is constructed', () => {
         expect(bootstrapComponents()).toBeInstanceOf(BootstrapContext);
       });
-      it('proxies whenDefined() method', () => {
+      it('proxies `whenDefined()` method', () => {
 
         const context = bootstrapComponents();
+        const componentRegistry = context.get(ComponentRegistry);
         const promise = Promise.resolve<any>('abc');
-
-        mockComponentRegistry.whenDefined.mockReturnValue(promise);
+        const whenDefinedSpy = jest.spyOn(componentRegistry, 'whenDefined').mockImplementation(() => promise);
 
         @Component('test-component')
         class TestComponent {}
 
         expect(context.whenDefined(TestComponent)).toBe(promise);
-        expect(mockComponentRegistry.whenDefined).toHaveBeenCalledWith(TestComponent);
+        expect(whenDefinedSpy).toHaveBeenCalledWith(TestComponent);
       });
     });
 
@@ -129,13 +86,7 @@ describe('boot', () => {
 
         const bootstrapContext = bootstrapComponents();
 
-        expect(createFeatureRegistrySpy).toHaveBeenCalledWith({
-          bootstrapContext: bootstrapContext,
-          componentRegistry: mockComponentRegistry,
-          valueRegistry: createBootstrapValueRegistrySpy.mock.results[0].value,
-          definitionValueRegistry: createDefinitionValueRegistrySpy.mock.results[0].value,
-          componentValueRegistry: createComponentValueRegistrySpy.mock.results[0].value,
-        });
+        expect(createFeatureRegistrySpy).toHaveBeenCalledWith(bootstrapContext);
       });
       it('receives feature', () => {
 
@@ -190,39 +141,42 @@ describe('boot', () => {
       });
       it('proxies `define()`', () => {
 
+        const componentRegistry = bootstrapContext.get(ComponentRegistry);
+        const defineSpy = jest.spyOn(componentRegistry, 'define').mockImplementation(noop);
+
         @Component({ name: 'test-component', extend: { name: 'div', type: Base } })
         class TestComponent {}
 
         featureContext.define(TestComponent);
-        expect(mockComponentRegistry.define).toHaveBeenCalledWith(TestComponent);
+        expect(defineSpy).toHaveBeenCalledWith(TestComponent);
       });
       it('proxies `whenDefined()`', () => {
 
         const promise = Promise.resolve<any>('abc');
-
-        mockComponentRegistry.whenDefined.mockReturnValue(promise);
+        const componentRegistry = bootstrapContext.get(ComponentRegistry);
+        const whenDefinedSpy = jest.spyOn(componentRegistry, 'whenDefined').mockImplementation(() => promise);
 
         @Component({ name: 'test-component', extend: { name: 'div', type: Base } })
         class TestComponent {}
 
         expect(featureContext.whenDefined(TestComponent)).toBe(promise);
-        expect(mockComponentRegistry.whenDefined).toHaveBeenCalledWith(TestComponent);
+        expect(whenDefinedSpy).toHaveBeenCalledWith(TestComponent);
       });
       it('proxies `BootstrapContext.whenDefined()`', () => {
 
         const promise = Promise.resolve<any>('abc');
-
-        mockComponentRegistry.whenDefined.mockReturnValue(promise);
+        const componentRegistry = bootstrapContext.get(ComponentRegistry);
+        const whenDefinedSpy = jest.spyOn(componentRegistry, 'whenDefined').mockImplementation(() => promise);
 
         @Component({ name: 'test-component', extend: { name: 'div', type: Base } })
         class TestComponent {}
 
         expect(featureContext.whenDefined(TestComponent)).toBe(promise);
-        expect(mockComponentRegistry.whenDefined).toHaveBeenCalledWith(TestComponent);
+        expect(whenDefinedSpy).toHaveBeenCalledWith(TestComponent);
       });
       it('proxies `perDefinition()`', () => {
 
-        const definitionValueRegistry = createDefinitionValueRegistrySpy.mock.results[0].value;
+        const definitionValueRegistry = bootstrapContext.get(DefinitionValueRegistry);
         const spy = jest.spyOn(definitionValueRegistry, 'provide');
 
         const key = new SingleContextKey<string>('test-value-key');
@@ -234,7 +188,7 @@ describe('boot', () => {
       });
       it('proxies `perComponent()`', () => {
 
-        const componentValueRegistry = createComponentValueRegistrySpy.mock.results[0].value;
+        const componentValueRegistry = bootstrapContext.get(ComponentValueRegistry);
         const spy = jest.spyOn(componentValueRegistry, 'provide');
 
         const key = new SingleContextKey<string>('test-value-key');
@@ -245,10 +199,10 @@ describe('boot', () => {
         expect(spy).toHaveBeenCalledWith({ a: key, by: provider });
       });
       it('proxies `onDefinition`', () => {
-        expect(featureContext.onDefinition).toBe(mockElementBuilder.definitions.on);
+        expect(featureContext.onDefinition).toBe(bootstrapContext.get(ElementBuilder).definitions.on);
       });
       it('proxies `onComponent`', () => {
-        expect(featureContext.onComponent).toBe(mockElementBuilder.components.on);
+        expect(featureContext.onComponent).toBe(bootstrapContext.get(ElementBuilder).components.on);
       });
 
       describe('whenReady', () => {
@@ -270,14 +224,14 @@ describe('boot', () => {
         it('proxies `whenDefined()`', () => {
 
           const promise = Promise.resolve<any>('abc');
-
-          mockComponentRegistry.whenDefined.mockReturnValue(promise);
+          const componentRegistry = bootstrapContext.get(ComponentRegistry);
+          const whenDefinedSpy = jest.spyOn(componentRegistry, 'whenDefined').mockImplementation(() => promise);
 
           @Component({ name: 'test-component', extend: { name: 'div', type: Base } })
           class TestComponent {}
 
           expect(bootstrapContext.whenDefined(TestComponent)).toBe(promise);
-          expect(mockComponentRegistry.whenDefined).toHaveBeenCalledWith(TestComponent);
+          expect(whenDefinedSpy).toHaveBeenCalledWith(TestComponent);
         });
 
         describe('whenReady', () => {

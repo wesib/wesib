@@ -9,8 +9,6 @@ import { ComponentClass } from '../../component/definition';
 import { FeatureRegistry } from '../../feature/loader';
 import { BootstrapContext } from '../bootstrap-context';
 import { ComponentRegistry } from '../definition/component-registry.impl';
-import { ComponentValueRegistry } from '../definition/component-value-registry.impl';
-import { DefinitionValueRegistry } from '../definition/definition-value-registry.impl';
 import { ElementBuilder } from '../definition/element-builder.impl';
 import { DefaultNamespaceAliaser } from '../globals';
 import { BootstrapValueRegistry } from './bootstrap-value-registry.impl';
@@ -28,18 +26,8 @@ import { BootstrapValueRegistry } from './bootstrap-value-registry.impl';
 export function bootstrapComponents(...features: Class[]): BootstrapContext {
 
   const valueRegistry = BootstrapValueRegistry.create();
-  const values = valueRegistry.values;
-  const definitionValueRegistry = DefinitionValueRegistry.create(values);
-  const componentValueRegistry = ComponentValueRegistry.create();
-  const elementBuilder = ElementBuilder.create({ definitionValueRegistry, componentValueRegistry });
-  const { bootstrapContext, componentRegistry, complete } = initBootstrap({ elementBuilder, valueRegistry });
-  const featureRegistry = FeatureRegistry.create({
-    bootstrapContext,
-    componentRegistry,
-    valueRegistry,
-    definitionValueRegistry,
-    componentValueRegistry,
-  });
+  const { bootstrapContext, complete } = initBootstrap(valueRegistry);
+  const featureRegistry = FeatureRegistry.create(bootstrapContext);
 
   features.forEach(feature => featureRegistry.add(feature));
   featureRegistry.bootstrap().then(complete);
@@ -47,30 +35,20 @@ export function bootstrapComponents(...features: Class[]): BootstrapContext {
   return bootstrapContext;
 }
 
-function initBootstrap(
-    {
-      elementBuilder,
-      valueRegistry,
-    }: {
-      elementBuilder: ElementBuilder;
-      valueRegistry: BootstrapValueRegistry;
-    },
-) {
+function initBootstrap(valueRegistry: BootstrapValueRegistry) {
 
-  let componentRegistry!: ComponentRegistry;
   const stage = trackValue<BootstrapStage>(BootstrapStage.Init);
   const whenReady = stage.read.thru(s => s ? nextArgs() : nextSkip());
-
   const values = valueRegistry.values;
 
   class Context extends BootstrapContext {
 
     get onDefinition() {
-      return elementBuilder.definitions.on;
+      return this.get(ElementBuilder).definitions.on;
     }
 
     get onComponent() {
-      return elementBuilder.components.on;
+      return this.get(ElementBuilder).components.on;
     }
 
     get get() {
@@ -80,13 +58,12 @@ function initBootstrap(
     constructor() {
       super();
       valueRegistry.provide({ a: DefaultNamespaceAliaser, by: newNamespaceAliaser });
-      valueRegistry.provide({ a: Context, is: this });
-      componentRegistry = ComponentRegistry.create({ bootstrapContext: this, elementBuilder });
-      this.whenReady(() => componentRegistry.complete());
+      valueRegistry.provide({ a: BootstrapContext, is: this });
+      this.whenReady(() => this.get(ComponentRegistry).complete());
     }
 
     whenDefined<C extends object>(componentType: ComponentClass<C>) {
-      return componentRegistry.whenDefined(componentType);
+      return this.get(ComponentRegistry).whenDefined(componentType);
     }
 
     whenReady(callback: (this: this) => void): void {
@@ -99,7 +76,6 @@ function initBootstrap(
 
   return {
     bootstrapContext,
-    componentRegistry,
     complete() {
       stage.it = BootstrapStage.Ready;
     },

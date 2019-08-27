@@ -1,5 +1,5 @@
 import { nextArgs, nextSkip, noop } from 'call-thru';
-import { ContextValues, ContextValueSpec } from 'context-values';
+import { ContextKey, ContextKey__symbol, ContextValues, ContextValueSpec, SingleContextKey } from 'context-values';
 import { EventEmitter, OnEvent, trackValue, ValueTracker } from 'fun-events';
 import { ArraySet, Class } from '../../common';
 import {
@@ -60,6 +60,12 @@ function elementStatus(element: any): ValueTracker<ComponentStatus> {
   return element[ComponentStatus__symbol];
 }
 
+const ElementBuilder__key = /*#__PURE__*/ new SingleContextKey<ElementBuilder>('element-builder', {
+  byDefault(context: ContextValues) {
+    return new ElementBuilder(context);
+  }
+});
+
 /**
  * @internal
  */
@@ -70,23 +76,13 @@ export class ElementBuilder {
   readonly definitions = new EventEmitter<[DefinitionContext_]>();
   readonly components = new EventEmitter<[ComponentContext_]>();
 
-  static create(opts: {
-    definitionValueRegistry: DefinitionValueRegistry;
-    componentValueRegistry: ComponentValueRegistry;
-  }): ElementBuilder {
-    return new ElementBuilder(opts);
+  static get [ContextKey__symbol](): ContextKey<ElementBuilder> {
+    return ElementBuilder__key;
   }
 
-  private constructor(
-      {
-        definitionValueRegistry,
-        componentValueRegistry,
-      }: {
-        definitionValueRegistry: DefinitionValueRegistry;
-        componentValueRegistry: ComponentValueRegistry;
-      }) {
-    this._definitionValueRegistry = definitionValueRegistry;
-    this._componentValueRegistry = componentValueRegistry;
+  constructor(context: ContextValues) {
+    this._definitionValueRegistry = context.get(DefinitionValueRegistry);
+    this._componentValueRegistry = context.get(ComponentValueRegistry);
   }
 
   buildElement<T extends object>(componentType: ComponentClass<T>): ComponentFactory_<T> {
@@ -192,14 +188,14 @@ export class ElementBuilder {
       constructor() {
         super();
 
-        const definitionRegistry = DefinitionValueRegistry.create(builder._definitionValueRegistry.seedIn(this));
+        const definitionRegistry = new DefinitionValueRegistry(builder._definitionValueRegistry.seedIn(this));
 
         definitionRegistry.provide({ a: DefinitionContext_, is: this });
         definitionRegistry.provide({ a: ComponentFactory_, is: componentFactory });
         values = definitionRegistry.newValues();
         new ArraySet(def.set).forEach(spec => definitionRegistry.provide(spec));
 
-        typeValueRegistry = ComponentValueRegistry.create(definitionRegistry.seedIn(this));
+        typeValueRegistry = new ComponentValueRegistry(definitionRegistry.seedIn(this));
         new ArraySet(def.perComponent).forEach(spec => typeValueRegistry.provide(spec));
       }
 

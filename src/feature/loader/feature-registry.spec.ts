@@ -33,7 +33,7 @@ describe('feature', () => {
       });
     });
 
-    let mockValueRegistry: Mocked<BootstrapValueRegistry>;
+    let bootstrapRegistry: BootstrapValueRegistry;
     let mockComponentRegistry: Mocked<ComponentRegistry>;
     let mockDefinitionValueRegistry: Mocked<DefinitionValueRegistry>;
     let mockComponentValueRegistry: Mocked<ComponentValueRegistry>;
@@ -42,26 +42,28 @@ describe('feature', () => {
     let addSpy: MethodSpy<FeatureRegistry, 'add'>;
 
     beforeEach(() => {
-      mockBootstrapContext = {} as any;
+      bootstrapRegistry = BootstrapValueRegistry.create();
+
+      mockBootstrapContext = {
+        get: bootstrapRegistry.values.get,
+      } as any;
+      bootstrapRegistry.provide({ a: BootstrapContext, is: mockBootstrapContext });
+
       mockComponentRegistry = {
         define: jest.fn(),
       } as any;
-      mockValueRegistry = {
-        provide: jest.fn(),
-      } as any;
+      bootstrapRegistry.provide({ a: ComponentRegistry, is: mockComponentRegistry });
+
       mockDefinitionValueRegistry = {
         provide: jest.fn(),
       } as any;
+      bootstrapRegistry.provide({ a: DefinitionValueRegistry, is: mockDefinitionValueRegistry });
+
       mockComponentValueRegistry = {
         provide: jest.fn(),
       } as any;
-      registry = FeatureRegistry.create({
-        bootstrapContext: mockBootstrapContext,
-        componentRegistry: mockComponentRegistry,
-        valueRegistry: mockValueRegistry,
-        definitionValueRegistry: mockDefinitionValueRegistry,
-        componentValueRegistry: mockComponentValueRegistry,
-      });
+      bootstrapRegistry.provide({ a: ComponentValueRegistry, is: mockComponentValueRegistry });
+      registry = FeatureRegistry.create(mockBootstrapContext);
 
       addSpy = jest.spyOn(registry, 'add');
     });
@@ -182,6 +184,7 @@ describe('feature', () => {
     });
     it('provides bootstrap values', () => {
 
+      const provideSpy = jest.spyOn(bootstrapRegistry, 'provide');
       const key = new SingleContextKey('test-key');
       const provider = jest.fn();
       class Feature {}
@@ -191,7 +194,7 @@ describe('feature', () => {
       registry.add(Feature);
       registry.bootstrap();
 
-      expect(mockValueRegistry.provide).toHaveBeenCalledWith({ a: key, by: provider });
+      expect(provideSpy).toHaveBeenCalledWith({ a: key, by: provider });
     });
     it('provides definition values', () => {
 

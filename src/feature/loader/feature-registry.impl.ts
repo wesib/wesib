@@ -1,7 +1,7 @@
+import { BootstrapContext } from '../../boot';
 import { ArraySet, Class } from '../../common';
 import { FeatureDef } from '../feature-def';
 import { FeatureHandle } from './feature-handle.impl';
-import { FeatureSetup } from './feature-setup.impl';
 
 /**
  * @internal
@@ -10,11 +10,11 @@ export class FeatureRegistry {
 
   private readonly _handles = new Map<Class, FeatureHandle>();
 
-  static create(deps: FeatureSetup): FeatureRegistry {
-    return new FeatureRegistry(deps);
+  static create(context: BootstrapContext): FeatureRegistry {
+    return new FeatureRegistry(context);
   }
 
-  private constructor(private readonly _setup: FeatureSetup) {
+  private constructor(private readonly _context: BootstrapContext) {
   }
 
   add(feature: Class, provider: Class = feature) {
@@ -23,7 +23,7 @@ export class FeatureRegistry {
     let handle = existing;
 
     if (!handle) {
-      handle = new FeatureHandle(feature, this._setup);
+      handle = new FeatureHandle(feature, this._context);
     }
     handle.provideBy(provider);
 

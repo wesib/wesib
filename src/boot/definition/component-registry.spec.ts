@@ -1,48 +1,52 @@
-import { ContextKey__symbol, ContextRequest } from 'context-values';
 import { Class } from '../../common';
 import { ComponentDef, ComponentDef__symbol } from '../../component';
 import { ComponentClass, CustomElements } from '../../component/definition';
-import { ObjectMock } from '../../spec/mocks';
 import { BootstrapContext } from '../bootstrap-context';
+import { BootstrapValueRegistry } from '../bootstrap/bootstrap-value-registry.impl';
 import { ComponentFactory__symbol } from './component-factory.symbol.impl';
 import { ComponentRegistry } from './component-registry.impl';
 import { ElementBuilder } from './element-builder.impl';
+import Mocked = jest.Mocked;
 
 describe('boot', () => {
   describe('ComponentRegistry', () => {
 
-    let customElementsSpy: ObjectMock<CustomElements, 'define' | 'whenDefined'>;
-    let bootstrapContextSpy: ObjectMock<BootstrapContext>;
-    let builderSpy: ObjectMock<ElementBuilder> & ElementBuilder;
-    let registry: ComponentRegistry;
-    let TestComponent: ComponentClass;
-    let ElementSpy: Class;
+    let bootstrapRegistry: BootstrapValueRegistry;
+    let mockBootstrapContext: Mocked<BootstrapContext>;
+    let mockCustomElements: Mocked<CustomElements>;
 
     beforeEach(() => {
-      bootstrapContextSpy = {
-        get: jest.fn((request: ContextRequest<any>) => {
-          if (request[ContextKey__symbol] === CustomElements[ContextKey__symbol]) {
-            return customElementsSpy;
-          }
-          return;
-        })
+      bootstrapRegistry = BootstrapValueRegistry.create();
+      mockBootstrapContext = {
+        get: bootstrapRegistry.values.get,
       } as any;
-      customElementsSpy = {
+      bootstrapRegistry.provide({ a: BootstrapContext, is: mockBootstrapContext });
+
+      mockCustomElements = {
         define: jest.fn(),
         whenDefined: jest.fn(),
       };
+      bootstrapRegistry.provide({ a: CustomElements, is: mockCustomElements });
     });
+
+    let mockBuilder: Mocked<ElementBuilder>;
+
     beforeEach(() => {
-      builderSpy = {
+      mockBuilder = {
         buildElement: jest.fn(),
       } as any;
+      bootstrapRegistry.provide({ a: ElementBuilder, is: mockBuilder });
     });
+
+    let registry: ComponentRegistry;
+
     beforeEach(() => {
-      registry = ComponentRegistry.create({
-        bootstrapContext: bootstrapContextSpy,
-        elementBuilder: builderSpy,
-      });
+      registry = mockBootstrapContext.get(ComponentRegistry);
     });
+
+    let TestComponent: ComponentClass;
+    let ElementSpy: Class;
+
     beforeEach(() => {
       TestComponent = class {
         static [ComponentDef__symbol]: ComponentDef = {
@@ -51,7 +55,7 @@ describe('boot', () => {
       };
 
       ElementSpy = { name: 'Element' } as any;
-      builderSpy.buildElement.mockReturnValue({ elementType: ElementSpy } as any);
+      mockBuilder.buildElement.mockReturnValue({ elementType: ElementSpy } as any);
     });
 
     describe('define', () => {
@@ -59,13 +63,13 @@ describe('boot', () => {
         registry.define(TestComponent);
         registry.complete();
 
-        expect(builderSpy.buildElement).toHaveBeenCalledWith(TestComponent);
+        expect(mockBuilder.buildElement).toHaveBeenCalledWith(TestComponent);
       });
       it('defines custom element', () => {
         registry.define(TestComponent);
         registry.complete();
 
-        expect(customElementsSpy.define).toHaveBeenCalledWith(TestComponent, ElementSpy);
+        expect(mockCustomElements.define).toHaveBeenCalledWith(TestComponent, ElementSpy);
       });
     });
     describe('whenDefined', () => {
@@ -75,26 +79,26 @@ describe('boot', () => {
 
         (TestComponent as any)[ComponentFactory__symbol] = { elementType: Element, componentType: TestComponent };
 
-        customElementsSpy.whenDefined.mockReturnValue(Promise.resolve());
+        mockCustomElements.whenDefined.mockReturnValue(Promise.resolve());
 
         await registry.whenDefined(TestComponent);
 
-        expect(customElementsSpy.whenDefined).toHaveBeenCalledWith(TestComponent);
+        expect(mockCustomElements.whenDefined).toHaveBeenCalledWith(TestComponent);
       });
       it('fails if component factory is absent', async () => {
-        customElementsSpy.whenDefined.mockReturnValue(Promise.resolve());
+        mockCustomElements.whenDefined.mockReturnValue(Promise.resolve());
 
         expect(registry.whenDefined(TestComponent)).rejects.toThrow(TypeError);
-        expect(customElementsSpy.whenDefined).toHaveBeenCalledWith(TestComponent);
+        expect(mockCustomElements.whenDefined).toHaveBeenCalledWith(TestComponent);
       });
       it('fails if component registry fails', async () => {
 
         const error = new Error();
 
-        customElementsSpy.whenDefined.mockReturnValue(Promise.reject(error));
+        mockCustomElements.whenDefined.mockReturnValue(Promise.reject(error));
 
         expect(registry.whenDefined(TestComponent)).rejects.toBe(error);
-        expect(customElementsSpy.whenDefined).toHaveBeenCalledWith(TestComponent);
+        expect(mockCustomElements.whenDefined).toHaveBeenCalledWith(TestComponent);
       });
     });
   });
