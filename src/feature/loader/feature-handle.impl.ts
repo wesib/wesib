@@ -5,7 +5,7 @@ import { ComponentContext } from '../../component';
 import { ComponentClass, DefinitionContext } from '../../component/definition';
 import { FeatureContext } from '../feature-context';
 import { FeatureDef } from '../feature-def';
-import { FeatureLoaderDeps } from './feature-loader-deps.impl';
+import { FeatureSetup } from './feature-setup.impl';
 
 /**
  * @internal
@@ -15,7 +15,7 @@ export class FeatureHandle {
   private readonly _providers = new Set<Class>();
   private _context?: FeatureContext;
 
-  constructor(readonly feature: Class, private readonly _deps: FeatureLoaderDeps) {
+  constructor(readonly feature: Class, private readonly _setup: FeatureSetup) {
     this.provideBy(feature);
   }
 
@@ -24,8 +24,8 @@ export class FeatureHandle {
       return this._context;
     }
 
-    const { componentRegistry, definitionValueRegistry, componentValueRegistry } = this._deps;
-    const registry = new ContextRegistry<FeatureContext>(this._deps.bootstrapContext);
+    const { componentRegistry, definitionValueRegistry, componentValueRegistry } = this._setup;
+    const registry = new ContextRegistry<FeatureContext>(this._setup.bootstrapContext);
     const values = registry.newValues();
 
     class Context extends FeatureContext {
@@ -114,7 +114,7 @@ export class FeatureHandle {
     const def = FeatureDef.of(feature);
     const context = this.context;
 
-    new ArraySet(def.set).forEach(spec => this._deps.valueRegistry.provide(spec));
+    new ArraySet(def.set).forEach(spec => this._setup.valueRegistry.provide(spec));
     new ArraySet(def.perDefinition).forEach(spec => context.perDefinition(spec));
     new ArraySet(def.perComponent).forEach(spec => context.perComponent(spec));
   }

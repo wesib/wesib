@@ -7,7 +7,7 @@ import { DefinitionValueRegistry } from '../../boot/definition/definition-value-
 /**
  * @internal
  */
-export interface FeatureLoaderDeps {
+export interface FeatureSetup {
   bootstrapContext: BootstrapContext;
   componentRegistry: ComponentRegistry;
   valueRegistry: BootstrapValueRegistry;
