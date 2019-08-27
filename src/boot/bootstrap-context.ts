@@ -6,7 +6,6 @@ import { OnEvent } from 'fun-events';
 import { ComponentContext } from '../component';
 import { ComponentClass, ComponentFactory, DefinitionContext } from '../component/definition';
 import { BootstrapContext__key } from './bootstrap-context.key.impl';
-import { ComponentKit } from './component-kit';
 
 /**
  * Components bootstrap context.
@@ -59,9 +58,7 @@ export abstract class BootstrapContext extends ContextValues {
    *
    * @throws TypeError  If `componentType` does not contain a component definition.
    */
-  whenDefined<C extends object>(componentType: ComponentClass<C>): Promise<ComponentFactory<C>> {
-    return this.get(ComponentKit).whenDefined(componentType);
-  }
+  abstract whenDefined<C extends object>(componentType: ComponentClass<C>): Promise<ComponentFactory<C>>;
 
   /**
    * Provides a value available in each component definition context.

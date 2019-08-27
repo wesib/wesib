@@ -22,9 +22,7 @@ export function testComponentFactory<T extends object>(componentType: Class<T>):
   })
   class TestFeature {}
 
-  const kit = bootstrapComponents(TestFeature);
-
-  return kit.whenDefined(componentType);
+  return bootstrapComponents(TestFeature).whenDefined(componentType);
 }
 
 export function testElement(componentType: Class): Class {

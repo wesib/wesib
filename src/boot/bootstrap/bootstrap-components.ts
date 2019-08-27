@@ -9,7 +9,6 @@ import { ComponentContext } from '../../component';
 import { ComponentClass, DefinitionContext } from '../../component/definition';
 import { FeatureRegistry } from '../../feature/loader';
 import { BootstrapContext } from '../bootstrap-context';
-import { ComponentKit } from '../component-kit';
 import { ComponentRegistry } from '../definition/component-registry.impl';
 import { ComponentValueRegistry } from '../definition/component-value-registry.impl';
 import { DefinitionValueRegistry } from '../definition/definition-value-registry.impl';
@@ -50,14 +49,6 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
   let whenReady: (this: BootstrapContext) => void = noop;
   let ready = false;
 
-  class Kit extends ComponentKit {
-
-    whenDefined<C extends object>(componentType: ComponentClass<C>) {
-      return componentRegistry.whenDefined(componentType);
-    }
-
-  }
-
   const values = valueRegistry.values;
 
   class Context extends BootstrapContext {
@@ -82,7 +73,10 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
       componentRegistry = ComponentRegistry.create({ bootstrapContext: this, elementBuilder });
       valueRegistry.provide({ a: DefaultNamespaceAliaser, by: newNamespaceAliaser });
       valueRegistry.provide({ a: Context, is: this });
-      valueRegistry.provide({ a: ComponentKit, as: Kit });
+    }
+
+    whenDefined<C extends object>(componentType: ComponentClass<C>) {
+      return componentRegistry.whenDefined(componentType);
     }
 
     perDefinition<D extends any[], S>(spec: ContextValueSpec<DefinitionContext, any, D, S>) {
