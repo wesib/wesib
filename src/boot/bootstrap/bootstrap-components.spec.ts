@@ -4,7 +4,6 @@ import { FeatureContext, FeatureDef } from '../../feature';
 import { FeatureRegistry } from '../../feature/loader';
 import { MethodSpy, ObjectMock } from '../../spec/mocks';
 import { BootstrapContext } from '../bootstrap-context';
-import { ComponentKit } from '../component-kit';
 import { ComponentRegistry } from '../definition/component-registry.impl';
 import { ComponentValueRegistry } from '../definition/component-value-registry.impl';
 import { DefinitionValueRegistry } from '../definition/definition-value-registry.impl';
@@ -93,13 +92,13 @@ describe('boot', () => {
       expect(bootstrapValues.get(DefaultNamespaceAliaser)).toBeInstanceOf(Function);
     });
 
-    describe('ComponentKit', () => {
+    describe('BootstrapContext', () => {
       it('is constructed', () => {
-        expect(bootstrapComponents()).toBeInstanceOf(ComponentKit);
+        expect(bootstrapComponents()).toBeInstanceOf(BootstrapContext);
       });
       it('proxies whenDefined() method', () => {
 
-        const kit = bootstrapComponents();
+        const context = bootstrapComponents();
         const promise = Promise.resolve<any>('abc');
 
         mockComponentRegistry.whenDefined.mockReturnValue(promise);
@@ -107,7 +106,7 @@ describe('boot', () => {
         @Component('test-component')
         class TestComponent {}
 
-        expect(kit.whenDefined(TestComponent)).toBe(promise);
+        expect(context.whenDefined(TestComponent)).toBe(promise);
         expect(mockComponentRegistry.whenDefined).toHaveBeenCalledWith(TestComponent);
       });
     });
@@ -159,7 +158,7 @@ describe('boot', () => {
 
       let featureContext: FeatureContext;
       let whenReady: Mock;
-      let kit: ComponentKit;
+      let bootstrapContext: BootstrapContext;
 
       beforeEach(() => {
         whenReady = jest.fn();
@@ -167,7 +166,7 @@ describe('boot', () => {
 
         class TestFeature {}
 
-        kit = bootstrapComponents(
+        bootstrapContext = bootstrapComponents(
             FeatureDef.define(
                 TestFeature,
                 {
@@ -179,8 +178,8 @@ describe('boot', () => {
                 }));
       });
 
-      it('provides `ComponentKit` value', () => {
-        expect(featureContext.get(ComponentKit)).toBe(kit);
+      it('provides `BootstrapContext` value', () => {
+        expect(featureContext.get(BootstrapContext)).toBe(bootstrapContext);
       });
       it('provides `FeatureContext` value', () => {
         expect(featureContext.get(FeatureContext)).toBe(featureContext);
@@ -264,17 +263,6 @@ describe('boot', () => {
       });
 
       describe('BootstrapContext', () => {
-
-        let bootstrapContext: BootstrapContext;
-
-        beforeEach(() => {
-          bootstrapContext = featureContext.get(BootstrapContext);
-        });
-
-        it('is provided', () => {
-          expect(bootstrapContext).toBeInstanceOf(BootstrapContext);
-          expect(bootstrapContext).not.toBe(featureContext);
-        });
         it('proxies `whenDefined()`', () => {
 
           const promise = Promise.resolve<any>('abc');

@@ -3,7 +3,7 @@
  */
 import { ContextKey, ContextKey__symbol, ContextValueSpec, SingleContextKey } from 'context-values';
 import { OnEvent } from 'fun-events';
-import { BootstrapContext, ComponentKit } from '../boot';
+import { BootstrapContext } from '../boot';
 import { ComponentContext } from '../component';
 import { ComponentClass, ComponentFactory, DefinitionContext } from '../component/definition';
 
@@ -30,7 +30,7 @@ export abstract class FeatureContext extends BootstrapContext {
   }
 
   whenDefined<C extends object>(componentType: ComponentClass<C>): Promise<ComponentFactory<C>> {
-    return this.get(ComponentKit).whenDefined(componentType);
+    return this.get(BootstrapContext).whenDefined(componentType);
   }
 
   /**

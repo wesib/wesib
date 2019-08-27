@@ -25,9 +25,9 @@ import { BootstrapValueRegistry } from './bootstrap-value-registry.impl';
  * @category Core
  * @param features  Features and components to enable.
  *
- * @returns New component kit instance.
+ * @returns Bootstrap context instance.
  */
-export function bootstrapComponents(...features: Class[]): ComponentKit {
+export function bootstrapComponents(...features: Class[]): BootstrapContext {
 
   const valueRegistry = BootstrapValueRegistry.create();
   const { bootstrapContext, componentRegistry, complete } = initBootstrap(valueRegistry);
@@ -38,7 +38,7 @@ export function bootstrapComponents(...features: Class[]): ComponentKit {
   featureRegistry.bootstrap(bootstrapContext);
   complete();
 
-  return bootstrapContext.get(ComponentKit);
+  return bootstrapContext;
 }
 
 function initBootstrap(valueRegistry: BootstrapValueRegistry) {
