@@ -1,7 +1,8 @@
 /**
  * @module @wesib/wesib
  */
-import { noop } from 'call-thru';
+import { nextArgs, nextSkip } from 'call-thru';
+import { trackValue } from 'fun-events';
 import { newNamespaceAliaser } from 'namespace-aliaser';
 import { Class } from '../../common';
 import { ComponentClass } from '../../component/definition';
@@ -57,8 +58,8 @@ function initBootstrap(
 ) {
 
   let componentRegistry!: ComponentRegistry;
-  let whenReady: (this: BootstrapContext) => void = noop;
-  let ready = false;
+  const stage = trackValue<BootstrapStage>(BootstrapStage.Init);
+  const whenReady = stage.read.thru(s => s ? nextArgs() : nextSkip());
 
   const values = valueRegistry.values;
 
@@ -88,18 +89,8 @@ function initBootstrap(
       return componentRegistry.whenDefined(componentType);
     }
 
-    whenReady(callback: (this: BootstrapContext) => void): void {
-      if (ready) {
-        callback.call(this);
-      } else {
-
-        const prev = whenReady;
-
-        whenReady = function () {
-          prev.call(this);
-          callback.call(this);
-        };
-      }
+    whenReady(callback: (this: this) => void): void {
+      whenReady.once(() => callback.call(this));
     }
 
   }
@@ -110,8 +101,12 @@ function initBootstrap(
     bootstrapContext,
     componentRegistry,
     complete() {
-      ready = true;
-      whenReady.call(bootstrapContext);
+      stage.it = BootstrapStage.Ready;
     },
   };
+}
+
+const enum BootstrapStage {
+  Init,
+  Ready,
 }

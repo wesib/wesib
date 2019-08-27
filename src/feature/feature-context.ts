@@ -51,15 +51,6 @@ export abstract class FeatureContext extends BootstrapContext {
    */
   abstract perComponent<D extends any[], S>(spec: ContextValueSpec<ComponentContext, any, D, S>): void;
 
-  /**
-   * Registers bootstrap readiness callback.
-   *
-   * The registered callback function will be called once bootstrap is complete.
-   *
-   * If bootstrap is complete already, the callback will be notified immediately.
-   *
-   * @param callback  A callback to notify on bootstrap completion.
-   */
   whenReady(callback: (this: this) => void): void {
     this.get(BootstrapContext).whenReady(() => callback.call(this));
   }
