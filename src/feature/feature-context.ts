@@ -51,8 +51,8 @@ export abstract class FeatureContext extends BootstrapContext {
    */
   abstract perComponent<D extends any[], S>(spec: ContextValueSpec<ComponentContext, any, D, S>): void;
 
-  whenReady(callback: (this: this) => void): void {
-    this.get(BootstrapContext).whenReady(() => callback.call(this));
+  whenReady(callback: (this: void) => void): void {
+    this.get(BootstrapContext).whenReady(callback);
   }
 
   /**

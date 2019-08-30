@@ -69,6 +69,6 @@ export abstract class BootstrapContext extends ContextValues {
    *
    * @param callback  A callback to notify on bootstrap completion.
    */
-  abstract whenReady(callback: (this: this) => void): void;
+  abstract whenReady(callback: (this: void) => void): void;
 
 }

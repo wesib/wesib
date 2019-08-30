@@ -66,8 +66,8 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
       return this.get(ComponentRegistry).whenDefined(componentType);
     }
 
-    whenReady(callback: (this: this) => void): void {
-      whenReady.once(() => callback.call(this));
+    whenReady(callback: (this: void) => void): void {
+      whenReady.once(callback);
     }
 
   }

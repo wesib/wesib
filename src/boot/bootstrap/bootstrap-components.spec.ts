@@ -208,7 +208,6 @@ describe('boot', () => {
       describe('whenReady', () => {
         it('invokes callback once bootstrap is complete', () => {
           expect(whenReady).toHaveBeenCalledWith();
-          expect(whenReady.mock.instances[0]).toBe(featureContext);
         });
         it('invokes callback immediately when bootstrap is complete already', () => {
 
@@ -216,7 +215,6 @@ describe('boot', () => {
 
           featureContext.whenReady(callback);
           expect(callback).toHaveBeenCalledWith();
-          expect(callback.mock.instances[0]).toBe(featureContext);
         });
       });
 
@@ -241,7 +239,6 @@ describe('boot', () => {
 
             bootstrapContext.whenReady(callback);
             expect(callback).toHaveBeenCalledWith();
-            expect(callback.mock.instances[0]).toBe(bootstrapContext);
           });
         });
       });
