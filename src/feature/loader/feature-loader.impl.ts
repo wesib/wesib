@@ -1,23 +1,93 @@
 import { filterIt, mapIt } from 'a-iterable';
 import { isPresent, NextArgs, nextArgs } from 'call-thru';
-import { ContextRegistry, ContextValueSpec } from 'context-values';
-import { AfterEvent, afterEventBy, afterEventFromAll, afterEventFromEach, afterEventOf } from 'fun-events';
+import { ContextRegistry, ContextUpKey, ContextValueOpts, ContextValues, ContextValueSpec } from 'context-values';
+import { AfterEvent, afterEventBy, afterEventFromAll, afterEventFromEach, afterEventOf, EventKeeper } from 'fun-events';
 import { BootstrapContext } from '../../boot';
 import { BootstrapValueRegistry } from '../../boot/bootstrap/bootstrap-value-registry.impl';
 import { ComponentRegistry } from '../../boot/definition/component-registry.impl';
 import { ComponentValueRegistry } from '../../boot/definition/component-value-registry.impl';
 import { DefinitionValueRegistry } from '../../boot/definition/definition-value-registry.impl';
-import { ArraySet } from '../../common';
+import { ArraySet, Class } from '../../common';
 import { ComponentContext } from '../../component';
 import { ComponentClass, DefinitionContext } from '../../component/definition';
 import { FeatureContext } from '../feature-context';
-import { FeatureKey } from './feature-key.impl';
 import { FeatureClause, FeatureRequest } from './feature-request.impl';
 
 /**
  * @internal
  */
-export function loadFeature(
+export interface FeatureLoader {
+
+  readonly request: FeatureRequest;
+
+  readonly ready: Promise<void>;
+
+  readonly down: Promise<void>;
+
+  setup(): Promise<void>;
+
+  init(): Promise<void>;
+
+}
+
+const FeatureKey__symbol = /*#__PURE__*/ Symbol('feature-key');
+
+/**
+ * @internal
+ */
+export class FeatureKey extends ContextUpKey<AfterEvent<[FeatureLoader?]>, FeatureClause> {
+
+  static of(feature: Class): FeatureKey {
+
+    const feat = feature as any;
+
+    return feat[FeatureKey__symbol] || (feat[FeatureKey__symbol] = new FeatureKey(feature));
+  }
+
+  private constructor(feature: Class) {
+    super(`feature:${feature.name}`);
+  }
+
+  grow<Ctx extends ContextValues>(
+      opts: ContextValueOpts<
+          Ctx,
+          AfterEvent<[FeatureLoader?]>,
+          EventKeeper<FeatureClause[]> | FeatureClause,
+          AfterEvent<FeatureClause[]>>,
+  ): AfterEvent<[FeatureLoader?]> | null | undefined {
+    return loadFeature(
+        opts.context.get(BootstrapContext),
+        opts.seed.keep.thru(preferredFeatureClause),
+    );
+  }
+
+}
+
+function preferredFeatureClause(...clauses: FeatureClause[]): FeatureClause | undefined {
+
+  let required = false;
+  let preferred: FeatureClause | undefined;
+
+  for (const clause of clauses) {
+    switch (clause[1]) {
+      case 'is':
+        required = true;
+        if (!preferred) {
+          preferred = clause;
+        }
+        break;
+      case 'has':
+        preferred = clause;
+        break;
+      case 'needs':
+        required = true;
+    }
+  }
+
+  return required ? preferred : undefined;
+}
+
+function loadFeature(
     bsContext: BootstrapContext,
     from: AfterEvent<[FeatureClause?]>,
 ): AfterEvent<[FeatureLoader?]> {
@@ -91,23 +161,6 @@ function presentFeatureDeps<NextReturn>(...deps: [FeatureLoader?][]): NextArgs<F
           isPresent,
       )
   );
-}
-
-/**
- * @internal
- */
-export interface FeatureLoader {
-
-  readonly request: FeatureRequest;
-
-  readonly ready: Promise<void>;
-
-  readonly down: Promise<void>;
-
-  setup(): Promise<void>;
-
-  init(): Promise<void>;
-
 }
 
 class FeatureState implements FeatureLoader {

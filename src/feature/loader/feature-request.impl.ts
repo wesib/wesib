@@ -2,7 +2,7 @@ import { noop } from 'call-thru';
 import { ArraySet, Class, mergeFunctions } from '../../common';
 import { FeatureDef } from '../feature-def';
 import { FeatureNeedsError } from '../feature-needs-error';
-import { FeatureKey } from './feature-key.impl';
+import { FeatureKey } from './feature-loader.impl';
 import { FeatureRequester } from './feature-requester.impl';
 
 /**
