@@ -22,25 +22,6 @@ import { ComponentClass, DefinitionContext } from '../../component/definition';
 import { FeatureContext } from '../feature-context';
 import { FeatureClause, FeatureRequest } from './feature-request.impl';
 
-/**
- * @internal
- */
-export interface FeatureLoader {
-
-  readonly request: FeatureRequest;
-
-  readonly ready: Promise<void>;
-
-  readonly isReady: boolean;
-
-  readonly down: Promise<void>;
-
-  setup(): Promise<void>;
-
-  init(): Promise<void>;
-
-}
-
 const FeatureKey__symbol = /*#__PURE__*/ Symbol('feature-key');
 
 /**
@@ -106,7 +87,7 @@ function loadFeature(
 
     let lastUnload = Promise.resolve();
     let lastCommand: 'setup' | 'init' | undefined;
-    let state: FeatureState | undefined;
+    let loader: FeatureLoader | undefined;
 
     return afterEventFromAll({
       clause: from,
@@ -116,14 +97,14 @@ function loadFeature(
         unload(); // Feature is no longer required. Unload it.
         return;
       }
-      if (state) {
-        if (clause[0].feature === state.request.feature) {
-          return state; // Implemented by the same feature. Do not change it.
+      if (loader) {
+        if (clause[0].feature === loader.request.feature) {
+          return loader; // Implemented by the same feature. Do not change it.
         }
         unload(); // Implemented by another feature. Unload the previous one.
       }
 
-      return state = new FeatureState(
+      return loader = new FeatureLoader(
           bsContext,
           clause[0],
           deps,
@@ -135,10 +116,10 @@ function loadFeature(
     });
 
     function unload() {
-      if (state) {
-        lastUnload = state.unload();
-        lastCommand = state.command;
-        state = undefined;
+      if (loader) {
+        lastUnload = loader.unload();
+        lastCommand = loader.command;
+        loader = undefined;
       }
     }
   }).share();
@@ -174,7 +155,10 @@ function presentFeatureDeps<NextReturn>(...deps: [FeatureLoader?][]): NextArgs<F
   );
 }
 
-class FeatureState implements FeatureLoader {
+/**
+ * @internal
+ */
+export class FeatureLoader {
 
   readonly down: Promise<void>;
   private _stage: Promise<FeatureStage>;
@@ -235,7 +219,7 @@ interface FeatureStage {
 abstract class BaseFeatureStage implements FeatureStage {
 
   constructor(
-      readonly state: FeatureState,
+      readonly state: FeatureLoader,
       readonly unload: () => Promise<void> = () => Promise.resolve(),
   ) {}
 
@@ -286,7 +270,7 @@ class SetupFeatureStage extends BaseFeatureStage {
 class InitFeatureStage extends BaseFeatureStage {
 
   constructor(
-      state: FeatureState,
+      state: FeatureLoader,
       private readonly _context: FeatureContext,
       unload: () => Promise<void>,
   ) {
