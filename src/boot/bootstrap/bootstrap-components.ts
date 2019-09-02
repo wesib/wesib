@@ -6,7 +6,8 @@ import { trackValue } from 'fun-events';
 import { newNamespaceAliaser } from 'namespace-aliaser';
 import { Class } from '../../common';
 import { ComponentClass } from '../../component/definition';
-import { FeatureRegistry } from '../../feature/loader';
+import { FeatureDef } from '../../feature';
+import { FeatureKey, FeatureRequester } from '../../feature/loader';
 import { BootstrapContext } from '../bootstrap-context';
 import { ComponentRegistry } from '../definition/component-registry.impl';
 import { ElementBuilder } from '../definition/element-builder.impl';
@@ -25,21 +26,27 @@ import { BootstrapValueRegistry } from './bootstrap-value-registry.impl';
  */
 export function bootstrapComponents(...features: Class[]): BootstrapContext {
 
-  const valueRegistry = BootstrapValueRegistry.create();
-  const { bootstrapContext, complete } = initBootstrap(valueRegistry);
-  const featureRegistry = FeatureRegistry.create(bootstrapContext);
+  const bootstrapRegistry = BootstrapValueRegistry.create();
+  const { bootstrapContext, complete } = initBootstrap(bootstrapRegistry);
+  const feature = features.length === 1 ? features[0] : bootstrapFeature(features);
 
-  features.forEach(feature => featureRegistry.add(feature));
-  featureRegistry.bootstrap().then(complete);
+  bootstrapContext.get(FeatureRequester).request(feature);
+  bootstrapContext.get(FeatureKey.of(feature))(loader => {
+    loader!.init().then(complete);
+  });
 
   return bootstrapContext;
 }
 
-function initBootstrap(valueRegistry: BootstrapValueRegistry) {
+function bootstrapFeature(needs: Class[]): Class {
+  return FeatureDef.define(class BootstrapFeature {}, { needs });
+}
+
+function initBootstrap(bootstrapRegistry: BootstrapValueRegistry) {
 
   const stage = trackValue<BootstrapStage>(BootstrapStage.Init);
   const whenReady = stage.read.thru(s => s ? nextArgs() : nextSkip());
-  const values = valueRegistry.values;
+  const values = bootstrapRegistry.values;
 
   class Context extends BootstrapContext {
 
@@ -57,12 +64,12 @@ function initBootstrap(valueRegistry: BootstrapValueRegistry) {
 
     constructor() {
       super();
-      valueRegistry.provide({ a: DefaultNamespaceAliaser, by: newNamespaceAliaser });
-      valueRegistry.provide({ a: BootstrapContext, is: this });
-      this.whenReady(() => this.get(ComponentRegistry).complete());
+      bootstrapRegistry.provide({ a: DefaultNamespaceAliaser, by: newNamespaceAliaser });
+      bootstrapRegistry.provide({ a: BootstrapContext, is: this });
     }
 
-    whenDefined<C extends object>(componentType: ComponentClass<C>) {
+    async whenDefined<C extends object>(componentType: ComponentClass<C>) {
+      await new Promise(resolve => this.whenReady(resolve));
       return this.get(ComponentRegistry).whenDefined(componentType);
     }
 

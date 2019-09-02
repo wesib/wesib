@@ -3,18 +3,18 @@ import { BootstrapWindow } from '../../boot/globals';
 import { Class } from '../../common';
 import { Component, ComponentContext } from '../../component';
 import { ComponentClass, CustomElements } from '../../component/definition';
-import { ObjectMock } from '../../spec/mocks';
 import { MockElement, testElement } from '../../spec/test-element';
 import { FeatureDef } from '../feature-def';
 import { Feature } from '../feature.decorator';
 import { RenderSchedule, RenderScheduler } from './render-scheduler';
 import { RenderSupport } from './render-support.feature';
+import Mocked = jest.Mocked;
 
 describe('feature/render', () => {
   describe('RenderSupport', () => {
 
-    let windowSpy: ObjectMock<Window>;
-    let customElementsSpy: ObjectMock<CustomElements>;
+    let windowSpy: Mocked<Window>;
+    let customElementsSpy: Mocked<CustomElements>;
 
     beforeEach(() => {
       windowSpy = {
@@ -45,7 +45,7 @@ describe('feature/render', () => {
       testComponent = TestComponent;
     });
 
-    beforeEach(() => {
+    beforeEach(async () => {
 
       @Feature({
         needs: [RenderSupport],
@@ -58,7 +58,7 @@ describe('feature/render', () => {
 
       FeatureDef.define(testComponent, { needs: TestFeature });
 
-      testElement(testComponent);
+      await testElement(testComponent);
     });
 
     describe('RenderSchedule', () => {
