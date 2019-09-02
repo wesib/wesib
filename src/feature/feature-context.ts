@@ -2,10 +2,12 @@
  * @module @wesib/wesib
  */
 import { ContextKey, ContextKey__symbol, ContextValueSpec, SingleContextKey } from 'context-values';
-import { OnEvent } from 'fun-events';
+import { AfterEvent, OnEvent } from 'fun-events';
 import { BootstrapContext } from '../boot';
+import { Class } from '../common';
 import { ComponentContext } from '../component';
 import { ComponentClass, ComponentFactory, DefinitionContext } from '../component/definition';
+import { LoadedFeature } from './loaded-feature';
 
 const FeatureContext_key = new SingleContextKey<FeatureContext>('feature-context');
 
@@ -81,5 +83,9 @@ export abstract class FeatureContext extends BootstrapContext {
    * @param callback  A callback to notify on feature load.
    */
   abstract whenReady(callback: (this: void) => void): void;
+
+  load(feature: Class): AfterEvent<[LoadedFeature]> {
+    return this.get(BootstrapContext).load(feature);
+  }
 
 }

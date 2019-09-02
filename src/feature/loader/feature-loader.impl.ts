@@ -31,6 +31,8 @@ export interface FeatureLoader {
 
   readonly ready: Promise<void>;
 
+  readonly isReady: boolean;
+
   readonly down: Promise<void>;
 
   setup(): Promise<void>;
@@ -193,6 +195,10 @@ class FeatureState implements FeatureLoader {
 
   get ready() {
     return this._stage as Promise<any>;
+  }
+
+  get isReady() {
+    return this.complete.it;
   }
 
   async setup(): Promise<void> {

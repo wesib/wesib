@@ -2,12 +2,12 @@
  * @module @wesib/wesib
  */
 import { nextArgs, nextSkip } from 'call-thru';
-import { trackValue } from 'fun-events';
+import { AfterEvent, afterEventBy, trackValue } from 'fun-events';
 import { newNamespaceAliaser } from 'namespace-aliaser';
 import { Class } from '../../common';
 import { ComponentClass } from '../../component/definition';
-import { FeatureDef } from '../../feature';
-import { FeatureKey, FeatureRequester } from '../../feature/loader';
+import { FeatureDef, LoadedFeature } from '../../feature';
+import { FeatureKey, FeatureLoader, FeatureRequester } from '../../feature/loader';
 import { BootstrapContext } from '../bootstrap-context';
 import { ComponentRegistry } from '../definition/component-registry.impl';
 import { ElementBuilder } from '../definition/element-builder.impl';
@@ -75,6 +75,41 @@ function initBootstrap(bootstrapRegistry: BootstrapValueRegistry) {
 
     whenReady(callback: (this: void) => void): void {
       whenReady.once(callback);
+    }
+
+    load(feature: Class<any>): AfterEvent<[LoadedFeature]> {
+      return afterEventBy<[LoadedFeature]>(receiver => {
+
+        const request = bootstrapContext.get(FeatureRequester).request(feature);
+        const info = trackValue<LoadedFeature>({
+          feature,
+          ready: false,
+        });
+
+        const interest = this.get(FeatureKey.of(feature))(ldr => {
+
+          // Present until `request` revoked
+          // But that happens only when interest is lost.
+          const loader = ldr as FeatureLoader;
+
+          info.it = {
+            feature: loader.request.feature,
+            ready: loader.isReady,
+          };
+          if (!loader.isReady) {
+            loader.init().then(() => {
+              info.it = {
+                feature: loader.request.feature,
+                ready: true,
+              };
+            });
+          }
+        }).whenDone(() => request.unuse());
+
+        info.read(receiver).needs(interest);
+
+        return interest;
+      }).share();
     }
 
   }

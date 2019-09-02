@@ -1,7 +1,9 @@
 import { noop } from 'call-thru';
-import { SingleContextKey } from 'context-values';
+import { SingleContextKey, SingleContextUpKey } from 'context-values';
+import { afterEventOf, EventInterest } from 'fun-events';
+import { Class } from '../../common';
 import { Component } from '../../component';
-import { FeatureContext, FeatureDef } from '../../feature';
+import { FeatureContext, FeatureDef, LoadedFeature } from '../../feature';
 import { MethodSpy } from '../../spec/mocks';
 import { BootstrapContext } from '../bootstrap-context';
 import { ComponentRegistry } from '../definition/component-registry.impl';
@@ -203,6 +205,98 @@ describe('boot', () => {
             bootstrapContext.whenReady(callback);
             expect(callback).toHaveBeenCalledWith();
           });
+        });
+
+        describe('load', () => {
+
+          let feature: Class;
+          let receiver: Mock<void, [LoadedFeature]>;
+          let featureInterest: EventInterest;
+
+          beforeEach(() => {
+            feature = class Feature {};
+            receiver = jest.fn();
+          });
+
+          it('loads the feature', async () => {
+            await loadFeature();
+            expect(receiver).toHaveBeenCalledWith({ feature, ready: false });
+            expect(receiver).toHaveBeenLastCalledWith({ feature, ready: true });
+            expect(receiver).toHaveBeenCalledTimes(2);
+          });
+          it('does not reload already loaded feature', async () => {
+            await loadFeature();
+            receiver.mockClear();
+
+            const receiver2 = jest.fn();
+
+            await loadFeature(receiver2);
+            expect(receiver).not.toHaveBeenCalled();
+            expect(receiver2).toHaveBeenCalledWith({ feature, ready: true });
+            expect(receiver2).toHaveBeenCalledTimes(1);
+          });
+          it('unloads the feature once interest is lost', async () => {
+
+            const key = new SingleContextUpKey<string | undefined>('test');
+
+            FeatureDef.define(feature, { set: { a: key, is: 'value' } });
+            await loadFeature();
+
+            let value: string | undefined;
+
+            bootstrapContext.get(key, { or: afterEventOf<[string?]>() })(v => value = v);
+            expect(value).toBe('value');
+
+            featureInterest.off();
+            await Promise.resolve();
+            expect(value).toBeUndefined();
+          });
+          it('readies the feature only when it is loaded', async () => {
+
+            const readySpy = jest.fn();
+
+            FeatureDef.define(
+                feature,
+                {
+                  init(ctx) {
+                    ctx.whenReady(readySpy);
+                    expect(readySpy).not.toHaveBeenCalled();
+                  },
+                },
+            );
+
+            await loadFeature();
+            expect(readySpy).toHaveBeenCalledTimes(1);
+          });
+          xit('informs on feature replacement', async () => {
+            await loadFeature();
+            receiver.mockClear();
+
+            class Replacement {}
+            FeatureDef.define(Replacement, { has: feature });
+            await new Promise(resolve => {
+              bootstrapContext.load(Replacement)(loaded => {
+                if (loaded.ready) {
+                  resolve();
+                }
+              });
+            });
+
+            expect(receiver).toHaveBeenCalledWith({ feature: Replacement, ready: false });
+            expect(receiver).toHaveBeenLastCalledWith({ feature: Replacement, ready: true });
+            expect(receiver).toHaveBeenCalledTimes(2);
+          });
+
+          function loadFeature(receive: Mock<void, [LoadedFeature]> = receiver) {
+            return new Promise(resolve => {
+              receive.mockImplementation(loaded => {
+                if (loaded.ready) {
+                  resolve();
+                }
+              });
+              featureInterest = bootstrapContext.load(feature)(receive);
+            });
+          }
         });
       });
     });

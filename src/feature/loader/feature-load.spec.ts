@@ -23,7 +23,10 @@ describe('feature', () => {
 
   beforeEach(() => {
     bsRegistry = BootstrapValueRegistry.create();
-    bsContext = bsRegistry.values as any;
+    bsContext = {
+      get: bsRegistry.values.get,
+      load: jest.fn(),
+    } as any;
     bsRegistry.provide({ a: BootstrapContext, is: bsContext });
   });
 
@@ -567,6 +570,31 @@ describe('feature', () => {
 
           await loader.init();
           expect(mockComponentRegistry.define).toHaveBeenLastCalledWith(TestComponent);
+        });
+      });
+
+      describe('load', () => {
+        it('delegates to bootstrap context', async () => {
+
+          class Dynamic {}
+          const loaded = { name: 'loaded feature' } as any;
+
+          bsContext.load.mockImplementation(() => loaded);
+
+          FeatureDef.define(
+              Feature,
+              {
+                init(ctx) {
+                  expect(ctx.load(Dynamic)).toBe(loaded);
+                },
+              },
+          );
+
+          const [loader] = await featureLoader();
+
+          await loader.init();
+
+          expect(bsContext.load).toHaveBeenCalledWith(Dynamic);
         });
       });
     });
