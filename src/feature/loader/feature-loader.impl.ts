@@ -1,7 +1,16 @@
 import { filterIt, mapIt } from 'a-iterable';
-import { isPresent, NextArgs, nextArgs } from 'call-thru';
+import { isPresent, NextArgs, nextArgs, nextSkip } from 'call-thru';
 import { ContextRegistry, ContextUpKey, ContextValueOpts, ContextValues, ContextValueSpec } from 'context-values';
-import { AfterEvent, afterEventBy, afterEventFromAll, afterEventFromEach, afterEventOf, EventKeeper } from 'fun-events';
+import {
+  AfterEvent,
+  afterEventBy,
+  afterEventFromAll,
+  afterEventFromEach,
+  afterEventOf,
+  EventKeeper,
+  OnEvent,
+  trackValue,
+} from 'fun-events';
 import { BootstrapContext } from '../../boot';
 import { BootstrapValueRegistry } from '../../boot/bootstrap/bootstrap-value-registry.impl';
 import { ComponentRegistry } from '../../boot/definition/component-registry.impl';
@@ -168,6 +177,7 @@ class FeatureState implements FeatureLoader {
   readonly down: Promise<void>;
   private _stage: Promise<FeatureStage>;
   private _down!: () => void;
+  readonly complete = trackValue(false);
 
   constructor(
       readonly bsContext: BootstrapContext,
@@ -242,7 +252,12 @@ class SetupFeatureStage extends BaseFeatureStage {
     await this.perDep(loader => loader.setup());
 
     const { bsContext, request: { def: { set, perDefinition, perComponent } } } = this.state;
-    const [context, unloads] = newFeatureContext(bsContext);
+    const [context, unloads] = newFeatureContext(
+        bsContext,
+        this.state.complete.read.thru(
+            complete => complete ? nextArgs() : nextSkip(),
+        ),
+    );
     const bootstrapValueRegistry = bsContext.get(BootstrapValueRegistry);
 
     new ArraySet(set).forEach(spec => unloads.push(bootstrapValueRegistry.provide(spec)));
@@ -294,6 +309,7 @@ class ActiveFeatureStage extends BaseFeatureStage {
 
   constructor(prev: InitFeatureStage) {
     super(prev.state, prev.unload);
+    prev.state.complete.it = true;
   }
 
   async setup(): Promise<FeatureStage> {
@@ -306,7 +322,10 @@ class ActiveFeatureStage extends BaseFeatureStage {
 
 }
 
-function newFeatureContext(bsContext: BootstrapContext): [FeatureContext, (() => void)[]] {
+function newFeatureContext(
+    bsContext: BootstrapContext,
+    whenReady: OnEvent<[]>,
+): [FeatureContext, (() => void)[]] {
 
   const unloads: (() => void)[] = [];
   const componentRegistry = bsContext.get(ComponentRegistry);
@@ -346,6 +365,12 @@ function newFeatureContext(bsContext: BootstrapContext): [FeatureContext, (() =>
 
     define<T extends object>(componentType: ComponentClass<T>): void {
       componentRegistry.define(componentType);
+    }
+
+    whenReady(callback: (this: void) => void): void {
+      bsContext.whenReady(() => {
+        whenReady.once(callback);
+      });
     }
 
   }

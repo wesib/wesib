@@ -55,10 +55,6 @@ export abstract class FeatureContext extends BootstrapContext {
    */
   abstract perComponent<D extends any[], S>(spec: ContextValueSpec<ComponentContext, any, D, S>): () => void;
 
-  whenReady(callback: (this: void) => void): void {
-    this.get(BootstrapContext).whenReady(callback);
-  }
-
   /**
    * Defines a component.
    *
@@ -74,5 +70,16 @@ export abstract class FeatureContext extends BootstrapContext {
    * @throws TypeError  If `componentType` does not contain a component definition.
    */
   abstract define<T extends object>(componentType: ComponentClass<T>): void;
+
+  /**
+   * Registers feature readiness callback.
+   *
+   * The registered callback function will be called once bootstrap is complete and the feature is loaded.
+   *
+   * If the above condition satisfied, the callback will be notified immediately.
+   *
+   * @param callback  A callback to notify on feature load.
+   */
+  abstract whenReady(callback: (this: void) => void): void;
 
 }
