@@ -39,8 +39,10 @@ export abstract class FeatureContext extends BootstrapContext {
    * @typeparam D  A type of dependencies.
    * @typeparam S  The type of context value sources.
    * @param spec  Component definition context value specifier.
+   *
+   * @returns A function that removes the given context value specifier when called.
    */
-  abstract perDefinition<D extends any[], S>(spec: ContextValueSpec<DefinitionContext, any, D, S>): void;
+  abstract perDefinition<D extends any[], S>(spec: ContextValueSpec<DefinitionContext, any, D, S>): () => void;
 
   /**
    * Provides a value available in each component context.
@@ -48,8 +50,10 @@ export abstract class FeatureContext extends BootstrapContext {
    * @typeparam D  A type of dependencies.
    * @typeparam S  The type of context value sources.
    * @param spec  Component context value specifier.
+   *
+   * A function that removes the given context value specifier when called.
    */
-  abstract perComponent<D extends any[], S>(spec: ContextValueSpec<ComponentContext, any, D, S>): void;
+  abstract perComponent<D extends any[], S>(spec: ContextValueSpec<ComponentContext, any, D, S>): () => void;
 
   whenReady(callback: (this: void) => void): void {
     this.get(BootstrapContext).whenReady(callback);

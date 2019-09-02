@@ -47,11 +47,11 @@ export class FeatureHandle {
       }
 
       perDefinition<D extends any[], S>(spec: ContextValueSpec<DefinitionContext, any, D, S>) {
-        definitionValueRegistry.provide(spec);
+        return definitionValueRegistry.provide(spec);
       }
 
       perComponent<D extends any[], S>(spec: ContextValueSpec<ComponentContext, any, D, S>) {
-        componentValueRegistry.provide(spec);
+        return componentValueRegistry.provide(spec);
       }
 
       define<T extends object>(componentType: ComponentClass<T>): void {
