@@ -49,18 +49,6 @@ export interface ComponentDef<T extends object = any> {
       | ContextValueSpec<DefinitionContext<T>, any, any[], any>[];
 
   /**
-   * Defines this component by calling the given component definition context methods.
-   *
-   * This function is called before the custom element is defined.
-   */
-  readonly define?:
-  /**
-   * @param this  This component definition instance.
-   * @param context  Component definition context.
-   */
-      (this: Class<T>, context: DefinitionContext<T>) => void;
-
-  /**
    * Component context value(s) to declare per each component construction.
    */
   readonly perComponent?:
@@ -71,6 +59,16 @@ export interface ComponentDef<T extends object = any> {
    * Additional feature definition options.
    */
   readonly feature?: FeatureDef;
+
+  /**
+   * Defines this component by calling the given component definition context methods.
+   *
+   * This function is called before the custom element is defined.
+   *
+   * @param this  Component class.
+   * @param context  Component definition context.
+   */
+  define?(this: Class<T>, context: DefinitionContext<T>): void;
 
 }
 
