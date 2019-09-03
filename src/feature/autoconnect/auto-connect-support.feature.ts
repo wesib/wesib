@@ -6,9 +6,9 @@ import { ConnectTracker } from './connect-tracker.impl';
 
 const AutoConnectSupport__feature: FeatureDef = {
   set: { as: ConnectTracker },
-  init(bootstrapContext) {
-    bootstrapContext.get(ConnectTracker).track();
-  }
+  init(context) {
+    context.get(ConnectTracker).track();
+  },
 };
 
 /**
