@@ -206,17 +206,7 @@ export class FeatureLoader {
 
 }
 
-interface FeatureStage {
-
-  readonly unload: () => Promise<void>;
-
-  setup(): Promise<FeatureStage>;
-
-  init(): Promise<FeatureStage>;
-
-}
-
-abstract class BaseFeatureStage implements FeatureStage {
+abstract class FeatureStage {
 
   constructor(
       readonly state: FeatureLoader,
@@ -236,7 +226,7 @@ abstract class BaseFeatureStage implements FeatureStage {
 
 }
 
-class SetupFeatureStage extends BaseFeatureStage {
+class SetupFeatureStage extends FeatureStage {
 
   async setup(): Promise<FeatureStage> {
     await this.perDep(loader => loader.setup());
@@ -267,7 +257,7 @@ class SetupFeatureStage extends BaseFeatureStage {
 
 }
 
-class InitFeatureStage extends BaseFeatureStage {
+class InitFeatureStage extends FeatureStage {
 
   constructor(
       state: FeatureLoader,
@@ -295,7 +285,7 @@ class InitFeatureStage extends BaseFeatureStage {
 
 }
 
-class ActiveFeatureStage extends BaseFeatureStage {
+class ActiveFeatureStage extends FeatureStage {
 
   constructor(prev: InitFeatureStage) {
     super(prev.state, prev.unload);
