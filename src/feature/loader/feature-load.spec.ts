@@ -18,7 +18,7 @@ import { FeatureRequest } from './feature-request.impl';
 import { FeatureRequester } from './feature-requester.impl';
 import Mocked = jest.Mocked;
 
-describe('feature', () => {
+describe('feature load', () => {
 
   let bsRegistry: BootstrapValueRegistry;
   let bsContext: Mocked<BootstrapContext>;
@@ -87,11 +87,8 @@ describe('feature', () => {
         expect(loader.request.feature).toBe(Feature);
       });
       it('registers feature dependencies as `needs` feature clause', () => {
-        class Dep1 {
-        }
-
-        class Dep2 {
-        }
+        class Dep1 {}
+        class Dep2 {}
 
         FeatureDef.define(Feature, { needs: [Dep1, Dep2] });
 
@@ -123,11 +120,8 @@ describe('feature', () => {
         expect(request2.feature).toBe(Dep2);
       });
       it('removes dependency when no longer needed', () => {
-        class Dep {
-        }
-
-        class Feature2 {
-        }
+        class Dep {}
+        class Feature2 {}
 
         FeatureDef.define(Feature, { needs: Dep });
         FeatureDef.define(Feature2, { needs: Dep });
@@ -147,8 +141,7 @@ describe('feature', () => {
         expect(depLoader).toBeUndefined();
       });
       it('registers provided feature as `has` feature clause', () => {
-        class Provided {
-        }
+        class Provided {}
 
         FeatureDef.define(Feature, { has: Provided });
 
@@ -464,7 +457,7 @@ describe('feature', () => {
 
           await replaceFeature(FeatureDef.define(class Replacement {}, { init: initSpy }), load);
 
-          expect(initSpy).toHaveBeenCalled();
+          expect(initSpy).toHaveBeenCalledTimes(1);
         });
       });
     });

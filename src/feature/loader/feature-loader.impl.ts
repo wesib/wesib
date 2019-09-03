@@ -1,5 +1,5 @@
 import { filterIt, mapIt } from 'a-iterable';
-import { isPresent, NextArgs, nextArgs, nextSkip } from 'call-thru';
+import { isPresent, NextArgs, nextArgs, NextSkip, nextSkip } from 'call-thru';
 import { ContextRegistry, ContextUpKey, ContextValueOpts, ContextValues, ContextValueSpec } from 'context-values';
 import {
   AfterEvent,
@@ -87,36 +87,73 @@ function loadFeature(
 ): AfterEvent<[FeatureLoader?]> {
   return afterEventBy<[FeatureLoader?]>(receiver => {
 
+    let origin: Class | undefined;
+    let source: OnEvent<[FeatureLoader?]> = afterEventOf();
     let stageId: Promise<FeatureStageId> = Promise.resolve('idle');
-    let loader: FeatureLoader | undefined;
 
     return afterEventFromAll({
       clause: from,
       deps: loadFeatureDeps(bsContext, from),
-    }).thru_(({ clause: [clause], deps }) => {
+    }).dig_(({ clause: [clause], deps }) => {
       if (!clause) {
-        unload(); // Feature is no longer required. Unload it.
-        return;
-      }
-      if (loader) {
-        if (clause[0].feature === loader.request.feature) {
-          return loader; // Implemented by the same feature. Do not change it.
-        }
-        unload(); // Implemented by another feature. Unload the previous one.
+        return afterEventOf();
       }
 
-      return loader = new FeatureLoader(bsContext, clause[0], deps).to(stageId);
-    })(receiver).whenDone(() => {
-      unload(); // Unload the feature once there is no more receivers
-    });
+      const [request, , target] = clause;
 
-    function unload() {
-      if (loader) {
-        stageId = loader.unload();
-        loader = undefined;
+      if (request.feature === origin) {
+        return source; // Origin didn't change. Reuse the source.
       }
+
+      origin = request.feature;
+
+      if (target !== origin) {
+        // Originated from replacement feature provider. Reuse its loader.
+        return source = bsContext.get(FeatureKey.of(origin)).thru_(
+            loader => {
+              if (loader) {
+                loader.to(stageId);
+                stageId = loader.stage;
+              }
+              return loader;
+            },
+        );
+      }
+
+      // Create feature's own loader
+      const ownLoader = new FeatureLoader(bsContext, request, deps).to(stageId);
+      const ownSource = afterEventOf(ownLoader);
+
+      return source = afterEventBy<[FeatureLoader]>(
+          rcv => ownSource(rcv).whenDone(() => {
+            stageId = ownLoader.unload();
+          })
+      ).share(); // Can be accessed again when reused
+    })(receiver);
+  }).keep.thru(
+      preventDuplicateLoader(),
+  );
+}
+
+function preventDuplicateLoader():
+    <NextReturn>(
+        loader?: FeatureLoader,
+    ) => NextArgs<[FeatureLoader?], NextReturn> | NextSkip<[FeatureLoader?], NextReturn> {
+
+  let lastLoader: FeatureLoader | null | undefined = null; // Initially `null` to differ from `undefined`
+
+  return <NextReturn>(loader?: FeatureLoader) => {
+    if (lastLoader === loader) {
+      return nextSkip();
     }
-  }).share();
+    lastLoader = loader;
+
+    if (!loader) {
+      return nextArgs<[FeatureLoader?], NextReturn>();
+    }
+
+    return nextArgs<[FeatureLoader?], NextReturn>(loader);
+  };
 }
 
 function loadFeatureDeps(
@@ -168,8 +205,8 @@ export class FeatureLoader {
     this._stage = Promise.resolve(new SetupFeatureStage(this));
   }
 
-  get stage(): Promise<any> {
-    return this._stage;
+  get stage(): Promise<FeatureStageId> {
+    return this._stage.then(stage => stage.after);
   }
 
   get ready(): boolean {
@@ -214,7 +251,7 @@ type FeatureStageStop = (this: void) => Promise<any>;
 
 abstract class FeatureStage {
 
-  protected abstract readonly after: FeatureStageId;
+  abstract readonly after: FeatureStageId;
 
   constructor(
       readonly loader: FeatureLoader,
@@ -244,8 +281,8 @@ abstract class FeatureStage {
 
 class SetupFeatureStage extends FeatureStage {
 
-  protected get after(): FeatureStageId {
-    return 'idle';
+  get after() {
+    return 'idle' as const;
   }
 
   async setup(): Promise<FeatureStage> {
@@ -274,8 +311,8 @@ class SetupFeatureStage extends FeatureStage {
 
 class InitFeatureStage extends FeatureStage {
 
-  protected get after(): FeatureStageId {
-    return 'setup';
+  get after() {
+    return 'setup' as const;
   }
 
   constructor(
@@ -306,8 +343,8 @@ class InitFeatureStage extends FeatureStage {
 
 class ActiveFeatureStage extends FeatureStage {
 
-  protected get after(): FeatureStageId {
-    return 'init';
+  get after() {
+    return 'init' as const;
   }
 
   constructor(prev: InitFeatureStage) {

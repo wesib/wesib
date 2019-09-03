@@ -237,7 +237,7 @@ describe('boot', () => {
             expect(receiver2).toHaveBeenCalledWith({ feature, ready: true });
             expect(receiver2).toHaveBeenCalledTimes(1);
           });
-          it('unloads the feature once interest is lost', async () => {
+          it('unloads the feature once the interest lost', async () => {
 
             const key = new SingleContextUpKey<string | undefined>('test');
 
@@ -270,7 +270,28 @@ describe('boot', () => {
             await loadFeature();
             expect(readySpy).toHaveBeenCalledTimes(1);
           });
-          xit('informs on feature replacement', async () => {
+          it('replaces the loaded feature', async () => {
+
+            const initSpy = jest.fn();
+
+            await loadFeature();
+            receiver.mockClear();
+
+            class Replacement {}
+            FeatureDef.define(Replacement, { init: initSpy, has: feature });
+            await new Promise(resolve => {
+              bootstrapContext.load(Replacement)(loaded => {
+                if (loaded.ready) {
+                  resolve();
+                }
+              });
+            });
+
+            expect(initSpy).toHaveBeenCalledTimes(1);
+            expect(receiver).toHaveBeenLastCalledWith({ feature: Replacement, ready: true });
+          });
+          it('informs on feature replacement load', async () => {
+
             await loadFeature();
             receiver.mockClear();
 
