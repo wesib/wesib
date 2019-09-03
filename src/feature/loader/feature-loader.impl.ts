@@ -111,10 +111,8 @@ function loadFeature(
         // Originated from replacement feature provider. Reuse its loader.
         return source = bsContext.get(FeatureKey.of(origin)).thru_(
             loader => {
-              if (loader) {
-                loader.to(stageId);
-                stageId = loader.stage;
-              }
+              loader!.to(stageId);
+              stageId = loader!.stage;
               return loader;
             },
         );
