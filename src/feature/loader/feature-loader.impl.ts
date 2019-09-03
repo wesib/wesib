@@ -85,8 +85,7 @@ function loadFeature(
 ): AfterEvent<[FeatureLoader?]> {
   return afterEventBy<[FeatureLoader?]>(receiver => {
 
-    let lastUnload = Promise.resolve();
-    let lastCommand: 'setup' | 'init' | undefined;
+    let stageId: Promise<FeatureStageId> = Promise.resolve('idle');
     let loader: FeatureLoader | undefined;
 
     return afterEventFromAll({
@@ -104,21 +103,14 @@ function loadFeature(
         unload(); // Implemented by another feature. Unload the previous one.
       }
 
-      return loader = new FeatureLoader(
-          bsContext,
-          clause[0],
-          deps,
-          lastUnload,
-          lastCommand,
-      );
+      return loader = new FeatureLoader(bsContext, clause[0], deps).to(stageId);
     })(receiver).whenDone(() => {
       unload(); // Unload the feature once there is no more receivers
     });
 
     function unload() {
       if (loader) {
-        lastUnload = loader.unload();
-        lastCommand = loader.command;
+        stageId = loader.unload();
         loader = undefined;
       }
     }
@@ -169,12 +161,9 @@ export class FeatureLoader {
       readonly bsContext: BootstrapContext,
       readonly request: FeatureRequest,
       readonly deps: FeatureLoader[],
-      prepare: Promise<void>,
-      public command: 'setup' | 'init' | undefined,
   ) {
     this.down = new Promise(resolve => this._down = resolve);
-    this._stage = prepare.then(() => new SetupFeatureStage(this))
-        .then(stage => command ? stage[command]() : stage);
+    this._stage = Promise.resolve(new SetupFeatureStage(this));
   }
 
   get ready() {
@@ -185,41 +174,66 @@ export class FeatureLoader {
     return this.complete.it;
   }
 
+  to(stageId: Promise<FeatureStageId>): this {
+
+    const lastStage = this._stage;
+
+    this._stage = stageId.then(id => lastStage.then(stage => stage[id]()));
+
+    return this;
+  }
+
   async setup(): Promise<void> {
-    this.command = 'setup';
     await (this._stage = this._stage.then(stage => stage.setup()));
   }
 
   async init(): Promise<void> {
-    this.command = 'init';
     await (this._stage = this._stage.then(stage => stage.init()));
   }
 
-  async unload(): Promise<void> {
+  async unload(): Promise<FeatureStageId> {
 
     const prevStage = this._stage;
 
     delete this._stage; // Unloaded feature should never be accessed again.
 
-    await prevStage.then(stage => stage.unload()).then(this._down);
+    const stage = await prevStage;
+    const stageId = await stage.stop();
+
+    this._down();
+
+    return stageId;
   }
 
 }
 
+type FeatureStageId = 'idle' | 'setup' | 'init';
+type FeatureStageStop = (this: void) => Promise<any>;
+
 abstract class FeatureStage {
 
+  protected abstract readonly after: FeatureStageId;
+
   constructor(
-      readonly state: FeatureLoader,
-      readonly unload: () => Promise<void> = () => Promise.resolve(),
+      readonly loader: FeatureLoader,
+      private readonly _stop: FeatureStageStop = () => Promise.resolve(),
   ) {}
+
+  async idle(): Promise<this> {
+    return this;
+  }
 
   abstract setup(): Promise<FeatureStage>;
 
   abstract init(): Promise<FeatureStage>;
 
+  stop(): Promise<FeatureStageId> {
+    return this._stop().then(() => this.after);
+  }
+
   protected perDep(action: (dep: FeatureLoader) => Promise<void>): Promise<any> {
 
-    const { deps } = this.state;
+    const { deps } = this.loader;
 
     return Promise.all(deps.map(dep => action(dep)));
   }
@@ -228,13 +242,17 @@ abstract class FeatureStage {
 
 class SetupFeatureStage extends FeatureStage {
 
+  protected get after(): FeatureStageId {
+    return 'idle';
+  }
+
   async setup(): Promise<FeatureStage> {
     await this.perDep(loader => loader.setup());
 
-    const { bsContext, request: { def: { set, perDefinition, perComponent } } } = this.state;
+    const { bsContext, request: { def: { set, perDefinition, perComponent } } } = this.loader;
     const [context, unloads] = newFeatureContext(
         bsContext,
-        this.state.complete.read.thru(
+        this.loader.complete.read.thru(
             complete => complete ? nextArgs() : nextSkip(),
         ),
     );
@@ -245,7 +263,7 @@ class SetupFeatureStage extends FeatureStage {
     new ArraySet(perComponent).forEach(spec => context.perComponent(spec));
 
     return new InitFeatureStage(
-        this.state,
+        this.loader,
         context,
         async () => unloads.forEach(unload => unload()),
     );
@@ -259,12 +277,16 @@ class SetupFeatureStage extends FeatureStage {
 
 class InitFeatureStage extends FeatureStage {
 
+  protected get after(): FeatureStageId {
+    return 'setup';
+  }
+
   constructor(
       state: FeatureLoader,
       private readonly _context: FeatureContext,
-      unload: () => Promise<void>,
+      stop: FeatureStageStop,
   ) {
-    super(state, unload);
+    super(state, stop);
   }
 
   async setup(): Promise<FeatureStage> {
@@ -274,7 +296,7 @@ class InitFeatureStage extends FeatureStage {
   async init(): Promise<FeatureStage> {
     await this.perDep(loader => loader.init());
 
-    const { request: { feature, def: { init } } } = this.state;
+    const { request: { feature, def: { init } } } = this.loader;
 
     if (init) {
       init.call(feature, this._context);
@@ -287,9 +309,13 @@ class InitFeatureStage extends FeatureStage {
 
 class ActiveFeatureStage extends FeatureStage {
 
+  protected get after(): FeatureStageId {
+    return 'init';
+  }
+
   constructor(prev: InitFeatureStage) {
-    super(prev.state, prev.unload);
-    prev.state.complete.it = true;
+    super(prev.loader, () => prev.stop());
+    prev.loader.complete.it = true;
   }
 
   async setup(): Promise<FeatureStage> {
