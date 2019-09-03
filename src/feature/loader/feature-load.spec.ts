@@ -633,7 +633,7 @@ describe('feature', () => {
             resolve(ldr);
           }
         });
-      }).then(ldr => ldr.ready);
+      }).then(ldr => ldr.stage);
     }
   });
 });

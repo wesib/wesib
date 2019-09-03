@@ -92,9 +92,9 @@ function initBootstrap(bootstrapRegistry: BootstrapValueRegistry) {
 
           info.it = {
             feature: loader.request.feature,
-            ready: loader.isReady,
+            ready: loader.ready,
           };
-          if (!loader.isReady) {
+          if (!loader.ready) {
             loader.init().then(() => {
               info.it = {
                 feature: loader.request.feature,

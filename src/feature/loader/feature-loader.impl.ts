@@ -157,7 +157,7 @@ export class FeatureLoader {
   readonly down: Promise<void>;
   private _stage: Promise<FeatureStage>;
   private _down!: () => void;
-  readonly complete = trackValue(false);
+  readonly state = trackValue(false);
 
   constructor(
       readonly bsContext: BootstrapContext,
@@ -168,12 +168,12 @@ export class FeatureLoader {
     this._stage = Promise.resolve(new SetupFeatureStage(this));
   }
 
-  get ready() {
-    return this._stage as Promise<any>;
+  get stage(): Promise<any> {
+    return this._stage;
   }
 
-  get isReady() {
-    return this.complete.it;
+  get ready(): boolean {
+    return this.state.it;
   }
 
   to(stageId: Promise<FeatureStageId>): this {
@@ -252,12 +252,7 @@ class SetupFeatureStage extends FeatureStage {
     await this.perDep(loader => loader.setup());
 
     const { bsContext, request: { def: { set, perDefinition, perComponent } } } = this.loader;
-    const [context, unloads] = newFeatureContext(
-        bsContext,
-        this.loader.complete.read.thru(
-            complete => complete ? nextArgs() : nextSkip(),
-        ),
-    );
+    const [context, unloads] = newFeatureContext(bsContext, this.loader);
     const bootstrapValueRegistry = bsContext.get(BootstrapValueRegistry);
 
     new ArraySet(set).forEach(spec => unloads.push(bootstrapValueRegistry.provide(spec)));
@@ -317,7 +312,7 @@ class ActiveFeatureStage extends FeatureStage {
 
   constructor(prev: InitFeatureStage) {
     super(prev.loader, () => prev.stop());
-    prev.loader.complete.it = true;
+    prev.loader.state.it = true;
   }
 
   async setup(): Promise<FeatureStage> {
@@ -332,7 +327,7 @@ class ActiveFeatureStage extends FeatureStage {
 
 function newFeatureContext(
     bsContext: BootstrapContext,
-    whenReady: OnEvent<[]>,
+    loader: FeatureLoader,
 ): [FeatureContext, (() => void)[]] {
 
   const unloads: (() => void)[] = [];
@@ -341,6 +336,9 @@ function newFeatureContext(
   const componentValueRegistry = bsContext.get(ComponentValueRegistry);
   const registry = new ContextRegistry<FeatureContext>(bsContext);
   const values = registry.newValues();
+  const whenReady: OnEvent<[]> = loader.state.read.thru(
+      ready => ready ? nextArgs() : nextSkip(),
+  );
 
   class Context extends FeatureContext {
 
