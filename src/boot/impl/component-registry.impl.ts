@@ -24,6 +24,10 @@ export class ComponentRegistry {
   private _definitionQueue: (() => void)[] = [];
 
   constructor(private readonly _bootstrapContext: BootstrapContext) {
+    _bootstrapContext.whenReady(() => {
+      this._definitionQueue.forEach(definition => definition());
+      delete this._definitionQueue;
+    });
   }
 
   get customElements(): CustomElements {
@@ -40,11 +44,6 @@ export class ComponentRegistry {
 
       this.customElements.define(componentType, factory.elementType);
     });
-  }
-
-  complete() {
-    this._definitionQueue.forEach(definition => definition());
-    delete this._definitionQueue;
   }
 
   async whenDefined<C extends object>(componentType: ComponentClass<C>): Promise<ComponentFactory<C>> {

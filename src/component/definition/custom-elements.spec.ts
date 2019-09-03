@@ -1,9 +1,9 @@
 import { ContextRegistry } from 'context-values';
 import { NamespaceDef, newNamespaceAliaser } from 'namespace-aliaser';
 import { BootstrapContext } from '../../boot';
-import { ComponentFactory__symbol } from '../../boot/definition/component-factory.symbol.impl';
-import { ComponentRegistry } from '../../boot/definition/component-registry.impl';
 import { BootstrapWindow, DefaultNamespaceAliaser } from '../../boot/globals';
+import { ComponentRegistry } from '../../boot/impl';
+import { ComponentFactory__symbol } from '../../boot/impl/component-factory.symbol.impl';
 import { Class } from '../../common';
 import { MethodSpy } from '../../spec/mocks';
 import { ComponentClass } from './component-class';

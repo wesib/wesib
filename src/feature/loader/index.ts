@@ -1,2 +1,3 @@
-export * from './feature-handle.impl';
-export * from './feature-registry.impl';
+export * from './feature-request.impl';
+export * from './feature-requester.impl';
+export * from './feature-loader.impl';

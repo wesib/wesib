@@ -1,8 +1,9 @@
-import { Class } from '../../common';
+import { noop } from 'call-thru';
+import { Class, mergeFunctions } from '../../common';
 import { ComponentDef, ComponentDef__symbol } from '../../component';
 import { ComponentClass, CustomElements } from '../../component/definition';
 import { BootstrapContext } from '../bootstrap-context';
-import { BootstrapValueRegistry } from '../bootstrap/bootstrap-value-registry.impl';
+import { BootstrapValueRegistry } from './bootstrap-value-registry.impl';
 import { ComponentFactory__symbol } from './component-factory.symbol.impl';
 import { ComponentRegistry } from './component-registry.impl';
 import { ElementBuilder } from './element-builder.impl';
@@ -14,10 +15,15 @@ describe('boot', () => {
     let bootstrapRegistry: BootstrapValueRegistry;
     let mockBootstrapContext: Mocked<BootstrapContext>;
     let mockCustomElements: Mocked<CustomElements>;
+    let ready: () => void;
 
     beforeEach(() => {
+      ready = noop;
       bootstrapRegistry = BootstrapValueRegistry.create();
       mockBootstrapContext = {
+        whenReady(callback: () => void) {
+          ready = mergeFunctions(ready, callback);
+        },
         get: bootstrapRegistry.values.get,
       } as any;
       bootstrapRegistry.provide({ a: BootstrapContext, is: mockBootstrapContext });
@@ -61,13 +67,13 @@ describe('boot', () => {
     describe('define', () => {
       it('builds custom element', () => {
         registry.define(TestComponent);
-        registry.complete();
+        ready();
 
         expect(mockBuilder.buildElement).toHaveBeenCalledWith(TestComponent);
       });
       it('defines custom element', () => {
         registry.define(TestComponent);
-        registry.complete();
+        ready();
 
         expect(mockCustomElements.define).toHaveBeenCalledWith(TestComponent, ElementSpy);
       });

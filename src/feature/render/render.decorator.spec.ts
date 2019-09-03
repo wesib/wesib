@@ -69,7 +69,7 @@ describe('feature/render', () => {
 
     let mockCustomElements: Mocked<CustomElements>;
 
-    beforeEach(() => {
+    beforeEach(async () => {
       mockCustomElements = {
         define: jest.fn(),
       } as any;
@@ -87,7 +87,7 @@ describe('feature/render', () => {
         needs: TestFeature,
       });
 
-      testElement(testComponent);
+      await testElement(testComponent);
     });
 
     it('requires state support', () => {

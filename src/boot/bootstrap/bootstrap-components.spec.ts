@@ -1,19 +1,21 @@
 import { noop } from 'call-thru';
-import { SingleContextKey } from 'context-values';
+import { SingleContextKey, SingleContextUpKey } from 'context-values';
+import { afterEventOf, EventInterest } from 'fun-events';
+import { Class } from '../../common';
 import { Component } from '../../component';
-import { FeatureContext, FeatureDef } from '../../feature';
-import { FeatureRegistry } from '../../feature/loader';
+import { FeatureContext, FeatureDef, LoadedFeature } from '../../feature';
 import { MethodSpy } from '../../spec/mocks';
 import { BootstrapContext } from '../bootstrap-context';
-import { ComponentRegistry } from '../definition/component-registry.impl';
-import { ComponentValueRegistry } from '../definition/component-value-registry.impl';
-import { DefinitionValueRegistry } from '../definition/definition-value-registry.impl';
-import { ElementBuilder } from '../definition/element-builder.impl';
 import { DefaultNamespaceAliaser } from '../globals';
+import {
+  BootstrapValueRegistry,
+  ComponentRegistry,
+  ComponentValueRegistry,
+  DefinitionValueRegistry,
+  ElementBuilder,
+} from '../impl';
 import { bootstrapComponents } from './bootstrap-components';
-import { BootstrapValueRegistry } from './bootstrap-value-registry.impl';
 import Mock = jest.Mock;
-import Mocked = jest.Mocked;
 
 describe('boot', () => {
 
@@ -53,69 +55,30 @@ describe('boot', () => {
       it('is constructed', () => {
         expect(bootstrapComponents()).toBeInstanceOf(BootstrapContext);
       });
-      it('proxies `whenDefined()` method', () => {
+      it('proxies `whenDefined()` method', async () => {
 
         const context = bootstrapComponents();
         const componentRegistry = context.get(ComponentRegistry);
-        const promise = Promise.resolve<any>('abc');
-        const whenDefinedSpy = jest.spyOn(componentRegistry, 'whenDefined').mockImplementation(() => promise);
+        const whenDefinedSpy = jest.spyOn(componentRegistry, 'whenDefined')
+            .mockImplementation(() => Promise.resolve<any>('abc'));
 
         @Component('test-component')
         class TestComponent {}
 
-        expect(context.whenDefined(TestComponent)).toBe(promise);
+        expect(await context.whenDefined(TestComponent)).toBe('abc');
         expect(whenDefinedSpy).toHaveBeenCalledWith(TestComponent);
-      });
-    });
-
-    describe('FeatureRegistry', () => {
-
-      let mockFeatureRegistry: Mocked<FeatureRegistry>;
-      let createFeatureRegistrySpy: MethodSpy<typeof FeatureRegistry, 'create'>;
-
-      beforeEach(() => {
-        mockFeatureRegistry = {
-          add: jest.fn(),
-          bootstrap: jest.fn(() => Promise.resolve()),
-        } as any;
-        createFeatureRegistrySpy = jest.spyOn(FeatureRegistry, 'create')
-            .mockReturnValue(mockFeatureRegistry as any);
-      });
-
-      it('creates feature registry', () => {
-
-        const bootstrapContext = bootstrapComponents();
-
-        expect(createFeatureRegistrySpy).toHaveBeenCalledWith(bootstrapContext);
-      });
-      it('receives feature', () => {
-
-        class TestFeature {}
-
-        bootstrapComponents(TestFeature);
-
-        expect(mockFeatureRegistry.add).toHaveBeenCalledWith(TestFeature);
-      });
-      it('receives feature and applies default config', () => {
-
-        class TestFeature {}
-
-        bootstrapComponents(TestFeature);
-
-        expect(mockFeatureRegistry.add).toHaveBeenCalledWith(TestFeature);
       });
     });
 
     describe('FeatureContext', () => {
 
-      class Base {
-      }
+      class Base {}
 
       let featureContext: FeatureContext;
       let whenReady: Mock;
       let bootstrapContext: BootstrapContext;
 
-      beforeEach(() => {
+      beforeEach(async () => {
         whenReady = jest.fn();
         createBootstrapValueRegistrySpy.mockRestore();
 
@@ -131,6 +94,10 @@ describe('boot', () => {
                     expect(whenReady).not.toHaveBeenCalled();
                   }
                 }));
+
+        await new Promise(resolve => {
+          bootstrapContext.whenReady(resolve);
+        });
       });
 
       it('provides `BootstrapContext` value', () => {
@@ -150,28 +117,28 @@ describe('boot', () => {
         featureContext.define(TestComponent);
         expect(defineSpy).toHaveBeenCalledWith(TestComponent);
       });
-      it('proxies `whenDefined()`', () => {
+      it('proxies `whenDefined()`', async () => {
 
-        const promise = Promise.resolve<any>('abc');
         const componentRegistry = bootstrapContext.get(ComponentRegistry);
-        const whenDefinedSpy = jest.spyOn(componentRegistry, 'whenDefined').mockImplementation(() => promise);
+        const whenDefinedSpy = jest.spyOn(componentRegistry, 'whenDefined')
+            .mockImplementation(() => Promise.resolve<any>('abc'));
 
         @Component({ name: 'test-component', extend: { name: 'div', type: Base } })
         class TestComponent {}
 
-        expect(featureContext.whenDefined(TestComponent)).toBe(promise);
+        expect(await featureContext.whenDefined(TestComponent)).toBe('abc');
         expect(whenDefinedSpy).toHaveBeenCalledWith(TestComponent);
       });
-      it('proxies `BootstrapContext.whenDefined()`', () => {
+      it('proxies `BootstrapContext.whenDefined()`', async () => {
 
-        const promise = Promise.resolve<any>('abc');
         const componentRegistry = bootstrapContext.get(ComponentRegistry);
-        const whenDefinedSpy = jest.spyOn(componentRegistry, 'whenDefined').mockImplementation(() => promise);
+        const whenDefinedSpy = jest.spyOn(componentRegistry, 'whenDefined')
+            .mockImplementation(() => Promise.resolve<any>('abc'));
 
         @Component({ name: 'test-component', extend: { name: 'div', type: Base } })
         class TestComponent {}
 
-        expect(featureContext.whenDefined(TestComponent)).toBe(promise);
+        expect(await featureContext.whenDefined(TestComponent)).toBe('abc');
         expect(whenDefinedSpy).toHaveBeenCalledWith(TestComponent);
       });
       it('proxies `perDefinition()`', () => {
@@ -219,16 +186,16 @@ describe('boot', () => {
       });
 
       describe('BootstrapContext', () => {
-        it('proxies `whenDefined()`', () => {
+        it('proxies `whenDefined()`', async () => {
 
-          const promise = Promise.resolve<any>('abc');
           const componentRegistry = bootstrapContext.get(ComponentRegistry);
-          const whenDefinedSpy = jest.spyOn(componentRegistry, 'whenDefined').mockImplementation(() => promise);
+          const whenDefinedSpy = jest.spyOn(componentRegistry, 'whenDefined')
+              .mockImplementation(() => Promise.resolve<any>('abc'));
 
           @Component({ name: 'test-component', extend: { name: 'div', type: Base } })
           class TestComponent {}
 
-          expect(bootstrapContext.whenDefined(TestComponent)).toBe(promise);
+          expect(await bootstrapContext.whenDefined(TestComponent)).toBe('abc');
           expect(whenDefinedSpy).toHaveBeenCalledWith(TestComponent);
         });
 
@@ -240,6 +207,119 @@ describe('boot', () => {
             bootstrapContext.whenReady(callback);
             expect(callback).toHaveBeenCalledWith();
           });
+        });
+
+        describe('load', () => {
+
+          let feature: Class;
+          let receiver: Mock<void, [LoadedFeature]>;
+          let featureInterest: EventInterest;
+
+          beforeEach(() => {
+            feature = class Feature {};
+            receiver = jest.fn();
+          });
+
+          it('loads the feature', async () => {
+            await loadFeature();
+            expect(receiver).toHaveBeenCalledWith({ feature, ready: false });
+            expect(receiver).toHaveBeenLastCalledWith({ feature, ready: true });
+            expect(receiver).toHaveBeenCalledTimes(2);
+          });
+          it('does not reload already loaded feature', async () => {
+            await loadFeature();
+            receiver.mockClear();
+
+            const receiver2 = jest.fn();
+
+            await loadFeature(receiver2);
+            expect(receiver).not.toHaveBeenCalled();
+            expect(receiver2).toHaveBeenCalledWith({ feature, ready: true });
+            expect(receiver2).toHaveBeenCalledTimes(1);
+          });
+          it('unloads the feature once the interest lost', async () => {
+
+            const key = new SingleContextUpKey<string | undefined>('test');
+
+            FeatureDef.define(feature, { set: { a: key, is: 'value' } });
+            await loadFeature();
+
+            let value: string | undefined;
+
+            bootstrapContext.get(key, { or: afterEventOf<[string?]>() })(v => value = v);
+            expect(value).toBe('value');
+
+            featureInterest.off();
+            await Promise.resolve();
+            expect(value).toBeUndefined();
+          });
+          it('readies the feature only when it is loaded', async () => {
+
+            const readySpy = jest.fn();
+
+            FeatureDef.define(
+                feature,
+                {
+                  init(ctx) {
+                    ctx.whenReady(readySpy);
+                    expect(readySpy).not.toHaveBeenCalled();
+                  },
+                },
+            );
+
+            await loadFeature();
+            expect(readySpy).toHaveBeenCalledTimes(1);
+          });
+          it('replaces the loaded feature', async () => {
+
+            const initSpy = jest.fn();
+
+            await loadFeature();
+            receiver.mockClear();
+
+            class Replacement {}
+            FeatureDef.define(Replacement, { init: initSpy, has: feature });
+            await new Promise(resolve => {
+              bootstrapContext.load(Replacement)(loaded => {
+                if (loaded.ready) {
+                  resolve();
+                }
+              });
+            });
+
+            expect(initSpy).toHaveBeenCalledTimes(1);
+            expect(receiver).toHaveBeenLastCalledWith({ feature: Replacement, ready: true });
+          });
+          it('informs on feature replacement load', async () => {
+
+            await loadFeature();
+            receiver.mockClear();
+
+            class Replacement {}
+            FeatureDef.define(Replacement, { has: feature });
+            await new Promise(resolve => {
+              bootstrapContext.load(Replacement)(loaded => {
+                if (loaded.ready) {
+                  resolve();
+                }
+              });
+            });
+
+            expect(receiver).toHaveBeenCalledWith({ feature: Replacement, ready: false });
+            expect(receiver).toHaveBeenLastCalledWith({ feature: Replacement, ready: true });
+            expect(receiver).toHaveBeenCalledTimes(2);
+          });
+
+          function loadFeature(receive: Mock<void, [LoadedFeature]> = receiver) {
+            return new Promise(resolve => {
+              receive.mockImplementation(loaded => {
+                if (loaded.ready) {
+                  resolve();
+                }
+              });
+              featureInterest = bootstrapContext.load(feature)(receive);
+            });
+          }
         });
       });
     });

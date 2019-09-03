@@ -42,16 +42,6 @@ export interface FeatureDef {
       | ContextValueSpec<BootstrapContext, any, any[], any>[];
 
   /**
-   * Bootstraps this feature by calling the given bootstrap context methods.
-   */
-  readonly init?:
-  /**
-   * @param this  Feature class.
-   * @param context  Feature initialization context.
-   */
-      (this: Class, context: FeatureContext) => void;
-
-  /**
    * Definition context value(s) to declare per each component class definition.
    */
   readonly perDefinition?:
@@ -64,6 +54,14 @@ export interface FeatureDef {
   readonly perComponent?:
       | ContextValueSpec<ComponentContext, any, any[], any>
       | ContextValueSpec<ComponentContext, any, any[], any>[];
+
+  /**
+   * Bootstraps this feature by calling the given bootstrap context methods.
+   *
+   * @param this  Feature class.
+   * @param context  Feature initialization context.
+   */
+  init?(this: Class, context: FeatureContext): void;
 
 }
 
