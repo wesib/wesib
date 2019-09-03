@@ -9,10 +9,8 @@ import { ComponentClass } from '../../component/definition';
 import { FeatureDef, LoadedFeature } from '../../feature';
 import { FeatureKey, FeatureLoader, FeatureRequester } from '../../feature/loader';
 import { BootstrapContext } from '../bootstrap-context';
-import { ComponentRegistry } from '../definition/component-registry.impl';
-import { ElementBuilder } from '../definition/element-builder.impl';
 import { DefaultNamespaceAliaser } from '../globals';
-import { BootstrapValueRegistry } from './bootstrap-value-registry.impl';
+import { BootstrapValueRegistry, ComponentRegistry, ElementBuilder } from '../impl';
 
 /**
  * Bootstraps components.

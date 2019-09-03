@@ -3,7 +3,7 @@ import { Class, mergeFunctions } from '../../common';
 import { ComponentDef, ComponentDef__symbol } from '../../component';
 import { ComponentClass, CustomElements } from '../../component/definition';
 import { BootstrapContext } from '../bootstrap-context';
-import { BootstrapValueRegistry } from '../bootstrap/bootstrap-value-registry.impl';
+import { BootstrapValueRegistry } from './bootstrap-value-registry.impl';
 import { ComponentFactory__symbol } from './component-factory.symbol.impl';
 import { ComponentRegistry } from './component-registry.impl';
 import { ElementBuilder } from './element-builder.impl';

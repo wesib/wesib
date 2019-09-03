@@ -14,7 +14,7 @@ import { ComponentClass, ComponentFactory, DefinitionContext, ElementDef } from 
 import { ObjectMock } from '../../spec/mocks';
 import { MockElement } from '../../spec/test-element';
 import { BootstrapContext } from '../bootstrap-context';
-import { BootstrapValueRegistry } from '../bootstrap/bootstrap-value-registry.impl';
+import { BootstrapValueRegistry } from './bootstrap-value-registry.impl';
 import { DefinitionValueRegistry } from './definition-value-registry.impl';
 import { ElementBuilder } from './element-builder.impl';
 import Mock = jest.Mock;

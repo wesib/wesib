@@ -1,6 +1,6 @@
 import { ContextKey, ContextKey__symbol, SingleContextKey } from 'context-values';
 import { BootstrapContext, bootstrapDefault } from '../../boot';
-import { BootstrapValueRegistry } from '../../boot/bootstrap/bootstrap-value-registry.impl';
+import { BootstrapValueRegistry } from '../../boot/impl';
 import { Class } from '../../common';
 import { FeatureNeedClause, FeatureRequest } from './feature-request.impl';
 

@@ -3,8 +3,8 @@
  */
 import { ContextKey, ContextKey__symbol, ContextValues, SingleContextKey } from 'context-values';
 import { html__naming, isQualifiedName, QualifiedName } from 'namespace-aliaser';
-import { componentFactoryOf } from '../../boot/definition/component-factory.symbol.impl';
 import { BootstrapWindow, DefaultNamespaceAliaser } from '../../boot/globals';
+import { componentFactoryOf } from '../../boot/impl/component-factory.symbol.impl';
 import { Class, PromiseResolver } from '../../common';
 import { ComponentClass } from './component-class';
 
