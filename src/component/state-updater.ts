@@ -1,7 +1,7 @@
 /**
  * @module @wesib/wesib
  */
-import { noop } from 'call-thru';
+import { noop, valueProvider } from 'call-thru';
 import { FnContextKey, FnContextRef } from 'context-values';
 import { StatePath } from 'fun-events';
 
@@ -32,6 +32,6 @@ export type StateUpdater =
 export const StateUpdater: FnContextRef<Parameters<StateUpdater>> = /*#__PURE__*/ new FnContextKey(
     'state-updater',
     {
-      byDefault: noop,
+      byDefault: valueProvider(noop),
     },
 );
