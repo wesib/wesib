@@ -23,7 +23,7 @@
   "dependencies": {
     "a-iterable": "^2.4.2",
     "call-thru": "^2.5.2",
-    "context-values": "2.0.2",
+    "context-values": "2.0.3",
     "fun-events": "^5.0.4",
     "namespace-aliaser": "^2.0.1"
   },
