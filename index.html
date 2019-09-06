@@ -169,7 +169,7 @@ bootstrapComponents(MyComponent);</code></pre>
 				<p>It is possible to define custom features too to extend Wesib. E.g. to augment the components, extend custom elements
 				(like <code>@Attribute</code> or <code>@DomProperty</code> decorators do), or provide some context values.</p>
 				<p>The feature is a class decorated with <code>@Feature</code> decorator:</p>
-				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { BootstrapContext, ComponentContext, DefinitionContext, Feature } <span class="hljs-keyword">from</span> <span class="hljs-string">'@wesib/wesib'</span>;
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { ComponentContext, DefinitionContext, Feature, FeatureContext } <span class="hljs-keyword">from</span> <span class="hljs-string">'@wesib/wesib'</span>;
 
 <span class="hljs-meta">@Feature</span>({
   needs: [
@@ -199,7 +199,7 @@ bootstrapComponents(MyComponent);</code></pre>
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> MyService(componentContext.component);
     }
   },
-  init(context: BootstrapContext) {
+  init(context: FeatureContext) {
     <span class="hljs-comment">// Bootstrap the feature by calling methods of provided context.</span>
 
     context.onDefinition(<span class="hljs-function">(<span class="hljs-params">definitionContext: DefinitionContext</span>) =&gt;</span> {
@@ -339,9 +339,6 @@ bootstrapComponents(MyFeature);</code></pre>
 					<li class=" tsd-kind-class tsd-has-type-parameter">
 						<a href="classes/componentfactory.html" class="tsd-kind-icon">Component<wbr>Factory</a>
 					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/componentkit.html" class="tsd-kind-icon">Component<wbr>Kit</a>
-					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter">
 						<a href="classes/componentmount.html" class="tsd-kind-icon">Component<wbr>Mount</a>
 					</li>
@@ -356,6 +353,12 @@ bootstrapComponents(MyFeature);</code></pre>
 					</li>
 					<li class=" tsd-kind-class">
 						<a href="classes/dompropertiessupport.html" class="tsd-kind-icon">Dom<wbr>Properties<wbr>Support</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/featurecontext.html" class="tsd-kind-icon">Feature<wbr>Context</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/featureneedserror.html" class="tsd-kind-icon">Feature<wbr>Needs<wbr>Error</a>
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter">
 						<a href="classes/metaaccessor.html" class="tsd-kind-icon">Meta<wbr>Accessor</a>
@@ -408,6 +411,9 @@ bootstrapComponents(MyFeature);</code></pre>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/featuredef.html" class="tsd-kind-icon">Feature<wbr>Def</a>
 					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/loadedfeature.html" class="tsd-kind-icon">Loaded<wbr>Feature</a>
+					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="interfaces/propertyaccessordescriptor.html" class="tsd-kind-icon">Property<wbr>Accessor<wbr>Descriptor</a>
 					</li>
@@ -455,6 +461,9 @@ bootstrapComponents(MyFeature);</code></pre>
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#elementrender" class="tsd-kind-icon">Element<wbr>Render</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#featureneed" class="tsd-kind-icon">Feature<wbr>Need</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#shadowcontentdef" class="tsd-kind-icon">Shadow<wbr>Content<wbr>Def</a>
@@ -551,6 +560,9 @@ bootstrapComponents(MyFeature);</code></pre>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="globals.html#bootstrapcomponents" class="tsd-kind-icon">bootstrap<wbr>Components</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="globals.html#bootstrapdefault" class="tsd-kind-icon">bootstrap<wbr>Default</a>
 					</li>
 					<li class=" tsd-kind-function tsd-has-type-parameter">
 						<a href="globals.html#decoratepropertyaccessor" class="tsd-kind-icon">decorate<wbr>Property<wbr>Accessor</a>
