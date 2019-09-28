@@ -1,6 +1,6 @@
 {
   "name": "@wesib/wesib",
-  "version": "1.0.0-alpha.36",
+  "version": "1.0.0-alpha.37",
   "description": "Web components building blocks",
   "keywords": [
     "web-components",
@@ -20,32 +20,37 @@
   "main": "dist/wesib.js",
   "module": "dist/wesib.mjs",
   "typings": "index.d.ts",
-  "dependencies": {
-    "a-iterable": "^2.4.3",
+  "peerDependencies": {
+    "a-iterable": "^2.4.4",
     "call-thru": "^2.5.3",
-    "context-values": "2.0.4",
-    "fun-events": "^5.0.5",
+    "context-values": "2.0.5",
+    "fun-events": "^5.0.6",
     "namespace-aliaser": "^2.0.2"
   },
   "devDependencies": {
     "@types/jest": "^24.0.18",
     "@types/jsdom": "^12.2.4",
-    "codecov": "^3.5.0",
+    "a-iterable": "^2.4.4",
+    "call-thru": "^2.5.3",
+    "codecov": "^3.6.1",
+    "context-values": "^2.0.5",
     "fs-extra": "^8.1.0",
+    "fun-events": "^5.0.6",
     "gh-pages": "^2.1.1",
     "jest": "^24.9.0",
     "jest-junit": "^8.0.0",
+    "namespace-aliaser": "^2.0.2",
     "npm-run-all": "^4.1.5",
-    "rollup": "^1.20.3",
+    "rollup": "^1.21.4",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-sourcemaps": "^0.4.2",
-    "rollup-plugin-typescript2": "^0.24.0",
-    "ts-jest": "^24.0.2",
-    "tslint": "^5.19.0",
+    "rollup-plugin-typescript2": "^0.24.3",
+    "ts-jest": "^24.1.0",
+    "tslint": "^5.20.0",
     "typedoc": "^0.15.0",
     "typedoc-plugin-external-module-name": "^2.1.0",
-    "typescript": "~3.6.2"
+    "typescript": "~3.6.3"
   },
   "scripts": {
     "all": "run-p rebuild lint test",
