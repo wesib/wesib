@@ -1,16 +1,7 @@
 import { filterIt, mapIt } from 'a-iterable';
 import { isPresent, NextArgs, nextArgs, NextSkip, nextSkip } from 'call-thru';
 import { ContextRegistry, ContextUpKey, ContextValueOpts, ContextValues, ContextValueSpec } from 'context-values';
-import {
-  AfterEvent,
-  afterEventBy,
-  afterEventFromAll,
-  afterEventFromEach,
-  afterEventOf,
-  EventKeeper,
-  OnEvent,
-  trackValue,
-} from 'fun-events';
+import { afterAll, afterEach, AfterEvent, afterEventBy, afterThe, EventKeeper, OnEvent, trackValue } from 'fun-events';
 import { BootstrapContext } from '../../boot';
 import {
   BootstrapValueRegistry,
@@ -88,15 +79,15 @@ function loadFeature(
   return afterEventBy<[FeatureLoader?]>(receiver => {
 
     let origin: Class | undefined;
-    let source: OnEvent<[FeatureLoader?]> = afterEventOf();
+    let source: OnEvent<[FeatureLoader?]> = afterThe();
     let stageId: Promise<FeatureStageId> = Promise.resolve('idle');
 
-    return afterEventFromAll({
+    return afterAll({
       clause: from,
       deps: loadFeatureDeps(bsContext, from),
     }).dig_(({ clause: [clause], deps }) => {
       if (!clause) {
-        return afterEventOf();
+        return afterThe();
       }
 
       const [request, , target] = clause;
@@ -120,10 +111,10 @@ function loadFeature(
 
       // Create feature's own loader
       const ownLoader = new FeatureLoader(bsContext, request, deps).to(stageId);
-      const ownSource = afterEventOf(ownLoader);
+      const ownSource = afterThe(ownLoader);
 
       return source = afterEventBy<[FeatureLoader]>(
-          rcv => ownSource(rcv).whenDone(() => {
+          rcv => ownSource(rcv).whenOff(() => {
             stageId = ownLoader.unload();
           })
       ).share(); // Can be accessed again when reused
@@ -160,17 +151,17 @@ function loadFeatureDeps(
 ): AfterEvent<FeatureLoader[]> {
   return from.keep.dig_(clause => {
     if (!clause) {
-      return afterEventOf();
+      return afterThe();
     }
 
     const [{ def }] = clause;
     const needs = new ArraySet(def.needs);
 
     if (!needs.size) {
-      return afterEventOf();
+      return afterThe();
     }
 
-    return afterEventFromEach(...needs.map(dep => bsContext.get(FeatureKey.of(dep))))
+    return afterEach(...needs.map(dep => bsContext.get(FeatureKey.of(dep))))
         .keep.thru_(presentFeatureDeps);
   });
 }
@@ -370,20 +361,17 @@ function newFeatureContext(
   const definitionValueRegistry = bsContext.get(DefinitionValueRegistry);
   const componentValueRegistry = bsContext.get(ComponentValueRegistry);
   const registry = new ContextRegistry<FeatureContext>(bsContext);
-  const values = registry.newValues();
   const whenReady: OnEvent<[]> = loader.state.read.thru(
       ready => ready ? nextArgs() : nextSkip(),
   );
 
   class Context extends FeatureContext {
 
+    readonly get = registry.newValues().get;
+
     constructor() {
       super();
       registry.provide({ a: FeatureContext, is: this });
-    }
-
-    get get() {
-      return values.get;
     }
 
     perDefinition<D extends any[], S>(spec: ContextValueSpec<DefinitionContext, any, D, S>) {

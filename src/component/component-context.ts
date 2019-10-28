@@ -83,7 +83,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    *
    * @param listener  A listener to notify on element connection.
    *
-   * @returns An event interest instance.
+   * @returns An event supply.
    */
   abstract readonly whenOn: OnEvent<[]>;
 
@@ -95,7 +95,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    *
    * @param listener  A listener to notify on element disconnection.
    *
-   * @returns An event interest instance.
+   * @returns An event supply.
    */
   abstract readonly whenOff: OnEvent<[]>;
 

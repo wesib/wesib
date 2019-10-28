@@ -48,16 +48,14 @@ function initBootstrap(bootstrapRegistry: BootstrapValueRegistry) {
 
   class Context extends BootstrapContext {
 
+    readonly get = values.get;
+
     get onDefinition() {
       return this.get(ElementBuilder).definitions.on;
     }
 
     get onComponent() {
       return this.get(ElementBuilder).components.on;
-    }
-
-    get get() {
-      return values.get;
     }
 
     constructor() {
@@ -84,29 +82,33 @@ function initBootstrap(bootstrapRegistry: BootstrapValueRegistry) {
           ready: false,
         });
 
-        const interest = this.get(FeatureKey.of(feature))(ldr => {
+        this.get(FeatureKey.of(feature))({
+          supply: receiver.supply,
+          receive(_ctx, ldr) {
 
-          // Present until `request` revoked
-          // But that happens only when interest is lost.
-          const loader = ldr as FeatureLoader;
+            // Present until `request` revoked
+            // But that happens only when supply is cut off.
+            const loader = ldr as FeatureLoader;
 
-          info.it = {
-            feature: loader.request.feature,
-            ready: loader.ready,
-          };
-          if (!loader.ready) {
-            loader.init().then(() => {
-              info.it = {
-                feature: loader.request.feature,
-                ready: true,
-              };
-            });
-          }
-        }).whenDone(() => request.unuse());
+            info.it = {
+              feature: loader.request.feature,
+              ready: loader.ready,
+            };
+            if (!loader.ready) {
+              loader.init().then(() => {
+                info.it = {
+                  feature: loader.request.feature,
+                  ready: true,
+                };
+              });
+            }
+          },
+        }).whenOff(() => {
+          request.unuse(); // Apply this callback _after_ registration complete,
+                           // to prevent receiver call.
+        });
 
-        info.read(receiver).needs(interest);
-
-        return interest;
+        info.read(receiver);
       }).share();
     }
 

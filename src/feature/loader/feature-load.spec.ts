@@ -1,6 +1,6 @@
 import { valueProvider } from 'call-thru';
 import { ContextValues, SingleContextKey, SingleContextUpKey } from 'context-values';
-import { AfterEvent, eventInterest, EventInterest } from 'fun-events';
+import { AfterEvent, eventSupply, EventSupply } from 'fun-events';
 import { BootstrapContext } from '../../boot';
 import {
   BootstrapValueRegistry,
@@ -264,12 +264,12 @@ describe('feature load', () => {
 
         FeatureDef.define(Feature, { set: { a: key, is: 'loaded' } });
 
-        const [loader, interest] = await featureLoader();
+        const [loader, supply] = await featureLoader();
 
         await loader.setup();
         expect(receive).toHaveBeenLastCalledWith('loaded');
 
-        interest.off();
+        supply.off();
         await loader.down;
         expect(receive).toHaveBeenLastCalledWith('default');
       });
@@ -286,12 +286,12 @@ describe('feature load', () => {
         FeatureDef.define(Dep, { set: { a: key, is: 'loaded' } });
         FeatureDef.define(Feature, { needs: Dep });
 
-        const [loader, interest] = await featureLoader();
+        const [loader, supply] = await featureLoader();
 
         await loader.setup();
         expect(receive).toHaveBeenLastCalledWith('loaded');
 
-        interest.off();
+        supply.off();
         await loader.down;
         expect(receive).toHaveBeenLastCalledWith('default');
       });
@@ -304,12 +304,12 @@ describe('feature load', () => {
 
         FeatureDef.define(Feature, { perDefinition: { a: key, is: 'provided' } });
 
-        const [loader, interest] = await featureLoader();
+        const [loader, supply] = await featureLoader();
 
         await loader.setup();
         expect(receive).toHaveBeenLastCalledWith('provided');
 
-        interest.off();
+        supply.off();
         await loader.down;
         expect(receive).toHaveBeenLastCalledWith('default');
       });
@@ -322,12 +322,12 @@ describe('feature load', () => {
 
         FeatureDef.define(Feature, { perComponent: { a: key, is: 'provided' } });
 
-        const [loader, interest] = await featureLoader();
+        const [loader, supply] = await featureLoader();
 
         await loader.setup();
         expect(receive).toHaveBeenLastCalledWith('provided');
 
-        interest.off();
+        supply.off();
         await loader.down;
         expect(receive).toHaveBeenLastCalledWith('default');
       });
@@ -508,12 +508,12 @@ describe('feature load', () => {
               },
           );
 
-          const [loader, interest] = await featureLoader();
+          const [loader, supply] = await featureLoader();
 
           await loader.init();
           expect(receive).toHaveBeenLastCalledWith('provided');
 
-          interest.off();
+          supply.off();
           await loader.down;
           expect(receive).toHaveBeenLastCalledWith('default');
         });
@@ -536,12 +536,12 @@ describe('feature load', () => {
               },
           );
 
-          const [loader, interest] = await featureLoader();
+          const [loader, supply] = await featureLoader();
 
           await loader.init();
           expect(receive).toHaveBeenLastCalledWith('provided');
 
-          interest.off();
+          supply.off();
           await loader.down;
           expect(receive).toHaveBeenLastCalledWith('default');
         });
@@ -596,19 +596,19 @@ describe('feature load', () => {
 
     function featureLoader(
         feature = Feature,
-    ): Promise<readonly [FeatureLoader, EventInterest, AfterEvent<[FeatureLoader?]>]> {
+    ): Promise<readonly [FeatureLoader, EventSupply, AfterEvent<[FeatureLoader?]>]> {
       return new Promise(resolve => {
 
-        const interest = eventInterest();
+        const supply = eventSupply();
 
         requester.request(feature);
 
         const load = bsContext.get(FeatureKey.of(feature));
 
-        interest.needs(
+        supply.needs(
             load(
-                loader => resolve([loader!, interest, load])
-            ).needs(interest)
+                loader => resolve([loader!, supply, load])
+            ).needs(supply)
         );
       });
     }

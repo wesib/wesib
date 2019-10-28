@@ -261,13 +261,13 @@ describe('boot', () => {
       it('allows to listen for component events', () => {
 
         const listener = jest.fn().mockName('event listener');
-        const interest = componentContext.on('test-event')(listener);
+        const supply = componentContext.on('test-event')(listener);
 
         expect(addEventListenerSpy).toHaveBeenCalledWith('test-event', expect.any(Function), undefined);
 
         const actualListener = addEventListenerSpy.mock.calls[0][1];
 
-        interest.off();
+        supply.off();
 
         expect(removeEventListenerSpy).toHaveBeenCalledWith('test-event', actualListener);
       });
@@ -337,22 +337,22 @@ describe('boot', () => {
 
           expect(mockRemove).toHaveBeenCalledWith(element);
         });
-        it('exhausts connection events', () => {
+        it('cuts off connection events supply', () => {
 
           const done = jest.fn();
           const reason = 'Destruction reason';
 
-          componentContext.whenOn(noop).whenDone(done);
+          componentContext.whenOn(noop).whenOff(done);
           componentContext.destroy(reason);
 
           expect(done).toHaveBeenCalledWith(reason);
         });
-        it('exhausts disconnection events', () => {
+        it('cuts off disconnection events supply', () => {
 
           const done = jest.fn();
           const reason = 'Destruction reason';
 
-          componentContext.whenOff(noop).whenDone(done);
+          componentContext.whenOff(noop).whenOff(done);
           componentContext.destroy(reason);
 
           expect(done).toHaveBeenCalledWith(reason);

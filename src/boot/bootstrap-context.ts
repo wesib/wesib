@@ -34,7 +34,7 @@ export abstract class BootstrapContext extends ContextValues {
    *
    * @param listener  A listener to notify on each component definition.
    *
-   * @return An event interest instance.
+   * @return An event supply.
    */
   abstract readonly onDefinition: OnEvent<[DefinitionContext]>;
 
@@ -45,7 +45,7 @@ export abstract class BootstrapContext extends ContextValues {
    *
    * @param listener  A listener to notify on each component construction.
    *
-   * @return An event interest instance.
+   * @return An event supply.
    */
   abstract readonly onComponent: OnEvent<[ComponentContext]>;
 
@@ -76,13 +76,12 @@ export abstract class BootstrapContext extends ContextValues {
   /**
    * Allows to loads the given `feature`.
    *
-   * This method returns an event keeper reporting the loaded feature info. Register the receiver in it to start the
-   * feature loading. Once interest in receiving the feature info is lost the feature will be released and unloaded,
-   * unless there are other receivers exist.
+   * This method returns an event keeper reporting the loaded feature info. Registering a receiver starts feature
+   * loading. Once all feature info supplies are cut off the feature will be released and unloaded.
    *
    * @param feature  The feature to load.
    *
-   * @returns  An `AfterEvent` registrar of feature info receivers.
+   * @returns  An `AfterEvent` keeper of loaded feature info.
    */
   abstract load(feature: Class): AfterEvent<[LoadedFeature]>;
 
