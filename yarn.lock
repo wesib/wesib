@@ -908,10 +908,10 @@ console-control-strings@^1.0.0, console-control-strings@~1.1.0:
   resolved "https://registry.yarnpkg.com/console-control-strings/-/console-control-strings-1.1.0.tgz#3d7cf4464db6446ea644bf4b39507f9851008e8e"
   integrity sha1-PXz0Rk22RG6mRL9LOVB/mFEAjo4=
 
-context-values@2.1.0-dev.1:
-  version "2.1.0-dev.1"
-  resolved "https://registry.yarnpkg.com/context-values/-/context-values-2.1.0-dev.1.tgz#321b39d315a1c34d60052526f828aacdf61df760"
-  integrity sha512-aPQvbhLUAhvxAm3IOM0Bqz2MwNLA920EoxoYc3lw0UXJx5y6qh3f1ud0bk4arBLJDkmbIEtEdS4MngA1DyaC1g==
+context-values@^2.1.0-dev.2:
+  version "2.1.0-dev.2"
+  resolved "https://registry.yarnpkg.com/context-values/-/context-values-2.1.0-dev.2.tgz#f7533b25d7bdd8d729e6cb343cdd798f814e4fcf"
+  integrity sha512-0EV+Oj5z+IqYOHgthuWh5sW+36iM8HVMuIWA0Y5v3VL1oiDF7ViyyccfOLJltyLezUrsyotc/G0FhusOc34hOQ==
 
 convert-source-map@^1.1.0, convert-source-map@^1.4.0:
   version "1.6.0"
@@ -1421,10 +1421,10 @@ fsevents@^1.2.7:
     nan "^2.12.1"
     node-pre-gyp "^0.12.0"
 
-fun-events@7.0.0-dev.1:
-  version "7.0.0-dev.1"
-  resolved "https://registry.yarnpkg.com/fun-events/-/fun-events-7.0.0-dev.1.tgz#2ff2572cc0c714af469599f083496c7a7866f08f"
-  integrity sha512-TNrb9plI/UDBsCID9vujzDr52/RRNwwvczsNiHjdcf/JXWr4otIRu/G1Hq7Rcgvi2CPito1YQZxqnFDWWQY7xw==
+fun-events@^7.0.0-dev.2:
+  version "7.0.0-dev.2"
+  resolved "https://registry.yarnpkg.com/fun-events/-/fun-events-7.0.0-dev.2.tgz#f06590b9f5975f5ed2216f7e0ed4b2c168318a2a"
+  integrity sha512-QDEYTN6CB7TNDFBlAkzfGpNPbhqu9N/Mag4rf3EHHdDh/DI3qYYr/eYm/JEnXTUfyoTJmL+FuwWq7PWDtCWbKQ==
 
 function-bind@^1.0.2, function-bind@^1.1.1:
   version "1.1.1"

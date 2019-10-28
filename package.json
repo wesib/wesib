@@ -23,8 +23,8 @@
   "peerDependencies": {
     "a-iterable": "^2.4.4",
     "call-thru": "^2.5.3",
-    "context-values": "2.1.0-dev.1",
-    "fun-events": "7.0.0-dev.1",
+    "context-values": "^2.1.0-dev.2",
+    "fun-events": "^7.0.0-dev.2",
     "namespace-aliaser": "^2.0.2"
   },
   "devDependencies": {
@@ -33,9 +33,9 @@
     "a-iterable": "^2.4.4",
     "call-thru": "^2.5.3",
     "codecov": "^3.6.1",
-    "context-values": "2.1.0-dev.1",
+    "context-values": "^2.1.0-dev.2",
     "fs-extra": "^8.1.0",
-    "fun-events": "7.0.0-dev.1",
+    "fun-events": "^7.0.0-dev.2",
     "gh-pages": "^2.1.1",
     "jest": "^24.9.0",
     "jest-junit": "^9.0.0",
