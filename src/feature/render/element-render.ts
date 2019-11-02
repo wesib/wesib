@@ -45,7 +45,7 @@ export const ElementRender = {
 
     const { offline } = def;
     let rendered = false;
-    const stateInterest = stateTracker.onUpdate(() => {
+    const stateSupply = stateTracker.onUpdate(() => {
       if (offline || context.connected) {
         scheduleRender();
       } else {
@@ -60,8 +60,8 @@ export const ElementRender = {
         if (!rendered) {
           scheduleRender();
         }
-      }).whenDone(reason => {
-        stateInterest.off(reason);
+      }).whenOff(reason => {
+        stateSupply.off(reason);
         rendered = true;
       });
     }

@@ -2,8 +2,8 @@
  * @module @wesib/wesib
  */
 import { TypedClassDecorator } from '../common';
-import { ComponentClass } from './definition';
 import { ComponentDef } from './component-def';
+import { ComponentClass } from './definition';
 
 /**
  * Component class decorator.

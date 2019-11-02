@@ -49,13 +49,13 @@ describe('feature/state', () => {
     it('notifies on state update', () => {
 
       const listenerSpy = jest.fn();
-      const interest = componentState.onUpdate(listenerSpy);
+      const supply = componentState.onUpdate(listenerSpy);
 
       updateState(['key'], 'new', 'old');
 
       expect(listenerSpy).toHaveBeenCalledWith(['key'], 'new', 'old');
 
-      interest.off();
+      supply.off();
       listenerSpy.mockClear();
       updateState('key', 'new', 'old');
 
@@ -64,13 +64,13 @@ describe('feature/state', () => {
     it('notifies on state update with `updateState()` method' , () => {
 
       const listenerSpy = jest.fn();
-      const interest = componentState.onUpdate(listenerSpy);
+      const supply = componentState.onUpdate(listenerSpy);
 
       context.updateState(['key'], 'new', 'old');
 
       expect(listenerSpy).toHaveBeenCalledWith(['key'], 'new', 'old');
 
-      interest.off();
+      supply.off();
       listenerSpy.mockClear();
       updateState('key', 'new', 'old');
 

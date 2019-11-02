@@ -65,7 +65,7 @@ export interface ComponentEventDispatcher {
   dispatch(context: ComponentContext, event: Event): boolean;
 
   /**
-   * Returns a registrar of DOM event listeners for the given DOM event type.
+   * Returns an `OnDomEvent` sender of DOM events of the given type.
    *
    * @param context  Target component context.
    * @param type  An event type to listen for.

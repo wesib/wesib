@@ -1,6 +1,6 @@
 import { noop } from 'call-thru';
 import { SingleContextKey, SingleContextUpKey } from 'context-values';
-import { afterEventOf, EventInterest } from 'fun-events';
+import { afterThe, EventSupply } from 'fun-events';
 import { Class } from '../../common';
 import { Component } from '../../component';
 import { FeatureContext, FeatureDef, LoadedFeature } from '../../feature';
@@ -213,7 +213,7 @@ describe('boot', () => {
 
           let feature: Class;
           let receiver: Mock<void, [LoadedFeature]>;
-          let featureInterest: EventInterest;
+          let featureSupply: EventSupply;
 
           beforeEach(() => {
             feature = class Feature {};
@@ -237,7 +237,7 @@ describe('boot', () => {
             expect(receiver2).toHaveBeenCalledWith({ feature, ready: true });
             expect(receiver2).toHaveBeenCalledTimes(1);
           });
-          it('unloads the feature once the interest lost', async () => {
+          it('unloads the feature once supply is cut off', async () => {
 
             const key = new SingleContextUpKey<string | undefined>('test');
 
@@ -246,10 +246,10 @@ describe('boot', () => {
 
             let value: string | undefined;
 
-            bootstrapContext.get(key, { or: afterEventOf<[string?]>() })(v => value = v);
+            bootstrapContext.get(key, { or: afterThe<[string?]>() })(v => value = v);
             expect(value).toBe('value');
 
-            featureInterest.off();
+            featureSupply.off('reason');
             await Promise.resolve();
             expect(value).toBeUndefined();
           });
@@ -317,7 +317,7 @@ describe('boot', () => {
                   resolve();
                 }
               });
-              featureInterest = bootstrapContext.load(feature)(receive);
+              featureSupply = bootstrapContext.load(feature)(receive);
             });
           }
         });

@@ -168,9 +168,10 @@ export class ElementBuilder {
     }
 
     const componentFactory = new ComponentFactory();
-    let values: ContextValues;
 
     class DefinitionContext extends DefinitionContext_<T> {
+
+      readonly get: ContextValues['get'];
 
       get componentType() {
         return componentType;
@@ -178,10 +179,6 @@ export class ElementBuilder {
 
       get onComponent() {
         return onComponent.on;
-      }
-
-      get get() {
-        return values.get;
       }
 
       get elementType(): Class {
@@ -195,7 +192,7 @@ export class ElementBuilder {
 
         definitionRegistry.provide({ a: DefinitionContext_, is: this });
         definitionRegistry.provide({ a: ComponentFactory_, is: componentFactory });
-        values = definitionRegistry.newValues();
+        this.get = definitionRegistry.newValues().get;
         new ArraySet(def.set).forEach(spec => definitionRegistry.provide(spec));
 
         typeValueRegistry = new ComponentValueRegistry(definitionRegistry.seedIn(this));
@@ -289,7 +286,7 @@ export class ElementBuilder {
       }: ComponentMeta<T>): ComponentContext_<T> {
 
     const status = trackValue<ComponentStatus>(ComponentStatus.Building);
-    const aliveInterest = status.on(noop);
+    const aliveSupply = status.on(noop);
     const whenReady: OnEvent<[]> = status.read.thru(sts => sts ? nextArgs() : nextSkip());
     const whenOn: OnEvent<[]> = status.read.thru(sts => sts === ComponentStatus.On ? nextArgs() : nextSkip());
     const whenOff: OnEvent<[]> = status.read.thru(sts => sts === ComponentStatus.Off ? nextArgs() : nextSkip());
@@ -298,20 +295,15 @@ export class ElementBuilder {
 
     class ComponentContext extends ComponentContext_<T> {
 
+      readonly get = values.get;
+      readonly elementSuper = elementSuper;
+
       get componentType() {
         return definitionContext.componentType;
       }
 
       get element() {
         return element;
-      }
-
-      get elementSuper() {
-        return elementSuper;
-      }
-
-      get get() {
-        return values.get;
       }
 
       get component(): T {
@@ -339,7 +331,7 @@ export class ElementBuilder {
       }
 
       whenDestroyed(callback: (this: void, reason: any) => void): void {
-        aliveInterest.whenDone(callback);
+        aliveSupply.whenOff(callback);
       }
 
       destroy(reason?: any): void {

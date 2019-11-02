@@ -4,8 +4,8 @@
 import { ContextKey, ContextKey__symbol, ContextValues, ContextValueSpec } from 'context-values';
 import { OnEvent } from 'fun-events';
 import { Class } from '../../common';
-import { ComponentClass } from './component-class';
 import { ComponentContext } from '../component-context';
+import { ComponentClass } from './component-class';
 import { DefinitionContext__key } from './definition.context.key.impl';
 import { ElementDef } from './element-def';
 
@@ -55,7 +55,7 @@ export abstract class DefinitionContext<T extends object = any> extends ContextV
    *
    * @param listener  A listener to notify on each defined component construction.
    *
-   * @return An event interest instance.
+   * @return An event supply.
    */
   abstract readonly onComponent: OnEvent<[ComponentContext]>;
 
