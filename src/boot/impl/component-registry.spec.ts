@@ -1,4 +1,4 @@
-import { noop } from 'call-thru';
+import { asis, noop } from 'call-thru';
 import { Class, mergeFunctions } from '../../common';
 import { ComponentDef, ComponentDef__symbol } from '../../component';
 import { ComponentClass, CustomElements } from '../../component/definition';
@@ -94,7 +94,7 @@ describe('boot', () => {
       it('fails if component factory is absent', async () => {
         mockCustomElements.whenDefined.mockReturnValue(Promise.resolve());
 
-        expect(registry.whenDefined(TestComponent)).rejects.toThrow(TypeError);
+        expect(await registry.whenDefined(TestComponent).catch(asis)).toBeInstanceOf(TypeError);
         expect(mockCustomElements.whenDefined).toHaveBeenCalledWith(TestComponent);
       });
       it('fails if component registry fails', async () => {
@@ -103,7 +103,7 @@ describe('boot', () => {
 
         mockCustomElements.whenDefined.mockReturnValue(Promise.reject(error));
 
-        expect(registry.whenDefined(TestComponent)).rejects.toBe(error);
+        expect(await registry.whenDefined(TestComponent).catch(asis)).toBe(error);
         expect(mockCustomElements.whenDefined).toHaveBeenCalledWith(TestComponent);
       });
     });
