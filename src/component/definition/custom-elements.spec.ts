@@ -2,7 +2,6 @@ import { ContextRegistry } from 'context-values';
 import { NamespaceDef, newNamespaceAliaser } from 'namespace-aliaser';
 import { BootstrapContext } from '../../boot';
 import { BootstrapWindow, DefaultNamespaceAliaser } from '../../boot/globals';
-import { ComponentRegistry } from '../../boot/impl';
 import { ComponentFactory__symbol } from '../../boot/impl/component-factory.symbol.impl';
 import { Class } from '../../common';
 import { MethodSpy } from '../../spec/mocks';
@@ -14,9 +13,9 @@ describe('component', () => {
   describe('CustomElements', () => {
 
     let context: BootstrapContext;
-    let registrySpy: {
-      define: MethodSpy<ComponentRegistry, 'define'>;
-      whenDefined: MethodSpy<ComponentRegistry, 'whenDefined'>;
+    let mockCustomElements: {
+      define: MethodSpy<CustomElements, 'define'>;
+      whenDefined: MethodSpy<CustomElements, 'whenDefined'>;
     };
     let customElements: CustomElements;
     let TestComponent: ComponentClass;
@@ -26,12 +25,12 @@ describe('component', () => {
 
       const valueRegistry = new ContextRegistry<BootstrapContext>();
 
-      registrySpy = {
+      mockCustomElements = {
         define: jest.fn(),
         whenDefined: jest.fn(),
       } as any;
       const windowSpy: Window = {
-        customElements: registrySpy,
+        customElements: mockCustomElements,
       } as any;
 
       context = {
@@ -67,7 +66,7 @@ describe('component', () => {
       it('defines custom element', () => {
         customElements.define(TestComponent, elementType);
 
-        expect(registrySpy.define).toHaveBeenCalledWith('test-component', elementType);
+        expect(mockCustomElements.define).toHaveBeenCalledWith('test-component', elementType);
       });
       it('defines custom element in namespace', () => {
 
@@ -87,12 +86,12 @@ describe('component', () => {
 
         customElements.define(NsComponent, elementType);
 
-        expect(registrySpy.define).toHaveBeenCalledWith('test-other', elementType);
+        expect(mockCustomElements.define).toHaveBeenCalledWith('test-other', elementType);
       });
       it('defines non-component custom element', () => {
         customElements.define('test-component', elementType);
 
-        expect(registrySpy.define).toHaveBeenCalledWith('test-component', elementType);
+        expect(mockCustomElements.define).toHaveBeenCalledWith('test-component', elementType);
       });
       it('does not define custom element for anonymous component', () => {
 
@@ -110,7 +109,7 @@ describe('component', () => {
 
         customElements.define(AnonymousComponent, elementType);
 
-        expect(registrySpy.define).not.toHaveBeenCalled();
+        expect(mockCustomElements.define).not.toHaveBeenCalled();
       });
       it('defines custom element extending another one', () => {
 
@@ -135,7 +134,7 @@ describe('component', () => {
 
         customElements.define(TestComponent, elementType);
 
-        expect(registrySpy.define).toHaveBeenCalledWith('test-component', elementType);
+        expect(mockCustomElements.define).toHaveBeenCalledWith('test-component', elementType);
       });
       it('defines custom element extending standard one', () => {
 
@@ -154,7 +153,7 @@ describe('component', () => {
 
         customElements.define(TestComponent, elementType);
 
-        expect(registrySpy.define).toHaveBeenCalledWith('test-component', elementType, {
+        expect(mockCustomElements.define).toHaveBeenCalledWith('test-component', elementType, {
           extends: 'input',
         });
       });
@@ -165,10 +164,10 @@ describe('component', () => {
 
         const promise = Promise.resolve<any>('defined');
 
-        registrySpy.whenDefined.mockReturnValue(promise);
+        mockCustomElements.whenDefined.mockReturnValue(promise);
 
         expect(customElements.whenDefined(TestComponent)).toBe(promise);
-        expect(registrySpy.whenDefined).toHaveBeenCalledWith('test-component');
+        expect(mockCustomElements.whenDefined).toHaveBeenCalledWith('test-component');
       });
       it('waits for component definition in namespace', async () => {
 
@@ -193,26 +192,26 @@ describe('component', () => {
 
         await customElements.whenDefined(NsComponent);
 
-        expect(registrySpy.whenDefined).toHaveBeenCalledWith('test-other');
+        expect(mockCustomElements.whenDefined).toHaveBeenCalledWith('test-other');
       });
       it('awaits for non-component element definition', () => {
 
         const promise = Promise.resolve<any>('defined');
 
-        registrySpy.whenDefined.mockReturnValue(promise);
+        mockCustomElements.whenDefined.mockReturnValue(promise);
 
         expect(customElements.whenDefined('test-component')).toBe(promise);
-        expect(registrySpy.whenDefined).toHaveBeenCalledWith('test-component');
+        expect(mockCustomElements.whenDefined).toHaveBeenCalledWith('test-component');
       });
       it('awaits for non-component element definition in namespace', () => {
 
         const ns = new NamespaceDef('test/url', 'test');
         const promise = Promise.resolve<any>('defined');
 
-        registrySpy.whenDefined.mockReturnValue(promise);
+        mockCustomElements.whenDefined.mockReturnValue(promise);
 
         expect(customElements.whenDefined(['other', ns])).toBe(promise);
-        expect(registrySpy.whenDefined).toHaveBeenCalledWith('test-other');
+        expect(mockCustomElements.whenDefined).toHaveBeenCalledWith('test-other');
       });
       it('waits for anonymous component definition', async () => {
 
@@ -235,7 +234,7 @@ describe('component', () => {
 
         await customElements.whenDefined(AnonymousComponent);
 
-        expect(registrySpy.whenDefined).not.toHaveBeenCalled();
+        expect(mockCustomElements.whenDefined).not.toHaveBeenCalled();
       });
     });
   });

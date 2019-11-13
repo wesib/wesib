@@ -1,21 +1,18 @@
-import { noop } from 'call-thru';
+import { asis, noop } from 'call-thru';
 import { SingleContextKey, SingleContextUpKey } from 'context-values';
 import { afterThe, EventSupply } from 'fun-events';
 import { Class } from '../../common';
-import { Component } from '../../component';
+import { Component, ComponentDef, ComponentDef__symbol } from '../../component';
+import { CustomElements } from '../../component/definition';
 import { FeatureContext, FeatureDef, LoadedFeature } from '../../feature';
 import { MethodSpy } from '../../spec/mocks';
 import { BootstrapContext } from '../bootstrap-context';
 import { DefaultNamespaceAliaser } from '../globals';
-import {
-  BootstrapValueRegistry,
-  ComponentRegistry,
-  ComponentValueRegistry,
-  DefinitionValueRegistry,
-  ElementBuilder,
-} from '../impl';
+import { BootstrapValueRegistry, ComponentValueRegistry, DefinitionValueRegistry, ElementBuilder } from '../impl';
+import { ComponentFactory__symbol } from '../impl/component-factory.symbol.impl';
 import { bootstrapComponents } from './bootstrap-components';
 import Mock = jest.Mock;
+import SpyInstance = jest.SpyInstance;
 
 describe('boot', () => {
 
@@ -40,9 +37,6 @@ describe('boot', () => {
     it('provides element builder', () => {
       expect(bootstrapComponents().get(ElementBuilder)).toBeInstanceOf(ElementBuilder);
     });
-    it('provides component registry', () => {
-      expect(bootstrapComponents().get(ComponentRegistry)).toBeInstanceOf(ComponentRegistry);
-    });
     it('constructs default namespace aliaser', () => {
       bootstrapComponents();
 
@@ -58,14 +52,19 @@ describe('boot', () => {
       it('proxies `whenDefined()` method', async () => {
 
         const context = bootstrapComponents();
-        const componentRegistry = context.get(ComponentRegistry);
-        const whenDefinedSpy = jest.spyOn(componentRegistry, 'whenDefined')
-            .mockImplementation(() => Promise.resolve<any>('abc'));
+        const customElements = context.get(CustomElements);
+        const whenDefinedSpy = jest.spyOn(customElements, 'whenDefined')
+            .mockImplementation(() => Promise.resolve());
 
         @Component('test-component')
         class TestComponent {}
 
-        expect(await context.whenDefined(TestComponent)).toBe('abc');
+        class Element {}
+        const componentFactory = { elementType: Element, componentType: TestComponent };
+
+        (TestComponent as any)[ComponentFactory__symbol] = componentFactory;
+
+        expect(await context.whenDefined(TestComponent)).toBe(componentFactory);
         expect(whenDefinedSpy).toHaveBeenCalledWith(TestComponent);
       });
     });
@@ -93,7 +92,9 @@ describe('boot', () => {
                     featureContext.whenReady(whenReady);
                     expect(whenReady).not.toHaveBeenCalled();
                   }
-                }));
+                },
+            ),
+        );
 
         await new Promise(resolve => {
           bootstrapContext.whenReady(resolve);
@@ -106,39 +107,46 @@ describe('boot', () => {
       it('provides `FeatureContext` value', () => {
         expect(featureContext.get(FeatureContext)).toBe(featureContext);
       });
-      it('proxies `define()`', () => {
+      it('proxies `define()`', async () => {
 
-        const componentRegistry = bootstrapContext.get(ComponentRegistry);
-        const defineSpy = jest.spyOn(componentRegistry, 'define').mockImplementation(noop);
+        let defineSpy!: SpyInstance;
 
         @Component({ name: 'test-component', extend: { name: 'div', type: Base } })
         class TestComponent {}
 
-        featureContext.define(TestComponent);
-        expect(defineSpy).toHaveBeenCalledWith(TestComponent);
+        bootstrapContext = bootstrapComponents(
+            FeatureDef.define(
+                class TestFeature {},
+                {
+                  init(ctx) {
+
+                    const customElements = ctx.get(CustomElements);
+
+                    defineSpy = jest.spyOn(customElements, 'define').mockImplementation(noop);
+                    ctx.define(TestComponent);
+                  }
+                },
+            ),
+        );
+
+        await new Promise(resolve => bootstrapContext.whenReady(resolve));
+
+        expect(defineSpy).toHaveBeenCalledWith(TestComponent, expect.any(Function));
       });
       it('proxies `whenDefined()`', async () => {
 
-        const componentRegistry = bootstrapContext.get(ComponentRegistry);
-        const whenDefinedSpy = jest.spyOn(componentRegistry, 'whenDefined')
-            .mockImplementation(() => Promise.resolve<any>('abc'));
+        const customElements = bootstrapContext.get(CustomElements);
+        const whenDefinedSpy = jest.spyOn(customElements, 'whenDefined')
+            .mockImplementation(() => Promise.resolve());
 
         @Component({ name: 'test-component', extend: { name: 'div', type: Base } })
         class TestComponent {}
+        class Element {}
 
-        expect(await featureContext.whenDefined(TestComponent)).toBe('abc');
-        expect(whenDefinedSpy).toHaveBeenCalledWith(TestComponent);
-      });
-      it('proxies `BootstrapContext.whenDefined()`', async () => {
+        const componentFactory = { elementType: Element, componentType: TestComponent };
+        (TestComponent as any)[ComponentFactory__symbol] = componentFactory;
 
-        const componentRegistry = bootstrapContext.get(ComponentRegistry);
-        const whenDefinedSpy = jest.spyOn(componentRegistry, 'whenDefined')
-            .mockImplementation(() => Promise.resolve<any>('abc'));
-
-        @Component({ name: 'test-component', extend: { name: 'div', type: Base } })
-        class TestComponent {}
-
-        expect(await featureContext.whenDefined(TestComponent)).toBe('abc');
+        expect(await featureContext.whenDefined(TestComponent)).toBe(componentFactory);
         expect(whenDefinedSpy).toHaveBeenCalledWith(TestComponent);
       });
       it('proxies `perDefinition()`', () => {
@@ -186,17 +194,51 @@ describe('boot', () => {
       });
 
       describe('BootstrapContext', () => {
-        it('proxies `whenDefined()`', async () => {
+        describe('whenDefined', () => {
 
-          const componentRegistry = bootstrapContext.get(ComponentRegistry);
-          const whenDefinedSpy = jest.spyOn(componentRegistry, 'whenDefined')
-              .mockImplementation(() => Promise.resolve<any>('abc'));
+          let TestComponent: Class;
 
-          @Component({ name: 'test-component', extend: { name: 'div', type: Base } })
-          class TestComponent {}
+          beforeEach(() => {
+            TestComponent = class {
+              static [ComponentDef__symbol]: ComponentDef = {
+                name: 'test-component',
+              };
+            };
+          });
 
-          expect(await bootstrapContext.whenDefined(TestComponent)).toBe('abc');
-          expect(whenDefinedSpy).toHaveBeenCalledWith(TestComponent);
+          let whenDefinedSpy: SpyInstance;
+
+          beforeEach(() => {
+
+            const customElements = bootstrapContext.get(CustomElements);
+
+            whenDefinedSpy = jest.spyOn(customElements, 'whenDefined')
+                .mockImplementation(() => Promise.resolve());
+          });
+
+          it('awaits for component definition', async () => {
+
+            class Element {}
+
+            (TestComponent as any)[ComponentFactory__symbol] = { elementType: Element, componentType: TestComponent };
+
+            await bootstrapContext.whenDefined(TestComponent);
+
+            expect(whenDefinedSpy).toHaveBeenCalledWith(TestComponent);
+          });
+          it('fails if component factory is absent', async () => {
+            expect(await bootstrapContext.whenDefined(TestComponent).catch(asis)).toBeInstanceOf(TypeError);
+            expect(whenDefinedSpy).toHaveBeenCalledWith(TestComponent);
+          });
+          it('fails if component registry fails', async () => {
+
+            const error = new Error();
+
+            whenDefinedSpy.mockImplementation(() => Promise.reject(error));
+
+            expect(await bootstrapContext.whenDefined(TestComponent).catch(asis)).toBe(error);
+            expect(whenDefinedSpy).toHaveBeenCalledWith(TestComponent);
+          });
         });
 
         describe('whenReady', () => {

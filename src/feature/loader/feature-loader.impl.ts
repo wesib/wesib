@@ -3,16 +3,12 @@ import { isPresent, NextArgs, nextArgs, NextSkip, nextSkip } from 'call-thru';
 import { ContextRegistry, ContextUpKey, ContextValueOpts, ContextValues, ContextValueSpec } from 'context-values';
 import { afterAll, afterEach, AfterEvent, afterEventBy, afterThe, EventKeeper, OnEvent, trackValue } from 'fun-events';
 import { BootstrapContext } from '../../boot';
-import {
-  BootstrapValueRegistry,
-  ComponentRegistry,
-  ComponentValueRegistry,
-  DefinitionValueRegistry,
-} from '../../boot/impl';
+import { BootstrapValueRegistry, ComponentValueRegistry, DefinitionValueRegistry } from '../../boot/impl';
 import { ArraySet, Class } from '../../common';
 import { ComponentContext } from '../../component';
 import { ComponentClass, DefinitionContext } from '../../component/definition';
 import { FeatureContext } from '../feature-context';
+import { ComponentRegistry } from './component-registry.impl';
 import { FeatureClause, FeatureRequest } from './feature-request.impl';
 
 const FeatureKey__symbol = /*#__PURE__*/ Symbol('feature-key');
@@ -357,7 +353,7 @@ function newFeatureContext(
 ): [FeatureContext, (() => void)[]] {
 
   const unloads: (() => void)[] = [];
-  const componentRegistry = bsContext.get(ComponentRegistry);
+  let componentRegistry: ComponentRegistry;
   const definitionValueRegistry = bsContext.get(DefinitionValueRegistry);
   const componentValueRegistry = bsContext.get(ComponentValueRegistry);
   const registry = new ContextRegistry<FeatureContext>(bsContext);
@@ -372,6 +368,7 @@ function newFeatureContext(
     constructor() {
       super();
       registry.provide({ a: FeatureContext, is: this });
+      componentRegistry = new ComponentRegistry(this);
     }
 
     perDefinition<D extends any[], S>(spec: ContextValueSpec<DefinitionContext, any, D, S>) {

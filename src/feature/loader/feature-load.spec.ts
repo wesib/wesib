@@ -2,14 +2,10 @@ import { valueProvider } from 'call-thru';
 import { ContextValues, SingleContextKey, SingleContextUpKey } from 'context-values';
 import { AfterEvent, eventSupply, EventSupply } from 'fun-events';
 import { BootstrapContext } from '../../boot';
-import {
-  BootstrapValueRegistry,
-  ComponentRegistry,
-  ComponentValueRegistry,
-  DefinitionValueRegistry,
-} from '../../boot/impl';
+import { BootstrapValueRegistry, ComponentValueRegistry, DefinitionValueRegistry } from '../../boot/impl';
 import { Class } from '../../common';
 import { ComponentDef } from '../../component';
+import { CustomElements } from '../../component/definition';
 import { FeatureContext } from '../feature-context';
 import { FeatureDef } from '../feature-def';
 import { FeatureNeedsError } from '../feature-needs-error';
@@ -22,27 +18,29 @@ describe('feature load', () => {
 
   let bsRegistry: BootstrapValueRegistry;
   let bsContext: Mocked<BootstrapContext>;
+  let makeReady: () => void;
 
   beforeEach(() => {
     bsRegistry = BootstrapValueRegistry.create();
     bsContext = {
       get: bsRegistry.values.get,
       load: jest.fn(),
+      whenReady: jest.fn(callback => makeReady = callback),
     } as any;
     bsRegistry.provide({ a: BootstrapContext, is: bsContext });
   });
 
-  let mockComponentRegistry: Mocked<ComponentRegistry>;
+  let mockCustomElements: Mocked<CustomElements>;
   let definitionValueRegistry: DefinitionValueRegistry;
   let definitionValues: ContextValues;
   let componentValueRegistry: ComponentValueRegistry;
   let componentValues: ContextValues;
 
   beforeEach(() => {
-    mockComponentRegistry = {
+    mockCustomElements = {
       define: jest.fn(),
     } as any;
-    bsRegistry.provide({ a: ComponentRegistry, is: mockComponentRegistry });
+    bsRegistry.provide({ a: CustomElements, is: mockCustomElements });
 
     definitionValueRegistry = bsContext.get(DefinitionValueRegistry);
     definitionValues = definitionValueRegistry.newValues();
@@ -564,7 +562,8 @@ describe('feature load', () => {
           const [loader] = await featureLoader();
 
           await loader.init();
-          expect(mockComponentRegistry.define).toHaveBeenLastCalledWith(TestComponent);
+          makeReady();
+          expect(mockCustomElements.define).toHaveBeenLastCalledWith(TestComponent, expect.any(Function));
         });
       });
 

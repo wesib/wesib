@@ -6,7 +6,7 @@ import { AfterEvent, OnEvent } from 'fun-events';
 import { Class } from '../common';
 import { ComponentContext } from '../component';
 import { ComponentClass, ComponentFactory, DefinitionContext } from '../component/definition';
-import { LoadedFeature } from '../feature/loaded-feature';
+import { LoadedFeature } from '../feature';
 import { BootstrapContext__key } from './bootstrap-context.key.impl';
 
 /**

@@ -5,12 +5,13 @@ import { nextArgs, nextSkip } from 'call-thru';
 import { AfterEvent, afterEventBy, trackValue } from 'fun-events';
 import { newNamespaceAliaser } from 'namespace-aliaser';
 import { Class } from '../../common';
-import { ComponentClass } from '../../component/definition';
+import { ComponentClass, CustomElements } from '../../component/definition';
 import { FeatureDef, LoadedFeature } from '../../feature';
 import { FeatureKey, FeatureLoader, FeatureRequester } from '../../feature/loader';
 import { BootstrapContext } from '../bootstrap-context';
 import { DefaultNamespaceAliaser } from '../globals';
-import { BootstrapValueRegistry, ComponentRegistry, ElementBuilder } from '../impl';
+import { BootstrapValueRegistry, ElementBuilder } from '../impl';
+import { componentFactoryOf } from '../impl/component-factory.symbol.impl';
 
 /**
  * Bootstraps components.
@@ -66,7 +67,8 @@ function initBootstrap(bootstrapRegistry: BootstrapValueRegistry) {
 
     async whenDefined<C extends object>(componentType: ComponentClass<C>) {
       await new Promise(resolve => this.whenReady(resolve));
-      return this.get(ComponentRegistry).whenDefined(componentType);
+      await this.get(CustomElements).whenDefined(componentType);
+      return componentFactoryOf(componentType);
     }
 
     whenReady(callback: (this: void) => void): void {
