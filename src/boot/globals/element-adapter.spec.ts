@@ -19,11 +19,17 @@ describe('boot', () => {
     it('always returns a value', () => {
       expect(context.get(ElementAdapter)).toBeInstanceOf(Function);
     });
+    it('returns a value when fallback is `null`', () => {
+      expect(context.get(ElementAdapter, { or: null })).toBeInstanceOf(Function);
+    });
     it('respects fallback value', () => {
 
-      const fallback = jest.fn();
+      const componentContext: ComponentContext = { name: 'component context' } as any;
+      const fallback = jest.fn(() => componentContext);
+      const adapter = context.get(ElementAdapter, { or: fallback });
 
-      expect(context.get(ElementAdapter, { or: fallback })).toBe(fallback);
+      expect(adapter(element)).toBe(componentContext);
+      expect(fallback).toHaveBeenCalledWith(element);
     });
 
     describe('default adapter', () => {
@@ -39,11 +45,11 @@ describe('boot', () => {
       });
       it('does not adapt component element', () => {
 
-        const componentContextSpy: ComponentContext = { name: 'component context' } as any;
+        const componentContext: ComponentContext = { name: 'component context' } as any;
 
-        element[ComponentContext__symbol] = componentContextSpy;
+        element[ComponentContext__symbol] = componentContext;
 
-        expect(adapter(element)).toBe(componentContextSpy);
+        expect(adapter(element)).toBe(componentContext);
       });
     });
 

@@ -1,8 +1,8 @@
 /**
  * @module @wesib/wesib
  */
-import { AIterable } from 'a-iterable';
-import { ContextValueOpts, ContextValues, SimpleContextKey, SingleContextRef } from 'context-values';
+import { ContextUpKey, ContextUpRef, ContextValueOpts, ContextValues } from 'context-values';
+import { AfterEvent, EventKeeper } from 'fun-events';
 import { ComponentContext, ComponentContext__symbol } from '../../component';
 
 /**
@@ -18,26 +18,38 @@ export type ElementAdapter =
 /**
  * @param element  Target raw element to adapt.
  *
- * @returns An adapted component's context, or `null` if the element can not be adapted.
+ * @returns An adapted component's context, or `undefined` if element can not be adapted.
  */
     (this: void, element: any) => ComponentContext | undefined;
 
-class Key extends SimpleContextKey<ElementAdapter> {
+class ElementAdapterKey extends ContextUpKey<ElementAdapter, ElementAdapter> {
 
   constructor() {
     super('element-adapter');
   }
 
   grow<Ctx extends ContextValues>(
-      opts: ContextValueOpts<Ctx, ElementAdapter, ElementAdapter, AIterable<ElementAdapter>>,
-  ): ElementAdapter | null | undefined {
+      opts: ContextValueOpts<
+          Ctx,
+          ElementAdapter,
+          EventKeeper<ElementAdapter[]> | ElementAdapter, AfterEvent<ElementAdapter[]>>,
+  ): ElementAdapter {
 
-    const result = opts.seed.reduce(
-        (prev, adapter) => (element: any) => prev(element) || adapter(element),
-        defaultElementAdapter,
-    );
+    let result: ElementAdapter;
 
-    return result !== defaultElementAdapter ? result : opts.byDefault(() => defaultElementAdapter);
+    opts.seed((...adapters) => {
+
+      const combined = adapters.reduce(
+          (prev, adapter) => (element: any) => prev(element) || adapter(element),
+          defaultElementAdapter,
+      );
+
+      result = combined !== defaultElementAdapter
+          ? combined
+          : opts.byDefault(() => defaultElementAdapter) || defaultElementAdapter;
+    });
+
+    return element => result(element);
   }
 
 }
@@ -47,7 +59,7 @@ class Key extends SimpleContextKey<ElementAdapter> {
  *
  * @category Core
  */
-export const ElementAdapter: SingleContextRef<ElementAdapter> = /*#__PURE__*/ new Key();
+export const ElementAdapter: ContextUpRef<ElementAdapter, ElementAdapter> = /*#__PURE__*/ new ElementAdapterKey();
 
 function defaultElementAdapter(element: any): ComponentContext | undefined {
   return element[ComponentContext__symbol];
