@@ -1,7 +1,6 @@
 import { ContextRegistry, ContextValues } from 'context-values';
 import { ComponentContext, ComponentContext__symbol } from '../../component';
 import { ElementAdapter } from './element-adapter';
-import { ElementEnhancer } from './element-enhancer';
 import Mock = jest.Mock;
 
 describe('boot', () => {
@@ -52,25 +51,6 @@ describe('boot', () => {
 
         expect(adapter(element)).toBe(componentContext);
       });
-      it('enhances element', () => {
-
-        const enhancer = jest.fn();
-
-        registry.provide({ a: ElementEnhancer, is: enhancer });
-        adapter(element);
-
-        expect(enhancer).toHaveBeenCalledWith(element);
-      });
-      it('does not enhance component element', () => {
-
-        const enhancer = jest.fn();
-        const componentContext: ComponentContext = { name: 'component context' } as any;
-
-        registry.provide({ a: ElementEnhancer, is: enhancer });
-        element[ComponentContext__symbol] = componentContext;
-
-        expect(enhancer).not.toHaveBeenCalled();
-      });
     });
 
     describe('constructed adapter', () => {
@@ -116,29 +96,6 @@ describe('boot', () => {
         expect(adapter(element)).toBe(componentContext);
         expect(adapter1).toHaveBeenCalledWith(element);
         expect(adapter2).not.toHaveBeenCalled();
-      });
-      it('enhances element', () => {
-
-        const componentContext: ComponentContext = { name: 'component context' } as any;
-        const enhancer = jest.fn();
-
-        adapter1.mockImplementation(() => componentContext);
-
-        registry.provide({ a: ElementEnhancer, is: enhancer });
-        expect(adapter(element)).toBe(componentContext);
-
-        expect(enhancer).toHaveBeenCalledWith(element);
-      });
-      it('does not enhance component element', () => {
-
-        const enhancer = jest.fn();
-        const componentContext: ComponentContext = { name: 'component context' } as any;
-
-        registry.provide({ a: ElementEnhancer, is: enhancer });
-        element[ComponentContext__symbol] = componentContext;
-
-        expect(adapter(element)).toBe(componentContext);
-        expect(enhancer).not.toHaveBeenCalled();
       });
     });
   });

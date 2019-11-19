@@ -4,7 +4,6 @@
 import { ContextUpKey, ContextUpRef, ContextValueOpts, ContextValues } from 'context-values';
 import { AfterEvent, EventKeeper } from 'fun-events';
 import { ComponentContext, ComponentContext__symbol } from '../../component';
-import { ElementEnhancer } from './element-enhancer';
 
 /**
  * Element adapter is a function able to convert a raw element to component. E.g. mount a component to it.
@@ -36,17 +35,7 @@ class ElementAdapterKey extends ContextUpKey<ElementAdapter, ElementAdapter> {
           EventKeeper<ElementAdapter[]> | ElementAdapter, AfterEvent<ElementAdapter[]>>,
   ): ElementAdapter {
 
-    const enhancer = opts.context.get(ElementEnhancer);
-    const defaultElementAdapter = (element: any) => {
-
-      const componentContext = element[ComponentContext__symbol];
-
-      if (!componentContext) {
-        enhancer(element);
-      }
-
-      return componentContext;
-    };
+    const defaultElementAdapter = (element: any) => element[ComponentContext__symbol];
 
     let result: ElementAdapter;
 
