@@ -8,10 +8,10 @@ Wesib: Web Components Building Blocks
 [![API Documentation][api-docs-image]][api-docs-url]
 
 
-[Wesib] provides a lightweight base for web components definition.
+[Wesib] is a base for web components definition.
 
-Primarily, it provides a way to define custom elements. But instead of inheriting `HTMLElement`, it allows to define
-your own type hierarchy and define custom elements programmatically in a very flexible manner.
+It provides a way to define custom elements. But instead of extending `HTMLElement`, it supports arbitrary component
+classes, and defines custom elements for them programmatically.
 
 Wesib provides an IoC container, a component definition and lifecycle callbacks, and an infrastructure for opt-in
 features that can involve in component definition process and thus alter the resulting components in very flexible way.
