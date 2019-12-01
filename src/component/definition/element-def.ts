@@ -53,7 +53,7 @@ export const ElementDef: SingleContextRef<ElementDef> = /*#__PURE__*/ new Single
           },
           get name() {
             return extend && extend.name;
-          }
+          },
         };
 
         return {

@@ -91,7 +91,7 @@ describe('boot', () => {
                     featureContext = ctx;
                     featureContext.whenReady(whenReady);
                     expect(whenReady).not.toHaveBeenCalled();
-                  }
+                  },
                 },
             ),
         );
@@ -124,7 +124,7 @@ describe('boot', () => {
 
                     defineSpy = jest.spyOn(customElements, 'define').mockImplementation(noop);
                     ctx.define(TestComponent);
-                  }
+                  },
                 },
             ),
         );

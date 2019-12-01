@@ -52,7 +52,7 @@ describe('feature/render', () => {
         set: [
           { a: BootstrapWindow, is: windowSpy },
           { a: CustomElements, is: customElementsSpy },
-        ]
+        ],
       })
       class TestFeature {}
 

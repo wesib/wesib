@@ -38,7 +38,7 @@ describe('feature/shadow-dom', () => {
           type: class extends MockElement {
             attachShadow = attachShadowSpy;
           },
-        }
+        },
       })
       @Feature({
         set: { a: ComponentEventDispatcher, is: mockDispatcher },
@@ -94,7 +94,7 @@ describe('feature/shadow-dom', () => {
           type: class extends MockElement {
             attachShadow = attachShadowSpy;
           },
-        }
+        },
       })
       class OtherComponent {
       }
@@ -116,7 +116,7 @@ describe('feature/shadow-dom', () => {
           type: class extends MockElement {
             attachShadow = attachShadowSpy;
           },
-        }
+        },
       })
       class OtherComponent {
 
@@ -143,7 +143,7 @@ describe('feature/shadow-dom', () => {
         name: 'other-component',
         extend: {
           type: MockElement,
-        }
+        },
       })
       class OtherComponent {
       }

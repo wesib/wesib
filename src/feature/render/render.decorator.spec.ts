@@ -32,7 +32,7 @@ describe('feature/render', () => {
         },
         define(ctx) {
           definitionContext = ctx;
-        }
+        },
       })
       class TestComponent {
 

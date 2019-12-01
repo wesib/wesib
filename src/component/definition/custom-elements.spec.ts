@@ -54,7 +54,7 @@ describe('component', () => {
               get type() {
                 return elementType;
               },
-            }
+            },
           },
         };
       };
@@ -118,7 +118,7 @@ describe('component', () => {
             elementDef: {
               extend: {
                 type: BaseElement,
-              }
+              },
             },
           };
         }

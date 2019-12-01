@@ -230,7 +230,7 @@ describe('boot', () => {
                   removeEventListener = removeEventListenerSpy;
                 },
               },
-              perComponent: { a: key2, is: value2, }
+              perComponent: { a: key2, is: value2 },
             });
       });
 
@@ -278,7 +278,7 @@ describe('boot', () => {
             name: 'another-component',
             extend: {
               type: MockElement,
-            }
+            },
           };
         }
 
@@ -549,7 +549,7 @@ describe('boot', () => {
         ComponentDef.define(TestComponent, {
           define(context) {
             context.onComponent(onComponentSpy);
-          }
+          },
         });
       });
       beforeEach(() => {
@@ -557,8 +557,8 @@ describe('boot', () => {
           a: ElementDef,
           is: {
             extend:
-                { type: MockElement }
-          }
+                { type: MockElement },
+          },
         });
       });
       beforeEach(() => {

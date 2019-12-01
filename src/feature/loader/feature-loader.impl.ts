@@ -112,7 +112,7 @@ function loadFeature(
       return source = afterEventBy<[FeatureLoader]>(
           rcv => ownSource(rcv).whenOff(() => {
             stageId = ownLoader.unload();
-          })
+          }),
       ).share(); // Can be accessed again when reused
     })(receiver);
   }).keep.thru(
@@ -167,7 +167,7 @@ function presentFeatureDeps<NextReturn>(...deps: [FeatureLoader?][]): NextArgs<F
       ...filterIt<FeatureLoader | undefined, FeatureLoader>(
           mapIt(deps, dep => dep[0]),
           isPresent,
-      )
+      ),
   );
 }
 

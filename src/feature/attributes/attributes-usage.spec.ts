@@ -48,7 +48,7 @@ describe('feature/attributes', () => {
         extend: {
           type: MockElement,
         },
-        name: 'test-component'
+        name: 'test-component',
       })
       class TestComponent {
 
@@ -99,7 +99,7 @@ describe('feature/attributes', () => {
           extend: {
             type: MockElement,
           },
-          name: 'no-attr-component'
+          name: 'no-attr-component',
         })
         @Feature({
           needs: AttributesSupport,
@@ -198,7 +198,7 @@ describe('feature/attributes', () => {
           extend: {
             type: Object,
           },
-          name: 'no-attr-component'
+          name: 'no-attr-component',
         })
         @Feature({
           needs: AttributesSupport,

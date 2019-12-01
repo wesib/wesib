@@ -122,7 +122,7 @@ function domPropertyDescriptor<V>(
     enumerable,
     get: function (this: HTMLElement) {
       return (ComponentContext.of(this).component as any)[propertyKey];
-    }
+    },
   };
 
   if (writable) {

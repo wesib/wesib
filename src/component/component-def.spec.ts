@@ -93,14 +93,16 @@ describe('component', () => {
         const key1 = new SingleContextKey<string>('a');
         const key2 = new SingleContextKey<string>('b');
 
-        expect(ComponentDef.merge(
-            { set: { a: key1, is: 'a' } },
-            { set: { a: key2, is: 'b' } })
+        expect(
+            ComponentDef.merge(
+                { set: { a: key1, is: 'a' } },
+                { set: { a: key2, is: 'b' } },
+            ),
         ).toEqual({
           set: [
             { a: key1, is: 'a' },
             { a: key2, is: 'b' },
-          ]
+          ],
         });
       });
       it('merges `define`', () => {
@@ -128,12 +130,12 @@ describe('component', () => {
 
         expect(ComponentDef.merge(
             { perComponent: { a: key1, is: 'a' } },
-            { perComponent: { a: key2, is: 'b' } })
+            { perComponent: { a: key2, is: 'b' } }),
         ).toEqual({
           perComponent: [
             { a: key1, is: 'a' },
             { a: key2, is: 'b' },
-          ]
+          ],
         });
       });
       it('merges `feature`', () => {
@@ -145,20 +147,20 @@ describe('component', () => {
 
         expect(ComponentDef.merge(
             { feature: feature1 },
-            { feature: feature2 })
+            { feature: feature2 }),
         ).toEqual({
           feature: FeatureDef.merge(feature1, feature2),
         });
         expect(ComponentDef.merge(
             { feature: feature1 },
-            { perComponent: { a: key2, is: 'b' } })
+            { perComponent: { a: key2, is: 'b' } }),
         ).toEqual({
           perComponent: { a: key2, is: 'b' },
           feature: feature1,
         });
         expect(ComponentDef.merge(
             { perComponent: { a: key1, is: 'a' } },
-            { feature: feature2 })
+            { feature: feature2 }),
         ).toEqual({
           perComponent: { a: key1, is: 'a' },
           feature: feature2,

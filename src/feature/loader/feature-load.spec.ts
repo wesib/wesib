@@ -606,8 +606,8 @@ describe('feature load', () => {
 
         supply.needs(
             load(
-                loader => resolve([loader!, supply, load])
-            ).needs(supply)
+                loader => resolve([loader!, supply, load]),
+            ).needs(supply),
         );
       });
     }

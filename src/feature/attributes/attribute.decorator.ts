@@ -37,7 +37,7 @@ export function Attribute<T extends ComponentClass>(
         {
           define(definitionContext) {
             definitionContext.get(AttributeRegistrar)(name, updateState);
-          }
+          },
         });
 
     const newDesc: TypedPropertyDescriptor<string | null> = {

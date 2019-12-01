@@ -11,7 +11,7 @@ describe('component', () => {
         name: 'test-component',
         extend: {
           name: 'input',
-          type: BaseElement
+          type: BaseElement,
         },
       };
 

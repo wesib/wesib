@@ -14,7 +14,7 @@ describe('feature/attributes', () => {
         name: 'test-component',
         extend: {
           type: MockElement,
-        }
+        },
       })
       class TestComponent {
 
@@ -37,7 +37,7 @@ describe('feature/attributes', () => {
         name: 'test-component',
         extend: {
           type: MockElement,
-        }
+        },
       })
       class TestComponent {
 
@@ -61,7 +61,7 @@ describe('feature/attributes', () => {
         name: 'test-component',
         extend: {
           type: MockElement,
-        }
+        },
       })
       class TestComponent {
 
@@ -88,7 +88,7 @@ describe('feature/attributes', () => {
         name: 'test-component',
         extend: {
           type: MockElement,
-        }
+        },
       })
       class TestComponent {
 
@@ -112,7 +112,7 @@ describe('feature/attributes', () => {
         name: 'test-component',
         extend: {
           type: MockElement,
-        }
+        },
       })
       class TestComponent {
 
@@ -139,7 +139,7 @@ describe('feature/attributes', () => {
         name: 'test-component',
         extend: {
           type: MockElement,
-        }
+        },
       })
       class TestComponent {
 

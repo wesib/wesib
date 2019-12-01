@@ -10,7 +10,7 @@ describe('feature/dom-properties', () => {
         name: 'test-component',
         extend: {
           type: MockElement,
-        }
+        },
       })
       class TestComponent {
         @DomProperty()
@@ -32,7 +32,7 @@ describe('feature/dom-properties', () => {
         name: 'test-component',
         extend: {
           type: MockElement,
-        }
+        },
       })
       class TestComponent {
         @DomProperty({ propertyKey: 'otherProperty' })
@@ -56,7 +56,7 @@ describe('feature/dom-properties', () => {
           name: 'test-component',
           extend: {
             type: MockElement,
-          }
+          },
         })
         class TestComponent {
           @DomProperty()
@@ -78,7 +78,7 @@ describe('feature/dom-properties', () => {
           name: 'test-component',
           extend: {
             type: Object,
-          }
+          },
         })
         class TestComponent {
           @DomProperty({ updateState: false })
@@ -100,7 +100,7 @@ describe('feature/dom-properties', () => {
           name: 'test-component',
           extend: {
             type: MockElement,
-          }
+          },
         })
         class TestComponent {
           @DomProperty({
@@ -126,7 +126,7 @@ describe('feature/dom-properties', () => {
           name: 'test-component',
           extend: {
             type: MockElement,
-          }
+          },
         })
         class TestComponent {
           @DomProperty({
@@ -155,7 +155,7 @@ describe('feature/dom-properties', () => {
           name: 'test-component',
           extend: {
             type: MockElement,
-          }
+          },
         })
         class TestComponent {
           @DomProperty()
@@ -179,7 +179,7 @@ describe('feature/dom-properties', () => {
           name: 'test-component',
           extend: {
             type: MockElement,
-          }
+          },
         })
         class TestComponent {
           @DomProperty({
@@ -207,7 +207,7 @@ describe('feature/dom-properties', () => {
           name: 'test-component',
           extend: {
             type: MockElement,
-          }
+          },
         })
         class TestComponent {
 
@@ -239,7 +239,7 @@ describe('feature/dom-properties', () => {
           name: 'test-component',
           extend: {
             type: MockElement,
-          }
+          },
         })
         class TestComponent {
 

@@ -31,7 +31,7 @@ describe('component instantiation', () => {
       @Feature({
         init(bootCtx) {
           bootCtx.onComponent(componentListenerSpy);
-        }
+        },
       })
       class TestComponent {
 
@@ -101,7 +101,7 @@ describe('component instantiation', () => {
                 expect(() => context.component).toThrow(/not constructed yet/);
                 ctx.whenReady(comp => resolve(comp));
               });
-            }
+            },
           })
           class TestComponent {
           }

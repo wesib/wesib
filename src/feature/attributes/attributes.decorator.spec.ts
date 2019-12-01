@@ -11,7 +11,7 @@ describe('feature/attributes', () => {
         name: 'test-component',
         extend: {
           type: MockElement,
-        }
+        },
       })
       @Attributes({
         attr: true,
@@ -32,7 +32,7 @@ describe('feature/attributes', () => {
         name: 'test-component',
         extend: {
           type: MockElement,
-        }
+        },
       })
       @Attributes([
         'attr',
@@ -53,7 +53,7 @@ describe('feature/attributes', () => {
         name: 'test-component',
         extend: {
           type: MockElement,
-        }
+        },
       })
       @Attributes('attr')
       class TestComponent {
@@ -74,7 +74,7 @@ describe('feature/attributes', () => {
         name: 'test-component',
         extend: {
           type: MockElement,
-        }
+        },
       })
       @Attributes({
         attr: updateSpy,
@@ -100,7 +100,7 @@ describe('feature/attributes', () => {
         name: 'test-component',
         extend: {
           type: MockElement,
-        }
+        },
       })
       @Attributes({
         attr: key,
@@ -121,7 +121,7 @@ describe('feature/attributes', () => {
         name: 'test-component',
         extend: {
           type: MockElement,
-        }
+        },
       })
       @Attributes({
         attr: false,

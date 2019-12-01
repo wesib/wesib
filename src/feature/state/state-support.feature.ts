@@ -16,7 +16,7 @@ const StateSupport__feature: FeatureDef = {
         context.whenDestroyed(reason => state.done(reason));
 
         return state;
-      }
+      },
     },
     {
       a: StateUpdater,
