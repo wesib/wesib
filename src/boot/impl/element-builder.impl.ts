@@ -1,6 +1,6 @@
 import { nextArgs, nextSkip, noop } from 'call-thru';
 import { ContextKey, ContextKey__symbol, ContextValues, ContextValueSpec, SingleContextKey } from 'context-values';
-import { EventEmitter, OnEvent, trackValue, ValueTracker } from 'fun-events';
+import { EventEmitter, eventSupply, EventSupply, OnEvent, trackValue, ValueTracker } from 'fun-events';
 import { ArraySet, Class } from '../../common';
 import {
   ComponentContext as ComponentContext_,
@@ -288,8 +288,21 @@ export class ElementBuilder {
     const status = trackValue<ComponentStatus>(ComponentStatus.Building);
     const aliveSupply = status.on(noop);
     const whenReady: OnEvent<[]> = status.read.thru(sts => sts ? nextArgs() : nextSkip());
-    const whenOn: OnEvent<[]> = status.read.thru(sts => sts === ComponentStatus.On ? nextArgs() : nextSkip());
     const whenOff: OnEvent<[]> = status.read.thru(sts => sts === ComponentStatus.Off ? nextArgs() : nextSkip());
+    const whenOn: OnEvent<[EventSupply]> = status.read.thru(
+        sts => {
+          if (sts !== ComponentStatus.On) {
+            return nextSkip();
+          }
+
+          const offSupply = eventSupply();
+
+          whenOff.once(() => offSupply.off());
+
+          return nextArgs(offSupply);
+        },
+    );
+
     let mount: ComponentMount_<T> | undefined;
     const values = valueRegistry.newValues();
 
@@ -318,7 +331,7 @@ export class ElementBuilder {
         return status.it === ComponentStatus.On;
       }
 
-      get whenOn(): OnEvent<[]> {
+      get whenOn(): OnEvent<[EventSupply]> {
         return whenOn;
       }
 

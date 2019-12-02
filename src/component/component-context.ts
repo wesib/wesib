@@ -2,7 +2,7 @@
  * @module @wesib/wesib
  */
 import { ContextKey, ContextKey__symbol, ContextValues } from 'context-values';
-import { OnDomEvent, OnEvent, StatePath } from 'fun-events';
+import { EventSupply, OnDomEvent, OnEvent, StatePath } from 'fun-events';
 import { BootstrapContext__key } from '../boot/bootstrap-context.key.impl';
 import { ComponentContext__key } from './component-context.key.impl';
 import { ComponentEventDispatcher__key } from './component-event.key.impl';
@@ -76,26 +76,20 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   abstract readonly connected: boolean;
 
   /**
-   * Registers custom element connection listener.
+   * An `OnEvent` sender of custom element connection events.
    *
-   * This listener is called when custom element is connected, i.e. its `connectedCallback()` method is called.
-   * If component is connected already the listener is called immediately.
+   * The registered receivers are called when custom element is connected, i.e. its `connectedCallback()` method is
+   * called. If component is connected already the receiver is called immediately.
    *
-   * @param listener  A listener to notify on element connection.
-   *
-   * @returns An event supply.
+   * Sends a connection supply that is cut off once custom element is disconnected.
    */
-  abstract readonly whenOn: OnEvent<[]>;
+  abstract readonly whenOn: OnEvent<[EventSupply]>;
 
   /**
-   * Registers custom element disconnection listener.
+   * An `OnEvent` sender of custom element disconnection events.
    *
-   * This listener is called when custom element is disconnected, i.e. its `disconnectedCallback()` method is called.
-   * If component is ready but disconnected, the listener is called immediately.
-   *
-   * @param listener  A listener to notify on element disconnection.
-   *
-   * @returns An event supply.
+   * The registered receivers are called when custom element is disconnected, i.e. its `disconnectedCallback()` method
+   * is called. If component is ready but disconnected, the receiver is called immediately.
    */
   abstract readonly whenOff: OnEvent<[]>;
 

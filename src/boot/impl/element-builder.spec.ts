@@ -1,6 +1,6 @@
 import { noop } from 'call-thru';
 import { ContextKey, SingleContextKey } from 'context-values';
-import { DomEventDispatcher } from 'fun-events';
+import { DomEventDispatcher, EventSupply } from 'fun-events';
 import { Class } from '../../common';
 import {
   ComponentContext,
@@ -461,7 +461,7 @@ describe('boot', () => {
           context.whenOn(connected);
           mount.connected = true;
 
-          expect(connected).toHaveBeenCalledWith();
+          expect(connected).toHaveBeenCalledWith(expect.any(EventSupply));
         });
         it('reports connected element', () => {
           doMount();
@@ -471,7 +471,7 @@ describe('boot', () => {
           const connected = jest.fn();
 
           context.whenOn(connected);
-          expect(connected).toHaveBeenCalledWith();
+          expect(connected).toHaveBeenCalledWith(expect.any(EventSupply));
         });
         it('reports disconnected element', () => {
           doMount();
@@ -481,6 +481,20 @@ describe('boot', () => {
           context.whenOff(disconnected);
 
           expect(disconnected).toHaveBeenCalledWith();
+        });
+        it('cuts off connection supply when element disconnected', () => {
+          doMount();
+
+          const disconnected = jest.fn();
+
+          context.whenOn(supply => supply.whenOff(disconnected));
+          expect(disconnected).not.toHaveBeenCalled();
+
+          mount.connected = true;
+          expect(disconnected).not.toHaveBeenCalled();
+
+          mount.connected = false;
+          expect(disconnected).toHaveBeenCalledWith(undefined);
         });
         it('does not disconnect not connected element', () => {
           doMount();
