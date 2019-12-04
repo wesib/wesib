@@ -8,7 +8,7 @@ import { SingleContextKey, SingleContextRef } from 'context-values';
  *
  * @category Core
  */
-export type BootstrapWindow = Window;
+export type BootstrapWindow = Window & typeof globalThis;
 
 /**
  * A key of bootstrap context value containing a window instance the bootstrap is performed against.

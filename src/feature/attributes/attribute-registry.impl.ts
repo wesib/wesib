@@ -20,7 +20,7 @@ export class AttributeRegistry<T extends object = any> {
   private readonly _attrs: { [name: string]: AttributeChangedCallback<T> } = {};
 
   constructor(ctx: DefinitionContext) {
-    this._MutationObserver = (ctx.get(BootstrapWindow) as any).MutationObserver;
+    this._MutationObserver = ctx.get(BootstrapWindow).MutationObserver;
   }
 
   add(name: string, callback: AttributeChangedCallback<T>): void {

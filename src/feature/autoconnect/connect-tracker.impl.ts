@@ -32,7 +32,7 @@ export class ConnectTracker {
     this._supply = new DomEventDispatcher(root)
         .on<ShadowDomEvent>('wesib:shadowAttached')(event => trackShadow(event.shadowRoot));
 
-    const Observer: typeof MutationObserver = (this._context.get(BootstrapWindow) as any).MutationObserver;
+    const Observer = this._context.get(BootstrapWindow).MutationObserver;
     const observer = this._observer = new Observer(records => updateConnections(records));
 
     observer.observe(root, { childList: true, subtree: true });

@@ -49,7 +49,7 @@ export const ElementDef: SingleContextRef<ElementDef> = /*#__PURE__*/ new Single
 
         const elementExtend: ElementDef.Extend = {
           get type() {
-            return extend && extend.type || (values.get(BootstrapWindow) as any).HTMLElement;
+            return extend && extend.type || values.get(BootstrapWindow).HTMLElement;
           },
           get name() {
             return extend && extend.name;
