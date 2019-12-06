@@ -35,7 +35,7 @@ describe('boot', () => {
       expect(bootstrapComponents().get(ComponentContextRegistry)).toBeInstanceOf(ComponentContextRegistry);
     });
     it('provides element builder', () => {
-      expect(bootstrapComponents().get(ElementBuilder)).toBeInstanceOf(ElementBuilder);
+      expect(bootstrapComponents().get(ElementBuilder)).toBeDefined();
     });
     it('constructs default namespace aliaser', () => {
       bootstrapComponents();
