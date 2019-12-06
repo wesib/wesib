@@ -354,8 +354,8 @@ function newFeatureContext(
 
   const unloads: (() => void)[] = [];
   let componentRegistry: ComponentRegistry;
-  const definitionValueRegistry = bsContext.get(DefinitionContextRegistry);
-  const componentValueRegistry = bsContext.get(ComponentContextRegistry);
+  const definitionContextRegistry = bsContext.get(DefinitionContextRegistry);
+  const componentContextRegistry = bsContext.get(ComponentContextRegistry);
   const registry = new ContextRegistry<FeatureContext>(bsContext);
   const whenReady: OnEvent<[]> = loader.state.read.thru(
       ready => ready ? nextArgs() : nextSkip(),
@@ -373,7 +373,7 @@ function newFeatureContext(
 
     perDefinition<D extends any[], S>(spec: ContextValueSpec<DefinitionContext, any, D, S>) {
 
-      const unload = definitionValueRegistry.provide(spec);
+      const unload = definitionContextRegistry.provide(spec);
 
       unloads.push(unload);
 
@@ -382,7 +382,7 @@ function newFeatureContext(
 
     perComponent<D extends any[], S>(spec: ContextValueSpec<ComponentContext, any, D, S>) {
 
-      const unload = componentValueRegistry.provide(spec);
+      const unload = componentContextRegistry.provide(spec);
 
       unloads.push(unload);
 

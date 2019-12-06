@@ -16,16 +16,16 @@ import SpyInstance = jest.SpyInstance;
 
 describe('boot', () => {
 
-  let createBootstrapValueRegistrySpy: MethodSpy<typeof BootstrapContextRegistry, 'create'>;
+  let createBootstrapContextRegistrySpy: MethodSpy<typeof BootstrapContextRegistry, 'create'>;
 
   beforeEach(() => {
-    createBootstrapValueRegistrySpy = jest.spyOn(BootstrapContextRegistry, 'create');
+    createBootstrapContextRegistrySpy = jest.spyOn(BootstrapContextRegistry, 'create');
   });
 
   describe('bootstrapComponents', () => {
     it('constructs bootstrap value registry', () => {
       bootstrapComponents();
-      expect(createBootstrapValueRegistrySpy).toHaveBeenCalledWith();
+      expect(createBootstrapContextRegistrySpy).toHaveBeenCalledWith();
     });
     it('provides definition value registry', () => {
       expect(bootstrapComponents().get(DefinitionContextRegistry)).toBeInstanceOf(DefinitionContextRegistry);
@@ -40,7 +40,7 @@ describe('boot', () => {
     it('constructs default namespace aliaser', () => {
       bootstrapComponents();
 
-      const bootstrapValues = createBootstrapValueRegistrySpy.mock.results[0].value.values;
+      const bootstrapValues = createBootstrapContextRegistrySpy.mock.results[0].value.values;
 
       expect(bootstrapValues.get(DefaultNamespaceAliaser)).toBeInstanceOf(Function);
     });
@@ -79,7 +79,7 @@ describe('boot', () => {
 
       beforeEach(async () => {
         whenReady = jest.fn();
-        createBootstrapValueRegistrySpy.mockRestore();
+        createBootstrapContextRegistrySpy.mockRestore();
 
         class TestFeature {}
 
@@ -151,8 +151,8 @@ describe('boot', () => {
       });
       it('proxies `perDefinition()`', () => {
 
-        const definitionValueRegistry = bootstrapContext.get(DefinitionContextRegistry);
-        const spy = jest.spyOn(definitionValueRegistry, 'provide');
+        const definitionContextRegistry = bootstrapContext.get(DefinitionContextRegistry);
+        const spy = jest.spyOn(definitionContextRegistry, 'provide');
 
         const key = new SingleContextKey<string>('test-value-key');
         const provider = () => 'test-value';
@@ -163,8 +163,8 @@ describe('boot', () => {
       });
       it('proxies `perComponent()`', () => {
 
-        const componentValueRegistry = bootstrapContext.get(ComponentContextRegistry);
-        const spy = jest.spyOn(componentValueRegistry, 'provide');
+        const componentContextRegistry = bootstrapContext.get(ComponentContextRegistry);
+        const spy = jest.spyOn(componentContextRegistry, 'provide');
 
         const key = new SingleContextKey<string>('test-value-key');
         const provider = () => 'test-value';

@@ -31,9 +31,9 @@ describe('feature load', () => {
   });
 
   let mockCustomElements: Mocked<CustomElements>;
-  let definitionValueRegistry: DefinitionContextRegistry;
+  let definitionContextRegistry: DefinitionContextRegistry;
   let definitionValues: ContextValues;
-  let componentValueRegistry: ComponentContextRegistry;
+  let componentContextRegistry: ComponentContextRegistry;
   let componentValues: ContextValues;
 
   beforeEach(() => {
@@ -42,10 +42,10 @@ describe('feature load', () => {
     } as any;
     bsRegistry.provide({ a: CustomElements, is: mockCustomElements });
 
-    definitionValueRegistry = bsContext.get(DefinitionContextRegistry);
-    definitionValues = definitionValueRegistry.newValues();
-    componentValueRegistry = bsContext.get(ComponentContextRegistry);
-    componentValues = componentValueRegistry.newValues();
+    definitionContextRegistry = bsContext.get(DefinitionContextRegistry);
+    definitionValues = definitionContextRegistry.newValues();
+    componentContextRegistry = bsContext.get(ComponentContextRegistry);
+    componentValues = componentContextRegistry.newValues();
   });
 
   let Feature: Class;

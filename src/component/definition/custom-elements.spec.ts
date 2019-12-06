@@ -23,7 +23,7 @@ describe('component', () => {
 
     beforeEach(() => {
 
-      const valueRegistry = new ContextRegistry<BootstrapContext>();
+      const registry = new ContextRegistry<BootstrapContext>();
 
       mockCustomElements = {
         define: jest.fn(),
@@ -34,11 +34,11 @@ describe('component', () => {
       } as any;
 
       context = {
-        get: valueRegistry.newValues().get,
+        get: registry.newValues().get,
       } as any;
 
-      valueRegistry.provide({ a: BootstrapWindow, is: windowSpy });
-      valueRegistry.provide({ a: DefaultNamespaceAliaser, by: newNamespaceAliaser });
+      registry.provide({ a: BootstrapWindow, is: windowSpy });
+      registry.provide({ a: DefaultNamespaceAliaser, by: newNamespaceAliaser });
     });
 
     beforeEach(() => {

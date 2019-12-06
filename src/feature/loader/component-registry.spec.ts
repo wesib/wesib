@@ -11,27 +11,27 @@ import Mocked = jest.Mocked;
 describe('feature load', () => {
   describe('ComponentRegistry', () => {
 
-    let featureRegistry: BootstrapContextRegistry;
+    let bsContextRegistry: BootstrapContextRegistry;
     let mockFeatureContext: Mocked<FeatureContext>;
     let mockCustomElements: Mocked<CustomElements>;
     let ready: () => void;
 
     beforeEach(() => {
       ready = noop;
-      featureRegistry = BootstrapContextRegistry.create();
+      bsContextRegistry = BootstrapContextRegistry.create();
       mockFeatureContext = {
         whenReady(callback: () => void) {
           ready = mergeFunctions(ready, callback);
         },
-        get: featureRegistry.values.get,
+        get: bsContextRegistry.values.get,
       } as any;
-      featureRegistry.provide({ a: BootstrapContext, is: mockFeatureContext });
+      bsContextRegistry.provide({ a: BootstrapContext, is: mockFeatureContext });
 
       mockCustomElements = {
         define: jest.fn(),
         whenDefined: jest.fn(),
       };
-      featureRegistry.provide({ a: CustomElements, is: mockCustomElements });
+      bsContextRegistry.provide({ a: CustomElements, is: mockCustomElements });
     });
 
     let mockBuilder: Mocked<ElementBuilder>;
@@ -40,7 +40,7 @@ describe('feature load', () => {
       mockBuilder = {
         buildElement: jest.fn(),
       } as any;
-      featureRegistry.provide({ a: ElementBuilder, is: mockBuilder });
+      bsContextRegistry.provide({ a: ElementBuilder, is: mockBuilder });
     });
 
     let registry: ComponentRegistry;
