@@ -3,7 +3,7 @@ import { isPresent, NextArgs, nextArgs, NextSkip, nextSkip } from 'call-thru';
 import { ContextRegistry, ContextUpKey, ContextValueOpts, ContextValues, ContextValueSpec } from 'context-values';
 import { afterAll, afterEach, AfterEvent, afterEventBy, afterThe, EventKeeper, OnEvent, trackValue } from 'fun-events';
 import { BootstrapContext } from '../../boot';
-import { BootstrapValueRegistry, ComponentValueRegistry, DefinitionValueRegistry } from '../../boot/impl';
+import { BootstrapContextRegistry, ComponentContextRegistry, DefinitionContextRegistry } from '../../boot/impl';
 import { ArraySet, Class } from '../../common';
 import { ComponentContext } from '../../component';
 import { ComponentClass, DefinitionContext } from '../../component/definition';
@@ -275,9 +275,9 @@ class SetupFeatureStage extends FeatureStage {
 
     const { bsContext, request: { def: { set, perDefinition, perComponent } } } = this.loader;
     const [context, unloads] = newFeatureContext(bsContext, this.loader);
-    const bootstrapValueRegistry = bsContext.get(BootstrapValueRegistry);
+    const bootstrapContextRegistry = bsContext.get(BootstrapContextRegistry);
 
-    new ArraySet(set).forEach(spec => unloads.push(bootstrapValueRegistry.provide(spec)));
+    new ArraySet(set).forEach(spec => unloads.push(bootstrapContextRegistry.provide(spec)));
     new ArraySet(perDefinition).forEach(spec => context.perDefinition(spec));
     new ArraySet(perComponent).forEach(spec => context.perComponent(spec));
 
@@ -354,8 +354,8 @@ function newFeatureContext(
 
   const unloads: (() => void)[] = [];
   let componentRegistry: ComponentRegistry;
-  const definitionValueRegistry = bsContext.get(DefinitionValueRegistry);
-  const componentValueRegistry = bsContext.get(ComponentValueRegistry);
+  const definitionValueRegistry = bsContext.get(DefinitionContextRegistry);
+  const componentValueRegistry = bsContext.get(ComponentContextRegistry);
   const registry = new ContextRegistry<FeatureContext>(bsContext);
   const whenReady: OnEvent<[]> = loader.state.read.thru(
       ready => ready ? nextArgs() : nextSkip(),

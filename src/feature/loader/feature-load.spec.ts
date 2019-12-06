@@ -2,7 +2,7 @@ import { valueProvider } from 'call-thru';
 import { ContextValues, SingleContextKey, SingleContextUpKey } from 'context-values';
 import { AfterEvent, eventSupply, EventSupply } from 'fun-events';
 import { BootstrapContext } from '../../boot';
-import { BootstrapValueRegistry, ComponentValueRegistry, DefinitionValueRegistry } from '../../boot/impl';
+import { BootstrapContextRegistry, ComponentContextRegistry, DefinitionContextRegistry } from '../../boot/impl';
 import { Class } from '../../common';
 import { ComponentDef } from '../../component';
 import { CustomElements } from '../../component/definition';
@@ -16,12 +16,12 @@ import Mocked = jest.Mocked;
 
 describe('feature load', () => {
 
-  let bsRegistry: BootstrapValueRegistry;
+  let bsRegistry: BootstrapContextRegistry;
   let bsContext: Mocked<BootstrapContext>;
   let makeReady: () => void;
 
   beforeEach(() => {
-    bsRegistry = BootstrapValueRegistry.create();
+    bsRegistry = BootstrapContextRegistry.create();
     bsContext = {
       get: bsRegistry.values.get,
       load: jest.fn(),
@@ -31,9 +31,9 @@ describe('feature load', () => {
   });
 
   let mockCustomElements: Mocked<CustomElements>;
-  let definitionValueRegistry: DefinitionValueRegistry;
+  let definitionValueRegistry: DefinitionContextRegistry;
   let definitionValues: ContextValues;
-  let componentValueRegistry: ComponentValueRegistry;
+  let componentValueRegistry: ComponentContextRegistry;
   let componentValues: ContextValues;
 
   beforeEach(() => {
@@ -42,9 +42,9 @@ describe('feature load', () => {
     } as any;
     bsRegistry.provide({ a: CustomElements, is: mockCustomElements });
 
-    definitionValueRegistry = bsContext.get(DefinitionValueRegistry);
+    definitionValueRegistry = bsContext.get(DefinitionContextRegistry);
     definitionValues = definitionValueRegistry.newValues();
-    componentValueRegistry = bsContext.get(ComponentValueRegistry);
+    componentValueRegistry = bsContext.get(ComponentContextRegistry);
     componentValues = componentValueRegistry.newValues();
   });
 

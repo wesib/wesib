@@ -14,8 +14,8 @@ import { ComponentClass, ComponentFactory, DefinitionContext, ElementDef } from 
 import { ObjectMock } from '../../spec/mocks';
 import { MockElement } from '../../spec/test-element';
 import { BootstrapContext } from '../bootstrap-context';
-import { BootstrapValueRegistry } from './bootstrap-value-registry.impl';
-import { DefinitionValueRegistry } from './definition-value-registry.impl';
+import { BootstrapContextRegistry } from './bootstrap-context-registry.impl';
+import { DefinitionContextRegistry } from './definition-context-registry.impl';
 import { ElementBuilder } from './element-builder.impl';
 import Mock = jest.Mock;
 import Mocked = jest.Mocked;
@@ -23,15 +23,15 @@ import Mocked = jest.Mocked;
 describe('boot', () => {
   describe('ElementBuilder', () => {
 
-    let bootstrapRegistry: BootstrapValueRegistry;
+    let bsContextRegistry: BootstrapContextRegistry;
     let mockBootstrapContext: Mocked<BootstrapContext>;
 
     beforeEach(() => {
-      bootstrapRegistry = BootstrapValueRegistry.create();
+      bsContextRegistry = BootstrapContextRegistry.create();
       mockBootstrapContext = {
-        get: bootstrapRegistry.values.get,
+        get: bsContextRegistry.values.get,
       } as any;
-      bootstrapRegistry.provide({ a: BootstrapContext, is: mockBootstrapContext });
+      bsContextRegistry.provide({ a: BootstrapContext, is: mockBootstrapContext });
     });
 
     let builder: ElementBuilder;
@@ -213,7 +213,7 @@ describe('boot', () => {
           on: jest.fn((context: ComponentContext, type: string) =>
               new DomEventDispatcher(context.element).on<any>(type)),
         };
-        bootstrapRegistry.provide({ a: ComponentEventDispatcher, is: mockDispatcher });
+        bsContextRegistry.provide({ a: ComponentEventDispatcher, is: mockDispatcher });
       });
 
       let addEventListenerSpy: Mock;
@@ -370,7 +370,7 @@ describe('boot', () => {
           on: jest.fn((ctx: ComponentContext, type: string) =>
               new DomEventDispatcher(ctx.element).on<any>(type)),
         };
-        bootstrapRegistry.provide({ a: ComponentEventDispatcher, is: mockDispatcher });
+        bsContextRegistry.provide({ a: ComponentEventDispatcher, is: mockDispatcher });
       });
 
       let factory: ComponentFactory;
@@ -567,7 +567,7 @@ describe('boot', () => {
         });
       });
       beforeEach(() => {
-        mockBootstrapContext.get(DefinitionValueRegistry).provide({
+        mockBootstrapContext.get(DefinitionContextRegistry).provide({
           a: ElementDef,
           is: {
             extend:

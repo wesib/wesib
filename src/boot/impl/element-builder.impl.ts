@@ -17,8 +17,8 @@ import {
 } from '../../component/definition';
 import { BootstrapContext } from '../bootstrap-context';
 import { bootstrapDefault } from '../bootstrap-default';
-import { ComponentValueRegistry } from './component-value-registry.impl';
-import { DefinitionValueRegistry } from './definition-value-registry.impl';
+import { ComponentContextRegistry } from './component-context-registry.impl';
+import { DefinitionContextRegistry } from './definition-context-registry.impl';
 
 /**
  * Creates new component of the given type.
@@ -74,8 +74,8 @@ const ElementBuilder__key = /*#__PURE__*/ new SingleContextKey<ElementBuilder>(
  */
 export class ElementBuilder {
 
-  private readonly _definitionValueRegistry: DefinitionValueRegistry;
-  private readonly _componentValueRegistry: ComponentValueRegistry;
+  private readonly _definitionContextRegistry_global: DefinitionContextRegistry;
+  private readonly _componentContextRegistry_global: ComponentContextRegistry;
   readonly definitions = new EventEmitter<[DefinitionContext_]>();
   readonly components = new EventEmitter<[ComponentContext_]>();
 
@@ -84,8 +84,8 @@ export class ElementBuilder {
   }
 
   constructor(context: BootstrapContext) {
-    this._definitionValueRegistry = context.get(DefinitionValueRegistry);
-    this._componentValueRegistry = context.get(ComponentValueRegistry);
+    this._definitionContextRegistry_global = context.get(DefinitionContextRegistry);
+    this._componentContextRegistry_global = context.get(ComponentContextRegistry);
   }
 
   buildElement<T extends object>(componentType: ComponentClass<T>): ComponentFactory_<T> {
@@ -93,13 +93,13 @@ export class ElementBuilder {
     const def = ComponentDef.of(componentType);
     const builder = this;
     const onComponent = new EventEmitter<[ComponentContext_]>();
-    let typeValueRegistry!: ComponentValueRegistry;
+    let componentContextRegistry_perType!: ComponentContextRegistry;
     const ready = trackValue(false);
     const whenReady: OnEvent<[]> = ready.read.thru(cls => cls ? nextArgs() : nextSkip());
     let definitionContext: DefinitionContext;
 
-    function createValueRegistry() {
-      return builder._componentValueRegistry.append(typeValueRegistry);
+    function createComponentContextRegistry() {
+      return builder._componentContextRegistry_global.append(componentContextRegistry_perType);
     }
 
     class ComponentFactory extends ComponentFactory_<T> {
@@ -124,7 +124,7 @@ export class ElementBuilder {
         const mount = builder._createComponent({
           definitionContext,
           onComponent,
-          valueRegistry: createValueRegistry(),
+          registry: createComponentContextRegistry(),
           element,
           elementSuper(key) {
             return element[key];
@@ -188,15 +188,16 @@ export class ElementBuilder {
       constructor() {
         super();
 
-        const definitionRegistry = new DefinitionValueRegistry(builder._definitionValueRegistry.seedIn(this));
+        const definitionContextRegistry =
+            new DefinitionContextRegistry(builder._definitionContextRegistry_global.seedIn(this));
 
-        definitionRegistry.provide({ a: DefinitionContext_, is: this });
-        definitionRegistry.provide({ a: ComponentFactory_, is: componentFactory });
-        this.get = definitionRegistry.newValues().get;
-        new ArraySet(def.set).forEach(spec => definitionRegistry.provide(spec));
+        definitionContextRegistry.provide({ a: DefinitionContext_, is: this });
+        definitionContextRegistry.provide({ a: ComponentFactory_, is: componentFactory });
+        this.get = definitionContextRegistry.newValues().get;
+        new ArraySet(def.set).forEach(spec => definitionContextRegistry.provide(spec));
 
-        typeValueRegistry = new ComponentValueRegistry(definitionRegistry.seedIn(this));
-        new ArraySet(def.perComponent).forEach(spec => typeValueRegistry.provide(spec));
+        componentContextRegistry_perType = new ComponentContextRegistry(definitionContextRegistry.seedIn(this));
+        new ArraySet(def.perComponent).forEach(spec => componentContextRegistry_perType.provide(spec));
       }
 
       whenReady(callback: (this: void, elementType: Class) => void) {
@@ -204,7 +205,7 @@ export class ElementBuilder {
       }
 
       perComponent<S>(spec: ContextValueSpec<ComponentContext_, any, any[], S>): void {
-        typeValueRegistry.provide(spec);
+        componentContextRegistry_perType.provide(spec);
       }
 
     }
@@ -216,7 +217,7 @@ export class ElementBuilder {
     }
     this.definitions.send(definitionContext);
 
-    const elementType = this._elementType(definitionContext, onComponent, createValueRegistry());
+    const elementType = this._elementType(definitionContext, onComponent, createComponentContextRegistry());
 
     Object.defineProperty(definitionContext, 'elementType', {
       configurable: true,
@@ -232,7 +233,8 @@ export class ElementBuilder {
   private _elementType<T extends object>(
       definitionContext: DefinitionContext_<T>,
       onComponent: EventEmitter<[ComponentContext_<T>]>,
-      valueRegistry: ComponentValueRegistry) {
+      componentContextRegistry: ComponentContextRegistry,
+  ) {
 
     const builder = this;
     const elementDef = definitionContext.get(ElementDef);
@@ -248,7 +250,7 @@ export class ElementBuilder {
         const context = builder._createComponent({
           definitionContext,
           onComponent,
-          valueRegistry,
+          registry: componentContextRegistry,
           element: this,
           createMount: noop,
           elementSuper: (key) => {
@@ -279,11 +281,12 @@ export class ElementBuilder {
       {
         definitionContext,
         onComponent,
-        valueRegistry,
+        registry,
         element,
         createMount,
         elementSuper,
-      }: ComponentMeta<T>): ComponentContext_<T> {
+      }: ComponentMeta<T>,
+  ): ComponentContext_<T> {
 
     const status = trackValue<ComponentStatus>(ComponentStatus.Building);
     const aliveSupply = status.on(noop);
@@ -304,7 +307,7 @@ export class ElementBuilder {
     );
 
     let mount: ComponentMount_<T> | undefined;
-    const values = valueRegistry.newValues();
+    const values = registry.newValues();
 
     class ComponentContext extends ComponentContext_<T> {
 
@@ -356,7 +359,7 @@ export class ElementBuilder {
     const context = new ComponentContext();
 
     context.whenDestroyed(() => removeElement(context));
-    valueRegistry.provide({ a: ComponentContext_, is: context });
+    registry.provide({ a: ComponentContext_, is: context });
 
     augmentElement();
 
@@ -386,7 +389,7 @@ export class ElementBuilder {
 interface ComponentMeta<T extends object> {
   definitionContext: DefinitionContext_<T>;
   onComponent: EventEmitter<[ComponentContext_<T>]>;
-  valueRegistry: ComponentValueRegistry;
+  registry: ComponentContextRegistry;
   element: any;
 
   elementSuper(name: PropertyKey): any;

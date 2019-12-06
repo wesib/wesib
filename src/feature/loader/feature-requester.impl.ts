@@ -1,6 +1,6 @@
 import { ContextKey, ContextKey__symbol, SingleContextKey } from 'context-values';
 import { BootstrapContext, bootstrapDefault } from '../../boot';
-import { BootstrapValueRegistry } from '../../boot/impl';
+import { BootstrapContextRegistry } from '../../boot/impl';
 import { Class } from '../../common';
 import { FeatureNeedClause, FeatureRequest } from './feature-request.impl';
 
@@ -20,11 +20,11 @@ export class FeatureRequester {
     return FeatureRequester__key;
   }
 
-  readonly registry: BootstrapValueRegistry;
+  readonly registry: BootstrapContextRegistry;
   private readonly _map = new Map<Class, FeatureRequest>();
 
   constructor(context: BootstrapContext) {
-    this.registry = context.get(BootstrapValueRegistry);
+    this.registry = context.get(BootstrapContextRegistry);
   }
 
   request(feature: Class, clauses: readonly FeatureNeedClause[] = []): FeatureRequest {

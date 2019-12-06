@@ -1,6 +1,6 @@
 import { noop } from 'call-thru';
 import { BootstrapContext } from '../../boot';
-import { BootstrapValueRegistry, ElementBuilder } from '../../boot/impl';
+import { BootstrapContextRegistry, ElementBuilder } from '../../boot/impl';
 import { Class, mergeFunctions } from '../../common';
 import { ComponentDef, ComponentDef__symbol } from '../../component';
 import { ComponentClass, CustomElements } from '../../component/definition';
@@ -11,14 +11,14 @@ import Mocked = jest.Mocked;
 describe('feature load', () => {
   describe('ComponentRegistry', () => {
 
-    let featureRegistry: BootstrapValueRegistry;
+    let featureRegistry: BootstrapContextRegistry;
     let mockFeatureContext: Mocked<FeatureContext>;
     let mockCustomElements: Mocked<CustomElements>;
     let ready: () => void;
 
     beforeEach(() => {
       ready = noop;
-      featureRegistry = BootstrapValueRegistry.create();
+      featureRegistry = BootstrapContextRegistry.create();
       mockFeatureContext = {
         whenReady(callback: () => void) {
           ready = mergeFunctions(ready, callback);

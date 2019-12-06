@@ -10,7 +10,7 @@ import { FeatureDef, LoadedFeature } from '../../feature';
 import { FeatureKey, FeatureLoader, FeatureRequester } from '../../feature/loader';
 import { BootstrapContext } from '../bootstrap-context';
 import { DefaultNamespaceAliaser } from '../globals';
-import { BootstrapValueRegistry, ElementBuilder } from '../impl';
+import { BootstrapContextRegistry, ElementBuilder } from '../impl';
 import { componentFactoryOf } from '../impl/component-factory.symbol.impl';
 
 /**
@@ -25,8 +25,8 @@ import { componentFactoryOf } from '../impl/component-factory.symbol.impl';
  */
 export function bootstrapComponents(...features: Class[]): BootstrapContext {
 
-  const bootstrapRegistry = BootstrapValueRegistry.create();
-  const { bootstrapContext, complete } = initBootstrap(bootstrapRegistry);
+  const bootstrapContextRegistry = BootstrapContextRegistry.create();
+  const { bootstrapContext, complete } = initBootstrap(bootstrapContextRegistry);
   const feature = features.length === 1 ? features[0] : bootstrapFeature(features);
 
   bootstrapContext.get(FeatureRequester).request(feature);
@@ -41,11 +41,11 @@ function bootstrapFeature(needs: Class[]): Class {
   return FeatureDef.define(class BootstrapFeature {}, { needs });
 }
 
-function initBootstrap(bootstrapRegistry: BootstrapValueRegistry) {
+function initBootstrap(bootstrapContextRegistry: BootstrapContextRegistry) {
 
   const stage = trackValue<BootstrapStage>(BootstrapStage.Init);
   const whenReady = stage.read.thru(s => s ? nextArgs() : nextSkip());
-  const values = bootstrapRegistry.values;
+  const values = bootstrapContextRegistry.values;
 
   class Context extends BootstrapContext {
 
@@ -61,8 +61,8 @@ function initBootstrap(bootstrapRegistry: BootstrapValueRegistry) {
 
     constructor() {
       super();
-      bootstrapRegistry.provide({ a: DefaultNamespaceAliaser, by: newNamespaceAliaser });
-      bootstrapRegistry.provide({ a: BootstrapContext, is: this });
+      bootstrapContextRegistry.provide({ a: DefaultNamespaceAliaser, by: newNamespaceAliaser });
+      bootstrapContextRegistry.provide({ a: BootstrapContext, is: this });
     }
 
     async whenDefined<C extends object>(componentType: ComponentClass<C>) {

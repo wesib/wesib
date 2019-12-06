@@ -1,5 +1,5 @@
-import { ComponentFactory__symbol } from '../../boot/impl/component-factory.symbol.impl';
 import { ElementBuilder } from '../../boot/impl';
+import { ComponentFactory__symbol } from '../../boot/impl/component-factory.symbol.impl';
 import { ComponentClass, CustomElements } from '../../component/definition';
 import { FeatureContext } from '../feature-context';
 

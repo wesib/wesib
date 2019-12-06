@@ -8,7 +8,7 @@ import { FeatureContext, FeatureDef, LoadedFeature } from '../../feature';
 import { MethodSpy } from '../../spec/mocks';
 import { BootstrapContext } from '../bootstrap-context';
 import { DefaultNamespaceAliaser } from '../globals';
-import { BootstrapValueRegistry, ComponentValueRegistry, DefinitionValueRegistry, ElementBuilder } from '../impl';
+import { BootstrapContextRegistry, ComponentContextRegistry, DefinitionContextRegistry, ElementBuilder } from '../impl';
 import { ComponentFactory__symbol } from '../impl/component-factory.symbol.impl';
 import { bootstrapComponents } from './bootstrap-components';
 import Mock = jest.Mock;
@@ -16,10 +16,10 @@ import SpyInstance = jest.SpyInstance;
 
 describe('boot', () => {
 
-  let createBootstrapValueRegistrySpy: MethodSpy<typeof BootstrapValueRegistry, 'create'>;
+  let createBootstrapValueRegistrySpy: MethodSpy<typeof BootstrapContextRegistry, 'create'>;
 
   beforeEach(() => {
-    createBootstrapValueRegistrySpy = jest.spyOn(BootstrapValueRegistry, 'create');
+    createBootstrapValueRegistrySpy = jest.spyOn(BootstrapContextRegistry, 'create');
   });
 
   describe('bootstrapComponents', () => {
@@ -28,11 +28,11 @@ describe('boot', () => {
       expect(createBootstrapValueRegistrySpy).toHaveBeenCalledWith();
     });
     it('provides definition value registry', () => {
-      expect(bootstrapComponents().get(DefinitionValueRegistry)).toBeInstanceOf(DefinitionValueRegistry);
+      expect(bootstrapComponents().get(DefinitionContextRegistry)).toBeInstanceOf(DefinitionContextRegistry);
     });
     it('provides component value registry', () => {
-      bootstrapComponents().get(ComponentValueRegistry);
-      expect(bootstrapComponents().get(ComponentValueRegistry)).toBeInstanceOf(ComponentValueRegistry);
+      bootstrapComponents().get(ComponentContextRegistry);
+      expect(bootstrapComponents().get(ComponentContextRegistry)).toBeInstanceOf(ComponentContextRegistry);
     });
     it('provides element builder', () => {
       expect(bootstrapComponents().get(ElementBuilder)).toBeInstanceOf(ElementBuilder);
@@ -151,7 +151,7 @@ describe('boot', () => {
       });
       it('proxies `perDefinition()`', () => {
 
-        const definitionValueRegistry = bootstrapContext.get(DefinitionValueRegistry);
+        const definitionValueRegistry = bootstrapContext.get(DefinitionContextRegistry);
         const spy = jest.spyOn(definitionValueRegistry, 'provide');
 
         const key = new SingleContextKey<string>('test-value-key');
@@ -163,7 +163,7 @@ describe('boot', () => {
       });
       it('proxies `perComponent()`', () => {
 
-        const componentValueRegistry = bootstrapContext.get(ComponentValueRegistry);
+        const componentValueRegistry = bootstrapContext.get(ComponentContextRegistry);
         const spy = jest.spyOn(componentValueRegistry, 'provide');
 
         const key = new SingleContextKey<string>('test-value-key');
