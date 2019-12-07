@@ -57,7 +57,7 @@ export abstract class DefinitionContext<T extends object = any> extends ContextV
    *
    * @return An event supply.
    */
-  abstract readonly onComponent: OnEvent<[ComponentContext]>;
+  abstract readonly onComponent: OnEvent<[ComponentContext<T>]>;
 
   /**
    * Registers component definition readiness callback.
@@ -77,7 +77,9 @@ export abstract class DefinitionContext<T extends object = any> extends ContextV
    * @typeparam D  A type of dependencies.
    * @typeparam S  The type of context value sources.
    * @param spec  Component context value specifier.
+   *
+   * @returns A function that removes the given context value specifier when called.
    */
-  abstract perComponent<S>(spec: ContextValueSpec<ComponentContext<T>, any, any[], S>): void;
+  abstract perComponent<S>(spec: ContextValueSpec<ComponentContext<T>, any, any[], S>): () => void;
 
 }

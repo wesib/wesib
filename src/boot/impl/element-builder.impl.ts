@@ -181,8 +181,8 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
           whenReady.once(() => callback(this));
         }
 
-        perComponent<S>(spec: ContextValueSpec<ComponentContext_, any, any[], S>): void {
-          componentContextRegistry_perType.provide(spec);
+        perComponent<S>(spec: ContextValueSpec<ComponentContext_, any, any[], S>): () => void {
+          return componentContextRegistry_perType.provide(spec);
         }
 
       }
