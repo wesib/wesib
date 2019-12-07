@@ -16,13 +16,11 @@ const DomPropertiesSupport__feature: FeatureDef = {
       },
       with: [DomPropertyRegistry],
     });
-  },
-  init(context) {
-    context.onDefinition(definitionContext => {
+    setup.onDefinition(definitionContext => {
       // Define element prototype properties
       definitionContext.whenReady(({ elementType }) => definitionContext.get(DomPropertyRegistry).define(elementType));
     });
-    context.onComponent(componentContext => {
+    setup.onComponent(componentContext => {
 
       const mount = componentContext.mount;
 

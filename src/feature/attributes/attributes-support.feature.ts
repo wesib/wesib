@@ -16,13 +16,11 @@ const AttributesSupport__feature: FeatureDef = {
       },
       with: [AttributeRegistry],
     });
-  },
-  init(context) {
-    context.onDefinition(definitionContext => {
+    setup.onDefinition(definitionContext => {
       // Define element prototype attributes
       definitionContext.whenReady(({ elementType }) => definitionContext.get(AttributeRegistry).define(elementType));
     });
-    context.onComponent(componentContext => {
+    setup.onComponent(componentContext => {
 
       const mount = componentContext.mount;
 
