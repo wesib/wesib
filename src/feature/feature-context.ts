@@ -31,6 +31,20 @@ export abstract class FeatureContext extends BootstrapContext {
     return this.get(BootstrapContext).onComponent;
   }
 
+  /**
+   * Provides bootstrap context value.
+   *
+   * @typeparam Deps  Dependencies tuple type.
+   * @typeparam Src  Source value type.
+   * @typeparam Seed  Value seed type.
+   * @param spec  Context value specifier.
+   *
+   * @returns A function that removes the given context value specifier when called.
+   */
+  abstract provide<Deps extends any[], Src, Seed>(
+      spec: ContextValueSpec<BootstrapContext, any, Deps, Src, Seed>,
+  ): () => void;
+
   whenDefined<C extends object>(componentType: ComponentClass<C>): Promise<ComponentFactory<C>> {
     return this.get(BootstrapContext).whenDefined(componentType);
   }

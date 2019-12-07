@@ -3,7 +3,12 @@ import { isPresent, NextArgs, nextArgs, NextSkip, nextSkip } from 'call-thru';
 import { ContextRegistry, ContextUpKey, ContextValueOpts, ContextValues, ContextValueSpec } from 'context-values';
 import { afterAll, afterEach, AfterEvent, afterEventBy, afterThe, EventKeeper, OnEvent, trackValue } from 'fun-events';
 import { BootstrapContext } from '../../boot';
-import { BootstrapContextRegistry, ComponentContextRegistry, DefinitionContextRegistry } from '../../boot/impl';
+import {
+  BootstrapContextRegistry,
+  ComponentContextRegistry,
+  DefinitionContextRegistry,
+  Unloader,
+} from '../../boot/impl';
 import { ArraySet, Class } from '../../common';
 import { ComponentContext } from '../../component';
 import { ComponentClass, DefinitionContext } from '../../component/definition';
@@ -274,17 +279,17 @@ class SetupFeatureStage extends FeatureStage {
     await this.perDep(loader => loader.setup());
 
     const { bsContext, request: { def: { set, perDefinition, perComponent } } } = this.loader;
-    const [context, unloads] = newFeatureContext(bsContext, this.loader);
+    const [context, unloader] = newFeatureContext(bsContext, this.loader);
     const bootstrapContextRegistry = bsContext.get(BootstrapContextRegistry);
 
-    new ArraySet(set).forEach(spec => unloads.push(bootstrapContextRegistry.provide(spec)));
+    new ArraySet(set).forEach(spec => unloader.add(bootstrapContextRegistry.provide(spec)));
     new ArraySet(perDefinition).forEach(spec => context.perDefinition(spec));
     new ArraySet(perComponent).forEach(spec => context.perComponent(spec));
 
     return new InitFeatureStage(
         this.loader,
         context,
-        async () => unloads.forEach(unload => unload()),
+        async () => unloader.unload(),
     );
   }
 
@@ -350,9 +355,9 @@ class ActiveFeatureStage extends FeatureStage {
 function newFeatureContext(
     bsContext: BootstrapContext,
     loader: FeatureLoader,
-): [FeatureContext, (() => void)[]] {
+): [FeatureContext, Unloader] {
 
-  const unloads: (() => void)[] = [];
+  const unloader = new Unloader();
   let componentRegistry: ComponentRegistry;
   const definitionContextRegistry = bsContext.get(DefinitionContextRegistry);
   const componentContextRegistry = bsContext.get(ComponentContextRegistry);
@@ -371,22 +376,18 @@ function newFeatureContext(
       componentRegistry = new ComponentRegistry(this);
     }
 
+    provide<Deps extends any[], Src, Seed>(
+        spec: ContextValueSpec<BootstrapContext, any, Deps, Src, Seed>,
+    ): () => void {
+      return unloader.add(bsContext.get(BootstrapContextRegistry).provide(spec));
+    }
+
     perDefinition<D extends any[], S>(spec: ContextValueSpec<DefinitionContext, any, D, S>) {
-
-      const unload = definitionContextRegistry.provide(spec);
-
-      unloads.push(unload);
-
-      return unload;
+      return unloader.add(definitionContextRegistry.provide(spec));
     }
 
     perComponent<D extends any[], S>(spec: ContextValueSpec<ComponentContext, any, D, S>) {
-
-      const unload = componentContextRegistry.provide(spec);
-
-      unloads.push(unload);
-
-      return unload;
+      return unloader.add(componentContextRegistry.provide(spec));
     }
 
     define<T extends object>(componentType: ComponentClass<T>): void {
@@ -401,5 +402,5 @@ function newFeatureContext(
 
   }
 
-  return [new Context(), unloads];
+  return [new Context(), unloader];
 }

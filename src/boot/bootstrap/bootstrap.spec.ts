@@ -41,6 +41,25 @@ describe('boot', () => {
       await Promise.resolve();
       expect(receiver).toHaveBeenLastCalledWith('default');
     });
+
+    it('provides bootstrap context values', async () => {
+      bsContext.get(key)(receiver);
+
+      @Feature({
+        init(ctx) {
+          ctx.provide({ a: key, is: 'provided' });
+        },
+      })
+      class TestFeature {}
+
+      const supply = await loadFeature(TestFeature);
+
+      expect(receiver).toHaveBeenLastCalledWith('provided');
+
+      supply.off();
+      await Promise.resolve();
+      expect(receiver).toHaveBeenLastCalledWith('default');
+    });
   });
 
   function loadFeature(
