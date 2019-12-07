@@ -69,22 +69,6 @@ describe('feature', () => {
 
         expect(FeatureDef.merge(first, second)).toEqual({ has: [Feature1, Feature2]});
       });
-      it('merges `set`', () => {
-
-        const v1: ContextValueSpec<BootstrapContext, string> = {
-          a: new SingleContextKey<string>('1'),
-          is: '1',
-        };
-        const v2: ContextValueSpec<BootstrapContext, string> = {
-          a: new SingleContextKey<string>('2'),
-          is: '2',
-        };
-
-        const first: FeatureDef = { set: v1 };
-        const second: FeatureDef = { set: v2 };
-
-        expect(FeatureDef.merge(first, second)).toEqual({ set: [v1, v2]});
-      });
       it('merges `setup`', () => {
 
         const mockSetup1 = jest.fn();

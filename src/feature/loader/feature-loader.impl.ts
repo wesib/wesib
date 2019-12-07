@@ -278,11 +278,8 @@ class SetupFeatureStage extends FeatureStage {
   async setup(): Promise<FeatureStage> {
     await this.perDep(loader => loader.setup());
 
-    const { bsContext, request: { feature, def: { set, setup, perDefinition, perComponent } } } = this.loader;
+    const { bsContext, request: { feature, def: { setup, perDefinition, perComponent } } } = this.loader;
     const [context, unloader] = newFeatureContext(bsContext, this.loader);
-    const bootstrapContextRegistry = bsContext.get(BootstrapContextRegistry);
-
-    new ArraySet(set).forEach(spec => unloader.add(bootstrapContextRegistry.provide(spec)));
 
     if (setup) {
       setup.call(feature, context);

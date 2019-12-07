@@ -211,10 +211,10 @@ describe('component', () => {
           const key1 = new SingleContextKey<string>('a');
           const key2 = new SingleContextKey<string>('b');
           const feature: FeatureDef = {
-            set: [
-              { a: key1, is: 'a' },
-              { a: key2, is: 'b' },
-            ],
+            setup(setup) {
+              setup.provide({ a: key1, is: 'a' });
+              setup.provide({ a: key2, is: 'b' });
+            },
           };
           const def: ComponentDef = { name: 'test-component', feature };
           const componentType = ComponentDef.define(TestComponent, def);

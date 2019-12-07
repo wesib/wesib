@@ -7,9 +7,9 @@ import { ShadowDomEvent } from './shadow-dom-event';
 import { ShadowRootBuilder } from './shadow-root-builder';
 
 const ShadowDomSupport__feature: FeatureDef = {
-  set: [
-    { a: ShadowRootBuilder, is: attachShadow },
-  ],
+  setup(setup) {
+    setup.provide({ a: ShadowRootBuilder, is: attachShadow });
+  },
 };
 
 /**

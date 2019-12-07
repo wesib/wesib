@@ -283,7 +283,14 @@ describe('boot', () => {
 
             const key = new SingleContextUpKey<string | undefined>('test');
 
-            FeatureDef.define(feature, { set: { a: key, is: 'value' } });
+            FeatureDef.define(
+                feature,
+                {
+                  setup(setup) {
+                    setup.provide({ a: key, is: 'value' });
+                  },
+                },
+            );
             await loadFeature();
 
             let value: string | undefined;

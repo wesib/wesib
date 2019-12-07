@@ -7,10 +7,12 @@ import { FeatureDef, FeatureDef__symbol } from '../feature-def';
 import { RenderSchedule as RenderSchedule_, RenderScheduler as RenderScheduler_ } from './render-scheduler';
 
 const RenderSupport__feature: FeatureDef = {
-  set: {
-    a: RenderScheduler_,
-    by: createRenderScheduler,
-    with: [BootstrapWindow],
+  setup(setup) {
+    setup.provide({
+      a: RenderScheduler_,
+      by: createRenderScheduler,
+      with: [BootstrapWindow],
+    });
   },
 };
 

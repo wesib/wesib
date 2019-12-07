@@ -75,11 +75,11 @@ describe('feature/render', () => {
       } as any;
 
       @Feature({
-        set: [
-          { a: RenderScheduler, is: mockRenderScheduler },
-          { a: CustomElements, is: mockCustomElements },
-        ],
         has: RenderSupport,
+        setup(setup) {
+          setup.provide({ a: RenderScheduler, is: mockRenderScheduler });
+          setup.provide({ a: CustomElements, is: mockCustomElements });
+        },
       })
       class TestFeature {}
 

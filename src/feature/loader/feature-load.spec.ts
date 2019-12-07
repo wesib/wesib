@@ -260,7 +260,14 @@ describe('feature load', () => {
         bsContext.get(key)(receive);
         expect(receive).toHaveBeenLastCalledWith('default');
 
-        FeatureDef.define(Feature, { set: { a: key, is: 'loaded' } });
+        FeatureDef.define(
+            Feature,
+            {
+              setup(setup) {
+                setup.provide({ a: key, is: 'loaded' });
+              },
+            },
+        );
 
         const [loader, supply] = await featureLoader();
 
@@ -281,7 +288,14 @@ describe('feature load', () => {
 
         class Dep {}
 
-        FeatureDef.define(Dep, { set: { a: key, is: 'loaded' } });
+        FeatureDef.define(
+            Dep,
+            {
+              setup(setup) {
+                setup.provide({ a: key, is: 'loaded' });
+              },
+            },
+        );
         FeatureDef.define(Feature, { needs: Dep });
 
         const [loader, supply] = await featureLoader();
@@ -344,7 +358,14 @@ describe('feature load', () => {
 
         const key = new SingleContextUpKey<string>('test', { byDefault: valueProvider('default') });
 
-        FeatureDef.define(Feature, { set: { a: key, is: 'loaded' } });
+        FeatureDef.define(
+            Feature,
+            {
+              setup(setup) {
+                setup.provide({ a: key, is: 'loaded' });
+              },
+            },
+        );
 
         const [loader] = await featureLoader();
         const receive = jest.fn();
@@ -361,7 +382,14 @@ describe('feature load', () => {
 
         const key = new SingleContextUpKey<string>('test', { byDefault: valueProvider('default') });
 
-        FeatureDef.define(Feature, { set: { a: key, is: 'loaded' } });
+        FeatureDef.define(
+            Feature,
+            {
+              setup(setup) {
+                setup.provide({ a: key, is: 'loaded' });
+              },
+            },
+        );
 
         const [loader] = await featureLoader();
         const receive = jest.fn();
@@ -383,12 +411,29 @@ describe('feature load', () => {
 
           bsContext.get(key)(receive);
 
-          FeatureDef.define(Feature, { set: { a: key, is: 'loaded' } });
+          FeatureDef.define(
+              Feature,
+              {
+                setup(setup) {
+                  setup.provide({ a: key, is: 'loaded' });
+                },
+              },
+          );
 
           const [loader, , load] = await featureLoader();
 
           await loader.setup();
-          await replaceFeature(FeatureDef.define(class Replacement {}, {  set: { a: key, is: 'replaced' } }), load);
+          await replaceFeature(
+              FeatureDef.define(
+                  class Replacement {},
+                  {
+                    setup(setup) {
+                      setup.provide({ a: key, is: 'replaced' });
+                    },
+                  },
+              ),
+              load,
+          );
 
           expect(receive).toHaveBeenLastCalledWith('replaced');
         });
@@ -477,7 +522,9 @@ describe('feature load', () => {
           FeatureDef.define(
               Feature,
               {
-                set: { a: key, is: 'provided' },
+                setup(setup) {
+                  setup.provide({ a: key, is: 'provided' });
+                },
                 init: initSpy,
               },
           );

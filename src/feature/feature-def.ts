@@ -2,7 +2,7 @@
  * @module @wesib/wesib
  */
 import { ContextValueSpec } from 'context-values';
-import { BootstrapContext, BootstrapSetup } from '../boot';
+import { BootstrapSetup } from '../boot';
 import { ArraySet, Class, mergeFunctions, MetaAccessor } from '../common';
 import { ComponentContext } from '../component';
 import { DefinitionContext } from '../component/definition';
@@ -35,13 +35,6 @@ export interface FeatureDef {
   readonly has?: Class | readonly Class[];
 
   /**
-   * Bootstrap context value(s) to declare prior to bootstrap.
-   */
-  readonly set?:
-      | ContextValueSpec<BootstrapContext, any, any[], any>
-      | ContextValueSpec<BootstrapContext, any, any[], any>[];
-
-  /**
    * Definition context value(s) to declare per each component class definition.
    */
   readonly perDefinition?:
@@ -61,9 +54,9 @@ export interface FeatureDef {
    * This method is called before bootstrap context created.
    *
    * @param this  Feature class.
-   * @param context  Bootstrap setup.
+   * @param setup  Bootstrap setup.
    */
-  setup?(this: Class, context: BootstrapSetup): void;
+  setup?(this: Class, setup: BootstrapSetup): void;
 
   /**
    * Bootstraps this feature by calling the given bootstrap context methods.
@@ -84,7 +77,6 @@ class FeatureMeta extends MetaAccessor<FeatureDef> {
   merge(...defs: readonly FeatureDef[]): FeatureDef {
     return defs.reduce<FeatureDef>(
         (prev, def) => ({
-          set: new ArraySet(prev.set).merge(def.set).value,
           needs: new ArraySet(prev.needs).merge(def.needs).value,
           has: new ArraySet(prev.has).merge(def.has).value,
           setup: mergeFunctions<[BootstrapSetup], void, Class>(prev.setup, def.setup),
