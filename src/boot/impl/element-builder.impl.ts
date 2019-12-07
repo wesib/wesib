@@ -1,7 +1,7 @@
 import { nextArgs, nextSkip, noop } from 'call-thru';
 import { ContextValues, ContextValueSpec, SingleContextKey, SingleContextRef } from 'context-values';
 import { EventEmitter, eventSupply, EventSupply, OnEvent, trackValue, ValueTracker } from 'fun-events';
-import { ArraySet, Class } from '../../common';
+import { Class } from '../../common';
 import {
   ComponentContext as ComponentContext_,
   ComponentContext__symbol,
@@ -154,10 +154,27 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
           definitionContextRegistry.provide({ a: DefinitionContext_, is: this });
           definitionContextRegistry.provide({ a: ComponentFactory_, is: componentFactory });
           this.get = definitionContextRegistry.newValues().get;
-          new ArraySet(def.set).forEach(spec => definitionContextRegistry.provide(spec));
-
           componentContextRegistry_perType = new ComponentContextRegistry(definitionContextRegistry.seedIn(this));
-          new ArraySet(def.perComponent).forEach(spec => componentContextRegistry_perType.provide(spec));
+
+          if (def.setup) {
+
+            const context = this;
+
+            def.setup({
+              get componentType() {
+                return componentType;
+              },
+              perDefinition(spec) {
+                return definitionContextRegistry.provide(spec);
+              },
+              perComponent(spec) {
+                return componentContextRegistry_perType.provide(spec);
+              },
+              whenReady(callback) {
+                context.whenReady(callback);
+              },
+            });
+          }
         }
 
         whenReady(callback: (this: void, context: this) => void) {

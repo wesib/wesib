@@ -32,7 +32,7 @@ export interface FeatureDef {
   readonly has?: Class | readonly Class[];
 
   /**
-   * Sets up bootstrap context.
+   * Sets up bootstrap.
    *
    * This method is called before bootstrap context created.
    *
@@ -42,7 +42,7 @@ export interface FeatureDef {
   setup?(this: Class, setup: BootstrapSetup): void;
 
   /**
-   * Bootstraps this feature by calling the given bootstrap context methods.
+   * Bootstraps this feature by calling the given bootstrap context constructed.
    *
    * @param this  Feature class.
    * @param context  Feature initialization context.

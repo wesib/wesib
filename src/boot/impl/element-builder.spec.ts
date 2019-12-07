@@ -152,6 +152,23 @@ describe('boot', () => {
 
           expect(elementType).toBe(context.elementType);
         });
+        it('is reported for setup when element built', () => {
+
+          const whenReady = jest.fn();
+
+          builder.buildElement(ComponentDef.define(
+              TestComponent,
+              {
+                setup(setup) {
+                  expect(setup.componentType).toBe(TestComponent);
+                  setup.whenReady(whenReady);
+                  expect(whenReady).not.toHaveBeenCalled();
+                },
+              },
+          ));
+
+          expect(whenReady).toHaveBeenCalledWith(onDefinition.mock.calls[0][0]);
+        });
       });
     });
 
@@ -169,7 +186,14 @@ describe('boot', () => {
 
       beforeEach(() => {
         key = new SingleContextKey('definition-key');
-        ComponentDef.define(TestComponent, { set: { a: key, is: 'definition value' } });
+        ComponentDef.define(
+            TestComponent,
+            {
+              setup(setup) {
+                setup.perDefinition({ a: key, is: 'definition value' });
+              },
+            },
+        );
       });
 
       let factory: ComponentFactory;
@@ -232,7 +256,9 @@ describe('boot', () => {
                   removeEventListener = removeEventListenerSpy;
                 },
               },
-              perComponent: { a: key2, is: value2 },
+              setup(setup) {
+                setup.perComponent({ a: key2, is: value2 });
+              },
             });
       });
 
