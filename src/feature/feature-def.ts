@@ -2,11 +2,10 @@
  * @module @wesib/wesib
  */
 import { ContextValueSpec } from 'context-values';
-import { BootstrapContext } from '../boot';
+import { BootstrapContext, BootstrapSetup } from '../boot';
 import { ArraySet, Class, mergeFunctions, MetaAccessor } from '../common';
 import { ComponentContext } from '../component';
 import { DefinitionContext } from '../component/definition';
-import { BootstrapSetup } from './bootstrap-setup';
 import { FeatureContext } from './feature-context';
 
 /**

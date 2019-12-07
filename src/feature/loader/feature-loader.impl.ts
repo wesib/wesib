@@ -285,11 +285,7 @@ class SetupFeatureStage extends FeatureStage {
     new ArraySet(set).forEach(spec => unloader.add(bootstrapContextRegistry.provide(spec)));
 
     if (setup) {
-      setup.call(feature, {
-        provide(spec) {
-          return unloader.add(bootstrapContextRegistry.provide(spec));
-        },
-      });
+      setup.call(feature, context);
     }
 
     new ArraySet(perDefinition).forEach(spec => context.perDefinition(spec));

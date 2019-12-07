@@ -3,7 +3,7 @@
  */
 import { ContextKey, ContextKey__symbol, ContextValueSpec, SingleContextKey } from 'context-values';
 import { AfterEvent, OnEvent } from 'fun-events';
-import { BootstrapContext } from '../boot';
+import { BootstrapContext, BootstrapSetup } from '../boot';
 import { Class } from '../common';
 import { ComponentContext } from '../component';
 import { ComponentClass, ComponentFactory, DefinitionContext } from '../component/definition';
@@ -14,7 +14,7 @@ const FeatureContext_key = new SingleContextKey<FeatureContext>('feature-context
 /**
  * Feature initialization context.
  */
-export abstract class FeatureContext extends BootstrapContext {
+export abstract class FeatureContext extends BootstrapContext implements BootstrapSetup {
 
   /**
    * A key of feature context value containing the feature context itself.
@@ -47,10 +47,6 @@ export abstract class FeatureContext extends BootstrapContext {
   abstract provide<Deps extends any[], Src, Seed>(
       spec: ContextValueSpec<BootstrapContext, any, Deps, Src, Seed>,
   ): () => void;
-
-  whenDefined<C extends object>(componentType: ComponentClass<C>): Promise<ComponentFactory<C>> {
-    return this.get(BootstrapContext).whenDefined(componentType);
-  }
 
   /**
    * Provides a value available in each component definition context.
@@ -89,6 +85,10 @@ export abstract class FeatureContext extends BootstrapContext {
    * @throws TypeError  If `componentType` does not contain a component definition.
    */
   abstract define<T extends object>(componentType: ComponentClass<T>): void;
+
+  whenDefined<C extends object>(componentType: ComponentClass<C>): Promise<ComponentFactory<C>> {
+    return this.get(BootstrapContext).whenDefined(componentType);
+  }
 
   /**
    * Registers feature readiness callback.
