@@ -22,24 +22,30 @@ export interface DefinitionSetup<T extends object = any> {
   /**
    * Provides a value available in component definition context.
    *
-   * @typeparam D  A type of dependencies.
-   * @typeparam S  The type of context value sources.
-   * @param spec  Component definition context value specifier.
-   *
-   * @returns A function that removes the given context value specifier when called.
-   */
-  perDefinition<D extends any[], S>(spec: ContextValueSpec<DefinitionContext, any, D, S>): () => void;
-
-  /**
-   * Provides a value available in the context of each component of the defined component type.
-   *
-   * @typeparam D  A type of dependencies.
-   * @typeparam S  The type of context value sources.
+   * @typeparam Deps  A type of dependencies.
+   * @typeparam Src  The type of context value sources.
+   * @typeparam Seed  Value seed type.
    * @param spec  Component context value specifier.
    *
    * @returns A function that removes the given context value specifier when called.
    */
-  perComponent<D extends any[], S>(spec: ContextValueSpec<ComponentContext, any, D, S>): () => void;
+  perDefinition<Deps extends any[], Src, Seed>(
+      spec: ContextValueSpec<DefinitionContext, any, Deps, Src, Seed>,
+  ): () => void;
+
+  /**
+   * Provides a value available in the context of each component of the defined component type.
+   *
+   * @typeparam Deps  A type of dependencies.
+   * @typeparam Src  The type of context value sources.
+   * @typeparam Seed  Value seed type.
+   * @param spec  Component context value specifier.
+   *
+   * @returns A function that removes the given context value specifier when called.
+   */
+  perComponent<Deps extends any[], Src, Seed>(
+      spec: ContextValueSpec<ComponentContext<T>, any, Deps, Src, Seed>,
+  ): () => void;
 
   /**
    * Registers component definition readiness callback.

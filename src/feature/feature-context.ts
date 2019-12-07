@@ -6,7 +6,7 @@ import { AfterEvent, OnEvent } from 'fun-events';
 import { BootstrapContext, BootstrapSetup } from '../boot';
 import { Class } from '../common';
 import { ComponentContext } from '../component';
-import { ComponentClass, ComponentFactory, DefinitionContext } from '../component/definition';
+import { ComponentClass, ComponentFactory, DefinitionContext, DefinitionSetup } from '../component/definition';
 import { LoadedFeature } from './loaded-feature';
 
 const FeatureContext_key = new SingleContextKey<FeatureContext>('feature-context');
@@ -44,9 +44,15 @@ export abstract class FeatureContext extends BootstrapContext implements Bootstr
       spec: ContextValueSpec<BootstrapContext, any, Deps, Src, Seed>,
   ): () => void;
 
-  abstract perDefinition<D extends any[], S>(spec: ContextValueSpec<DefinitionContext, any, D, S>): () => void;
+  abstract perDefinition<Deps extends any[], Src, Seed>(
+      spec: ContextValueSpec<DefinitionContext, any, Deps, Src, Seed>,
+  ): () => void;
 
-  abstract perComponent<D extends any[], S>(spec: ContextValueSpec<ComponentContext, any, D, S>): () => void;
+  abstract perComponent<Deps extends any[], Src, Seed>(
+      spec: ContextValueSpec<ComponentContext, any, Deps, Src, Seed>,
+  ): () => void;
+
+  abstract setupDefinition<T extends object>(componentType: ComponentClass<T>): OnEvent<[DefinitionSetup]>;
 
   /**
    * Defines a component.

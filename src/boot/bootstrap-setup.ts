@@ -5,7 +5,7 @@ import { ContextValueSpec } from 'context-values';
 import { OnEvent } from 'fun-events';
 import { BootstrapContext } from './index';
 import { ComponentContext } from '../component';
-import { DefinitionContext } from '../component/definition';
+import { ComponentClass, DefinitionContext, DefinitionSetup } from '../component/definition';
 
 /**
  * Bootstrap context setup.
@@ -53,24 +53,42 @@ export interface BootstrapSetup {
   /**
    * Provides a value available in each component definition context.
    *
-   * @typeparam D  A type of dependencies.
-   * @typeparam S  The type of context value sources.
+   * @typeparam Deps  A type of dependencies.
+   * @typeparam Src  The type of context value sources.
+   * @typeparam Seed  Value seed type.
    * @param spec  Component definition context value specifier.
    *
    * @returns A function that removes the given context value specifier when called.
    */
-  perDefinition<D extends any[], S>(spec: ContextValueSpec<DefinitionContext, any, D, S>): () => void;
+  perDefinition<Deps extends any[], Src, Seed>(
+      spec: ContextValueSpec<DefinitionContext, any, Deps, Src, Seed>,
+  ): () => void;
 
   /**
    * Provides a value available in each component context.
    *
-   * @typeparam D  A type of dependencies.
-   * @typeparam S  The type of context value sources.
+   * @typeparam Deps  A type of dependencies.
+   * @typeparam Src  The type of context value sources.
+   * @typeparam Seed  Value seed type.
    * @param spec  Component context value specifier.
    *
    * @returns A function that removes the given context value specifier when called.
    */
-  perComponent<D extends any[], S>(spec: ContextValueSpec<ComponentContext, any, D, S>): () => void;
+  perComponent<Deps extends any[], Src, Seed>(
+      spec: ContextValueSpec<ComponentContext, any, Deps, Src, Seed>,
+  ): () => void;
+
+  /**
+   * Sets up the definition of component of the given type..
+   *
+   * Whenever the definition of component of the given type or any of its subtype starts, the returned `OnEvent` sender
+   * sends a [[DefinitionSetup]] instance, that can be used to set up the definition.
+   *
+   * @param componentType  Target component type.
+   *
+   * @returns An `OnEvent` sender of component definition setup instances.
+   */
+  setupDefinition<T extends object>(componentType: ComponentClass<T>): OnEvent<[DefinitionSetup]>;
 
   /**
    * Registers feature readiness callback.

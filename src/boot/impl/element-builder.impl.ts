@@ -3,6 +3,7 @@ import { ContextValues, ContextValueSpec, SingleContextKey, SingleContextRef } f
 import { EventEmitter, eventSupply, EventSupply, OnEvent, trackValue, ValueTracker } from 'fun-events';
 import { Class } from '../../common';
 import {
+  ComponentContext,
   ComponentContext as ComponentContext_,
   ComponentContext__symbol,
   ComponentDef,
@@ -181,7 +182,9 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
           whenReady.once(() => callback(this));
         }
 
-        perComponent<S>(spec: ContextValueSpec<ComponentContext_, any, any[], S>): () => void {
+        perComponent<Deps extends any[], Src, Seed>(
+            spec: ContextValueSpec<ComponentContext<T>, any, Deps, Src, Seed>,
+        ): () => void {
           return componentContextRegistry_perType.provide(spec);
         }
 

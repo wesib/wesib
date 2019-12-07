@@ -418,11 +418,15 @@ function newFeatureContext(
       return unloader.add(bsContext.get(BootstrapContextRegistry).provide(spec));
     }
 
-    perDefinition<D extends any[], S>(spec: ContextValueSpec<DefinitionContext, any, D, S>) {
+    perDefinition<Deps extends any[], Src, Seed>(
+        spec: ContextValueSpec<DefinitionContext, any, Deps, Src, Seed>,
+    ): () => void {
       return unloader.add(definitionContextRegistry.provide(spec));
     }
 
-    perComponent<D extends any[], S>(spec: ContextValueSpec<ComponentContext, any, D, S>) {
+    perComponent<Deps extends any[], Src, Seed>(
+        spec: ContextValueSpec<ComponentContext, any, Deps, Src, Seed>,
+    ): () => void {
       return unloader.add(componentContextRegistry.provide(spec));
     }
 
