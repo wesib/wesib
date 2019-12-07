@@ -1,6 +1,4 @@
 import { noop } from 'call-thru';
-import { ContextValueSpec, SingleContextKey } from 'context-values';
-import { BootstrapContext } from '../boot';
 import { Class } from '../common';
 import { FeatureContext } from './feature-context';
 import { FeatureDef, FeatureDef__symbol } from './feature-def';
@@ -104,38 +102,6 @@ describe('feature', () => {
         expect(mockInit1 .mock.instances[0]).toBe(Feature);
         expect(mockInit2).toHaveBeenCalledWith(context);
         expect(mockInit2.mock.instances[0]).toBe(Feature);
-      });
-      it('merges `perDefinition`', () => {
-
-        const v1: ContextValueSpec<BootstrapContext, string> = {
-          a: new SingleContextKey<string>('1'),
-          is: '1',
-        };
-        const v2: ContextValueSpec<BootstrapContext, string> = {
-          a: new SingleContextKey<string>('2'),
-          is: '2',
-        };
-
-        const first: FeatureDef = { perDefinition: v1 };
-        const second: FeatureDef = { perDefinition: v2 };
-
-        expect(FeatureDef.merge(first, second)).toEqual({ perDefinition: [v1, v2]});
-      });
-      it('merges `perComponent`', () => {
-
-        const v1: ContextValueSpec<BootstrapContext, string> = {
-          a: new SingleContextKey<string>('1'),
-          is: '1',
-        };
-        const v2: ContextValueSpec<BootstrapContext, string> = {
-          a: new SingleContextKey<string>('2'),
-          is: '2',
-        };
-
-        const first: FeatureDef = { perComponent: v1 };
-        const second: FeatureDef = { perComponent: v2 };
-
-        expect(FeatureDef.merge(first, second)).toEqual({ perComponent: [v1, v2]});
       });
       it('does not merge empty definitions', () => {
         expect(FeatureDef.merge({}, {})).toEqual({});

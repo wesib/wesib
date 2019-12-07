@@ -48,26 +48,8 @@ export abstract class FeatureContext extends BootstrapContext implements Bootstr
       spec: ContextValueSpec<BootstrapContext, any, Deps, Src, Seed>,
   ): () => void;
 
-  /**
-   * Provides a value available in each component definition context.
-   *
-   * @typeparam D  A type of dependencies.
-   * @typeparam S  The type of context value sources.
-   * @param spec  Component definition context value specifier.
-   *
-   * @returns A function that removes the given context value specifier when called.
-   */
   abstract perDefinition<D extends any[], S>(spec: ContextValueSpec<DefinitionContext, any, D, S>): () => void;
 
-  /**
-   * Provides a value available in each component context.
-   *
-   * @typeparam D  A type of dependencies.
-   * @typeparam S  The type of context value sources.
-   * @param spec  Component context value specifier.
-   *
-   * A function that removes the given context value specifier when called.
-   */
   abstract perComponent<D extends any[], S>(spec: ContextValueSpec<ComponentContext, any, D, S>): () => void;
 
   /**
@@ -90,15 +72,6 @@ export abstract class FeatureContext extends BootstrapContext implements Bootstr
     return this.get(BootstrapContext).whenDefined(componentType);
   }
 
-  /**
-   * Registers feature readiness callback.
-   *
-   * The registered callback function will be called once bootstrap is complete and the feature is loaded.
-   *
-   * If the above condition satisfied, the callback will be notified immediately.
-   *
-   * @param callback  A callback to notify on feature load.
-   */
   abstract whenReady(callback: (this: void) => void): void;
 
   load(feature: Class): AfterEvent<[LoadedFeature]> {

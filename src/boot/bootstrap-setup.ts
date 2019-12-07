@@ -51,6 +51,28 @@ export interface BootstrapSetup {
   ): () => void;
 
   /**
+   * Provides a value available in each component definition context.
+   *
+   * @typeparam D  A type of dependencies.
+   * @typeparam S  The type of context value sources.
+   * @param spec  Component definition context value specifier.
+   *
+   * @returns A function that removes the given context value specifier when called.
+   */
+  perDefinition<D extends any[], S>(spec: ContextValueSpec<DefinitionContext, any, D, S>): () => void;
+
+  /**
+   * Provides a value available in each component context.
+   *
+   * @typeparam D  A type of dependencies.
+   * @typeparam S  The type of context value sources.
+   * @param spec  Component context value specifier.
+   *
+   * A function that removes the given context value specifier when called.
+   */
+  perComponent<D extends any[], S>(spec: ContextValueSpec<ComponentContext, any, D, S>): () => void;
+
+  /**
    * Registers feature readiness callback.
    *
    * The registered callback function will be called once bootstrap is complete and the feature is loaded.

@@ -1,11 +1,8 @@
 /**
  * @module @wesib/wesib
  */
-import { ContextValueSpec } from 'context-values';
 import { BootstrapSetup } from '../boot';
 import { ArraySet, Class, mergeFunctions, MetaAccessor } from '../common';
-import { ComponentContext } from '../component';
-import { DefinitionContext } from '../component/definition';
 import { FeatureContext } from './feature-context';
 
 /**
@@ -33,20 +30,6 @@ export interface FeatureDef {
    * The feature always provides itself.
    */
   readonly has?: Class | readonly Class[];
-
-  /**
-   * Definition context value(s) to declare per each component class definition.
-   */
-  readonly perDefinition?:
-      | ContextValueSpec<DefinitionContext, any, any[], any>
-      | ContextValueSpec<DefinitionContext, any, any[], any>[];
-
-  /**
-   * Component context value(s) to declare per each component construction.
-   */
-  readonly perComponent?:
-      | ContextValueSpec<ComponentContext, any, any[], any>
-      | ContextValueSpec<ComponentContext, any, any[], any>[];
 
   /**
    * Sets up bootstrap context.
@@ -81,8 +64,6 @@ class FeatureMeta extends MetaAccessor<FeatureDef> {
           has: new ArraySet(prev.has).merge(def.has).value,
           setup: mergeFunctions<[BootstrapSetup], void, Class>(prev.setup, def.setup),
           init: mergeFunctions<[FeatureContext], void, Class>(prev.init, def.init),
-          perDefinition: new ArraySet(prev.perDefinition).merge(def.perDefinition).value,
-          perComponent: new ArraySet(prev.perComponent).merge(def.perComponent).value,
         }),
         {});
   }

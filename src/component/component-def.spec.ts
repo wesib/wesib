@@ -140,31 +140,20 @@ describe('component', () => {
       });
       it('merges `feature`', () => {
 
-        const key1 = new SingleContextKey<string>('a');
-        const key2 = new SingleContextKey<string>('b');
-        const feature1: FeatureDef = { perComponent: { a: key1, is: 'a' } };
-        const feature2: FeatureDef = { perComponent: { a: key2, is: 'b' } };
+        const setup1 = jest.fn();
+        const setup2 = jest.fn();
+        const mergedFeature = ComponentDef.merge(
+            { feature: { setup: setup1 } },
+            { feature: { setup: setup2 } },
+        ).feature;
 
-        expect(ComponentDef.merge(
-            { feature: feature1 },
-            { feature: feature2 }),
-        ).toEqual({
-          feature: FeatureDef.merge(feature1, feature2),
-        });
-        expect(ComponentDef.merge(
-            { feature: feature1 },
-            { perComponent: { a: key2, is: 'b' } }),
-        ).toEqual({
-          perComponent: { a: key2, is: 'b' },
-          feature: feature1,
-        });
-        expect(ComponentDef.merge(
-            { perComponent: { a: key1, is: 'a' } },
-            { feature: feature2 }),
-        ).toEqual({
-          perComponent: { a: key1, is: 'a' },
-          feature: feature2,
-        });
+        class TestFeature {}
+        const setup = { name: 'setup' } as any;
+
+        mergedFeature?.setup?.call(TestFeature, setup);
+
+        expect(setup1).toHaveBeenCalledWith(setup);
+        expect(setup2).toHaveBeenCalledWith(setup);
       });
       it('does not merge empty definitions', () => {
         expect(ComponentDef.merge({}, {})).toEqual({});
