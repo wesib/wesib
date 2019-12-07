@@ -29,7 +29,9 @@ describe('boot', () => {
       bsContext.get(key)(receiver);
 
       @Feature({
-        set: { a: key, is: 'provided' },
+        setup(setup) {
+          setup.provide({ a: key, is: 'provided' });
+        },
       })
       class TestFeature {}
 

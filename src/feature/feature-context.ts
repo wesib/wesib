@@ -34,6 +34,9 @@ export abstract class FeatureContext extends BootstrapContext {
   /**
    * Provides bootstrap context value.
    *
+   * Note that this happens when bootstrap context already exists. To provide a value before bootstrap context created
+   * a [[BootstrapSetup.provide]] method can be used.
+   *
    * @typeparam Deps  Dependencies tuple type.
    * @typeparam Src  Source value type.
    * @typeparam Seed  Value seed type.

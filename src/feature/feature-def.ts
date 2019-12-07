@@ -6,6 +6,7 @@ import { BootstrapContext } from '../boot';
 import { ArraySet, Class, mergeFunctions, MetaAccessor } from '../common';
 import { ComponentContext } from '../component';
 import { DefinitionContext } from '../component/definition';
+import { BootstrapSetup } from './bootstrap-setup';
 import { FeatureContext } from './feature-context';
 
 /**
@@ -56,6 +57,16 @@ export interface FeatureDef {
       | ContextValueSpec<ComponentContext, any, any[], any>[];
 
   /**
+   * Sets up bootstrap context.
+   *
+   * This method is called before bootstrap context created.
+   *
+   * @param this  Feature class.
+   * @param context  Bootstrap setup.
+   */
+  setup?(this: Class, context: BootstrapSetup): void;
+
+  /**
    * Bootstraps this feature by calling the given bootstrap context methods.
    *
    * @param this  Feature class.
@@ -77,6 +88,7 @@ class FeatureMeta extends MetaAccessor<FeatureDef> {
           set: new ArraySet(prev.set).merge(def.set).value,
           needs: new ArraySet(prev.needs).merge(def.needs).value,
           has: new ArraySet(prev.has).merge(def.has).value,
+          setup: mergeFunctions<[BootstrapSetup], void, Class>(prev.setup, def.setup),
           init: mergeFunctions<[FeatureContext], void, Class>(prev.init, def.init),
           perDefinition: new ArraySet(prev.perDefinition).merge(def.perDefinition).value,
           perComponent: new ArraySet(prev.perComponent).merge(def.perComponent).value,

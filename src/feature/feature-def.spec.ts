@@ -85,23 +85,41 @@ describe('feature', () => {
 
         expect(FeatureDef.merge(first, second)).toEqual({ set: [v1, v2]});
       });
-      it('merges `init`', () => {
+      it('merges `setup`', () => {
 
-        const bootstrap1spy = jest.fn();
-        const bootstrap2spy = jest.fn();
+        const mockSetup1 = jest.fn();
+        const mockSetup2 = jest.fn();
         const merged = FeatureDef.merge(
-            { init: bootstrap1spy },
-            { init: bootstrap2spy }).init || noop;
+            { setup: mockSetup1 },
+            { setup: mockSetup2 }).setup || noop;
         const context: FeatureContext = { name: 'feature context' } as any;
 
         class Feature {}
 
         merged.call(Feature, context);
 
-        expect(bootstrap1spy).toHaveBeenCalledWith(context);
-        expect(bootstrap1spy.mock.instances[0]).toBe(Feature);
-        expect(bootstrap2spy).toHaveBeenCalledWith(context);
-        expect(bootstrap2spy.mock.instances[0]).toBe(Feature);
+        expect(mockSetup1).toHaveBeenCalledWith(context);
+        expect(mockSetup1.mock.instances[0]).toBe(Feature);
+        expect(mockSetup2).toHaveBeenCalledWith(context);
+        expect(mockSetup2.mock.instances[0]).toBe(Feature);
+      });
+      it('merges `init`', () => {
+
+        const mockInit1 = jest.fn();
+        const mockInit2 = jest.fn();
+        const merged = FeatureDef.merge(
+            { init: mockInit1  },
+            { init: mockInit2 }).init || noop;
+        const context: FeatureContext = { name: 'feature context' } as any;
+
+        class Feature {}
+
+        merged.call(Feature, context);
+
+        expect(mockInit1 ).toHaveBeenCalledWith(context);
+        expect(mockInit1 .mock.instances[0]).toBe(Feature);
+        expect(mockInit2).toHaveBeenCalledWith(context);
+        expect(mockInit2.mock.instances[0]).toBe(Feature);
       });
       it('merges `perDefinition`', () => {
 
