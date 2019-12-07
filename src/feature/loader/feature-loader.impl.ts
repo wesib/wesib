@@ -376,20 +376,12 @@ function newFeatureContext(
   const registry = new ContextRegistry<FeatureContext>(bsContext);
   const elementBuilder = bsContext.get(ElementBuilder);
   const onDefinition = onEventBy<[DefinitionContext]>(receiver => {
-    elementBuilder.definitions.on({
-      supply: receiver.supply.needs(unloader.supply),
-      receive(ctx, defCtx): void {
-        receiver.receive(ctx, defCtx);
-      },
-    });
+    receiver.supply.needs(unloader.supply);
+    elementBuilder.definitions.on(receiver);
   });
   const onComponent = onEventBy<[ComponentContext]>(receiver => {
-    elementBuilder.components.on({
-      supply: receiver.supply.needs(unloader.supply),
-      receive(ctx, defCtx): void {
-        receiver.receive(ctx, defCtx);
-      },
-    });
+    receiver.supply.needs(unloader.supply);
+    elementBuilder.components.on(receiver);
   });
   const whenReady: OnEvent<[]> = loader.state.read.thru(
       ready => ready ? nextArgs() : nextSkip(),
