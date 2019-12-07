@@ -7,7 +7,8 @@ import {
   AfterEvent,
   afterEventBy,
   afterThe,
-  EventKeeper, EventSupply, eventSupply,
+  EventKeeper,
+  EventSupply,
   OnEvent,
   onEventBy,
   trackValue,
@@ -16,7 +17,8 @@ import { BootstrapContext } from '../../boot';
 import {
   BootstrapContextRegistry,
   ComponentContextRegistry,
-  DefinitionContextRegistry, ElementBuilder,
+  DefinitionContextRegistry,
+  ElementBuilder,
   Unloader,
 } from '../../boot/impl';
 import { ArraySet, Class } from '../../common';
@@ -374,20 +376,20 @@ function newFeatureContext(
   const elementBuilder = bsContext.get(ElementBuilder);
   const onDefinition = onEventBy<[DefinitionContext]>(receiver => {
     elementBuilder.definitions.on({
-      supply: eventSupply().needs(receiver.supply).needs(unloader.supply),
+      supply: receiver.supply.needs(unloader.supply),
       receive(ctx, defCtx): void {
         receiver.receive(ctx, defCtx);
       },
     });
-  }).share();
+  });
   const onComponent = onEventBy<[ComponentContext]>(receiver => {
     elementBuilder.components.on({
-      supply: eventSupply().needs(receiver.supply.needs(unloader.supply)),
+      supply: receiver.supply.needs(unloader.supply),
       receive(ctx, defCtx): void {
         receiver.receive(ctx, defCtx);
       },
     });
-  }).share();
+  });
   const whenReady: OnEvent<[]> = loader.state.read.thru(
       ready => ready ? nextArgs() : nextSkip(),
   );
