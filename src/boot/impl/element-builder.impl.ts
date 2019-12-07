@@ -160,8 +160,8 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
           new ArraySet(def.perComponent).forEach(spec => componentContextRegistry_perType.provide(spec));
         }
 
-        whenReady(callback: (this: void, elementType: Class) => void) {
-          whenReady.once(() => callback(this.elementType));
+        whenReady(callback: (this: void, context: this) => void) {
+          whenReady.once(() => callback(this));
         }
 
         perComponent<S>(spec: ContextValueSpec<ComponentContext_, any, any[], S>): void {

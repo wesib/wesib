@@ -20,7 +20,7 @@ const DomPropertiesSupport__feature: FeatureDef = {
   init(context) {
     context.onDefinition(definitionContext => {
       // Define element prototype properties
-      definitionContext.whenReady(elementType => definitionContext.get(DomPropertyRegistry).define(elementType));
+      definitionContext.whenReady(({ elementType }) => definitionContext.get(DomPropertyRegistry).define(elementType));
     });
     context.onComponent(componentContext => {
 

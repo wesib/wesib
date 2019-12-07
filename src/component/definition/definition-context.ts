@@ -62,14 +62,14 @@ export abstract class DefinitionContext<T extends object = any> extends ContextV
   /**
    * Registers component definition readiness callback.
    *
-   * The custom element class is not constructed yet when `DefinitionListener` or `ComponentDef.define()` is called.
+   * The custom element class is not constructed until component definition is complete.
    * The registered callback will be notified when the custom element class is constructed.
    *
    * If the custom element class is constructed already, the callback will be notified immediately.
    *
    * @param callback  A callback to notify on custom element class construction.
    */
-  abstract whenReady(callback: (this: void, elementType: Class) => void): void;
+  abstract whenReady(callback: (this: void, context: this) => void): void;
 
   /**
    * Provides a value available in the context of each component of the defined component type.

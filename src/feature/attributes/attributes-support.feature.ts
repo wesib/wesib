@@ -20,7 +20,7 @@ const AttributesSupport__feature: FeatureDef = {
   init(context) {
     context.onDefinition(definitionContext => {
       // Define element prototype attributes
-      definitionContext.whenReady(elementType => definitionContext.get(AttributeRegistry).define(elementType));
+      definitionContext.whenReady(({ elementType }) => definitionContext.get(AttributeRegistry).define(elementType));
     });
     context.onComponent(componentContext => {
 
