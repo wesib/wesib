@@ -10,7 +10,7 @@ import { FeatureDef, LoadedFeature } from '../../feature';
 import { FeatureKey, FeatureLoader, FeatureRequester } from '../../feature/loader';
 import { BootstrapContext } from '../bootstrap-context';
 import { DefaultNamespaceAliaser } from '../globals';
-import { BootstrapContextRegistry, ElementBuilder } from '../impl';
+import { BootstrapContextRegistry } from '../impl';
 import { componentFactoryOf } from '../impl/component-factory.symbol.impl';
 
 /**
@@ -50,14 +50,6 @@ function initBootstrap(bootstrapContextRegistry: BootstrapContextRegistry) {
   class Context extends BootstrapContext {
 
     readonly get = values.get;
-
-    get onDefinition() {
-      return this.get(ElementBuilder).definitions.on;
-    }
-
-    get onComponent() {
-      return this.get(ElementBuilder).components.on;
-    }
 
     constructor() {
       super();

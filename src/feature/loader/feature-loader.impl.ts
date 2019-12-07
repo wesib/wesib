@@ -1,12 +1,22 @@
 import { filterIt, mapIt } from 'a-iterable';
 import { isPresent, NextArgs, nextArgs, NextSkip, nextSkip } from 'call-thru';
 import { ContextRegistry, ContextUpKey, ContextValueOpts, ContextValues, ContextValueSpec } from 'context-values';
-import { afterAll, afterEach, AfterEvent, afterEventBy, afterThe, EventKeeper, OnEvent, trackValue } from 'fun-events';
+import {
+  afterAll,
+  afterEach,
+  AfterEvent,
+  afterEventBy,
+  afterThe,
+  EventKeeper, EventSupply, eventSupply,
+  OnEvent,
+  onEventBy,
+  trackValue,
+} from 'fun-events';
 import { BootstrapContext } from '../../boot';
 import {
   BootstrapContextRegistry,
   ComponentContextRegistry,
-  DefinitionContextRegistry,
+  DefinitionContextRegistry, ElementBuilder,
   Unloader,
 } from '../../boot/impl';
 import { ArraySet, Class } from '../../common';
@@ -279,7 +289,7 @@ class SetupFeatureStage extends FeatureStage {
     await this.perDep(loader => loader.setup());
 
     const { bsContext, request: { feature, def: { setup } } } = this.loader;
-    const [context, unloader] = newFeatureContext(bsContext, this.loader);
+    const [context, supply] = newFeatureContext(bsContext, this.loader);
 
     if (setup) {
       setup.call(feature, context);
@@ -288,7 +298,7 @@ class SetupFeatureStage extends FeatureStage {
     return new InitFeatureStage(
         this.loader,
         context,
-        async () => unloader.unload(),
+        async () => supply.off(),
     );
   }
 
@@ -354,13 +364,30 @@ class ActiveFeatureStage extends FeatureStage {
 function newFeatureContext(
     bsContext: BootstrapContext,
     loader: FeatureLoader,
-): [FeatureContext, Unloader] {
+): [FeatureContext, EventSupply] {
 
   const unloader = new Unloader();
   let componentRegistry: ComponentRegistry;
   const definitionContextRegistry = bsContext.get(DefinitionContextRegistry);
   const componentContextRegistry = bsContext.get(ComponentContextRegistry);
   const registry = new ContextRegistry<FeatureContext>(bsContext);
+  const elementBuilder = bsContext.get(ElementBuilder);
+  const onDefinition = onEventBy<[DefinitionContext]>(receiver => {
+    elementBuilder.definitions.on({
+      supply: eventSupply().needs(receiver.supply).needs(unloader.supply),
+      receive(ctx, defCtx): void {
+        receiver.receive(ctx, defCtx);
+      },
+    });
+  }).share();
+  const onComponent = onEventBy<[ComponentContext]>(receiver => {
+    elementBuilder.components.on({
+      supply: eventSupply().needs(receiver.supply.needs(unloader.supply)),
+      receive(ctx, defCtx): void {
+        receiver.receive(ctx, defCtx);
+      },
+    });
+  }).share();
   const whenReady: OnEvent<[]> = loader.state.read.thru(
       ready => ready ? nextArgs() : nextSkip(),
   );
@@ -373,6 +400,14 @@ function newFeatureContext(
       super();
       registry.provide({ a: FeatureContext, is: this });
       componentRegistry = new ComponentRegistry(this);
+    }
+
+    get onDefinition() {
+      return onDefinition;
+    }
+
+    get onComponent() {
+      return onComponent;
     }
 
     provide<Deps extends any[], Src, Seed>(
@@ -401,5 +436,5 @@ function newFeatureContext(
 
   }
 
-  return [new Context(), unloader];
+  return [new Context(), unloader.supply];
 }

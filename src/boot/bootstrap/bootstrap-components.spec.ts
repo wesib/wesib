@@ -173,12 +173,6 @@ describe('boot', () => {
 
         expect(spy).toHaveBeenCalledWith({ a: key, by: provider });
       });
-      it('proxies `onDefinition`', () => {
-        expect(featureContext.onDefinition).toBe(bootstrapContext.get(ElementBuilder).definitions.on);
-      });
-      it('proxies `onComponent`', () => {
-        expect(featureContext.onComponent).toBe(bootstrapContext.get(ElementBuilder).components.on);
-      });
 
       describe('whenReady', () => {
         it('invokes callback once bootstrap is complete', () => {

@@ -23,13 +23,9 @@ export abstract class FeatureContext extends BootstrapContext implements Bootstr
     return FeatureContext_key;
   }
 
-  get onDefinition(): OnEvent<[DefinitionContext]> {
-    return this.get(BootstrapContext).onDefinition;
-  }
+  abstract readonly onDefinition: OnEvent<[DefinitionContext]>;
 
-  get onComponent(): OnEvent<[ComponentContext]> {
-    return this.get(BootstrapContext).onComponent;
-  }
+  abstract readonly onComponent: OnEvent<[ComponentContext]>;
 
   /**
    * Provides bootstrap context value.
