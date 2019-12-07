@@ -35,7 +35,7 @@ export class FeatureRequester {
       return existing.reuse(clauses);
     }
 
-    const request = new FeatureRequest(this, feature);
+    const request = new FeatureRequest(this, feature, () => this._map.delete(feature));
 
     this._map.set(feature, request);
 

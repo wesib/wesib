@@ -1,4 +1,3 @@
-import { noop } from 'call-thru';
 import { ArraySet, Class, mergeFunctions } from '../../common';
 import { FeatureDef } from '../feature-def';
 import { FeatureNeedsError } from '../feature-needs-error';
@@ -22,9 +21,12 @@ export class FeatureRequest {
 
   readonly def: FeatureDef;
   private _uses = 0;
-  private _revoke: () => void = noop;
 
-  constructor(private readonly _requester: FeatureRequester, readonly feature: Class) {
+  constructor(
+      private readonly _requester: FeatureRequester,
+      readonly feature: Class,
+      private _revoke: () => void,
+  ) {
     this.def = FeatureDef.of(feature);
   }
 
