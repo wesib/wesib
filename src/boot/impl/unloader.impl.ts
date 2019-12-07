@@ -12,6 +12,7 @@ export class Unloader {
         overArray(this._unloads).reverse(),
         unload => unload(),
     );
+    this._unloads.length = 0;
   });
 
   add(unload: () => void): () => void {
