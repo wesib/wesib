@@ -37,7 +37,7 @@ export interface DefinitionSetup<T extends object = any> {
    * @typeparam S  The type of context value sources.
    * @param spec  Component context value specifier.
    *
-   * A function that removes the given context value specifier when called.
+   * @returns A function that removes the given context value specifier when called.
    */
   perComponent<D extends any[], S>(spec: ContextValueSpec<ComponentContext, any, D, S>): () => void;
 
