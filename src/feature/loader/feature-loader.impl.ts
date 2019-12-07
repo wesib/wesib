@@ -23,10 +23,11 @@ import {
 } from '../../boot/impl';
 import { ArraySet, Class } from '../../common';
 import { ComponentContext } from '../../component';
-import { ComponentClass, DefinitionContext } from '../../component/definition';
+import { ComponentClass, DefinitionContext, DefinitionSetup } from '../../component/definition';
 import { FeatureContext } from '../feature-context';
 import { ComponentRegistry } from './component-registry.impl';
 import { FeatureClause, FeatureRequest } from './feature-request.impl';
+import { onFeaturedDefSetup } from './on-featured-def-setup.impl';
 
 const FeatureKey__symbol = /*#__PURE__*/ Symbol('feature-key');
 
@@ -428,6 +429,10 @@ function newFeatureContext(
         spec: ContextValueSpec<ComponentContext, any, Deps, Src, Seed>,
     ): () => void {
       return unloader.add(componentContextRegistry.provide(spec));
+    }
+
+    setupDefinition<T extends object>(componentType: ComponentClass<T>): OnEvent<[DefinitionSetup]> {
+      return onFeaturedDefSetup(componentType, unloader);
     }
 
     define<T extends object>(componentType: ComponentClass<T>): void {
