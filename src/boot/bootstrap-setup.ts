@@ -16,24 +16,17 @@ import { BootstrapContext } from './index';
 export interface BootstrapSetup {
 
   /**
-   * Registers component definition listener.
+   * An `OnEvent` sender of component definition events.
    *
-   * This listener will be called when new component class is defined, but before its custom element class constructed.
-   *
-   * @param listener  A listener to notify on each component definition.
-   *
-   * @return An event supply.
+   * The registered receiver will be notified when new component class is defined, but before its custom element class
+   * constructed.
    */
   readonly onDefinition: OnEvent<[DefinitionContext]>;
 
   /**
-   * Registers component construction listener.
+   * An `OnEvent` sender of component construction events.
    *
-   * This listener will be called right before component is constructed.
-   *
-   * @param listener  A listener to notify on each component construction.
-   *
-   * @return An event supply.
+   * The registered receiver will be notified right before component is constructed.
    */
   readonly onComponent: OnEvent<[ComponentContext]>;
 

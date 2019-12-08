@@ -59,13 +59,9 @@ export abstract class DefinitionContext<T extends object = any> extends ContextV
   }
 
   /**
-   * Registers component construction listener.
+   * An `OnEvent` sender of component construction events.
    *
-   * This listener will be called right before the defined component is constructed.
-   *
-   * @param listener  A listener to notify on each defined component construction.
-   *
-   * @return An event supply.
+   * The registered receiver will be notified right before the defined component is constructed.
    */
   abstract readonly onComponent: OnEvent<[ComponentContext<T>]>;
 
