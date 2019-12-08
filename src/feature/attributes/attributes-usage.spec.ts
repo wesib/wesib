@@ -36,10 +36,11 @@ describe('feature/attributes', () => {
       attr2ChangedSpy = jest.fn();
 
       @Feature({
-        set: { a: BootstrapWindow, is: { MutationObserver: Observer } as any},
+        setup(setup) {
+          setup.provide({ a: BootstrapWindow, is: { MutationObserver: Observer } as any });
+        },
       })
-      class TestWindowFeature {
-      }
+      class TestWindowFeature {}
 
       @Feature({
         needs: TestWindowFeature,

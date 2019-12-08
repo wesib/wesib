@@ -1,8 +1,7 @@
-import { noop } from 'call-thru';
 import { SingleContextKey } from 'context-values';
 import { FeatureContext, FeatureDef } from '../feature';
 import { ComponentDef, ComponentDef__symbol } from './component-def';
-import { ComponentClass, DefinitionContext } from './definition';
+import { ComponentClass, DefinitionContext, DefinitionSetup } from './definition';
 import Mocked = jest.Mocked;
 
 describe('component', () => {
@@ -88,83 +87,56 @@ describe('component', () => {
             { extend: { name: 'input', type: Base2 } }))
             .toEqual({ extend: { name: 'input', type: Base2 } });
       });
-      it('merges `set`', () => {
+      it('merges `setup`', () => {
 
-        const key1 = new SingleContextKey<string>('a');
-        const key2 = new SingleContextKey<string>('b');
+        const setup1 = jest.fn();
+        const setup2 = jest.fn();
+        const merged = ComponentDef.merge(
+            { setup: setup1 },
+            { setup: setup2 },
+        ).setup!;
+        const setup: DefinitionSetup = { name: 'definition setup' } as any;
 
-        expect(
-            ComponentDef.merge(
-                { set: { a: key1, is: 'a' } },
-                { set: { a: key2, is: 'b' } },
-            ),
-        ).toEqual({
-          set: [
-            { a: key1, is: 'a' },
-            { a: key2, is: 'b' },
-          ],
-        });
+        merged(setup);
+
+        expect(setup1).toHaveBeenCalledWith(setup);
+        expect(setup2).toHaveBeenCalledWith(setup);
       });
       it('merges `define`', () => {
 
-        const define1spy = jest.fn();
-        const define2spy = jest.fn();
+        const define1 = jest.fn();
+        const define2 = jest.fn();
         const merged = ComponentDef.merge(
-            { define: define1spy },
-            { define: define2spy }).define || noop;
+            { define: define1 },
+            { define: define2 },
+        ).define!;
         const context: DefinitionContext = { name: 'definition context' } as any;
 
         class Component {}
 
         merged.call(Component, context);
 
-        expect(define1spy).toHaveBeenCalledWith(context);
-        expect(define1spy.mock.instances[0]).toBe(Component);
-        expect(define2spy).toHaveBeenCalledWith(context);
-        expect(define2spy.mock.instances[0]).toBe(Component);
-      });
-      it('merges `perComponent`', () => {
-
-        const key1 = new SingleContextKey<string>('a');
-        const key2 = new SingleContextKey<string>('b');
-
-        expect(ComponentDef.merge(
-            { perComponent: { a: key1, is: 'a' } },
-            { perComponent: { a: key2, is: 'b' } }),
-        ).toEqual({
-          perComponent: [
-            { a: key1, is: 'a' },
-            { a: key2, is: 'b' },
-          ],
-        });
+        expect(define1).toHaveBeenCalledWith(context);
+        expect(define1.mock.instances[0]).toBe(Component);
+        expect(define2).toHaveBeenCalledWith(context);
+        expect(define2.mock.instances[0]).toBe(Component);
       });
       it('merges `feature`', () => {
 
-        const key1 = new SingleContextKey<string>('a');
-        const key2 = new SingleContextKey<string>('b');
-        const feature1: FeatureDef = { perComponent: { a: key1, is: 'a' } };
-        const feature2: FeatureDef = { perComponent: { a: key2, is: 'b' } };
+        const setup1 = jest.fn();
+        const setup2 = jest.fn();
+        const mergedFeature = ComponentDef.merge(
+            { feature: { setup: setup1 } },
+            { feature: { setup: setup2 } },
+        ).feature;
 
-        expect(ComponentDef.merge(
-            { feature: feature1 },
-            { feature: feature2 }),
-        ).toEqual({
-          feature: FeatureDef.merge(feature1, feature2),
-        });
-        expect(ComponentDef.merge(
-            { feature: feature1 },
-            { perComponent: { a: key2, is: 'b' } }),
-        ).toEqual({
-          perComponent: { a: key2, is: 'b' },
-          feature: feature1,
-        });
-        expect(ComponentDef.merge(
-            { perComponent: { a: key1, is: 'a' } },
-            { feature: feature2 }),
-        ).toEqual({
-          perComponent: { a: key1, is: 'a' },
-          feature: feature2,
-        });
+        class TestFeature {}
+        const setup = { name: 'setup' } as any;
+
+        mergedFeature?.setup?.call(TestFeature, setup);
+
+        expect(setup1).toHaveBeenCalledWith(setup);
+        expect(setup2).toHaveBeenCalledWith(setup);
       });
       it('does not merge empty definitions', () => {
         expect(ComponentDef.merge({}, {})).toEqual({});
@@ -211,10 +183,10 @@ describe('component', () => {
           const key1 = new SingleContextKey<string>('a');
           const key2 = new SingleContextKey<string>('b');
           const feature: FeatureDef = {
-            set: [
-              { a: key1, is: 'a' },
-              { a: key2, is: 'b' },
-            ],
+            setup(setup) {
+              setup.provide({ a: key1, is: 'a' });
+              setup.provide({ a: key2, is: 'b' });
+            },
           };
           const def: ComponentDef = { name: 'test-component', feature };
           const componentType = ComponentDef.define(TestComponent, def);

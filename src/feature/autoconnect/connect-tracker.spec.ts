@@ -45,7 +45,9 @@ describe('feature/autoconnect', () => {
 
       @Feature({
         needs: AutoConnectSupport,
-        set: { a: ElementAdapter, is: adapter },
+        setup(setup) {
+          setup.provide({ a: ElementAdapter, is: adapter });
+        },
       })
       @Component({
         name: 'test-component',

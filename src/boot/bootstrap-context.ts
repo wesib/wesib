@@ -2,10 +2,9 @@
  * @module @wesib/wesib
  */
 import { ContextKey, ContextKey__symbol, ContextValues } from 'context-values';
-import { AfterEvent, OnEvent } from 'fun-events';
+import { AfterEvent } from 'fun-events';
 import { Class } from '../common';
-import { ComponentContext } from '../component';
-import { ComponentClass, ComponentFactory, DefinitionContext } from '../component/definition';
+import { ComponentClass, ComponentFactory } from '../component/definition';
 import { LoadedFeature } from '../feature';
 import { BootstrapContext__key } from './bootstrap-context.key.impl';
 
@@ -26,28 +25,6 @@ export abstract class BootstrapContext extends ContextValues {
   static get [ContextKey__symbol](): ContextKey<BootstrapContext> {
     return BootstrapContext__key;
   }
-
-  /**
-   * Registers component definition listener.
-   *
-   * This listener will be called when new component class is defined, but before its custom element class constructed.
-   *
-   * @param listener  A listener to notify on each component definition.
-   *
-   * @return An event supply.
-   */
-  abstract readonly onDefinition: OnEvent<[DefinitionContext]>;
-
-  /**
-   * Registers component construction listener.
-   *
-   * This listener will be called right before component is constructed.
-   *
-   * @param listener  A listener to notify on each component construction.
-   *
-   * @return An event supply.
-   */
-  abstract readonly onComponent: OnEvent<[ComponentContext]>;
 
   /**
    * Allows to wait for component definition.

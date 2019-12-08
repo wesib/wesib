@@ -1,6 +1,4 @@
 import { noop } from 'call-thru';
-import { ContextValueSpec, SingleContextKey } from 'context-values';
-import { BootstrapContext } from '../boot';
 import { Class } from '../common';
 import { FeatureContext } from './feature-context';
 import { FeatureDef, FeatureDef__symbol } from './feature-def';
@@ -69,71 +67,41 @@ describe('feature', () => {
 
         expect(FeatureDef.merge(first, second)).toEqual({ has: [Feature1, Feature2]});
       });
-      it('merges `set`', () => {
+      it('merges `setup`', () => {
 
-        const v1: ContextValueSpec<BootstrapContext, string> = {
-          a: new SingleContextKey<string>('1'),
-          is: '1',
-        };
-        const v2: ContextValueSpec<BootstrapContext, string> = {
-          a: new SingleContextKey<string>('2'),
-          is: '2',
-        };
-
-        const first: FeatureDef = { set: v1 };
-        const second: FeatureDef = { set: v2 };
-
-        expect(FeatureDef.merge(first, second)).toEqual({ set: [v1, v2]});
-      });
-      it('merges `init`', () => {
-
-        const bootstrap1spy = jest.fn();
-        const bootstrap2spy = jest.fn();
+        const mockSetup1 = jest.fn();
+        const mockSetup2 = jest.fn();
         const merged = FeatureDef.merge(
-            { init: bootstrap1spy },
-            { init: bootstrap2spy }).init || noop;
+            { setup: mockSetup1 },
+            { setup: mockSetup2 }).setup || noop;
         const context: FeatureContext = { name: 'feature context' } as any;
 
         class Feature {}
 
         merged.call(Feature, context);
 
-        expect(bootstrap1spy).toHaveBeenCalledWith(context);
-        expect(bootstrap1spy.mock.instances[0]).toBe(Feature);
-        expect(bootstrap2spy).toHaveBeenCalledWith(context);
-        expect(bootstrap2spy.mock.instances[0]).toBe(Feature);
+        expect(mockSetup1).toHaveBeenCalledWith(context);
+        expect(mockSetup1.mock.instances[0]).toBe(Feature);
+        expect(mockSetup2).toHaveBeenCalledWith(context);
+        expect(mockSetup2.mock.instances[0]).toBe(Feature);
       });
-      it('merges `perDefinition`', () => {
+      it('merges `init`', () => {
 
-        const v1: ContextValueSpec<BootstrapContext, string> = {
-          a: new SingleContextKey<string>('1'),
-          is: '1',
-        };
-        const v2: ContextValueSpec<BootstrapContext, string> = {
-          a: new SingleContextKey<string>('2'),
-          is: '2',
-        };
+        const mockInit1 = jest.fn();
+        const mockInit2 = jest.fn();
+        const merged = FeatureDef.merge(
+            { init: mockInit1  },
+            { init: mockInit2 }).init || noop;
+        const context: FeatureContext = { name: 'feature context' } as any;
 
-        const first: FeatureDef = { perDefinition: v1 };
-        const second: FeatureDef = { perDefinition: v2 };
+        class Feature {}
 
-        expect(FeatureDef.merge(first, second)).toEqual({ perDefinition: [v1, v2]});
-      });
-      it('merges `perComponent`', () => {
+        merged.call(Feature, context);
 
-        const v1: ContextValueSpec<BootstrapContext, string> = {
-          a: new SingleContextKey<string>('1'),
-          is: '1',
-        };
-        const v2: ContextValueSpec<BootstrapContext, string> = {
-          a: new SingleContextKey<string>('2'),
-          is: '2',
-        };
-
-        const first: FeatureDef = { perComponent: v1 };
-        const second: FeatureDef = { perComponent: v2 };
-
-        expect(FeatureDef.merge(first, second)).toEqual({ perComponent: [v1, v2]});
+        expect(mockInit1 ).toHaveBeenCalledWith(context);
+        expect(mockInit1 .mock.instances[0]).toBe(Feature);
+        expect(mockInit2).toHaveBeenCalledWith(context);
+        expect(mockInit2.mock.instances[0]).toBe(Feature);
       });
       it('does not merge empty definitions', () => {
         expect(FeatureDef.merge({}, {})).toEqual({});

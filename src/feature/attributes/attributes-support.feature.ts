@@ -6,23 +6,21 @@ import { AttributeChangedCallback, AttributeRegistrar } from './attribute-regist
 import { AttributeRegistry } from './attribute-registry.impl';
 
 const AttributesSupport__feature: FeatureDef = {
-  perDefinition: [
-    { as: AttributeRegistry },
-    {
+  setup(setup) {
+    setup.perDefinition({ as: AttributeRegistry });
+    setup.perDefinition({
       a: AttributeRegistrar,
       by(registry: AttributeRegistry) {
         return <T extends object>(name: string, callback: AttributeChangedCallback<T>) =>
             registry.add(name, callback);
       },
       with: [AttributeRegistry],
-    },
-  ],
-  init(context) {
-    context.onDefinition(definitionContext => {
-      // Define element prototype attributes
-      definitionContext.whenReady(elementType => definitionContext.get(AttributeRegistry).define(elementType));
     });
-    context.onComponent(componentContext => {
+    setup.onDefinition(definitionContext => {
+      // Define element prototype attributes
+      definitionContext.whenReady(({ elementType }) => definitionContext.get(AttributeRegistry).define(elementType));
+    });
+    setup.onComponent(componentContext => {
 
       const mount = componentContext.mount;
 

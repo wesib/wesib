@@ -101,22 +101,22 @@ describe('boot', () => {
 
     describe('component definition listener', () => {
 
-      let listenerSpy: Mock;
+      let onDefinition: Mock;
 
       beforeEach(() => {
-        listenerSpy = jest.fn();
-        builder.definitions.on(listenerSpy);
+        onDefinition = jest.fn();
+        builder.definitions.on(onDefinition);
       });
 
       it('is notified on component definition', () => {
         builder.buildElement(TestComponent);
 
-        expect(listenerSpy).toHaveBeenCalledWith(expect.objectContaining({ componentType: TestComponent }));
+        expect(onDefinition).toHaveBeenCalledWith(expect.objectContaining({ componentType: TestComponent }));
       });
 
       describe('element type', () => {
         it('is absent when listener notified', () => {
-          listenerSpy.mockImplementation((context: DefinitionContext) => {
+          onDefinition.mockImplementation((context: DefinitionContext) => {
             expect(() => context.elementType).toThrowError(/not constructed yet/);
           });
 
@@ -124,31 +124,50 @@ describe('boot', () => {
         });
         it('is reported when ready', async () => {
 
-          const promise = new Promise<Class>(resolve => {
-            listenerSpy.mockImplementation((context: DefinitionContext) => context.whenReady(resolve));
+          const promise = new Promise<DefinitionContext>(resolve => {
+            onDefinition.mockImplementation((context: DefinitionContext) => context.whenReady(resolve));
           });
 
           builder.buildElement(TestComponent);
 
-          expect(typeof await promise).toBe('function');
+          const definitionContext = await promise;
+
+          expect(typeof definitionContext.elementType).toBe('function');
         });
         it('is present when element built', () => {
           builder.buildElement(TestComponent);
 
-          const context: DefinitionContext = listenerSpy.mock.calls[0][0];
+          const context: DefinitionContext = onDefinition.mock.calls[0][0];
 
           expect(typeof context.elementType).toBe('function');
         });
         it('is reported immediately by callback when element built', () => {
           builder.buildElement(TestComponent);
 
-          const context: DefinitionContext = listenerSpy.mock.calls[0][0];
+          const context: DefinitionContext = onDefinition.mock.calls[0][0];
 
           let elementType: Class | undefined;
 
-          context.whenReady(type => elementType = type);
+          context.whenReady(ctx => elementType = ctx.elementType);
 
           expect(elementType).toBe(context.elementType);
+        });
+        it('is reported for setup when element built', () => {
+
+          const whenReady = jest.fn();
+
+          builder.buildElement(ComponentDef.define(
+              TestComponent,
+              {
+                setup(setup) {
+                  expect(setup.componentType).toBe(TestComponent);
+                  setup.whenReady(whenReady);
+                  expect(whenReady).not.toHaveBeenCalled();
+                },
+              },
+          ));
+
+          expect(whenReady).toHaveBeenCalledWith(onDefinition.mock.calls[0][0]);
         });
       });
     });
@@ -167,7 +186,14 @@ describe('boot', () => {
 
       beforeEach(() => {
         key = new SingleContextKey('definition-key');
-        ComponentDef.define(TestComponent, { set: { a: key, is: 'definition value' } });
+        ComponentDef.define(
+            TestComponent,
+            {
+              setup(setup) {
+                setup.perDefinition({ a: key, is: 'definition value' });
+              },
+            },
+        );
       });
 
       let factory: ComponentFactory;
@@ -230,7 +256,9 @@ describe('boot', () => {
                   removeEventListener = removeEventListenerSpy;
                 },
               },
-              perComponent: { a: key2, is: value2 },
+              setup(setup) {
+                setup.perComponent({ a: key2, is: value2 });
+              },
             });
       });
 

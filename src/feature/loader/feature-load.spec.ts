@@ -48,10 +48,10 @@ describe('feature load', () => {
     componentValues = componentContextRegistry.newValues();
   });
 
-  let Feature: Class;
+  let TestFeature: Class;
 
   beforeEach(() => {
-    Feature = FeatureDef.define(class TestFeature {}, {});
+    TestFeature = FeatureDef.define(class TestFeatureImpl {}, {});
   });
 
   let requester: FeatureRequester;
@@ -64,36 +64,36 @@ describe('feature load', () => {
     describe('request', () => {
       it('registers `is` feature clause', () => {
 
-        const request = requester.request(Feature);
+        const request = requester.request(TestFeature);
         const receive = jest.fn();
 
-        bsContext.get(FeatureKey.of(Feature).seedKey).once(receive);
-        expect(receive).toHaveBeenCalledWith([request, 'is', Feature]);
+        bsContext.get(FeatureKey.of(TestFeature).seedKey).once(receive);
+        expect(receive).toHaveBeenCalledWith([request, 'is', TestFeature]);
 
-        expect(request.feature).toBe(Feature);
+        expect(request.feature).toBe(TestFeature);
       });
       it('registers feature loader', () => {
 
         const receive = jest.fn();
 
-        requester.request(Feature);
-        bsContext.get(FeatureKey.of(Feature)).once(receive);
+        requester.request(TestFeature);
+        bsContext.get(FeatureKey.of(TestFeature)).once(receive);
         expect(receive).toHaveBeenCalledWith(expect.anything());
 
         const loader: FeatureLoader = receive.mock.calls[0][0];
 
-        expect(loader.request.feature).toBe(Feature);
+        expect(loader.request.feature).toBe(TestFeature);
       });
       it('registers feature dependencies as `needs` feature clause', () => {
         class Dep1 {}
         class Dep2 {}
 
-        FeatureDef.define(Feature, { needs: [Dep1, Dep2] });
+        FeatureDef.define(TestFeature, { needs: [Dep1, Dep2] });
 
         const receive1 = jest.fn();
         const receive2 = jest.fn();
 
-        requester.request(Feature);
+        requester.request(TestFeature);
 
         bsContext.get(FeatureKey.of(Dep1).seedKey).once(receive1);
         bsContext.get(FeatureKey.of(Dep2).seedKey).once(receive2);
@@ -107,7 +107,7 @@ describe('feature load', () => {
         const request1: FeatureRequest = receive1.mock.calls[0][0][0];
 
         expect(request1.feature).toBe(Dep1);
-        expect(request.feature).toBe(Feature);
+        expect(request.feature).toBe(TestFeature);
         expect(receive2).toHaveBeenCalledWith(
             [expect.any(FeatureRequest), 'is', Dep2],
             [request, 'needs', Dep2],
@@ -121,10 +121,10 @@ describe('feature load', () => {
         class Dep {}
         class Feature2 {}
 
-        FeatureDef.define(Feature, { needs: Dep });
+        FeatureDef.define(TestFeature, { needs: Dep });
         FeatureDef.define(Feature2, { needs: Dep });
 
-        const request1 = requester.request(Feature);
+        const request1 = requester.request(TestFeature);
         const request2 = requester.request(Feature2);
         let depLoader: FeatureLoader | undefined;
 
@@ -141,11 +141,11 @@ describe('feature load', () => {
       it('registers provided feature as `has` feature clause', () => {
         class Provided {}
 
-        FeatureDef.define(Feature, { has: Provided });
+        FeatureDef.define(TestFeature, { has: Provided });
 
         const receive = jest.fn();
 
-        requester.request(Feature);
+        requester.request(TestFeature);
         bsContext.get(FeatureKey.of(Provided).seedKey).once(receive);
 
         expect(receive).toHaveBeenCalledWith(
@@ -156,36 +156,36 @@ describe('feature load', () => {
         const hasRequest: FeatureRequest = receive.mock.calls[0][0][0];
         const isRequest: FeatureRequest = receive.mock.calls[0][1][0];
 
-        expect(hasRequest.feature).toBe(Feature);
+        expect(hasRequest.feature).toBe(TestFeature);
         expect(isRequest.feature).toBe(Provided);
       });
       it('fails to request recursive dependencies', () => {
         class Dep {}
 
-        FeatureDef.define(Dep, { needs: Feature });
-        FeatureDef.define(Feature, { needs: Dep });
+        FeatureDef.define(Dep, { needs: TestFeature });
+        FeatureDef.define(TestFeature, { needs: Dep });
 
-        expect(() => requester.request(Feature)).toThrow(FeatureNeedsError);
+        expect(() => requester.request(TestFeature)).toThrow(FeatureNeedsError);
       });
       it('replaces feature provider', () => {
 
         let loader: FeatureLoader | undefined;
 
-        bsContext.get(FeatureKey.of(Feature))(l => loader = l);
+        bsContext.get(FeatureKey.of(TestFeature))(l => loader = l);
 
-        requester.request(Feature);
-        expect(loader!.request.feature).toBe(Feature);
+        requester.request(TestFeature);
+        expect(loader!.request.feature).toBe(TestFeature);
 
         class Provider {}
 
-        FeatureDef.define(Provider, { has: Feature });
+        FeatureDef.define(Provider, { has: TestFeature });
 
         const providerRequest = requester.request(Provider);
 
         expect(loader!.request.feature).toBe(Provider);
 
         providerRequest.unuse();
-        expect(loader!.request.feature).toBe(Feature);
+        expect(loader!.request.feature).toBe(TestFeature);
       });
     });
 
@@ -194,12 +194,12 @@ describe('feature load', () => {
 
         class Provider {}
 
-        FeatureDef.define(Provider, { has: Feature });
+        FeatureDef.define(Provider, { has: TestFeature });
         requester.request(Provider);
 
         let loader: FeatureLoader | undefined;
 
-        bsContext.get(FeatureKey.of(Feature)).once(ldr => loader = ldr);
+        bsContext.get(FeatureKey.of(TestFeature)).once(ldr => loader = ldr);
 
         expect(loader!.request.feature).toBe(Provider);
       });
@@ -207,13 +207,13 @@ describe('feature load', () => {
 
         class Provider {}
 
-        FeatureDef.define(Provider, { has: Feature });
+        FeatureDef.define(Provider, { has: TestFeature });
         requester.request(Provider);
-        requester.request(Feature);
+        requester.request(TestFeature);
 
         let loader: FeatureLoader | undefined;
 
-        bsContext.get(FeatureKey.of(Feature)).once(ldr => loader = ldr);
+        bsContext.get(FeatureKey.of(TestFeature)).once(ldr => loader = ldr);
 
         expect(loader!.request.feature).toBe(Provider);
       });
@@ -221,13 +221,13 @@ describe('feature load', () => {
 
         class Provider {}
 
-        FeatureDef.define(Provider, { has: Feature });
-        requester.request(Feature);
+        FeatureDef.define(Provider, { has: TestFeature });
+        requester.request(TestFeature);
         requester.request(Provider);
 
         let loader: FeatureLoader | undefined;
 
-        bsContext.get(FeatureKey.of(Feature)).once(ldr => loader = ldr);
+        bsContext.get(FeatureKey.of(TestFeature)).once(ldr => loader = ldr);
 
         expect(loader!.request.feature).toBe(Provider);
       });
@@ -236,14 +236,14 @@ describe('feature load', () => {
         class Provider1 {}
         class Provider2 {}
 
-        FeatureDef.define(Provider1, { has: Feature });
-        FeatureDef.define(Provider2, { has: Feature });
+        FeatureDef.define(Provider1, { has: TestFeature });
+        FeatureDef.define(Provider2, { has: TestFeature });
         requester.request(Provider1);
         requester.request(Provider2);
 
         let loader: FeatureLoader | undefined;
 
-        bsContext.get(FeatureKey.of(Feature)).once(ldr => loader = ldr);
+        bsContext.get(FeatureKey.of(TestFeature)).once(ldr => loader = ldr);
 
         expect(loader!.request.feature).toBe(Provider2);
       });
@@ -260,7 +260,14 @@ describe('feature load', () => {
         bsContext.get(key)(receive);
         expect(receive).toHaveBeenLastCalledWith('default');
 
-        FeatureDef.define(Feature, { set: { a: key, is: 'loaded' } });
+        FeatureDef.define(
+            TestFeature,
+            {
+              setup(setup) {
+                setup.provide({ a: key, is: 'loaded' });
+              },
+            },
+        );
 
         const [loader, supply] = await featureLoader();
 
@@ -281,8 +288,15 @@ describe('feature load', () => {
 
         class Dep {}
 
-        FeatureDef.define(Dep, { set: { a: key, is: 'loaded' } });
-        FeatureDef.define(Feature, { needs: Dep });
+        FeatureDef.define(
+            Dep,
+            {
+              setup(setup) {
+                setup.provide({ a: key, is: 'loaded' });
+              },
+            },
+        );
+        FeatureDef.define(TestFeature, { needs: Dep });
 
         const [loader, supply] = await featureLoader();
 
@@ -300,7 +314,14 @@ describe('feature load', () => {
 
         definitionValues.get(key)(receive);
 
-        FeatureDef.define(Feature, { perDefinition: { a: key, is: 'provided' } });
+        FeatureDef.define(
+            TestFeature,
+            {
+              setup(setup) {
+                setup.perDefinition({ a: key, is: 'provided' });
+              },
+            },
+        );
 
         const [loader, supply] = await featureLoader();
 
@@ -318,7 +339,14 @@ describe('feature load', () => {
 
         componentValues.get(key)(receive);
 
-        FeatureDef.define(Feature, { perComponent: { a: key, is: 'provided' } });
+        FeatureDef.define(
+            TestFeature,
+            {
+              setup(setup) {
+                setup.perComponent({ a: key, is: 'provided' });
+              },
+            },
+        );
 
         const [loader, supply] = await featureLoader();
 
@@ -333,7 +361,7 @@ describe('feature load', () => {
 
         const initSpy = jest.fn();
 
-        FeatureDef.define(Feature, { init: initSpy });
+        FeatureDef.define(TestFeature, { init: initSpy });
 
         const [loader] = await featureLoader();
 
@@ -344,7 +372,14 @@ describe('feature load', () => {
 
         const key = new SingleContextUpKey<string>('test', { byDefault: valueProvider('default') });
 
-        FeatureDef.define(Feature, { set: { a: key, is: 'loaded' } });
+        FeatureDef.define(
+            TestFeature,
+            {
+              setup(setup) {
+                setup.provide({ a: key, is: 'loaded' });
+              },
+            },
+        );
 
         const [loader] = await featureLoader();
         const receive = jest.fn();
@@ -361,7 +396,14 @@ describe('feature load', () => {
 
         const key = new SingleContextUpKey<string>('test', { byDefault: valueProvider('default') });
 
-        FeatureDef.define(Feature, { set: { a: key, is: 'loaded' } });
+        FeatureDef.define(
+            TestFeature,
+            {
+              setup(setup) {
+                setup.provide({ a: key, is: 'loaded' });
+              },
+            },
+        );
 
         const [loader] = await featureLoader();
         const receive = jest.fn();
@@ -383,12 +425,29 @@ describe('feature load', () => {
 
           bsContext.get(key)(receive);
 
-          FeatureDef.define(Feature, { set: { a: key, is: 'loaded' } });
+          FeatureDef.define(
+              TestFeature,
+              {
+                setup(setup) {
+                  setup.provide({ a: key, is: 'loaded' });
+                },
+              },
+          );
 
           const [loader, , load] = await featureLoader();
 
           await loader.setup();
-          await replaceFeature(FeatureDef.define(class Replacement {}, {  set: { a: key, is: 'replaced' } }), load);
+          await replaceFeature(
+              FeatureDef.define(
+                  class Replacement {},
+                  {
+                    setup(setup) {
+                      setup.provide({ a: key, is: 'replaced' });
+                    },
+                  },
+              ),
+              load,
+          );
 
           expect(receive).toHaveBeenLastCalledWith('replaced');
         });
@@ -412,7 +471,7 @@ describe('feature load', () => {
 
         const initSpy = jest.fn();
 
-        FeatureDef.define(Feature, { init: initSpy });
+        FeatureDef.define(TestFeature, { init: initSpy });
 
         const [loader] = await featureLoader();
 
@@ -423,7 +482,7 @@ describe('feature load', () => {
 
         const initSpy = jest.fn();
         class Dep {}
-        FeatureDef.define(Feature, { needs: Dep });
+        FeatureDef.define(TestFeature, { needs: Dep });
         FeatureDef.define(Dep, { init: initSpy });
 
         const [loader] = await featureLoader();
@@ -435,7 +494,7 @@ describe('feature load', () => {
 
         const initSpy = jest.fn();
 
-        FeatureDef.define(Feature, { init: initSpy });
+        FeatureDef.define(TestFeature, { init: initSpy });
 
         const [loader] = await featureLoader();
 
@@ -475,9 +534,11 @@ describe('feature load', () => {
           });
 
           FeatureDef.define(
-              Feature,
+              TestFeature,
               {
-                set: { a: key, is: 'provided' },
+                setup(setup) {
+                  setup.provide({ a: key, is: 'provided' });
+                },
                 init: initSpy,
               },
           );
@@ -498,7 +559,7 @@ describe('feature load', () => {
           definitionValues.get(key)(receive);
 
           FeatureDef.define(
-              Feature,
+              TestFeature,
               {
                 init(ctx) {
                   ctx.perDefinition({ a: key, is: 'provided' });
@@ -526,7 +587,7 @@ describe('feature load', () => {
           componentValues.get(key)(receive);
 
           FeatureDef.define(
-              Feature,
+              TestFeature,
               {
                 init(ctx) {
                   ctx.perComponent({ a: key, is: 'provided' });
@@ -551,7 +612,7 @@ describe('feature load', () => {
           ComponentDef.define(TestComponent, { name: 'test-component' });
 
           FeatureDef.define(
-              Feature,
+              TestFeature,
               {
                 init(ctx) {
                   ctx.define(TestComponent);
@@ -576,7 +637,7 @@ describe('feature load', () => {
           bsContext.load.mockImplementation(() => loaded);
 
           FeatureDef.define(
-              Feature,
+              TestFeature,
               {
                 init(ctx) {
                   expect(ctx.load(Dynamic)).toBe(loaded);
@@ -594,7 +655,7 @@ describe('feature load', () => {
     });
 
     function featureLoader(
-        feature = Feature,
+        feature = TestFeature,
     ): Promise<readonly [FeatureLoader, EventSupply, AfterEvent<[FeatureLoader?]>]> {
       return new Promise(resolve => {
 
@@ -616,7 +677,7 @@ describe('feature load', () => {
         replacement: Class,
         load: AfterEvent<[FeatureLoader?]>,
     ): Promise<void> {
-      FeatureDef.define(replacement, { has: Feature });
+      FeatureDef.define(replacement, { has: TestFeature });
       requester.request(replacement);
 
       await new Promise<FeatureLoader>(resolve => {

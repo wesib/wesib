@@ -3,10 +3,10 @@
  */
 import { ContextKey, ContextKey__symbol, ContextValueSpec, SingleContextKey } from 'context-values';
 import { AfterEvent, OnEvent } from 'fun-events';
-import { BootstrapContext } from '../boot';
+import { BootstrapContext, BootstrapSetup } from '../boot';
 import { Class } from '../common';
 import { ComponentContext } from '../component';
-import { ComponentClass, ComponentFactory, DefinitionContext } from '../component/definition';
+import { ComponentClass, ComponentFactory, DefinitionContext, DefinitionSetup } from '../component/definition';
 import { LoadedFeature } from './loaded-feature';
 
 const FeatureContext_key = new SingleContextKey<FeatureContext>('feature-context');
@@ -14,7 +14,7 @@ const FeatureContext_key = new SingleContextKey<FeatureContext>('feature-context
 /**
  * Feature initialization context.
  */
-export abstract class FeatureContext extends BootstrapContext {
+export abstract class FeatureContext extends BootstrapContext implements BootstrapSetup {
 
   /**
    * A key of feature context value containing the feature context itself.
@@ -23,39 +23,36 @@ export abstract class FeatureContext extends BootstrapContext {
     return FeatureContext_key;
   }
 
-  get onDefinition(): OnEvent<[DefinitionContext]> {
-    return this.get(BootstrapContext).onDefinition;
-  }
+  abstract readonly onDefinition: OnEvent<[DefinitionContext]>;
 
-  get onComponent(): OnEvent<[ComponentContext]> {
-    return this.get(BootstrapContext).onComponent;
-  }
-
-  whenDefined<C extends object>(componentType: ComponentClass<C>): Promise<ComponentFactory<C>> {
-    return this.get(BootstrapContext).whenDefined(componentType);
-  }
+  abstract readonly onComponent: OnEvent<[ComponentContext]>;
 
   /**
-   * Provides a value available in each component definition context.
+   * Provides bootstrap context value.
    *
-   * @typeparam D  A type of dependencies.
-   * @typeparam S  The type of context value sources.
-   * @param spec  Component definition context value specifier.
+   * Note that this happens when bootstrap context already exists. To provide a value before bootstrap context created
+   * a [[BootstrapSetup.provide]] method can be used.
+   *
+   * @typeparam Deps  Dependencies tuple type.
+   * @typeparam Src  Source value type.
+   * @typeparam Seed  Value seed type.
+   * @param spec  Context value specifier.
    *
    * @returns A function that removes the given context value specifier when called.
    */
-  abstract perDefinition<D extends any[], S>(spec: ContextValueSpec<DefinitionContext, any, D, S>): () => void;
+  abstract provide<Deps extends any[], Src, Seed>(
+      spec: ContextValueSpec<BootstrapContext, any, Deps, Src, Seed>,
+  ): () => void;
 
-  /**
-   * Provides a value available in each component context.
-   *
-   * @typeparam D  A type of dependencies.
-   * @typeparam S  The type of context value sources.
-   * @param spec  Component context value specifier.
-   *
-   * A function that removes the given context value specifier when called.
-   */
-  abstract perComponent<D extends any[], S>(spec: ContextValueSpec<ComponentContext, any, D, S>): () => void;
+  abstract perDefinition<Deps extends any[], Src, Seed>(
+      spec: ContextValueSpec<DefinitionContext, any, Deps, Src, Seed>,
+  ): () => void;
+
+  abstract perComponent<Deps extends any[], Src, Seed>(
+      spec: ContextValueSpec<ComponentContext, any, Deps, Src, Seed>,
+  ): () => void;
+
+  abstract setupDefinition<T extends object>(componentType: ComponentClass<T>): OnEvent<[DefinitionSetup]>;
 
   /**
    * Defines a component.
@@ -73,15 +70,10 @@ export abstract class FeatureContext extends BootstrapContext {
    */
   abstract define<T extends object>(componentType: ComponentClass<T>): void;
 
-  /**
-   * Registers feature readiness callback.
-   *
-   * The registered callback function will be called once bootstrap is complete and the feature is loaded.
-   *
-   * If the above condition satisfied, the callback will be notified immediately.
-   *
-   * @param callback  A callback to notify on feature load.
-   */
+  whenDefined<C extends object>(componentType: ComponentClass<C>): Promise<ComponentFactory<C>> {
+    return this.get(BootstrapContext).whenDefined(componentType);
+  }
+
   abstract whenReady(callback: (this: void) => void): void;
 
   load(feature: Class): AfterEvent<[LoadedFeature]> {

@@ -13,7 +13,7 @@ import Mocked = jest.Mocked;
 describe('feature/render', () => {
   describe('RenderSupport', () => {
 
-    let windowSpy: Mocked<Window>;
+    let windowSpy: Mocked<BootstrapWindow>;
     let customElementsSpy: Mocked<CustomElements>;
 
     beforeEach(() => {
@@ -49,10 +49,10 @@ describe('feature/render', () => {
 
       @Feature({
         needs: [RenderSupport],
-        set: [
-          { a: BootstrapWindow, is: windowSpy },
-          { a: CustomElements, is: customElementsSpy },
-        ],
+        setup(setup) {
+          setup.provide({ a: BootstrapWindow, is: windowSpy });
+          setup.provide({ a: CustomElements, is: customElementsSpy });
+        },
       })
       class TestFeature {}
 

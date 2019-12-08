@@ -1,12 +1,10 @@
 /**
  * @module @wesib/wesib
  */
-import { ContextValueSpec } from 'context-values';
 import { QualifiedName } from 'namespace-aliaser';
-import { ArraySet, Class, mergeFunctions, MetaAccessor } from '../common';
+import { Class, mergeFunctions, MetaAccessor } from '../common';
 import { FeatureDef } from '../feature';
-import { ComponentContext } from './component-context';
-import { ComponentClass, DefinitionContext, ElementDef } from './definition';
+import { ComponentClass, DefinitionContext, DefinitionSetup, ElementDef } from './definition';
 
 /**
  * A key of a property holding a component definition within its class constructor.
@@ -42,23 +40,18 @@ export interface ComponentDef<T extends object = any> {
   readonly extend?: ElementDef.Extend;
 
   /**
-   * Definition context value(s) to declare prior to component class definition.
-   */
-  readonly set?:
-      | ContextValueSpec<DefinitionContext<T>, any, any[], any>
-      | ContextValueSpec<DefinitionContext<T>, any, any[], any>[];
-
-  /**
-   * Component context value(s) to declare per each component construction.
-   */
-  readonly perComponent?:
-      | ContextValueSpec<ComponentContext<T>, any, any[], any>
-      | ContextValueSpec<ComponentContext<T>, any, any[], any>[];
-
-  /**
    * Additional feature definition options.
    */
   readonly feature?: FeatureDef;
+
+  /**
+   * Sets up component definition.
+   *
+   * This method is called before component definition context constructed.
+   *
+   * @param setup  Component definition setup.
+   */
+  setup?(this: void, setup: DefinitionSetup<T>): void;
 
   /**
    * Defines this component by calling the given component definition context methods.
@@ -83,9 +76,8 @@ class ComponentMeta extends MetaAccessor<ComponentDef> {
         (prev, def) => ({
           ...prev,
           ...def,
-          set: new ArraySet(prev.set).merge(def.set).value,
+          setup: mergeFunctions(prev.setup, def.setup),
           define: mergeFunctions(prev.define, def.define),
-          perComponent: new ArraySet(prev.perComponent).merge(def.perComponent).value,
           feature: prev.feature
               ? def.feature ? FeatureDef.merge(prev.feature, def.feature) : prev.feature
               : def.feature,

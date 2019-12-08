@@ -6,8 +6,8 @@ import { FeatureDef, FeatureDef__symbol } from '../feature-def';
 import { ComponentState } from './component-state';
 
 const StateSupport__feature: FeatureDef = {
-  perComponent: [
-    {
+  setup(setup) {
+    setup.perComponent({
       a: ComponentState,
       by(context: ComponentContext) {
 
@@ -17,15 +17,15 @@ const StateSupport__feature: FeatureDef = {
 
         return state;
       },
-    },
-    {
+    });
+    setup.perComponent({
       a: StateUpdater,
       by(state: ComponentState) {
         return state.update;
       },
       with: [ComponentState],
-    },
-  ],
+    });
+  },
 };
 
 /**

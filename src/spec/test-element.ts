@@ -18,14 +18,16 @@ export function testComponentFactory<T extends object>(componentType: Class<T>):
 
   @Feature({
     needs: componentType,
-    set: { a: CustomElements, is: customElements },
+    setup(setup) {
+      setup.provide({ a: CustomElements, is: customElements });
+    },
   })
   class TestFeature {}
 
   return bootstrapComponents(TestFeature).whenDefined(componentType);
 }
 
-export async function testElement(componentType: Class): Promise<Class> {
+export async function testElement(componentType: ComponentClass): Promise<Class> {
 
   let result!: Class;
 
@@ -43,7 +45,9 @@ export async function testElement(componentType: Class): Promise<Class> {
 
   @Feature({
     needs: componentType,
-    set: { a: CustomElements, is: customElements },
+    setup(setup) {
+      setup.provide({ a: CustomElements, is: customElements });
+    },
   })
   class TestFeature {}
 

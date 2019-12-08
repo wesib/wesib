@@ -35,20 +35,22 @@ export const ShadowContentDef = {
    */
   componentDef<T extends object>(def: ShadowContentDef = defaultShadowContentDef): ComponentDef<T> {
     return {
-      perComponent: [
-        {
-          a: ShadowContentRoot,
-          by(ctx: ComponentContext<T>) {
-            return ctx.get(ShadowRootBuilder)(ctx, def);
-          },
-        },
-        { // Content root is an alias of shadow root when present.
+      setup(setup) {
+        setup.perComponent(
+            {
+              a: ShadowContentRoot,
+              by(ctx: ComponentContext<T>) {
+                return ctx.get(ShadowRootBuilder)(ctx, def);
+              },
+            },
+        );
+        setup.perComponent({ // Content root is an alias of shadow root when present.
           a: ContentRoot,
           by(context: ComponentContext<T>) {
             return context.get(ShadowContentRoot, { or: null });
           },
-        },
-      ],
+        });
+      },
       feature: { needs: ShadowDomSupport },
     };
   },

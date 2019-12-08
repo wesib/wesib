@@ -41,7 +41,9 @@ describe('feature/shadow-dom', () => {
         },
       })
       @Feature({
-        set: { a: ComponentEventDispatcher, is: mockDispatcher },
+        setup(setup) {
+          setup.provide({ a: ComponentEventDispatcher, is: mockDispatcher });
+        },
       })
       class TestComponent {
       }

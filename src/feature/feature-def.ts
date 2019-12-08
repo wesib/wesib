@@ -1,11 +1,8 @@
 /**
  * @module @wesib/wesib
  */
-import { ContextValueSpec } from 'context-values';
-import { BootstrapContext } from '../boot';
+import { BootstrapSetup } from '../boot';
 import { ArraySet, Class, mergeFunctions, MetaAccessor } from '../common';
-import { ComponentContext } from '../component';
-import { DefinitionContext } from '../component/definition';
 import { FeatureContext } from './feature-context';
 
 /**
@@ -35,28 +32,17 @@ export interface FeatureDef {
   readonly has?: Class | readonly Class[];
 
   /**
-   * Bootstrap context value(s) to declare prior to bootstrap.
+   * Sets up bootstrap.
+   *
+   * This method is called before bootstrap context created.
+   *
+   * @param this  Feature class.
+   * @param setup  Bootstrap setup.
    */
-  readonly set?:
-      | ContextValueSpec<BootstrapContext, any, any[], any>
-      | ContextValueSpec<BootstrapContext, any, any[], any>[];
+  setup?(this: Class, setup: BootstrapSetup): void;
 
   /**
-   * Definition context value(s) to declare per each component class definition.
-   */
-  readonly perDefinition?:
-      | ContextValueSpec<DefinitionContext, any, any[], any>
-      | ContextValueSpec<DefinitionContext, any, any[], any>[];
-
-  /**
-   * Component context value(s) to declare per each component construction.
-   */
-  readonly perComponent?:
-      | ContextValueSpec<ComponentContext, any, any[], any>
-      | ContextValueSpec<ComponentContext, any, any[], any>[];
-
-  /**
-   * Bootstraps this feature by calling the given bootstrap context methods.
+   * Bootstraps this feature by calling the given bootstrap context constructed.
    *
    * @param this  Feature class.
    * @param context  Feature initialization context.
@@ -74,12 +60,10 @@ class FeatureMeta extends MetaAccessor<FeatureDef> {
   merge(...defs: readonly FeatureDef[]): FeatureDef {
     return defs.reduce<FeatureDef>(
         (prev, def) => ({
-          set: new ArraySet(prev.set).merge(def.set).value,
           needs: new ArraySet(prev.needs).merge(def.needs).value,
           has: new ArraySet(prev.has).merge(def.has).value,
+          setup: mergeFunctions<[BootstrapSetup], void, Class>(prev.setup, def.setup),
           init: mergeFunctions<[FeatureContext], void, Class>(prev.init, def.init),
-          perDefinition: new ArraySet(prev.perDefinition).merge(def.perDefinition).value,
-          perComponent: new ArraySet(prev.perComponent).merge(def.perComponent).value,
         }),
         {});
   }
