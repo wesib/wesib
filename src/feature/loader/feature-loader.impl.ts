@@ -10,7 +10,6 @@ import {
   EventKeeper,
   EventSupply,
   OnEvent,
-  onEventBy,
   trackValue,
 } from 'fun-events';
 import { BootstrapContext } from '../../boot';
@@ -375,24 +374,25 @@ function newFeatureContext(
   const componentContextRegistry = bsContext.get(ComponentContextRegistry);
   const registry = new ContextRegistry<FeatureContext>(bsContext);
   const elementBuilder = bsContext.get(ElementBuilder);
-  const onDefinition = onEventBy<[DefinitionContext]>(receiver => {
-    receiver.supply.needs(unloader.supply);
-    elementBuilder.definitions.on(receiver);
-  });
-  const onComponent = onEventBy<[ComponentContext]>(receiver => {
-    receiver.supply.needs(unloader.supply);
-    elementBuilder.components.on(receiver);
-  });
-  const whenReady: OnEvent<[]> = loader.state.read.thru(
-      ready => ready ? nextArgs() : nextSkip(),
-  );
+  const onDefinition = elementBuilder.definitions.on.tillOff(unloader.supply);
+  const onComponent = elementBuilder.components.on.tillOff(unloader.supply);
 
   class Context extends FeatureContext {
 
     readonly get = registry.newValues().get;
+    readonly whenReady: OnEvent<[FeatureContext]>;
 
     constructor() {
       super();
+
+      const whenReady: OnEvent<[FeatureContext]> = afterAll({
+        st: loader.state,
+        bs: trackValue<BootstrapContext>().by(bsContext.whenReady),
+      }).thru(
+          ({ st: [ready], bs: [bs] }) => bs && ready ? nextArgs(this) : nextSkip(),
+      );
+
+      this.whenReady = whenReady.once;
       registry.provide({ a: FeatureContext, is: this });
       componentRegistry = new ComponentRegistry(this);
     }
@@ -429,12 +429,6 @@ function newFeatureContext(
 
     define<T extends object>(componentType: ComponentClass<T>): void {
       componentRegistry.define(componentType);
-    }
-
-    whenReady(callback: (this: void) => void): void {
-      bsContext.whenReady(() => {
-        whenReady.once(callback);
-      });
     }
 
   }

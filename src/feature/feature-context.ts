@@ -23,6 +23,8 @@ export abstract class FeatureContext extends BootstrapContext implements Bootstr
     return FeatureContext_key;
   }
 
+  abstract readonly whenReady: OnEvent<[FeatureContext]>;
+
   abstract readonly onDefinition: OnEvent<[DefinitionContext]>;
 
   abstract readonly onComponent: OnEvent<[ComponentContext]>;
@@ -73,8 +75,6 @@ export abstract class FeatureContext extends BootstrapContext implements Bootstr
   whenDefined<C extends object>(componentType: ComponentClass<C>): Promise<ComponentFactory<C>> {
     return this.get(BootstrapContext).whenDefined(componentType);
   }
-
-  abstract whenReady(callback: (this: void) => void): void;
 
   load(feature: Class): AfterEvent<[LoadedFeature]> {
     return this.get(BootstrapContext).load(feature);

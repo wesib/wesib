@@ -94,6 +94,25 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   abstract readonly whenOff: OnEvent<[]>;
 
   /**
+   * An `OnEvent` sender of component readiness event.
+   *
+   * The component is constructed shortly after custom element. So the component may not exist when requested
+   * e.g. inside component constructor or {@link DefinitionContext.onComponent component construction event} receiver.
+   * The registered receiver will be notified when the component is constructed.
+   *
+   * If the component is constructed already, the receiver will be notified immediately.
+   */
+  abstract readonly whenReady: OnEvent<[this]>;
+
+  /**
+   * An `OnEvent` sender of component destruction reason event.
+   *
+   * The registered receiver is notified when [[destroy]] method is called. If the component is destroyed already
+   * the receiver is notified immediately.
+   */
+  abstract readonly whenDestroyed: OnEvent<[any]>;
+
+  /**
    * Updates component's state.
    *
    * This is a shorthand for invoking a component {@link StateUpdater state updater} .
@@ -136,31 +155,6 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   get contentRoot(): ContentRoot {
     return this.get(ContentRoot);
   }
-
-  /**
-   * Registers component readiness callback.
-   *
-   * The component is constructed shortly after custom element. So the component may not exist when requested
-   * e.g. inside component constructor or {@link DefinitionContext.onComponent component construction event} receiver.
-   * The registered callback will be notified when the component is constructed.
-   *
-   * If the component is constructed already, the callback will be notified immediately.
-   *
-   * @param callback  A callback to notify on component construction.
-   */
-  abstract whenReady(callback: (this: void, component: T) => void): void;
-
-  /**
-   * Registers component destruction callback.
-   *
-   * This callback is notified when [[destroy]] method is called. If the component is destroyed already the callback
-   * is notified immediately.
-   *
-   * Multiple callbacks will be called in the order reverse to their registration order.
-   *
-   * @param callback  A callback to notify on component destruction.
-   */
-  abstract whenDestroyed(callback: (this: void, reason: any) => void): void;
 
   /**
    * Returns a `super` property value inherited from custom element parent.

@@ -132,6 +132,7 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
       class DefinitionContext extends DefinitionContext_<T> {
 
         readonly get: ContextValues['get'];
+        readonly whenReady: OnEvent<[this]>;
 
         get componentType() {
           return componentType;
@@ -147,6 +148,7 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
 
         constructor() {
           super();
+          this.whenReady = whenReady.thru(() => this).once;
 
           const definitionContextRegistry =
               new DefinitionContextRegistry(definitionContextRegistry_global.seedIn(this));
@@ -164,21 +166,17 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
               get componentType() {
                 return componentType;
               },
+              get whenReady() {
+                return context.whenReady;
+              },
               perDefinition(spec) {
                 return definitionContextRegistry.provide(spec);
               },
               perComponent(spec) {
                 return componentContextRegistry_perType.provide(spec);
               },
-              whenReady(callback) {
-                context.whenReady(callback);
-              },
             });
           }
-        }
-
-        whenReady(callback: (this: void, context: this) => void) {
-          whenReady.once(() => callback(this));
         }
 
         perComponent<Deps extends any[], Src, Seed>(
@@ -275,8 +273,13 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
   ): ComponentContext_<T> {
 
     const status = trackValue<ComponentStatus>(ComponentStatus.Building);
-    const aliveSupply = status.on(noop);
-    const whenReady: OnEvent<[]> = status.read.thru(sts => sts ? nextArgs() : nextSkip());
+    const destructionReason = trackValue<[any] | undefined>();
+
+    status.on(noop).whenOff(reason => destructionReason.it = [reason]);
+
+    const destroyed: OnEvent<[any]> = destructionReason.read.thru(reason => reason ? nextArgs(reason[0]) : nextSkip());
+    const whenDestroyed: OnEvent<[any]> = destroyed.once;
+
     const whenOff: OnEvent<[]> = status.read.thru(sts => sts === ComponentStatus.Off ? nextArgs() : nextSkip());
     const whenOn: OnEvent<[EventSupply]> = status.read.thru(
         sts => {
@@ -299,6 +302,15 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
 
       readonly get = values.get;
       readonly elementSuper = elementSuper;
+      readonly whenReady: OnEvent<[this]>;
+
+      constructor() {
+        super();
+
+        const whenReady: OnEvent<[this]> = status.read.thru(sts => sts ? nextArgs(this) : nextSkip());
+
+        this.whenReady = whenReady.once;
+      }
 
       get componentType() {
         return definitionContext.componentType;
@@ -328,12 +340,8 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
         return whenOff;
       }
 
-      whenReady(callback: (this: void, component: T) => void) {
-        whenReady.once(() => callback(this.component));
-      }
-
-      whenDestroyed(callback: (this: void, reason: any) => void): void {
-        aliveSupply.whenOff(callback);
+      get whenDestroyed() {
+        return whenDestroyed;
       }
 
       destroy(reason?: any): void {
