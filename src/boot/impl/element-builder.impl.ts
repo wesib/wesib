@@ -132,6 +132,7 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
       class DefinitionContext extends DefinitionContext_<T> {
 
         readonly get: ContextValues['get'];
+        readonly whenReady: OnEvent<[this]>;
 
         get componentType() {
           return componentType;
@@ -147,6 +148,7 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
 
         constructor() {
           super();
+          this.whenReady = whenReady.thru(() => this).once;
 
           const definitionContextRegistry =
               new DefinitionContextRegistry(definitionContextRegistry_global.seedIn(this));
@@ -164,21 +166,17 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
               get componentType() {
                 return componentType;
               },
+              get whenReady() {
+                return context.whenReady;
+              },
               perDefinition(spec) {
                 return definitionContextRegistry.provide(spec);
               },
               perComponent(spec) {
                 return componentContextRegistry_perType.provide(spec);
               },
-              whenReady(callback) {
-                context.whenReady(callback);
-              },
             });
           }
-        }
-
-        whenReady(callback: (this: void, context: this) => void) {
-          whenReady.once(() => callback(this));
         }
 
         perComponent<Deps extends any[], Src, Seed>(

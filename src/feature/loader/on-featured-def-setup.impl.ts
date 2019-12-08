@@ -18,16 +18,21 @@ export function onFeaturedDefSetup(
     onSetup({
       supply: receiver.supply.needs(unloader.supply),
       receive(ctx, setup) {
+
+        const whenReady = setup.whenReady.tillOff(unloader.supply);
+
         receiver.receive(ctx, {
-          componentType: setup.componentType,
+          get componentType() {
+            return setup.componentType;
+          },
+          get whenReady() {
+            return whenReady;
+          },
           perDefinition(spec) {
             return unloader.add(setup.perDefinition(spec));
           },
           perComponent(spec) {
             return unloader.add(setup.perComponent(spec));
-          },
-          whenReady(callback) {
-            setup.whenReady(callback);
           },
         });
       },

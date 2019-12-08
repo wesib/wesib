@@ -163,6 +163,7 @@ describe('boot', () => {
       @Feature({
         setup(setup) {
           setup.setupDefinition(TestComponent)(defSetup => {
+            expect(defSetup.componentType).toBe(TestComponent);
             defSetup.whenReady(whenReady);
           });
         },

@@ -42,6 +42,16 @@ export abstract class DefinitionContext<T extends object = any> extends ContextV
   abstract readonly elementType: Class;
 
   /**
+   * An `OnEvent` sender of component definition readiness event.
+   *
+   * The custom element class is not constructed until component definition is complete.
+   * The registered receiver will be notified when the custom element class is constructed.
+   *
+   * If the custom element class is constructed already, the receiver will be notified immediately.
+   */
+  abstract readonly whenReady: OnEvent<[this]>;
+
+  /**
    * Custom element definition.
    */
   get elementDef(): ElementDef {
@@ -58,18 +68,6 @@ export abstract class DefinitionContext<T extends object = any> extends ContextV
    * @return An event supply.
    */
   abstract readonly onComponent: OnEvent<[ComponentContext<T>]>;
-
-  /**
-   * Registers component definition readiness callback.
-   *
-   * The custom element class is not constructed until component definition is complete.
-   * The registered callback will be notified when the custom element class is constructed.
-   *
-   * If the custom element class is constructed already, the callback will be notified immediately.
-   *
-   * @param callback  A callback to notify on custom element class construction.
-   */
-  abstract whenReady(callback: (this: void, context: this) => void): void;
 
   /**
    * Provides a value available in the context of each component of the defined component type.
