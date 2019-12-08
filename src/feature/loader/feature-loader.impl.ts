@@ -10,7 +10,6 @@ import {
   EventKeeper,
   EventSupply,
   OnEvent,
-  onEventBy,
   trackValue,
 } from 'fun-events';
 import { BootstrapContext } from '../../boot';
@@ -375,14 +374,8 @@ function newFeatureContext(
   const componentContextRegistry = bsContext.get(ComponentContextRegistry);
   const registry = new ContextRegistry<FeatureContext>(bsContext);
   const elementBuilder = bsContext.get(ElementBuilder);
-  const onDefinition = onEventBy<[DefinitionContext]>(receiver => {
-    receiver.supply.needs(unloader.supply);
-    elementBuilder.definitions.on(receiver);
-  });
-  const onComponent = onEventBy<[ComponentContext]>(receiver => {
-    receiver.supply.needs(unloader.supply);
-    elementBuilder.components.on(receiver);
-  });
+  const onDefinition = elementBuilder.definitions.on.tillOff(unloader.supply);
+  const onComponent = elementBuilder.components.on.tillOff(unloader.supply);
 
   class Context extends FeatureContext {
 
