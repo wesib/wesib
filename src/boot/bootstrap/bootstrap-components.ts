@@ -1,12 +1,12 @@
 /**
  * @module @wesib/wesib
  */
-import { nextArgs, nextSkip } from 'call-thru';
-import { AfterEvent, afterEventBy, OnEvent, trackValue } from 'fun-events';
+import { nextArgs, nextSkip, noop } from 'call-thru';
+import { afterEventBy, OnEvent, trackValue } from 'fun-events';
 import { newNamespaceAliaser } from 'namespace-aliaser';
 import { Class } from '../../common';
 import { ComponentClass, CustomElements } from '../../component/definition';
-import { FeatureDef, LoadedFeature } from '../../feature';
+import { FeatureDef, FeatureRef, FeatureStatus } from '../../feature';
 import { FeatureKey, FeatureLoader, FeatureRequester } from '../../feature/loader';
 import { BootstrapContext } from '../bootstrap-context';
 import { DefaultNamespaceAliaser } from '../globals';
@@ -69,11 +69,12 @@ function initBootstrap(bootstrapContextRegistry: BootstrapContextRegistry) {
       return componentFactoryOf(componentType);
     }
 
-    load(feature: Class<any>): AfterEvent<[LoadedFeature]> {
-      return afterEventBy<[LoadedFeature]>(receiver => {
+    load(feature: Class<any>): FeatureRef {
+
+      const status = afterEventBy<[FeatureStatus]>(receiver => {
 
         const request = bootstrapContext.get(FeatureRequester).request(feature);
-        const info = trackValue<LoadedFeature>({
+        const info = trackValue<FeatureStatus>({
           feature,
           ready: false,
         });
@@ -106,6 +107,23 @@ function initBootstrap(bootstrapContextRegistry: BootstrapContextRegistry) {
 
         info.read(receiver);
       }).share();
+
+      const supply = status(noop);
+      const read = status.tillOff(supply);
+
+      class Ref extends FeatureRef {
+
+        get read() {
+          return read;
+        }
+
+        unload(reason?: any) {
+          supply.off(reason);
+        }
+
+      }
+
+      return new Ref();
     }
 
   }

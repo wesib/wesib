@@ -2,10 +2,10 @@
  * @module @wesib/wesib
  */
 import { ContextKey, ContextKey__symbol, ContextValues } from 'context-values';
-import { AfterEvent, OnEvent } from 'fun-events';
+import { OnEvent } from 'fun-events';
 import { Class } from '../common';
 import { ComponentClass, ComponentFactory } from '../component/definition';
-import { LoadedFeature } from '../feature';
+import { FeatureRef } from '../feature';
 import { BootstrapContext__key } from './bootstrap-context.key.impl';
 
 /**
@@ -51,13 +51,10 @@ export abstract class BootstrapContext extends ContextValues {
   /**
    * Allows to loads the given `feature`.
    *
-   * This method returns an event keeper reporting the loaded feature info. Registering a receiver starts feature
-   * loading. Once all feature info supplies are cut off the feature will be released and unloaded.
-   *
    * @param feature  The feature to load.
    *
-   * @returns  An `AfterEvent` keeper of loaded feature info.
+   * @returns  Loaded feature reference.
    */
-  abstract load(feature: Class): AfterEvent<[LoadedFeature]>;
+  abstract load(feature: Class): FeatureRef;
 
 }

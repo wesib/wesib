@@ -1,10 +1,9 @@
 import { asis, noop } from 'call-thru';
-import { SingleContextKey, SingleContextUpKey } from 'context-values';
-import { afterThe, EventSupply } from 'fun-events';
+import { SingleContextKey } from 'context-values';
 import { Class } from '../../common';
 import { Component, ComponentDef, ComponentDef__symbol } from '../../component';
 import { CustomElements } from '../../component/definition';
-import { FeatureContext, FeatureDef, LoadedFeature } from '../../feature';
+import { FeatureContext, FeatureDef } from '../../feature';
 import { MethodSpy } from '../../spec/mocks';
 import { BootstrapContext } from '../bootstrap-context';
 import { DefaultNamespaceAliaser } from '../globals';
@@ -243,126 +242,6 @@ describe('boot', () => {
             bootstrapContext.whenReady(callback);
             expect(callback).toHaveBeenCalledWith(bootstrapContext);
           });
-        });
-
-        describe('load', () => {
-
-          let feature: Class;
-          let receiver: Mock<void, [LoadedFeature]>;
-          let featureSupply: EventSupply;
-
-          beforeEach(() => {
-            feature = class Feature {};
-            receiver = jest.fn();
-          });
-
-          it('loads the feature', async () => {
-            await loadFeature();
-            expect(receiver).toHaveBeenCalledWith({ feature, ready: false });
-            expect(receiver).toHaveBeenLastCalledWith({ feature, ready: true });
-            expect(receiver).toHaveBeenCalledTimes(2);
-          });
-          it('does not reload already loaded feature', async () => {
-            await loadFeature();
-            receiver.mockClear();
-
-            const receiver2 = jest.fn();
-
-            await loadFeature(receiver2);
-            expect(receiver).not.toHaveBeenCalled();
-            expect(receiver2).toHaveBeenCalledWith({ feature, ready: true });
-            expect(receiver2).toHaveBeenCalledTimes(1);
-          });
-          it('unloads the feature once supply is cut off', async () => {
-
-            const key = new SingleContextUpKey<string | undefined>('test');
-
-            FeatureDef.define(
-                feature,
-                {
-                  setup(setup) {
-                    setup.provide({ a: key, is: 'value' });
-                  },
-                },
-            );
-            await loadFeature();
-
-            let value: string | undefined;
-
-            bootstrapContext.get(key, { or: afterThe<[string?]>() })(v => value = v);
-            expect(value).toBe('value');
-
-            featureSupply.off('reason');
-            await Promise.resolve();
-            expect(value).toBeUndefined();
-          });
-          it('readies the feature only when it is loaded', async () => {
-
-            const readySpy = jest.fn();
-
-            FeatureDef.define(
-                feature,
-                {
-                  init(ctx) {
-                    ctx.whenReady(readySpy);
-                    expect(readySpy).not.toHaveBeenCalled();
-                  },
-                },
-            );
-
-            await loadFeature();
-            expect(readySpy).toHaveBeenCalledTimes(1);
-          });
-          it('replaces the loaded feature', async () => {
-
-            const initSpy = jest.fn();
-
-            await loadFeature();
-            receiver.mockClear();
-
-            class Replacement {}
-            FeatureDef.define(Replacement, { init: initSpy, has: feature });
-            await new Promise(resolve => {
-              bootstrapContext.load(Replacement)(loaded => {
-                if (loaded.ready) {
-                  resolve();
-                }
-              });
-            });
-
-            expect(initSpy).toHaveBeenCalledTimes(1);
-            expect(receiver).toHaveBeenLastCalledWith({ feature: Replacement, ready: true });
-          });
-          it('informs on feature replacement load', async () => {
-
-            await loadFeature();
-            receiver.mockClear();
-
-            class Replacement {}
-            FeatureDef.define(Replacement, { has: feature });
-            await new Promise(resolve => {
-              bootstrapContext.load(Replacement)(loaded => {
-                if (loaded.ready) {
-                  resolve();
-                }
-              });
-            });
-
-            expect(receiver).toHaveBeenCalledWith({ feature: Replacement, ready: false });
-            expect(receiver).toHaveBeenLastCalledWith({ feature: Replacement, ready: true });
-            expect(receiver).toHaveBeenCalledTimes(2);
-          });
-
-          function loadFeature(receive: Mock<void, [LoadedFeature]> = receiver) {
-            return new Promise(resolve => {
-              receive.mockImplementation(loaded => {
-                if (loaded.ready) {
-                  resolve();
-                }
-              });
-              featureSupply = bootstrapContext.load(feature)(receive);
-            });
-          }
         });
       });
     });

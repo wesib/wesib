@@ -1,9 +1,9 @@
 import { SingleContextUpKey } from 'context-values';
-import { eventSupply, EventSupply } from 'fun-events';
+import { afterSupplied, afterThe } from 'fun-events';
 import { Class } from '../../common';
 import { Component, ComponentContext } from '../../component';
 import { CustomElements } from '../../component/definition';
-import { Feature } from '../../feature';
+import { Feature, FeatureDef, FeatureRef, FeatureStatus } from '../../feature';
 import { MockElement } from '../../spec/test-element';
 import { BootstrapContext } from '../bootstrap-context';
 import { bootstrapComponents } from './bootstrap-components';
@@ -56,11 +56,11 @@ describe('boot', () => {
       })
       class TestFeature {}
 
-      const supply = await loadFeature(TestFeature);
+      const featureRef = await loadFeature(TestFeature);
 
       expect(receiver).toHaveBeenLastCalledWith('provided');
 
-      supply.off();
+      featureRef.unload();
       await Promise.resolve();
       expect(receiver).toHaveBeenLastCalledWith('default');
     });
@@ -74,11 +74,11 @@ describe('boot', () => {
       })
       class TestFeature {}
 
-      const supply = await loadFeature(TestFeature);
+      const featureRef = await loadFeature(TestFeature);
 
       expect(receiver).toHaveBeenLastCalledWith('provided');
 
-      supply.off();
+      featureRef.unload();
       await Promise.resolve();
       expect(receiver).toHaveBeenLastCalledWith('default');
     });
@@ -104,13 +104,13 @@ describe('boot', () => {
       })
       class TestFeature {}
 
-      const supply = await loadFeature(TestFeature);
+      const featureRef = await loadFeature(TestFeature);
       await loadFeature(TestComponent);
       await bsContext.whenDefined(TestComponent);
 
       expect(receiver).toHaveBeenCalledWith('provided');
 
-      supply.off();
+      featureRef.unload();
       await Promise.resolve();
       expect(receiver).toHaveBeenCalledWith('default');
 
@@ -140,13 +140,13 @@ describe('boot', () => {
       })
       class TestFeature {}
 
-      const supply = await loadFeature(TestFeature);
+      const featureRef = await loadFeature(TestFeature);
       await loadFeature(TestComponent);
       await bsContext.whenDefined(TestComponent).then(({ elementType }) => new elementType());
 
       expect(receiver).toHaveBeenCalledWith('provided');
 
-      supply.off();
+      featureRef.unload();
       await Promise.resolve();
       expect(receiver).toHaveBeenCalledWith('default');
 
@@ -192,9 +192,9 @@ describe('boot', () => {
       })
       class TestFeature {}
 
-      const supply = await loadFeature(TestFeature);
+      const featureRef = await loadFeature(TestFeature);
 
-      supply.off();
+      featureRef.unload();
       await Promise.resolve();
 
       await loadFeature(TestComponent);
@@ -224,13 +224,13 @@ describe('boot', () => {
       })
       class TestFeature {}
 
-      const supply = await loadFeature(TestFeature);
+      const featureRef = await loadFeature(TestFeature);
       await loadFeature(SubTypeComponent);
       await bsContext.whenDefined(SubTypeComponent);
 
       expect(receiver).toHaveBeenCalledWith('provided');
 
-      supply.off();
+      featureRef.unload();
       await Promise.resolve();
       expect(receiver).toHaveBeenCalledWith('default');
 
@@ -239,20 +239,145 @@ describe('boot', () => {
     });
   });
 
-  function loadFeature(
-      feature: Class,
-  ): Promise<EventSupply> {
-    return new Promise(resolve => {
+  describe('feature load', () => {
 
-      const supply = eventSupply();
+    let testFeature: Class;
+    let statusReceiver: Mock<void, [FeatureStatus]>;
 
-      bsContext.load(feature)({
-        supply,
-        receive(_ctx, { ready }) {
+    beforeEach(() => {
+      testFeature = class TestFeature {};
+      statusReceiver = jest.fn();
+    });
+
+    it('loads the feature', async () => {
+      await loadFeatureStatus();
+      expect(statusReceiver).toHaveBeenCalledWith({ feature: testFeature, ready: false });
+      expect(statusReceiver).toHaveBeenLastCalledWith({ feature: testFeature, ready: true });
+      expect(statusReceiver).toHaveBeenCalledTimes(2);
+    });
+    it('does not reload already loaded feature', async () => {
+      await loadFeatureStatus();
+      statusReceiver.mockClear();
+
+      const receiver2 = jest.fn();
+
+      await loadFeatureStatus(receiver2);
+      expect(statusReceiver).not.toHaveBeenCalled();
+      expect(receiver2).toHaveBeenCalledWith({ feature: testFeature, ready: true });
+      expect(receiver2).toHaveBeenCalledTimes(1);
+    });
+    it('readies the feature only when it is loaded', async () => {
+
+      const readySpy = jest.fn();
+
+      FeatureDef.define(
+          testFeature,
+          {
+            init(ctx) {
+              ctx.whenReady(readySpy);
+              expect(readySpy).not.toHaveBeenCalled();
+            },
+          },
+      );
+
+      await loadFeatureStatus();
+      expect(readySpy).toHaveBeenCalledTimes(1);
+    });
+    it('replaces the loaded feature', async () => {
+
+      const initSpy = jest.fn();
+
+      await loadFeatureStatus();
+      statusReceiver.mockClear();
+
+      class Replacement {}
+      FeatureDef.define(Replacement, { init: initSpy, has: testFeature });
+      await new Promise(resolve => {
+        bsContext.load(Replacement).read(({ ready }) => {
           if (ready) {
-            resolve(supply);
+            resolve();
           }
-        },
+        });
+      });
+
+      expect(initSpy).toHaveBeenCalledTimes(1);
+      expect(statusReceiver).toHaveBeenLastCalledWith({ feature: Replacement, ready: true });
+    });
+    it('informs on feature replacement load', async () => {
+      await loadFeatureStatus();
+      statusReceiver.mockClear();
+
+      class Replacement {}
+      FeatureDef.define(Replacement, { has: testFeature });
+      await new Promise(resolve => {
+        bsContext.load(Replacement).read(({ ready }) => {
+          if (ready) {
+            resolve();
+          }
+        });
+      });
+
+      expect(statusReceiver).toHaveBeenCalledWith({ feature: Replacement, ready: false });
+      expect(statusReceiver).toHaveBeenLastCalledWith({ feature: Replacement, ready: true });
+      expect(statusReceiver).toHaveBeenCalledTimes(2);
+    });
+
+    describe('FeatureRef', () => {
+      describe('[AfterEvent__symbol]', () => {
+        it('is an alias of `read`', async () => {
+
+          const featureRef = await loadFeatureStatus();
+
+          expect(afterSupplied(featureRef)).toBe(featureRef.read);
+        });
+      });
+      describe('unload', () => {
+        it('unloads the feature', async () => {
+          FeatureDef.define(
+              testFeature,
+              {
+                setup(setup) {
+                  setup.provide({ a: key, is: 'provided' });
+                },
+              },
+          );
+          const featureRef = await loadFeatureStatus();
+
+          let value: string | undefined;
+
+          bsContext.get(key, { or: afterThe<[string?]>() })(v => value = v);
+          expect(value).toBe('provided');
+
+          featureRef.unload('reason');
+          await Promise.resolve();
+          expect(value).toBeUndefined();
+        });
+      });
+    });
+
+    function loadFeatureStatus(receive: Mock<void, [FeatureStatus]> = statusReceiver): Promise<FeatureRef> {
+      return new Promise<FeatureRef>(resolve => {
+
+        const featureRef = bsContext.load(testFeature);
+
+        featureRef.read(receive.mockImplementation(loaded => {
+          if (loaded.ready) {
+            resolve(featureRef);
+          }
+        }));
+      });
+    }
+  });
+
+  function loadFeature(feature: Class): Promise<FeatureRef> {
+    return new Promise<FeatureRef>(resolve => {
+
+      const ref = bsContext.load(feature);
+
+      ref.read(({ ready }) => {
+        if (ready) {
+          resolve(ref);
+        }
       });
     });
   }

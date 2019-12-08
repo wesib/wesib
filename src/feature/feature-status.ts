@@ -4,11 +4,11 @@
 import { Class } from '../common';
 
 /**
- * Loaded feature info.
+ * Feature load status.
  *
- * This object is reported by event keeper returned from [BootstrapContext.load] method.
+ * This status is reported by {@link FeatureRef loaded feature reference}.
  */
-export interface LoadedFeature {
+export interface FeatureStatus {
 
   /**
    * Loaded feature class.
