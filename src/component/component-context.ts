@@ -105,6 +105,14 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   abstract readonly whenReady: OnEvent<[this]>;
 
   /**
+   * An `OnEvent` sender of component destruction reason event.
+   *
+   * The registered receiver is notified when [[destroy]] method is called. If the component is destroyed already
+   * the receiver is notified immediately.
+   */
+  abstract readonly whenDestroyed: OnEvent<[any]>;
+
+  /**
    * Updates component's state.
    *
    * This is a shorthand for invoking a component {@link StateUpdater state updater} .
@@ -147,18 +155,6 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   get contentRoot(): ContentRoot {
     return this.get(ContentRoot);
   }
-
-  /**
-   * Registers component destruction callback.
-   *
-   * This callback is notified when [[destroy]] method is called. If the component is destroyed already the callback
-   * is notified immediately.
-   *
-   * Multiple callbacks will be called in the order reverse to their registration order.
-   *
-   * @param callback  A callback to notify on component destruction.
-   */
-  abstract whenDestroyed(callback: (this: void, reason: any) => void): void;
 
   /**
    * Returns a `super` property value inherited from custom element parent.

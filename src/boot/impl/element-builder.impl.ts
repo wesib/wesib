@@ -273,7 +273,13 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
   ): ComponentContext_<T> {
 
     const status = trackValue<ComponentStatus>(ComponentStatus.Building);
-    const aliveSupply = status.on(noop);
+    const destructionReason = trackValue<[any] | undefined>();
+
+    status.on(noop).whenOff(reason => destructionReason.it = [reason]);
+
+    const destroyed: OnEvent<[any]> = destructionReason.read.thru(reason => reason ? nextArgs(reason[0]) : nextSkip());
+    const whenDestroyed: OnEvent<[any]> = destroyed.once;
+
     const whenOff: OnEvent<[]> = status.read.thru(sts => sts === ComponentStatus.Off ? nextArgs() : nextSkip());
     const whenOn: OnEvent<[EventSupply]> = status.read.thru(
         sts => {
@@ -334,8 +340,8 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
         return whenOff;
       }
 
-      whenDestroyed(callback: (this: void, reason: any) => void): void {
-        aliveSupply.whenOff(callback);
+      get whenDestroyed() {
+        return whenDestroyed;
       }
 
       destroy(reason?: any): void {
