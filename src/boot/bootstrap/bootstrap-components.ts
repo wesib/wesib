@@ -1,8 +1,8 @@
 /**
  * @module @wesib/wesib
  */
-import { nextArgs, nextSkip, noop } from 'call-thru';
-import { afterEventBy, OnEvent, trackValue } from 'fun-events';
+import { nextArgs, nextSkip } from 'call-thru';
+import { AfterEvent, afterEventBy, OnEvent, trackValue } from 'fun-events';
 import { newNamespaceAliaser } from 'namespace-aliaser';
 import { Class } from '../../common';
 import { ComponentClass, CustomElements } from '../../component/definition';
@@ -71,12 +71,19 @@ function initBootstrap(bootstrapContextRegistry: BootstrapContextRegistry) {
 
     load(feature: Class<any>): FeatureRef {
 
-      const status = afterEventBy<[FeatureStatus]>(receiver => {
+      interface FeatureInfo {
+        status: FeatureStatus;
+        down?: Promise<void>;
+      }
+
+      const status = afterEventBy<[FeatureInfo]>(receiver => {
 
         const request = bootstrapContext.get(FeatureRequester).request(feature);
-        const info = trackValue<FeatureStatus>({
-          feature,
-          ready: false,
+        const info = trackValue<FeatureInfo>({
+          status: {
+            feature,
+            ready: false,
+          },
         });
 
         this.get(FeatureKey.of(feature))({
@@ -88,14 +95,20 @@ function initBootstrap(bootstrapContextRegistry: BootstrapContextRegistry) {
             const loader = ldr as FeatureLoader;
 
             info.it = {
-              feature: loader.request.feature,
-              ready: loader.ready,
+              status: {
+                feature: loader.request.feature,
+                ready: loader.ready,
+              },
+              down: loader.down,
             };
             if (!loader.ready) {
               loader.init().then(() => {
                 info.it = {
-                  feature: loader.request.feature,
-                  ready: true,
+                  status: {
+                    feature: loader.request.feature,
+                    ready: true,
+                  },
+                  down: loader.down,
                 };
               });
             }
@@ -108,8 +121,10 @@ function initBootstrap(bootstrapContextRegistry: BootstrapContextRegistry) {
         info.read(receiver);
       }).share();
 
-      const supply = status(noop);
-      const read = status.tillOff(supply);
+      let whenDown: Promise<void>;
+      const supply = status(({ down }) => whenDown = down!);
+      const read: AfterEvent<[FeatureStatus]> =
+          status.keep.thru(info => info.status).tillOff(supply);
 
       class Ref extends FeatureRef {
 
@@ -117,8 +132,13 @@ function initBootstrap(bootstrapContextRegistry: BootstrapContextRegistry) {
           return read;
         }
 
-        off(reason?: any) {
+        get down() {
+          return whenDown;
+        }
+
+        dismiss(reason?: any) {
           supply.off(reason);
+          return whenDown;
         }
 
       }

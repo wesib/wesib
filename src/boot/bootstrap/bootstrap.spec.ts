@@ -60,8 +60,7 @@ describe('boot', () => {
 
       expect(receiver).toHaveBeenLastCalledWith('provided');
 
-      featureRef.off();
-      await Promise.resolve();
+      await featureRef.dismiss();
       expect(receiver).toHaveBeenLastCalledWith('default');
     });
     it('provides bootstrap context values', async () => {
@@ -78,8 +77,7 @@ describe('boot', () => {
 
       expect(receiver).toHaveBeenLastCalledWith('provided');
 
-      featureRef.off();
-      await Promise.resolve();
+      await featureRef.dismiss();
       expect(receiver).toHaveBeenLastCalledWith('default');
     });
   });
@@ -110,8 +108,8 @@ describe('boot', () => {
 
       expect(receiver).toHaveBeenCalledWith('provided');
 
-      featureRef.off();
-      await Promise.resolve();
+      featureRef.dismiss();
+      await featureRef.down;
       expect(receiver).toHaveBeenCalledWith('default');
 
       await loadFeature(TestFeature);
@@ -146,8 +144,7 @@ describe('boot', () => {
 
       expect(receiver).toHaveBeenCalledWith('provided');
 
-      featureRef.off();
-      await Promise.resolve();
+      await featureRef.dismiss();
       expect(receiver).toHaveBeenCalledWith('default');
 
       await loadFeature(TestFeature);
@@ -194,9 +191,7 @@ describe('boot', () => {
 
       const featureRef = await loadFeature(TestFeature);
 
-      featureRef.off();
-      await Promise.resolve();
-
+      await featureRef.dismiss();
       await loadFeature(TestComponent);
       await bsContext.whenDefined(TestComponent);
 
@@ -230,8 +225,7 @@ describe('boot', () => {
 
       expect(receiver).toHaveBeenCalledWith('provided');
 
-      featureRef.off();
-      await Promise.resolve();
+      await featureRef.dismiss();
       expect(receiver).toHaveBeenCalledWith('default');
 
       await loadFeature(TestFeature);
@@ -348,8 +342,7 @@ describe('boot', () => {
           bsContext.get(key, { or: afterThe<[string?]>() })(v => value = v);
           expect(value).toBe('provided');
 
-          featureRef.off('reason');
-          await Promise.resolve();
+          await featureRef.dismiss('reason');
           expect(value).toBeUndefined();
         });
       });
