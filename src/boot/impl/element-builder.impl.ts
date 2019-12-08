@@ -274,7 +274,6 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
 
     const status = trackValue<ComponentStatus>(ComponentStatus.Building);
     const aliveSupply = status.on(noop);
-    const whenReady: OnEvent<[]> = status.read.thru(sts => sts ? nextArgs() : nextSkip());
     const whenOff: OnEvent<[]> = status.read.thru(sts => sts === ComponentStatus.Off ? nextArgs() : nextSkip());
     const whenOn: OnEvent<[EventSupply]> = status.read.thru(
         sts => {
@@ -297,6 +296,15 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
 
       readonly get = values.get;
       readonly elementSuper = elementSuper;
+      readonly whenReady: OnEvent<[this]>;
+
+      constructor() {
+        super();
+
+        const whenReady: OnEvent<[this]> = status.read.thru(sts => sts ? nextArgs(this) : nextSkip());
+
+        this.whenReady = whenReady.once;
+      }
 
       get componentType() {
         return definitionContext.componentType;
@@ -324,10 +332,6 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
 
       get whenOff(): OnEvent<[]> {
         return whenOff;
-      }
-
-      whenReady(callback: (this: void, component: T) => void) {
-        whenReady.once(() => callback(this.component));
       }
 
       whenDestroyed(callback: (this: void, reason: any) => void): void {

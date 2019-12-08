@@ -99,7 +99,7 @@ describe('component instantiation', () => {
               featureCtx.onComponent(ctx => {
                 context = ctx;
                 expect(() => context.component).toThrow(/not constructed yet/);
-                ctx.whenReady(comp => resolve(comp));
+                ctx.whenReady(c => resolve(c.component));
               });
             },
           })
@@ -116,7 +116,7 @@ describe('component instantiation', () => {
 
         context.whenReady(ready);
 
-        expect(ready).toHaveBeenCalledWith(component);
+        expect(ready).toHaveBeenCalledWith(context);
       });
     });
 

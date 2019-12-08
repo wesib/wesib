@@ -94,6 +94,17 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   abstract readonly whenOff: OnEvent<[]>;
 
   /**
+   * An `OnEvent` sender of component readiness event.
+   *
+   * The component is constructed shortly after custom element. So the component may not exist when requested
+   * e.g. inside component constructor or {@link DefinitionContext.onComponent component construction event} receiver.
+   * The registered receiver will be notified when the component is constructed.
+   *
+   * If the component is constructed already, the receiver will be notified immediately.
+   */
+  abstract readonly whenReady: OnEvent<[this]>;
+
+  /**
    * Updates component's state.
    *
    * This is a shorthand for invoking a component {@link StateUpdater state updater} .
@@ -136,19 +147,6 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   get contentRoot(): ContentRoot {
     return this.get(ContentRoot);
   }
-
-  /**
-   * Registers component readiness callback.
-   *
-   * The component is constructed shortly after custom element. So the component may not exist when requested
-   * e.g. inside component constructor or {@link DefinitionContext.onComponent component construction event} receiver.
-   * The registered callback will be notified when the component is constructed.
-   *
-   * If the component is constructed already, the callback will be notified immediately.
-   *
-   * @param callback  A callback to notify on component construction.
-   */
-  abstract whenReady(callback: (this: void, component: T) => void): void;
 
   /**
    * Registers component destruction callback.
