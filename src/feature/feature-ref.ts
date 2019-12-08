@@ -25,12 +25,14 @@ export abstract class FeatureRef implements EventKeeper<[FeatureStatus]> {
   }
 
   /**
-   * Unloads the feature.
+   * Releases feature reference.
    *
-   * This removes everything set up by the feature via [[BootstrapSetup]] and [[DefinitionSetup]].
+   * If there is no more unreleased feature references, then unloads the feature. This removes everything set up by the
+   * feature via [[BootstrapSetup]] and [[DefinitionSetup]].
    *
-   * @param reason  Arbitrary reason of feature unload. This will be reported by load status supplies.
+   * @param reason  Arbitrary reason of feature reference release. This will be reported by load status supplies
+   * as their cut off reason.
    */
-  abstract unload(reason?: any): void;
+  abstract off(reason?: any): void;
 
 }

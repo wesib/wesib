@@ -60,7 +60,7 @@ describe('boot', () => {
 
       expect(receiver).toHaveBeenLastCalledWith('provided');
 
-      featureRef.unload();
+      featureRef.off();
       await Promise.resolve();
       expect(receiver).toHaveBeenLastCalledWith('default');
     });
@@ -78,7 +78,7 @@ describe('boot', () => {
 
       expect(receiver).toHaveBeenLastCalledWith('provided');
 
-      featureRef.unload();
+      featureRef.off();
       await Promise.resolve();
       expect(receiver).toHaveBeenLastCalledWith('default');
     });
@@ -110,7 +110,7 @@ describe('boot', () => {
 
       expect(receiver).toHaveBeenCalledWith('provided');
 
-      featureRef.unload();
+      featureRef.off();
       await Promise.resolve();
       expect(receiver).toHaveBeenCalledWith('default');
 
@@ -146,7 +146,7 @@ describe('boot', () => {
 
       expect(receiver).toHaveBeenCalledWith('provided');
 
-      featureRef.unload();
+      featureRef.off();
       await Promise.resolve();
       expect(receiver).toHaveBeenCalledWith('default');
 
@@ -194,7 +194,7 @@ describe('boot', () => {
 
       const featureRef = await loadFeature(TestFeature);
 
-      featureRef.unload();
+      featureRef.off();
       await Promise.resolve();
 
       await loadFeature(TestComponent);
@@ -230,7 +230,7 @@ describe('boot', () => {
 
       expect(receiver).toHaveBeenCalledWith('provided');
 
-      featureRef.unload();
+      featureRef.off();
       await Promise.resolve();
       expect(receiver).toHaveBeenCalledWith('default');
 
@@ -331,7 +331,7 @@ describe('boot', () => {
           expect(afterSupplied(featureRef)).toBe(featureRef.read);
         });
       });
-      describe('unload', () => {
+      describe('off', () => {
         it('unloads the feature', async () => {
           FeatureDef.define(
               testFeature,
@@ -348,7 +348,7 @@ describe('boot', () => {
           bsContext.get(key, { or: afterThe<[string?]>() })(v => value = v);
           expect(value).toBe('provided');
 
-          featureRef.unload('reason');
+          featureRef.off('reason');
           await Promise.resolve();
           expect(value).toBeUndefined();
         });
