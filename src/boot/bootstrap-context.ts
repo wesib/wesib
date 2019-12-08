@@ -2,7 +2,7 @@
  * @module @wesib/wesib
  */
 import { ContextKey, ContextKey__symbol, ContextValues } from 'context-values';
-import { AfterEvent } from 'fun-events';
+import { AfterEvent, OnEvent } from 'fun-events';
 import { Class } from '../common';
 import { ComponentClass, ComponentFactory } from '../component/definition';
 import { LoadedFeature } from '../feature';
@@ -27,6 +27,15 @@ export abstract class BootstrapContext extends ContextValues {
   }
 
   /**
+   * An `OnEvent` sender of bootstrap readiness event.
+   *
+   * The registered receiver will be notified once bootstrap is complete.
+   *
+   * If bootstrap is complete already, the receiver will be notified immediately.
+   */
+  abstract readonly whenReady: OnEvent<[BootstrapContext]>;
+
+  /**
    * Allows to wait for component definition.
    *
    * This corresponds to `window.customElements.whenDefined()` method.
@@ -38,17 +47,6 @@ export abstract class BootstrapContext extends ContextValues {
    * @throws TypeError  If `componentType` does not contain a component definition.
    */
   abstract whenDefined<C extends object>(componentType: ComponentClass<C>): Promise<ComponentFactory<C>>;
-
-  /**
-   * Registers bootstrap readiness callback.
-   *
-   * The registered callback function will be called once bootstrap is complete.
-   *
-   * If bootstrap is complete already, the callback will be notified immediately.
-   *
-   * @param callback  A callback to notify on bootstrap completion.
-   */
-  abstract whenReady(callback: (this: void) => void): void;
 
   /**
    * Allows to loads the given `feature`.

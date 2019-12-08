@@ -383,16 +383,23 @@ function newFeatureContext(
     receiver.supply.needs(unloader.supply);
     elementBuilder.components.on(receiver);
   });
-  const whenReady: OnEvent<[]> = loader.state.read.thru(
-      ready => ready ? nextArgs() : nextSkip(),
-  );
 
   class Context extends FeatureContext {
 
     readonly get = registry.newValues().get;
+    readonly whenReady: OnEvent<[FeatureContext]>;
 
     constructor() {
       super();
+
+      const whenReady: OnEvent<[FeatureContext]> = afterAll({
+        st: loader.state,
+        bs: trackValue<BootstrapContext>().by(bsContext.whenReady),
+      }).thru(
+          ({ st: [ready], bs: [bs] }) => bs && ready ? nextArgs(this) : nextSkip(),
+      );
+
+      this.whenReady = whenReady.once;
       registry.provide({ a: FeatureContext, is: this });
       componentRegistry = new ComponentRegistry(this);
     }
@@ -429,12 +436,6 @@ function newFeatureContext(
 
     define<T extends object>(componentType: ComponentClass<T>): void {
       componentRegistry.define(componentType);
-    }
-
-    whenReady(callback: (this: void) => void): void {
-      bsContext.whenReady(() => {
-        whenReady.once(callback);
-      });
     }
 
   }

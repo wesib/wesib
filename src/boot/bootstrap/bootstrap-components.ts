@@ -2,7 +2,7 @@
  * @module @wesib/wesib
  */
 import { nextArgs, nextSkip } from 'call-thru';
-import { AfterEvent, afterEventBy, trackValue } from 'fun-events';
+import { AfterEvent, afterEventBy, OnEvent, trackValue } from 'fun-events';
 import { newNamespaceAliaser } from 'namespace-aliaser';
 import { Class } from '../../common';
 import { ComponentClass, CustomElements } from '../../component/definition';
@@ -44,15 +44,21 @@ function bootstrapFeature(needs: Class[]): Class {
 function initBootstrap(bootstrapContextRegistry: BootstrapContextRegistry) {
 
   const stage = trackValue<BootstrapStage>(BootstrapStage.Init);
-  const whenReady = stage.read.thru(s => s ? nextArgs() : nextSkip());
   const values = bootstrapContextRegistry.values;
 
   class Context extends BootstrapContext {
 
     readonly get = values.get;
+    readonly whenReady: OnEvent<[BootstrapContext]>;
 
     constructor() {
       super();
+
+      const whenReady: OnEvent<[BootstrapContext]> = stage.read.thru(
+          s => s ? nextArgs(this) : nextSkip(),
+      );
+
+      this.whenReady = whenReady.once;
       bootstrapContextRegistry.provide({ a: DefaultNamespaceAliaser, by: newNamespaceAliaser });
       bootstrapContextRegistry.provide({ a: BootstrapContext, is: this });
     }
@@ -61,10 +67,6 @@ function initBootstrap(bootstrapContextRegistry: BootstrapContextRegistry) {
       await new Promise(resolve => this.whenReady(resolve));
       await this.get(CustomElements).whenDefined(componentType);
       return componentFactoryOf(componentType);
-    }
-
-    whenReady(callback: (this: void) => void): void {
-      whenReady.once(callback);
     }
 
     load(feature: Class<any>): AfterEvent<[LoadedFeature]> {

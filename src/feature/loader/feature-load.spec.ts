@@ -1,6 +1,6 @@
 import { valueProvider } from 'call-thru';
 import { ContextValues, SingleContextKey, SingleContextUpKey } from 'context-values';
-import { AfterEvent, eventSupply, EventSupply } from 'fun-events';
+import { AfterEvent, EventEmitter, eventSupply, EventSupply } from 'fun-events';
 import { BootstrapContext } from '../../boot';
 import { BootstrapContextRegistry, ComponentContextRegistry, DefinitionContextRegistry } from '../../boot/impl';
 import { Class } from '../../common';
@@ -18,14 +18,15 @@ describe('feature load', () => {
 
   let bsRegistry: BootstrapContextRegistry;
   let bsContext: Mocked<BootstrapContext>;
-  let makeReady: () => void;
+  let makeReady: EventEmitter<[BootstrapContext]>;
 
   beforeEach(() => {
     bsRegistry = BootstrapContextRegistry.create();
+    makeReady = new EventEmitter();
     bsContext = {
       get: bsRegistry.values.get,
       load: jest.fn(),
-      whenReady: jest.fn(callback => makeReady = callback),
+      whenReady: makeReady.on,
     } as any;
     bsRegistry.provide({ a: BootstrapContext, is: bsContext });
   });
@@ -623,7 +624,7 @@ describe('feature load', () => {
           const [loader] = await featureLoader();
 
           await loader.init();
-          makeReady();
+          makeReady.send(bsContext);
           expect(mockCustomElements.define).toHaveBeenLastCalledWith(TestComponent, expect.any(Function));
         });
       });

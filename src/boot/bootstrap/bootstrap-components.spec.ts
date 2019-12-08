@@ -176,14 +176,14 @@ describe('boot', () => {
 
       describe('whenReady', () => {
         it('invokes callback once bootstrap is complete', () => {
-          expect(whenReady).toHaveBeenCalledWith();
+          expect(whenReady).toHaveBeenCalledWith(featureContext);
         });
         it('invokes callback immediately when bootstrap is complete already', () => {
 
           const callback = jest.fn();
 
           featureContext.whenReady(callback);
-          expect(callback).toHaveBeenCalledWith();
+          expect(callback).toHaveBeenCalledWith(featureContext);
         });
       });
 
@@ -241,7 +241,7 @@ describe('boot', () => {
             const callback = jest.fn();
 
             bootstrapContext.whenReady(callback);
-            expect(callback).toHaveBeenCalledWith();
+            expect(callback).toHaveBeenCalledWith(bootstrapContext);
           });
         });
 

@@ -3,9 +3,10 @@
  */
 import { ContextValueSpec } from 'context-values';
 import { OnEvent } from 'fun-events';
-import { BootstrapContext } from './index';
 import { ComponentContext } from '../component';
 import { ComponentClass, DefinitionContext, DefinitionSetup } from '../component/definition';
+import { FeatureContext } from '../feature';
+import { BootstrapContext } from './index';
 
 /**
  * Bootstrap context setup.
@@ -35,6 +36,15 @@ export interface BootstrapSetup {
    * @return An event supply.
    */
   readonly onComponent: OnEvent<[ComponentContext]>;
+
+  /**
+   * An `OnEvent` sender of feature readiness event.
+   *
+   * The registered receiver will be notified once bootstrap is complete and the feature is loaded.
+   *
+   * If the above conditions satisfied, the receiver will be notified immediately.
+   */
+  readonly whenReady: OnEvent<[FeatureContext]>;
 
   /**
    * Provides bootstrap context value before context creation.
@@ -89,16 +99,5 @@ export interface BootstrapSetup {
    * @returns An `OnEvent` sender of component definition setup instances.
    */
   setupDefinition<T extends object>(componentType: ComponentClass<T>): OnEvent<[DefinitionSetup]>;
-
-  /**
-   * Registers feature readiness callback.
-   *
-   * The registered callback function will be called once bootstrap is complete and the feature is loaded.
-   *
-   * If the above condition satisfied, the callback will be notified immediately.
-   *
-   * @param callback  A callback to notify on feature load.
-   */
-  whenReady(callback: (this: void) => void): void;
 
 }
