@@ -6,6 +6,7 @@ import { CustomElements } from '../../component/definition';
 import { Feature, FeatureDef, FeatureRef, FeatureStatus } from '../../feature';
 import { MockElement } from '../../spec/test-element';
 import { BootstrapContext } from '../bootstrap-context';
+import { BootstrapSetup } from '../bootstrap-setup';
 import { bootstrapComponents } from './bootstrap-components';
 import Mock = jest.Mock;
 
@@ -78,6 +79,24 @@ describe('boot', () => {
       expect(receiver).toHaveBeenLastCalledWith('provided');
 
       await featureRef.dismiss();
+      expect(receiver).toHaveBeenLastCalledWith('default');
+    });
+    it('does not set up bootstrap context values when feature unloaded already', async () => {
+      bsContext.get(key)(receiver);
+
+      let bsSetup!: BootstrapSetup;
+
+      @Feature({
+        setup(setup) {
+          bsSetup = setup;
+        },
+      })
+      class TestFeature {}
+
+      const featureRef = await loadFeature(TestFeature);
+
+      await featureRef.dismiss();
+      bsSetup.provide({ a: key, is: 'provided' });
       expect(receiver).toHaveBeenLastCalledWith('default');
     });
   });

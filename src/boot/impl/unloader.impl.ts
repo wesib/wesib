@@ -1,23 +1,44 @@
 import { itsEach, overArray } from 'a-iterable';
-import { eventSupply } from 'fun-events';
+import { noop, valueProvider } from 'call-thru';
+import { EventSupply, eventSupply } from 'fun-events';
 
 /**
  * @internal
  */
-export class Unloader {
+export interface Unloader {
+  readonly supply: EventSupply;
+  add(adder: () => () => void): () => void;
+}
 
-  private readonly _unloads: (() => void)[] = [];
-  readonly supply = eventSupply(() => {
+const doNotAdd = valueProvider(noop);
+
+/**
+ * @internal
+ */
+export function newUnloader(): Unloader {
+
+  const unloads: (() => void)[] = [];
+  let add = (adder: () => () => void) => {
+
+    const unload = adder();
+
+    unloads.push(unload);
+
+    return unload;
+  };
+  const supply = eventSupply(() => {
+    add = doNotAdd;
     itsEach(
-        overArray(this._unloads).reverse(),
+        overArray(unloads).reverse(),
         unload => unload(),
     );
-    this._unloads.length = 0;
+    unloads.length = 0;
   });
 
-  add(unload: () => void): () => void {
-    this._unloads.push(unload);
-    return unload;
-  }
-
+  return {
+    supply,
+    add(adder) {
+      return add(adder);
+    },
+  };
 }

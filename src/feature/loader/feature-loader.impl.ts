@@ -18,7 +18,7 @@ import {
   ComponentContextRegistry,
   DefinitionContextRegistry,
   ElementBuilder,
-  Unloader,
+  newUnloader,
 } from '../../boot/impl';
 import { ArraySet, Class } from '../../common';
 import { ComponentContext } from '../../component';
@@ -368,7 +368,7 @@ function newFeatureContext(
     loader: FeatureLoader,
 ): [FeatureContext, EventSupply] {
 
-  const unloader = new Unloader();
+  const unloader = newUnloader();
   let componentRegistry: ComponentRegistry;
   const definitionContextRegistry = bsContext.get(DefinitionContextRegistry);
   const componentContextRegistry = bsContext.get(ComponentContextRegistry);
@@ -408,19 +408,19 @@ function newFeatureContext(
     provide<Deps extends any[], Src, Seed>(
         spec: ContextValueSpec<BootstrapContext, any, Deps, Src, Seed>,
     ): () => void {
-      return unloader.add(bsContext.get(BootstrapContextRegistry).provide(spec));
+      return unloader.add(() => bsContext.get(BootstrapContextRegistry).provide(spec));
     }
 
     perDefinition<Deps extends any[], Src, Seed>(
         spec: ContextValueSpec<DefinitionContext, any, Deps, Src, Seed>,
     ): () => void {
-      return unloader.add(definitionContextRegistry.provide(spec));
+      return unloader.add(() => definitionContextRegistry.provide(spec));
     }
 
     perComponent<Deps extends any[], Src, Seed>(
         spec: ContextValueSpec<ComponentContext, any, Deps, Src, Seed>,
     ): () => void {
-      return unloader.add(componentContextRegistry.provide(spec));
+      return unloader.add(() => componentContextRegistry.provide(spec));
     }
 
     setupDefinition<T extends object>(componentType: ComponentClass<T>): OnEvent<[DefinitionSetup]> {

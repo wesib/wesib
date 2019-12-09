@@ -29,10 +29,10 @@ export function onFeaturedDefSetup(
             return whenReady;
           },
           perDefinition(spec) {
-            return unloader.add(setup.perDefinition(spec));
+            return unloader.add(() => setup.perDefinition(spec));
           },
           perComponent(spec) {
-            return unloader.add(setup.perComponent(spec));
+            return unloader.add(() => setup.perComponent(spec));
           },
         });
       },
