@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>StateSupport | Wesib: Web Components Building Blocks</title>
+	<title>FeatureRef | Wesib: Web Components Building Blocks</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -54,10 +54,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="statesupport.html">StateSupport</a>
+					<a href="featureref.html">FeatureRef</a>
 				</li>
 			</ul>
-			<h1>Class StateSupport</h1>
+			<h1>Class FeatureRef</h1>
 		</div>
 	</div>
 </header>
@@ -67,23 +67,24 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Component state support feature.</p>
+						<p>Dynamically loaded feature reference.</p>
 					</div>
-					<p>When enabled, it registers the following component context values:</p>
-					<ul>
-						<li><a href="../globals.html#stateupdater">StateUpdater</a> that allows to update the component state, and</li>
-						<li><a href="componentstate.html">ComponentState</a> that allows to track component state changes.</li>
-					</ul>
-					<p>Other features would use this to notify when the state changes. E.g. <a href="dompropertiessupport.html">DomPropertiesSupport</a>
-					and <a href="attributessupport.html">AttributesSupport</a> features issue state updates when needed.</p>
+					<p>It is returned from <a href="bootstrapcontext.html#load">BootstrapContext.load</a> and can be used to read feature load status and unload it.</p>
+					<p>Implements an <code>EventKeeper</code> interface by sending a feature load status updates.</p>
 				</div>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">StateSupport</span>
+						<span class="target">FeatureRef</span>
 					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel">
+				<h3>Implements</h3>
+				<ul class="tsd-hierarchy">
+					<li><span class="tsd-signature-type">EventKeeper</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><a href="../interfaces/featurestatus.html" class="tsd-signature-type">FeatureStatus</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -91,30 +92,116 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="featureref.html#down" class="tsd-kind-icon">down</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="featureref.html#read" class="tsd-kind-icon">read</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
 							<h3>Accessors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-static"><a href="statesupport.html#_featuredef__symbol_" class="tsd-kind-icon">[<wbr>Feature<wbr>Def__symbol]</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="featureref.html#_afterevent__symbol_" class="tsd-kind-icon">[<wbr>After<wbr>Event__symbol]</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="featureref.html#dismiss" class="tsd-kind-icon">dismiss</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="down" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> down</h3>
+					<div class="tsd-signature tsd-kind-icon">down<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/e8499aa/src/feature/feature-ref.ts#L32">src/feature/feature-ref.ts:32</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A promise resolved when feature is unloaded.</p>
+						</div>
+						<p>This happens after all feature references dismissed.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="read" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> read</h3>
+					<div class="tsd-signature tsd-kind-icon">read<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">AfterEvent</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><a href="../interfaces/featurestatus.html" class="tsd-signature-type">FeatureStatus</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/e8499aa/src/feature/feature-ref.ts#L21">src/feature/feature-ref.ts:21</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>An <code>AfterEvent</code> sender of feature load status updates.</p>
+						</div>
+						<p>The <code>[AfterEvent__symbol]</code> property is an alias of this one.</p>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Accessors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
-					<a name="_featuredef__symbol_" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> [<wbr>Feature<wbr>Def__symbol]</h3>
-					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> [FeatureDef__symbol]<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/featuredef.html" class="tsd-signature-type">FeatureDef</a></li>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="_afterevent__symbol_" class="tsd-anchor"></a>
+					<h3>[<wbr>After<wbr>Event__symbol]</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> [AfterEvent__symbol]<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">AfterEvent</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><a href="../interfaces/featurestatus.html" class="tsd-signature-type">FeatureStatus</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/e8499aa/src/feature/state/state-support.feature.ts#L46">src/feature/state/state-support.feature.ts:46</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/e8499aa/src/feature/feature-ref.ts#L23">src/feature/feature-ref.ts:23</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <a href="../interfaces/featuredef.html" class="tsd-signature-type">FeatureDef</a></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">AfterEvent</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><a href="../interfaces/featurestatus.html" class="tsd-signature-type">FeatureStatus</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="dismiss" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> dismiss</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">dismiss<span class="tsd-signature-symbol">(</span>reason<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/e8499aa/src/feature/feature-ref.ts#L45">src/feature/feature-ref.ts:45</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Dismisses feature reference.</p>
+								</div>
+								<p>When all feature references dismissed, then unloads the feature. This removes everything set up by the
+								feature via <a href="../interfaces/bootstrapsetup.html">BootstrapSetup</a> and <a href="../interfaces/definitionsetup.html">DefinitionSetup</a>.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> reason: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Arbitrary reason of feature reference dismiss. This will be reported by load status supplies
+										as their cut off reason.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>A promise resolved when feature is unloaded. This happens only after all feature references dismissed.</p>
 						</li>
 					</ul>
 				</section>
@@ -133,10 +220,19 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class">
-						<a href="statesupport.html" class="tsd-kind-icon">State<wbr>Support</a>
+						<a href="featureref.html" class="tsd-kind-icon">Feature<wbr>Ref</a>
 						<ul>
-							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
-								<a href="statesupport.html#_featuredef__symbol_" class="tsd-kind-icon">[<wbr>Feature<wbr>Def__symbol]</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="featureref.html#down" class="tsd-kind-icon">down</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="featureref.html#read" class="tsd-kind-icon">read</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="featureref.html#_afterevent__symbol_" class="tsd-kind-icon">[<wbr>After<wbr>Event__symbol]</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="featureref.html#dismiss" class="tsd-kind-icon">dismiss</a>
 							</li>
 						</ul>
 					</li>

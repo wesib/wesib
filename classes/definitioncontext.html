@@ -109,13 +109,14 @@
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="definitioncontext.html#componenttype" class="tsd-kind-icon">component<wbr>Type</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="definitioncontext.html#elementtype" class="tsd-kind-icon">element<wbr>Type</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="definitioncontext.html#oncomponent" class="tsd-kind-icon">on<wbr>Component</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="definitioncontext.html#whenready" class="tsd-kind-icon">when<wbr>Ready</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Accessors</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="definitioncontext.html#elementdef" class="tsd-kind-icon">element<wbr>Def</a></li>
-								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-static"><a href="definitioncontext.html#__computed" class="tsd-kind-icon">__computed</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-static"><a href="definitioncontext.html#_contextkey__symbol_" class="tsd-kind-icon">[<wbr>Context<wbr>Key__symbol]</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -123,7 +124,6 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="definitioncontext.html#get" class="tsd-kind-icon">get</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="definitioncontext.html#percomponent" class="tsd-kind-icon">per<wbr>Component</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="definitioncontext.html#whenready" class="tsd-kind-icon">when<wbr>Ready</a></li>
 							</ul>
 						</section>
 					</div>
@@ -137,7 +137,7 @@
 					<div class="tsd-signature tsd-kind-icon">component<wbr>Type<span class="tsd-signature-symbol">:</span> <a href="../interfaces/componentclass.html" class="tsd-signature-type">ComponentClass</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/e781a5e/src/component/definition/definition-context.ts#L33">src/component/definition/definition-context.ts:33</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/e8499aa/src/component/definition/definition-context.ts#L33">src/component/definition/definition-context.ts:33</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -152,7 +152,7 @@
 					<div class="tsd-signature tsd-kind-icon">element<wbr>Type<span class="tsd-signature-symbol">:</span> <a href="../interfaces/class.html" class="tsd-signature-type">Class</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/e781a5e/src/component/definition/definition-context.ts#L42">src/component/definition/definition-context.ts:42</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/e8499aa/src/component/definition/definition-context.ts#L42">src/component/definition/definition-context.ts:42</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -167,25 +167,35 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="oncomponent" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> on<wbr>Component</h3>
-					<div class="tsd-signature tsd-kind-icon">on<wbr>Component<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">OnEvent</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><a href="componentcontext.html" class="tsd-signature-type">ComponentContext</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<div class="tsd-signature tsd-kind-icon">on<wbr>Component<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">OnEvent</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><a href="componentcontext.html" class="tsd-signature-type">ComponentContext</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/e781a5e/src/component/definition/definition-context.ts#L60">src/component/definition/definition-context.ts:60</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/e8499aa/src/component/definition/definition-context.ts#L66">src/component/definition/definition-context.ts:66</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Registers component construction listener.</p>
+							<p>An <code>OnEvent</code> sender of component construction events.</p>
 						</div>
-						<p>This listener will be called right before the defined component is constructed.</p>
-						<dl class="tsd-comment-tags">
-							<dt>param</dt>
-							<dd><p>A listener to notify on each defined component construction.</p>
-							</dd>
-							<dt>returns</dt>
-							<dd><p>An event supply.</p>
-							</dd>
-						</dl>
+						<p>The registered receiver will be notified right before the defined component is constructed.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="whenready" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> when<wbr>Ready</h3>
+					<div class="tsd-signature tsd-kind-icon">when<wbr>Ready<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">OnEvent</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">this</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/e8499aa/src/component/definition/definition-context.ts#L52">src/component/definition/definition-context.ts:52</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>An <code>OnEvent</code> sender of component definition readiness event.</p>
+						</div>
+						<p>The custom element class is not constructed until component definition is complete.
+						The registered receiver will be notified when the custom element class is constructed.</p>
+						<p>If the custom element class is constructed already, the receiver will be notified immediately.</p>
 					</div>
 				</section>
 			</section>
@@ -201,7 +211,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/e781a5e/src/component/definition/definition-context.ts#L47">src/component/definition/definition-context.ts:47</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/e8499aa/src/component/definition/definition-context.ts#L57">src/component/definition/definition-context.ts:57</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -214,16 +224,16 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
-					<a name="__computed" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> __computed</h3>
+					<a name="_contextkey__symbol_" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> [<wbr>Context<wbr>Key__symbol]</h3>
 					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> __computed<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ContextKey</span><span class="tsd-signature-symbol">&lt;</span><a href="definitioncontext.html" class="tsd-signature-type">DefinitionContext</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> [ContextKey__symbol]<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ContextKey</span><span class="tsd-signature-symbol">&lt;</span><a href="definitioncontext.html" class="tsd-signature-type">DefinitionContext</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/e781a5e/src/component/definition/definition-context.ts#L26">src/component/definition/definition-context.ts:26</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/e8499aa/src/component/definition/definition-context.ts#L26">src/component/definition/definition-context.ts:26</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -383,99 +393,64 @@
 					<a name="percomponent" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> per<wbr>Component</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">per<wbr>Component&lt;S&gt;<span class="tsd-signature-symbol">(</span>spec<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ContextValueSpec</span><span class="tsd-signature-symbol">&lt;</span><a href="componentcontext.html" class="tsd-signature-type">ComponentContext</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">S</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">per<wbr>Component&lt;Deps, Src, Seed&gt;<span class="tsd-signature-symbol">(</span>spec<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ContextValueSpec</span><span class="tsd-signature-symbol">&lt;</span><a href="componentcontext.html" class="tsd-signature-type">ComponentContext</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Deps</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Src</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Seed</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/e781a5e/src/component/definition/definition-context.ts#L81">src/component/definition/definition-context.ts:81</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/e8499aa/src/component/definition/definition-context.ts#L78">src/component/definition/definition-context.ts:78</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Provides a value available in the context of each component of the defined component type.</p>
 								</div>
-								<dl class="tsd-comment-tags">
-									<dt>typeparam</dt>
-									<dd><p>A type of dependencies.</p>
-									</dd>
-								</dl>
 							</div>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
-									<h4>S</h4>
+									<h4>Deps<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h4>
+									<div class="tsd-comment tsd-typography">
+										<p>A type of dependencies.</p>
+									</div>
+								</li>
+								<li>
+									<h4>Src</h4>
 									<div class="tsd-comment tsd-typography">
 										<p>The type of context value sources.</p>
+									</div>
+								</li>
+								<li>
+									<h4>Seed</h4>
+									<div class="tsd-comment tsd-typography">
+										<p>Value seed type.</p>
 									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>spec: <span class="tsd-signature-type">ContextValueSpec</span><span class="tsd-signature-symbol">&lt;</span><a href="componentcontext.html" class="tsd-signature-type">ComponentContext</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">S</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5>spec: <span class="tsd-signature-type">ContextValueSpec</span><span class="tsd-signature-symbol">&lt;</span><a href="componentcontext.html" class="tsd-signature-type">ComponentContext</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Deps</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Src</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Seed</span><span class="tsd-signature-symbol">&gt;</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Component context value specifier.</p>
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="whenready" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> when<wbr>Ready</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">when<wbr>Ready<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/e781a5e/src/component/definition/definition-context.ts#L72">src/component/definition/definition-context.ts:72</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Registers component definition readiness callback.</p>
-								</div>
-								<p>The custom element class is not constructed yet when <code>DefinitionListener</code> or <code>ComponentDef.define()</code> is called.
-								The registered callback will be notified when the custom element class is constructed.</p>
-								<p>If the custom element class is constructed already, the callback will be notified immediately.</p>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">function</span></h4>
+							<p>A function that removes the given context value specifier when called.</p>
 							<ul class="tsd-parameters">
-								<li>
-									<h5>callback: <span class="tsd-signature-type">function</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>A callback to notify on custom element class construction.</p>
-									</div>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter-siganture">
-											<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
-												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, elementType<span class="tsd-signature-symbol">: </span><a href="../interfaces/class.html" class="tsd-signature-type">Class</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-											</ul>
-											<ul class="tsd-descriptions">
-												<li class="tsd-description">
-													<h4 class="tsd-parameters-title">Parameters</h4>
-													<ul class="tsd-parameters">
-														<li>
-															<h5>this: <span class="tsd-signature-type">void</span></h5>
-														</li>
-														<li>
-															<h5>elementType: <a href="../interfaces/class.html" class="tsd-signature-type">Class</a></h5>
-														</li>
-													</ul>
-													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-												</li>
-											</ul>
+								<li class="tsd-parameter-siganture">
+									<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
+										<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+									</ul>
+									<ul class="tsd-descriptions">
+										<li class="tsd-description">
+											<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 										</li>
 									</ul>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -505,20 +480,20 @@
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="definitioncontext.html#oncomponent" class="tsd-kind-icon">on<wbr>Component</a>
 							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="definitioncontext.html#whenready" class="tsd-kind-icon">when<wbr>Ready</a>
+							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="definitioncontext.html#elementdef" class="tsd-kind-icon">element<wbr>Def</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
-								<a href="definitioncontext.html#__computed" class="tsd-kind-icon">__computed</a>
+								<a href="definitioncontext.html#_contextkey__symbol_" class="tsd-kind-icon">[<wbr>Context<wbr>Key__symbol]</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
 								<a href="definitioncontext.html#get" class="tsd-kind-icon">get</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
 								<a href="definitioncontext.html#percomponent" class="tsd-kind-icon">per<wbr>Component</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="definitioncontext.html#whenready" class="tsd-kind-icon">when<wbr>Ready</a>
 							</li>
 						</ul>
 					</li>

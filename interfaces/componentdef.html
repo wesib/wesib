@@ -103,14 +103,13 @@
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="componentdef.html#extend" class="tsd-kind-icon">extend</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="componentdef.html#feature" class="tsd-kind-icon">feature</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="componentdef.html#name" class="tsd-kind-icon">name</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="componentdef.html#percomponent" class="tsd-kind-icon">per<wbr>Component</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="componentdef.html#set" class="tsd-kind-icon">set</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="componentdef.html#define" class="tsd-kind-icon">define</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="componentdef.html#setup" class="tsd-kind-icon">setup</a></li>
 							</ul>
 						</section>
 					</div>
@@ -124,7 +123,7 @@
 					<div class="tsd-signature tsd-kind-icon">extend<span class="tsd-signature-symbol">:</span> <a href="elementdef.extend.html" class="tsd-signature-type">Extend</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/e781a5e/src/component/component-def.ts#L42">src/component/component-def.ts:42</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/e8499aa/src/component/component-def.ts#L40">src/component/component-def.ts:40</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -139,7 +138,7 @@
 					<div class="tsd-signature tsd-kind-icon">feature<span class="tsd-signature-symbol">:</span> <a href="featuredef.html" class="tsd-signature-type">FeatureDef</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/e781a5e/src/component/component-def.ts#L61">src/component/component-def.ts:61</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/e8499aa/src/component/component-def.ts#L45">src/component/component-def.ts:45</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -154,7 +153,7 @@
 					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">QualifiedName</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/e781a5e/src/component/component-def.ts#L37">src/component/component-def.ts:37</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/e8499aa/src/component/component-def.ts#L35">src/component/component-def.ts:35</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -165,36 +164,6 @@
 						name/namespace tuple.</p>
 						<p>When omitted an anonymous component will be registered. Such component is not bound to custom element, but it
 						still can be mounted.</p>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="percomponent" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> per<wbr>Component</h3>
-					<div class="tsd-signature tsd-kind-icon">per<wbr>Component<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ContextValueSpec</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/componentcontext.html" class="tsd-signature-type">ComponentContext</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">ContextValueSpec</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/componentcontext.html" class="tsd-signature-type">ComponentContext</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/e781a5e/src/component/component-def.ts#L54">src/component/component-def.ts:54</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Component context value(s) to declare per each component construction.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="set" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> set</h3>
-					<div class="tsd-signature tsd-kind-icon">set<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ContextValueSpec</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/definitioncontext.html" class="tsd-signature-type">DefinitionContext</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">ContextValueSpec</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/definitioncontext.html" class="tsd-signature-type">DefinitionContext</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/e781a5e/src/component/component-def.ts#L47">src/component/component-def.ts:47</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Definition context value(s) to declare prior to component class definition.</p>
-						</div>
 					</div>
 				</section>
 			</section>
@@ -210,7 +179,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/e781a5e/src/component/component-def.ts#L71">src/component/component-def.ts:71</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/e8499aa/src/component/component-def.ts#L64">src/component/component-def.ts:64</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -231,6 +200,41 @@
 									<h5>context: <a href="../classes/definitioncontext.html" class="tsd-signature-type">DefinitionContext</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Component definition context.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="setup" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> setup</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">setup<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, setup<span class="tsd-signature-symbol">: </span><a href="definitionsetup.html" class="tsd-signature-type">DefinitionSetup</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/e8499aa/src/component/component-def.ts#L54">src/component/component-def.ts:54</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Sets up component definition.</p>
+								</div>
+								<p>This method is called before component definition context constructed.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>this: <span class="tsd-signature-type">void</span></h5>
+								</li>
+								<li>
+									<h5>setup: <a href="definitionsetup.html" class="tsd-signature-type">DefinitionSetup</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Component definition setup.</p>
 									</div>
 								</li>
 							</ul>
@@ -264,14 +268,11 @@
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="componentdef.html#name" class="tsd-kind-icon">name</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="componentdef.html#percomponent" class="tsd-kind-icon">per<wbr>Component</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="componentdef.html#set" class="tsd-kind-icon">set</a>
-							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
 								<a href="componentdef.html#define" class="tsd-kind-icon">define</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="componentdef.html#setup" class="tsd-kind-icon">setup</a>
 							</li>
 						</ul>
 					</li>
