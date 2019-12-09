@@ -4,7 +4,6 @@ import { Class } from '../../common';
 import { Component, ComponentDef, ComponentDef__symbol } from '../../component';
 import { CustomElements } from '../../component/definition';
 import { FeatureContext, FeatureDef } from '../../feature';
-import { MethodSpy } from '../../spec/mocks';
 import { BootstrapContext } from '../bootstrap-context';
 import { DefaultNamespaceAliaser } from '../globals';
 import { BootstrapContextRegistry, ComponentContextRegistry, DefinitionContextRegistry, ElementBuilder } from '../impl';
@@ -15,7 +14,7 @@ import SpyInstance = jest.SpyInstance;
 
 describe('boot', () => {
 
-  let createBootstrapContextRegistrySpy: MethodSpy<typeof BootstrapContextRegistry, 'create'>;
+  let createBootstrapContextRegistrySpy: SpyInstance<BootstrapContextRegistry, []>;
 
   beforeEach(() => {
     createBootstrapContextRegistrySpy = jest.spyOn(BootstrapContextRegistry, 'create');

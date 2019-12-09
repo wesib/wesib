@@ -11,7 +11,6 @@ import {
   ComponentMount,
 } from '../../component';
 import { ComponentClass, ComponentFactory, DefinitionContext, ElementDef } from '../../component/definition';
-import { ObjectMock } from '../../spec/mocks';
 import { MockElement } from '../../spec/test-element';
 import { BootstrapContext } from '../bootstrap-context';
 import { BootstrapContextRegistry } from './bootstrap-context-registry.impl';
@@ -231,7 +230,7 @@ describe('boot', () => {
         });
       });
 
-      let mockDispatcher: ObjectMock<ComponentEventDispatcher>;
+      let mockDispatcher: Mocked<ComponentEventDispatcher>;
 
       beforeEach(() => {
         mockDispatcher = {
@@ -390,7 +389,7 @@ describe('boot', () => {
 
     describe('mounted element', () => {
 
-      let mockDispatcher: ObjectMock<ComponentEventDispatcher>;
+      let mockDispatcher: Mocked<ComponentEventDispatcher>;
 
       beforeEach(() => {
         mockDispatcher = {

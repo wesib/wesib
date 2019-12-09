@@ -4,19 +4,16 @@ import { BootstrapContext } from '../../boot';
 import { BootstrapWindow, DefaultNamespaceAliaser } from '../../boot/globals';
 import { ComponentFactory__symbol } from '../../boot/impl/component-factory.symbol.impl';
 import { Class } from '../../common';
-import { MethodSpy } from '../../spec/mocks';
 import { ComponentClass } from './component-class';
 import { ComponentFactory } from './component-factory';
 import { CustomElements } from './custom-elements';
+import Mocked = jest.Mocked;
 
 describe('component', () => {
   describe('CustomElements', () => {
 
     let context: BootstrapContext;
-    let mockCustomElements: {
-      define: MethodSpy<CustomElements, 'define'>;
-      whenDefined: MethodSpy<CustomElements, 'whenDefined'>;
-    };
+    let mockCustomElements: Mocked<CustomElements>;
     let customElements: CustomElements;
     let TestComponent: ComponentClass;
     let elementType: Class;
@@ -28,8 +25,8 @@ describe('component', () => {
       mockCustomElements = {
         define: jest.fn(),
         whenDefined: jest.fn(),
-      } as any;
-      const windowSpy: Window = {
+      };
+      const mockWindow: Mocked<BootstrapWindow> = {
         customElements: mockCustomElements,
       } as any;
 
@@ -37,7 +34,7 @@ describe('component', () => {
         get: registry.newValues().get,
       } as any;
 
-      registry.provide({ a: BootstrapWindow, is: windowSpy });
+      registry.provide({ a: BootstrapWindow, is: mockWindow });
       registry.provide({ a: DefaultNamespaceAliaser, by: newNamespaceAliaser });
     });
 

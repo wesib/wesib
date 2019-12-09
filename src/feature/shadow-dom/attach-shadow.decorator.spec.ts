@@ -1,7 +1,6 @@
 import { DomEventDispatcher } from 'fun-events';
 import { Component, ComponentContext, ComponentEventDispatcher, ContentRoot } from '../../component';
 import { ComponentClass } from '../../component/definition';
-import { ObjectMock } from '../../spec/mocks';
 import { MockElement, testElement } from '../../spec/test-element';
 import { FeatureDef } from '../feature-def';
 import { Feature } from '../feature.decorator';
@@ -11,6 +10,7 @@ import { ShadowContentRoot } from './shadow-content-root';
 import { ShadowDomEvent } from './shadow-dom-event';
 import { ShadowDomSupport } from './shadow-dom-support.feature';
 import Mock = jest.Mock;
+import Mocked = jest.Mocked;
 
 describe('feature/shadow-dom', () => {
   describe('@AttachShadow', () => {
@@ -18,7 +18,7 @@ describe('feature/shadow-dom', () => {
     let testComponent: ComponentClass;
     let attachShadowSpy: Mock;
     let shadowRoot: ShadowContentRoot;
-    let mockDispatcher: ObjectMock<ComponentEventDispatcher>;
+    let mockDispatcher: Mocked<ComponentEventDispatcher>;
     let element: any;
     let context: ComponentContext;
 
