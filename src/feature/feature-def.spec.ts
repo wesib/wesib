@@ -51,6 +51,23 @@ describe('feature', () => {
         expect(FeatureDef.of(B))
             .toEqual(FeatureDef.merge(A[FeatureDef__symbol], B[FeatureDef__symbol]));
       });
+      it('merges with super-inherited definition', () => {
+
+        class A {
+          static [FeatureDef__symbol]: FeatureDef = {
+            needs: Feature1,
+          };
+        }
+        class B extends A {}
+        class C extends B {
+          static [FeatureDef__symbol]: FeatureDef = {
+            needs: Feature2,
+          };
+        }
+
+        expect(FeatureDef.of(C))
+            .toEqual(FeatureDef.merge(A[FeatureDef__symbol], C[FeatureDef__symbol]));
+      });
     });
     describe('merge', () => {
       it('merges `needs`', () => {

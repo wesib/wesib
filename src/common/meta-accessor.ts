@@ -16,20 +16,16 @@ export abstract class MetaAccessor<M> {
 
   of(type: Class): M | undefined {
 
-    const def = (type as any)[this.symbol];
-    const superType = superClassOf(type, st => this.symbol in st);
+    const def: M | undefined = type.hasOwnProperty(this.symbol) ? (type as any)[this.symbol] : undefined;
+    const superType = superClassOf(type);
     const superDef = superType && this.of(superType);
 
-    if (!def) {
-      return;
-    }
-
-    return superDef && superDef !== def ? this.merge(superDef, def) : def;
+    return def ? (superDef ? this.merge(superDef, def) : def) : superDef;
   }
 
   define<C extends Class>(type: C, ...defs: M[]): C {
 
-    const prevDef = this.of(type);
+    const prevDef: M | undefined = type.hasOwnProperty(this.symbol) ? (type as any)[this.symbol] : undefined;
     let def: M;
 
     if (prevDef) {
@@ -44,7 +40,8 @@ export abstract class MetaAccessor<M> {
         {
           configurable: true,
           value: def,
-        });
+        },
+    );
 
     return type;
   }
