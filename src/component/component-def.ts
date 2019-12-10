@@ -87,6 +87,7 @@ class ComponentMeta extends MetaAccessor<ComponentDef> {
 }
 
 const meta = /*#__PURE__*/ new ComponentMeta();
+const componentDefined = /*#__PURE__*/ Symbol('component-defined');
 
 /**
  * @category Core
@@ -137,7 +138,6 @@ export const ComponentDef = {
   ): T {
 
     const def = this.merge(...defs);
-    const prevDef = meta.of(type);
 
     meta.define(type, def);
 
@@ -146,17 +146,16 @@ export const ComponentDef = {
     if (feature) {
       FeatureDef.define(type, feature);
     }
-    if (prevDef) {
-      return type; // Define component only once.
-    }
+    FeatureDef.define(type, {
+      init: function (context) {
+        if (context.feature === type && !type.hasOwnProperty(componentDefined)) {
+          Object.defineProperty(type, componentDefined, { value: 1 });
+          context.define(type);
+        }
+      },
+    });
 
-    return FeatureDef.define(
-        type,
-        {
-          init: function (context) {
-            context.define(this);
-          },
-        });
+    return type;
   },
 
 };

@@ -210,6 +210,7 @@ describe('component', () => {
           expect(init).toBeDefined();
 
           const mockFeatureContext: Mocked<FeatureContext> = {
+            feature: componentType,
             define: jest.fn(),
           } as any;
 
@@ -233,6 +234,7 @@ describe('component', () => {
           expect(init).toBeDefined();
 
           const mockFeatureContext: Mocked<FeatureContext> = {
+            feature: extType,
             define: jest.fn(),
           } as any;
 
@@ -246,17 +248,20 @@ describe('component', () => {
           const componentType = ComponentDef.define(
               ComponentDef.define(
                   TestComponent,
-                  {}),
-              { name: 'test-component' });
+                  {},
+              ),
+              { name: 'test-component' },
+          );
           const featureDef = FeatureDef.of(componentType)!;
 
           expect(featureDef).toBeDefined();
 
           const init = featureDef.init!;
 
-          expect(init).toBeDefined();
+          expect(featureDef.init).toBeDefined();
 
           const mockFeatureContext: Mocked<FeatureContext> = {
+            feature: componentType,
             define: jest.fn(),
           } as any;
 
