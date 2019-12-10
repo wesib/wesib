@@ -3,6 +3,7 @@
  */
 import { ContextValueSpec } from 'context-values';
 import { OnEvent } from 'fun-events';
+import { Class } from '../common';
 import { ComponentContext } from '../component';
 import { ComponentClass, DefinitionContext, DefinitionSetup } from '../component/definition';
 import { FeatureContext } from '../feature';
@@ -14,6 +15,11 @@ import { BootstrapContext } from './index';
  * It is passed to [[FeatureDef.setup]] method to set up the bootstrap. E.g. by providing bootstrap context values.
  */
 export interface BootstrapSetup {
+
+  /**
+   * Feature class performing bootstrap setup.
+   */
+  readonly feature: Class;
 
   /**
    * An `OnEvent` sender of component definition events.

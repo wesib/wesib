@@ -23,6 +23,11 @@ export abstract class FeatureContext extends BootstrapContext implements Bootstr
     return FeatureContext_key;
   }
 
+  /**
+   * Feature class this context is created for.
+   */
+  abstract readonly feature: Class;
+
   abstract readonly whenReady: OnEvent<[FeatureContext]>;
 
   abstract readonly onDefinition: OnEvent<[DefinitionContext]>;

@@ -137,7 +137,7 @@ export const ComponentDef = {
   ): T {
 
     const def = this.merge(...defs);
-    const prevDef = meta.own(type);
+    const prevDef = meta.of(type);
 
     meta.define(type, def);
 

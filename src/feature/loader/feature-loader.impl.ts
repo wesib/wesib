@@ -397,6 +397,10 @@ function newFeatureContext(
       componentRegistry = new ComponentRegistry(this);
     }
 
+    get feature() {
+      return loader.request.feature;
+    }
+
     get onDefinition() {
       return onDefinition;
     }

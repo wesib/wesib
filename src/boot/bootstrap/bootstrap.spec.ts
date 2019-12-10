@@ -295,6 +295,26 @@ describe('boot', () => {
       statusReceiver = jest.fn();
     });
 
+    it('configures feature', async () => {
+
+      let setupFeature!: Class;
+      let loadedFeature!: Class;
+
+      await loadFeature(FeatureDef.define(
+          testFeature,
+          {
+            setup(setup) {
+              setupFeature = setup.feature;
+            },
+            init(context) {
+              loadedFeature = context.feature;
+            },
+          },
+      ));
+
+      expect(setupFeature).toBe(testFeature);
+      expect(loadedFeature).toBe(testFeature);
+    });
     it('loads the feature', async () => {
       await loadFeatureStatus();
       expect(statusReceiver).toHaveBeenCalledWith({ feature: testFeature, ready: false });
