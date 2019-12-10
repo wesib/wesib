@@ -63,7 +63,8 @@ class FeatureMeta extends MetaAccessor<FeatureDef> {
           setup: mergeFunctions<[BootstrapSetup], void, Class>(prev.setup, def.setup),
           init: mergeFunctions<[FeatureContext], void, Class>(prev.init, def.init),
         }),
-        {});
+        {},
+    );
   }
 
 }

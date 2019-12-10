@@ -81,7 +81,8 @@ class ComponentMeta extends MetaAccessor<ComponentDef> {
               ? def.feature ? FeatureDef.merge(prev.feature, def.feature) : prev.feature
               : def.feature,
         }),
-        {});
+        {},
+    );
   }
 
 }
