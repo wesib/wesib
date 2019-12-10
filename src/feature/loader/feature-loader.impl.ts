@@ -290,12 +290,10 @@ class SetupFeatureStage extends FeatureStage {
   async setup(): Promise<FeatureStage> {
     await this.perDep(loader => loader.setup());
 
-    const { bsContext, request: { feature, def: { setup } } } = this.loader;
+    const { bsContext, request: { def } } = this.loader;
     const [context, supply] = newFeatureContext(bsContext, this.loader);
 
-    if (setup) {
-      setup.call(feature, context);
-    }
+    def.setup?.(context);
 
     return new InitFeatureStage(
         this.loader,
@@ -331,11 +329,9 @@ class InitFeatureStage extends FeatureStage {
   async init(): Promise<FeatureStage> {
     await this.perDep(loader => loader.init());
 
-    const { request: { feature, def: { init } } } = this.loader;
+    const { request: { def } } = this.loader;
 
-    if (init) {
-      init.call(feature, this._context);
-    }
+    def.init?.(this._context);
 
     return new ActiveFeatureStage(this);
   }

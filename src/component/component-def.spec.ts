@@ -201,20 +201,16 @@ describe('component', () => {
         it('registers the component', () => {
 
           const componentType = ComponentDef.define(TestComponent, { name: 'test-component' });
-          const featureDef = FeatureDef.of(componentType)!;
+          const featureDef = FeatureDef.of(componentType);
 
-          expect(featureDef).toBeDefined();
-
-          const init = featureDef.init!;
-
-          expect(init).toBeDefined();
+          expect(featureDef.init!).toBeDefined();
 
           const mockFeatureContext: Mocked<FeatureContext> = {
             feature: componentType,
             define: jest.fn(),
           } as any;
 
-          init.call(componentType, mockFeatureContext);
+          featureDef.init?.(mockFeatureContext);
 
           expect(mockFeatureContext.define).toHaveBeenCalledWith(componentType);
         });
@@ -225,20 +221,16 @@ describe('component', () => {
           class ExtComponent extends TestComponent {}
 
           const extType = ComponentDef.define(ExtComponent, { name: 'ext-component' });
-          const featureDef = FeatureDef.of(extType)!;
+          const featureDef = FeatureDef.of(extType);
 
-          expect(featureDef).toBeDefined();
-
-          const init = featureDef.init!;
-
-          expect(init).toBeDefined();
+          expect(featureDef.init).toBeDefined();
 
           const mockFeatureContext: Mocked<FeatureContext> = {
             feature: extType,
             define: jest.fn(),
           } as any;
 
-          init.call(extType, mockFeatureContext);
+          featureDef.init?.(mockFeatureContext);
 
           expect(mockFeatureContext.define).toHaveBeenCalledWith(extType);
           expect(mockFeatureContext.define).not.toHaveBeenCalledWith(baseType);
@@ -252,11 +244,7 @@ describe('component', () => {
               ),
               { name: 'test-component' },
           );
-          const featureDef = FeatureDef.of(componentType)!;
-
-          expect(featureDef).toBeDefined();
-
-          const init = featureDef.init!;
+          const featureDef = FeatureDef.of(componentType);
 
           expect(featureDef.init).toBeDefined();
 
@@ -265,7 +253,7 @@ describe('component', () => {
             define: jest.fn(),
           } as any;
 
-          init.call(componentType, mockFeatureContext);
+          featureDef.init?.call(componentType, mockFeatureContext);
 
           expect(mockFeatureContext.define).toHaveBeenCalledWith(componentType);
           expect(mockFeatureContext.define).toHaveBeenCalledTimes(1);

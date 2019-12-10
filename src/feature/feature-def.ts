@@ -36,18 +36,16 @@ export interface FeatureDef {
    *
    * This method is called before bootstrap context created.
    *
-   * @param this  Feature class.
    * @param setup  Bootstrap setup.
    */
-  setup?(this: Class, setup: BootstrapSetup): void;
+  setup?(setup: BootstrapSetup): void;
 
   /**
    * Bootstraps this feature by calling the given bootstrap context constructed.
    *
-   * @param this  Feature class.
    * @param context  Feature initialization context.
    */
-  init?(this: Class, context: FeatureContext): void;
+  init?(context: FeatureContext): void;
 
 }
 

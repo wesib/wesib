@@ -177,9 +177,7 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
             },
           };
 
-          if (def.setup) {
-            def.setup(definitionSetup);
-          }
+          def.setup?.(definitionSetup);
           postDefSetup(componentType).setup(definitionSetup);
         }
 
@@ -193,9 +191,7 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
 
       definitionContext = new DefinitionContext();
 
-      if (def.define) {
-        def.define(definitionContext);
-      }
+      def.define?.(definitionContext);
       definitions.send(definitionContext);
 
       const elementType = createElementType(definitionContext, onComponent, createComponentContextRegistry());
