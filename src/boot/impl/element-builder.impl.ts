@@ -194,7 +194,7 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
       definitionContext = new DefinitionContext();
 
       if (def.define) {
-        def.define.call(componentType, definitionContext);
+        def.define(definitionContext);
       }
       definitions.send(definitionContext);
 

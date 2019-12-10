@@ -2,7 +2,7 @@
  * @module @wesib/wesib
  */
 import { QualifiedName } from 'namespace-aliaser';
-import { Class, mergeFunctions, MetaAccessor } from '../common';
+import { mergeFunctions, MetaAccessor } from '../common';
 import { FeatureDef } from '../feature';
 import { ComponentClass, DefinitionContext, DefinitionSetup, ElementDef } from './definition';
 
@@ -51,17 +51,16 @@ export interface ComponentDef<T extends object = any> {
    *
    * @param setup  Component definition setup.
    */
-  setup?(this: void, setup: DefinitionSetup<T>): void;
+  setup?(setup: DefinitionSetup<T>): void;
 
   /**
    * Defines this component by calling the given component definition context methods.
    *
    * This function is called before the custom element is defined.
    *
-   * @param this  Component class.
    * @param context  Component definition context.
    */
-  define?(this: Class<T>, context: DefinitionContext<T>): void;
+  define?(context: DefinitionContext<T>): void;
 
 }
 
@@ -138,7 +137,7 @@ export const ComponentDef = {
   ): T {
 
     const def = this.merge(...defs);
-    const prevDef = meta.of(type);
+    const prevDef = meta.own(type);
 
     meta.define(type, def);
 

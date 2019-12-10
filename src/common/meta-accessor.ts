@@ -14,25 +14,23 @@ export abstract class MetaAccessor<M> {
     this.symbol = symbol;
   }
 
+  own(type: Class): M | undefined {
+    return type.hasOwnProperty(this.symbol) ? (type as any)[this.symbol] : undefined;
+  }
+
   of(type: Class): M | undefined {
 
-    const def: M | undefined = type.hasOwnProperty(this.symbol) ? (type as any)[this.symbol] : undefined;
+    const ownDef: M | undefined = this.own(type);
     const superType = superClassOf(type);
     const superDef = superType && this.of(superType);
 
-    return def ? (superDef ? this.merge(superDef, def) : def) : superDef;
+    return ownDef ? (superDef ? this.merge(superDef, ownDef) : ownDef) : superDef;
   }
 
   define<C extends Class>(type: C, ...defs: M[]): C {
 
-    const prevDef: M | undefined = type.hasOwnProperty(this.symbol) ? (type as any)[this.symbol] : undefined;
-    let def: M;
-
-    if (prevDef) {
-      def = this.merge(prevDef, ...defs);
-    } else {
-      def = this.merge(...defs);
-    }
+    const prevDef = this.own(type);
+    const def = prevDef ? this.merge(prevDef, ...defs) : this.merge(...defs);
 
     Object.defineProperty(
         type,
