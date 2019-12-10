@@ -19,6 +19,7 @@ import {
   DefinitionContextRegistry,
   ElementBuilder,
   newUnloader,
+  onPostDefSetup,
 } from '../../boot/impl';
 import { ArraySet, Class } from '../../common';
 import { ComponentContext } from '../../component';
@@ -26,7 +27,6 @@ import { ComponentClass, DefinitionContext, DefinitionSetup } from '../../compon
 import { FeatureContext } from '../feature-context';
 import { ComponentRegistry } from './component-registry.impl';
 import { FeatureClause, FeatureRequest } from './feature-request.impl';
-import { onFeaturedDefSetup } from './on-featured-def-setup.impl';
 
 const FeatureKey__symbol = /*#__PURE__*/ Symbol('feature-key');
 
@@ -424,7 +424,7 @@ function newFeatureContext(
     }
 
     setupDefinition<T extends object>(componentType: ComponentClass<T>): OnEvent<[DefinitionSetup]> {
-      return onFeaturedDefSetup(componentType, unloader);
+      return onPostDefSetup(componentType, unloader);
     }
 
     define<T extends object>(componentType: ComponentClass<T>): void {

@@ -12,13 +12,14 @@ import {
 import {
   ComponentClass,
   ComponentFactory as ComponentFactory_,
-  DefinitionContext as DefinitionContext_,
+  DefinitionContext as DefinitionContext_, DefinitionSetup,
   ElementDef,
 } from '../../component/definition';
 import { BootstrapContext } from '../bootstrap-context';
 import { bootstrapDefault } from '../bootstrap-default';
 import { ComponentContextRegistry } from './component-context-registry.impl';
 import { DefinitionContextRegistry } from './definition-context-registry.impl';
+import { postDefSetup } from './post-def-setup.impl';
 
 /**
  * @internal
@@ -148,6 +149,9 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
 
         constructor() {
           super();
+
+          const context = this;
+
           this.whenReady = whenReady.thru(() => this).once;
 
           const definitionContextRegistry =
@@ -158,25 +162,25 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
           this.get = definitionContextRegistry.newValues().get;
           componentContextRegistry_perType = new ComponentContextRegistry(definitionContextRegistry.seedIn(this));
 
+          const definitionSetup: DefinitionSetup<T> = {
+            get componentType() {
+              return componentType;
+            },
+            get whenReady() {
+              return context.whenReady;
+            },
+            perDefinition(spec) {
+              return definitionContextRegistry.provide(spec);
+            },
+            perComponent(spec) {
+              return componentContextRegistry_perType.provide(spec);
+            },
+          };
+
           if (def.setup) {
-
-            const context = this;
-
-            def.setup({
-              get componentType() {
-                return componentType;
-              },
-              get whenReady() {
-                return context.whenReady;
-              },
-              perDefinition(spec) {
-                return definitionContextRegistry.provide(spec);
-              },
-              perComponent(spec) {
-                return componentContextRegistry_perType.provide(spec);
-              },
-            });
+            def.setup(definitionSetup);
           }
+          postDefSetup(componentType).setup(definitionSetup);
         }
 
         perComponent<Deps extends any[], Src, Seed>(

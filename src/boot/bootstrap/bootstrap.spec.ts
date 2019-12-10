@@ -134,6 +134,39 @@ describe('boot', () => {
       await loadFeature(TestFeature);
       expect(receiver).toHaveBeenCalledWith('provided');
     });
+    it('sets up definition context value when component is defined already', async () => {
+
+      @Component({
+        name: 'test-component',
+        define(context) {
+          context.get(key)(receiver);
+        },
+      })
+      class TestComponent {}
+
+      @Feature({
+        setup(setup) {
+          setup.setupDefinition(TestComponent)(defSetup => {
+            defSetup.perDefinition({ a: key, is: 'provided' });
+          });
+        },
+      })
+      class TestFeature {}
+
+      await loadFeature(TestComponent);
+      await bsContext.whenDefined(TestComponent);
+
+      const featureRef = await loadFeature(TestFeature);
+
+      expect(receiver).toHaveBeenCalledWith('provided');
+
+      featureRef.dismiss();
+      await featureRef.down;
+      expect(receiver).toHaveBeenCalledWith('default');
+
+      await loadFeature(TestFeature);
+      expect(receiver).toHaveBeenCalledWith('provided');
+    });
     it('sets up component context value', async () => {
 
       @Component({
