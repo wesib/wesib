@@ -1,7 +1,7 @@
 import Mock = jest.Mock;
 import Mocked = jest.Mocked;
-import { ElementAdapter } from '../../boot/globals';
-import { Component, ComponentMount } from '../../component';
+import { BootstrapRoot, ElementObserver } from '../../boot/globals';
+import { Component } from '../../component';
 import { ComponentFactory } from '../../component/definition';
 import { MockElement, testComponentFactory } from '../../spec/test-element';
 import { Feature } from '../feature.decorator';
@@ -11,8 +11,18 @@ import { AutoConnectSupport } from './auto-connect-support.feature';
 describe('feature/autoconnect', () => {
   describe('ConnectTracker', () => {
 
-    let MockObserver: Mock;
-    let observer: Mocked<MutationObserver>;
+    let root: Element;
+
+    beforeEach(() => {
+      root = document.createElement('test-root');
+      document.body.appendChild(root);
+    });
+    afterEach(() => {
+      root.remove();
+    });
+
+    let newObserver: Mock<ElementObserver, [MutationCallback]>;
+    let observer: Mocked<ElementObserver>;
     let update: (records: Partial<MutationRecord>[]) => void;
 
     beforeEach(() => {
@@ -20,23 +30,16 @@ describe('feature/autoconnect', () => {
         observe: jest.fn(),
         disconnect: jest.fn(),
       } as any;
-      MockObserver = jest.fn((callback: (records: Partial<MutationRecord>[]) => void) => {
-        update = callback;
+      newObserver = jest.fn((callback: MutationCallback) => {
+        update = callback as (records: Partial<MutationRecord>[]) => void;
         return observer;
       });
-      (window as any).MutationObserver = MockObserver;
     });
 
     let element: Element;
 
     beforeEach(() => {
       element = document.createElement('div');
-    });
-
-    let adapter: Mock;
-
-    beforeEach(() => {
-      adapter = jest.fn();
     });
 
     let factory: ComponentFactory;
@@ -46,7 +49,8 @@ describe('feature/autoconnect', () => {
       @Feature({
         needs: AutoConnectSupport,
         setup(setup) {
-          setup.provide({ a: ElementAdapter, is: adapter });
+          setup.provide({ a: ElementObserver, is: newObserver });
+          setup.provide({ a: BootstrapRoot, is: root });
         },
       })
       @Component({
@@ -61,82 +65,59 @@ describe('feature/autoconnect', () => {
     });
 
     it('starts tracking', () => {
-      expect(MockObserver).toHaveBeenCalledWith(update);
-      expect(observer.observe).toHaveBeenCalledWith(document.body, { childList: true, subtree: true });
+      expect(newObserver).toHaveBeenCalledWith(update);
+      expect(observer.observe).toHaveBeenCalledWith(root, { subtree: true });
     });
-    it('connects when element is added to document', async () => {
-
-      const mount = factory.mountTo(element);
-
-      expect(mount.connected).toBe(false);
-
-      document.body.appendChild(element);
+    it('tracks simple element', () => {
+      root.appendChild(element);
       update([{ type: 'childList', addedNodes: [element] as any, removedNodes: [] as any }]);
-
-      expect(mount.connected).toBe(true);
-    });
-    it('consults element adapter', () => {
-      document.body.appendChild(element);
-      update([{ type: 'childList', addedNodes: [element] as any, removedNodes: [] as any }]);
-
-      expect(adapter).toHaveBeenCalledWith(element);
-    });
-    it('adapts added element', () => {
-
-      let mount: ComponentMount = undefined!;
-
-      adapter.mockImplementation((el: any) => {
-        mount = factory.mountTo(el);
-        return mount.context;
-      });
-
-      document.body.appendChild(element);
-      update([{ type: 'childList', addedNodes: [element] as any, removedNodes: [] as any }]);
-
-      expect(adapter).toHaveBeenCalledWith(element);
-      expect(mount.connected).toBe(true);
-    });
-    it('disconnects when element is removed from document', async () => {
-      document.body.appendChild(element);
-
-      const mount = factory.mountTo(element);
-
-      expect(mount.connected).toBe(true);
-
       element.remove();
       update([{ type: 'childList', addedNodes: [] as any, removedNodes: [element] as any }]);
-
-      expect(mount.connected).toBe(false);
     });
     it('tracks existing shadow root', () => {
 
-      const shadowRoot = document.createElement('div');
+      const shadowRoot = element.attachShadow({ mode: 'closed' });
 
-      (element.shadowRoot as any) = shadowRoot;
+      jest.spyOn(element, 'shadowRoot', 'get').mockImplementation(() => shadowRoot);
 
       factory.mountTo(element);
-
-      document.body.appendChild(element);
+      root.appendChild(element);
       update([{ type: 'childList', addedNodes: [element] as any, removedNodes: [] as any }]);
 
-      expect(observer.observe).toHaveBeenCalledWith(shadowRoot, { childList: true, subtree: true });
+      expect(observer.observe).toHaveBeenCalledWith(shadowRoot, { subtree: true });
     });
-    it('tracks attached shadow root', () => {
-      document.body.appendChild(element);
+    it('tracks attached shadow root', async () => {
+      root.appendChild(element);
       factory.mountTo(element);
 
-      const shadowRoot = document.createElement('div');
+      const shadowRoot = element.attachShadow({ mode: 'closed' });
 
-      (element.shadowRoot as any) = shadowRoot;
+      jest.spyOn(element, 'shadowRoot', 'get').mockImplementation(() => shadowRoot);
       element.dispatchEvent(new ShadowDomEvent('wesib:shadowAttached', { bubbles: true }));
 
-      expect(observer.observe).toHaveBeenCalledWith(shadowRoot, { childList: true, subtree: true });
+      expect(observer.observe).toHaveBeenCalledWith(shadowRoot, { subtree: true });
+      expect(observer.observe).toHaveBeenCalledTimes(2);
     });
-    it('stops shadow root tracking on component removal', () => {
-      (element.shadowRoot as any) = document.createElement('div');
+    it('starts shadow root tracking only once', async () => {
+      root.appendChild(element);
       factory.mountTo(element);
 
-      document.body.appendChild(element);
+      const shadowRoot = element.attachShadow({ mode: 'closed' });
+
+      jest.spyOn(element, 'shadowRoot', 'get').mockImplementation(() => shadowRoot);
+      element.dispatchEvent(new ShadowDomEvent('wesib:shadowAttached', { bubbles: true }));
+      element.dispatchEvent(new ShadowDomEvent('wesib:shadowAttached', { bubbles: true }));
+
+      expect(observer.observe).toHaveBeenCalledTimes(2);
+    });
+    it('stops shadow root tracking on component removal', () => {
+
+      const shadowRoot = element.attachShadow({ mode: 'closed' });
+
+      jest.spyOn(element, 'shadowRoot', 'get').mockImplementation(() => shadowRoot);
+      factory.mountTo(element);
+
+      root.appendChild(element);
       update([{ type: 'childList', addedNodes: [element] as any, removedNodes: [] as any }]);
       element.remove();
       update([{ type: 'childList', addedNodes: [] as any, removedNodes: [element] as any }]);
@@ -144,10 +125,13 @@ describe('feature/autoconnect', () => {
       expect(observer.disconnect).toHaveBeenCalled();
     });
     it('stops shadow root tracking only once', () => {
-      (element.shadowRoot as any) = document.createElement('div');
+
+      const shadowRoot = element.attachShadow({ mode: 'closed' });
+
+      jest.spyOn(element, 'shadowRoot', 'get').mockImplementation(() => shadowRoot);
       factory.mountTo(element);
 
-      document.body.appendChild(element);
+      root.appendChild(element);
       update([{ type: 'childList', addedNodes: [element] as any, removedNodes: [] as any }]);
       element.remove();
       update([{ type: 'childList', addedNodes: [] as any, removedNodes: [element] as any }]);

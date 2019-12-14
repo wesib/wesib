@@ -1,9 +1,8 @@
-import { AIterable, overArray } from 'a-iterable';
+import { filterIt, itsEach, overArray } from 'a-iterable';
 import { ContextKey, ContextKey__symbol, SingleContextKey } from 'context-values';
 import { DomEventDispatcher, noEventSupply } from 'fun-events';
 import { BootstrapContext } from '../../boot';
-import { BootstrapRoot, BootstrapWindow, ElementAdapter } from '../../boot/globals';
-import { ComponentMount } from '../../component';
+import { BootstrapRoot, ElementObserver } from '../../boot/globals';
 import { ShadowDomEvent } from '../shadow-dom';
 
 const shadowConnectTracker__symbol = /*#__PURE__*/ Symbol('shadow-connect-tracker');
@@ -19,7 +18,7 @@ export class ConnectTracker {
   }
 
   private _supply = noEventSupply();
-  private _observer!: MutationObserver;
+  private _observer!: ElementObserver;
 
   constructor(private readonly _context: BootstrapContext) {
   }
@@ -27,46 +26,32 @@ export class ConnectTracker {
   track(root: Node = this._context.get(BootstrapRoot)) {
 
     const { _context } = this;
-    const adapter = _context.get(ElementAdapter);
 
     this._supply = new DomEventDispatcher(root)
         .on<ShadowDomEvent>('wesib:shadowAttached')(event => trackShadow(event.shadowRoot));
 
-    const Observer = this._context.get(BootstrapWindow).MutationObserver;
-    const observer = this._observer = new Observer(records => updateConnections(records));
+    const newObserver = this._context.get(ElementObserver);
+    const observer = this._observer = newObserver(records => updateConnections(records));
 
-    observer.observe(root, { childList: true, subtree: true });
+    observer.observe(root, { subtree: true });
 
     function updateConnections(records: MutationRecord[]) {
       records.forEach(record => {
-        AIterable.from(overArray(record.removedNodes))
-            .filter<Element>(isElement)
-            .map(element => {
-              untrackNested(element);
-              return mountOf(element);
-            })
-            .filter<ComponentMount>(isPresent)
-            .forEach(mount => {
-              mount.connected = false;
-            });
-        AIterable.from(overArray(record.addedNodes))
-            .filter<Element>(isElement)
-            .map(element => {
-              trackNested(element);
-              return mountOf(element);
-            })
-            .filter<ComponentMount>(isPresent)
-            .forEach(mount => {
-              mount.connected = true;
-            });
+        itsEach(
+            filterIt<Node, Element>(
+                overArray(record.removedNodes),
+                isElement,
+            ),
+            untrackNested,
+        );
+        itsEach(
+            filterIt<Node, Element>(
+                overArray(record.addedNodes),
+                isElement,
+            ),
+            trackNested,
+        );
       });
-    }
-
-    function mountOf(element: Element): ComponentMount | undefined {
-
-      const context = adapter(element);
-
-      return context && context.mount;
     }
 
     function trackNested(element: Element) {
@@ -102,10 +87,6 @@ export class ConnectTracker {
 
 function isElement(node: Node): node is Element {
   return node.nodeType === Node.ELEMENT_NODE;
-}
-
-function isPresent<T>(value: T | undefined): value is T {
-  return value != null;
 }
 
 function untrackNested(element: Element) {
