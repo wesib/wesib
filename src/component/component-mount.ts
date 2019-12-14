@@ -8,9 +8,10 @@ import { ComponentContext } from './component-context';
  *
  * This is constructed when a component is mounted to arbitrary element by [[ComponentFactory.mountTo]] method.
  *
- * Mounted components do not maintain their connection status automatically. It is a calling code responsibility to set
- * their connection status by updating [[ComponentMount.connected]] property. E.g. by periodically calling a
- * [[ComponentMount.checkConnected]] method, or by using an [[AutoConnectSupport]] feature.
+ * Mounted components do not maintain their connection state automatically. It is a calling code responsibility to set
+ * their connection state by updating [[ComponentMount.connected]] property. E.g. by calling a
+ * [[ComponentMount.checkConnected]] method. An [[ElementObserver]] and [[AutoConnectSupport]] feature could be used to
+ * do it automatically.
  *
  * @category Core
  * @typeparam T  A type of component.
