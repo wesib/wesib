@@ -3,6 +3,7 @@
  */
 import { filterIt, itsEach, overArray } from 'a-iterable';
 import { ContextKey__symbol, ContextUpKey, FnContextKey } from 'context-values';
+import { isElement } from '../../common';
 import { ComponentContext__symbol, ComponentMount } from '../../component';
 import { bootstrapDefault } from '../bootstrap-default';
 import { ElementAdapter } from './element-adapter';
@@ -90,10 +91,6 @@ export interface ElementObserverInit extends MutationObserverInit {
    */
   childList?: true;
 
-}
-
-function isElement(node: Node): node is Element {
-  return node.nodeType === Node.ELEMENT_NODE;
 }
 
 function mountOf(node: any): ComponentMount | undefined {

@@ -3,6 +3,7 @@ import { ContextKey, ContextKey__symbol, SingleContextKey } from 'context-values
 import { DomEventDispatcher, noEventSupply } from 'fun-events';
 import { BootstrapContext } from '../../boot';
 import { BootstrapRoot, ElementObserver } from '../../boot/globals';
+import { isElement } from '../../common';
 import { ShadowDomEvent } from '../shadow-dom';
 
 const shadowConnectTracker__symbol = /*#__PURE__*/ Symbol('shadow-connect-tracker');
@@ -83,10 +84,6 @@ export class ConnectTracker {
     this._supply = noEventSupply();
   }
 
-}
-
-function isElement(node: Node): node is Element {
-  return node.nodeType === Node.ELEMENT_NODE;
 }
 
 function untrackNested(element: Element) {
