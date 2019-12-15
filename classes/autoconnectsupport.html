@@ -71,8 +71,10 @@
 					</div>
 					<p>By default, a mounted component connection state is not tracked automatically. So, a
 					<a href="componentmount.html#checkconnected">ComponentMount.checkConnected</a> should be called to update it.</p>
-					<p>This feature tracks the DOM tree manipulation within <a href="../globals.html#bootstraproot">BootstrapRoot</a> and updates the mounted component connection
-					when its element is added or removed from the document.</p>
+					<p>This feature tracks the DOM tree manipulations within <a href="../globals.html#bootstraproot">BootstrapRoot</a> with <a href="../interfaces/elementobserver.html">ElementObserver</a>. The latter updates
+					the mounted component connection when its element is added or removed from the document.</p>
+					<p>Tracks mounted components connection state within shadow root if shadow root attachment is reported by
+					<a href="shadowdomevent.html">wesib:shadowAttached</a> event.</p>
 				</div>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
@@ -108,7 +110,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/e8499aa/src/feature/autoconnect/auto-connect-support.feature.ts#L29">src/feature/autoconnect/auto-connect-support.feature.ts:29</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/6393ae7/src/feature/autoconnect/auto-connect-support.feature.ts#L32">src/feature/autoconnect/auto-connect-support.feature.ts:32</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/featuredef.html" class="tsd-signature-type">FeatureDef</a></h4>
