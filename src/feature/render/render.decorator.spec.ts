@@ -1,7 +1,7 @@
 import { Component, ComponentContext } from '../../component';
 import { ComponentClass, CustomElements, DefinitionContext } from '../../component/definition';
 import { MockElement, testElement } from '../../spec/test-element';
-import { DomProperty } from '../dom-properties';
+import { DomProperty, domPropertyPathTo } from '../dom-properties';
 import { FeatureDef } from '../feature-def';
 import { Feature } from '../feature.decorator';
 import { StateSupport } from '../state';
@@ -18,12 +18,14 @@ describe('feature/render', () => {
     let mockRender: Mock;
     let mockOfflineRender: Mock;
     let mockDelegateRender: Mock;
+    let mockPartRender: Mock;
     let definitionContext: DefinitionContext<object>;
 
     beforeEach(() => {
       mockRender = jest.fn();
       mockOfflineRender = jest.fn();
       mockDelegateRender = jest.fn();
+      mockPartRender = jest.fn();
 
       @Component({
         name: 'test-component',
@@ -42,8 +44,14 @@ describe('feature/render', () => {
         @Render({ offline: true })
         readonly offlineRender = mockOfflineRender;
 
+        @Render({ path: domPropertyPathTo('property2') })
+        readonly partRender = mockPartRender;
+
         @DomProperty()
         property = 'value';
+
+        @DomProperty()
+        property2 = 'value';
 
         @Render({ offline: true })
         nestRender() {
@@ -122,6 +130,14 @@ describe('feature/render', () => {
       it('is scheduled on state update', () => {
         component.property = 'other';
         expect(mockRender).toHaveBeenCalled();
+      });
+      it('is scheduled on state part update', () => {
+        component.property2 = 'other';
+        expect(mockPartRender).toHaveBeenCalled();
+      });
+      it('is scheduled on another state part update', () => {
+        component.property = 'other';
+        expect(mockPartRender).not.toHaveBeenCalled();
       });
       it('is not scheduled on state update while offline', () => {
         connected = false;

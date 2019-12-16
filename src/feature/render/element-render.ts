@@ -38,12 +38,12 @@ export const ElementRender = {
       context: ComponentContext,
       render: ElementRender,
       def: RenderDef = {},
-  ) {
+  ): void {
 
-    const stateTracker = context.get(ComponentState);
+    const { offline, path = [] } = def;
+    const stateTracker = context.get(ComponentState).track(path);
     const schedule = context.get(RenderScheduler).newSchedule();
 
-    const { offline } = def;
     let rendered = false;
     const stateSupply = stateTracker.onUpdate(() => {
       if (offline || context.connected) {
