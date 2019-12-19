@@ -141,22 +141,33 @@ export const ComponentDef = {
     const def = this.merge(...defs);
 
     meta.define(type, def);
+    FeatureDef.define(type, ComponentDef.featureDef(type, def));
 
-    const { feature } = def;
+    return type;
+  },
 
-    if (feature) {
-      FeatureDef.define(type, feature);
-    }
-    FeatureDef.define(type, {
-      init: function (context) {
+  /**
+   * Builds feature definition for the given component definition.
+   *
+   * @param type  Target component type.
+   * @param def  Component definition.
+   *
+   * @returns New feature definition that defines the component and performs definitions from [[ComponentDef.feature]]
+   * property.
+   */
+  featureDef<T extends object>(type: ComponentClass<T>, def: ComponentDef<T>): FeatureDef {
+
+    const registrar: FeatureDef = {
+      init(context) {
         if (context.feature === type && !type.hasOwnProperty(componentDefined)) {
           Object.defineProperty(type, componentDefined, { value: 1 });
           context.define(type);
         }
       },
-    });
+    };
+    const { feature } = def;
 
-    return type;
+    return feature ? FeatureDef.merge(feature, registrar) : registrar;
   },
 
 };
