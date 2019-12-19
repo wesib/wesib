@@ -83,7 +83,7 @@ export const FeatureDef = {
    *
    * @returns A feature definition. May be empty when there is no feature definition found in the given `featureType`.
    */
-  of(featureType: Class): FeatureDef {
+  of(this: void, featureType: Class): FeatureDef {
     return meta.of(featureType) || {};
   },
 
@@ -94,7 +94,7 @@ export const FeatureDef = {
    *
    * @returns Merged feature definition.
    */
-  merge(...defs: readonly FeatureDef[]): FeatureDef {
+  merge(this: void, ...defs: readonly FeatureDef[]): FeatureDef {
     return meta.merge(...defs);
   },
 
@@ -109,7 +109,7 @@ export const FeatureDef = {
    *
    * @returns The `type` instance.
    */
-  define<T extends Class>(type: T, ...defs: readonly FeatureDef[]): T {
+  define<T extends Class>(this: void, type: T, ...defs: readonly FeatureDef[]): T {
     return meta.define(type, ...defs);
   },
 
