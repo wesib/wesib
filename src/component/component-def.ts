@@ -103,7 +103,7 @@ export const ComponentDef = {
    *
    * @returns Component definition. May be empty if there is not definition attached to component type.
    */
-  of<T extends object>(componentType: ComponentClass<T>): ComponentDef<T> {
+  of<T extends object>(this: void, componentType: ComponentClass<T>): ComponentDef<T> {
     return meta.of(componentType) as ComponentDef<T> || {};
   },
 
@@ -115,7 +115,7 @@ export const ComponentDef = {
    *
    * @returns Merged component definition.
    */
-  merge<T extends object>(...defs: ComponentDef<T>[]): ComponentDef<T> {
+  merge<T extends object>(this: void, ...defs: ComponentDef<T>[]): ComponentDef<T> {
     return meta.merge(...defs);
   },
 
@@ -134,11 +134,12 @@ export const ComponentDef = {
    * @returns The `type` instance.
    */
   define<T extends ComponentClass>(
+      this: void,
       type: T,
       ...defs: ComponentDef<InstanceType<T>>[]
   ): T {
 
-    const def = this.merge(...defs);
+    const def = ComponentDef.merge(...defs);
 
     meta.define(type, def);
     FeatureDef.define(type, ComponentDef.featureDef(type, def));
@@ -155,7 +156,7 @@ export const ComponentDef = {
    * @returns New feature definition that defines the component and performs definitions from [[ComponentDef.feature]]
    * property.
    */
-  featureDef<T extends object>(type: ComponentClass<T>, def: ComponentDef<T>): FeatureDef {
+  featureDef<T extends object>(this: void, type: ComponentClass<T>, def: ComponentDef<T>): FeatureDef {
 
     const registrar: FeatureDef = {
       init(context) {
