@@ -35,6 +35,7 @@ export const ElementRender = {
    * @param def  Optional element render definition.
    */
   render(
+      this: void,
       context: ComponentContext,
       render: ElementRender,
       def: RenderDef = {},
