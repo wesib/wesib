@@ -24,7 +24,7 @@ import { AttributesSupport } from './attributes-support.feature';
  * class MyComponent {
  *
  *   @AttributeChanged('my-attribute')
- *   void myAttributeChanged(newValue: string, oldValue: string | null) {
+ *   myAttributeChanged(newValue: string, oldValue: string | null) {
  *     console.log(`my-attribute value changed from ${oldValue} to ${newValue}`);
  *   }
  *
