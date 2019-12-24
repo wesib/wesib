@@ -87,6 +87,7 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="renderdef.html#offline" class="tsd-kind-icon">offline</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="renderdef.html#path" class="tsd-kind-icon">path</a></li>
 							</ul>
 						</section>
 					</div>
@@ -100,7 +101,7 @@
 					<div class="tsd-signature tsd-kind-icon">offline<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/6393ae7/src/feature/render/render-def.ts#L19">src/feature/render/render-def.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/91d4ee0/src/feature/render/render-def.ts#L21">src/feature/render/render-def.ts:21</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -110,6 +111,24 @@
 						<p>When offline rendering is disabled the rendering will be scheduled whenever element is connected.</p>
 						<p><code>false</code> by default. Which means the element contents won&#39;t be rendered while disconnected. Rendering will
 						be initiated once element is connected for the first time, or if it is connected after state update.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="path" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> path</h3>
+					<div class="tsd-signature tsd-kind-icon">path<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">StatePath</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/91d4ee0/src/feature/render/render-def.ts#L31">src/feature/render/render-def.ts:31</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A path to component state part the render should track.</p>
+						</div>
+						<p>The rendering would trigger only when the target state part is updated. This can be useful e.g. when component has
+						multiple independent sub-views.</p>
+						<p>The full component state is tracked when this property is omitted.</p>
 					</div>
 				</section>
 			</section>
@@ -131,6 +150,9 @@
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="renderdef.html#offline" class="tsd-kind-icon">offline</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="renderdef.html#path" class="tsd-kind-icon">path</a>
 							</li>
 						</ul>
 					</li>
