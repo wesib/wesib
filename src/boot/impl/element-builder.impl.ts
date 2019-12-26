@@ -33,12 +33,12 @@ export interface ElementBuilder {
 /**
  * @internal
  */
-export const ElementBuilder: SingleContextRef<ElementBuilder> = /*#__PURE__*/ new SingleContextKey<ElementBuilder>(
+export const ElementBuilder: SingleContextRef<ElementBuilder> = (/*#__PURE__*/ new SingleContextKey<ElementBuilder>(
     'element-builder',
     {
       byDefault: bootstrapDefault(newElementBuilder),
     },
-);
+));
 
 function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
 
@@ -416,7 +416,7 @@ const enum ComponentStatus {
   On,
 }
 
-const ComponentStatus__symbol = /*#__PURE__*/ Symbol('component-status');
+const ComponentStatus__symbol = (/*#__PURE__*/ Symbol('component-status'));
 
 function elementStatus(element: any): ValueTracker<ComponentStatus> {
   return element[ComponentStatus__symbol];

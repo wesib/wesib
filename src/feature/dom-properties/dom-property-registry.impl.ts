@@ -2,7 +2,7 @@ import { ContextKey, ContextKey__symbol, SingleContextKey } from 'context-values
 import { Class } from '../../common';
 import { ComponentMount } from '../../component';
 
-const DomPropertyRegistry__key = /*#__PURE__*/ new SingleContextKey<DomPropertyRegistry>('dom-property-registry');
+const DomPropertyRegistry__key = (/*#__PURE__*/ new SingleContextKey<DomPropertyRegistry>('dom-property-registry'));
 
 /**
  * @internal

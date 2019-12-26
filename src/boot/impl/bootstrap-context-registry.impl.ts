@@ -2,7 +2,7 @@ import { ContextKey, ContextKey__symbol, ContextRegistry, ContextValues, SingleC
 import { BootstrapContext } from '../bootstrap-context';
 
 const BootstrapContextRegistry__key =
-    /*#__PURE__*/ new SingleContextKey<BootstrapContextRegistry>('bootstrap-context-registry');
+    (/*#__PURE__*/ new SingleContextKey<BootstrapContextRegistry>('bootstrap-context-registry'));
 
 /**
  * @internal

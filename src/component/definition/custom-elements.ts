@@ -8,12 +8,12 @@ import { componentFactoryOf } from '../../boot/impl/component-factory.symbol.imp
 import { Class, PromiseResolver } from '../../common';
 import { ComponentClass } from './component-class';
 
-const CustomElements__key = /*#__PURE__*/ new SingleContextKey<CustomElements>(
+const CustomElements__key = (/*#__PURE__*/ new SingleContextKey<CustomElements>(
     'custom-elements',
     {
       byDefault: createCustomElements,
     },
-);
+));
 
 /**
  * Custom elements registry.
@@ -113,7 +113,7 @@ function createCustomElements(values: ContextValues) {
   return new WindowCustomElements();
 }
 
-const ComponentResolver__symbol = /*#__PURE__*/ Symbol('component-resolver');
+const ComponentResolver__symbol = (/*#__PURE__*/ Symbol('component-resolver'));
 
 function componentResolver(componentType: ComponentClass): PromiseResolver<void> {
   return (componentType as any)[ComponentResolver__symbol]

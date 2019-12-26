@@ -39,7 +39,7 @@ export interface ElementDef {
  * Target value defaults to `HTMLElement` from the window provided under `[BootstrapWindow.key]`,
  * unless `ComponentDef.extend.type` is specified.
  */
-export const ElementDef: SingleContextRef<ElementDef> = /*#__PURE__*/ new SingleContextKey<ElementDef>(
+export const ElementDef: SingleContextRef<ElementDef> = (/*#__PURE__*/ new SingleContextKey<ElementDef>(
     'element-def',
     {
       byDefault(values) {
@@ -66,7 +66,7 @@ export const ElementDef: SingleContextRef<ElementDef> = /*#__PURE__*/ new Single
         };
       },
     },
-);
+));
 
 /**
  * @category Core

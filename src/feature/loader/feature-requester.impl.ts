@@ -4,12 +4,12 @@ import { BootstrapContextRegistry } from '../../boot/impl';
 import { Class } from '../../common';
 import { FeatureNeedClause, FeatureRequest } from './feature-request.impl';
 
-const FeatureRequester__key = /*#__PURE__*/ new SingleContextKey<FeatureRequester>(
+const FeatureRequester__key = (/*#__PURE__*/ new SingleContextKey<FeatureRequester>(
     'feature-requester',
     {
       byDefault: bootstrapDefault(context => new FeatureRequester(context)),
     },
-);
+));
 
 /**
  * @internal

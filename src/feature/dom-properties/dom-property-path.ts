@@ -8,7 +8,7 @@
  *
  * @category Feature
  */
-export const DomPropertyPath__root = /*#__PURE__*/ Symbol('dom-property');
+export const DomPropertyPath__root = (/*#__PURE__*/ Symbol('dom-property'));
 
 /**
  * A path to the named DOM property state.

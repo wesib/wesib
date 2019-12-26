@@ -7,7 +7,7 @@ import { ComponentMount } from '../component-mount';
 import { ComponentClass } from './component-class';
 import { ElementDef } from './element-def';
 
-const ComponentFactory__key = /*#__PURE__*/ new SingleContextKey<ComponentFactory>('component-factory');
+const ComponentFactory__key = (/*#__PURE__*/ new SingleContextKey<ComponentFactory>('component-factory'));
 
 /**
  * A factory of components of particular type.

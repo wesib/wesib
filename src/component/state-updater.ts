@@ -29,9 +29,9 @@ export type StateUpdater =
  *
  * @category Core
  */
-export const StateUpdater: FnContextRef<Parameters<StateUpdater>> = /*#__PURE__*/ new FnContextKey(
+export const StateUpdater: FnContextRef<Parameters<StateUpdater>> = (/*#__PURE__*/ new FnContextKey(
     'state-updater',
     {
       byDefault: valueProvider(noop),
     },
-);
+));

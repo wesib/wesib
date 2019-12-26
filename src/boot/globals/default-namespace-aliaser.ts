@@ -19,4 +19,4 @@ export type DefaultNamespaceAliaser = NamespaceAliaser;
  * @category Core
  */
 export const DefaultNamespaceAliaser: SingleContextRef<DefaultNamespaceAliaser> =
-    /*#__PURE__*/ new SingleContextKey<DefaultNamespaceAliaser>('default-namespace-aliaser');
+    (/*#__PURE__*/ new SingleContextKey<DefaultNamespaceAliaser>('default-namespace-aliaser'));

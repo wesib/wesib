@@ -82,4 +82,4 @@ export interface ComponentEventDispatcher {
  * @category Core
  */
 export const ComponentEventDispatcher: SingleContextRef<ComponentEventDispatcher> =
-    /*#__PURE__*/ ComponentEventDispatcher__key;
+    (/*#__PURE__*/ ComponentEventDispatcher__key);

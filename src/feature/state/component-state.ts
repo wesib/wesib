@@ -4,7 +4,7 @@
 import { ContextKey, ContextKey__symbol, SingleContextKey } from 'context-values';
 import { StateTracker } from 'fun-events';
 
-const ComponentState__key = /*#__PURE__*/ new SingleContextKey<ComponentState>('component-state');
+const ComponentState__key = (/*#__PURE__*/ new SingleContextKey<ComponentState>('component-state'));
 
 /**
  * Component state tracker.

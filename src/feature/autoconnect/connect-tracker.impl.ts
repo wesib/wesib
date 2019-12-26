@@ -6,8 +6,8 @@ import { BootstrapRoot, ElementObserver } from '../../boot/globals';
 import { isElement } from '../../common';
 import { ShadowDomEvent } from '../shadow-dom';
 
-const shadowConnectTracker__symbol = /*#__PURE__*/ Symbol('shadow-connect-tracker');
-const ConnectTracker__key = /*#__PURE__*/ new SingleContextKey<ConnectTracker>('connect-tracker');
+const shadowConnectTracker__symbol = (/*#__PURE__*/ Symbol('shadow-connect-tracker'));
+const ConnectTracker__key = (/*#__PURE__*/ new SingleContextKey<ConnectTracker>('connect-tracker'));
 
 /**
  * @internal

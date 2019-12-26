@@ -11,7 +11,7 @@ import { ComponentClass, DefinitionContext, DefinitionSetup, ElementDef } from '
  *
  * @category Core
  */
-export const ComponentDef__symbol = /*#__PURE__*/ Symbol('component-def');
+export const ComponentDef__symbol = (/*#__PURE__*/ Symbol('component-def'));
 
 /**
  * Component definition.
@@ -87,8 +87,8 @@ class ComponentMeta extends MetaAccessor<ComponentDef> {
 
 }
 
-const meta = /*#__PURE__*/ new ComponentMeta();
-const componentDefined = /*#__PURE__*/ Symbol('component-defined');
+const meta = (/*#__PURE__*/ new ComponentMeta());
+const componentDefined = (/*#__PURE__*/ Symbol('component-defined'));
 
 /**
  * @category Core

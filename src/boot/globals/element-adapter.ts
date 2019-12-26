@@ -61,4 +61,4 @@ class ElementAdapterKey extends ContextUpKey<ElementAdapter, ElementAdapter> {
  *
  * @category Core
  */
-export const ElementAdapter: ContextUpRef<ElementAdapter, ElementAdapter> = /*#__PURE__*/ new ElementAdapterKey();
+export const ElementAdapter: ContextUpRef<ElementAdapter, ElementAdapter> = (/*#__PURE__*/ new ElementAdapterKey());

@@ -3,7 +3,7 @@ import { ComponentClass, ComponentFactory } from '../../component/definition';
 /**
  * @internal
  */
-export const ComponentFactory__symbol = /*#__PURE__*/ Symbol('component-factory');
+export const ComponentFactory__symbol = (/*#__PURE__*/ Symbol('component-factory'));
 
 /**
  * @internal

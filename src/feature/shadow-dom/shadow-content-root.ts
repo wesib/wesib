@@ -18,4 +18,4 @@ export type ShadowContentRoot = ShadowRoot;
  * @category Feature
  */
 export const ShadowContentRoot: SingleContextRef<ShadowContentRoot> =
-    /*#__PURE__*/ new SingleContextKey<ShadowContentRoot>('shadow-content-root');
+    (/*#__PURE__*/ new SingleContextKey<ShadowContentRoot>('shadow-content-root'));

@@ -10,7 +10,7 @@ import { FeatureContext } from './feature-context';
  *
  * @category Core
  */
-export const FeatureDef__symbol = /*#__PURE__*/ Symbol('feature-def');
+export const FeatureDef__symbol = (/*#__PURE__*/ Symbol('feature-def'));
 
 /**
  * Feature definition.
@@ -69,7 +69,7 @@ class FeatureMeta extends MetaAccessor<FeatureDef> {
 
 }
 
-const meta = /*#__PURE__*/ new FeatureMeta();
+const meta = (/*#__PURE__*/ new FeatureMeta());
 
 /**
  * @category Core

@@ -18,11 +18,11 @@ export type BootstrapRoot = any;
  *
  * @category Core
  */
-export const BootstrapRoot: SingleContextRef<BootstrapRoot> = /*#__PURE__*/ new SingleContextKey(
+export const BootstrapRoot: SingleContextRef<BootstrapRoot> = (/*#__PURE__*/ new SingleContextKey(
     'bootstrap-root',
     {
       byDefault(ctx) {
         return ctx.get(BootstrapWindow).document.body;
       },
     },
-);
+));

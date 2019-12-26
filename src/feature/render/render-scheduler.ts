@@ -3,7 +3,7 @@
  */
 import { ContextKey, ContextKey__symbol, SingleContextKey } from 'context-values';
 
-const RenderScheduler__key = /*#__PURE__*/ new SingleContextKey<RenderScheduler>('render-scheduler');
+const RenderScheduler__key = (/*#__PURE__*/ new SingleContextKey<RenderScheduler>('render-scheduler'));
 
 /**
  * Rendering scheduler.

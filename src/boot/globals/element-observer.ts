@@ -37,7 +37,7 @@ export interface ElementObserver extends MutationObserver {
 /**
  * A key of bootstrap context value containing a function constructing a new [[ElementObserver]] instance.
  */
-export const ElementObserver: FnContextKey<[MutationCallback], ElementObserver> = /*#__PURE__*/ new FnContextKey(
+export const ElementObserver: FnContextKey<[MutationCallback], ElementObserver> = (/*#__PURE__*/ new FnContextKey(
     'element-observer',
     {
       byDefault: bootstrapDefault(bsContext => {
@@ -73,7 +73,7 @@ export const ElementObserver: FnContextKey<[MutationCallback], ElementObserver> 
         return callback => new DefaultElementObserver(callback);
       }),
     },
-);
+));
 
 /**
  * Element observer initialization options.

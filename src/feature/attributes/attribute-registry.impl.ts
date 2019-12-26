@@ -5,7 +5,7 @@ import { ComponentContext, ComponentMount } from '../../component';
 import { DefinitionContext } from '../../component/definition';
 import { AttributeChangedCallback } from './attribute-registrar';
 
-const AttributeRegistry__key = /*#__PURE__*/ new SingleContextKey<AttributeRegistry>('attribute-registry');
+const AttributeRegistry__key = (/*#__PURE__*/ new SingleContextKey<AttributeRegistry>('attribute-registry'));
 
 /**
  * @internal

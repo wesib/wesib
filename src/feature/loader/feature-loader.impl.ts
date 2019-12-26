@@ -28,7 +28,7 @@ import { FeatureContext } from '../feature-context';
 import { ComponentRegistry } from './component-registry.impl';
 import { FeatureClause, FeatureRequest } from './feature-request.impl';
 
-const FeatureKey__symbol = /*#__PURE__*/ Symbol('feature-key');
+const FeatureKey__symbol = (/*#__PURE__*/ Symbol('feature-key'));
 
 /**
  * @internal

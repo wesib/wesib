@@ -18,11 +18,11 @@ export type ContentRoot = ParentNode;
  *
  * @category Core
  */
-export const ContentRoot: SingleContextRef<ContentRoot> = /*#__PURE__*/ new SingleContextKey<ContentRoot>(
+export const ContentRoot: SingleContextRef<ContentRoot> = (/*#__PURE__*/ new SingleContextKey<ContentRoot>(
     'content-root',
     {
       byDefault(ctx) {
         return ctx.get(ComponentContext__key).element;
       },
     },
-);
+));

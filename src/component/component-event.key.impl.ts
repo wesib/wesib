@@ -6,7 +6,7 @@ import { ComponentEventDispatcher } from './component-event';
 /**
  * @internal
  */
-export const ComponentEventDispatcher__key = /*#__PURE__*/ new SingleContextKey<ComponentEventDispatcher>(
+export const ComponentEventDispatcher__key = (/*#__PURE__*/ new SingleContextKey<ComponentEventDispatcher>(
     'component-event-dispatcher',
     {
       byDefault() {
@@ -23,4 +23,4 @@ export const ComponentEventDispatcher__key = /*#__PURE__*/ new SingleContextKey<
         };
       },
     },
-);
+));
