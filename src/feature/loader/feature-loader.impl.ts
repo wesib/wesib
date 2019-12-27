@@ -36,10 +36,9 @@ const FeatureKey__symbol = (/*#__PURE__*/ Symbol('feature-key'));
 export class FeatureKey extends ContextUpKey<AfterEvent<[FeatureLoader?]>, FeatureClause> {
 
   static of(feature: Class): FeatureKey {
-
-    const feat = feature as any;
-
-    return feat[FeatureKey__symbol] || (feat[FeatureKey__symbol] = new FeatureKey(feature));
+    return feature.hasOwnProperty(FeatureKey__symbol)
+        ? (feature as any)[FeatureKey__symbol]
+        : ((feature as any)[FeatureKey__symbol] = new FeatureKey(feature));
   }
 
   private constructor(feature: Class) {
