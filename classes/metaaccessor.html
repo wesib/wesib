@@ -57,7 +57,7 @@
 					<a href="metaaccessor.html">MetaAccessor</a>
 				</li>
 			</ul>
-			<h1>Class MetaAccessor&lt;M&gt;</h1>
+			<h1>Class MetaAccessor&lt;M, S&gt;</h1>
 		</div>
 	</div>
 </header>
@@ -73,6 +73,9 @@
 				<ul class="tsd-type-parameters">
 					<li>
 						<h4>M</h4>
+					</li>
+					<li>
+						<h4>S</h4>
 					</li>
 				</ul>
 			</section>
@@ -105,6 +108,7 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="metaaccessor.html#define" class="tsd-kind-icon">define</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="metaaccessor.html#merge" class="tsd-kind-icon">merge</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="metaaccessor.html#meta" class="tsd-kind-icon">meta</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="metaaccessor.html#of" class="tsd-kind-icon">of</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="metaaccessor.html#own" class="tsd-kind-icon">own</a></li>
 							</ul>
@@ -124,7 +128,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/8b9bb6c/src/common/meta-accessor.ts#L11">src/common/meta-accessor.ts:11</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/a9689de/src/common/meta-accessor.ts#L13">src/common/meta-accessor.ts:13</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -146,7 +150,7 @@
 					<div class="tsd-signature tsd-kind-icon">symbol<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">symbol</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/8b9bb6c/src/common/meta-accessor.ts#L11">src/common/meta-accessor.ts:11</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/a9689de/src/common/meta-accessor.ts#L13">src/common/meta-accessor.ts:13</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -157,13 +161,13 @@
 					<a name="define" class="tsd-anchor"></a>
 					<h3>define</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">define&lt;C&gt;<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">C</span>, <span class="tsd-signature-symbol">...</span>defs<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">M</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">C</span></li>
+						<li class="tsd-signature tsd-kind-icon">define&lt;C&gt;<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">C</span>, sources<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">S</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">C</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/8b9bb6c/src/common/meta-accessor.ts#L30">src/common/meta-accessor.ts:30</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/a9689de/src/common/meta-accessor.ts#L32">src/common/meta-accessor.ts:32</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -178,7 +182,7 @@
 									<h5>type: <span class="tsd-signature-type">C</span></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>defs: <span class="tsd-signature-type">M</span><span class="tsd-signature-symbol">[]</span></h5>
+									<h5>sources: <span class="tsd-signature-type">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">S</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">C</span></h4>
@@ -189,19 +193,45 @@
 					<a name="merge" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> merge</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">merge<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>defs<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">M</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">M</span></li>
+						<li class="tsd-signature tsd-kind-icon">merge<span class="tsd-signature-symbol">(</span>metas<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">M</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">M</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/8b9bb6c/src/common/meta-accessor.ts#L47">src/common/meta-accessor.ts:47</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/a9689de/src/common/meta-accessor.ts#L50">src/common/meta-accessor.ts:50</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>defs: <span class="tsd-signature-type">M</span><span class="tsd-signature-symbol">[]</span></h5>
+									<h5>metas: <span class="tsd-signature-type">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">M</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">M</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+					<a name="meta" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> <span class="tsd-flag ts-flagAbstract">Abstract</span> meta</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">meta<span class="tsd-signature-symbol">(</span>source<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">S</span>, type<span class="tsd-signature-symbol">: </span><a href="../interfaces/class.html" class="tsd-signature-type">Class</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">M</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/a9689de/src/common/meta-accessor.ts#L52">src/common/meta-accessor.ts:52</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>source: <span class="tsd-signature-type">S</span></h5>
+								</li>
+								<li>
+									<h5>type: <a href="../interfaces/class.html" class="tsd-signature-type">Class</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">M</span></h4>
@@ -218,7 +248,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/8b9bb6c/src/common/meta-accessor.ts#L21">src/common/meta-accessor.ts:21</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/a9689de/src/common/meta-accessor.ts#L23">src/common/meta-accessor.ts:23</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -244,7 +274,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/8b9bb6c/src/common/meta-accessor.ts#L17">src/common/meta-accessor.ts:17</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/a9689de/src/common/meta-accessor.ts#L19">src/common/meta-accessor.ts:19</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -288,6 +318,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="metaaccessor.html#merge" class="tsd-kind-icon">merge</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+								<a href="metaaccessor.html#meta" class="tsd-kind-icon">meta</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="metaaccessor.html#of" class="tsd-kind-icon">of</a>
