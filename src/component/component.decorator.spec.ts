@@ -20,12 +20,5 @@ describe('component', () => {
 
       expect(ComponentDef.of(TestComponent)).toEqual(def);
     });
-    it('allows shorthand definition', () => {
-
-      @Component('test-component')
-      class TestComponent {}
-
-      expect(ComponentDef.of(TestComponent)).toEqual({ name: 'test-component' });
-    });
   });
 });

@@ -2,7 +2,7 @@
  * @module @wesib/wesib
  */
 import { itsReduction, mapIt } from 'a-iterable';
-import { QualifiedName } from 'namespace-aliaser';
+import { isQualifiedName, QualifiedName } from 'namespace-aliaser';
 import { Class, mergeFunctions, MetaAccessor } from '../common';
 import { FeatureDef, FeatureDef__symbol } from '../feature';
 import { ComponentClass, DefinitionContext, DefinitionSetup, ElementDef } from './definition';
@@ -73,6 +73,7 @@ export namespace ComponentDef {
    * An instances of this type accepted when {@link ComponentDef.define defining a component}.
    *
    * This can be one of:
+   * - custom element name (possibly qualified),
    * - component definition,
    * - component definition holder,
    * - component definition factory,
@@ -82,6 +83,7 @@ export namespace ComponentDef {
    * @typeparam T  A type of component.
    */
   export type Source<T extends object = any> =
+      | QualifiedName
       | ComponentDef<T>
       | Holder<T>
       | Factory<T>
@@ -153,6 +155,9 @@ class ComponentMeta extends MetaAccessor<ComponentDef, ComponentDef.Source> {
     }
     if ((source as any)[FeatureDef__symbol] != null) {
       return { feature: FeatureDef.for(componentType, source as FeatureDef.Source) };
+    }
+    if (isQualifiedName(source)) {
+      return { name: source };
     }
 
     return source as ComponentDef;

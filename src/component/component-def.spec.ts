@@ -1,4 +1,5 @@
 import { SingleContextKey } from 'context-values';
+import { NamespaceDef, QualifiedName } from 'namespace-aliaser';
 import { FeatureContext, FeatureDef, FeatureDef__symbol } from '../feature';
 import { ComponentDef, ComponentDef__symbol } from './component-def';
 import { ComponentClass, DefinitionContext, DefinitionSetup } from './definition';
@@ -156,6 +157,20 @@ describe('component', () => {
         const componentType = ComponentDef.define(TestComponent, def);
 
         expect(ComponentDef.of(componentType)).toEqual(def);
+      });
+      it('accepts raw component name', () => {
+
+        const name = 'test-component';
+        const componentType = ComponentDef.define(TestComponent, name);
+
+        expect(ComponentDef.of(componentType)).toEqual({ name });
+      });
+      it('accepts qualified component name', () => {
+
+        const name: QualifiedName = ['component', new NamespaceDef('http://localhost/ns/test', 'test')];
+        const componentType = ComponentDef.define(TestComponent, name);
+
+        expect(ComponentDef.of(componentType)).toEqual({ name });
       });
       it('updates component definition', () => {
 
