@@ -13,6 +13,8 @@ import { BootstrapContext } from './index';
  * Bootstrap context setup.
  *
  * It is passed to [[FeatureDef.setup]] method to set up the bootstrap. E.g. by providing bootstrap context values.
+ *
+ * @category Core
  */
 export interface BootstrapSetup {
 

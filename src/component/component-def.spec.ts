@@ -1,5 +1,5 @@
 import { SingleContextKey } from 'context-values';
-import { FeatureContext, FeatureDef } from '../feature';
+import { FeatureContext, FeatureDef, FeatureDef__symbol } from '../feature';
 import { ComponentDef, ComponentDef__symbol } from './component-def';
 import { ComponentClass, DefinitionContext, DefinitionSetup } from './definition';
 import Mocked = jest.Mocked;
@@ -177,6 +177,43 @@ describe('component', () => {
 
         expect<ComponentDef>(ComponentDef.of(componentType)).toEqual(ComponentDef.merge(initialDef, def));
       });
+      it('accepts provided component definition', () => {
+
+        const def: ComponentDef = { name: 'test-component' };
+        const componentType = ComponentDef.define(TestComponent, { [ComponentDef__symbol]: def });
+
+        expect(ComponentDef.of(componentType)).toEqual(def);
+      });
+      it('accepts built component definition', () => {
+
+        const def: ComponentDef = { name: 'test-component' };
+        const mockBuildDef = jest.fn(() => def);
+        const componentType = ComponentDef.define(TestComponent, { [ComponentDef__symbol]: mockBuildDef });
+
+        expect(mockBuildDef).toHaveBeenCalledWith(TestComponent);
+        expect(ComponentDef.of(componentType)).toEqual(def);
+      });
+      it('accepts provided feature definition', () => {
+
+        class Dep {}
+
+        const def: FeatureDef = { needs: Dep };
+        const componentType = ComponentDef.define(TestComponent, { [FeatureDef__symbol]: def });
+
+        expect(ComponentDef.of(componentType)).toEqual({ feature: def });
+      });
+      it('accepts built feature definition', () => {
+
+        class Dep {}
+
+        const def: FeatureDef = { needs: Dep };
+        const mockBuildDef = jest.fn(() => def);
+        const componentType = ComponentDef.define(TestComponent, { [FeatureDef__symbol]: mockBuildDef });
+
+        expect(mockBuildDef).toHaveBeenCalledWith(TestComponent);
+        expect(ComponentDef.of(componentType)).toEqual({ feature: def });
+      });
+
       describe('created component feature', () => {
         it('applies feature options', () => {
 

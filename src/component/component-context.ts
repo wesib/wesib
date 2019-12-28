@@ -24,7 +24,7 @@ export const ComponentContext__symbol = (/*#__PURE__*/ Symbol('component-context
  * Passed to component constructor as its only parameter.
  *
  * Extends `ContextValues` interface. The values are provided by corresponding providers registered with
- * [[BootstrapContext.perComponent]] method.
+ * [[BootstrapSetup.perComponent]] and [[DefinitionSetup.perComponent]] methods.
  *
  * @category Core
  * @typeparam T  A type of component.

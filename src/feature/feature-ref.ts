@@ -10,6 +10,8 @@ import { FeatureStatus } from './feature-status';
  * It is returned from [[BootstrapContext.load]] and can be used to read feature load status and unload it.
  *
  * Implements an `EventKeeper` interface by sending a feature load status updates.
+ *
+ * @category Core
  */
 export abstract class FeatureRef implements EventKeeper<[FeatureStatus]> {
 

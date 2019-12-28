@@ -1,9 +1,10 @@
 /**
  * @module @wesib/wesib
  */
+import { itsReduction, mapIt } from 'a-iterable';
 import { QualifiedName } from 'namespace-aliaser';
-import { mergeFunctions, MetaAccessor } from '../common';
-import { FeatureDef } from '../feature';
+import { Class, mergeFunctions, MetaAccessor } from '../common';
+import { FeatureDef, FeatureDef__symbol } from '../feature';
 import { ComponentClass, DefinitionContext, DefinitionSetup, ElementDef } from './definition';
 
 /**
@@ -64,14 +65,72 @@ export interface ComponentDef<T extends object = any> {
 
 }
 
-class ComponentMeta extends MetaAccessor<ComponentDef> {
+export namespace ComponentDef {
+
+  /**
+   * Component definition source.
+   *
+   * An instances of this type accepted when {@link ComponentDef.define defining a component}.
+   *
+   * This can be one of:
+   * - component definition,
+   * - component definition holder,
+   * - component definition factory,
+   * - feature definition holder, or
+   * - feature definition factory.
+   *
+   * @typeparam T  A type of component.
+   */
+  export type Source<T extends object = any> =
+      | ComponentDef<T>
+      | Holder<T>
+      | Factory<T>
+      | FeatureDef.Holder
+      | FeatureDef.Factory;
+
+  /**
+   * Component definition holder.
+   *
+   * @typeparam T  A type of component.
+   */
+  export interface Holder<T extends object = any> {
+
+    /**
+     * The component definition this holder contains.
+     */
+    readonly [ComponentDef__symbol]: ComponentDef<T>;
+
+  }
+
+  /**
+   * Component definition factory.
+   *
+   * @typeparam T  A type of component.
+   */
+  export interface Factory<T extends object = any> {
+
+    /**
+     * Builds component definition.
+     *
+     * @param componentType  A component class constructor to build definition for.
+     *
+     * @returns Built component definition.
+     */
+    [ComponentDef__symbol](componentType: ComponentClass<T>): ComponentDef<T>;
+
+  }
+
+}
+
+class ComponentMeta extends MetaAccessor<ComponentDef, ComponentDef.Source> {
 
   constructor() {
     super(ComponentDef__symbol);
   }
 
-  merge<T extends object>(...defs: ComponentDef<T>[]): ComponentDef<T> {
-    return defs.reduce(
+  merge<T extends object>(defs: Iterable<ComponentDef<T>>): ComponentDef<T> {
+    return itsReduction<ComponentDef<T>, ComponentDef<T>>(
+        defs,
         (prev, def) => ({
           ...prev,
           ...def,
@@ -83,6 +142,25 @@ class ComponentMeta extends MetaAccessor<ComponentDef> {
         }),
         {},
     );
+  }
+
+  meta<T extends object>(source: ComponentDef.Source<T>, componentType: ComponentClass<T>): ComponentDef<T> {
+
+    const def = (source as any)[ComponentDef__symbol];
+
+    if (def != null) {
+      return typeof def === 'function' ? (source as any)[ComponentDef__symbol](componentType) : def;
+    }
+
+    const featureDef = (source as any)[FeatureDef__symbol];
+
+    if (featureDef != null) {
+      return {
+        feature: typeof featureDef === 'function' ? (source as any)[FeatureDef__symbol](componentType) : featureDef,
+      };
+    }
+
+    return source as ComponentDef;
   }
 
 }
@@ -116,7 +194,7 @@ export const ComponentDef = {
    * @returns Merged component definition.
    */
   merge<T extends object>(this: void, ...defs: ComponentDef<T>[]): ComponentDef<T> {
-    return meta.merge(...defs);
+    return meta.merge(defs);
   },
 
   /**
@@ -128,47 +206,50 @@ export const ComponentDef = {
    * [[bootstrapComponents]] function or added as a requirement of another feature.
    *
    * @typeparam T  A type of component.
-   * @param type  Component class constructor.
+   * @param componentType  Component class constructor.
    * @param defs  Component definitions.
    *
    * @returns The `type` instance.
    */
   define<T extends ComponentClass>(
       this: void,
-      type: T,
-      ...defs: ComponentDef<InstanceType<T>>[]
+      componentType: T,
+      ...defs: ComponentDef.Source<InstanceType<T>>[]
   ): T {
 
-    const def = ComponentDef.merge(...defs);
+    const def = meta.merge(mapIt(defs, source => meta.meta(source, componentType)));
 
-    meta.define(type, def);
-    FeatureDef.define(type, ComponentDef.featureDef(type, def));
+    meta.define(componentType, [def]);
+    FeatureDef.define(componentType, ComponentDef.featureDef(def));
 
-    return type;
+    return componentType;
   },
 
   /**
    * Builds feature definition for the given component definition.
    *
-   * @param type  Target component type.
    * @param def  Component definition.
    *
-   * @returns New feature definition that defines the component and performs definitions from [[ComponentDef.feature]]
-   * property.
+   * @returns Feature definition source that defines the component and applies other definitions from
+   * [[ComponentDef.feature]] property.
    */
-  featureDef<T extends object>(this: void, type: ComponentClass<T>, def: ComponentDef<T>): FeatureDef {
+  featureDef<T extends object>(this: void, def: ComponentDef<T>): FeatureDef.Source {
+    return {
+      [FeatureDef__symbol](featureType: Class) {
 
-    const registrar: FeatureDef = {
-      init(context) {
-        if (context.feature === type && !type.hasOwnProperty(componentDefined)) {
-          Object.defineProperty(type, componentDefined, { value: 1 });
-          context.define(type);
-        }
+        const registrar: FeatureDef = {
+          init(context) {
+            if (context.feature === featureType && !featureType.hasOwnProperty(componentDefined)) {
+              Object.defineProperty(featureType, componentDefined, { value: 1 });
+              context.define(featureType);
+            }
+          },
+        };
+        const { feature } = def;
+
+        return feature ? FeatureDef.merge(feature, registrar) : registrar;
       },
     };
-    const { feature } = def;
-
-    return feature ? FeatureDef.merge(feature, registrar) : registrar;
   },
 
 };

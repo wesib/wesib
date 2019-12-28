@@ -1,12 +1,14 @@
 /**
  * @module @wesib/wesib
  */
+import { flatMapIt, mapIt } from 'a-iterable';
+import { asis } from 'call-thru';
 import { Class, superClassOf } from './classes';
 
 /**
  * @category Utility
  */
-export abstract class MetaAccessor<M> {
+export abstract class MetaAccessor<M, S = M> {
 
   readonly symbol: symbol;
 
@@ -24,26 +26,29 @@ export abstract class MetaAccessor<M> {
     const superType = superClassOf(type);
     const superDef = superType && this.of(superType);
 
-    return ownDef ? (superDef ? this.merge(superDef, ownDef) : ownDef) : superDef;
+    return ownDef ? (superDef ? this.merge([superDef, ownDef]) : ownDef) : superDef;
   }
 
-  define<C extends Class>(type: C, ...defs: M[]): C {
+  define<C extends Class>(type: C, sources: Iterable<S>): C {
 
-    const prevDef = this.own(type);
-    const def = prevDef ? this.merge(prevDef, ...defs) : this.merge(...defs);
+    const prevMeta = this.own(type);
+    const updates = mapIt(sources, source => this.meta(source, type));
+    const newMeta: M = this.merge(prevMeta ? flatMapIt([[prevMeta], updates], asis) : updates);
 
     Object.defineProperty(
         type,
         this.symbol,
         {
           configurable: true,
-          value: def,
+          value: newMeta,
         },
     );
 
     return type;
   }
 
-  abstract merge(...defs: M[]): M;
+  abstract merge(metas: Iterable<M>): M;
+
+  protected abstract meta(source: S, type: Class): M;
 
 }
