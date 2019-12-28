@@ -23,7 +23,7 @@ import { ComponentClass } from './definition';
  *
  * @category Core
  * @typeparam T  A type of decorated component class.
- * @param defs  A component definition sources.
+ * @param defs  Component definition sources.
  *
  * @returns A component class decorator.
  */
