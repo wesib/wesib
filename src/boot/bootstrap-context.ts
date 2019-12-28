@@ -13,7 +13,8 @@ import { BootstrapContext__key } from './bootstrap-context.key.impl';
  *
  * An instance of this class is passed to [[FeatureDef.init]] method so that the feature can configure itself.
  *
- * Extends `BootstrapValues` interface. The values are {@link FeatureDef.set pre-configured} in feature definitions.
+ * Extends `BootstrapValues` interface. The values could be {@link BootstrapSetup.provide pre-configured} in feature
+ * definitions.
  *
  * @category Core
  */

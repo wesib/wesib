@@ -7,6 +7,7 @@ import { BootstrapContext } from './bootstrap-context';
 /**
  * Provides a default value for bootstrap context key.
  *
+ * @category Core
  * @param provide  A function accepting bootstrap context and target key as parameters, and returning either a default
  * value, or `null`/`undefined` if unknown.
  *

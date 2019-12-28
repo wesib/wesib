@@ -17,6 +17,8 @@ import { ElementAdapter } from './element-adapter';
  * - tracks mounted components {@link ComponentMount.connected connection state}.
  *
  * A function constructing element observer instance could be obtained from bootstrap context.
+ *
+ * @category Core
  */
 export interface ElementObserver extends MutationObserver {
 
@@ -36,6 +38,8 @@ export interface ElementObserver extends MutationObserver {
 
 /**
  * A key of bootstrap context value containing a function constructing a new [[ElementObserver]] instance.
+ *
+ * @category Core
  */
 export const ElementObserver: FnContextKey<[MutationCallback], ElementObserver> = (/*#__PURE__*/ new FnContextKey(
     'element-observer',
@@ -77,6 +81,8 @@ export const ElementObserver: FnContextKey<[MutationCallback], ElementObserver> 
 
 /**
  * Element observer initialization options.
+ *
+ * @category Core
  */
 export interface ElementObserverInit extends MutationObserverInit {
 

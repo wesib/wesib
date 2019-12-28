@@ -10,11 +10,15 @@ import { Class } from '../common';
  *
  * - `needs` when feature {@link FeatureDef.needs depends} on another one, or
  * - `has` when feature {@link FeatureDef.has provides} another one.
+ *
+ * @category Core
  */
 export type FeatureNeed = [Class, 'needs' | 'has', Class];
 
 /**
  * An error in feature needs. I.e. circular dependency.
+ *
+ * @category Core
  */
 export class FeatureNeedsError extends Error {
 
@@ -33,7 +37,8 @@ export class FeatureNeedsError extends Error {
         'Circular feature needs: '
         + needs.reduce(
         (prev, [feature, reason, need]) =>
-            (prev ? prev : feature.name) + ` ${reason} ${need.name}`, ''));
+            (prev ? prev : feature.name) + ` ${reason} ${need.name}`, ''),
+    );
     this.needs = needs;
   }
 

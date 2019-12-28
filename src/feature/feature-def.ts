@@ -112,7 +112,7 @@ export namespace FeatureDef {
   }
 
   /**
-   * Feature definition provider.
+   * Feature definition factory.
    */
   export interface Factory {
 

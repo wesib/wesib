@@ -12,6 +12,8 @@ import { DefinitionContext } from './definition-context';
  *
  * It is passed to [[ComponentDef.setup]] method to set up the bootstrap. E.g. by providing definition or component
  * context values.
+ *
+ * @category Core
  */
 export interface DefinitionSetup<T extends object = any> {
 

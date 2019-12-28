@@ -7,6 +7,8 @@ import { Class } from '../common';
  * Feature load status.
  *
  * This status is reported by {@link FeatureRef loaded feature reference}.
+ *
+ * @category Core
  */
 export interface FeatureStatus {
 

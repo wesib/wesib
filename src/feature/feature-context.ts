@@ -13,6 +13,8 @@ const FeatureContext_key = new SingleContextKey<FeatureContext>('feature-context
 
 /**
  * Feature initialization context.
+ *
+ * @category Core
  */
 export abstract class FeatureContext extends BootstrapContext implements BootstrapSetup {
 

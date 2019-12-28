@@ -16,7 +16,7 @@ import { ComponentClass } from './definition';
  * }
  * ```
  *
- * Such component can be registered with [[BootstrapContext.define]] method, or used as a feature, e.g. passed to
+ * Such component can be registered with [[FeatureContext.define]] method or used as a feature, e.g. passed to
  * [[bootstrapComponents]] function, or added to [[FeatureDef.needs]] property of another feature.
  *
  * This is an alternative to direct call to [[ComponentDef.define]] method.
