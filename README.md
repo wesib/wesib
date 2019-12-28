@@ -164,35 +164,43 @@ It is possible to define custom features too to extend Wesib. E.g. to augment th
 
 The feature is a class decorated with `@Feature` decorator:
 ```typescript
-import { ComponentContext, DefinitionContext, Feature, FeatureContext } from '@wesib/wesib';
+import {
+  ComponentContext,
+  DefinitionContext,
+  Feature,
+  FeatureContext,
+  FeatureSetup,
+} from '@wesib/wesib';
 
 @Feature({
   needs: [
     OtherFeature1, // Requires other features to be enabled.
     MyComponent, // The required component will be defined too.  
-  ], 
-  set: [
-    { a: GlobalService, by: () => new GlobalService() }, // Provide a `GlobalService` available globally
-                                                         // in all IoC contexts
   ],
-  perDefinition: {
-    a: DefinitionService,
-    by: (definitionContext: DefinitionContext) => {
-      // Provide a `DefinitionService` available during component definition.
-      // Such service will be provided per component class
-      // and will be available during custom element construction,
-      // e.g. to `onDefinition()` listeners.
-      return new DefinitionService(definitionContext);
-    }
-  },
-  perComponent: {
-    a: MyService,
-    by: (componentContext: ComponentContext) => {
-      // Provide a `MyService` available to components.
-      // Such service will be provided per component instance
-      // and will be available to component instance and `onComponent()` listeners.
-      return new MyService(componentContext.component);
-    }
+  setup(setup: FeatureSetup) { 
+    setup.provide({ 
+      a: GlobalService,              // Provide a `GlobalService` available globally
+      as: () => new GlobalService(), // in all IoC contexts
+    }); 
+    setup.perDefinition({
+      a: DefinitionService,
+      by: (definitionContext: DefinitionContext) => {
+        // Provide a `DefinitionService` available during component definition.
+        // Such service will be provided per component class
+        // and will be available during custom element construction,
+        // e.g. to `onDefinition()` listeners.
+        return new DefinitionService(definitionContext);
+      },
+    });
+    setup.perComponent({
+      a: MyService,
+      by: (componentContext: ComponentContext) => {
+        // Provide a `MyService` available to components.
+        // Such service will be provided per component instance
+        // and will be available to component instance and `onComponent()` listeners.
+        return new MyService(componentContext.component);
+      },
+    });
   },
   init(context: FeatureContext) {
     // Bootstrap the feature by calling methods of provided context.
