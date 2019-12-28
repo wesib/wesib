@@ -148,6 +148,18 @@ export const FeatureDef = {
   },
 
   /**
+   * Builds feature definition for the given feature class by definition source.
+   *
+   * @param featureType  Target feature class constructor.
+   * @param source  A source of feature definition.
+   *
+   * @returns Feature definition.
+   */
+  for(this: void, featureType: Class, source: FeatureDef.Source): FeatureDef {
+    return meta.meta(source, featureType);
+  },
+
+  /**
    * Merges multiple feature definitions.
    *
    * @param defs  Feature definitions to merge.

@@ -151,13 +151,8 @@ class ComponentMeta extends MetaAccessor<ComponentDef, ComponentDef.Source> {
     if (def != null) {
       return typeof def === 'function' ? (source as any)[ComponentDef__symbol](componentType) : def;
     }
-
-    const featureDef = (source as any)[FeatureDef__symbol];
-
-    if (featureDef != null) {
-      return {
-        feature: typeof featureDef === 'function' ? (source as any)[FeatureDef__symbol](componentType) : featureDef,
-      };
+    if ((source as any)[FeatureDef__symbol] != null) {
+      return { feature: FeatureDef.for(componentType, source as FeatureDef.Source) };
     }
 
     return source as ComponentDef;
@@ -183,6 +178,18 @@ export const ComponentDef = {
    */
   of<T extends object>(this: void, componentType: ComponentClass<T>): ComponentDef<T> {
     return meta.of(componentType) as ComponentDef<T> || {};
+  },
+
+  /**
+   * Builds component definition for the given component class by definition source.
+   *
+   * @param componentType  Target component class constructor.
+   * @param source  A source of component definition.
+   *
+   * @returns Component definition.
+   */
+  for<T extends object>(this: void, componentType: ComponentClass<T>, source: ComponentDef.Source<T>): ComponentDef<T> {
+    return meta.meta(source, componentType);
   },
 
   /**
@@ -217,7 +224,7 @@ export const ComponentDef = {
       ...defs: ComponentDef.Source<InstanceType<T>>[]
   ): T {
 
-    const def = meta.merge(mapIt(defs, source => meta.meta(source, componentType)));
+    const def = meta.merge(mapIt(defs, source => ComponentDef.for(componentType, source)));
 
     meta.define(componentType, [def]);
     FeatureDef.define(componentType, ComponentDef.featureDef(def));
