@@ -1,6 +1,8 @@
 /**
  * @module @wesib/wesib
  */
+import { itsReduction } from 'a-iterable';
+import { asis } from 'call-thru';
 import { QualifiedName } from 'namespace-aliaser';
 import { mergeFunctions, MetaAccessor } from '../common';
 import { FeatureDef } from '../feature';
@@ -66,12 +68,15 @@ export interface ComponentDef<T extends object = any> {
 
 class ComponentMeta extends MetaAccessor<ComponentDef> {
 
+  protected readonly meta = asis;
+
   constructor() {
     super(ComponentDef__symbol);
   }
 
-  merge<T extends object>(...defs: ComponentDef<T>[]): ComponentDef<T> {
-    return defs.reduce(
+  merge<T extends object>(defs: Iterable<ComponentDef<T>>): ComponentDef<T> {
+    return itsReduction<ComponentDef<T>, ComponentDef<T>>(
+        defs,
         (prev, def) => ({
           ...prev,
           ...def,
@@ -116,7 +121,7 @@ export const ComponentDef = {
    * @returns Merged component definition.
    */
   merge<T extends object>(this: void, ...defs: ComponentDef<T>[]): ComponentDef<T> {
-    return meta.merge(...defs);
+    return meta.merge(defs);
   },
 
   /**
@@ -141,7 +146,7 @@ export const ComponentDef = {
 
     const def = ComponentDef.merge(...defs);
 
-    meta.define(type, def);
+    meta.define(type, [def]);
     FeatureDef.define(type, ComponentDef.featureDef(type, def));
 
     return type;

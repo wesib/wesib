@@ -1,6 +1,8 @@
 /**
  * @module @wesib/wesib
  */
+import { itsReduction } from 'a-iterable';
+import { asis } from 'call-thru';
 import { BootstrapSetup } from '../boot';
 import { ArraySet, Class, mergeFunctions, MetaAccessor } from '../common';
 import { FeatureContext } from './feature-context';
@@ -51,12 +53,15 @@ export interface FeatureDef {
 
 class FeatureMeta extends MetaAccessor<FeatureDef> {
 
+  protected readonly meta = asis;
+
   constructor() {
     super(FeatureDef__symbol);
   }
 
-  merge(...defs: readonly FeatureDef[]): FeatureDef {
-    return defs.reduce<FeatureDef>(
+  merge(defs: Iterable<FeatureDef>): FeatureDef {
+    return itsReduction<FeatureDef, FeatureDef>(
+        defs,
         (prev, def) => ({
           needs: new ArraySet(prev.needs).merge(def.needs).value,
           has: new ArraySet(prev.has).merge(def.has).value,
@@ -95,7 +100,7 @@ export const FeatureDef = {
    * @returns Merged feature definition.
    */
   merge(this: void, ...defs: readonly FeatureDef[]): FeatureDef {
-    return meta.merge(...defs);
+    return meta.merge(defs);
   },
 
   /**
@@ -110,7 +115,7 @@ export const FeatureDef = {
    * @returns The `type` instance.
    */
   define<T extends Class>(this: void, type: T, ...defs: readonly FeatureDef[]): T {
-    return meta.define(type, ...defs);
+    return meta.define(type, defs);
   },
 
 };
