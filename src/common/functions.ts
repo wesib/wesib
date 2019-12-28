@@ -21,22 +21,26 @@
 export function mergeFunctions<P extends any[], R, T>(
     first: (this: T, ...args: P) => R,
     second: ((this: T, ...args: P) => R) | undefined,
-    merge: (first: R, second: R) => R): (this: T, ...args: P) => R;
+    merge: (first: R, second: R) => R,
+): (this: T, ...args: P) => R;
 
 export function mergeFunctions<P extends any[], R, T>(
     first: ((this: T, ...args: P) => R) | undefined,
     second: (this: T, ...args: P) => R,
-    merge?: (first: R, second: R) => R): (this: T, ...args: P) => R;
+    merge?: (first: R, second: R) => R,
+): (this: T, ...args: P) => R;
 
 export function mergeFunctions<P extends any[], R, T>(
     first: ((this: T, ...args: P) => R) | undefined,
     second: ((this: T, ...args: P) => R) | undefined,
-    merge?: (first: R, second: R) => R): ((this: T, ...args: P) => R) | undefined;
+    merge?: (first: R, second: R) => R,
+): ((this: T, ...args: P) => R) | undefined;
 
 export function mergeFunctions<P extends any[], R, T>(
     first: ((this: T, ...args: P) => R) | undefined,
     second: ((this: T, ...args: P) => R) | undefined,
-    merge: (first: R, second: R) => R = (_f, s) => s): ((this: T, ...args: P) => R) | undefined {
+    merge: (first: R, second: R) => R = (_f, s) => s,
+): ((this: T, ...args: P) => R) | undefined {
   if (!first) {
     return second;
   }
@@ -45,7 +49,8 @@ export function mergeFunctions<P extends any[], R, T>(
   }
   return function(this: T, ...args: P) {
     return merge(
-      first.apply(this, args),
-      second.apply(this, args));
+        first.apply(this, args),
+        second.apply(this, args),
+    );
   };
 }

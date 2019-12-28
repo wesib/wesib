@@ -51,7 +51,8 @@ export function Attributes<T extends ComponentClass = any>(
               }
             }
           },
-        });
+        },
+    );
   };
 }
 

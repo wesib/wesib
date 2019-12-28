@@ -69,8 +69,11 @@ export class AttributeRegistry<T extends object = any> {
               return (attrs[attributeName] as any).call(
                   ComponentContext.of(element).component,
                   element.getAttribute(attributeName),
-                  record.oldValue);
-            }));
+                  record.oldValue,
+              );
+            },
+        ),
+    );
 
     observer.observe(element, {
       attributes: true,

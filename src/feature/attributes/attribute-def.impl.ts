@@ -9,7 +9,8 @@ import { attributeStateUpdate } from './attribute-state-update.impl';
 export function parseAttributeDef<T extends ComponentClass>(
     target: InstanceType<T>,
     propertyKey: string | symbol,
-    opts?: AttributeDef<InstanceType<T>> | string) {
+    opts?: AttributeDef<InstanceType<T>> | string,
+) {
 
   let name: string;
   let updateState: AttributeChangedCallback<InstanceType<T>>;
@@ -23,7 +24,8 @@ export function parseAttributeDef<T extends ComponentClass>(
     } else if (typeof propertyKey !== 'string') {
       throw new TypeError(
           'Attribute name is required, as property key is not a string: ' +
-          `${target.constructor.name}.${propertyKey.toString()}`);
+          `${target.constructor.name}.${propertyKey.toString()}`,
+      );
     } else {
       name = propertyKey;
     }

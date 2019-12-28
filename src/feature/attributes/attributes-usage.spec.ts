@@ -164,7 +164,8 @@ describe('feature/attributes', () => {
               attributes: true,
               attributeFilter: expect.arrayContaining(['custom-attribute', 'custom-attribute-2', 'attr3']),
               attributeOldValue: true,
-            });
+            },
+        );
       });
       it('updates attribute', () => {
         element.setAttribute('custom-attribute', 'value1');

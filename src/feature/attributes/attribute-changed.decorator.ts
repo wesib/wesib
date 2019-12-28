@@ -55,7 +55,8 @@ export function AttributeChanged<T extends ComponentClass>(
             defContext.get(AttributeRegistrar)(name, function (
                 this: InstanceType<T>,
                 newValue: string,
-                oldValue: string | null) {
+                oldValue: string | null,
+            ) {
 
               const callback: AttributeChangedCallback<InstanceType<T>> = (this as any)[propertyKey];
 
@@ -63,6 +64,7 @@ export function AttributeChanged<T extends ComponentClass>(
               updateState.call(this, newValue, oldValue);
             });
           },
-        });
+        },
+    );
   };
 }

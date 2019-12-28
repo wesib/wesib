@@ -90,7 +90,8 @@ describe('feature', () => {
         const mockSetup2 = jest.fn();
         const merged = FeatureDef.merge(
             { setup: mockSetup1 },
-            { setup: mockSetup2 }).setup || noop;
+            { setup: mockSetup2 },
+        ).setup || noop;
         const context: FeatureContext = { name: 'feature context' } as any;
 
         class Feature {}
@@ -107,8 +108,9 @@ describe('feature', () => {
         const mockInit1 = jest.fn();
         const mockInit2 = jest.fn();
         const merged = FeatureDef.merge(
-            { init: mockInit1  },
-            { init: mockInit2 }).init || noop;
+            { init: mockInit1 },
+            { init: mockInit2 },
+        ).init || noop;
         const context: FeatureContext = { name: 'feature context' } as any;
 
         class Feature {}

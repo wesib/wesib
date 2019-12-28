@@ -13,7 +13,8 @@ import { AttributeChangedCallback } from './attribute-registrar';
  */
 export function attributeStateUpdate<T extends object>(
     name: string,
-    updateState: boolean | AttributeUpdateReceiver<T> | StatePath = true): AttributeChangedCallback<T> {
+    updateState: boolean | AttributeUpdateReceiver<T> | StatePath = true,
+): AttributeChangedCallback<T> {
   if (updateState === false) {
     return noop;
   }
@@ -35,6 +36,7 @@ function defaultUpdateState<T extends object>(
     this: T,
     path: AttributePath,
     newValue: string,
-    oldValue: string | null) {
+    oldValue: string | null,
+) {
   ComponentContext.of(this).updateState(path, newValue, oldValue);
 }

@@ -87,7 +87,8 @@ function createCustomElements(values: ContextValues) {
             elementType,
             {
               extends: extend.name,
-            });
+            },
+        );
       } else {
         customElements.define(html__naming.name(name, nsAlias), elementType);
       }

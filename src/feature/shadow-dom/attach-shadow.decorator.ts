@@ -21,8 +21,6 @@ export function AttachShadow<T extends ComponentClass = any>(
     def?: ShadowContentDef,
 ): TypedClassDecorator<T> {
   return (type: T) => {
-    ComponentDef.define(
-        type,
-        ShadowContentDef.componentDef(def));
+    ComponentDef.define(type, ShadowContentDef.componentDef(def));
   };
 }

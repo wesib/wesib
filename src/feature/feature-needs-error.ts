@@ -34,10 +34,11 @@ export class FeatureNeedsError extends Error {
    */
   constructor(needs: readonly FeatureNeed[]) {
     super(
-        'Circular feature needs: '
-        + needs.reduce(
+        'Circular feature needs: ' + needs.reduce(
         (prev, [feature, reason, need]) =>
-            (prev ? prev : feature.name) + ` ${reason} ${need.name}`, ''),
+            (prev ? prev : feature.name) + ` ${reason} ${need.name}`,
+        '',
+        ),
     );
     this.needs = needs;
   }

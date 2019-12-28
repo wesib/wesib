@@ -42,15 +42,15 @@ export function DomProperty<T extends ComponentClass>(def: DomPropertyDef<T> = {
         }
 
         return {
-            ...dsc,
-            set: function (this: InstanceType<T>, newValue: V) {
+          ...dsc,
+          set: function (this: InstanceType<T>, newValue: V) {
 
-              const oldValue = (this as any)[propertyKey];
+            const oldValue = (this as any)[propertyKey];
 
-              setter.call(this, newValue);
-              updateState.call(this, newValue, oldValue);
-            },
-          };
+            setter.call(this, newValue);
+            updateState.call(this, newValue, oldValue);
+          },
+        };
       });
     }
 
@@ -66,7 +66,8 @@ export function DomProperty<T extends ComponentClass>(def: DomPropertyDef<T> = {
           feature: {
             needs: DomPropertiesSupport,
           },
-        });
+        },
+    );
 
     return result;
   };
@@ -88,7 +89,8 @@ function domPropertyDescriptor<V>(
       configurable,
       enumerable,
       writable,
-    }: DomPropertyDef): PropertyAccessorDescriptor<V> {
+    }: DomPropertyDef,
+): PropertyAccessorDescriptor<V> {
   if (!propertyDesc) {
     // Component object property
     if (enumerable == null) {

@@ -31,12 +31,12 @@ export const ShadowContentDef = {
    * @typeparam T  A type of component.
    * @param def  Shadow content root definition. Uses `mode: 'open'` by default.
    *
-   * @returns Component definition.
+   * @returns Component definition source.
    */
   componentDef<T extends object>(
       this: void,
       def: ShadowContentDef = defaultShadowContentDef,
-  ): ComponentDef<T> {
+  ): ComponentDef.Source<T> {
     return {
       setup(setup) {
         setup.perComponent(

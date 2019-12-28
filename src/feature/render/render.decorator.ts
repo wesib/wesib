@@ -50,6 +50,7 @@ export function Render<T extends ComponentClass>(def?: RenderDef): TypedProperty
           feature: {
             needs: [StateSupport, RenderSupport],
           },
-        });
+        },
+    );
   };
 }

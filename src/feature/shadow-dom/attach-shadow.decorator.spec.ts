@@ -78,10 +78,12 @@ describe('feature/shadow-dom', () => {
       context.get(ShadowContentRoot);
       expect(mockDispatcher.dispatch).toHaveBeenCalledWith(
           context,
-          expect.any(ShadowDomEvent));
+          expect.any(ShadowDomEvent),
+      );
       expect(mockDispatcher.dispatch).toHaveBeenCalledWith(
           context,
-          expect.objectContaining({ type: 'wesib:shadowAttached' }));
+          expect.objectContaining({ type: 'wesib:shadowAttached' }),
+      );
     });
     it('attaches shadow root', async () => {
 

@@ -77,16 +77,16 @@ describe('component', () => {
 
         expect(ComponentDef.merge(
             { extend: { name: 'div', type: Base1 } },
-            { extend: { name: 'input', type: Base2 } }))
-            .toEqual({ extend: { name: 'input', type: Base2 } });
+            { extend: { name: 'input', type: Base2 } },
+        )).toEqual({ extend: { name: 'input', type: Base2 } });
         expect(ComponentDef.merge(
             { extend: { name: 'div', type: Base1 } },
-            {}))
-            .toEqual({ extend: { name: 'div', type: Base1 } });
+            {},
+        )).toEqual({ extend: { name: 'div', type: Base1 } });
         expect(ComponentDef.merge(
             { extend: { name: 'div', type: Base1 } },
-            { extend: { name: 'input', type: Base2 } }))
-            .toEqual({ extend: { name: 'input', type: Base2 } });
+            { extend: { name: 'input', type: Base2 } },
+        )).toEqual({ extend: { name: 'input', type: Base2 } });
       });
       it('merges `setup`', () => {
 
