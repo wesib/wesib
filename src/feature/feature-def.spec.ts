@@ -136,11 +136,11 @@ describe('feature', () => {
       it('assigns feature definition', () => {
 
         const def: FeatureDef = { needs: Feature1 };
-        const componentType = FeatureDef.define(TestFeature, def);
+        const featureType = FeatureDef.define(TestFeature, def);
 
-        expect(FeatureDef.of(componentType)).toEqual(def);
+        expect(FeatureDef.of(featureType)).toEqual(def);
       });
-      it('updates component definition', () => {
+      it('updates feature definition', () => {
 
         const initialDef: FeatureDef = {
           needs: Feature1,
@@ -154,6 +154,22 @@ describe('feature', () => {
         const featureType = FeatureDef.define(TestFeature, def);
 
         expect(FeatureDef.of(featureType)).toEqual(FeatureDef.merge(initialDef, def));
+      });
+      it('accepts provided feature definition', () => {
+
+        const def: FeatureDef = { needs: Feature1 };
+        const featureType = FeatureDef.define(TestFeature, { [FeatureDef__symbol]: def });
+
+        expect(FeatureDef.of(featureType)).toEqual(def);
+      });
+      it('accepts built feature definition', () => {
+
+        const def: FeatureDef = { needs: Feature1 };
+        const mockBuildDef = jest.fn(() => def);
+        const featureType = FeatureDef.define(TestFeature, { [FeatureDef__symbol]: mockBuildDef });
+
+        expect(mockBuildDef).toHaveBeenCalledWith(TestFeature);
+        expect(FeatureDef.of(featureType)).toEqual(def);
       });
     });
   });

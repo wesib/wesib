@@ -2,7 +2,6 @@
  * @module @wesib/wesib
  */
 import { itsReduction } from 'a-iterable';
-import { asis } from 'call-thru';
 import { BootstrapSetup } from '../boot';
 import { ArraySet, Class, mergeFunctions, MetaAccessor } from '../common';
 import { FeatureContext } from './feature-context';
@@ -51,9 +50,7 @@ export interface FeatureDef {
 
 }
 
-class FeatureMeta extends MetaAccessor<FeatureDef> {
-
-  protected readonly meta = asis;
+class FeatureMeta extends MetaAccessor<FeatureDef, FeatureDef.Source> {
 
   constructor() {
     super(FeatureDef__symbol);
@@ -70,6 +67,64 @@ class FeatureMeta extends MetaAccessor<FeatureDef> {
         }),
         {},
     );
+  }
+
+  meta(source: FeatureDef.Source, type: Class): FeatureDef {
+
+    const def = (source as any)[FeatureDef__symbol];
+
+    if (def != null) {
+      return typeof def === 'function' ? (source as any)[FeatureDef__symbol](type) : def;
+    }
+
+    return source as FeatureDef;
+  }
+
+}
+
+export namespace FeatureDef {
+
+  /**
+   * Feature definition source.
+   *
+   * An instances of this type accepted when {@link FeatureDef.define defining a feature}.
+   *
+   * This can be one of:
+   * - feature definition,
+   * - feature definition holder, or
+   * - feature definition factory.
+   */
+  export type Source =
+      | FeatureDef
+      | Holder
+      | Factory;
+
+  /**
+   * Feature definition holder.
+   */
+  export interface Holder {
+
+    /**
+     * The feature definition this holder contains.
+     */
+    readonly [FeatureDef__symbol]: FeatureDef;
+
+  }
+
+  /**
+   * Feature definition provider.
+   */
+  export interface Factory {
+
+    /**
+     * Builds feature definition.
+     *
+     * @param featureType  A feature class constructor to build definition for.
+     *
+     * @returns Built feature definition.
+     */
+    [FeatureDef__symbol](featureType: Class): FeatureDef;
+
   }
 
 }
@@ -109,13 +164,13 @@ export const FeatureDef = {
    * Either creates new or extends an existing feature definition and stores it under `[FeatureDef__symbol]` key.
    *
    * @typeparam T  Feature type.
-   * @param type  Feature class constructor.
-   * @param defs  Feature definitions.
+   * @param featureType  Feature class constructor.
+   * @param defs  Feature definition sources.
    *
    * @returns The `type` instance.
    */
-  define<T extends Class>(this: void, type: T, ...defs: readonly FeatureDef[]): T {
-    return meta.define(type, defs);
+  define<T extends Class>(this: void, featureType: T, ...defs: readonly FeatureDef.Source[]): T {
+    return meta.define(featureType, defs);
   },
 
 };
