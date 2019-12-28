@@ -2,7 +2,6 @@
  * @module @wesib/wesib
  */
 import { itsReduction, mapIt } from 'a-iterable';
-import { asis } from 'call-thru';
 import { QualifiedName } from 'namespace-aliaser';
 import { Class, mergeFunctions, MetaAccessor } from '../common';
 import { FeatureDef, FeatureDef__symbol } from '../feature';
