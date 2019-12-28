@@ -74,15 +74,19 @@ export namespace ComponentDef {
    *
    * This can be one of:
    * - component definition,
-   * - component definition holder, or
-   * - component definition factory.
+   * - component definition holder,
+   * - component definition factory,
+   * - feature definition holder, or
+   * - feature definition factory.
    *
    * @typeparam T  A type of component.
    */
   export type Source<T extends object = any> =
       | ComponentDef<T>
       | Holder<T>
-      | Factory<T>;
+      | Factory<T>
+      | FeatureDef.Holder
+      | FeatureDef.Factory;
 
   /**
    * Component definition holder.
@@ -146,6 +150,14 @@ class ComponentMeta extends MetaAccessor<ComponentDef, ComponentDef.Source> {
 
     if (def != null) {
       return typeof def === 'function' ? (source as any)[ComponentDef__symbol](componentType) : def;
+    }
+
+    const featureDef = (source as any)[FeatureDef__symbol];
+
+    if (featureDef != null) {
+      return {
+        feature: typeof featureDef === 'function' ? (source as any)[FeatureDef__symbol](componentType) : featureDef,
+      };
     }
 
     return source as ComponentDef;
