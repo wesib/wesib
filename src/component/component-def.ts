@@ -4,8 +4,8 @@
 import { itsReduction } from 'a-iterable';
 import { asis } from 'call-thru';
 import { QualifiedName } from 'namespace-aliaser';
-import { mergeFunctions, MetaAccessor } from '../common';
-import { FeatureDef } from '../feature';
+import { Class, mergeFunctions, MetaAccessor } from '../common';
+import { FeatureDef, FeatureDef__symbol } from '../feature';
 import { ComponentClass, DefinitionContext, DefinitionSetup, ElementDef } from './definition';
 
 /**
@@ -147,7 +147,7 @@ export const ComponentDef = {
     const def = ComponentDef.merge(...defs);
 
     meta.define(type, [def]);
-    FeatureDef.define(type, ComponentDef.featureDef(type, def));
+    FeatureDef.define(type, ComponentDef.featureDef(def));
 
     return type;
   },
@@ -155,25 +155,28 @@ export const ComponentDef = {
   /**
    * Builds feature definition for the given component definition.
    *
-   * @param type  Target component type.
    * @param def  Component definition.
    *
-   * @returns New feature definition that defines the component and performs definitions from [[ComponentDef.feature]]
-   * property.
+   * @returns Feature definition source that defines the component and applies other definitions from
+   * [[ComponentDef.feature]] property.
    */
-  featureDef<T extends object>(this: void, type: ComponentClass<T>, def: ComponentDef<T>): FeatureDef {
+  featureDef<T extends object>(this: void, def: ComponentDef<T>): FeatureDef.Source {
+    return {
+      [FeatureDef__symbol](featureType: Class) {
 
-    const registrar: FeatureDef = {
-      init(context) {
-        if (context.feature === type && !type.hasOwnProperty(componentDefined)) {
-          Object.defineProperty(type, componentDefined, { value: 1 });
-          context.define(type);
-        }
+        const registrar: FeatureDef = {
+          init(context) {
+            if (context.feature === featureType && !featureType.hasOwnProperty(componentDefined)) {
+              Object.defineProperty(featureType, componentDefined, { value: 1 });
+              context.define(featureType);
+            }
+          },
+        };
+        const { feature } = def;
+
+        return feature ? FeatureDef.merge(feature, registrar) : registrar;
       },
     };
-    const { feature } = def;
-
-    return feature ? FeatureDef.merge(feature, registrar) : registrar;
   },
 
 };
