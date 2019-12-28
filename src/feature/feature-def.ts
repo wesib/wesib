@@ -50,38 +50,6 @@ export interface FeatureDef {
 
 }
 
-class FeatureMeta extends MetaAccessor<FeatureDef, FeatureDef.Source> {
-
-  constructor() {
-    super(FeatureDef__symbol);
-  }
-
-  merge(defs: Iterable<FeatureDef>): FeatureDef {
-    return itsReduction<FeatureDef, FeatureDef>(
-        defs,
-        (prev, def) => ({
-          needs: new ArraySet(prev.needs).merge(def.needs).value,
-          has: new ArraySet(prev.has).merge(def.has).value,
-          setup: mergeFunctions<[BootstrapSetup], void, Class>(prev.setup, def.setup),
-          init: mergeFunctions<[FeatureContext], void, Class>(prev.init, def.init),
-        }),
-        {},
-    );
-  }
-
-  meta(source: FeatureDef.Source, type: Class): FeatureDef {
-
-    const def = (source as any)[FeatureDef__symbol];
-
-    if (def != null) {
-      return typeof def === 'function' ? (source as any)[FeatureDef__symbol](type) : def;
-    }
-
-    return source as FeatureDef;
-  }
-
-}
-
 export namespace FeatureDef {
 
   /**
@@ -125,6 +93,38 @@ export namespace FeatureDef {
      */
     [FeatureDef__symbol](featureType: Class): FeatureDef;
 
+  }
+
+}
+
+class FeatureMeta extends MetaAccessor<FeatureDef, FeatureDef.Source> {
+
+  constructor() {
+    super(FeatureDef__symbol);
+  }
+
+  merge(defs: Iterable<FeatureDef>): FeatureDef {
+    return itsReduction<FeatureDef, FeatureDef>(
+        defs,
+        (prev, def) => ({
+          needs: new ArraySet(prev.needs).merge(def.needs).value,
+          has: new ArraySet(prev.has).merge(def.has).value,
+          setup: mergeFunctions<[BootstrapSetup], void, Class>(prev.setup, def.setup),
+          init: mergeFunctions<[FeatureContext], void, Class>(prev.init, def.init),
+        }),
+        {},
+    );
+  }
+
+  meta(source: FeatureDef.Source, type: Class): FeatureDef {
+
+    const def = (source as any)[FeatureDef__symbol];
+
+    if (def != null) {
+      return typeof def === 'function' ? (source as any)[FeatureDef__symbol](type) : def;
+    }
+
+    return source as FeatureDef;
   }
 
 }

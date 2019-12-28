@@ -1,7 +1,7 @@
 /**
  * @module @wesib/wesib
  */
-import { itsReduction } from 'a-iterable';
+import { itsReduction, mapIt } from 'a-iterable';
 import { asis } from 'call-thru';
 import { QualifiedName } from 'namespace-aliaser';
 import { Class, mergeFunctions, MetaAccessor } from '../common';
@@ -66,9 +66,60 @@ export interface ComponentDef<T extends object = any> {
 
 }
 
-class ComponentMeta extends MetaAccessor<ComponentDef> {
+export namespace ComponentDef {
 
-  protected readonly meta = asis;
+  /**
+   * Component definition source.
+   *
+   * An instances of this type accepted when {@link ComponentDef.define defining a component}.
+   *
+   * This can be one of:
+   * - component definition,
+   * - component definition holder, or
+   * - component definition factory.
+   *
+   * @typeparam T  A type of component.
+   */
+  export type Source<T extends object = any> =
+      | ComponentDef<T>
+      | Holder<T>
+      | Factory<T>;
+
+  /**
+   * Component definition holder.
+   *
+   * @typeparam T  A type of component.
+   */
+  export interface Holder<T extends object = any> {
+
+    /**
+     * The component definition this holder contains.
+     */
+    readonly [ComponentDef__symbol]: ComponentDef<T>;
+
+  }
+
+  /**
+   * Component definition factory.
+   *
+   * @typeparam T  A type of component.
+   */
+  export interface Factory<T extends object = any> {
+
+    /**
+     * Builds component definition.
+     *
+     * @param componentType  A component class constructor to build definition for.
+     *
+     * @returns Built component definition.
+     */
+    [ComponentDef__symbol](componentType: ComponentClass<T>): ComponentDef<T>;
+
+  }
+
+}
+
+class ComponentMeta extends MetaAccessor<ComponentDef, ComponentDef.Source> {
 
   constructor() {
     super(ComponentDef__symbol);
@@ -88,6 +139,17 @@ class ComponentMeta extends MetaAccessor<ComponentDef> {
         }),
         {},
     );
+  }
+
+  meta<T extends object>(source: ComponentDef.Source<T>, componentType: ComponentClass<T>): ComponentDef<T> {
+
+    const def = (source as any)[ComponentDef__symbol];
+
+    if (def != null) {
+      return typeof def === 'function' ? (source as any)[ComponentDef__symbol](componentType) : def;
+    }
+
+    return source as ComponentDef;
   }
 
 }
@@ -133,23 +195,23 @@ export const ComponentDef = {
    * [[bootstrapComponents]] function or added as a requirement of another feature.
    *
    * @typeparam T  A type of component.
-   * @param type  Component class constructor.
+   * @param componentType  Component class constructor.
    * @param defs  Component definitions.
    *
    * @returns The `type` instance.
    */
   define<T extends ComponentClass>(
       this: void,
-      type: T,
-      ...defs: ComponentDef<InstanceType<T>>[]
+      componentType: T,
+      ...defs: ComponentDef.Source<InstanceType<T>>[]
   ): T {
 
-    const def = ComponentDef.merge(...defs);
+    const def = meta.merge(mapIt(defs, source => meta.meta(source, componentType)));
 
-    meta.define(type, [def]);
-    FeatureDef.define(type, ComponentDef.featureDef(def));
+    meta.define(componentType, [def]);
+    FeatureDef.define(componentType, ComponentDef.featureDef(def));
 
-    return type;
+    return componentType;
   },
 
   /**

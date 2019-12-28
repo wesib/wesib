@@ -124,6 +124,7 @@ describe('feature', () => {
         expect(FeatureDef.merge({}, {})).toEqual({});
       });
     });
+
     describe('define', () => {
 
       let TestFeature: Class;
