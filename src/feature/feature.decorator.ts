@@ -21,10 +21,10 @@ import { FeatureDef } from './feature-def';
  *
  * @category Core
  * @typeparam T  A type of decorated feature class.
- * @param def  Feature definition.
+ * @param defs  Feature definition sources.
  *
  * @returns A feature class decorator.
  */
-export function Feature<T extends Class = any>(def: FeatureDef): TypedClassDecorator<T> {
-  return (type: T) => FeatureDef.define(type, def);
+export function Feature<T extends Class = any>(...defs: FeatureDef.Source[]): TypedClassDecorator<T> {
+  return (type: T) => FeatureDef.define(type, ...defs);
 }
