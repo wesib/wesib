@@ -144,11 +144,11 @@ const noFeatureDef: FeatureDef.Factory = {
 export const FeatureDef = {
 
   /**
-   * Extracts a feature definition options from its type.
+   * Extracts feature definition options from its type.
    *
    * @param featureType  Target feature class constructor.
    *
-   * @returns A feature definition options. May be empty when there is no feature definition found in the given
+   * @returns Feature definition options. May be empty when there is no feature definition found in the given
    * `featureType`.
    */
   of(this: void, featureType: Class): FeatureDef.Options {
