@@ -19,7 +19,7 @@ export type FeatureNeedClause = [FeatureRequest, 'needs' | 'has', Class];
  */
 export class FeatureRequest {
 
-  readonly def: FeatureDef;
+  readonly def: FeatureDef.Options;
   private _uses = 0;
 
   constructor(

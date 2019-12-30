@@ -38,12 +38,12 @@ describe('feature', () => {
       it('merges with inherited definition', () => {
 
         class A {
-          static [FeatureDef__symbol]: FeatureDef = {
+          static [FeatureDef__symbol]: FeatureDef.Options = {
             needs: Feature1,
           };
         }
         class B extends A {
-          static [FeatureDef__symbol]: FeatureDef = {
+          static [FeatureDef__symbol]: FeatureDef.Options = {
             needs: Feature2,
           };
         }
@@ -54,13 +54,13 @@ describe('feature', () => {
       it('merges with super-inherited definition', () => {
 
         class A {
-          static [FeatureDef__symbol]: FeatureDef = {
+          static [FeatureDef__symbol]: FeatureDef.Options = {
             needs: Feature1,
           };
         }
         class B extends A {}
         class C extends B {
-          static [FeatureDef__symbol]: FeatureDef = {
+          static [FeatureDef__symbol]: FeatureDef.Options = {
             needs: Feature2,
           };
         }
@@ -69,20 +69,21 @@ describe('feature', () => {
             .toEqual(FeatureDef.merge(A[FeatureDef__symbol], C[FeatureDef__symbol]));
       });
     });
+
     describe('merge', () => {
       it('merges `needs`', () => {
 
         const first: FeatureDef = { needs: Feature1 };
         const second: FeatureDef = { needs: Feature2 };
 
-        expect(FeatureDef.merge(first, second)).toEqual({ needs: [Feature1, Feature2]});
+        expect(FeatureDef.merge(first, second)).toEqual({ needs: [Feature1, Feature2] });
       });
       it('merges `has`', () => {
 
         const first: FeatureDef = { has: Feature1 };
         const second: FeatureDef = { has: Feature2 };
 
-        expect(FeatureDef.merge(first, second)).toEqual({ has: [Feature1, Feature2]});
+        expect(FeatureDef.merge(first, second)).toEqual({ has: [Feature1, Feature2] });
       });
       it('merges `setup`', () => {
 
@@ -124,6 +125,77 @@ describe('feature', () => {
       });
       it('does not merge empty definitions', () => {
         expect(FeatureDef.merge({}, {})).toEqual({});
+      });
+    });
+
+    describe('all', () => {
+
+      class TestFeature {}
+
+      it('merges feature definition options', () => {
+
+        const first: FeatureDef = { needs: Feature1 };
+        const second: FeatureDef = { needs: Feature2 };
+
+        expect(
+            FeatureDef.for(
+                TestFeature,
+                FeatureDef.all(first, second),
+            ),
+        ).toEqual(FeatureDef.merge(first, second));
+      });
+      it('merges feature definition holders', () => {
+
+        const first: FeatureDef = { needs: Feature1 };
+        const second: FeatureDef = { needs: Feature2 };
+
+        expect(
+            FeatureDef.for(
+                TestFeature,
+                FeatureDef.all(
+                    {
+                      [FeatureDef__symbol]: first,
+                    },
+                    second,
+                ),
+            ),
+        ).toEqual(FeatureDef.merge(first, second));
+      });
+      it('merges feature definition factories', () => {
+
+        const first: FeatureDef = { needs: Feature1 };
+        const second: FeatureDef = { needs: Feature2 };
+
+        expect(
+            FeatureDef.for(
+                TestFeature,
+                FeatureDef.all(
+                    {
+                      [FeatureDef__symbol]: () => first,
+                    },
+                    second,
+                ),
+            ),
+        ).toEqual(FeatureDef.merge(first, second));
+      });
+      it('merges recursive feature definition', () => {
+
+        const first: FeatureDef = { needs: Feature1 };
+        const second: FeatureDef = { needs: Feature2 };
+
+        expect(
+            FeatureDef.for(
+                TestFeature,
+                FeatureDef.all(
+                    {
+                      [FeatureDef__symbol]: () => ({
+                        [FeatureDef__symbol]: first,
+                      }),
+                    },
+                    second,
+                ),
+            ),
+        ).toEqual(FeatureDef.merge(first, second));
       });
     });
 

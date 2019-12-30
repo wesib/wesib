@@ -16,56 +16,56 @@ export const FeatureDef__symbol = (/*#__PURE__*/ Symbol('feature-def'));
 /**
  * Feature definition.
  *
+ * This can be one of:
+ * - feature definition options object,
+ * - feature definition holder, or
+ * - feature definition factory.
+ *
  * @category Core
  */
-export interface FeatureDef {
-
-  /**
-   * Features this one requires.
-   */
-  readonly needs?: Class | readonly Class[];
-
-  /**
-   * Features this one provides.
-   *
-   * The feature always provides itself.
-   */
-  readonly has?: Class | readonly Class[];
-
-  /**
-   * Sets up bootstrap.
-   *
-   * This method is called before bootstrap context created.
-   *
-   * @param setup  Bootstrap setup.
-   */
-  setup?(setup: BootstrapSetup): void;
-
-  /**
-   * Bootstraps this feature by calling the given bootstrap context constructed.
-   *
-   * @param context  Feature initialization context.
-   */
-  init?(context: FeatureContext): void;
-
-}
+export type FeatureDef =
+    | FeatureDef.Options
+    | FeatureDef.Holder
+    | FeatureDef.Factory;
 
 export namespace FeatureDef {
 
   /**
-   * Feature definition source.
-   *
-   * An instances of this type accepted when {@link FeatureDef.define defining a feature}.
-   *
-   * This can be one of:
-   * - feature definition,
-   * - feature definition holder, or
-   * - feature definition factory.
+   * Feature definition options.
    */
-  export type Source =
-      | FeatureDef
-      | Holder
-      | Factory;
+  export interface Options {
+
+    readonly [FeatureDef__symbol]?: undefined;
+
+    /**
+     * Features this one requires.
+     */
+    readonly needs?: Class | readonly Class[];
+
+    /**
+     * Features this one provides.
+     *
+     * The feature always provides itself.
+     */
+    readonly has?: Class | readonly Class[];
+
+    /**
+     * Sets up bootstrap.
+     *
+     * This method is called before bootstrap context created.
+     *
+     * @param setup  Bootstrap setup.
+     */
+    setup?(setup: BootstrapSetup): void;
+
+    /**
+     * Bootstraps this feature by calling the given bootstrap context constructed.
+     *
+     * @param context  Feature initialization context.
+     */
+    init?(context: FeatureContext): void;
+
+  }
 
   /**
    * Feature definition holder.
@@ -97,14 +97,14 @@ export namespace FeatureDef {
 
 }
 
-class FeatureMeta extends MetaAccessor<FeatureDef, FeatureDef.Source> {
+class FeatureMeta extends MetaAccessor<FeatureDef.Options, FeatureDef> {
 
   constructor() {
     super(FeatureDef__symbol);
   }
 
-  merge(defs: Iterable<FeatureDef>): FeatureDef {
-    return itsReduction<FeatureDef, FeatureDef>(
+  merge(defs: Iterable<FeatureDef.Options>): FeatureDef.Options {
+    return itsReduction<FeatureDef.Options, FeatureDef.Options>(
         defs,
         (prev, def) => ({
           needs: new ArraySet(prev.needs).merge(def.needs).value,
@@ -116,20 +116,27 @@ class FeatureMeta extends MetaAccessor<FeatureDef, FeatureDef.Source> {
     );
   }
 
-  meta(source: FeatureDef.Source, type: Class): FeatureDef {
+  meta(source: FeatureDef, type: Class): FeatureDef.Options {
 
-    const def = (source as any)[FeatureDef__symbol];
+    const def = source[FeatureDef__symbol];
 
-    if (def != null) {
-      return typeof def === 'function' ? (source as any)[FeatureDef__symbol](type) : def;
-    }
-
-    return source as FeatureDef;
+    return def == null
+        ? source as FeatureDef.Options
+        : this.meta(
+            typeof def === 'function' ? (source as FeatureDef.Factory)[FeatureDef__symbol](type) : def,
+            type,
+        );
   }
 
 }
 
 const meta = (/*#__PURE__*/ new FeatureMeta());
+
+const noFeatureDef: FeatureDef.Factory = {
+  [FeatureDef__symbol]() {
+    return {};
+  },
+};
 
 /**
  * @category Core
@@ -137,26 +144,38 @@ const meta = (/*#__PURE__*/ new FeatureMeta());
 export const FeatureDef = {
 
   /**
-   * Extracts a feature definition from its type.
+   * Extracts a feature definition options from its type.
    *
    * @param featureType  Target feature class constructor.
    *
-   * @returns A feature definition. May be empty when there is no feature definition found in the given `featureType`.
+   * @returns A feature definition options. May be empty when there is no feature definition found in the given
+   * `featureType`.
    */
-  of(this: void, featureType: Class): FeatureDef {
+  of(this: void, featureType: Class): FeatureDef.Options {
     return meta.of(featureType) || {};
   },
 
   /**
-   * Builds feature definition for the given feature class by definition source.
+   * Builds feature definition options for the given feature class.
    *
    * @param featureType  Target feature class constructor.
-   * @param source  A source of feature definition.
+   * @param def  A feature definition.
    *
-   * @returns Feature definition.
+   * @returns Feature definition options.
    */
-  for(this: void, featureType: Class, source: FeatureDef.Source): FeatureDef {
-    return meta.meta(source, featureType);
+  for(this: void, featureType: Class, def: FeatureDef): FeatureDef.Options {
+    return meta.meta(def, featureType);
+  },
+
+  /**
+   * Merges multiple feature definition options.
+   *
+   * @param defs  Feature definition options to merge.
+   *
+   * @returns Merged feature definition options.
+   */
+  merge(this: void, ...defs: readonly FeatureDef.Options[]): FeatureDef.Options {
+    return meta.merge(defs);
   },
 
   /**
@@ -166,8 +185,19 @@ export const FeatureDef = {
    *
    * @returns Merged feature definition.
    */
-  merge(this: void, ...defs: readonly FeatureDef[]): FeatureDef {
-    return meta.merge(defs);
+  all(this: void, ...defs: readonly FeatureDef[]): FeatureDef {
+    return itsReduction<FeatureDef, FeatureDef.Factory>(
+        defs,
+        (prev, def) => ({
+          [FeatureDef__symbol](featureType: Class) {
+            return FeatureDef.merge(
+                FeatureDef.for(featureType, prev),
+                FeatureDef.for(featureType, def),
+            );
+          },
+        }),
+        noFeatureDef,
+    );
   },
 
   /**
@@ -177,11 +207,11 @@ export const FeatureDef = {
    *
    * @typeparam T  Feature type.
    * @param featureType  Feature class constructor.
-   * @param defs  Feature definition sources.
+   * @param defs  Feature definitions.
    *
    * @returns The `type` instance.
    */
-  define<T extends Class>(this: void, featureType: T, ...defs: readonly FeatureDef.Source[]): T {
+  define<T extends Class>(this: void, featureType: T, ...defs: readonly FeatureDef[]): T {
     return meta.define(featureType, defs);
   },
 

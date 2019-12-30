@@ -43,7 +43,7 @@ export interface ComponentDef<T extends object = any> {
   /**
    * Additional feature definition options.
    */
-  readonly feature?: FeatureDef;
+  readonly feature?: FeatureDef.Options;
 
   /**
    * Sets up component definition.
@@ -154,7 +154,7 @@ class ComponentMeta extends MetaAccessor<ComponentDef, ComponentDef.Source> {
       return typeof def === 'function' ? (source as any)[ComponentDef__symbol](componentType) : def;
     }
     if ((source as any)[FeatureDef__symbol] != null) {
-      return { feature: FeatureDef.for(componentType, source as FeatureDef.Source) };
+      return { feature: FeatureDef.for(componentType, source as FeatureDef) };
     }
     if (isQualifiedName(source)) {
       return { name: source };
@@ -242,10 +242,10 @@ export const ComponentDef = {
    *
    * @param def  Component definition.
    *
-   * @returns Feature definition source that defines the component and applies other definitions from
+   * @returns Feature definition that defines the component and applies other definitions from
    * [[ComponentDef.feature]] property.
    */
-  featureDef<T extends object>(this: void, def: ComponentDef<T>): FeatureDef.Source {
+  featureDef<T extends object>(this: void, def: ComponentDef<T>): FeatureDef {
     return {
       [FeatureDef__symbol](featureType: Class) {
 
