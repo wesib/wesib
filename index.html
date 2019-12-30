@@ -169,35 +169,43 @@ bootstrapComponents(MyComponent);</code></pre>
 				<p>It is possible to define custom features too to extend Wesib. E.g. to augment the components, extend custom elements
 				(like <code>@Attribute</code> or <code>@DomProperty</code> decorators do), or provide some context values.</p>
 				<p>The feature is a class decorated with <code>@Feature</code> decorator:</p>
-				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { ComponentContext, DefinitionContext, Feature, FeatureContext } <span class="hljs-keyword">from</span> <span class="hljs-string">'@wesib/wesib'</span>;
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> {
+  ComponentContext,
+  DefinitionContext,
+  Feature,
+  FeatureContext,
+  FeatureSetup,
+} <span class="hljs-keyword">from</span> <span class="hljs-string">'@wesib/wesib'</span>;
 
 <span class="hljs-meta">@Feature</span>({
   needs: [
     OtherFeature1, <span class="hljs-comment">// Requires other features to be enabled.</span>
     MyComponent, <span class="hljs-comment">// The required component will be defined too.  </span>
-  ], 
-  <span class="hljs-keyword">set</span>: [
-    { a: GlobalService, by: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-keyword">new</span> GlobalService() }, <span class="hljs-comment">// Provide a `GlobalService` available globally</span>
-                                                         <span class="hljs-comment">// in all IoC contexts</span>
   ],
-  perDefinition: {
-    a: DefinitionService,
-    by: <span class="hljs-function">(<span class="hljs-params">definitionContext: DefinitionContext</span>) =&gt;</span> {
-      <span class="hljs-comment">// Provide a `DefinitionService` available during component definition.</span>
-      <span class="hljs-comment">// Such service will be provided per component class</span>
-      <span class="hljs-comment">// and will be available during custom element construction,</span>
-      <span class="hljs-comment">// e.g. to `onDefinition()` listeners.</span>
-      <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> DefinitionService(definitionContext);
-    }
-  },
-  perComponent: {
-    a: MyService,
-    by: <span class="hljs-function">(<span class="hljs-params">componentContext: ComponentContext</span>) =&gt;</span> {
-      <span class="hljs-comment">// Provide a `MyService` available to components.</span>
-      <span class="hljs-comment">// Such service will be provided per component instance</span>
-      <span class="hljs-comment">// and will be available to component instance and `onComponent()` listeners.</span>
-      <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> MyService(componentContext.component);
-    }
+  setup(setup: FeatureSetup) { 
+    setup.provide({ 
+      a: GlobalService,              <span class="hljs-comment">// Provide a `GlobalService` available globally</span>
+      <span class="hljs-keyword">as</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-keyword">new</span> GlobalService(), <span class="hljs-comment">// in all IoC contexts</span>
+    }); 
+    setup.perDefinition({
+      a: DefinitionService,
+      by: <span class="hljs-function">(<span class="hljs-params">definitionContext: DefinitionContext</span>) =&gt;</span> {
+        <span class="hljs-comment">// Provide a `DefinitionService` available during component definition.</span>
+        <span class="hljs-comment">// Such service will be provided per component class</span>
+        <span class="hljs-comment">// and will be available during custom element construction,</span>
+        <span class="hljs-comment">// e.g. to `onDefinition()` listeners.</span>
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> DefinitionService(definitionContext);
+      },
+    });
+    setup.perComponent({
+      a: MyService,
+      by: <span class="hljs-function">(<span class="hljs-params">componentContext: ComponentContext</span>) =&gt;</span> {
+        <span class="hljs-comment">// Provide a `MyService` available to components.</span>
+        <span class="hljs-comment">// Such service will be provided per component instance</span>
+        <span class="hljs-comment">// and will be available to component instance and `onComponent()` listeners.</span>
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> MyService(componentContext.component);
+      },
+    });
   },
   init(context: FeatureContext) {
     <span class="hljs-comment">// Bootstrap the feature by calling methods of provided context.</span>
