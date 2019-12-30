@@ -41,7 +41,7 @@ describe('component', () => {
         class BaseA {}
         class BaseB {}
         class A {
-          static [ComponentDef__symbol]: ComponentDef = {
+          static [ComponentDef__symbol]: ComponentDef.Options = {
             name: 'component-a',
             extend: {
               name: 'div',
@@ -50,7 +50,7 @@ describe('component', () => {
           };
         }
         class B extends A {
-          static [ComponentDef__symbol]: ComponentDef = {
+          static [ComponentDef__symbol]: ComponentDef.Options = {
             name: 'component-b',
             extend: {
               name: 'span',
@@ -63,6 +63,7 @@ describe('component', () => {
             .toEqual(ComponentDef.merge(A[ComponentDef__symbol], B[ComponentDef__symbol]));
       });
     });
+
     describe('merge', () => {
       it('merges `name`', () => {
         expect(ComponentDef.merge({ name: 'name1' }, { name: 'name2' })).toEqual({ name: 'name2' });
@@ -143,6 +144,69 @@ describe('component', () => {
         expect(ComponentDef.merge({}, {})).toEqual({});
       });
     });
+
+    describe('all', () => {
+
+      class TestComponent {}
+      let def1: ComponentDef.Options;
+      let def2: ComponentDef.Options;
+
+      beforeEach(() => {
+        class Dep1 {}
+        class Dep2 {}
+        class Base {}
+
+        def1 = { name: 'test-component', feature: { needs: Dep1 } };
+        def2 = { extend: { name: 'input', type: Base }, feature: { needs: Dep2 } };
+      });
+
+      it('merges definition options', () => {
+        expect(
+            ComponentDef.for(
+                TestComponent,
+                ComponentDef.all(def1, def2),
+            ),
+        ).toEqual(ComponentDef.merge(def1, def2));
+      });
+      it('merges definition holders', () => {
+        expect(
+            ComponentDef.for(
+                TestComponent,
+                ComponentDef.all(
+                    { [ComponentDef__symbol]: def1 },
+                    def2,
+                ),
+            ),
+        ).toEqual(ComponentDef.merge(def1, def2));
+      });
+      it('merges definition factories', () => {
+        expect(
+            ComponentDef.for(
+                TestComponent,
+                ComponentDef.all(
+                    { [ComponentDef__symbol]: () => def1 },
+                    def2,
+                ),
+            ),
+        ).toEqual(ComponentDef.merge(def1, def2));
+      });
+      it('merges deep definitions', () => {
+        expect(
+            ComponentDef.for(
+                TestComponent,
+                ComponentDef.all(
+                    {
+                      [ComponentDef__symbol]: () => ({
+                        [ComponentDef__symbol]: def1,
+                      }),
+                    },
+                    def2,
+                ),
+            ),
+        ).toEqual(ComponentDef.merge(def1, def2));
+      });
+    });
+
     describe('define', () => {
 
       let TestComponent: ComponentClass;

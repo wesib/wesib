@@ -23,12 +23,12 @@ import { ComponentClass } from './definition';
  *
  * @category Core
  * @typeparam T  A type of decorated component class.
- * @param defs  Component definition sources.
+ * @param defs  Component definitions.
  *
  * @returns A component class decorator.
  */
 export function Component<T extends ComponentClass = any>(
-    ...defs: ComponentDef.Source<InstanceType<T>>[]
+    ...defs: ComponentDef<InstanceType<T>>[]
 ): TypedClassDecorator<T> {
   return (type: T) => ComponentDef.define(type, ...defs);
 }
