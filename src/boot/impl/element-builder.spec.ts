@@ -447,6 +447,7 @@ describe('boot', () => {
           bubbles: true,
         }));
       });
+
       describe('component mount', () => {
         it('refers to element', () => {
           doMount();

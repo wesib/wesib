@@ -43,7 +43,7 @@ export abstract class DefinitionContext<T extends object = any> extends ContextV
   abstract readonly elementType: Class;
 
   /**
-   * An `OnEvent` sender of component definition readiness event.
+   * An `OnEvent` sender of component definition context upon its readiness.
    *
    * The custom element class is not constructed until component definition is complete.
    * The registered receiver will be notified when the custom element class is constructed.
@@ -51,6 +51,18 @@ export abstract class DefinitionContext<T extends object = any> extends ContextV
    * If the custom element class is constructed already, the receiver will be notified immediately.
    */
   abstract readonly whenReady: OnEvent<[this]>;
+
+  /**
+   * An `OnEvent` sender of component context upon its instantiation.
+   *
+   * If component instantiated after the receiver is registered, that receiver would receive an instantiated component's
+   * context immediately.
+   *
+   * If component already exists when the receiver is registered, that receiver would receive instantiated component's
+   * context only when/if component is {@link ComponentContext.whenOn connected}. This is to prevent resource leaking
+   * on disconnected components that may be never used again.
+   */
+  abstract readonly whenComponent: OnEvent<[ComponentContext<T>]>;
 
   /**
    * Custom element definition.

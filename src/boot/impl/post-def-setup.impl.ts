@@ -21,6 +21,7 @@ export function onPostDefSetup(
       receive(ctx, setup) {
 
         const whenReady = setup.whenReady.tillOff(unloader.supply);
+        const whenComponent = setup.whenComponent.tillOff(unloader.supply);
 
         receiver.receive(ctx, {
           get componentType() {
@@ -28,6 +29,9 @@ export function onPostDefSetup(
           },
           get whenReady() {
             return whenReady;
+          },
+          get whenComponent() {
+            return whenComponent;
           },
           perDefinition(spec) {
             return unloader.add(() => setup.perDefinition(spec));

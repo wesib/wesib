@@ -20,6 +20,7 @@ import { bootstrapDefault } from '../bootstrap-default';
 import { ComponentContextRegistry } from './component-context-registry.impl';
 import { DefinitionContextRegistry } from './definition-context-registry.impl';
 import { postDefSetup } from './post-def-setup.impl';
+import { WhenComponent } from './when-component.impl';
 
 /**
  * @internal
@@ -53,6 +54,7 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
     buildElement<T extends object>(componentType: ComponentClass<T>) {
 
       const def = ComponentDef.of(componentType);
+      const whenComponent = new WhenComponent<T>();
       const onComponent = new EventEmitter<[ComponentContext_]>();
       let componentContextRegistry_perType!: ComponentContextRegistry;
       const ready = trackValue(false);
@@ -84,6 +86,7 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
 
           const mount = createComponent({
             definitionContext,
+            whenComponent,
             onComponent,
             registry: createComponentContextRegistry(),
             element,
@@ -139,6 +142,10 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
           return componentType;
         }
 
+        get whenComponent() {
+          return whenComponent.onCreated;
+        }
+
         get onComponent() {
           return onComponent.on;
         }
@@ -152,7 +159,7 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
 
           const context = this;
 
-          this.whenReady = whenReady.thru(() => this).once;
+          this.whenReady = whenReady.thru_(() => this).once;
 
           const definitionContextRegistry =
               new DefinitionContextRegistry(definitionContextRegistry_global.seedIn(this));
@@ -168,6 +175,9 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
             },
             get whenReady() {
               return context.whenReady;
+            },
+            get whenComponent() {
+              return context.whenComponent;
             },
             perDefinition(spec) {
               return definitionContextRegistry.provide(spec);
@@ -194,7 +204,12 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
       def.define?.(definitionContext);
       definitions.send(definitionContext);
 
-      const elementType = createElementType(definitionContext, onComponent, createComponentContextRegistry());
+      const elementType = createElementType(
+          definitionContext,
+          whenComponent,
+          onComponent,
+          createComponentContextRegistry(),
+      );
 
       Object.defineProperty(definitionContext, 'elementType', {
         configurable: true,
@@ -210,6 +225,7 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
 
   function createElementType<T extends object>(
       definitionContext: DefinitionContext_<T>,
+      whenComponent: WhenComponent<T>,
       onComponent: EventEmitter<[ComponentContext_<T>]>,
       componentContextRegistry: ComponentContextRegistry,
   ) {
@@ -226,6 +242,7 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
 
         const context = createComponent({
           definitionContext,
+          whenComponent,
           onComponent,
           registry: componentContextRegistry,
           element: this,
@@ -257,6 +274,7 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
   function createComponent<T extends object>(
       {
         definitionContext,
+        whenComponent,
         onComponent,
         registry,
         element,
@@ -264,6 +282,7 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
         elementSuper,
       }: {
         definitionContext: DefinitionContext_<T>;
+        whenComponent: WhenComponent<T>,
         onComponent: EventEmitter<[ComponentContext_<T>]>;
         registry: ComponentContextRegistry;
         element: any;
@@ -280,8 +299,8 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
     const destroyed: OnEvent<[any]> = destructionReason.read.thru(reason => reason ? nextArgs(reason[0]) : nextSkip());
     const whenDestroyed: OnEvent<[any]> = destroyed.once;
 
-    const whenOff: OnEvent<[]> = status.read.thru(sts => sts === ComponentStatus.Off ? nextArgs() : nextSkip());
-    const whenOn: OnEvent<[EventSupply]> = status.read.thru(
+    const whenOff: OnEvent<[]> = status.read.thru_(sts => sts === ComponentStatus.Off ? nextArgs() : nextSkip());
+    const whenOn: OnEvent<[EventSupply]> = status.read.thru_(
         sts => {
           if (sts !== ComponentStatus.On) {
             return nextSkip();
@@ -351,12 +370,22 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
     }
 
     const context = new ComponentContext();
+    let lastRev = 0;
 
     context.whenDestroyed(() => removeElement(context));
     registry.provide({ a: ComponentContext_, is: context });
 
     augmentElement();
 
+    whenComponent.readNotifier.once(notifier => lastRev = notifier(context, lastRev));
+    context.whenOn(supply => {
+      whenComponent.readNotifier({
+        supply,
+        receive(_, notifier) {
+          lastRev = notifier(context, lastRev);
+        },
+      });
+    });
     components.send(context);
     onComponent.send(context);
 

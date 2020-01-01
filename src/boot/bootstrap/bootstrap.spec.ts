@@ -1,8 +1,9 @@
+import { noop } from 'call-thru';
 import { SingleContextUpKey } from 'context-values';
 import { afterSupplied, afterThe } from 'fun-events';
 import { Class } from '../../common';
-import { Component, ComponentContext } from '../../component';
-import { CustomElements } from '../../component/definition';
+import { Component, ComponentContext, ComponentMount } from '../../component';
+import { ComponentFactory, CustomElements, DefinitionContext } from '../../component/definition';
 import { Feature, FeatureDef, FeatureRef, FeatureStatus } from '../../feature';
 import { MockElement } from '../../spec/test-element';
 import { BootstrapContext } from '../bootstrap-context';
@@ -202,53 +203,7 @@ describe('boot', () => {
       await loadFeature(TestFeature);
       expect(receiver).toHaveBeenCalledWith('provided');
     });
-    it('is notified on component readiness', async () => {
 
-      const whenReady = jest.fn();
-
-      @Component('test-component')
-      class TestComponent {}
-
-      @Feature({
-        setup(setup) {
-          setup.setupDefinition(TestComponent)(defSetup => {
-            expect(defSetup.componentType).toBe(TestComponent);
-            defSetup.whenReady(whenReady);
-          });
-        },
-      })
-      class TestFeature {}
-
-      await loadFeature(TestFeature);
-      await loadFeature(TestComponent);
-      await bsContext.whenDefined(TestComponent);
-
-      expect(whenReady).toHaveBeenCalled();
-    });
-    it('is not notified on component readiness after feature unloaded', async () => {
-
-      const whenReady = jest.fn();
-
-      @Component('test-component')
-      class TestComponent {}
-
-      @Feature({
-        setup(setup) {
-          setup.setupDefinition(TestComponent)(defSetup => {
-            defSetup.whenReady(whenReady);
-          });
-        },
-      })
-      class TestFeature {}
-
-      const featureRef = await loadFeature(TestFeature);
-
-      await featureRef.dismiss();
-      await loadFeature(TestComponent);
-      await bsContext.whenDefined(TestComponent);
-
-      expect(whenReady).not.toHaveBeenCalled();
-    });
     it('sets up component subtype', async () => {
 
       @Component('test-component')
@@ -282,6 +237,168 @@ describe('boot', () => {
 
       await loadFeature(TestFeature);
       expect(receiver).toHaveBeenCalledWith('provided');
+    });
+
+    describe('whenReady', () => {
+      it('is notified on component definition readiness', async () => {
+
+        const whenReady = jest.fn();
+
+        @Component('test-component')
+        class TestComponent {
+        }
+
+        @Feature({
+          setup(setup) {
+            setup.setupDefinition(TestComponent)(defSetup => {
+              expect(defSetup.componentType).toBe(TestComponent);
+              defSetup.whenReady(whenReady);
+            });
+          },
+        })
+        class TestFeature {
+        }
+
+        await loadFeature(TestFeature);
+        await loadFeature(TestComponent);
+        await bsContext.whenDefined(TestComponent);
+
+        expect(whenReady).toHaveBeenCalled();
+      });
+      it('is not notified on component definition readiness after feature unloaded', async () => {
+
+        const whenReady = jest.fn();
+
+        @Component('test-component')
+        class TestComponent {
+        }
+
+        @Feature({
+          setup(setup) {
+            setup.setupDefinition(TestComponent)(defSetup => {
+              defSetup.whenReady(whenReady);
+            });
+          },
+        })
+        class TestFeature {
+        }
+
+        const featureRef = await loadFeature(TestFeature);
+
+        await featureRef.dismiss();
+        await loadFeature(TestComponent);
+        await bsContext.whenDefined(TestComponent);
+
+        expect(whenReady).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('whenComponent', () => {
+
+      let element1: Element;
+      let element2: Element;
+      let element3: Element;
+
+      beforeEach(() => {
+        element1 = document.body.appendChild(document.createElement('test-element-1'));
+        element2 = document.body.appendChild(document.createElement('test-element-2'));
+        element3 = document.body.appendChild(document.createElement('test-element-2'));
+        element3.setAttribute('id', '3');
+      });
+      afterEach(() => {
+        element1.remove();
+        element2.remove();
+        element3.remove();
+      });
+
+      let whenComponent11: Mock<void, [ComponentContext]>;
+      let whenComponent12: Mock<void, [ComponentContext]>;
+      let whenComponent21: Mock<void, [ComponentContext]>;
+      let factory1: ComponentFactory;
+      let factory2: ComponentFactory;
+      let mount1: ComponentMount;
+      let mount2: ComponentMount;
+
+      beforeEach(async () => {
+        whenComponent11 = jest.fn();
+        whenComponent12 = jest.fn();
+        whenComponent21 = jest.fn();
+
+        @Component('test-element-1')
+        class TestComponent1 {}
+
+        @Component('test-element-2')
+        class TestComponent2 {}
+
+        @Feature({
+          needs: [TestComponent1, TestComponent2],
+          setup(setup) {
+            setup.setupDefinition(TestComponent1)(defSetup => {
+              defSetup.whenComponent(whenComponent11);
+              defSetup.whenComponent(whenComponent12);
+            });
+            setup.setupDefinition(TestComponent2)(defSetup => {
+              defSetup.whenComponent(whenComponent21);
+            });
+          },
+        })
+        class TestFeature {}
+
+        await loadFeature(TestFeature);
+
+        [factory1, factory2] = await Promise.all([
+          bsContext.whenDefined(TestComponent1),
+          bsContext.whenDefined(TestComponent2),
+        ]);
+        mount1 = factory1.mountTo(element1);
+        mount2 = factory2.mountTo(element2);
+      });
+
+      it('notifies on component instantiation', () => {
+        expect(whenComponent11).toHaveBeenCalledWith(mount1.context);
+        expect(whenComponent12).toHaveBeenCalledWith(mount1.context);
+        expect(whenComponent21).toHaveBeenCalledWith(mount2.context);
+        expect(whenComponent11).toHaveBeenCalledTimes(1);
+        expect(whenComponent12).toHaveBeenCalledTimes(1);
+        expect(whenComponent21).toHaveBeenCalledTimes(1);
+      });
+      it('does not notify again when component is connected again', () => {
+        mount1.connected = false;
+        mount1.connected = true;
+        mount2.connected = true;
+        mount2.connected = true;
+        expect(whenComponent11).toHaveBeenCalledTimes(1);
+        expect(whenComponent12).toHaveBeenCalledTimes(1);
+      });
+      it('notifies new receiver immediately on already instantiated component', () => {
+
+        const whenComponent13 = jest.fn();
+
+        mount1.context.get(DefinitionContext).whenComponent(whenComponent13);
+        expect(whenComponent13).toHaveBeenCalledWith(mount1.context);
+        expect(whenComponent13).toHaveBeenCalledTimes(1);
+      });
+      it('notifies new receiver when already instantiated component gets connected', () => {
+        mount1.connected = false;
+
+        const whenComponent13 = jest.fn();
+
+        mount1.context.get(DefinitionContext).whenComponent(whenComponent13);
+        expect(whenComponent13).not.toHaveBeenCalled();
+
+        mount1.connected = true;
+        expect(whenComponent13).toHaveBeenCalledWith(mount1.context);
+        expect(whenComponent13).toHaveBeenCalledTimes(1);
+      });
+      it('notifies on recurrent component mount', () => {
+        mount2.context.get(DefinitionContext).whenComponent({
+          receive(eventContext) {
+            eventContext.onRecurrent(noop);
+            factory2.mountTo(element3);
+          },
+        });
+        expect(whenComponent21).toHaveBeenCalledTimes(2);
+      });
     });
   });
 
@@ -439,11 +556,7 @@ describe('boot', () => {
 
       const ref = bsContext.load(feature);
 
-      ref.read(({ ready }) => {
-        if (ready) {
-          resolve(ref);
-        }
-      });
+      ref.read(({ ready }) => ready && resolve(ref));
     });
   }
 });
