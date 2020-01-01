@@ -69,8 +69,8 @@
 					<div class="lead">
 						<p>Component definition setup.</p>
 					</div>
-					<p>It is passed to [[ComponentDef.setup]] method to set up the bootstrap. E.g. by providing definition or component
-					context values.</p>
+					<p>It is passed to <a href="../globals.html#componentdef.options.setup">ComponentDef.Options.setup</a> method to set up the bootstrap. E.g. by providing definition
+					or component context values.</p>
 				</div>
 			</section>
 			<section class="tsd-panel tsd-type-parameters">
@@ -97,6 +97,7 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="definitionsetup.html#componenttype" class="tsd-kind-icon">component<wbr>Type</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="definitionsetup.html#whencomponent" class="tsd-kind-icon">when<wbr>Component</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="definitionsetup.html#whenready" class="tsd-kind-icon">when<wbr>Ready</a></li>
 							</ul>
 						</section>
@@ -118,7 +119,7 @@
 					<div class="tsd-signature tsd-kind-icon">component<wbr>Type<span class="tsd-signature-symbol">:</span> <a href="componentclass.html" class="tsd-signature-type">ComponentClass</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/5597514/src/component/definition/definition-setup.ts#L23">src/component/definition/definition-setup.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/e732e60/src/component/definition/definition-setup.ts#L23">src/component/definition/definition-setup.ts:23</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -128,17 +129,37 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="whencomponent" class="tsd-anchor"></a>
+					<h3>when<wbr>Component</h3>
+					<div class="tsd-signature tsd-kind-icon">when<wbr>Component<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">OnEvent</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><a href="../classes/componentcontext.html" class="tsd-signature-type">ComponentContext</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/e732e60/src/component/definition/definition-setup.ts#L45">src/component/definition/definition-setup.ts:45</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>An <code>OnEvent</code> sender of component context upon its instantiation.</p>
+						</div>
+						<p>If component instantiated after the receiver is registered, that receiver would receive an instantiated component&#39;s
+						context immediately.</p>
+						<p>If component already exists when the receiver is registered, that receiver would receive instantiated component&#39;s
+							context only when/if component is <a href="../classes/componentcontext.html#whenon">connected</a>. This is to prevent resource leaking
+						on disconnected components that may be never used again.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="whenready" class="tsd-anchor"></a>
 					<h3>when<wbr>Ready</h3>
 					<div class="tsd-signature tsd-kind-icon">when<wbr>Ready<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">OnEvent</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><a href="../classes/definitioncontext.html" class="tsd-signature-type">DefinitionContext</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/5597514/src/component/definition/definition-setup.ts#L33">src/component/definition/definition-setup.ts:33</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/e732e60/src/component/definition/definition-setup.ts#L33">src/component/definition/definition-setup.ts:33</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>An <code>OnEvent</code> sender of component definition readiness event.</p>
+							<p>An <code>OnEvent</code> sender of component definition context upon its readiness.</p>
 						</div>
 						<p>The custom element class is not constructed until component definition is complete.
 						The registered receiver will be notified when the custom element class is constructed.</p>
@@ -158,7 +179,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/5597514/src/component/definition/definition-setup.ts#L59">src/component/definition/definition-setup.ts:59</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/e732e60/src/component/definition/definition-setup.ts#L71">src/component/definition/definition-setup.ts:71</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -223,7 +244,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/5597514/src/component/definition/definition-setup.ts#L45">src/component/definition/definition-setup.ts:45</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/e732e60/src/component/definition/definition-setup.ts#L57">src/component/definition/definition-setup.ts:57</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -297,6 +318,9 @@
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="definitionsetup.html#componenttype" class="tsd-kind-icon">component<wbr>Type</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="definitionsetup.html#whencomponent" class="tsd-kind-icon">when<wbr>Component</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="definitionsetup.html#whenready" class="tsd-kind-icon">when<wbr>Ready</a>
