@@ -10,11 +10,10 @@ import {
   ComponentEventDispatcher,
   ComponentMount,
 } from '../../component';
-import { ComponentClass, ComponentFactory, DefinitionContext, ElementDef } from '../../component/definition';
+import { ComponentClass, ComponentFactory, DefinitionContext } from '../../component/definition';
 import { MockElement } from '../../spec/test-element';
 import { BootstrapContext } from '../bootstrap-context';
 import { BootstrapContextRegistry } from './bootstrap-context-registry.impl';
-import { DefinitionContextRegistry } from './definition-context-registry.impl';
 import { ElementBuilder } from './element-builder.impl';
 import Mock = jest.Mock;
 import Mocked = jest.Mocked;
@@ -578,40 +577,6 @@ describe('boot', () => {
         mount.connected = false;
 
         expect(disconnected).toHaveBeenCalledWith();
-      });
-    });
-
-    describe('component listener', () => {
-
-      let componentContext: ComponentContext;
-      let onComponentSpy: Mock;
-
-      beforeEach(() => {
-        onComponentSpy = jest.fn();
-        ComponentDef.define(TestComponent, {
-          define(context) {
-            context.onComponent(onComponentSpy);
-          },
-        });
-      });
-      beforeEach(() => {
-        mockBootstrapContext.get(DefinitionContextRegistry).provide({
-          a: ElementDef,
-          is: {
-            extend:
-                { type: MockElement },
-          },
-        });
-      });
-      beforeEach(() => {
-
-        const element = new (builder.buildElement(TestComponent).elementType);
-
-        componentContext = ComponentContext.of(element);
-      });
-
-      it('is notified to component instantiation', () => {
-        expect(onComponentSpy).toHaveBeenCalledWith(componentContext);
       });
     });
   });

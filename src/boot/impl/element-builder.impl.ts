@@ -12,7 +12,8 @@ import {
 import {
   ComponentClass,
   ComponentFactory as ComponentFactory_,
-  DefinitionContext as DefinitionContext_, DefinitionSetup,
+  DefinitionContext as DefinitionContext_,
+  DefinitionSetup,
   ElementDef,
 } from '../../component/definition';
 import { BootstrapContext } from '../bootstrap-context';
@@ -55,7 +56,6 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
 
       const def = ComponentDef.of(componentType);
       const whenComponent = new WhenComponent<T>();
-      const onComponent = new EventEmitter<[ComponentContext_]>();
       let componentContextRegistry_perType!: ComponentContextRegistry;
       const ready = trackValue(false);
       const whenReady: OnEvent<[]> = ready.read.thru(cls => cls ? nextArgs() : nextSkip());
@@ -87,7 +87,6 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
           const mount = createComponent({
             definitionContext,
             whenComponent,
-            onComponent,
             registry: createComponentContextRegistry(),
             element,
             elementSuper(key) {
@@ -144,10 +143,6 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
 
         get whenComponent() {
           return whenComponent.onCreated;
-        }
-
-        get onComponent() {
-          return onComponent.on;
         }
 
         get elementType(): Class {
@@ -207,7 +202,6 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
       const elementType = createElementType(
           definitionContext,
           whenComponent,
-          onComponent,
           createComponentContextRegistry(),
       );
 
@@ -226,7 +220,6 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
   function createElementType<T extends object>(
       definitionContext: DefinitionContext_<T>,
       whenComponent: WhenComponent<T>,
-      onComponent: EventEmitter<[ComponentContext_<T>]>,
       componentContextRegistry: ComponentContextRegistry,
   ) {
 
@@ -243,7 +236,6 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
         const context = createComponent({
           definitionContext,
           whenComponent,
-          onComponent,
           registry: componentContextRegistry,
           element: this,
           createMount: noop,
@@ -275,7 +267,6 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
       {
         definitionContext,
         whenComponent,
-        onComponent,
         registry,
         element,
         createMount,
@@ -283,7 +274,6 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
       }: {
         definitionContext: DefinitionContext_<T>;
         whenComponent: WhenComponent<T>,
-        onComponent: EventEmitter<[ComponentContext_<T>]>;
         registry: ComponentContextRegistry;
         element: any;
         elementSuper(name: PropertyKey): any;
@@ -387,7 +377,6 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
       });
     });
     components.send(context);
-    onComponent.send(context);
 
     const component = newComponent(definitionContext.componentType, context);
 

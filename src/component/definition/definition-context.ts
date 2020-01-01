@@ -72,13 +72,6 @@ export abstract class DefinitionContext<T extends object = any> extends ContextV
   }
 
   /**
-   * An `OnEvent` sender of component construction events.
-   *
-   * The registered receiver will be notified right before the defined component is constructed.
-   */
-  abstract readonly onComponent: OnEvent<[ComponentContext<T>]>;
-
-  /**
    * Provides a value available in the context of each component of the defined component type.
    *
    * @typeparam Deps  A type of dependencies.

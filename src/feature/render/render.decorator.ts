@@ -37,7 +37,7 @@ export function Render<T extends ComponentClass>(def?: RenderDef): TypedProperty
         componentType,
         {
           define(defContext) {
-            defContext.onComponent(componentContext => {
+            defContext.whenComponent(componentContext => {
               componentContext.whenReady(() => {
 
                 const component = componentContext.component as any;
