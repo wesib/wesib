@@ -10,8 +10,8 @@ import { DefinitionContext } from './definition-context';
 /**
  * Component definition setup.
  *
- * It is passed to [[ComponentDef.setup]] method to set up the bootstrap. E.g. by providing definition or component
- * context values.
+ * It is passed to [[ComponentDef.Options.setup]] method to set up the bootstrap. E.g. by providing definition
+ * or component context values.
  *
  * @category Core
  */

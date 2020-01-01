@@ -278,7 +278,7 @@ export const ComponentDef = {
    * @param def  Component definition options.
    *
    * @returns Feature definition that defines the component and applies other definitions from
-   * [[ComponentDef.feature]] property.
+   * [[ComponentDef.Options.feature]] property.
    */
   featureDef<T extends object>(this: void, def: ComponentDef.Options<T>): FeatureDef {
     return {

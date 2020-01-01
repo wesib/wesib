@@ -8,8 +8,8 @@ import { Class } from '../common';
  *
  * Indicates why one feature needs another one. The reason can be one of:
  *
- * - `needs` when feature {@link FeatureDef.needs depends} on another one, or
- * - `has` when feature {@link FeatureDef.has provides} another one.
+ * - `needs` when feature {@link FeatureDef.Options.needs depends} on another one, or
+ * - `has` when feature {@link FeatureDef.Options.has provides} another one.
  *
  * @category Core
  */

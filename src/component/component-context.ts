@@ -54,8 +54,8 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    * A component instance.
    *
    * It is an error accessing this property before the component is created, e.g. from inside of component constructor
-   * or {@link DefinitionContext.onComponent component construction event} receiver. In these cases you may wish to
-   * add a [[whenReady]] callback.
+   * or {@link DefinitionContext.whenComponent component instantiation event} receiver. A [[whenReady]] callback could
+   * be utilized to work this around.
    */
   abstract readonly component: T;
 
@@ -97,8 +97,8 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    * An `OnEvent` sender of component readiness event.
    *
    * The component is constructed shortly after custom element. So the component may not exist when requested
-   * e.g. inside component constructor or {@link DefinitionContext.onComponent component construction event} receiver.
-   * The registered receiver will be notified when the component is constructed.
+   * e.g. inside component constructor or {@link DefinitionContext.whenComponent component instantiation event}
+   * receiver. The registered receiver will be notified when the component is constructed.
    *
    * If the component is constructed already, the receiver will be notified immediately.
    */

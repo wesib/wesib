@@ -11,7 +11,7 @@ import { BootstrapContext__key } from './bootstrap-context.key.impl';
 /**
  * Components bootstrap context.
  *
- * An instance of this class is passed to [[FeatureDef.init]] method so that the feature can configure itself.
+ * An instance of this class is passed to [[FeatureDef.Options.init]] method so that the feature can configure itself.
  *
  * Extends `BootstrapValues` interface. The values could be {@link BootstrapSetup.provide pre-configured} in feature
  * definitions.
