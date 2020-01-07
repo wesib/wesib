@@ -34,11 +34,10 @@ function attachShadow(context: ComponentContext, init: ShadowRootInit): ShadowRo
 
   if (shadowRoot) {
     (shadowRoot as any)[ComponentContext__symbol] = context;
-    context.dispatchEvent(new ShadowDomEvent('wesib:shadowAttached', { bubbles: true }));
-    return shadowRoot;
+    context.whenOn.once(() => context.dispatchEvent(new ShadowDomEvent('wesib:shadowAttached', { bubbles: true })));
   }
 
-  return;
+  return shadowRoot;
 }
 
 function shadowRootOf(element: Element, init: ShadowRootInit): ShadowRoot | undefined {

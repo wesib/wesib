@@ -74,8 +74,11 @@ describe('feature/shadow-dom', () => {
       context.get(ShadowContentRoot);
       expect(attachShadowSpy).toHaveBeenCalledWith({ mode: 'open' });
     });
-    it('dispatches shadow DOM event', () => {
+    it('dispatches shadow DOM event on first connection', () => {
       context.get(ShadowContentRoot);
+      expect(mockDispatcher.dispatch).not.toHaveBeenCalled();
+
+      element.connectedCallback();
       expect(mockDispatcher.dispatch).toHaveBeenCalledWith(
           context,
           expect.any(ShadowDomEvent),
