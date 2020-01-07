@@ -15,8 +15,10 @@ import { ComponentEventDispatcher__key } from './component-event.key.impl';
  * using [[ComponentEventDispatcher]] available in component context.
  *
  * The following event types supported:
- * - `wesib:component` is thrown when component is bound to element. I.e. when HTML element is upgraded to custom one
- *   defined by component, or component is bound to the element. This event bubbles and is not cancelable.
+ * - `wesib:component` is dispatched when component is bound to element. I.e. when HTML element is upgraded to custom
+ *   one defined by component, or component is mounted to element. The event is dispatched when component is connected
+ *   for the first time. I.e. when element is added to the document.
+ *   This event bubbles and is not cancelable.
  *
  * @category Core
  * @event ComponentEvent#wesib:component

@@ -441,7 +441,9 @@ function elementStatus(element: any): ValueTracker<ComponentStatus> {
 }
 
 function componentCreated(context: ComponentContext_) {
-  context.dispatchEvent(new ComponentEvent('wesib:component', { bubbles: true }));
+  context.whenOn.once(
+      () => context.dispatchEvent(new ComponentEvent('wesib:component', { bubbles: true })),
+  );
 }
 
 function removeElement(context: ComponentContext_) {

@@ -276,7 +276,11 @@ describe('boot', () => {
       it('is not mounted', () => {
         expect(componentContext.mount).toBeUndefined();
       });
-      it('dispatches component event', () => {
+      it('dispatches component event when first connected', () => {
+        expect(mockDispatcher.dispatch).not.toHaveBeenCalled();
+
+        componentContext.element.connectedCallback();
+
         expect(mockDispatcher.dispatch).toHaveBeenCalledWith(componentContext, expect.any(ComponentEvent));
         expect(mockDispatcher.dispatch).toHaveBeenCalledWith(componentContext, expect.objectContaining({
           type: 'wesib:component',
@@ -437,14 +441,19 @@ describe('boot', () => {
         doMount();
         expect(() => factory.mountTo(element)).toThrow('already bound');
       });
-      it('dispatches component event', () => {
+      it('dispatches component event when first connected', () => {
         doMount();
+        expect(mockDispatcher.dispatch).not.toHaveBeenCalled();
+        mount.connected = true;
         expect(mockDispatcher.dispatch).toHaveBeenCalledWith(context, expect.any(ComponentEvent));
         expect(mockDispatcher.dispatch).toHaveBeenCalledWith(context, expect.objectContaining({
           type: 'wesib:component',
           cancelable: false,
           bubbles: true,
         }));
+        mount.connected = false;
+        mount.connected = true;
+        expect(mockDispatcher.dispatch).toHaveBeenCalledTimes(1);
       });
 
       describe('component mount', () => {
