@@ -28,7 +28,7 @@ export const ElementRender = {
   /**
    * Enables component element rendering.
    *
-   * The `render` call will be scheduled by [[RenderScheduler]] once component state updated.
+   * The `render` call will be scheduled by [[DefaultRenderScheduler]] once component state updated.
    *
    * @param context  Target component context.
    * @param render  Element render function.

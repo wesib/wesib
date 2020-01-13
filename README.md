@@ -324,8 +324,5 @@ export class GreetTextComponent {
 }
 ```
 
-The `@Render`-decorated method will be called from `requestAnimationFrame()` callback. So, it won't be called too
-frequently.
-
-The `@Render` decorator enables `StateSupport` and `RenderSupport` features. The latter provides a per-component
-`RenderScheduler` service that is used to schedule component renderer calls.
+The `@Render`-decorated method will be called from `requestAnimationFrame()` callback by default. So, it won't be
+called too frequently.
