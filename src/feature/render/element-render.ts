@@ -1,10 +1,10 @@
 /**
  * @module @wesib/wesib
  */
+import { DefaultRenderScheduler } from '../../boot/globals';
 import { ComponentContext } from '../../component';
 import { ComponentState } from '../state';
 import { RenderDef } from './render-def';
-import { RenderScheduler } from './render-scheduler';
 
 /**
  * Component element render function interface.
@@ -43,7 +43,7 @@ export const ElementRender = {
 
     const { offline, path = [] } = def;
     const stateTracker = context.get(ComponentState).track(path);
-    const schedule = context.get(RenderScheduler).newSchedule();
+    const schedule = context.get(DefaultRenderScheduler)();
 
     let rendered = false;
     const stateSupply = stateTracker.onUpdate(() => {
@@ -69,7 +69,7 @@ export const ElementRender = {
 
     function scheduleRender() {
       rendered = true;
-      schedule.schedule(renderElement);
+      schedule(renderElement);
     }
 
     function renderElement() {

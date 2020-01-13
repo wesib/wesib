@@ -7,18 +7,17 @@ import { ComponentClass } from '../../component/definition';
 import { StateSupport } from '../state';
 import { ElementRender } from './element-render';
 import { RenderDef } from './render-def';
-import { RenderSupport } from './render-support.feature';
 
 /**
  * Component property decorator that declares a rendering method for the component.
  *
- * The decorated method call will be scheduled by [[RenderScheduler]] once component state updated.
+ * The decorated method call will be scheduled by [[DefaultRenderScheduler]] once component state updated.
  *
  * The decorated method should have no arguments. It may return either nothing, or a function. In the latter case the
  * returned function will be called immediately to render the element. It may, in turn, return a renderer function,
  * and so on.
  *
- * This decorator automatically enables [[StateSupport]] and [[RenderSupport]] features.
+ * This decorator automatically enables [[StateSupport]] feature.
  *
  * Utilizes [[ElementRender.render]] function to define rendering.
  *
@@ -36,6 +35,9 @@ export function Render<T extends ComponentClass>(def?: RenderDef): TypedProperty
     ComponentDef.define(
         componentType,
         {
+          feature: {
+            needs: StateSupport,
+          },
           define(defContext) {
             defContext.whenComponent(componentContext => {
               componentContext.whenReady(() => {
@@ -46,9 +48,6 @@ export function Render<T extends ComponentClass>(def?: RenderDef): TypedProperty
                 ElementRender.render(componentContext, render, def);
               });
             });
-          },
-          feature: {
-            needs: [StateSupport, RenderSupport],
           },
         },
     );

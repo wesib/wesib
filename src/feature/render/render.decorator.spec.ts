@@ -1,3 +1,5 @@
+import { immediateRenderScheduler, RenderSchedule, RenderScheduler } from 'render-scheduler';
+import { DefaultRenderScheduler } from '../../boot/globals';
 import { Component, ComponentContext } from '../../component';
 import { ComponentClass, CustomElements, DefinitionContext } from '../../component/definition';
 import { MockElement, testElement } from '../../spec/test-element';
@@ -5,8 +7,6 @@ import { DomProperty, domPropertyPathTo } from '../dom-properties';
 import { FeatureDef } from '../feature-def';
 import { Feature } from '../feature.decorator';
 import { StateSupport } from '../state';
-import { RenderSchedule, RenderScheduler } from './render-scheduler';
-import { RenderSupport } from './render-support.feature';
 import { Render } from './render.decorator';
 import Mock = jest.Mock;
 import Mocked = jest.Mocked;
@@ -63,16 +63,12 @@ describe('feature/render', () => {
       testComponent = TestComponent;
     });
 
-    let mockRenderScheduler: Mocked<RenderScheduler>;
-    let mockRenderSchedule: Mocked<RenderSchedule>;
+    let mockRenderScheduler: Mock<RenderSchedule, Parameters<RenderScheduler>>;
+    let mockRenderSchedule: Mock<void, Parameters<RenderSchedule>>;
 
     beforeEach(() => {
-      mockRenderSchedule = {
-        schedule: jest.fn((fn: () => void) => fn()),
-      };
-      mockRenderScheduler = {
-        newSchedule: jest.fn(() => mockRenderSchedule),
-      };
+      mockRenderSchedule = jest.fn(immediateRenderScheduler());
+      mockRenderScheduler = jest.fn((_options?) => mockRenderSchedule);
     });
 
     let mockCustomElements: Mocked<CustomElements>;
@@ -83,9 +79,8 @@ describe('feature/render', () => {
       } as any;
 
       @Feature({
-        has: RenderSupport,
         setup(setup) {
-          setup.provide({ a: RenderScheduler, is: mockRenderScheduler });
+          setup.provide({ a: DefaultRenderScheduler, is: mockRenderScheduler });
           setup.provide({ a: CustomElements, is: mockCustomElements });
         },
       })
@@ -100,9 +95,6 @@ describe('feature/render', () => {
 
     it('requires state support', () => {
       expect(FeatureDef.of(testComponent).needs).toContain(StateSupport);
-    });
-    it('requires rendering support', () => {
-      expect(FeatureDef.of(testComponent).needs).toContain(RenderSupport);
     });
 
     describe('Rendering', () => {
@@ -170,10 +162,8 @@ describe('feature/render', () => {
         expect(mockRender).toHaveBeenCalledTimes(1);
       });
       it('uses decorated method', () => {
-        mockRenderSchedule.schedule.mockRestore();
-        component.property = 'other';
-        mockRenderSchedule.schedule.mock.calls[0][0]();
-
+        connected = true;
+        element.connectedCallback();
         expect(mockRender).toHaveBeenCalledWith();
         expect(mockRender.mock.instances[0]).toBe(component);
       });
@@ -183,12 +173,12 @@ describe('feature/render', () => {
           expect(mockOfflineRender).toHaveBeenCalled();
         });
         it('is scheduled on state update', () => {
-          mockRenderSchedule.schedule.mockClear();
+          mockRenderSchedule.mockClear();
           component.property = 'other';
           expect(mockOfflineRender).toHaveBeenCalled();
         });
         it('is scheduled on state update while offline', () => {
-          mockRenderSchedule.schedule.mockClear();
+          mockRenderSchedule.mockClear();
           connected = false;
           component.property = 'other';
           expect(mockOfflineRender).toHaveBeenCalled();
@@ -205,10 +195,10 @@ describe('feature/render', () => {
         });
         it('does not re-create schedule on state update', () => {
 
-          const schedulesCreated = mockRenderScheduler.newSchedule.mock.calls.length;
+          const schedulesCreated = mockRenderScheduler.mock.calls.length;
 
           component.property = 'other';
-          expect(mockRenderScheduler.newSchedule).toHaveBeenCalledTimes(schedulesCreated);
+          expect(mockRenderScheduler).toHaveBeenCalledTimes(schedulesCreated);
         });
         it('is scheduled with a replacement function', () => {
 
