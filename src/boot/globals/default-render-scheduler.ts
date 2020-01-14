@@ -1,4 +1,4 @@
-import { ContextRef, SingleContextKey } from 'context-values';
+import { FnContextKey, FnContextRef } from 'context-values';
 import { newRenderSchedule, RenderScheduler } from 'render-scheduler';
 import { bootstrapDefault } from '../bootstrap-default';
 import { BootstrapWindow } from './bootstrap-window';
@@ -15,8 +15,9 @@ export type DefaultRenderScheduler = RenderScheduler;
  *
  * Uses the default `RenderScheduler` (`newRenderSchedule()`) for {@link BootstrapWindow bootstrap window}.
  */
-export const DefaultRenderScheduler: ContextRef<DefaultRenderScheduler> =
-    (/*#__PURE__*/ new SingleContextKey<DefaultRenderScheduler>(
+export const DefaultRenderScheduler:
+    FnContextRef<Parameters<DefaultRenderScheduler>, ReturnType<DefaultRenderScheduler>> =
+    (/*#__PURE__*/ new FnContextKey<Parameters<DefaultRenderScheduler>, ReturnType<DefaultRenderScheduler>>(
         'default-render-scheduler',
         {
           byDefault: bootstrapDefault(
