@@ -1,5 +1,6 @@
 import { FnContextKey, FnContextRef } from 'context-values';
 import { newRenderSchedule, RenderScheduler } from 'render-scheduler';
+import { bootstrapDefault } from '../bootstrap-default';
 import { BootstrapWindow } from './bootstrap-window';
 
 /**
@@ -19,10 +20,11 @@ export const DefaultRenderScheduler:
     (/*#__PURE__*/ new FnContextKey<Parameters<DefaultRenderScheduler>, ReturnType<DefaultRenderScheduler>>(
         'default-render-scheduler',
         {
-          byDefault: context => (options = {}) => newRenderSchedule({
-                ...options,
-                window: options.window || context.get(BootstrapWindow),
-              },
-          ),
+          byDefault: bootstrapDefault(
+              context => (options = {}) => newRenderSchedule({
+                    ...options,
+                    window: options.window || context.get(BootstrapWindow),
+                  },
+              )),
         },
     ));
