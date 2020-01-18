@@ -5,6 +5,9 @@ import { FeatureDef, FeatureDef__symbol } from '../feature-def';
 import { DomPropertyRegistrar } from './dom-property-registrar';
 import { DomPropertyRegistry } from './dom-property-registry.impl';
 
+/**
+ * @internal
+ */
 const DomPropertiesSupport__feature: FeatureDef = {
   setup(setup) {
     setup.perDefinition({ as: DomPropertyRegistry });

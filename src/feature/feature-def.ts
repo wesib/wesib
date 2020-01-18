@@ -97,6 +97,9 @@ export namespace FeatureDef {
 
 }
 
+/**
+ * @internal
+ */
 class FeatureMeta extends MetaAccessor<FeatureDef.Options, FeatureDef> {
 
   constructor() {
@@ -130,8 +133,14 @@ class FeatureMeta extends MetaAccessor<FeatureDef.Options, FeatureDef> {
 
 }
 
-const meta = (/*#__PURE__*/ new FeatureMeta());
+/**
+ * @internal
+ */
+const featureMeta = (/*#__PURE__*/ new FeatureMeta());
 
+/**
+ * @internal
+ */
 const noFeatureDef: FeatureDef.Factory = {
   [FeatureDef__symbol]() {
     return {};
@@ -152,7 +161,7 @@ export const FeatureDef = {
    * `featureType`.
    */
   of(this: void, featureType: Class): FeatureDef.Options {
-    return meta.of(featureType) || {};
+    return featureMeta.of(featureType) || {};
   },
 
   /**
@@ -164,7 +173,7 @@ export const FeatureDef = {
    * @returns Feature definition options.
    */
   for(this: void, featureType: Class, def: FeatureDef): FeatureDef.Options {
-    return meta.meta(def, featureType);
+    return featureMeta.meta(def, featureType);
   },
 
   /**
@@ -175,7 +184,7 @@ export const FeatureDef = {
    * @returns Merged feature definition options.
    */
   merge(this: void, ...defs: readonly FeatureDef.Options[]): FeatureDef.Options {
-    return meta.merge(defs);
+    return featureMeta.merge(defs);
   },
 
   /**
@@ -212,7 +221,7 @@ export const FeatureDef = {
    * @returns The `type` instance.
    */
   define<T extends Class>(this: void, featureType: T, ...defs: readonly FeatureDef[]): T {
-    return meta.define(featureType, defs);
+    return featureMeta.define(featureType, defs);
   },
 
 };

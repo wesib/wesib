@@ -15,6 +15,9 @@ import { ShadowRootBuilder } from './shadow-root-builder';
  */
 export type ShadowContentDef = Readonly<ShadowRootInit>;
 
+/**
+ * @internal
+ */
 const defaultShadowContentDef: ShadowContentDef = { mode: 'open' };
 
 /**

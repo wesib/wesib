@@ -122,6 +122,9 @@ export namespace ComponentDef {
 
 }
 
+/**
+ * @internal
+ */
 class ComponentMeta extends MetaAccessor<ComponentDef.Options, ComponentDef> {
 
   constructor() {
@@ -168,8 +171,19 @@ class ComponentMeta extends MetaAccessor<ComponentDef.Options, ComponentDef> {
 
 }
 
-const meta = (/*#__PURE__*/ new ComponentMeta());
+/**
+ * @internal
+ */
+const componentMeta = (/*#__PURE__*/ new ComponentMeta());
+
+/**
+ * @internal
+ */
 const componentDefined = (/*#__PURE__*/ Symbol('component-defined'));
+
+/**
+ * @internal
+ */
 const noComponentDef: ComponentDef.Factory = {
   [ComponentDef__symbol]() {
     return {};
@@ -190,7 +204,7 @@ export const ComponentDef = {
    * @returns Component definition options. May be empty if there is not definition attached to component type.
    */
   of<T extends object>(this: void, componentType: ComponentClass<T>): ComponentDef.Options<T> {
-    return meta.of(componentType) as ComponentDef.Options<T> || {};
+    return componentMeta.of(componentType) as ComponentDef.Options<T> || {};
   },
 
   /**
@@ -206,7 +220,7 @@ export const ComponentDef = {
       componentType: ComponentClass<T>,
       source: ComponentDef<T>,
   ): ComponentDef.Options<T> {
-    return meta.meta(source, componentType);
+    return componentMeta.meta(source, componentType);
   },
 
   /**
@@ -218,7 +232,7 @@ export const ComponentDef = {
    * @returns Merged component definition options.
    */
   merge<T extends object>(this: void, ...defs: ComponentDef.Options<T>[]): ComponentDef.Options<T> {
-    return meta.merge(defs);
+    return componentMeta.merge(defs);
   },
 
   /**
@@ -264,9 +278,9 @@ export const ComponentDef = {
       ...defs: ComponentDef<InstanceType<T>>[]
   ): T {
 
-    const def = meta.merge(mapIt(defs, source => ComponentDef.for(componentType, source)));
+    const def = componentMeta.merge(mapIt(defs, source => ComponentDef.for(componentType, source)));
 
-    meta.define(componentType, [def]);
+    componentMeta.define(componentType, [def]);
     FeatureDef.define(componentType, ComponentDef.featureDef(def));
 
     return componentType;

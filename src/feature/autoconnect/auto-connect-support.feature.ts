@@ -4,6 +4,9 @@
 import { FeatureDef, FeatureDef__symbol } from '../feature-def';
 import { ConnectTracker } from './connect-tracker.impl';
 
+/**
+ * @internal
+ */
 const AutoConnectSupport__feature: FeatureDef = {
   setup(setup) {
     setup.provide({ as: ConnectTracker });

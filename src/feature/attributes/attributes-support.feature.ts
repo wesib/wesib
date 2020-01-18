@@ -5,6 +5,9 @@ import { FeatureDef, FeatureDef__symbol } from '../feature-def';
 import { AttributeChangedCallback, AttributeRegistrar } from './attribute-registrar';
 import { AttributeRegistry } from './attribute-registry.impl';
 
+/**
+ * @internal
+ */
 const AttributesSupport__feature: FeatureDef = {
   setup(setup) {
     setup.perDefinition({ as: AttributeRegistry });

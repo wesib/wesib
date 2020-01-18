@@ -7,6 +7,9 @@ import { ComponentMount } from '../component-mount';
 import { ComponentClass } from './component-class';
 import { ElementDef } from './element-def';
 
+/**
+ * @internal
+ */
 const ComponentFactory__key = (/*#__PURE__*/ new SingleContextKey<ComponentFactory>('component-factory'));
 
 /**

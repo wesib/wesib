@@ -8,6 +8,9 @@ import { componentFactoryOf } from '../../boot/impl/component-factory.symbol.imp
 import { Class, PromiseResolver } from '../../common';
 import { ComponentClass } from './component-class';
 
+/**
+ * @internal
+ */
 const CustomElements__key = (/*#__PURE__*/ new SingleContextKey<CustomElements>(
     'custom-elements',
     {
@@ -61,6 +64,9 @@ export abstract class CustomElements {
 
 }
 
+/**
+ * @internal
+ */
 function createCustomElements(values: ContextValues) {
 
   const customElements: CustomElementRegistry = values.get(BootstrapWindow).customElements;
@@ -114,8 +120,14 @@ function createCustomElements(values: ContextValues) {
   return new WindowCustomElements();
 }
 
+/**
+ * @internal
+ */
 const ComponentResolver__symbol = (/*#__PURE__*/ Symbol('component-resolver'));
 
+/**
+ * @internal
+ */
 function componentResolver(componentType: ComponentClass): PromiseResolver<void> {
   return (componentType as any)[ComponentResolver__symbol]
       || ((componentType as any)[ComponentResolver__symbol] = new PromiseResolver());

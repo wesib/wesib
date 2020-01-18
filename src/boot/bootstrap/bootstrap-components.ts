@@ -37,10 +37,16 @@ export function bootstrapComponents(...features: Class[]): BootstrapContext {
   return bootstrapContext;
 }
 
+/**
+ * @internal
+ */
 function bootstrapFeature(needs: Class[]): Class {
   return FeatureDef.define(class BootstrapFeature {}, { needs });
 }
 
+/**
+ * @internal
+ */
 function initBootstrap(bootstrapContextRegistry: BootstrapContextRegistry) {
 
   const stage = trackValue<BootstrapStage>(BootstrapStage.Init);
@@ -158,6 +164,9 @@ function initBootstrap(bootstrapContextRegistry: BootstrapContextRegistry) {
   };
 }
 
+/**
+ * @internal
+ */
 const enum BootstrapStage {
   Init,
   Ready,

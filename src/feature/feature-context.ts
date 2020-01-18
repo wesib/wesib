@@ -9,6 +9,9 @@ import { ComponentContext } from '../component';
 import { ComponentClass, ComponentFactory, DefinitionContext, DefinitionSetup } from '../component/definition';
 import { FeatureRef } from './feature-ref';
 
+/**
+ * @internal
+ */
 const FeatureContext_key = new SingleContextKey<FeatureContext>('feature-context');
 
 /**

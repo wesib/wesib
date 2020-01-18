@@ -82,6 +82,9 @@ export function DomProperty<T extends ComponentClass>(def: DomPropertyDef<T> = {
  */
 export { DomProperty as DomMethod };
 
+/**
+ * @internal
+ */
 function domPropertyDescriptor<V>(
     propertyKey: string | symbol,
     propertyDesc: TypedPropertyDescriptor<V> | undefined,

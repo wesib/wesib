@@ -6,6 +6,9 @@ import { FeatureDef, FeatureDef__symbol } from '../feature-def';
 import { ShadowDomEvent } from './shadow-dom-event';
 import { ShadowRootBuilder } from './shadow-root-builder';
 
+/**
+ * @internal
+ */
 const ShadowDomSupport__feature: FeatureDef = {
   setup(setup) {
     setup.provide({ a: ShadowRootBuilder, is: attachShadow });
@@ -27,6 +30,9 @@ export class ShadowDomSupport {
 
 }
 
+/**
+ * @internal
+ */
 function attachShadow(context: ComponentContext, init: ShadowRootInit): ShadowRoot | undefined {
 
   const element = context.element;
@@ -40,6 +46,9 @@ function attachShadow(context: ComponentContext, init: ShadowRootInit): ShadowRo
   return shadowRoot;
 }
 
+/**
+ * @internal
+ */
 function shadowRootOf(element: Element, init: ShadowRootInit): ShadowRoot | undefined {
 
   const existing = element.shadowRoot;
