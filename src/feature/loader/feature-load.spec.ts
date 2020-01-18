@@ -248,6 +248,15 @@ describe('feature load', () => {
 
         expect(loader!.request.feature).toBe(Provider2);
       });
+
+      describe('upKey', () => {
+        it('is the key itself', () => {
+
+          const key = FeatureKey.of(TestFeature);
+
+          expect(key.upKey).toBe(key);
+        });
+      });
     });
   });
 

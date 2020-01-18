@@ -41,6 +41,10 @@ export class FeatureKey extends ContextUpKey<AfterEvent<[FeatureLoader?]>, Featu
         : ((feature as any)[FeatureKey__symbol] = new FeatureKey(feature));
   }
 
+  get upKey(): this {
+    return this;
+  }
+
   private constructor(feature: Class) {
     super(`feature:${feature.name}`);
   }

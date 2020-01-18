@@ -2,7 +2,7 @@
  * @module @wesib/wesib
  */
 import { ContextUpKey, ContextUpRef, ContextValueOpts, ContextValues } from 'context-values';
-import { AfterEvent, EventKeeper } from 'fun-events';
+import { AfterEvent, afterThe, EventKeeper } from 'fun-events';
 import { ComponentContext, ComponentContext__symbol } from '../../component';
 
 /**
@@ -22,38 +22,57 @@ export type ElementAdapter =
  */
     (this: void, element: any) => ComponentContext | undefined;
 
+/**
+ * @internal
+ */
 class ElementAdapterKey extends ContextUpKey<ElementAdapter, ElementAdapter> {
+
+  readonly upKey: ContextUpKey.UpKey<ElementAdapter, ElementAdapter>;
 
   constructor() {
     super('element-adapter');
+    this.upKey = this.createUpKey(
+        opts => opts.seed.keep.dig((...adapters) => {
+
+          const combined: ElementAdapter = adapters.reduce(
+              (prev, adapter) => element => prev(element) || adapter(element),
+              defaultElementAdapter,
+          );
+
+          const defaultProvider = () => afterThe(defaultElementAdapter);
+
+          return combined !== defaultElementAdapter
+              ? afterThe(combined)
+              : opts.byDefault(defaultProvider) || defaultProvider();
+        }),
+    );
   }
 
   grow<Ctx extends ContextValues>(
       opts: ContextValueOpts<
           Ctx,
           ElementAdapter,
-          EventKeeper<ElementAdapter[]> | ElementAdapter, AfterEvent<ElementAdapter[]>>,
+          EventKeeper<ElementAdapter[]> | ElementAdapter,
+          AfterEvent<ElementAdapter[]>>,
   ): ElementAdapter {
 
-    const defaultElementAdapter = (element: any) => element[ComponentContext__symbol];
+    let delegated: ElementAdapter;
 
-    let result: ElementAdapter;
+    opts.context.get(
+        this.upKey,
+        'or' in opts ? { or: opts.or != null ? afterThe(opts.or) : opts.or } : undefined,
+    )!(adapter => delegated = adapter);
 
-    opts.seed((...adapters) => {
-
-      const combined = adapters.reduce(
-          (prev, adapter) => (element: any) => prev(element) || adapter(element),
-          defaultElementAdapter,
-      );
-
-      result = combined !== defaultElementAdapter
-          ? combined
-          : opts.byDefault(() => defaultElementAdapter) || defaultElementAdapter;
-    });
-
-    return element => result(element);
+    return element => delegated(element);
   }
 
+}
+
+/**
+ * @internal
+ */
+function defaultElementAdapter(element: any): ComponentContext {
+  return element[ComponentContext__symbol];
 }
 
 /**
