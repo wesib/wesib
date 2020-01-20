@@ -24,10 +24,10 @@ export const DefaultRenderScheduler:
         {
           byDefault: bootstrapDefault(
               context => (options = {}) => newRenderSchedule({
-                    ...options,
-                    window: options.window || context.get(BootstrapWindow),
-                  },
-              )),
+                ...options,
+                window: options.window || context.get(BootstrapWindow),
+              }),
+          ),
         },
     )
 );

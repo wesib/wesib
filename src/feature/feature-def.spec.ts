@@ -135,7 +135,7 @@ describe('feature', () => {
         merged.call(Feature, context);
 
         expect(mockInit1).toHaveBeenCalledWith(context);
-        expect(mockInit1 .mock.instances[0]).toBe(Feature);
+        expect(mockInit1.mock.instances[0]).toBe(Feature);
         expect(mockInit2).toHaveBeenCalledWith(context);
         expect(mockInit2.mock.instances[0]).toBe(Feature);
       });

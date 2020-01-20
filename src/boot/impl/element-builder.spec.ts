@@ -249,7 +249,8 @@ describe('boot', () => {
         addEventListenerSpy = jest.fn();
         removeEventListenerSpy = jest.fn();
         ComponentDef.define(
-            TestComponent, {
+            TestComponent,
+            {
               extend: {
                 type: class {
 
@@ -261,7 +262,8 @@ describe('boot', () => {
               setup(setup) {
                 setup.perComponent({ a: key2, is: value2 });
               },
-            });
+            },
+        );
       });
 
       beforeEach(() => {
