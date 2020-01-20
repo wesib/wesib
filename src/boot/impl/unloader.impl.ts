@@ -18,7 +18,7 @@ const doNotAdd = valueProvider(noop);
 export function newUnloader(): Unloader {
 
   const unloads: (() => void)[] = [];
-  let add = (adder: () => () => void) => {
+  let add = (adder: () => () => void): () => void => {
 
     const unload = adder();
 

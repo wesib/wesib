@@ -36,6 +36,7 @@ const FeatureKey__symbol = (/*#__PURE__*/ Symbol('feature-key'));
 export class FeatureKey extends ContextUpKey<AfterEvent<[FeatureLoader?]>, FeatureClause> {
 
   static of(feature: Class): FeatureKey {
+    // eslint-disable-next-line no-prototype-builtins
     return feature.hasOwnProperty(FeatureKey__symbol)
         ? (feature as any)[FeatureKey__symbol]
         : ((feature as any)[FeatureKey__symbol] = new FeatureKey(feature));
@@ -263,8 +264,8 @@ abstract class FeatureStage {
       private readonly _stop: FeatureStageStop = () => Promise.resolve(),
   ) {}
 
-  async idle(): Promise<this> {
-    return this;
+  idle(): Promise<this> {
+    return Promise.resolve(this);
   }
 
   abstract setup(): Promise<FeatureStage>;
@@ -286,8 +287,8 @@ abstract class FeatureStage {
 
 class SetupFeatureStage extends FeatureStage {
 
-  get after() {
-    return 'idle' as const;
+  get after(): 'idle' {
+    return 'idle';
   }
 
   async setup(): Promise<FeatureStage> {
@@ -301,7 +302,7 @@ class SetupFeatureStage extends FeatureStage {
     return new InitFeatureStage(
         this.loader,
         context,
-        async () => supply.off(),
+        () => Promise.resolve(supply.off()),
     );
   }
 
@@ -313,8 +314,8 @@ class SetupFeatureStage extends FeatureStage {
 
 class InitFeatureStage extends FeatureStage {
 
-  get after() {
-    return 'setup' as const;
+  get after(): 'setup' {
+    return 'setup';
   }
 
   constructor(
@@ -325,8 +326,8 @@ class InitFeatureStage extends FeatureStage {
     super(state, stop);
   }
 
-  async setup(): Promise<FeatureStage> {
-    return this;
+  setup(): Promise<FeatureStage> {
+    return Promise.resolve(this);
   }
 
   async init(): Promise<FeatureStage> {
@@ -343,8 +344,8 @@ class InitFeatureStage extends FeatureStage {
 
 class ActiveFeatureStage extends FeatureStage {
 
-  get after() {
-    return 'init' as const;
+  get after(): 'init' {
+    return 'init';
   }
 
   constructor(prev: InitFeatureStage) {
@@ -352,12 +353,12 @@ class ActiveFeatureStage extends FeatureStage {
     prev.loader.state.it = true;
   }
 
-  async setup(): Promise<FeatureStage> {
-    return this;
+  setup(): Promise<FeatureStage> {
+    return Promise.resolve(this);
   }
 
-  async init(): Promise<FeatureStage> {
-    return this;
+  init(): Promise<FeatureStage> {
+    return Promise.resolve(this);
   }
 
 }
@@ -396,15 +397,15 @@ function newFeatureContext(
       componentRegistry = new ComponentRegistry(this);
     }
 
-    get feature() {
+    get feature(): Class {
       return loader.request.feature;
     }
 
-    get onDefinition() {
+    get onDefinition(): OnEvent<[DefinitionContext]> {
       return onDefinition;
     }
 
-    get onComponent() {
+    get onComponent(): OnEvent<[ComponentContext]> {
       return onComponent;
     }
 

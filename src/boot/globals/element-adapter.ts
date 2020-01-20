@@ -39,7 +39,7 @@ class ElementAdapterKey extends ContextUpKey<ElementAdapter, ElementAdapter> {
               defaultElementAdapter,
           );
 
-          const defaultProvider = () => afterThe(defaultElementAdapter);
+          const defaultProvider = (): AfterEvent<[ElementAdapter]> => afterThe(defaultElementAdapter);
 
           return combined !== defaultElementAdapter
               ? afterThe(combined)

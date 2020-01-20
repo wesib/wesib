@@ -27,7 +27,7 @@ export class AttributeRegistry<T extends object = any> {
     this._attrs[name] = mergeFunctions<[string, string | null], void, T>(this._attrs[name], callback);
   }
 
-  define(elementType: Class) {
+  define(elementType: Class): void {
 
     const attrs = this._attrs;
     const observedAttributes = Object.keys(attrs);
@@ -50,7 +50,7 @@ export class AttributeRegistry<T extends object = any> {
     });
   }
 
-  mount(mount: ComponentMount<T>) {
+  mount(mount: ComponentMount<T>): void {
 
     const element = mount.element;
     const attrs = this._attrs;

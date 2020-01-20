@@ -53,6 +53,7 @@ describe('feature/attributes', () => {
         }
 
         set attr(_value: string) {
+          /* do not set */
         }
 
       }

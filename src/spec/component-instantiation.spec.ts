@@ -22,9 +22,11 @@ describe('component instantiation', () => {
         name: 'test-component',
         extend: {
           type: class extends MockElement {
-            get inheritedProperty() {
+
+            get inheritedProperty(): string {
               return 'inherited-value';
             }
+
           },
         },
       })
@@ -47,7 +49,7 @@ describe('component instantiation', () => {
       element = new (await testElement(testComponent))();
     });
 
-    it('instantiates custom element', async () => {
+    it('instantiates custom element', () => {
       expect(element).toBeDefined();
     });
     it('assigns component context reference to custom element', () => {
@@ -86,7 +88,7 @@ describe('component instantiation', () => {
       it('is resolved on component instantiation', async () => {
 
         let context!: ComponentContext;
-        const component = await new Promise(async resolve => {
+        const component = await new Promise(resolve => {
 
           @Component({
             name: 'test-component',
@@ -106,7 +108,7 @@ describe('component instantiation', () => {
           class TestComponent {
           }
 
-          new (await testElement(TestComponent))(); // tslint:disable-line:no-unused-expression
+          testElement(TestComponent).then(cls => new cls());
         });
 
         expect(component).toBeDefined();

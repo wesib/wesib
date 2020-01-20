@@ -19,8 +19,7 @@ describe('boot', () => {
 
     const customElements: CustomElements = {
 
-      define(): void {
-      },
+      define(): void { /* do not defined */ },
 
       whenDefined(): Promise<void> {
         return Promise.resolve();
@@ -177,10 +176,12 @@ describe('boot', () => {
         },
       })
       class TestComponent {
+
         constructor(context: ComponentContext) {
           context.get(key)(receiver);
         }
-      }
+
+}
 
       @Feature({
         setup(setup) {

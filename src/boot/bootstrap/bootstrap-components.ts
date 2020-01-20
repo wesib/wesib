@@ -5,7 +5,7 @@ import { nextArgs, nextSkip } from 'call-thru';
 import { AfterEvent, afterEventBy, OnEvent, trackValue } from 'fun-events';
 import { newNamespaceAliaser } from 'namespace-aliaser';
 import { Class } from '../../common';
-import { ComponentClass, CustomElements } from '../../component/definition';
+import { ComponentClass, ComponentFactory, CustomElements } from '../../component/definition';
 import { FeatureDef, FeatureRef, FeatureStatus } from '../../feature';
 import { FeatureKey, FeatureLoader, FeatureRequester } from '../../feature/loader';
 import { BootstrapContext } from '../bootstrap-context';
@@ -47,7 +47,20 @@ function bootstrapFeature(needs: Class[]): Class {
 /**
  * @internal
  */
-function initBootstrap(bootstrapContextRegistry: BootstrapContextRegistry) {
+const enum BootstrapStage {
+  Init,
+  Ready,
+}
+
+/**
+ * @internal
+ */
+function initBootstrap(
+    bootstrapContextRegistry: BootstrapContextRegistry,
+): {
+  bootstrapContext: BootstrapContext;
+  complete(): void;
+} {
 
   const stage = trackValue<BootstrapStage>(BootstrapStage.Init);
   const values = bootstrapContextRegistry.values;
@@ -69,7 +82,7 @@ function initBootstrap(bootstrapContextRegistry: BootstrapContextRegistry) {
       bootstrapContextRegistry.provide({ a: BootstrapContext, is: this });
     }
 
-    async whenDefined<C extends object>(componentType: ComponentClass<C>) {
+    async whenDefined<C extends object>(componentType: ComponentClass<C>): Promise<ComponentFactory<C>> {
       await new Promise(resolve => this.whenReady(resolve));
       await this.get(CustomElements).whenDefined(componentType);
       return componentFactoryOf(componentType);
@@ -84,6 +97,7 @@ function initBootstrap(bootstrapContextRegistry: BootstrapContextRegistry) {
 
       const status = afterEventBy<[FeatureInfo]>(receiver => {
 
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
         const request = bootstrapContext.get(FeatureRequester).request(feature);
         const info = trackValue<FeatureInfo>({
           status: {
@@ -128,21 +142,24 @@ function initBootstrap(bootstrapContextRegistry: BootstrapContextRegistry) {
       }).share();
 
       let whenDown: Promise<void>;
-      const supply = status(({ down }) => whenDown = down!);
-      const read: AfterEvent<[FeatureStatus]> =
-          status.keep.thru(info => info.status).tillOff(supply);
+      const supply = status(({ down }) => {
+        whenDown = down!;
+      });
+      const read: AfterEvent<[FeatureStatus]> = status.keep.thru(
+          info => info.status,
+      ).tillOff(supply);
 
       class Ref extends FeatureRef {
 
-        get read() {
+        get read(): AfterEvent<[FeatureStatus]> {
           return read;
         }
 
-        get down() {
+        get down(): Promise<void> {
           return whenDown;
         }
 
-        dismiss(reason?: any) {
+        dismiss(reason?: any): Promise<void> {
           supply.off(reason);
           return whenDown;
         }
@@ -158,16 +175,8 @@ function initBootstrap(bootstrapContextRegistry: BootstrapContextRegistry) {
 
   return {
     bootstrapContext,
-    complete() {
+    complete(): void {
       stage.it = BootstrapStage.Ready;
     },
   };
-}
-
-/**
- * @internal
- */
-const enum BootstrapStage {
-  Init,
-  Ready,
 }

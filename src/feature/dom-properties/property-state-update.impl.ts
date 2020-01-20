@@ -38,6 +38,6 @@ function defaultUpdateState<T extends object, K extends keyof T>(
     path: DomPropertyPath<K>,
     newValue: T[K],
     oldValue: T[K],
-) {
+): void {
   ComponentContext.of(this).updateState(path, newValue, oldValue);
 }

@@ -1,8 +1,9 @@
 import { ContextKey, ContextKey__symbol, ContextRegistry, ContextValues, SingleContextKey } from 'context-values';
 import { BootstrapContext } from '../bootstrap-context';
 
-const BootstrapContextRegistry__key =
-    (/*#__PURE__*/ new SingleContextKey<BootstrapContextRegistry>('bootstrap-context-registry'));
+const BootstrapContextRegistry__key = (
+    /*#__PURE__*/ new SingleContextKey<BootstrapContextRegistry>('bootstrap-context-registry')
+);
 
 /**
  * @internal

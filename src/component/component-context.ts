@@ -206,6 +206,6 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
 /**
  * @internal
  */
-function updateComponentState<V>(this: ComponentContext<any>, key: StatePath, newValue: V, oldValue: V) {
+function updateComponentState<V>(this: ComponentContext<any>, key: StatePath, newValue: V, oldValue: V): void {
   this.get(StateUpdater)(key, newValue, oldValue);
 }

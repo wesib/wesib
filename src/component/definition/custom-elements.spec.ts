@@ -44,6 +44,7 @@ describe('component', () => {
 
     beforeEach(() => {
       TestComponent = class {
+
         static [ComponentFactory__symbol]: Partial<ComponentFactory> = {
           elementDef: {
             name: 'test-component',
@@ -54,6 +55,7 @@ describe('component', () => {
             },
           },
         };
+
       };
 
       elementType = HTMLElement;
@@ -69,6 +71,7 @@ describe('component', () => {
 
         const ns = new NamespaceDef('test/url', 'test');
         class NsComponent {
+
           static [ComponentFactory__symbol]: Partial<ComponentFactory> = {
             elementDef: {
               name: ['other', ns],
@@ -79,6 +82,7 @@ describe('component', () => {
               },
             },
           };
+
         }
 
         customElements.define(NsComponent, elementType);
@@ -93,6 +97,7 @@ describe('component', () => {
       it('does not define custom element for anonymous component', () => {
 
         class AnonymousComponent {
+
           static [ComponentFactory__symbol]: Partial<ComponentFactory> = {
             elementDef: {
               extend: {
@@ -102,6 +107,7 @@ describe('component', () => {
               },
             },
           };
+
         }
 
         customElements.define(AnonymousComponent, elementType);
@@ -111,6 +117,7 @@ describe('component', () => {
       it('defines custom element extending another one', () => {
 
         class BaseElement {
+
           static [ComponentFactory__symbol]: Partial<ComponentFactory> = {
             elementDef: {
               extend: {
@@ -118,6 +125,7 @@ describe('component', () => {
               },
             },
           };
+
         }
 
         (TestComponent as any)[ComponentFactory__symbol] = {
@@ -170,6 +178,7 @@ describe('component', () => {
 
         const ns = new NamespaceDef('test/url', 'test');
         class NsComponent {
+
           static [ComponentFactory__symbol]: Partial<ComponentFactory> = {
             elementDef: {
               name: ['other', ns],
@@ -180,6 +189,7 @@ describe('component', () => {
               },
             },
           };
+
         }
 
         class Element {
@@ -213,6 +223,7 @@ describe('component', () => {
       it('waits for anonymous component definition', async () => {
 
         class AnonymousComponent {
+
           static [ComponentFactory__symbol]: Partial<ComponentFactory> = {
             elementDef: {
               extend: {
@@ -222,6 +233,7 @@ describe('component', () => {
               },
             },
           };
+
         }
 
         class Element {

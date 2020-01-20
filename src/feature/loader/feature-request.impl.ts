@@ -78,13 +78,13 @@ export class FeatureRequest {
     return this;
   }
 
-  unuse() {
+  unuse(): void {
     if (!--this._uses) {
       this._revoke();
     }
   }
 
-  private _revokeBy(revoke: () => void) {
+  private _revokeBy(revoke: () => void): void {
     this._revoke = mergeFunctions(revoke, this._revoke);
   }
 

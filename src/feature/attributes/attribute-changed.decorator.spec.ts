@@ -162,13 +162,17 @@ describe('feature/attributes', () => {
       const attrSpy = jest.fn();
 
       expect(() => {
+
         @Component('test-component')
-        // @ts-ignore
         class TestComponent {
+
           @AttributeChanged()
           [key] = attrSpy;
+
         }
-      }).toThrowError(TypeError);
+
+        return TestComponent;
+      }).toThrow(TypeError);
     });
   });
 });

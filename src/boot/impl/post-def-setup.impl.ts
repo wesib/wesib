@@ -60,6 +60,7 @@ const PostDefSetup__symbol = (/*#__PURE__*/ Symbol('post-def-setup'));
  * @internal
  */
 export function postDefSetup<T extends object>(componentType: ComponentClass<T>): PostDefSetup<T> {
+  // eslint-disable-next-line no-prototype-builtins
   if (componentType.hasOwnProperty(PostDefSetup__symbol)) {
     return (componentType as any)[PostDefSetup__symbol];
   }

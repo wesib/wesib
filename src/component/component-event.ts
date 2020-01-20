@@ -26,16 +26,6 @@ import { ComponentEventDispatcher__key } from './component-event.key.impl';
 export class ComponentEvent extends Event {
 
   /**
-   * Constructs component event.
-   *
-   * @param type  Event type.
-   * @param eventInitDict  Event initialization dictionary.
-   */
-  constructor(type: string, eventInitDict?: EventInit) {
-    super(type, eventInitDict);
-  }
-
-  /**
    * Target component context.
    */
   get context(): ComponentContext {
@@ -83,5 +73,4 @@ export interface ComponentEventDispatcher {
  *
  * @category Core
  */
-export const ComponentEventDispatcher: SingleContextRef<ComponentEventDispatcher> =
-    (/*#__PURE__*/ ComponentEventDispatcher__key);
+export const ComponentEventDispatcher: SingleContextRef<ComponentEventDispatcher> = ComponentEventDispatcher__key;

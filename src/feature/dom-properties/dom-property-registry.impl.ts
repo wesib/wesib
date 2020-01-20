@@ -19,7 +19,7 @@ export class DomPropertyRegistry {
     this._props.set(propertyKey, descriptor);
   }
 
-  define<T extends object>(elementType: Class<T>) {
+  define<T extends object>(elementType: Class<T>): void {
 
     const prototype = elementType.prototype;
 
@@ -28,7 +28,7 @@ export class DomPropertyRegistry {
     });
   }
 
-  mount<T extends object>(mount: ComponentMount<T>) {
+  mount<T extends object>(mount: ComponentMount<T>): void {
 
     const element = mount.element;
 

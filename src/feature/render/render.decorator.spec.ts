@@ -54,7 +54,7 @@ describe('feature/render', () => {
         property2 = 'value';
 
         @Render({ offline: true })
-        nestRender() {
+        nestRender(): () => void {
           return mockDelegateRender;
         }
 
@@ -106,7 +106,7 @@ describe('feature/render', () => {
       beforeEach(() => {
         element = new definitionContext.elementType;
         context = ComponentContext.of(element);
-        component = context.component as any;
+        component = context.component;
       });
 
       let connected: boolean;

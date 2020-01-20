@@ -11,9 +11,11 @@ describe('component', () => {
       it('returns component definition', () => {
 
         class TestComponent {
+
           static [ComponentDef__symbol]: ComponentDef = {
             name: 'test-component',
           };
+
         }
 
         expect(ComponentDef.of(TestComponent)).toEqual(TestComponent[ComponentDef__symbol]);
@@ -28,9 +30,11 @@ describe('component', () => {
       it('requests inherited definition', () => {
 
         class A {
+
           static [ComponentDef__symbol]: ComponentDef = {
             name: 'test-component',
           };
+
         }
         class B extends A {}
 
@@ -41,6 +45,7 @@ describe('component', () => {
         class BaseA {}
         class BaseB {}
         class A {
+
           static [ComponentDef__symbol]: ComponentDef.Options = {
             name: 'component-a',
             extend: {
@@ -48,8 +53,10 @@ describe('component', () => {
               type: BaseA,
             },
           };
+
         }
         class B extends A {
+
           static [ComponentDef__symbol]: ComponentDef.Options = {
             name: 'component-b',
             extend: {
@@ -57,6 +64,7 @@ describe('component', () => {
               type: BaseB,
             },
           };
+
         }
 
         expect(ComponentDef.of(B))

@@ -15,7 +15,7 @@ export const DomPropertyPath__root = (/*#__PURE__*/ Symbol('dom-property'));
  *
  * @category Feature
  */
-export type DomPropertyPath<K extends PropertyKey = PropertyKey> = readonly [keyof DomPropertyPath__root_Keys, K];
+export type DomPropertyPath<K extends PropertyKey = PropertyKey> = readonly [keyof DomPropertyPath__rootKeys, K];
 
 /**
  * Constructs a named DOM property state path.
@@ -32,7 +32,7 @@ export function domPropertyPathTo<K extends PropertyKey = PropertyKey>(key: K): 
 /**
  * @category Feature
  */
-// tslint:disable-next-line:class-name
-export interface DomPropertyPath__root_Keys {
+// eslint-disable-next-line @typescript-eslint/class-name-casing
+export interface DomPropertyPath__rootKeys {
   [DomPropertyPath__root]: true;
 }

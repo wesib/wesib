@@ -67,7 +67,7 @@ export abstract class CustomElements {
 /**
  * @internal
  */
-function createCustomElements(values: ContextValues) {
+function createCustomElements(values: ContextValues): CustomElements {
 
   const customElements: CustomElementRegistry = values.get(BootstrapWindow).customElements;
   const nsAlias = values.get(DefaultNamespaceAliaser);

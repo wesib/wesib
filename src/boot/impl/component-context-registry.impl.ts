@@ -1,4 +1,4 @@
-import { ContextKey, ContextKey__symbol, ContextRegistry, ContextSeeds, SingleContextKey } from 'context-values';
+import { ContextKey, ContextKey__symbol, ContextRegistry, SingleContextKey } from 'context-values';
 import { ComponentContext } from '../../component';
 import { bootstrapDefault } from '../bootstrap-default';
 
@@ -16,10 +16,6 @@ export class ComponentContextRegistry extends ContextRegistry<ComponentContext> 
 
   static get [ContextKey__symbol](): ContextKey<ComponentContextRegistry> {
     return ComponentContextRegistry__key;
-  }
-
-  constructor(initial?: ContextSeeds<ComponentContext>) {
-    super(initial);
   }
 
 }

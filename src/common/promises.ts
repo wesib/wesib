@@ -17,11 +17,11 @@ export class PromiseResolver<T = void> {
     });
   }
 
-  resolve(value: T) {
+  resolve(value: T): void {
     this._resolve(value);
   }
 
-  reject(error: any) {
+  reject(error: any): void {
     this._reject(error);
   }
 

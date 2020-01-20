@@ -7,8 +7,7 @@ export function testComponentFactory<T extends object>(componentType: Class<T>):
 
   const customElements: CustomElements = {
 
-    define(): void {
-    },
+    define(): void {/* do not register element */},
 
     whenDefined(): Promise<void> {
       return Promise.resolve();
@@ -68,14 +67,14 @@ export class MockElement {
     this._target = new.target;
   }
 
-  getAttribute(name: string) {
+  getAttribute(name: string): string | null {
 
     const value = this._attributes[name];
 
     return value != null ? value : null;
   }
 
-  setAttribute(name: string, value: string) {
+  setAttribute(name: string, value: string): void {
 
     const oldValue = this.getAttribute(name);
 
@@ -83,12 +82,13 @@ export class MockElement {
 
     const observedAttributes: string[] = this._target.observedAttributes;
 
-    if (observedAttributes && observedAttributes.indexOf(name) >= 0) {
+    if (observedAttributes && observedAttributes.includes(name)) {
       this.attributeChangedCallback(name, oldValue, value);
     }
   }
 
-  attributeChangedCallback(_name: string, _oldValue: string | null, _newValue: string) {
+  attributeChangedCallback(_name: string, _oldValue: string | null, _newValue: string): void {
+    /* no callback */
   }
 
 }

@@ -15,16 +15,6 @@
 export class ShadowDomEvent extends Event {
 
   /**
-   * Constructs shadow DOM event.
-   *
-   * @param type  Event type.
-   * @param eventInitDict  Event initialization dictionary.
-   */
-  constructor(type: string, eventInitDict?: EventInit) {
-    super(type, eventInitDict);
-  }
-
-  /**
    * Shadow root this event relates to.
    */
   get shadowRoot(): ShadowRoot {

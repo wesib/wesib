@@ -67,12 +67,12 @@ export const ElementRender = {
       });
     }
 
-    function scheduleRender() {
+    function scheduleRender(): void {
       rendered = true;
       schedule(renderElement);
     }
 
-    function renderElement() {
+    function renderElement(): void {
       for (;;) {
 
         const newRender = render();

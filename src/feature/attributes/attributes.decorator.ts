@@ -35,13 +35,7 @@ export function Attributes<T extends ComponentClass = any>(
 
             const registrar = defContext.get(AttributeRegistrar);
 
-            if (isArray<Attributes.Item<InstanceType<T>>>(items)) {
-              items.forEach(defineByItem);
-            } else {
-              defineByItem(items);
-            }
-
-            function defineByItem(item: Attributes.Item<InstanceType<T>>) {
+            const defineByItem = (item: Attributes.Item<InstanceType<T>>): void => {
               if (typeof item === 'string') {
                 registrar(item, attributeStateUpdate(item));
               } else {
@@ -49,6 +43,12 @@ export function Attributes<T extends ComponentClass = any>(
                   registrar(name, attributeStateUpdate(name, item[name]));
                 });
               }
+            };
+
+            if (isArray<Attributes.Item<InstanceType<T>>>(items)) {
+              items.forEach(defineByItem);
+            } else {
+              defineByItem(items);
             }
           },
         },

@@ -48,11 +48,11 @@ describe('feature/dom-properties', () => {
         }
 
         @DomProperty()
-        get readonlyProperty() {
+        get readonlyProperty(): number {
           return propertyValue;
         }
 
-        get writableProperty() {
+        get writableProperty(): number {
           return propertyValue;
         }
 
@@ -94,7 +94,7 @@ describe('feature/dom-properties', () => {
       tests();
     });
 
-    function tests() {
+    function tests(): void {
       it('reads component property', () => {
         expect(element.readonlyProperty).toBe(propertyValue);
         propertyValue = 1;

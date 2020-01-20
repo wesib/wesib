@@ -36,7 +36,9 @@ describe('feature/shadow-dom', () => {
         name: 'test-component',
         extend: {
           type: class extends MockElement {
+
             attachShadow = attachShadowSpy;
+
           },
         },
       })
@@ -99,7 +101,9 @@ describe('feature/shadow-dom', () => {
         name: 'other-component',
         extend: {
           type: class extends MockElement {
+
             attachShadow = attachShadowSpy;
+
           },
         },
       })
@@ -121,7 +125,9 @@ describe('feature/shadow-dom', () => {
         name: 'other-component',
         extend: {
           type: class extends MockElement {
+
             attachShadow = attachShadowSpy;
+
           },
         },
       })

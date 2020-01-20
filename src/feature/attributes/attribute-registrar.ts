@@ -27,5 +27,6 @@ export type AttributeRegistrar<T extends object = any> = (name: string, callback
 /**
  * @category Feature
  */
-export const AttributeRegistrar: SingleContextRef<AttributeRegistrar> =
-    (/*#__PURE__*/ new SingleContextKey<AttributeRegistrar>('attribute-registrar'));
+export const AttributeRegistrar: SingleContextRef<AttributeRegistrar> = (
+    /*#__PURE__*/ new SingleContextKey<AttributeRegistrar>('attribute-registrar')
+);

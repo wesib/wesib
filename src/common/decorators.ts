@@ -44,8 +44,9 @@ export function decoratePropertyAccessor<T, V>(
 ): PropertyAccessorDescriptor<V> | undefined {
 
   const isField = !desc;
-  const accessorDesc: PropertyAccessorDescriptor<V> =
-      desc ? toPropertyAccessorDescriptor(desc) : fieldAccessorDescriptor(target, propertyKey as keyof T) as any;
+  const accessorDesc: PropertyAccessorDescriptor<V> = desc
+      ? toPropertyAccessorDescriptor(desc)
+      : fieldAccessorDescriptor(target, propertyKey as keyof T) as any;
   const updatedDesc = updateDescriptor(accessorDesc);
 
   if (isField && updatedDesc) {

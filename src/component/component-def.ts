@@ -300,6 +300,7 @@ export const ComponentDef = {
 
         const registrar: FeatureDef = {
           init(context) {
+            // eslint-disable-next-line no-prototype-builtins
             if (context.feature === featureType && !featureType.hasOwnProperty(componentDefined)) {
               Object.defineProperty(featureType, componentDefined, { value: 1 });
               context.define(featureType);

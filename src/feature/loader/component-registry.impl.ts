@@ -21,7 +21,7 @@ export class ComponentRegistry {
     return this._context.get(CustomElements);
   }
 
-  define<T extends object>(componentType: ComponentClass<T>) {
+  define<T extends object>(componentType: ComponentClass<T>): void {
     this._definitionQueue.push(() => {
 
       const elementBuilder = this._context.get(ElementBuilder);

@@ -10,7 +10,10 @@ export function parseAttributeDef<T extends ComponentClass>(
     target: InstanceType<T>,
     propertyKey: string | symbol,
     opts?: AttributeDef<InstanceType<T>> | string,
-) {
+): {
+  readonly name: string;
+  readonly updateState: AttributeChangedCallback<InstanceType<T>>;
+} {
 
   let name: string;
   let updateState: AttributeChangedCallback<InstanceType<T>>;
@@ -23,8 +26,8 @@ export function parseAttributeDef<T extends ComponentClass>(
       name = opts.name;
     } else if (typeof propertyKey !== 'string') {
       throw new TypeError(
-          'Attribute name is required, as property key is not a string: ' +
-          `${target.constructor.name}.${propertyKey.toString()}`,
+          'Attribute name is required, as property key is not a string: '
+          + `${target.constructor.name}.${propertyKey.toString()}`,
       );
     } else {
       name = propertyKey;

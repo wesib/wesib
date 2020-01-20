@@ -41,9 +41,11 @@ describe('boot', () => {
 
     beforeEach(() => {
       TestComponent = class {
+
         static [ComponentDef__symbol]: ComponentDef = {
           name: 'test-component',
         };
+
       };
     });
 
@@ -115,7 +117,7 @@ describe('boot', () => {
       describe('element type', () => {
         it('is absent when listener notified', () => {
           onDefinition.mockImplementation((context: DefinitionContext) => {
-            expect(() => context.elementType).toThrowError(/not constructed yet/);
+            expect(() => context.elementType).toThrow(/not constructed yet/);
           });
 
           builder.buildElement(TestComponent);
@@ -250,8 +252,10 @@ describe('boot', () => {
             TestComponent, {
               extend: {
                 type: class {
+
                   addEventListener = addEventListenerSpy;
                   removeEventListener = removeEventListenerSpy;
+
                 },
               },
               setup(setup) {
@@ -304,12 +308,14 @@ describe('boot', () => {
       it('can not access values of another component type', () => {
 
         class AnotherComponent {
+
           static [ComponentDef__symbol]: ComponentDef = {
             name: 'another-component',
             extend: {
               type: MockElement,
             },
           };
+
         }
 
         const otherElement = new (builder.buildElement(AnotherComponent).elementType);
@@ -412,15 +418,17 @@ describe('boot', () => {
         factory = builder.buildElement(TestComponent);
 
         class Element {
-          get property() {
+
+          get property(): string {
             return 'overridden';
           }
+
         }
 
         element = new Element();
       });
 
-      function doMount() {
+      function doMount(): void {
         mount = factory.mountTo(element);
         context = mount.context;
       }

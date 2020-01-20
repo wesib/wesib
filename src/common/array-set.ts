@@ -24,7 +24,7 @@ export class ArraySet<T> extends AIterable<T> {
     }
   }
 
-  [Symbol.iterator]() {
+  [Symbol.iterator](): IterableIterator<T> {
     return this.items[Symbol.iterator]();
   }
 

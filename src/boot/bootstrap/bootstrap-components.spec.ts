@@ -88,6 +88,7 @@ describe('boot', () => {
                   init(ctx) {
                     featureContext = ctx;
                     featureContext.whenReady(whenReady);
+                    // eslint-disable-next-line jest/no-standalone-expect
                     expect(whenReady).not.toHaveBeenCalled();
                   },
                 },
@@ -153,7 +154,7 @@ describe('boot', () => {
         const spy = jest.spyOn(definitionContextRegistry, 'provide');
 
         const key = new SingleContextKey<string>('test-value-key');
-        const provider = () => 'test-value';
+        const provider = (): string => 'test-value';
 
         featureContext.perDefinition({ a: key, by: provider });
 
@@ -165,7 +166,7 @@ describe('boot', () => {
         const spy = jest.spyOn(componentContextRegistry, 'provide');
 
         const key = new SingleContextKey<string>('test-value-key');
-        const provider = () => 'test-value';
+        const provider = (): string => 'test-value';
 
         featureContext.perComponent({ a: key, by: provider });
 
@@ -192,9 +193,11 @@ describe('boot', () => {
 
           beforeEach(() => {
             TestComponent = class {
+
               static [ComponentDef__symbol]: ComponentDef = {
                 name: 'test-component',
               };
+
             };
           });
 

@@ -54,9 +54,11 @@ describe('feature load', () => {
 
     beforeEach(() => {
       TestComponent = class {
+
         static [ComponentDef__symbol]: ComponentDef = {
           name: 'test-component',
         };
+
       };
 
       ElementSpy = { name: 'Element' } as any;

@@ -18,8 +18,8 @@ export type DefaultRenderScheduler = RenderScheduler;
  * @category Core
  */
 export const DefaultRenderScheduler:
-    FnContextRef<Parameters<DefaultRenderScheduler>, ReturnType<DefaultRenderScheduler>> =
-    (/*#__PURE__*/ new FnContextKey<Parameters<DefaultRenderScheduler>, ReturnType<DefaultRenderScheduler>>(
+    FnContextRef<Parameters<DefaultRenderScheduler>, ReturnType<DefaultRenderScheduler>> = (
+    /*#__PURE__*/ new FnContextKey<Parameters<DefaultRenderScheduler>, ReturnType<DefaultRenderScheduler>>(
         'default-render-scheduler',
         {
           byDefault: bootstrapDefault(
@@ -29,4 +29,5 @@ export const DefaultRenderScheduler:
                   },
               )),
         },
-    ));
+    )
+);

@@ -19,7 +19,7 @@ describe('component', () => {
       it('fails when there is no context defined', () => {
         delete (element as any)[ComponentContext__symbol];
 
-        expect(() => ComponentContext.of(element)).toThrowError(TypeError);
+        expect(() => ComponentContext.of(element)).toThrow(TypeError);
       });
     });
   });

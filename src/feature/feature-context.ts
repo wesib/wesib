@@ -12,7 +12,7 @@ import { FeatureRef } from './feature-ref';
 /**
  * @internal
  */
-const FeatureContext_key = new SingleContextKey<FeatureContext>('feature-context');
+const FeatureContext__key = (/*#__PURE__*/ new SingleContextKey<FeatureContext>('feature-context'));
 
 /**
  * Feature initialization context.
@@ -25,7 +25,7 @@ export abstract class FeatureContext extends BootstrapContext implements Bootstr
    * A key of feature context value containing the feature context itself.
    */
   static get [ContextKey__symbol](): ContextKey<FeatureContext> {
-    return FeatureContext_key;
+    return FeatureContext__key;
   }
 
   /**

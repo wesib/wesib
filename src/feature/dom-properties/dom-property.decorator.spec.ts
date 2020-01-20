@@ -13,8 +13,10 @@ describe('feature/dom-properties', () => {
         },
       })
       class TestComponent {
+
         @DomProperty()
         customProperty = 'value';
+
       }
 
       const element = new (await testElement(TestComponent));
@@ -35,8 +37,10 @@ describe('feature/dom-properties', () => {
         },
       })
       class TestComponent {
+
         @DomProperty({ propertyKey: 'otherProperty' })
         customProperty = 'value';
+
       }
 
       const element = new (await testElement(TestComponent));
@@ -59,8 +63,10 @@ describe('feature/dom-properties', () => {
           },
         })
         class TestComponent {
+
           @DomProperty()
           customProperty = 'value';
+
         }
 
         const elementType = await testElement(TestComponent);
@@ -81,8 +87,10 @@ describe('feature/dom-properties', () => {
           },
         })
         class TestComponent {
+
           @DomProperty({ updateState: false })
           customProperty = 'value';
+
         }
 
         const elementType = await testElement(TestComponent);
@@ -103,12 +111,14 @@ describe('feature/dom-properties', () => {
           },
         })
         class TestComponent {
+
           @DomProperty({
             configurable: false,
             enumerable: false,
             writable: false,
           })
           customProperty = 'value';
+
         }
 
         const elementType = await testElement(TestComponent);
@@ -129,6 +139,7 @@ describe('feature/dom-properties', () => {
           },
         })
         class TestComponent {
+
           @DomProperty({
             configurable: false,
             enumerable: false,
@@ -136,6 +147,7 @@ describe('feature/dom-properties', () => {
             updateState: false,
           })
           customProperty = 'value';
+
         }
 
         const elementType = await testElement(TestComponent);
@@ -158,10 +170,12 @@ describe('feature/dom-properties', () => {
           },
         })
         class TestComponent {
+
           @DomProperty()
-          get customProperty() {
+          get customProperty(): string {
             return 'value';
           }
+
         }
 
         const elementType = await testElement(TestComponent);
@@ -182,14 +196,16 @@ describe('feature/dom-properties', () => {
           },
         })
         class TestComponent {
+
           @DomProperty({
             configurable: false,
             enumerable: true,
             writable: false,
           })
-          get customProperty() {
+          get customProperty(): string {
             return 'value';
           }
+
         }
 
         const elementType = await testElement(TestComponent);
@@ -213,7 +229,7 @@ describe('feature/dom-properties', () => {
 
           private _value = 'value';
 
-          get customProperty() {
+          get customProperty(): string {
             return this._value;
           }
 
@@ -245,7 +261,7 @@ describe('feature/dom-properties', () => {
 
           private _value = 'value';
 
-          get customProperty() {
+          get customProperty(): string {
             return this._value;
           }
 

@@ -73,6 +73,8 @@ describe('feature/autoconnect', () => {
       update([{ type: 'childList', addedNodes: [element] as any, removedNodes: [] as any }]);
       element.remove();
       update([{ type: 'childList', addedNodes: [] as any, removedNodes: [element] as any }]);
+      expect(newObserver).toHaveBeenCalledTimes(1);
+      expect(observer.observe).toHaveBeenCalledTimes(1);
     });
     it('tracks existing shadow root', () => {
 
@@ -86,7 +88,7 @@ describe('feature/autoconnect', () => {
 
       expect(observer.observe).toHaveBeenCalledWith(shadowRoot, { subtree: true });
     });
-    it('tracks attached shadow root', async () => {
+    it('tracks attached shadow root', () => {
       root.appendChild(element);
       factory.mountTo(element);
 
@@ -98,7 +100,7 @@ describe('feature/autoconnect', () => {
       expect(observer.observe).toHaveBeenCalledWith(shadowRoot, { subtree: true });
       expect(observer.observe).toHaveBeenCalledTimes(2);
     });
-    it('starts shadow root tracking only once', async () => {
+    it('starts shadow root tracking only once', () => {
       root.appendChild(element);
       factory.mountTo(element);
 

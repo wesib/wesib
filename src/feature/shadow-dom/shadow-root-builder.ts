@@ -31,7 +31,8 @@ export type ShadowRootBuilder =
  *
  * @category Feature
  */
-export const ShadowRootBuilder: FnContextRef<Parameters<ShadowRootBuilder>, ReturnType<ShadowRootBuilder>> =
-    (/*#__PURE__*/ new FnContextKey<Parameters<ShadowRootBuilder>, ReturnType<ShadowRootBuilder>>(
+export const ShadowRootBuilder: FnContextRef<Parameters<ShadowRootBuilder>, ReturnType<ShadowRootBuilder>> = (
+    /*#__PURE__*/ new FnContextKey<Parameters<ShadowRootBuilder>, ReturnType<ShadowRootBuilder>>(
         'shadow-root-builder',
-    ));
+    )
+);

@@ -47,7 +47,7 @@ export function mergeFunctions<P extends any[], R, T>(
   if (!second) {
     return first;
   }
-  return function(this: T, ...args: P) {
+  return function (this: T, ...args: P): R {
     return merge(
         first.apply(this, args),
         second.apply(this, args),

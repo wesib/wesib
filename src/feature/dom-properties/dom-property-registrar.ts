@@ -11,5 +11,6 @@ export type DomPropertyRegistrar = (propertyKey: PropertyKey, descriptor: Proper
 /**
  * @category Feature
  */
-export const DomPropertyRegistrar: SingleContextRef<DomPropertyRegistrar> =
-    (/*#__PURE__*/ new SingleContextKey<DomPropertyRegistrar>('dom-property-registrar'));
+export const DomPropertyRegistrar: SingleContextRef<DomPropertyRegistrar> = (
+    /*#__PURE__*/ new SingleContextKey<DomPropertyRegistrar>('dom-property-registrar')
+);

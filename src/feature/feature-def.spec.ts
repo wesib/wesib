@@ -13,7 +13,9 @@ describe('feature', () => {
       it('extracts feature definition', () => {
 
         class TestFeature {
+
           static [FeatureDef__symbol]: FeatureDef = { name: 'feature definition' } as any;
+
         }
 
         expect(FeatureDef.of(TestFeature)).toBe(TestFeature[FeatureDef__symbol]);
@@ -27,10 +29,13 @@ describe('feature', () => {
       it('requests inherited definition', () => {
 
         class A {
+
           static [FeatureDef__symbol]: FeatureDef = {
             needs: Feature1,
           };
+
         }
+
         class B extends A {}
 
         expect(FeatureDef.of(B)).toEqual(A[FeatureDef__symbol]);
@@ -38,14 +43,19 @@ describe('feature', () => {
       it('merges with inherited definition', () => {
 
         class A {
+
           static [FeatureDef__symbol]: FeatureDef.Options = {
             needs: Feature1,
           };
+
         }
+
         class B extends A {
+
           static [FeatureDef__symbol]: FeatureDef.Options = {
             needs: Feature2,
           };
+
         }
 
         expect(FeatureDef.of(B))
@@ -54,15 +64,21 @@ describe('feature', () => {
       it('merges with super-inherited definition', () => {
 
         class A {
+
           static [FeatureDef__symbol]: FeatureDef.Options = {
             needs: Feature1,
           };
+
         }
+
         class B extends A {}
+
         class C extends B {
+
           static [FeatureDef__symbol]: FeatureDef.Options = {
             needs: Feature2,
           };
+
         }
 
         expect(FeatureDef.of(C))
@@ -118,7 +134,7 @@ describe('feature', () => {
 
         merged.call(Feature, context);
 
-        expect(mockInit1 ).toHaveBeenCalledWith(context);
+        expect(mockInit1).toHaveBeenCalledWith(context);
         expect(mockInit1 .mock.instances[0]).toBe(Feature);
         expect(mockInit2).toHaveBeenCalledWith(context);
         expect(mockInit2.mock.instances[0]).toBe(Feature);

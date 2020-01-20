@@ -26,11 +26,13 @@ describe('feature/state', () => {
       })
       @Feature({ needs: StateSupport })
       class TestComponent {
+
         constructor(ctx: ComponentContext) {
           context = ctx;
           updateState = ctx.get(StateUpdater);
           componentState = ctx.get(ComponentState);
         }
+
       }
 
       testComponent = TestComponent;

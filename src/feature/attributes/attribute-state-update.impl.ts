@@ -37,6 +37,6 @@ function defaultUpdateState<T extends object>(
     path: AttributePath,
     newValue: string,
     oldValue: string | null,
-) {
+): void {
   ComponentContext.of(this).updateState(path, newValue, oldValue);
 }

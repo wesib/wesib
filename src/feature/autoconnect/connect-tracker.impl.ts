@@ -24,7 +24,7 @@ export class ConnectTracker {
   constructor(private readonly _context: BootstrapContext) {
   }
 
-  track(root: Node = this._context.get(BootstrapRoot)) {
+  track(root: Node = this._context.get(BootstrapRoot)): void {
 
     const { _context } = this;
 
@@ -36,7 +36,7 @@ export class ConnectTracker {
 
     observer.observe(root, { subtree: true });
 
-    function updateConnections(records: MutationRecord[]) {
+    function updateConnections(records: MutationRecord[]): void {
       records.forEach(record => {
         itsEach(
             filterIt<Node, Element>(
@@ -55,7 +55,7 @@ export class ConnectTracker {
       });
     }
 
-    function trackNested(element: Element) {
+    function trackNested(element: Element): void {
 
       const shadowRoot = element.shadowRoot;
 
@@ -64,7 +64,7 @@ export class ConnectTracker {
       }
     }
 
-    function trackShadow(shadowRoot: ShadowRoot) {
+    function trackShadow(shadowRoot: ShadowRoot): void {
       if ((shadowRoot as any)[shadowConnectTracker__symbol]) {
         // Already tracked
         return;
@@ -78,7 +78,7 @@ export class ConnectTracker {
     }
   }
 
-  _untrack() {
+  _untrack(): void {
     this._observer.disconnect();
     this._supply.off();
     this._supply = noEventSupply();
@@ -86,7 +86,7 @@ export class ConnectTracker {
 
 }
 
-function untrackNested(element: Element) {
+function untrackNested(element: Element): void {
 
   const shadowRoot = element.shadowRoot;
 
@@ -95,7 +95,7 @@ function untrackNested(element: Element) {
   }
 }
 
-function untrackShadow(shadowRoot: ShadowRoot) {
+function untrackShadow(shadowRoot: ShadowRoot): void {
 
   const shadowTracker: ConnectTracker = (shadowRoot as any)[shadowConnectTracker__symbol];
 

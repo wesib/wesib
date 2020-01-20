@@ -46,7 +46,7 @@ describe('boot', () => {
     it('substitutes bootstrap window by default', () => {
 
       const node = document.createElement('div');
-      const error = () => {};
+      const error = (): void => { /* log error */ };
 
       scheduler({ node, error });
       expect(mockScheduler).toHaveBeenCalledWith({ window: mockWindow, node, error });
@@ -55,7 +55,7 @@ describe('boot', () => {
 
       const window: Window = { name: 'window' } as any;
       const node = document.createElement('div');
-      const error = () => {};
+      const error = (): void => { /* log error */ };
 
       scheduler({ window, node, error });
       expect(mockScheduler).toHaveBeenCalledWith({ window, node, error });
