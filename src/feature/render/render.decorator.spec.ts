@@ -1,4 +1,4 @@
-import { immediateRenderScheduler, RenderSchedule, RenderScheduler } from 'render-scheduler';
+import { immediateRenderScheduler, RenderSchedule, RenderScheduleOptions, RenderScheduler } from 'render-scheduler';
 import { DefaultRenderScheduler } from '../../boot/globals';
 import { Component, ComponentContext } from '../../component';
 import { ComponentClass, CustomElements, DefinitionContext } from '../../component/definition';
@@ -68,7 +68,7 @@ describe('feature/render', () => {
 
     beforeEach(() => {
       mockRenderSchedule = jest.fn(immediateRenderScheduler());
-      mockRenderScheduler = jest.fn((_options?) => mockRenderSchedule);
+      mockRenderScheduler = jest.fn((_options?: RenderScheduleOptions) => mockRenderSchedule);
     });
 
     let mockCustomElements: Mocked<CustomElements>;

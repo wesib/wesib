@@ -14,8 +14,7 @@ const AttributesSupport__feature: FeatureDef = {
     setup.perDefinition({
       a: AttributeRegistrar,
       by(registry: AttributeRegistry) {
-        return <T extends object>(name: string, callback: AttributeChangedCallback<T>) =>
-            registry.add(name, callback);
+        return <T extends object>(name: string, callback: AttributeChangedCallback<T>) => registry.add(name, callback);
       },
       with: [AttributeRegistry],
     });

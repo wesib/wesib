@@ -236,8 +236,9 @@ describe('boot', () => {
       beforeEach(() => {
         mockDispatcher = {
           dispatch: jest.fn(),
-          on: jest.fn((context: ComponentContext, type: string) =>
-              new DomEventDispatcher(context.element).on<any>(type)),
+          on: jest.fn(
+              (context: ComponentContext, type: string) => new DomEventDispatcher(context.element).on<any>(type),
+          ),
         };
         bsContextRegistry.provide({ a: ComponentEventDispatcher, is: mockDispatcher });
       });
@@ -405,8 +406,9 @@ describe('boot', () => {
       beforeEach(() => {
         mockDispatcher = {
           dispatch: jest.fn(),
-          on: jest.fn((ctx: ComponentContext, type: string) =>
-              new DomEventDispatcher(ctx.element).on<any>(type)),
+          on: jest.fn(
+              (ctx: ComponentContext, type: string) => new DomEventDispatcher(ctx.element).on<any>(type),
+          ),
         };
         bsContextRegistry.provide({ a: ComponentEventDispatcher, is: mockDispatcher });
       });

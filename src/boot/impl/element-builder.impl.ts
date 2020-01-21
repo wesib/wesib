@@ -250,7 +250,7 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
           registry: componentContextRegistry,
           element: this,
           createMount: noop,
-          elementSuper: (key) => super[key],
+          elementSuper: key => super[key],
         });
 
         componentCreated(context);

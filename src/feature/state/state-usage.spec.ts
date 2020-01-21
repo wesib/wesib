@@ -63,7 +63,7 @@ describe('feature/state', () => {
 
       expect(listenerSpy).not.toHaveBeenCalled();
     });
-    it('notifies on state update with `updateState()` method' , () => {
+    it('notifies on state update with `updateState()` method', () => {
 
       const listenerSpy = jest.fn();
       const supply = componentState.onUpdate(listenerSpy);

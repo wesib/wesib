@@ -14,8 +14,7 @@ const DomPropertiesSupport__feature: FeatureDef = {
     setup.perDefinition({
       a: DomPropertyRegistrar,
       by(registry: DomPropertyRegistry) {
-        return (propertyKey: PropertyKey, descriptor: PropertyDescriptor) =>
-            registry.add(propertyKey, descriptor);
+        return (propertyKey: PropertyKey, descriptor: PropertyDescriptor) => registry.add(propertyKey, descriptor);
       },
       with: [DomPropertyRegistry],
     });

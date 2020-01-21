@@ -27,8 +27,9 @@ describe('feature/shadow-dom', () => {
       attachShadowSpy = jest.fn(() => shadowRoot);
       mockDispatcher = {
         dispatch: jest.fn(),
-        on: jest.fn((ctx: ComponentContext, type: string) =>
-            new DomEventDispatcher(ctx.element).on<any>(type)),
+        on: jest.fn(
+            (ctx: ComponentContext, type: string) => new DomEventDispatcher(ctx.element).on<any>(type),
+        ),
       };
 
       @AttachShadow()
