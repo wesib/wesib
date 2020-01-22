@@ -1,4 +1,5 @@
 /**
+ * @packageDocumentation
  * @module @wesib/wesib
  */
 import { noop, valueProvider } from 'call-thru';

@@ -1,4 +1,5 @@
 /**
+ * @packageDocumentation
  * @module @wesib/wesib
  */
 import { flatMapIt, mapIt } from 'a-iterable';

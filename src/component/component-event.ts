@@ -1,4 +1,5 @@
 /**
+ * @packageDocumentation
  * @module @wesib/wesib
  */
 import { SingleContextRef } from 'context-values';

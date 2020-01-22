@@ -1,4 +1,5 @@
 /**
+ * @packageDocumentation
  * @module @wesib/wesib
  */
 import { StatePath } from 'fun-events';

@@ -1,4 +1,5 @@
 /**
+ * @packageDocumentation
  * @module wesib/wesib
  */
 import { AfterEvent, AfterEvent__symbol, EventKeeper } from 'fun-events';

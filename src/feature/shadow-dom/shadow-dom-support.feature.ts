@@ -1,4 +1,5 @@
 /**
+ * @packageDocumentation
  * @module @wesib/wesib
  */
 import { ComponentContext, ComponentContext__symbol } from '../../component';

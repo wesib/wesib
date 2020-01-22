@@ -1,4 +1,5 @@
 /**
+ * @packageDocumentation
  * @module wesib/wesib
  */
 import { filterIt, itsEach, overArray } from 'a-iterable';

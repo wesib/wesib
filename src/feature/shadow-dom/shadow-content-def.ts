@@ -1,4 +1,5 @@
 /**
+ * @packageDocumentation
  * @module @wesib/wesib
  */
 import { ComponentContext, ComponentDef, ContentRoot } from '../../component';

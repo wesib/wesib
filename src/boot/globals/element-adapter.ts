@@ -1,4 +1,5 @@
 /**
+ * @packageDocumentation
  * @module @wesib/wesib
  */
 import { ContextUpKey, ContextUpRef, ContextValueOpts, ContextValues } from 'context-values';
