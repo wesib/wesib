@@ -1,4 +1,4 @@
-import { DomEventDispatcher } from 'fun-events';
+import { DomEventDispatcher } from 'fun-events/dom';
 import { Component, ComponentContext, ComponentEventDispatcher, ContentRoot } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { MockElement, testElement } from '../../spec/test-element';

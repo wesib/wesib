@@ -1,6 +1,7 @@
 import { noop } from 'call-thru';
 import { ContextKey, SingleContextKey } from 'context-values';
-import { DomEventDispatcher, EventSupply } from 'fun-events';
+import { EventSupply } from 'fun-events';
+import { DomEventDispatcher } from 'fun-events/dom';
 import { Class } from '../../common';
 import {
   ComponentContext,

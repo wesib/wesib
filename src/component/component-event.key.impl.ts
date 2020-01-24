@@ -1,5 +1,5 @@
 import { SingleContextKey } from 'context-values';
-import { DomEventDispatcher, OnDomEvent } from 'fun-events';
+import { DomEventDispatcher, OnDomEvent } from 'fun-events/dom';
 import { ComponentContext } from './component-context';
 import { ComponentEventDispatcher } from './component-event';
 

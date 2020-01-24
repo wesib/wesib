@@ -3,7 +3,8 @@
  * @module @wesib/wesib
  */
 import { ContextKey, ContextKey__symbol, ContextValues } from 'context-values';
-import { EventSupply, OnDomEvent, OnEvent, StatePath } from 'fun-events';
+import { EventSupply, OnEvent, StatePath } from 'fun-events';
+import { OnDomEvent } from 'fun-events/dom';
 import { BootstrapContext__key } from '../boot/bootstrap-context.key.impl';
 import { ComponentContext__key } from './component-context.key.impl';
 import { ComponentEventDispatcher__key } from './component-event.key.impl';

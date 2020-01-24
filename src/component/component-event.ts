@@ -3,7 +3,7 @@
  * @module @wesib/wesib
  */
 import { SingleContextRef } from 'context-values';
-import { OnDomEvent } from 'fun-events';
+import { OnDomEvent } from 'fun-events/dom';
 import { ComponentContext } from './component-context';
 import { ComponentEventDispatcher__key } from './component-event.key.impl';
 

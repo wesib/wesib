@@ -1,6 +1,7 @@
 import { filterIt, itsEach, overArray } from 'a-iterable';
 import { ContextKey, ContextKey__symbol, SingleContextKey } from 'context-values';
-import { DomEventDispatcher, noEventSupply } from 'fun-events';
+import { noEventSupply } from 'fun-events';
+import { DomEventDispatcher } from 'fun-events/dom';
 import { BootstrapContext } from '../../boot';
 import { BootstrapRoot, ElementObserver } from '../../boot/globals';
 import { isElement } from '../../common';
