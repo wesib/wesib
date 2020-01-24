@@ -4,7 +4,7 @@
  */
 import { FnContextKey, FnContextRef } from 'context-values';
 import { ComponentContext } from '../../component';
-import { ShadowContentDef } from './shadow-content-def';
+import { ShadowContentDef } from './attach-shadow.decorator';
 
 /**
  * Shadow root builder function type.
@@ -25,7 +25,7 @@ export type ShadowRootBuilder =
  *
  * @returns A shadow root instance for target component, or `null`/`undefined` if one can not be attached.
  */
-    (context: ComponentContext<any>, init: ShadowContentDef) => ShadowRoot | null | undefined;
+    (context: ComponentContext, init: ShadowContentDef) => ShadowRoot | null | undefined;
 
 /**
  * A key of component context value containing a shadow root builder instance.

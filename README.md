@@ -287,8 +287,7 @@ Shadow DOM
 It is possible to attach shadow root to custom element by decorating the component with `@AttachShadow` decorator.
 
 If shadow DOM is supported, then a shadow root will be attached to element. Otherwise an element itself will be used
-as shadow root. In both cases the shadow root will be available in component context under
-`[ShadowContentRoot.key]` key.
+as shadow root. In both cases the shadow root will be available in component context under `[ShadowContentRoot]` key.
 
 The `@AttachShadow` decorator automatically enables a `ShadowDomSupport` feature.
 
