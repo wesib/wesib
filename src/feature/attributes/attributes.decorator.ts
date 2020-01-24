@@ -3,18 +3,16 @@
  * @module @wesib/wesib
  */
 import { StatePath } from 'fun-events';
-import { TypedClassDecorator } from '../../common';
 import { isArray } from '../../common/types.impl';
-import { ComponentDef } from '../../component';
+import { Component, ComponentDecorator } from '../../component';
 import { ComponentClass } from '../../component/definition';
-import { FeatureDef } from '../feature-def';
 import { AttributeUpdateReceiver } from './attribute-def';
 import { AttributeRegistrar } from './attribute-registrar';
 import { attributeStateUpdate } from './attribute-state-update.impl';
 import { AttributesSupport } from './attributes-support.feature';
 
 /**
- * Creates a component class decorator declaring supported custom element's attributes.
+ * Creates a component decorator declaring supported custom element's attributes.
  *
  * This decorator automatically enables [[AttributesSupport]] feature.
  *
@@ -22,39 +20,34 @@ import { AttributesSupport } from './attributes-support.feature';
  * @typeparam T  A type of decorated component class.
  * @param items  Attributes definition options. Either an attribute definition item, or an array of such items.
  *
- * @return New component class decorator.
+ * @return New component decorator.
  */
 export function Attributes<T extends ComponentClass = any>(
     items: Attributes.Item<InstanceType<T>> | readonly Attributes.Item<InstanceType<T>>[],
-): TypedClassDecorator<T> {
-  return componentType => {
-    FeatureDef.define(componentType, { needs: AttributesSupport });
-    ComponentDef.define(
-        componentType,
-        {
-          define(defContext) {
+): ComponentDecorator<T> {
+  return Component({
+    feature: { needs: AttributesSupport },
+    define(defContext) {
 
-            const registrar = defContext.get(AttributeRegistrar);
+      const registrar = defContext.get(AttributeRegistrar);
 
-            const defineByItem = (item: Attributes.Item<InstanceType<T>>): void => {
-              if (typeof item === 'string') {
-                registrar(item, attributeStateUpdate(item));
-              } else {
-                Object.keys(item).forEach(name => {
-                  registrar(name, attributeStateUpdate(name, item[name]));
-                });
-              }
-            };
+      const defineByItem = (item: Attributes.Item<InstanceType<T>>): void => {
+        if (typeof item === 'string') {
+          registrar(item, attributeStateUpdate(item));
+        } else {
+          Object.keys(item).forEach(name => {
+            registrar(name, attributeStateUpdate(name, item[name]));
+          });
+        }
+      };
 
-            if (isArray<Attributes.Item<InstanceType<T>>>(items)) {
-              items.forEach(defineByItem);
-            } else {
-              defineByItem(items);
-            }
-          },
-        },
-    );
-  };
+      if (isArray<Attributes.Item<InstanceType<T>>>(items)) {
+        items.forEach(defineByItem);
+      } else {
+        defineByItem(items);
+      }
+    },
+  });
 }
 
 export namespace Attributes {

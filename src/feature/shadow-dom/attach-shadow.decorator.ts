@@ -23,7 +23,7 @@ const defaultShadowContentDef: ShadowContentDef = { mode: 'open' };
 export type ShadowContentDef = Readonly<ShadowRootInit>;
 
 /**
- * Component decorator that attaches shadow root to decorated component instance.
+ * Creates a component decorator that attaches shadow root to decorated component instance.
  *
  * The returned component decorator enables [[ShadowDomSupport]] feature and attaches shadow content root to the
  * component.
@@ -32,7 +32,7 @@ export type ShadowContentDef = Readonly<ShadowRootInit>;
  * @typeparam T  A type of decorated component class.
  * @param def  Shadow content root definition. Uses `mode: 'open'` by default.
  *
- * @returns Component decorator.
+ * @returns New component decorator.
  */
 export function AttachShadow<T extends ComponentClass = any>(
     def: ShadowContentDef = defaultShadowContentDef,
