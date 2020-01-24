@@ -278,8 +278,7 @@ bootstrapComponents(MyFeature);</code></pre>
 				</a>
 				<p>It is possible to attach shadow root to custom element by decorating the component with <code>@AttachShadow</code> decorator.</p>
 				<p>If shadow DOM is supported, then a shadow root will be attached to element. Otherwise an element itself will be used
-					as shadow root. In both cases the shadow root will be available in component context under
-				<code>[ShadowContentRoot.key]</code> key.</p>
+				as shadow root. In both cases the shadow root will be available in component context under <code>[ShadowContentRoot]</code> key.</p>
 				<p>The <code>@AttachShadow</code> decorator automatically enables a <code>ShadowDomSupport</code> feature.</p>
 				<p>A <code>ComponentContext.contentRoot</code> property is always available. It either contains a shadow root, or element itself.
 				This is a DOM node to use to insert the DOM nodes to component.</p>
@@ -446,6 +445,9 @@ bootstrapComponents(MyFeature);</code></pre>
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#bootstrapwindow" class="tsd-kind-icon">Bootstrap<wbr>Window</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="globals.html#componentdecorator" class="tsd-kind-icon">Component<wbr>Decorator</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#contentroot" class="tsd-kind-icon">Content<wbr>Root</a>
@@ -614,9 +616,6 @@ bootstrapComponents(MyFeature);</code></pre>
 					</li>
 					<li class=" tsd-kind-object-literal">
 						<a href="globals.html#featuredef" class="tsd-kind-icon">Feature<wbr>Def</a>
-					</li>
-					<li class=" tsd-kind-object-literal">
-						<a href="globals.html#shadowcontentdef" class="tsd-kind-icon">Shadow<wbr>Content<wbr>Def</a>
 					</li>
 				</ul>
 			</nav>
