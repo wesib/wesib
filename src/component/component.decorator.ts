@@ -2,12 +2,26 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { TypedClassDecorator } from '../common';
-import { ComponentDef } from './component-def';
+import { ComponentDef, ComponentDef__symbol } from './component-def';
 import { ComponentClass } from './definition';
 
 /**
- * Component class decorator.
+ * Component decorator interface.
+ *
+ * In addition to being a decorator for component class, it may also serve as {@link ComponentDef component definition}.
+ * Thus it can be added as parameter to {@link Component @Component} decorator, or used as class decorator by itself.
+ *
+ * Constructed by [[Component]] function.
+ *
+ * @category Core
+ * @typeparam T  A type of decorated component class.
+ */
+export type ComponentDecorator<T extends ComponentClass = any> =
+    & ((this: void, type: T) => T | void)
+    & ComponentDef<InstanceType<T>>;
+
+/**
+ * Decorator of component class.
  *
  * Decorate a class with this decorator to define a component like this:
  * ```TypeScript
@@ -30,6 +44,12 @@ import { ComponentClass } from './definition';
  */
 export function Component<T extends ComponentClass = any>(
     ...defs: ComponentDef<InstanceType<T>>[]
-): TypedClassDecorator<T> {
-  return (type: T) => ComponentDef.define(type, ...defs);
+): ComponentDecorator<T> {
+
+  const decorator = ((type: T) => ComponentDef.define(type, ...defs)) as ComponentDecorator<T>;
+  const def = decorator as ComponentDef.Factory<InstanceType<T>>;
+
+  def[ComponentDef__symbol] = () => ComponentDef.all(...defs);
+
+  return decorator;
 }
