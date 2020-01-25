@@ -10,26 +10,22 @@ import { BootstrapContext } from '../bootstrap-context';
 import { BootstrapSetup } from '../bootstrap-setup';
 import { bootstrapComponents } from './bootstrap-components';
 import Mock = jest.Mock;
+import Mocked = jest.Mocked;
 
 describe('boot', () => {
 
   let bsContext: BootstrapContext;
+  let mockCustomElements: Mocked<CustomElements>;
 
   beforeEach(async () => {
-
-    const customElements: CustomElements = {
-
-      define(): void { /* do not defined */ },
-
-      whenDefined(): Promise<void> {
-        return Promise.resolve();
-      },
-
+    mockCustomElements = {
+      define: jest.fn(),
+      whenDefined: jest.fn(_componentType => Promise.resolve()),
     };
 
     @Feature({
       setup(setup) {
-        setup.provide({ a: CustomElements, is: customElements });
+        setup.provide({ a: CustomElements, is: mockCustomElements });
       },
     })
     class TestBootstrapFeature {}
@@ -98,6 +94,75 @@ describe('boot', () => {
       await featureRef.dismiss();
       bsSetup.provide({ a: key, is: 'provided' });
       expect(receiver).toHaveBeenLastCalledWith('default');
+    });
+  });
+
+  describe('component used as feature', () => {
+    it('applies feature options', async () => {
+      bsContext.get(key)(receiver);
+
+      @Component({
+        name: 'test-component',
+        feature: {
+          setup(setup) {
+            setup.provide({ a: key, is: 'component feature value' });
+          },
+        },
+      })
+      class TestComponent {}
+
+      await loadFeature(TestComponent);
+
+      expect(receiver).toHaveBeenLastCalledWith('component feature value');
+    });
+    it('applies feature options when used as dependency', async () => {
+      bsContext.get(key)(receiver);
+
+      @Component({
+        name: 'test-component',
+        feature: {
+          setup(setup) {
+            setup.provide({ a: key, is: 'component feature value' });
+          },
+        },
+      })
+      class TestComponent {}
+
+      @Feature({ needs: TestComponent })
+      class TestFeature {}
+
+      await loadFeature(TestFeature);
+
+      expect(receiver).toHaveBeenLastCalledWith('component feature value');
+    });
+    it('registers the component', async () => {
+      @Component('test-component')
+      class TestComponent {}
+
+      await loadFeature(TestComponent);
+      expect(mockCustomElements.define).toHaveBeenCalledWith(TestComponent, expect.any(Function));
+    });
+    it('registers the component when used as dependency', async () => {
+      @Component('test-component')
+      class TestComponent {}
+
+      @Feature({ needs: TestComponent })
+      class TestFeature {}
+
+      await loadFeature(TestFeature);
+      expect(mockCustomElements.define).toHaveBeenCalledWith(TestComponent, expect.any(Function));
+    });
+    it('does not register the base component', async () => {
+
+      @Component('base-component')
+      class BaseComponent {}
+
+      @Component('test-component')
+      class TestComponent extends BaseComponent {}
+
+      await loadFeature(TestComponent);
+      expect(mockCustomElements.define).toHaveBeenCalledWith(TestComponent, expect.any(Function));
+      expect(mockCustomElements.define).not.toHaveBeenCalledWith(BaseComponent, expect.anything());
     });
   });
 

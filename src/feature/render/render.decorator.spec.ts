@@ -6,7 +6,7 @@ import { MockElement, testElement } from '../../spec/test-element';
 import { DomProperty, domPropertyPathTo } from '../dom-properties';
 import { FeatureDef } from '../feature-def';
 import { Feature } from '../feature.decorator';
-import { StateSupport } from '../state';
+import { ComponentState } from '../state';
 import { Render } from './render.decorator';
 import Mock = jest.Mock;
 import Mocked = jest.Mocked;
@@ -93,10 +93,6 @@ describe('feature/render', () => {
       await testElement(testComponent);
     });
 
-    it('requires state support', () => {
-      expect(FeatureDef.of(testComponent).needs).toContain(StateSupport);
-    });
-
     describe('Rendering', () => {
 
       let element: any;
@@ -116,6 +112,9 @@ describe('feature/render', () => {
         jest.spyOn(context, 'connected', 'get').mockImplementation(() => connected);
       });
 
+      it('enables component state', () => {
+        expect(context.get(ComponentState, { or: null })).toBeDefined();
+      });
       it('is not scheduled initially', () => {
         expect(mockRender).not.toHaveBeenCalled();
       });

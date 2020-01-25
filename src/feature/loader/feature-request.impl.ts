@@ -1,4 +1,5 @@
 import { ArraySet, Class, mergeFunctions } from '../../common';
+import { ComponentDef, ComponentDef__symbol } from '../../component';
 import { FeatureDef } from '../feature-def';
 import { FeatureNeedsError } from '../feature-needs-error';
 import { FeatureKey } from './feature-loader.impl';
@@ -27,7 +28,7 @@ export class FeatureRequest {
       readonly feature: Class,
       private _revoke: () => void,
   ) {
-    this.def = FeatureDef.of(feature);
+    this.def = featureDef(feature);
   }
 
   request(clauses: readonly FeatureNeedClause[]): this {
@@ -89,3 +90,29 @@ export class FeatureRequest {
   }
 
 }
+
+function featureDef(featureType: Class): FeatureDef.Options {
+
+  let def = FeatureDef.of(featureType);
+
+  if (ComponentDef__symbol in featureType) {
+    def = FeatureDef.merge(
+        def,
+        {
+          init(context) {
+            context.define(featureType);
+          },
+        },
+    );
+
+    const { feature } = ComponentDef.of(featureType);
+
+    if (feature) {
+      def = FeatureDef.merge(def, feature);
+    }
+
+  }
+
+  return def;
+}
+

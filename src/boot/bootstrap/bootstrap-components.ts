@@ -17,7 +17,7 @@ import { componentFactoryOf } from '../impl/component-factory.symbol.impl';
 /**
  * Bootstraps components.
  *
- * Note that both features and components can be passed as parameters to this function, as components are features too.
+ * Both features and components can be passed as parameters to this function.
  *
  * @category Core
  * @param features  Features and components to enable.

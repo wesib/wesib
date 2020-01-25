@@ -23,7 +23,7 @@ export type ComponentDecorator<T extends ComponentClass = any> =
 /**
  * Decorator of component class.
  *
- * Decorate a class with this decorator to define a component like this:
+ * Decorated class becomes component:
  * ```TypeScript
  * @Component({ name: 'my-element' })
  * class MyComponent {

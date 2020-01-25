@@ -1,13 +1,13 @@
 import { DomEventDispatcher } from 'fun-events/dom';
+import { BootstrapContext } from '../../boot';
 import { Component, ComponentContext, ComponentEventDispatcher, ContentRoot } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { MockElement, testElement } from '../../spec/test-element';
-import { FeatureDef } from '../feature-def';
 import { Feature } from '../feature.decorator';
 import { AttachShadow, ShadowContentDef } from './attach-shadow.decorator';
 import { ShadowContentRoot } from './shadow-content-root';
 import { ShadowDomEvent } from './shadow-dom-event';
-import { ShadowDomSupport } from './shadow-dom-support.feature';
+import { ShadowRootBuilder } from './shadow-root-builder';
 import Mock = jest.Mock;
 import Mocked = jest.Mocked;
 
@@ -57,8 +57,8 @@ describe('feature/shadow-dom', () => {
       context = ComponentContext.of(element);
     });
 
-    it('enables shadow root support', () => {
-      expect(FeatureDef.of(testComponent).needs).toBe(ShadowDomSupport);
+    it('makes shadow root builder available in bootstrap context', () => {
+      expect(context.get(BootstrapContext).get(ShadowRootBuilder)).toBeDefined();
     });
     it('provides shadow root', () => {
       expect(context.get(ShadowContentRoot)).toBe(shadowRoot);

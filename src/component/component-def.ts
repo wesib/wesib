@@ -2,9 +2,9 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { itsReduction, mapIt } from 'a-iterable';
+import { itsReduction } from 'a-iterable';
 import { isQualifiedName, QualifiedName } from 'namespace-aliaser';
-import { Class, mergeFunctions, MetaAccessor } from '../common';
+import { mergeFunctions, MetaAccessor } from '../common';
 import { FeatureDef, FeatureDef__symbol } from '../feature';
 import { ComponentClass, DefinitionContext, DefinitionSetup, ElementDef } from './definition';
 
@@ -180,11 +180,6 @@ const componentMeta = (/*#__PURE__*/ new ComponentMeta());
 /**
  * @internal
  */
-const componentDefined = (/*#__PURE__*/ Symbol('component-defined'));
-
-/**
- * @internal
- */
 const noComponentDef: ComponentDef.Factory = {
   [ComponentDef__symbol]() {
     return {};
@@ -262,10 +257,10 @@ export const ComponentDef = {
   /**
    * Defines a component.
    *
-   * Either assigns new or extends an existing component definition and stores it under [[ComponentDef__symbol]] key.
+   * Either assigns new or extends existing component definition and stores it under [[ComponentDef__symbol]] key.
    *
-   * Note that each component is also a feature able to register itself, so it can be passed directly to
-   * [[bootstrapComponents]] function or added as a requirement of another feature.
+   * Each component can be passed directly to [[bootstrapComponents]] function or added as a requirement
+   * of another feature.
    *
    * @typeparam T  A type of component.
    * @param componentType  Component class constructor.
@@ -278,41 +273,7 @@ export const ComponentDef = {
       componentType: T,
       ...defs: ComponentDef<InstanceType<T>>[]
   ): T {
-
-    const def = componentMeta.merge(mapIt(defs, source => ComponentDef.for(componentType, source)));
-
-    componentMeta.define(componentType, [def]);
-    FeatureDef.define(componentType, ComponentDef.featureDef(def));
-
-    return componentType;
-  },
-
-  /**
-   * Builds feature definition for the given component definition.
-   *
-   * @param def  Component definition options.
-   *
-   * @returns Feature definition that defines the component and applies other definitions from
-   * [[ComponentDef.Options.feature]] property.
-   */
-  featureDef<T extends object>(this: void, def: ComponentDef.Options<T>): FeatureDef {
-    return {
-      [FeatureDef__symbol](featureType: Class) {
-
-        const registrar: FeatureDef = {
-          init(context) {
-            // eslint-disable-next-line no-prototype-builtins
-            if (context.feature === featureType && !featureType.hasOwnProperty(componentDefined)) {
-              Object.defineProperty(featureType, componentDefined, { value: 1 });
-              context.define(featureType);
-            }
-          },
-        };
-        const { feature } = def;
-
-        return feature ? FeatureDef.merge(feature, registrar) : registrar;
-      },
-    };
+    return componentMeta.define(componentType, defs);
   },
 
 };
