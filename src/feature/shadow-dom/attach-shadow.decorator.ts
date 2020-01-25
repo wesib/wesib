@@ -2,6 +2,7 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
+import { Class } from '../../common';
 import { Component, ComponentContext, ComponentDecorator, ContentRoot } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { ShadowContentRoot } from './shadow-content-root';
@@ -34,7 +35,7 @@ export type ShadowContentDef = Readonly<ShadowRootInit>;
  *
  * @returns New component decorator.
  */
-export function AttachShadow<T extends ComponentClass = any>(
+export function AttachShadow<T extends ComponentClass = Class>(
     def: ShadowContentDef = defaultShadowContentDef,
 ): ComponentDecorator<T> {
   return Component({

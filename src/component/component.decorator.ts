@@ -2,6 +2,7 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
+import { Class } from '../common';
 import { ComponentDef, ComponentDef__symbol } from './component-def';
 import { ComponentClass } from './definition';
 
@@ -42,7 +43,7 @@ export type ComponentDecorator<T extends ComponentClass = any> =
  *
  * @returns A component class decorator.
  */
-export function Component<T extends ComponentClass = any>(
+export function Component<T extends ComponentClass = Class>(
     ...defs: ComponentDef<InstanceType<T>>[]
 ): ComponentDecorator<T> {
 

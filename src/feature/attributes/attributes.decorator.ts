@@ -3,6 +3,7 @@
  * @module @wesib/wesib
  */
 import { StatePath } from 'fun-events';
+import { Class } from '../../common';
 import { isArray } from '../../common/types.impl';
 import { Component, ComponentDecorator } from '../../component';
 import { ComponentClass } from '../../component/definition';
@@ -22,7 +23,7 @@ import { AttributesSupport } from './attributes-support.feature';
  *
  * @return New component decorator.
  */
-export function Attributes<T extends ComponentClass = any>(
+export function Attributes<T extends ComponentClass = Class>(
     items: Attributes.Item<InstanceType<T>> | readonly Attributes.Item<InstanceType<T>>[],
 ): ComponentDecorator<T> {
   return Component({
