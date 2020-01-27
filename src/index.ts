@@ -15,3 +15,4 @@ export * from './feature/dom-properties';
 export * from './feature/render';
 export * from './feature/shadow-dom';
 export * from './feature/state';
+export * from './wesib.ns';
