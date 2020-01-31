@@ -9,3 +9,4 @@ export * from './attribute-path';
 export * from './attribute-registrar';
 export * from './attributes.decorator';
 export * from './attributes-support.feature';
+export * from './track-attribute';
