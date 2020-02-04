@@ -2,7 +2,6 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { nextArg } from 'call-thru';
 import { ContextUpKey, ContextUpRef, ContextValueOpts, ContextValues } from 'context-values';
 import { AfterEvent, afterThe, EventKeeper, nextOnEvent } from 'fun-events';
 import { ComponentContext, ComponentContext__symbol } from '../../component';
