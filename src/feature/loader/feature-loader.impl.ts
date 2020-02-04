@@ -1,5 +1,5 @@
 import { filterIt, mapIt } from 'a-iterable';
-import { isPresent, NextArgs, nextArgs, NextSkip, nextSkip } from 'call-thru';
+import { isPresent, nextArgs, NextCall, NextSkip, nextSkip } from 'call-thru';
 import { ContextRegistry, ContextUpKey, ContextValueOpts, ContextValues, ContextValueSpec } from 'context-values';
 import {
   afterAll,
@@ -10,6 +10,7 @@ import {
   EventKeeper,
   EventSupply,
   OnEvent,
+  OnEventCallChain,
   trackValue,
 } from 'fun-events';
 import { BootstrapContext } from '../../boot';
@@ -142,23 +143,23 @@ function loadFeature(
 }
 
 function preventDuplicateLoader():
-    <NextReturn>(
+    (
         loader?: FeatureLoader,
-    ) => NextArgs<[FeatureLoader?], NextReturn> | NextSkip<[FeatureLoader?], NextReturn> {
+    ) => NextCall<OnEventCallChain, [FeatureLoader?]> | NextSkip {
 
   let lastLoader: FeatureLoader | null | undefined = null; // Initially `null` to differ from `undefined`
 
-  return <NextReturn>(loader?: FeatureLoader) => {
+  return (loader?: FeatureLoader) => {
     if (lastLoader === loader) {
       return nextSkip();
     }
     lastLoader = loader;
 
     if (!loader) {
-      return nextArgs<[FeatureLoader?], NextReturn>();
+      return nextArgs<[FeatureLoader?]>();
     }
 
-    return nextArgs<[FeatureLoader?], NextReturn>(loader);
+    return nextArgs<[FeatureLoader?]>(loader);
   };
 }
 
@@ -183,8 +184,8 @@ function loadFeatureDeps(
   });
 }
 
-function presentFeatureDeps<NextReturn>(...deps: [FeatureLoader?][]): NextArgs<FeatureLoader[], NextReturn> {
-  return nextArgs<FeatureLoader[], NextReturn>(
+function presentFeatureDeps(...deps: [FeatureLoader?][]): NextCall<OnEventCallChain, FeatureLoader[]> {
+  return nextArgs<FeatureLoader[]>(
       ...filterIt<FeatureLoader | undefined, FeatureLoader>(
           mapIt(deps, dep => dep[0]),
           isPresent,
