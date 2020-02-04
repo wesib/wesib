@@ -8,7 +8,7 @@ import {
   afterEventBy,
   afterThe,
   EventKeeper,
-  EventSupply,
+  EventSupply, nextOnEvent,
   OnEvent,
   OnEventCallChain,
   trackValue,
@@ -103,39 +103,39 @@ function loadFeature(
     return afterAll({
       clause: from,
       deps: loadFeatureDeps(bsContext, from),
-    }).dig_(({ clause: [clause], deps }) => {
+    }).thru_(({ clause: [clause], deps }): NextCall<OnEventCallChain, [FeatureLoader?]> => {
       if (!clause) {
-        return afterThe();
+        return nextArgs();
       }
 
       const [request, , target] = clause;
 
       if (request.feature === origin) {
-        return source; // Origin didn't change. Reuse the source.
+        return nextOnEvent(source); // Origin didn't change. Reuse the source.
       }
 
       origin = request.feature;
 
       if (target !== origin) {
         // Originated from replacement feature provider. Reuse its loader.
-        return source = bsContext.get(FeatureKey.of(origin)).thru_(
+        return nextOnEvent(source = bsContext.get(FeatureKey.of(origin)).thru_(
             loader => {
               loader!.to(stageId);
               stageId = loader!.stage;
               return loader;
             },
-        );
+        ));
       }
 
       // Create feature's own loader
       const ownLoader = new FeatureLoader(bsContext, request, deps).to(stageId);
       const ownSource = afterThe(ownLoader);
 
-      return source = afterEventBy<[FeatureLoader]>(
+      return nextOnEvent(source = afterEventBy<[FeatureLoader]>(
           rcv => ownSource(rcv).whenOff(() => {
             stageId = ownLoader.unload();
           }),
-      ).share(); // Can be accessed again when reused
+      ).share()); // Can be accessed again when reused
     })(receiver);
   }).keep.thru(
       preventDuplicateLoader(),
@@ -167,20 +167,26 @@ function loadFeatureDeps(
     bsContext: BootstrapContext,
     from: AfterEvent<[FeatureClause?]>,
 ): AfterEvent<FeatureLoader[]> {
-  return from.keep.dig_(clause => {
+  return from.keep.thru_(clause => {
     if (!clause) {
-      return afterThe();
+      return nextArgs();
     }
 
     const [{ def }] = clause;
     const needs = new ArraySet(def.needs);
 
     if (!needs.size) {
-      return afterThe();
+      return nextArgs();
     }
 
-    return afterEach(...needs.map(dep => bsContext.get(FeatureKey.of(dep))))
-        .keep.thru_(presentFeatureDeps);
+    return nextOnEvent(
+        afterEach(
+            ...mapIt(
+                needs,
+                dep => bsContext.get(FeatureKey.of(dep)),
+            ),
+        ).keep.thru_(presentFeatureDeps),
+    );
   });
 }
 
