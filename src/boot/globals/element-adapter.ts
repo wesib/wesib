@@ -2,7 +2,8 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { ContextUpKey, ContextUpRef, ContextValueOpts, ContextValues } from 'context-values';
+import { ContextValueOpts, ContextValues } from 'context-values';
+import { ContextUpKey, ContextUpRef } from 'context-values/updatable';
 import { AfterEvent, afterThe, EventKeeper, nextOnEvent } from 'fun-events';
 import { ComponentContext, ComponentContext__symbol } from '../../component';
 

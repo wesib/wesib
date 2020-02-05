@@ -1,5 +1,6 @@
 import { valueProvider } from 'call-thru';
-import { ContextValues, SingleContextKey, SingleContextUpKey } from 'context-values';
+import { ContextValues, SingleContextKey } from 'context-values';
+import { SingleContextUpKey } from 'context-values/updatable';
 import { AfterEvent, EventEmitter, eventSupply, EventSupply } from 'fun-events';
 import { BootstrapContext } from '../../boot';
 import { BootstrapContextRegistry, ComponentContextRegistry, DefinitionContextRegistry } from '../../boot/impl';

@@ -1,4 +1,4 @@
-import { FnContextKey, FnContextRef } from 'context-values';
+import { FnContextKey, FnContextRef } from 'context-values/updatable';
 import { newRenderSchedule, RenderScheduler } from 'render-scheduler';
 import { bootstrapDefault } from '../bootstrap-default';
 import { BootstrapWindow } from './bootstrap-window';

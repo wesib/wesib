@@ -1,6 +1,7 @@
 import { filterIt, mapIt } from 'a-iterable';
 import { isPresent, nextArgs, NextCall, NextSkip, nextSkip } from 'call-thru';
-import { ContextRegistry, ContextUpKey, ContextValueOpts, ContextValues, ContextValueSpec } from 'context-values';
+import { ContextRegistry, ContextValueOpts, ContextValues, ContextValueSpec } from 'context-values';
+import { ContextUpKey } from 'context-values/updatable';
 import {
   afterAll,
   afterEach,
@@ -8,7 +9,8 @@ import {
   afterEventBy,
   afterThe,
   EventKeeper,
-  EventSupply, nextOnEvent,
+  EventSupply,
+  nextOnEvent,
   OnEvent,
   OnEventCallChain,
   trackValue,
