@@ -1,4 +1,4 @@
-import { nextArgs, nextSkip, noop } from 'call-thru';
+import { nextArgs, nextSkip, noop, valueProvider } from 'call-thru';
 import { ContextRegistry, ContextValues, ContextValueSpec, SingleContextKey, SingleContextRef } from 'context-values';
 import { EventEmitter, eventSupply, EventSupply, OnEvent, trackValue, ValueTracker } from 'fun-events';
 import { Class } from '../../common';
@@ -164,7 +164,7 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
 
           const context = this;
 
-          this.whenReady = whenReady.thru_(() => this).once;
+          this.whenReady = whenReady.thru_(valueProvider(this)).once as OnEvent<[this]>;
 
           const definitionContextRegistry = new DefinitionContextRegistry(
               definitionContextRegistry$global.seedIn(this),

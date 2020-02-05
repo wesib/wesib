@@ -3,7 +3,7 @@
  * @module @wesib/wesib
  */
 import { noop, valueProvider } from 'call-thru';
-import { FnContextKey, FnContextRef } from 'context-values';
+import { FnContextKey, FnContextRef } from 'context-values/updatable';
 import { StatePath } from 'fun-events';
 
 /**

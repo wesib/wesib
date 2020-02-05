@@ -1,5 +1,5 @@
 import { noop } from 'call-thru';
-import { SingleContextUpKey } from 'context-values';
+import { SingleContextUpKey } from 'context-values/updatable';
 import { afterSupplied, afterThe } from 'fun-events';
 import { Class } from '../../common';
 import { Component, ComponentContext, ComponentMount } from '../../component';

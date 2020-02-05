@@ -2,8 +2,9 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { ContextUpKey, ContextUpRef, ContextValueOpts, ContextValues } from 'context-values';
-import { AfterEvent, afterThe, EventKeeper } from 'fun-events';
+import { ContextValueOpts, ContextValues } from 'context-values';
+import { ContextUpKey, ContextUpRef } from 'context-values/updatable';
+import { AfterEvent, afterThe, EventKeeper, nextOnEvent } from 'fun-events';
 import { ComponentContext, ComponentContext__symbol } from '../../component';
 
 /**
@@ -33,7 +34,7 @@ class ElementAdapterKey extends ContextUpKey<ElementAdapter, ElementAdapter> {
   constructor() {
     super('element-adapter');
     this.upKey = this.createUpKey(
-        opts => opts.seed.keep.dig((...adapters) => {
+        opts => opts.seed.keep.thru((...adapters) => {
 
           const combined: ElementAdapter = adapters.reduce(
               (prev, adapter) => element => prev(element) || adapter(element),
@@ -43,8 +44,8 @@ class ElementAdapterKey extends ContextUpKey<ElementAdapter, ElementAdapter> {
           const defaultProvider = (): AfterEvent<[ElementAdapter]> => afterThe(defaultElementAdapter);
 
           return combined !== defaultElementAdapter
-              ? afterThe(combined)
-              : opts.byDefault(defaultProvider) || defaultProvider();
+              ? combined
+              : nextOnEvent(opts.byDefault(defaultProvider) || defaultProvider());
         }),
     );
   }

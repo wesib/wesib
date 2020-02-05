@@ -3,7 +3,7 @@
  * @module wesib/wesib
  */
 import { filterIt, itsEach, overArray } from 'a-iterable';
-import { FnContextKey } from 'context-values';
+import { FnContextKey } from 'context-values/updatable';
 import { isElement } from '../../common';
 import { ComponentContext__symbol, ComponentMount } from '../../component';
 import { bootstrapDefault } from '../bootstrap-default';

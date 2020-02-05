@@ -1,6 +1,7 @@
 import { filterIt, mapIt } from 'a-iterable';
-import { isPresent, NextArgs, nextArgs, NextSkip, nextSkip } from 'call-thru';
-import { ContextRegistry, ContextUpKey, ContextValueOpts, ContextValues, ContextValueSpec } from 'context-values';
+import { isPresent, nextArgs, NextCall, NextSkip, nextSkip } from 'call-thru';
+import { ContextRegistry, ContextValueOpts, ContextValues, ContextValueSpec } from 'context-values';
+import { ContextUpKey } from 'context-values/updatable';
 import {
   afterAll,
   afterEach,
@@ -9,7 +10,9 @@ import {
   afterThe,
   EventKeeper,
   EventSupply,
+  nextOnEvent,
   OnEvent,
+  OnEventCallChain,
   trackValue,
 } from 'fun-events';
 import { BootstrapContext } from '../../boot';
@@ -102,39 +105,39 @@ function loadFeature(
     return afterAll({
       clause: from,
       deps: loadFeatureDeps(bsContext, from),
-    }).dig_(({ clause: [clause], deps }) => {
+    }).thru_(({ clause: [clause], deps }): NextCall<OnEventCallChain, [FeatureLoader?]> => {
       if (!clause) {
-        return afterThe();
+        return nextArgs();
       }
 
       const [request, , target] = clause;
 
       if (request.feature === origin) {
-        return source; // Origin didn't change. Reuse the source.
+        return nextOnEvent(source); // Origin didn't change. Reuse the source.
       }
 
       origin = request.feature;
 
       if (target !== origin) {
         // Originated from replacement feature provider. Reuse its loader.
-        return source = bsContext.get(FeatureKey.of(origin)).thru_(
+        return nextOnEvent(source = bsContext.get(FeatureKey.of(origin)).thru_(
             loader => {
               loader!.to(stageId);
               stageId = loader!.stage;
               return loader;
             },
-        );
+        ));
       }
 
       // Create feature's own loader
       const ownLoader = new FeatureLoader(bsContext, request, deps).to(stageId);
       const ownSource = afterThe(ownLoader);
 
-      return source = afterEventBy<[FeatureLoader]>(
+      return nextOnEvent(source = afterEventBy<[FeatureLoader]>(
           rcv => ownSource(rcv).whenOff(() => {
             stageId = ownLoader.unload();
           }),
-      ).share(); // Can be accessed again when reused
+      ).share()); // Can be accessed again when reused
     })(receiver);
   }).keep.thru(
       preventDuplicateLoader(),
@@ -142,23 +145,23 @@ function loadFeature(
 }
 
 function preventDuplicateLoader():
-    <NextReturn>(
+    (
         loader?: FeatureLoader,
-    ) => NextArgs<[FeatureLoader?], NextReturn> | NextSkip<[FeatureLoader?], NextReturn> {
+    ) => NextCall<OnEventCallChain, [FeatureLoader?]> | NextSkip {
 
   let lastLoader: FeatureLoader | null | undefined = null; // Initially `null` to differ from `undefined`
 
-  return <NextReturn>(loader?: FeatureLoader) => {
+  return (loader?: FeatureLoader) => {
     if (lastLoader === loader) {
       return nextSkip();
     }
     lastLoader = loader;
 
     if (!loader) {
-      return nextArgs<[FeatureLoader?], NextReturn>();
+      return nextArgs<[FeatureLoader?]>();
     }
 
-    return nextArgs<[FeatureLoader?], NextReturn>(loader);
+    return nextArgs<[FeatureLoader?]>(loader);
   };
 }
 
@@ -166,25 +169,31 @@ function loadFeatureDeps(
     bsContext: BootstrapContext,
     from: AfterEvent<[FeatureClause?]>,
 ): AfterEvent<FeatureLoader[]> {
-  return from.keep.dig_(clause => {
+  return from.keep.thru_(clause => {
     if (!clause) {
-      return afterThe();
+      return nextArgs();
     }
 
     const [{ def }] = clause;
     const needs = new ArraySet(def.needs);
 
     if (!needs.size) {
-      return afterThe();
+      return nextArgs();
     }
 
-    return afterEach(...needs.map(dep => bsContext.get(FeatureKey.of(dep))))
-        .keep.thru_(presentFeatureDeps);
+    return nextOnEvent(
+        afterEach(
+            ...mapIt(
+                needs,
+                dep => bsContext.get(FeatureKey.of(dep)),
+            ),
+        ).keep.thru_(presentFeatureDeps),
+    );
   });
 }
 
-function presentFeatureDeps<NextReturn>(...deps: [FeatureLoader?][]): NextArgs<FeatureLoader[], NextReturn> {
-  return nextArgs<FeatureLoader[], NextReturn>(
+function presentFeatureDeps(...deps: [FeatureLoader?][]): NextCall<OnEventCallChain, FeatureLoader[]> {
+  return nextArgs<FeatureLoader[]>(
       ...filterIt<FeatureLoader | undefined, FeatureLoader>(
           mapIt(deps, dep => dep[0]),
           isPresent,
