@@ -4,7 +4,7 @@
  */
 import { ContextValueOpts, ContextValues } from 'context-values';
 import { ContextUpKey, ContextUpRef } from 'context-values/updatable';
-import { AfterEvent, afterThe, EventKeeper, nextOnEvent } from 'fun-events';
+import { AfterEvent, afterThe, EventKeeper, nextAfterEvent } from 'fun-events';
 import { ComponentContext, ComponentContext__symbol } from '../../component';
 
 /**
@@ -45,7 +45,7 @@ class ElementAdapterKey extends ContextUpKey<ElementAdapter, ElementAdapter> {
 
           return combined !== defaultElementAdapter
               ? combined
-              : nextOnEvent(opts.byDefault(defaultProvider) || defaultProvider());
+              : nextAfterEvent(opts.byDefault(defaultProvider) || defaultProvider());
         }),
     );
   }

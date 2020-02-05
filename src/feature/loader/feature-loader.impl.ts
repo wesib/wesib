@@ -10,7 +10,7 @@ import {
   afterThe,
   EventKeeper,
   EventSupply,
-  nextOnEvent,
+  nextAfterEvent,
   OnEvent,
   OnEventCallChain,
   trackValue,
@@ -99,13 +99,13 @@ function loadFeature(
   return afterEventBy<[FeatureLoader?]>(receiver => {
 
     let origin: Class | undefined;
-    let source: OnEvent<[FeatureLoader?]> = afterThe();
+    let source: AfterEvent<[FeatureLoader?]> = afterThe();
     let stageId: Promise<FeatureStageId> = Promise.resolve('idle');
 
     return afterAll({
       clause: from,
       deps: loadFeatureDeps(bsContext, from),
-    }).thru_(({ clause: [clause], deps }): NextCall<OnEventCallChain, [FeatureLoader?]> => {
+    }).keep.thru_(({ clause: [clause], deps }): NextCall<OnEventCallChain, [FeatureLoader?]> => {
       if (!clause) {
         return nextArgs();
       }
@@ -113,14 +113,14 @@ function loadFeature(
       const [request, , target] = clause;
 
       if (request.feature === origin) {
-        return nextOnEvent(source); // Origin didn't change. Reuse the source.
+        return nextAfterEvent(source); // Origin didn't change. Reuse the source.
       }
 
       origin = request.feature;
 
       if (target !== origin) {
         // Originated from replacement feature provider. Reuse its loader.
-        return nextOnEvent(source = bsContext.get(FeatureKey.of(origin)).thru_(
+        return nextAfterEvent(source = bsContext.get(FeatureKey.of(origin)).keep.thru_(
             loader => {
               loader!.to(stageId);
               stageId = loader!.stage;
@@ -133,7 +133,7 @@ function loadFeature(
       const ownLoader = new FeatureLoader(bsContext, request, deps).to(stageId);
       const ownSource = afterThe(ownLoader);
 
-      return nextOnEvent(source = afterEventBy<[FeatureLoader]>(
+      return nextAfterEvent(source = afterEventBy<[FeatureLoader]>(
           rcv => ownSource(rcv).whenOff(() => {
             stageId = ownLoader.unload();
           }),
@@ -181,7 +181,7 @@ function loadFeatureDeps(
       return nextArgs();
     }
 
-    return nextOnEvent(
+    return nextAfterEvent(
         afterEach(
             ...mapIt(
                 needs,
