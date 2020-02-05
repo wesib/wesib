@@ -3,7 +3,6 @@
  * @module @wesib/wesib
  */
 import { flatMapIt, mapIt } from 'a-iterable';
-import { asis } from 'call-thru';
 import { Class, superClassOf } from './classes';
 
 /**
@@ -35,7 +34,7 @@ export abstract class MetaAccessor<M, S = M> {
 
     const prevMeta = this.own(type);
     const updates = mapIt(sources, source => this.meta(source, type));
-    const newMeta: M = this.merge(prevMeta ? flatMapIt([[prevMeta], updates], asis) : updates);
+    const newMeta: M = this.merge(prevMeta ? flatMapIt([[prevMeta], updates]) : updates);
 
     Object.defineProperty(
         type,
