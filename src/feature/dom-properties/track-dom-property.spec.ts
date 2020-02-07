@@ -110,6 +110,12 @@ describe('feature/domProperties', () => {
         expect(updatesOff).toHaveBeenCalledWith(reason);
         expect(readOff).toHaveBeenCalledWith(reason);
       });
+      it('rejects property updates', () => {
+        tracker.it = 'old';
+        tracker.done();
+        tracker.it = 'new';
+        expect(tracker.it).toBe('old');
+      });
     });
   });
 });

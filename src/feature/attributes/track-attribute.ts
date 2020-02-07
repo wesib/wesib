@@ -3,7 +3,7 @@
  * @module @wesib/wesib
  */
 import { nextArgs } from 'call-thru';
-import { eventSupply, OnEvent, StatePath, ValueTracker } from 'fun-events';
+import { EventSupply, eventSupply, EventSupply__symbol, OnEvent, StatePath, ValueTracker } from 'fun-events';
 import { ComponentContext } from '../../component';
 import { ComponentState } from '../state';
 import { attributePathTo } from './attribute-path';
@@ -40,21 +40,22 @@ export function trackAttribute(
       return on;
     }
 
+    get [EventSupply__symbol](): EventSupply {
+      return supply;
+    }
+
     get it(): string | null {
       return element.getAttribute(name);
     }
 
     set it(value: string | null) {
-      if (value == null) {
-        element.removeAttribute(name);
-      } else {
-        element.setAttribute(name, value);
+      if (!supply.isOff) {
+        if (value == null) {
+          element.removeAttribute(name);
+        } else {
+          element.setAttribute(name, value);
+        }
       }
-    }
-
-    done(reason?: any): this {
-      supply.off(reason);
-      return this;
     }
 
   }

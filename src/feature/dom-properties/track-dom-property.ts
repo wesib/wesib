@@ -1,5 +1,5 @@
 import { nextArgs } from 'call-thru';
-import { eventSupply, OnEvent, StatePath, ValueTracker } from 'fun-events';
+import { EventSupply, eventSupply, EventSupply__symbol, OnEvent, StatePath, ValueTracker } from 'fun-events';
 import { ComponentContext } from '../../component';
 import { ComponentState } from '../state';
 import { domPropertyPathTo } from './dom-property-path';
@@ -37,17 +37,18 @@ export function trackDomProperty<T = any>(
       return on;
     }
 
+    get [EventSupply__symbol](): EventSupply {
+      return supply;
+    }
+
     get it(): T {
       return element[key];
     }
 
     set it(value: T) {
-      element[key] = value;
-    }
-
-    done(reason?: any): this {
-      supply.off(reason);
-      return this;
+      if (!supply.isOff) {
+        element[key] = value;
+      }
     }
 
   }

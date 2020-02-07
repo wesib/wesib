@@ -122,6 +122,12 @@ describe('feature/attributes', () => {
         expect(updatesOff).toHaveBeenCalledWith(reason);
         expect(readOff).toHaveBeenCalledWith(reason);
       });
+      it('rejects attribute updates', () => {
+        tracker.it = 'old';
+        tracker.done();
+        tracker.it = 'new';
+        expect(tracker.it).toBe('old');
+      });
     });
   });
 });
