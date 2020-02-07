@@ -1,6 +1,14 @@
 import { nextArgs, nextSkip, noop, valueProvider } from 'call-thru';
 import { ContextRegistry, ContextValues, ContextValueSpec, SingleContextKey, SingleContextRef } from 'context-values';
-import { EventEmitter, eventSupply, EventSupply, OnEvent, trackValue, ValueTracker } from 'fun-events';
+import {
+  EventEmitter,
+  eventSupply,
+  EventSupply,
+  EventSupply__symbol, eventSupplyOf,
+  OnEvent,
+  trackValue,
+  ValueTracker,
+} from 'fun-events';
 import { Class } from '../../common';
 import {
   ComponentContext as ComponentContext_,
@@ -345,6 +353,10 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
 
       get connected(): boolean {
         return status.it === ComponentStatus.On;
+      }
+
+      get [EventSupply__symbol](): EventSupply {
+        return eventSupplyOf(status);
       }
 
       get whenOn(): OnEvent<[EventSupply]> {

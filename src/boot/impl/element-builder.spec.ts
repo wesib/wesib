@@ -1,16 +1,8 @@
 import { noop } from 'call-thru';
 import { ContextKey, SingleContextKey } from 'context-values';
 import { EventSupply } from 'fun-events';
-import { DomEventDispatcher } from 'fun-events/dom';
 import { Class } from '../../common';
-import {
-  ComponentContext,
-  ComponentDef,
-  ComponentDef__symbol,
-  ComponentEvent,
-  ComponentEventDispatcher,
-  ComponentMount,
-} from '../../component';
+import { ComponentContext, ComponentDef, ComponentDef__symbol, ComponentEvent, ComponentMount } from '../../component';
 import { ComponentClass, ComponentFactory, DefinitionContext } from '../../component/definition';
 import { MockElement } from '../../spec/test-element';
 import { BootstrapContext } from '../bootstrap-context';
@@ -232,24 +224,14 @@ describe('boot', () => {
         });
       });
 
-      let mockDispatcher: Mocked<ComponentEventDispatcher>;
-
-      beforeEach(() => {
-        mockDispatcher = {
-          dispatch: jest.fn(),
-          on: jest.fn(
-              (context: ComponentContext, type: string) => new DomEventDispatcher(context.element).on<any>(type),
-          ),
-        };
-        bsContextRegistry.provide({ a: ComponentEventDispatcher, is: mockDispatcher });
-      });
-
       let addEventListenerSpy: Mock;
       let removeEventListenerSpy: Mock;
+      let dispatchEventSpy: Mock<boolean, [Event]>;
 
       beforeEach(() => {
         addEventListenerSpy = jest.fn();
         removeEventListenerSpy = jest.fn();
+        dispatchEventSpy = jest.fn();
         ComponentDef.define(
             TestComponent,
             {
@@ -258,6 +240,7 @@ describe('boot', () => {
 
                   addEventListener = addEventListenerSpy;
                   removeEventListener = removeEventListenerSpy;
+                  dispatchEvent = dispatchEventSpy;
 
                 },
               },
@@ -285,12 +268,12 @@ describe('boot', () => {
         expect(componentContext.mount).toBeUndefined();
       });
       it('dispatches component event when first connected', () => {
-        expect(mockDispatcher.dispatch).not.toHaveBeenCalled();
+        expect(dispatchEventSpy).not.toHaveBeenCalled();
 
         componentContext.element.connectedCallback();
 
-        expect(mockDispatcher.dispatch).toHaveBeenCalledWith(componentContext, expect.any(ComponentEvent));
-        expect(mockDispatcher.dispatch).toHaveBeenCalledWith(componentContext, expect.objectContaining({
+        expect(dispatchEventSpy).toHaveBeenCalledWith(expect.any(ComponentEvent));
+        expect(dispatchEventSpy).toHaveBeenCalledWith(expect.objectContaining({
           type: 'wesib:component',
           cancelable: false,
           bubbles: true,
@@ -402,27 +385,18 @@ describe('boot', () => {
 
     describe('mounted element', () => {
 
-      let mockDispatcher: Mocked<ComponentEventDispatcher>;
-
-      beforeEach(() => {
-        mockDispatcher = {
-          dispatch: jest.fn(),
-          on: jest.fn(
-              (ctx: ComponentContext, type: string) => new DomEventDispatcher(ctx.element).on<any>(type),
-          ),
-        };
-        bsContextRegistry.provide({ a: ComponentEventDispatcher, is: mockDispatcher });
-      });
-
       let factory: ComponentFactory;
       let element: any;
       let mount: ComponentMount;
       let context: ComponentContext;
+      let dispatchEventSpy: Mock<void, [Event]>;
 
       beforeEach(() => {
         factory = builder.buildElement(TestComponent);
-
+        dispatchEventSpy = jest.fn();
         class Element {
+
+          readonly dispatchEvent = dispatchEventSpy;
 
           get property(): string {
             return 'overridden';
@@ -456,17 +430,17 @@ describe('boot', () => {
       });
       it('dispatches component event when first connected', () => {
         doMount();
-        expect(mockDispatcher.dispatch).not.toHaveBeenCalled();
+        expect(dispatchEventSpy).not.toHaveBeenCalled();
         mount.connected = true;
-        expect(mockDispatcher.dispatch).toHaveBeenCalledWith(context, expect.any(ComponentEvent));
-        expect(mockDispatcher.dispatch).toHaveBeenCalledWith(context, expect.objectContaining({
+        expect(dispatchEventSpy).toHaveBeenCalledWith(expect.any(ComponentEvent));
+        expect(dispatchEventSpy).toHaveBeenCalledWith(expect.objectContaining({
           type: 'wesib:component',
           cancelable: false,
           bubbles: true,
         }));
         mount.connected = false;
         mount.connected = true;
-        expect(mockDispatcher.dispatch).toHaveBeenCalledTimes(1);
+        expect(dispatchEventSpy).toHaveBeenCalledTimes(1);
       });
 
       describe('component mount', () => {

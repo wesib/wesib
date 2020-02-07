@@ -3,7 +3,6 @@ import { BootstrapContext } from '../../boot';
 import { Component, ComponentContext, ComponentEventDispatcher, ContentRoot } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { MockElement, testElement } from '../../spec/test-element';
-import { Feature } from '../feature.decorator';
 import { AttachShadow, ShadowContentDef } from './attach-shadow.decorator';
 import { ShadowContentRoot } from './shadow-content-root';
 import { ShadowDomEvent } from './shadow-dom-event';
@@ -27,7 +26,7 @@ describe('feature/shadow-dom', () => {
       mockDispatcher = {
         dispatch: jest.fn(),
         on: jest.fn(
-            (ctx: ComponentContext, type: string) => new DomEventDispatcher(ctx.element).on<any>(type),
+            (type: string) => new DomEventDispatcher(element).on<any>(type),
         ),
       };
 
@@ -41,10 +40,8 @@ describe('feature/shadow-dom', () => {
 
           },
         },
-      })
-      @Feature({
         setup(setup) {
-          setup.provide({ a: ComponentEventDispatcher, is: mockDispatcher });
+          setup.perComponent({ a: ComponentEventDispatcher, is: mockDispatcher });
         },
       })
       class TestComponent {
@@ -81,14 +78,8 @@ describe('feature/shadow-dom', () => {
       expect(mockDispatcher.dispatch).not.toHaveBeenCalled();
 
       element.connectedCallback();
-      expect(mockDispatcher.dispatch).toHaveBeenCalledWith(
-          context,
-          expect.any(ShadowDomEvent),
-      );
-      expect(mockDispatcher.dispatch).toHaveBeenCalledWith(
-          context,
-          expect.objectContaining({ type: 'wesib:shadowAttached' }),
-      );
+      expect(mockDispatcher.dispatch).toHaveBeenCalledWith(expect.any(ShadowDomEvent));
+      expect(mockDispatcher.dispatch).toHaveBeenCalledWith(expect.objectContaining({ type: 'wesib:shadowAttached' }));
     });
     it('attaches shadow root', async () => {
 

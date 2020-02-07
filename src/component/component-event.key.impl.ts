@@ -1,6 +1,7 @@
 import { SingleContextKey } from 'context-values';
+import { eventSupplyOf } from 'fun-events';
 import { DomEventDispatcher, OnDomEvent } from 'fun-events/dom';
-import { ComponentContext } from './component-context';
+import { ComponentContext__key } from './component-context.key.impl';
 import { ComponentEventDispatcher } from './component-event';
 
 /**
@@ -9,15 +10,18 @@ import { ComponentEventDispatcher } from './component-event';
 export const ComponentEventDispatcher__key = (/*#__PURE__*/ new SingleContextKey<ComponentEventDispatcher>(
     'component-event-dispatcher',
     {
-      byDefault() {
+      byDefault(values) {
+
+        const context = values.get(ComponentContext__key);
+        const dispatcher = new DomEventDispatcher(context.element);
+
+        eventSupplyOf(dispatcher).needs(context);
+
         return {
-          dispatch(context: ComponentContext, event: Event): boolean {
-            return context.element.dispatchEvent(event);
+          dispatch(event: Event): boolean {
+            return dispatcher.dispatch(event);
           },
-          on<E extends Event>(context: ComponentContext, type: string): OnDomEvent<E> {
-
-            const dispatcher = new DomEventDispatcher(context.element);
-
+          on<E extends Event>(type: string): OnDomEvent<E> {
             return dispatcher.on(type);
           },
         };

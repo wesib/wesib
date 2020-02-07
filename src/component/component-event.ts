@@ -49,28 +49,26 @@ export interface ComponentEventDispatcher {
   /**
    * Dispatches the DOM event for the given component.
    *
-   * @param context  Target component context.
    * @param event  An event to dispatch.
    *
    * @returns `true` if either event's `cancelable` attribute value is `false` or its `preventDefault()` method was not
    * invoked, or `false` otherwise.
    */
-  dispatch(context: ComponentContext, event: Event): boolean;
+  dispatch(event: Event): boolean;
 
   /**
    * Returns an `OnDomEvent` sender of DOM events of the given type.
    *
-   * @param context  Target component context.
    * @param type  An event type to listen for.
    *
    * @returns A producer of DOM event events of the given type.
    */
-  on<E extends Event>(context: ComponentContext, type: string): OnDomEvent<E>;
+  on<E extends Event>(type: string): OnDomEvent<E>;
 
 }
 
 /**
- * A key of bootstrap context value containing component event dispatcher.
+ * A key of component context value containing component event dispatcher.
  *
  * @category Core
  */

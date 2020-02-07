@@ -3,9 +3,8 @@
  * @module @wesib/wesib
  */
 import { ContextKey, ContextKey__symbol, ContextValues } from 'context-values';
-import { EventSupply, OnEvent, StatePath } from 'fun-events';
+import { EventSupply, EventSupply__symbol, EventSupplyPeer, OnEvent, StatePath } from 'fun-events';
 import { OnDomEvent } from 'fun-events/dom';
-import { BootstrapContext__key } from '../boot/bootstrap-context.key.impl';
 import { ComponentContext__key } from './component-context.key.impl';
 import { ComponentEventDispatcher__key } from './component-event.key.impl';
 import { ComponentMount } from './component-mount';
@@ -31,7 +30,7 @@ export const ComponentContext__symbol = (/*#__PURE__*/ Symbol('component-context
  * @category Core
  * @typeparam T  A type of component.
  */
-export abstract class ComponentContext<T extends object = any> extends ContextValues {
+export abstract class ComponentContext<T extends object = any> extends ContextValues implements EventSupplyPeer {
 
   /**
    * A key of component context value containing the component context instance itself.
@@ -76,6 +75,11 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    * sent.
    */
   abstract readonly connected: boolean;
+
+  /**
+   * An event supply that {@link destroy destroys} component when cut off.
+   */
+  abstract readonly [EventSupply__symbol]: EventSupply;
 
   /**
    * An `OnEvent` sender of custom element connection events.
@@ -176,7 +180,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    * @returns A producer of DOM event events of the given type.
    */
   on<E extends Event>(type: string): OnDomEvent<E> {
-    return this.get(ComponentEventDispatcher__key).on(this, type);
+    return this.get(ComponentEventDispatcher__key).on(type);
   }
 
   /**
@@ -187,7 +191,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    * @param event  An event to dispatch.
    */
   dispatchEvent(event: Event): void {
-    this.get(BootstrapContext__key).get(ComponentEventDispatcher__key).dispatch(this, event);
+    this.get(ComponentEventDispatcher__key).dispatch(event);
   }
 
   /**

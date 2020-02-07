@@ -1,4 +1,5 @@
 import { ContextRegistry } from 'context-values';
+import { eventSupply, EventSupply__symbol } from 'fun-events';
 import { MockElement } from '../spec/test-element';
 import { ComponentContext, ComponentContext__symbol } from './component-context';
 import { ComponentEvent, ComponentEventDispatcher } from './component-event';
@@ -37,13 +38,18 @@ describe('component', () => {
       element = new MockElement();
       context = {
         element,
+        [EventSupply__symbol]: eventSupply(),
       } as any;
     });
 
     let dispatcher: ComponentEventDispatcher;
 
     beforeEach(() => {
-      dispatcher = new ContextRegistry().newValues().get(ComponentEventDispatcher);
+
+      const registry = new ContextRegistry<ComponentContext>();
+
+      registry.provide({ a: ComponentContext, is: context });
+      dispatcher = registry.newValues().get(ComponentEventDispatcher);
     });
 
     describe('dispatchEvent', () => {
@@ -51,7 +57,7 @@ describe('component', () => {
 
         const event = new KeyboardEvent('click');
 
-        dispatcher.dispatch(context, event);
+        dispatcher.dispatch(event);
 
         expect(element.dispatchEvent).toHaveBeenCalledWith(event);
       });
@@ -61,7 +67,7 @@ describe('component', () => {
 
         const mockListener = jest.fn();
 
-        dispatcher.on(context, 'click')(mockListener);
+        dispatcher.on('click')(mockListener);
         expect(element.addEventListener).toHaveBeenCalledWith('click', expect.any(Function), undefined);
 
         const event = new KeyboardEvent('click');
