@@ -41,7 +41,7 @@ export function decoratePropertyAccessor<T, V>(
     target: T,
     propertyKey: string | symbol,
     desc: TypedPropertyDescriptor<V> | undefined,
-    updateDescriptor: (desc: PropertyAccessorDescriptor<V>) => PropertyAccessorDescriptor<V> | undefined,
+    updateDescriptor: (desc: PropertyAccessorDescriptor<V>) => PropertyAccessorDescriptor<V>,
 ): PropertyAccessorDescriptor<V> | undefined {
 
   const isField = !desc;
@@ -55,5 +55,5 @@ export function decoratePropertyAccessor<T, V>(
     return;
   }
 
-  return updatedDesc || accessorDesc;
+  return updatedDesc;
 }
