@@ -2,7 +2,7 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { ComponentProperty, ComponentPropertyDecorator } from '../../component';
+import { ComponentContext, ComponentProperty, ComponentPropertyDecorator } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { AttributeDef } from './attribute-def';
 import { parseAttributeDef } from './attribute-def.impl';
@@ -38,7 +38,10 @@ export function Attribute<T extends ComponentClass>(
           definitionContext.get(AttributeRegistrar)(name, updateState);
         },
       },
-      access({ element }) {
+      access(component) {
+
+        const { element } = ComponentContext.of(component);
+
         return {
           get(this: InstanceType<T>): string | null {
             return element.getAttribute(name);

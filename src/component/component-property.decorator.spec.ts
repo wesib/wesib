@@ -192,13 +192,13 @@ describe('component', () => {
                 setup(setup) {
                   setup.perComponent({
                     a: testKey,
-                    by: (ctx: ComponentContext<TestComponent>) => access(ctx).get(),
+                    by: (ctx: ComponentContext<TestComponent>) => access(ctx.component).get(),
                   });
                 },
               },
-            })).With(ctx => ({
-              get: () => ctx.component.property,
-              set: value => ctx.component.property = value,
+            })).With(component => ({
+              get: () => component.property,
+              set: value => component.property = value,
             })),
         )
         class TestComponent {
@@ -215,9 +215,9 @@ describe('component', () => {
 
         @Component(
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
-            ComponentProperty<string, typeof TestComponent>(noop).With(ctx => ({
-              get: () => ctx.component.property,
-              set: value => ctx.component.property = value,
+            ComponentProperty<string, typeof TestComponent>(noop).With(component => ({
+              get: () => component.property,
+              set: value => component.property = value,
             })),
         )
         class TestComponent {

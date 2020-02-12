@@ -50,15 +50,15 @@ export namespace ComponentProperty {
   export type Access<V, T extends object = any> =
       (
           this: void,
-          context: ComponentContext<T>,
+          component: T,
           key: string | symbol,
       ) => Accessor<V>;
 
   export interface Accessor<V> {
 
-    get(): V;
+    get(this: void): V;
 
-    set(value: V): void;
+    set(this: void, value: V): void;
 
   }
 
@@ -70,8 +70,10 @@ export namespace ComponentProperty {
 
     readonly access: (
         this: void,
-        context: ComponentContext<InstanceType<T>>,
+        component: InstanceType<T>,
     ) => Accessor<V>;
+
+    readonly writable: boolean;
 
     readonly enumerable: boolean;
 
@@ -123,8 +125,9 @@ export function ComponentProperty<V, T extends ComponentClass = Class>(
           const { access, configurable, enumerable, componentDef = {} } = define({
             type,
             key: propertyKey,
-            enumerable: descriptor ? !!descriptor.enumerable : true,
-            configurable: descriptor ? !!descriptor.configurable : true,
+            writable: !!desc.set,
+            enumerable: !!desc.enumerable,
+            configurable: !!desc.configurable,
             access: componentPropertyAccess(propertyKey, desc),
           }) || {};
 
@@ -138,16 +141,19 @@ export function ComponentProperty<V, T extends ComponentClass = Class>(
 
           if (access) {
 
-            const accessorOf = (component: any): ComponentProperty.Accessor<V> => (
+            const accessorOf = (component: InstanceType<T>): ComponentProperty.Accessor<V> => (
                 component[accessor__symbol]
-                || (component[accessor__symbol] = access(ComponentContext.of(component), propertyKey)));
+                || (component[accessor__symbol] = access(component, propertyKey))
+            );
 
             updated.get = function (this: any) {
               return accessorOf(this).get();
             };
-            updated.set = function (this: any, value: V) {
-              accessorOf(this).set(value);
-            };
+            if (desc.set) {
+              updated.set = function (this: any, value: V) {
+                accessorOf(this).set(value);
+              };
+            }
           }
 
           return updated;
@@ -157,15 +163,17 @@ export function ComponentProperty<V, T extends ComponentClass = Class>(
 
   const result = decorator as ComponentPropertyDecorator<V, T>;
 
-  const With = (
+  const decorateWith = (
       access: ComponentProperty.Access<V, InstanceType<T>>,
       key: string | symbol = AnonymousComponentProperty__symbol,
+      writable: boolean,
   ): ComponentDef.Factory<InstanceType<T>> => ({
     [ComponentDef__symbol](type: InstanceType<T>) {
 
       const def = define({
         type,
         key,
+        writable,
         enumerable: false,
         configurable: false,
         access: context => access(context, key),
@@ -177,7 +185,7 @@ export function ComponentProperty<V, T extends ComponentClass = Class>(
   const By = (
       createValue: ComponentProperty.Factory<V, InstanceType<T>>,
       key?: string | symbol,
-  ): ComponentDef.Factory<InstanceType<T>> => With(
+  ): ComponentDef.Factory<InstanceType<T>> => decorateWith(
       (context, key) => {
 
         const value = createValue(context, key);
@@ -186,15 +194,13 @@ export function ComponentProperty<V, T extends ComponentClass = Class>(
           get() {
             return value;
           },
-          set() {
-            throw new TypeError(`"${String(key)}" is read-only`);
-          },
-        };
+        } as ComponentProperty.Accessor<V>;
       },
       key,
+      false,
   );
 
-  result.With = With;
+  result.With = (access, key) => decorateWith(access, key, true);
   result.By = By;
   result.As = (value, key?) => By(valueProvider(value), key);
 
@@ -210,6 +216,6 @@ function componentPropertyAccess<V, T extends object>(
 ) => ComponentProperty.Accessor<V> {
   return () => ({
     get: desc.get || (() => { throw new TypeError(`"${String(key)}" is not readable`); }),
-    set: desc.set || (() => { throw new TypeError(`"${String(key)}" is read-only`); }),
-  });
+    set: desc.set,
+  }) as ComponentProperty.Accessor<V>;
 }
