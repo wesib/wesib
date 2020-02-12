@@ -2,8 +2,7 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { TypedPropertyDecorator } from '../../common';
-import { ComponentDef } from '../../component';
+import { ComponentProperty, ComponentPropertyDecorator } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { StateSupport } from '../state';
 import { ElementRender } from './element-render';
@@ -28,29 +27,26 @@ import { RenderDef } from './render-def';
  *
  * @returns Component method decorator.
  */
-export function Render<T extends ComponentClass>(def?: RenderDef): TypedPropertyDecorator<T> {
-  return (target: InstanceType<T>, propertyKey: string | symbol) => {
+export function Render<T extends ComponentClass>(
+    def?: RenderDef,
+): ComponentPropertyDecorator<() => any, T> {
+  return ComponentProperty(({ access }) => ({
+    componentDef: {
+      feature: {
+        needs: StateSupport,
+      },
+      define(defContext) {
+        defContext.whenComponent(componentContext => {
+          componentContext.whenReady(() => {
 
-    const componentType = target.constructor as T;
+            const { component } = componentContext;
+            const accessor = access(component);
+            const render = accessor.get().bind(component) as ((this: void) => ElementRender | void);
 
-    ComponentDef.define(
-        componentType,
-        {
-          feature: {
-            needs: StateSupport,
-          },
-          define(defContext) {
-            defContext.whenComponent(componentContext => {
-              componentContext.whenReady(() => {
-
-                const component = componentContext.component as any;
-                const render: () => any = component[propertyKey].bind(component);
-
-                ElementRender.render(componentContext, render, def);
-              });
-            });
-          },
-        },
-    );
-  };
+            ElementRender.render(componentContext, render, def);
+          });
+        });
+      },
+    },
+  }));
 }
