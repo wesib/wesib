@@ -2,10 +2,8 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { TypedPropertyDecorator } from '../../common';
-import { ComponentDef } from '../../component';
+import { ComponentProperty, ComponentPropertyDecorator } from '../../component';
 import { ComponentClass } from '../../component/definition';
-import { FeatureDef } from '../feature-def';
 import { AttributeDef } from './attribute-def';
 import { parseAttributeDef } from './attribute-def.impl';
 import { AttributeChangedCallback, AttributeRegistrar } from './attribute-registrar';
@@ -42,30 +40,30 @@ import { AttributesSupport } from './attributes-support.feature';
  */
 export function AttributeChanged<T extends ComponentClass>(
     def?: AttributeDef<InstanceType<T>> | string,
-): TypedPropertyDecorator<T> {
-  return (target: InstanceType<T>, propertyKey: string | symbol) => {
+): ComponentPropertyDecorator<(newValue: string, oldValue: string | null) => void, T> {
+  return ComponentProperty(({ type, key }) => {
 
-    const { name, updateState } = parseAttributeDef(target, propertyKey, def);
-    const componentType = target.constructor as T;
+    const { name, updateState } = parseAttributeDef(type.prototype, key, def);
 
-    FeatureDef.define(componentType, { needs: AttributesSupport });
-    ComponentDef.define(
-        componentType,
-        {
-          define(defContext) {
-            defContext.get(AttributeRegistrar)(name, function (
-                this: InstanceType<T>,
-                newValue: string,
-                oldValue: string | null,
-            ) {
-
-              const callback: AttributeChangedCallback<InstanceType<T>> = (this as any)[propertyKey];
-
-              callback.call(this, newValue, oldValue);
-              updateState.call(this, newValue, oldValue);
-            });
-          },
+    return {
+      componentDef: {
+        feature: {
+          needs: AttributesSupport,
         },
-    );
-  };
+        define(defContext) {
+          defContext.get(AttributeRegistrar)(name, function (
+              this: InstanceType<T>,
+              newValue: string,
+              oldValue: string | null,
+          ) {
+
+            const callback: AttributeChangedCallback<InstanceType<T>> = (this as any)[key];
+
+            callback.call(this, newValue, oldValue);
+            updateState.call(this, newValue, oldValue);
+          });
+        },
+      },
+    };
+  });
 }
