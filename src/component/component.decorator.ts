@@ -17,7 +17,7 @@ import { ComponentClass } from './definition';
  * @category Core
  * @typeparam T  A type of decorated component class.
  */
-export type ComponentDecorator<T extends ComponentClass = any> =
+export type ComponentDecorator<T extends ComponentClass = Class> =
     & ((this: void, type: T) => T | void)
     & ComponentDef<InstanceType<T>>;
 
