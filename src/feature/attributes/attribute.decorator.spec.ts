@@ -48,11 +48,11 @@ describe('feature/attributes', () => {
         [ComponentContext__symbol] = contextSpy;
 
         @Attribute()
-        get attr(): string {
+        get attr(): string | null {
           return '';
         }
 
-        set attr(_value: string) {
+        set attr(_value: string | null) {
           /* do not set */
         }
 
