@@ -2,10 +2,8 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { TypedPropertyDecorator } from '../../common';
-import { ComponentContext, ComponentDef } from '../../component';
+import { ComponentProperty, ComponentPropertyDecorator } from '../../component';
 import { ComponentClass } from '../../component/definition';
-import { FeatureDef } from '../feature-def';
 import { AttributeDef } from './attribute-def';
 import { parseAttributeDef } from './attribute-def.impl';
 import { AttributeRegistrar } from './attribute-registrar';
@@ -26,37 +24,30 @@ import { AttributesSupport } from './attributes-support.feature';
  */
 export function Attribute<T extends ComponentClass>(
     def?: AttributeDef<InstanceType<T>> | string,
-): TypedPropertyDecorator<T> {
-  return <V>(target: InstanceType<T>, propertyKey: string | symbol, descriptor?: TypedPropertyDescriptor<V>) => {
+): ComponentPropertyDecorator<string | null, T> {
+  return ComponentProperty(({ type, key }) => {
 
-    const { name, updateState } = parseAttributeDef(target, propertyKey, def);
-    const componentType = target.constructor as T;
+    const { name, updateState } = parseAttributeDef(type.prototype, key, def);
 
-    FeatureDef.define(componentType, { needs: AttributesSupport });
-    ComponentDef.define(
-        componentType,
-        {
-          define(definitionContext) {
-            definitionContext.get(AttributeRegistrar)(name, updateState);
-          },
+    return {
+      componentDef: {
+        feature: {
+          needs: AttributesSupport,
         },
-    );
-
-    const newDesc: TypedPropertyDescriptor<string | null> = {
-      get(this: InstanceType<T>): string | null {
-        return ComponentContext.of(this).element.getAttribute(name);
+        define(definitionContext) {
+          definitionContext.get(AttributeRegistrar)(name, updateState);
+        },
       },
-      set(this: InstanceType<T>, newValue: string | null) {
-        ComponentContext.of(this).element.setAttribute(name, newValue as string);
+      access({ element }) {
+        return {
+          get(this: InstanceType<T>): string | null {
+            return element.getAttribute(name);
+          },
+          set(this: InstanceType<T>, newValue: string | null) {
+            element.setAttribute(name, newValue);
+          },
+        };
       },
     };
-
-    if (descriptor == null) {
-      // Annotated field
-      Object.defineProperty(target, propertyKey, newDesc);
-      return;
-    }
-
-    return newDesc;
-  };
+  });
 }
