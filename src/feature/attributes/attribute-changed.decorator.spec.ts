@@ -172,7 +172,7 @@ describe('feature/attributes', () => {
         }
 
         return TestComponent;
-      }).toThrow(TypeError);
+      }).toThrow(/Attribute name is required as property key is not a string/);
     });
   });
 });

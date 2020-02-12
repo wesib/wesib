@@ -43,7 +43,7 @@ export function fieldAccessorDescriptor<T, K extends keyof T>(
     fieldKey: K,
 ): PropertyAccessorDescriptor<T[K]> {
 
-  const value__symbol = Symbol(`${fieldKey}:value`);
+  const value__symbol = Symbol(`${String(fieldKey)}:value`);
   const initial: T[K] = target[fieldKey];
 
   return {
