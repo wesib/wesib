@@ -214,8 +214,8 @@ function componentPropertyAccess<V, T extends object>(
     this: void,
     context: ComponentContext<T>,
 ) => ComponentProperty.Accessor<V> {
-  return () => ({
-    get: desc.get || (() => { throw new TypeError(`"${String(key)}" is not readable`); }),
-    set: desc.set,
+  return component => ({
+    get: desc.get ? desc.get.bind(component) : (() => { throw new TypeError(`"${String(key)}" is not readable`); }),
+    set: desc.set && desc.set.bind(component),
   }) as ComponentProperty.Accessor<V>;
 }
