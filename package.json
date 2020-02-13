@@ -10,7 +10,7 @@
   "homepage": "https://github.com/wesib/wesib",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wesib/wesib.git"
+    "url": "ssh://git@github.com:wesib/wesib.git"
   },
   "license": "MIT",
   "author": "Ruslan Lopatin <ruslan.lopatin@gmail.com>",
