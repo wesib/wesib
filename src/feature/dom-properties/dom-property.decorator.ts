@@ -2,13 +2,14 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { decoratePropertyAccessor, PropertyAccessorDescriptor, TypedPropertyDecorator } from '../../common';
-import { ComponentContext, ComponentDef } from '../../component';
+import { noop } from 'call-thru';
+import { Class, PropertyAccessorDescriptor } from '../../common';
+import { ComponentContext, ComponentProperty, ComponentPropertyDecorator } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { DomPropertiesSupport } from './dom-properties-support.feature';
 import { DomPropertyDef } from './dom-property-def';
 import { DomPropertyRegistrar } from './dom-property-registrar';
-import { propertyStateUpdate } from './property-state-update.impl';
+import { DomPropertyUpdateCallback, propertyStateUpdate } from './property-state-update.impl';
 
 /**
  * Component property decorator that declares a property to add to custom element created for this component.
@@ -23,55 +24,46 @@ import { propertyStateUpdate } from './property-state-update.impl';
  *
  * @returns Component property decorator.
  */
-export function DomProperty<T extends ComponentClass>(def: DomPropertyDef<T> = {}): TypedPropertyDecorator<T> {
-  return <V>(target: InstanceType<T>, propertyKey: string | symbol, propertyDesc?: TypedPropertyDescriptor<V>) => {
+export function DomProperty<V = any, T extends ComponentClass = Class>(
+    def: DomPropertyDef<T> = {},
+): ComponentPropertyDecorator<V, T> {
+  return ComponentProperty(descriptor => {
 
-    const componentType = target.constructor as T;
+    const { key, access } = descriptor;
+    const name = def.propertyKey || key;
+    const desc = domPropertyDescriptor(key, descriptor, def);
 
-    let result: TypedPropertyDescriptor<V> | undefined;
+    return {
+      componentDef: {
+        feature: {
+          needs: DomPropertiesSupport,
+        },
+        define(definitionContext) {
+          definitionContext.get(DomPropertyRegistrar)(name, desc);
+        },
+      },
+      access(component) {
 
-    if (def.updateState !== false) {
-
-      const updateState: any = propertyStateUpdate(propertyKey, def.updateState);
-
-      result = decoratePropertyAccessor(target, propertyKey, propertyDesc, dsc => {
-
-        const setter = dsc.set;
-
-        if (!setter) {
-          return;
-        }
+        const accessor = access(component);
+        const updateState: DomPropertyUpdateCallback<InstanceType<T>> = def.updateState !== false
+            ? propertyStateUpdate(key, def.updateState)
+            : noop;
 
         return {
-          ...dsc,
-          set: function (this: InstanceType<T>, newValue: V) {
+          get(): V {
+            return accessor.get();
+          },
+          set(newValue: V) {
 
-            const oldValue = (this as any)[propertyKey];
+            const oldValue = component[key];
 
-            setter.call(this, newValue);
-            updateState.call(this, newValue, oldValue);
+            accessor.set(newValue);
+            updateState.call(component, newValue, oldValue);
           },
         };
-      });
-    }
-
-    const name = def.propertyKey || propertyKey;
-    const desc = domPropertyDescriptor(propertyKey, propertyDesc, def);
-
-    ComponentDef.define(
-        componentType,
-        {
-          define(definitionContext) {
-            definitionContext.get(DomPropertyRegistrar)(name, desc);
-          },
-          feature: {
-            needs: DomPropertiesSupport,
-          },
-        },
-    );
-
-    return result;
-  };
+      },
+    };
+  });
 }
 
 /**
@@ -88,54 +80,23 @@ export { DomProperty as DomMethod };
  */
 function domPropertyDescriptor<V>(
     propertyKey: string | symbol,
-    propertyDesc: TypedPropertyDescriptor<V> | undefined,
+    propertyDesc: ComponentProperty.Descriptor<V>,
     {
-      configurable,
-      enumerable,
-      writable,
+      configurable = propertyDesc.configurable,
+      enumerable = propertyDesc.enumerable,
+      writable = propertyDesc.writable,
     }: DomPropertyDef,
 ): PropertyAccessorDescriptor<V> {
-  if (!propertyDesc) {
-    // Component object property
-    if (enumerable == null) {
-      enumerable = true;
-    }
-    if (configurable == null) {
-      configurable = true;
-    }
-    if (writable == null) {
-      writable = true;
-    }
-  } else {
-    // Component property accessor
-    if (configurable == null) {
-      configurable = propertyDesc.configurable === true;
-    }
-    if (enumerable == null) {
-      enumerable = propertyDesc.enumerable === true;
-    }
-    if (!propertyDesc.set) {
-      // No setter. Element property is not writable.
-      writable = false;
-    } else if (writable == null) {
-      // There is a setter. Element property is writable by default.
-      writable = true;
-    }
-  }
-
-  const desc: PropertyAccessorDescriptor<V> = {
+  return {
     configurable,
     enumerable,
-    get: function (this: HTMLElement) {
+    get: function (this: any) {
       return (ComponentContext.of(this).component as any)[propertyKey];
     },
+    set: writable
+        ? function (this: any, value: any) {
+          (ComponentContext.of(this).component as any)[propertyKey] = value;
+        }
+        : undefined,
   };
-
-  if (writable) {
-    desc.set = function (this: HTMLElement, value: any) {
-      (ComponentContext.of(this).component as any)[propertyKey] = value;
-    };
-  }
-
-  return desc;
 }
