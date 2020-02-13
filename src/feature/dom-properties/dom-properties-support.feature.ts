@@ -3,7 +3,6 @@
  * @module @wesib/wesib
  */
 import { FeatureDef, FeatureDef__symbol } from '../feature-def';
-import { DomPropertyRegistrar } from './dom-property-registrar';
 import { DomPropertyRegistry } from './dom-property-registry.impl';
 
 /**
@@ -12,16 +11,11 @@ import { DomPropertyRegistry } from './dom-property-registry.impl';
 const DomPropertiesSupport__feature: FeatureDef = {
   setup(setup) {
     setup.perDefinition({ as: DomPropertyRegistry });
-    setup.perDefinition({
-      a: DomPropertyRegistrar,
-      by(registry: DomPropertyRegistry) {
-        return (propertyKey: PropertyKey, descriptor: PropertyDescriptor) => registry.add(propertyKey, descriptor);
-      },
-      with: [DomPropertyRegistry],
-    });
     setup.onDefinition(definitionContext => {
       // Define element prototype properties
-      definitionContext.whenReady(({ elementType }) => definitionContext.get(DomPropertyRegistry).define(elementType));
+      definitionContext.whenReady(
+          ({ elementType }) => definitionContext.get(DomPropertyRegistry).define(elementType),
+      );
     });
     setup.onComponent(componentContext => {
 

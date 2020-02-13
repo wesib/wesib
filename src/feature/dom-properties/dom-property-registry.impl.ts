@@ -1,6 +1,8 @@
 import { ContextKey, ContextKey__symbol, SingleContextKey } from 'context-values';
 import { Class } from '../../common';
 import { ComponentMount } from '../../component';
+import { DefinitionContext } from '../../component/definition';
+import { DomPropertyDescriptor } from './dom-property-descriptor';
 
 const DomPropertyRegistry__key = (/*#__PURE__*/ new SingleContextKey<DomPropertyRegistry>('dom-property-registry'));
 
@@ -13,17 +15,28 @@ export class DomPropertyRegistry {
     return DomPropertyRegistry__key;
   }
 
-  private readonly _props = new Map<PropertyKey, PropertyDescriptor>();
+  private _props?: Map<PropertyKey, PropertyDescriptor>;
 
-  add(propertyKey: PropertyKey, descriptor: PropertyDescriptor): void {
-    this._props.set(propertyKey, descriptor);
+  constructor(private readonly _context: DefinitionContext) {
   }
+
+  get props(): Map<PropertyKey, PropertyDescriptor> {
+    if (this._props) {
+      return this._props;
+    }
+
+    return this._props = new Map<PropertyKey, PropertyDescriptor>(
+        this._context.get(DomPropertyDescriptor)
+            .map(({ key, descriptor }) => [key, descriptor]),
+    );
+  }
+
 
   define<T extends object>(elementType: Class<T>): void {
 
     const prototype = elementType.prototype;
 
-    this._props.forEach((desc, key) => {
+    this.props.forEach((desc, key) => {
       Object.defineProperty(prototype, key, desc);
     });
   }
@@ -32,7 +45,7 @@ export class DomPropertyRegistry {
 
     const element = mount.element;
 
-    this._props.forEach((desc, key) => {
+    this.props.forEach((desc, key) => {
       Object.defineProperty(element, key, desc);
     });
   }

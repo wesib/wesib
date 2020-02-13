@@ -3,12 +3,13 @@
  * @module @wesib/wesib
  */
 import { noop } from 'call-thru';
-import { Class, PropertyAccessorDescriptor } from '../../common';
-import { ComponentContext, ComponentProperty, ComponentPropertyDecorator } from '../../component';
+import { Class } from '../../common';
+import { ComponentProperty, ComponentPropertyDecorator } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { DomPropertiesSupport } from './dom-properties-support.feature';
 import { DomPropertyDef } from './dom-property-def';
-import { DomPropertyRegistrar } from './dom-property-registrar';
+import { DomPropertyDescriptor } from './dom-property-descriptor';
+import { domPropertyDescriptor } from './dom-property-descriptor.impl';
 import { DomPropertyUpdateCallback, propertyStateUpdate } from './property-state-update.impl';
 
 /**
@@ -30,16 +31,15 @@ export function DomProperty<V = any, T extends ComponentClass = Class>(
   return ComponentProperty(descriptor => {
 
     const { key, access } = descriptor;
-    const name = def.propertyKey || key;
-    const desc = domPropertyDescriptor(key, descriptor, def);
+    const domDescriptor = domPropertyDescriptor(descriptor, def);
 
     return {
       componentDef: {
         feature: {
           needs: DomPropertiesSupport,
         },
-        define(definitionContext) {
-          definitionContext.get(DomPropertyRegistrar)(name, desc);
+        setup(setup) {
+          setup.perDefinition({ a: DomPropertyDescriptor, is: domDescriptor });
         },
       },
       access(component) {
@@ -74,29 +74,3 @@ export function DomProperty<V = any, T extends ComponentClass = Class>(
  * @category Feature
  */
 export { DomProperty as DomMethod };
-
-/**
- * @internal
- */
-function domPropertyDescriptor<V>(
-    propertyKey: string | symbol,
-    propertyDesc: ComponentProperty.Descriptor<V>,
-    {
-      configurable = propertyDesc.configurable,
-      enumerable = propertyDesc.enumerable,
-      writable = propertyDesc.writable,
-    }: DomPropertyDef,
-): PropertyAccessorDescriptor<V> {
-  return {
-    configurable,
-    enumerable,
-    get: function (this: any) {
-      return (ComponentContext.of(this).component as any)[propertyKey];
-    },
-    set: writable
-        ? function (this: any, value: any) {
-          (ComponentContext.of(this).component as any)[propertyKey] = value;
-        }
-        : undefined,
-  };
-}
