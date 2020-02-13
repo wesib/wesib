@@ -3,7 +3,7 @@ import { BootstrapWindow } from '../../boot/globals';
 import { Class, mergeFunctions } from '../../common';
 import { ComponentContext, ComponentMount } from '../../component';
 import { DefinitionContext } from '../../component/definition';
-import { AttributeChangedCallback } from './attribute-registrar';
+import { AttributeChangedCallback, AttributeDescriptor } from './attribute-descriptor';
 
 const AttributeRegistry__key = (/*#__PURE__*/ new SingleContextKey<AttributeRegistry>('attribute-registry'));
 
@@ -16,21 +16,32 @@ export class AttributeRegistry<T extends object = any> {
     return AttributeRegistry__key;
   }
 
-  private readonly _MutationObserver: typeof MutationObserver;
-  private readonly _attrs: { [name: string]: AttributeChangedCallback<T> } = {};
+  private _attrs?: Map<string, AttributeChangedCallback<T>>;
 
-  constructor(ctx: DefinitionContext) {
-    this._MutationObserver = ctx.get(BootstrapWindow).MutationObserver;
+  constructor(private readonly _context: DefinitionContext) {
   }
 
-  add(name: string, callback: AttributeChangedCallback<T>): void {
-    this._attrs[name] = mergeFunctions<[string, string | null], void, T>(this._attrs[name], callback);
+  get attrs(): Map<string, AttributeChangedCallback<T>> {
+    if (this._attrs) {
+      return this._attrs;
+    }
+
+    const attrs = new Map<string, AttributeChangedCallback<T>>();
+
+    this._context.get(AttributeDescriptor).forEach(desc => {
+
+      const { name, change } = desc;
+
+      attrs.set(name, mergeFunctions(attrs.get(name), change));
+    });
+
+    return this._attrs = attrs;
   }
 
   define(elementType: Class): void {
 
-    const attrs = this._attrs;
-    const observedAttributes = Object.keys(attrs);
+    const attrs = this.attrs;
+    const observedAttributes = Array.from(attrs.keys());
 
     if (!observedAttributes.length) {
       return; // No attributes defined
@@ -45,7 +56,7 @@ export class AttributeRegistry<T extends object = any> {
       configurable: true,
       enumerable: true,
       value: function (name: string, oldValue: string | null, newValue: string) {
-        (attrs[name] as any).call(ComponentContext.of(this).component, newValue, oldValue);
+        attrs.get(name)!.call(ComponentContext.of<T>(this).component, newValue, oldValue);
       },
     });
   }
@@ -53,21 +64,22 @@ export class AttributeRegistry<T extends object = any> {
   mount(mount: ComponentMount<T>): void {
 
     const element = mount.element;
-    const attrs = this._attrs;
-    const attributeFilter = Object.keys(attrs);
+    const attrs = this.attrs;
+    const attributeFilter = Array.from(attrs.keys());
 
     if (!attributeFilter.length) {
       return; // No attributes defined
     }
 
-    const observer = new this._MutationObserver(
+    const MutationObserver = this._context.get(BootstrapWindow).MutationObserver;
+    const observer = new MutationObserver(
         records => records.forEach(
             record => {
 
               const attributeName = record.attributeName as string;
 
-              return (attrs[attributeName] as any).call(
-                  ComponentContext.of(element).component,
+              return attrs.get(attributeName)!.call(
+                  ComponentContext.of<T>(element).component,
                   element.getAttribute(attributeName),
                   record.oldValue,
               );

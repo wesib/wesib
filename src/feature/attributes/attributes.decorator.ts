@@ -8,7 +8,7 @@ import { isArray } from '../../common/types.impl';
 import { Component, ComponentDecorator } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { AttributeUpdateReceiver } from './attribute-def';
-import { AttributeRegistrar } from './attribute-registrar';
+import { AttributeDescriptor } from './attribute-descriptor';
 import { attributeStateUpdate } from './attribute-state-update.impl';
 import { AttributesSupport } from './attributes-support.feature';
 
@@ -28,16 +28,26 @@ export function Attributes<T extends ComponentClass = Class>(
 ): ComponentDecorator<T> {
   return Component({
     feature: { needs: AttributesSupport },
-    define(defContext) {
-
-      const registrar = defContext.get(AttributeRegistrar);
+    setup(setup) {
 
       const defineByItem = (item: Attributes.Item<InstanceType<T>>): void => {
         if (typeof item === 'string') {
-          registrar(item, attributeStateUpdate(item));
+          setup.perDefinition({
+            a: AttributeDescriptor,
+            is: {
+              name: item,
+              change: attributeStateUpdate(item),
+            },
+          });
         } else {
           Object.keys(item).forEach(name => {
-            registrar(name, attributeStateUpdate(name, item[name]));
+            setup.perDefinition({
+              a: AttributeDescriptor,
+              is: {
+                name,
+                change: attributeStateUpdate(name, item[name]),
+              },
+            });
           });
         }
       };

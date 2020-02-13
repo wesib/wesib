@@ -5,8 +5,8 @@
 import { ComponentContext, ComponentProperty, ComponentPropertyDecorator } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { AttributeDef } from './attribute-def';
-import { parseAttributeDef } from './attribute-def.impl';
-import { AttributeRegistrar } from './attribute-registrar';
+import { AttributeDescriptor } from './attribute-descriptor';
+import { parseAttributeDescriptor } from './attribute-descriptor.impl';
 import { AttributesSupport } from './attributes-support.feature';
 
 /**
@@ -27,15 +27,16 @@ export function Attribute<T extends ComponentClass>(
 ): ComponentPropertyDecorator<string | null, T> {
   return ComponentProperty(({ type, key }) => {
 
-    const { name, updateState } = parseAttributeDef(type.prototype, key, def);
+    const descriptor = parseAttributeDescriptor(type.prototype, key, def);
+    const { name } = descriptor;
 
     return {
       componentDef: {
         feature: {
           needs: AttributesSupport,
         },
-        define(definitionContext) {
-          definitionContext.get(AttributeRegistrar)(name, updateState);
+        setup(setup) {
+          setup.perDefinition({ a: AttributeDescriptor, is: descriptor });
         },
       },
       access(component) {

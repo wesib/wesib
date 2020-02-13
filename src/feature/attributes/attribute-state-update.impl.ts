@@ -6,8 +6,8 @@ import { noop } from 'call-thru';
 import { StatePath } from 'fun-events';
 import { ComponentContext } from '../../component';
 import { AttributeUpdateReceiver } from './attribute-def';
+import { AttributeChangedCallback } from './attribute-descriptor';
 import { AttributePath, attributePathTo } from './attribute-path';
-import { AttributeChangedCallback } from './attribute-registrar';
 
 /**
  * @internal

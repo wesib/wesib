@@ -1,26 +1,23 @@
 import { ComponentClass } from '../../component/definition';
 import { AttributeDef } from './attribute-def';
-import { AttributeChangedCallback } from './attribute-registrar';
+import { AttributeChangedCallback, AttributeDescriptor } from './attribute-descriptor';
 import { attributeStateUpdate } from './attribute-state-update.impl';
 
 /**
  * @internal
  */
-export function parseAttributeDef<T extends ComponentClass>(
+export function parseAttributeDescriptor<T extends ComponentClass>(
     target: InstanceType<T>,
     propertyKey: string | symbol,
     opts?: AttributeDef<InstanceType<T>> | string,
-): {
-  readonly name: string;
-  readonly updateState: AttributeChangedCallback<InstanceType<T>>;
-} {
+): AttributeDescriptor<InstanceType<T>> {
 
   let name: string;
-  let updateState: AttributeChangedCallback<InstanceType<T>>;
+  let change: AttributeChangedCallback<InstanceType<T>>;
 
   if (typeof opts === 'string') {
     name = opts;
-    updateState = attributeStateUpdate(name);
+    change = attributeStateUpdate(name);
   } else {
     if (opts && opts.name) {
       name = opts.name;
@@ -33,8 +30,8 @@ export function parseAttributeDef<T extends ComponentClass>(
       name = propertyKey;
     }
 
-    updateState = attributeStateUpdate(name, opts && opts.updateState);
+    change = attributeStateUpdate(name, opts && opts.updateState);
   }
 
-  return { name, updateState };
+  return { name, change };
 }

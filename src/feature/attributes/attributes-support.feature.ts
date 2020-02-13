@@ -3,7 +3,6 @@
  * @module @wesib/wesib
  */
 import { FeatureDef, FeatureDef__symbol } from '../feature-def';
-import { AttributeChangedCallback, AttributeRegistrar } from './attribute-registrar';
 import { AttributeRegistry } from './attribute-registry.impl';
 
 /**
@@ -12,16 +11,11 @@ import { AttributeRegistry } from './attribute-registry.impl';
 const AttributesSupport__feature: FeatureDef = {
   setup(setup) {
     setup.perDefinition({ as: AttributeRegistry });
-    setup.perDefinition({
-      a: AttributeRegistrar,
-      by(registry: AttributeRegistry) {
-        return <T extends object>(name: string, callback: AttributeChangedCallback<T>) => registry.add(name, callback);
-      },
-      with: [AttributeRegistry],
-    });
     setup.onDefinition(definitionContext => {
       // Define element prototype attributes
-      definitionContext.whenReady(({ elementType }) => definitionContext.get(AttributeRegistry).define(elementType));
+      definitionContext.whenReady(
+          ({ elementType }) => definitionContext.get(AttributeRegistry).define(elementType),
+      );
     });
     setup.onComponent(componentContext => {
 

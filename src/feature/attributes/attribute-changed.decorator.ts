@@ -5,8 +5,8 @@
 import { ComponentProperty, ComponentPropertyDecorator } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { AttributeDef } from './attribute-def';
-import { parseAttributeDef } from './attribute-def.impl';
-import { AttributeChangedCallback, AttributeRegistrar } from './attribute-registrar';
+import { AttributeChangedCallback, AttributeDescriptor } from './attribute-descriptor';
+import { parseAttributeDescriptor } from './attribute-descriptor.impl';
 import { AttributesSupport } from './attributes-support.feature';
 
 /**
@@ -43,24 +43,30 @@ export function AttributeChanged<T extends ComponentClass>(
 ): ComponentPropertyDecorator<(newValue: string, oldValue: string | null) => void, T> {
   return ComponentProperty(({ type, key }) => {
 
-    const { name, updateState } = parseAttributeDef(type.prototype, key, def);
+    const { name, change } = parseAttributeDescriptor(type.prototype, key, def);
 
     return {
       componentDef: {
         feature: {
           needs: AttributesSupport,
         },
-        define(defContext) {
-          defContext.get(AttributeRegistrar)(name, function (
-              this: InstanceType<T>,
-              newValue: string,
-              oldValue: string | null,
-          ) {
+        setup(setup) {
+          setup.perDefinition({
+            a: AttributeDescriptor,
+            is: {
+              name,
+              change(
+                  this: InstanceType<T>,
+                  newValue: string,
+                  oldValue: string | null,
+              ) {
 
-            const callback: AttributeChangedCallback<InstanceType<T>> = (this as any)[key];
+                const callback: AttributeChangedCallback<InstanceType<T>> = (this as any)[key];
 
-            callback.call(this, newValue, oldValue);
-            updateState.call(this, newValue, oldValue);
+                callback.call(this, newValue, oldValue);
+                change.call(this, newValue, oldValue);
+              },
+            },
           });
         },
       },
