@@ -56,7 +56,7 @@ export class AttributeRegistry<T extends object = any> {
       configurable: true,
       enumerable: true,
       value: function (name: string, oldValue: string | null, newValue: string) {
-        attrs.get(name)!.call(ComponentContext.of<T>(this).component, newValue, oldValue);
+        attrs.get(name)!(ComponentContext.of<T>(this).component, newValue, oldValue);
       },
     });
   }
@@ -78,7 +78,7 @@ export class AttributeRegistry<T extends object = any> {
 
               const attributeName = record.attributeName as string;
 
-              return attrs.get(attributeName)!.call(
+              return attrs.get(attributeName)!(
                   ComponentContext.of<T>(element).component,
                   element.getAttribute(attributeName),
                   record.oldValue,

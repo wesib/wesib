@@ -19,6 +19,7 @@ describe('feature/attributes', () => {
     let testComponent: ComponentClass;
     let context: ComponentContext;
     let element: any;
+    let component: any;
     let attrChangedSpy: Mock;
     let attr2ChangedSpy: Mock;
 
@@ -55,6 +56,7 @@ describe('feature/attributes', () => {
 
         constructor(ctx: ComponentContext) {
           context = ctx;
+          component = this;
         }
 
         @AttributeChanged('custom-attribute')
@@ -78,11 +80,11 @@ describe('feature/attributes', () => {
 
       it('notifies on attribute change', () => {
         element.setAttribute('custom-attribute', 'value1');
-        expect(attrChangedSpy).toHaveBeenCalledWith('value1', null);
+        expect(attrChangedSpy).toHaveBeenCalledWith(component, 'value1', null);
 
         attrChangedSpy.mockClear();
         element.setAttribute('custom-attribute', 'value2');
-        expect(attrChangedSpy).toHaveBeenCalledWith('value2', 'value1');
+        expect(attrChangedSpy).toHaveBeenCalledWith(component, 'value2', 'value1');
       });
       it('does not notify on other attribute change', () => {
         element.setAttribute('custom-attribute-2', 'value');
@@ -178,7 +180,7 @@ describe('feature/attributes', () => {
 
         observe([record1]);
 
-        expect(attrChangedSpy).toHaveBeenCalledWith('value1', null);
+        expect(attrChangedSpy).toHaveBeenCalledWith(component, 'value1', null);
 
         attrChangedSpy.mockClear();
 
@@ -191,7 +193,7 @@ describe('feature/attributes', () => {
         } as MutationRecord;
 
         observe([record2]);
-        expect(attrChangedSpy).toHaveBeenCalledWith('value2', 'value1');
+        expect(attrChangedSpy).toHaveBeenCalledWith(component, 'value2', 'value1');
       });
       it('does not observe attributes when not defined', async () => {
         Observer.mockClear();

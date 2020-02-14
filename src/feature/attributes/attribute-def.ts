@@ -37,20 +37,21 @@ export interface AttributeDef<T extends object> {
 }
 
 /**
- * Attribute updates receiver invoked after custom element attribute change.
+ * Signature of attribute updates receiver invoked after custom element attribute change.
  *
  * @category Feature
  * @typeparam T  A type of component.
  */
 export type AttributeUpdateReceiver<T extends object> =
 /**
- * @param this  Component instance.
- * @param path  The changed attribute state path in the form of `[attributePathRoot, attributeName]`.
+ * @param component  Component instance.
+ * @param path  The changed attribute state path in the form of `[AttributePath__root, attributeName]`.
  * @param newValue  New attribute value.
  * @param oldValue  Previous attribute value, or `null` if there were no value assigned.
  */
     (
-        this: T,
+        this: void,
+        component: T,
         path: AttributePath,
         newValue: string,
         oldValue: string | null,

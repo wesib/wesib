@@ -56,15 +56,15 @@ export function AttributeChanged<T extends ComponentClass>(
             is: {
               name,
               change(
-                  this: InstanceType<T>,
+                  component: InstanceType<T>,
                   newValue: string,
                   oldValue: string | null,
               ) {
 
-                const callback: AttributeChangedCallback<InstanceType<T>> = (this as any)[key];
+                const callback: AttributeChangedCallback<InstanceType<T>> = (component as any)[key];
 
-                callback.call(this, newValue, oldValue);
-                change.call(this, newValue, oldValue);
+                callback(component, newValue, oldValue);
+                change(component, newValue, oldValue);
               },
             },
           });

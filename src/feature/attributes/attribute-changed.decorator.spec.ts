@@ -28,8 +28,7 @@ describe('feature/attributes', () => {
 
       element.attributeChangedCallback('attr', 'old', 'new');
 
-      expect(attrSpy).toHaveBeenCalledWith('new', 'old');
-      expect(attrSpy.mock.instances[0]).toBe(component);
+      expect(attrSpy).toHaveBeenCalledWith(component, 'new', 'old');
     });
     it('updates the state', async () => {
 
@@ -77,8 +76,7 @@ describe('feature/attributes', () => {
       element.attributeChangedCallback('attr', 'old', 'new');
 
       expect(updateStateSpy).not.toHaveBeenCalled();
-      expect(updateSpy).toHaveBeenCalledWith(attributePathTo('attr'), 'new', 'old');
-      expect(updateSpy.mock.instances[0]).toBe(component);
+      expect(updateSpy).toHaveBeenCalledWith(component, attributePathTo('attr'), 'new', 'old');
     });
     it('updates the state with custom key', async () => {
 
@@ -127,8 +125,7 @@ describe('feature/attributes', () => {
 
       element.attributeChangedCallback('attr', 'old', 'new');
 
-      expect(attrSpy).toHaveBeenCalledWith('new', 'old');
-      expect(attrSpy.mock.instances[0]).toBe(component);
+      expect(attrSpy).toHaveBeenCalledWith(component, 'new', 'old');
       expect(updateStateSpy).not.toHaveBeenCalled();
     });
     it('declares attribute with custom attribute name', async () => {
@@ -153,8 +150,7 @@ describe('feature/attributes', () => {
 
       element.attributeChangedCallback('my-attr', 'old', 'new');
 
-      expect(attrSpy).toHaveBeenCalledWith('new', 'old');
-      expect(attrSpy.mock.instances[0]).toBe(component);
+      expect(attrSpy).toHaveBeenCalledWith(component, 'new', 'old');
     });
     it('fails when attribute name is absent and property key is symbol', () => {
 

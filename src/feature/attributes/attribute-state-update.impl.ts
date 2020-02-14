@@ -7,7 +7,7 @@ import { StatePath } from 'fun-events';
 import { ComponentContext } from '../../component';
 import { AttributeUpdateReceiver } from './attribute-def';
 import { AttributeChangedCallback } from './attribute-descriptor';
-import { AttributePath, attributePathTo } from './attribute-path';
+import { attributePathTo } from './attribute-path';
 
 /**
  * @internal
@@ -21,23 +21,20 @@ export function attributeStateUpdate<T extends object>(
   }
   if (updateState === true || typeof updateState === 'function') {
 
-    const key = attributePathTo(name);
-    const update: AttributeUpdateReceiver<T> = updateState === true ? defaultUpdateState : updateState;
+    const path = attributePathTo(name);
+    const update: AttributeUpdateReceiver<T> = updateState === true ? updateAttributeState : updateState;
 
-    return function (this: T, newValue, oldValue) {
-      update.call(this, key, newValue, oldValue);
-    };
+    return (component: T, newValue, oldValue) => update(component, path, newValue, oldValue);
   }
-  return function (this: T, newValue, oldValue) {
-    ComponentContext.of(this).updateState(updateState, newValue, oldValue);
-  };
+
+  return (component: T, newValue, oldValue) => updateAttributeState(component, updateState, newValue, oldValue);
 }
 
-function defaultUpdateState<T extends object>(
-    this: T,
-    path: AttributePath,
+function updateAttributeState<T extends object>(
+    component: T,
+    path: StatePath,
     newValue: string,
     oldValue: string | null,
 ): void {
-  ComponentContext.of(this).updateState(path, newValue, oldValue);
+  ComponentContext.of(component).updateState(path, newValue, oldValue);
 }

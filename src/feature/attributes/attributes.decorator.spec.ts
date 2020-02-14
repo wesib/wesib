@@ -89,8 +89,7 @@ describe('feature/attributes', () => {
       element.attributeChangedCallback('attr', 'old', 'new');
 
       expect(updateStateSpy).not.toHaveBeenCalled();
-      expect(updateSpy).toHaveBeenCalledWith([AttributePath__root, 'attr'], 'new', 'old');
-      expect(updateSpy.mock.instances[0]).toBe(component);
+      expect(updateSpy).toHaveBeenCalledWith(component, [AttributePath__root, 'attr'], 'new', 'old');
     });
     it('updates the state with custom key', async () => {
 

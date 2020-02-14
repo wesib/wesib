@@ -5,7 +5,7 @@
 import { MultiContextKey, MultiContextRef } from 'context-values';
 
 /**
- * Custom element attribute change callback.
+ * Custom element attribute change callback signature.
  *
  * This function is called whenever a new attribute value assigned.
  *
@@ -14,10 +14,11 @@ import { MultiContextKey, MultiContextRef } from 'context-values';
  */
 export type AttributeChangedCallback<T extends object> =
 /**
+ * @param component  Component instance.
  * @param newValue  New attribute value.
  * @param oldValue  Previous attribute value, or `null` if there were no value assigned.
  */
-    (this: T, newValue: string, oldValue: string | null) => void;
+    (this: void, component: T, newValue: string, oldValue: string | null) => void;
 
 /**
  * Custom element attribute descriptor.
