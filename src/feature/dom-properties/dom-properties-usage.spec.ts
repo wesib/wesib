@@ -11,6 +11,7 @@ describe('feature/dom-properties', () => {
 
     let testComponent: ComponentClass;
     let context: ComponentContext;
+    let component: any;
     let element: any;
     let propertyValue: number;
     let customUpdateStateSpy: Mock;
@@ -44,6 +45,7 @@ describe('feature/dom-properties', () => {
 
         constructor(ctx: ComponentContext) {
           context = ctx;
+          component = this;
           this.writableProperty = 11;
         }
 
@@ -146,8 +148,12 @@ describe('feature/dom-properties', () => {
 
         expect(element.customStateUpdatingField).toEqual(19);
         expect(updateStateSpy).not.toHaveBeenCalled();
-        expect(customUpdateStateSpy).toHaveBeenCalledWith([DomPropertyPath__root, 'customStateUpdatingField'], 19, 91);
-        expect(customUpdateStateSpy.mock.instances[0]).toBe(ComponentContext.of(element).component);
+        expect(customUpdateStateSpy).toHaveBeenCalledWith(
+            component,
+            [DomPropertyPath__root, 'customStateUpdatingField'],
+            19,
+            91,
+        );
       });
       it('updates the component state with custom path', () => {
 

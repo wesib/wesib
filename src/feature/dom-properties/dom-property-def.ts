@@ -66,13 +66,14 @@ export interface DomPropertyDef<T extends object = any> {
 export type DomPropertyUpdateReceiver<T extends object> =
 /**
  * @typeparam K  A type of component property keys.
- * @param this  Component instance.
+ * @param component  Component instance.
  * @param path  The changed property state path in the form of `[DomPropertyPath__root, propertyKey]`.
  * @param newValue  New property value.
  * @param oldValue  Previous property value.
  */
     <K extends keyof T>(
-        this: T,
+        this: void,
+        component: T,
         path: DomPropertyPath<K>,
         newValue: T[K],
         oldValue: T[K],

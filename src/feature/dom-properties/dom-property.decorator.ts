@@ -43,7 +43,7 @@ export function DomProperty<V = any, T extends ComponentClass = Class>(
         const oldValue = get(component);
 
         setValue(component, newValue);
-        updateState.call(component, newValue, oldValue);
+        updateState(component, newValue, oldValue);
       };
     }
 
