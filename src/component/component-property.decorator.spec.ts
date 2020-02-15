@@ -43,19 +43,12 @@ describe('component', () => {
 
       class TestComponent {
 
-        @ComponentProperty(({ access }: ComponentProperty.Descriptor<string, typeof TestComponent>) => ({
-          access(context) {
-
-            const accessor = access(context);
-
-            return {
-              get() {
-                return accessor.get() + `!`;
-              },
-              set(value) {
-                accessor.set('+' + value);
-              },
-            };
+        @ComponentProperty(({ get, set }: ComponentProperty.Descriptor<string, typeof TestComponent>) => ({
+          get(component) {
+            return get(component) + `!`;
+          },
+          set(component, value) {
+            set(component, '+' + value);
           },
         }))
         property = 'some';
@@ -107,19 +100,12 @@ describe('component', () => {
 
       class TestComponent {
 
-        @ComponentProperty(({ access }: ComponentProperty.Descriptor<string, typeof TestComponent>) => ({
-          access(context) {
-
-            const accessor = access(context);
-
-            return {
-              get() {
-                return accessor.get() + `!`;
-              },
-              set(value) {
-                accessor.set('+' + value);
-              },
-            };
+        @ComponentProperty(({ get, set }: ComponentProperty.Descriptor<string, typeof TestComponent>) => ({
+          get(component) {
+            return get(component) + `!`;
+          },
+          set(component, value) {
+            set(component, '+' + value);
           },
         }))
         get property(): string {
@@ -138,19 +124,12 @@ describe('component', () => {
 
       class TestComponent {
 
-        @ComponentProperty(({ access }: ComponentProperty.Descriptor<string, typeof TestComponent>) => ({
-          access(context) {
-
-            const accessor = access(context);
-
-            return {
-              get() {
-                return accessor.get() + `!`;
-              },
-              set(value) {
-                accessor.set('+' + value);
-              },
-            };
+        @ComponentProperty(({ get, set }: ComponentProperty.Descriptor<string, typeof TestComponent>) => ({
+          get(component) {
+            return get(component) + `!`;
+          },
+          set(component, value) {
+            set(component, '+' + value);
           },
         }))
         set property(_value: string) {
@@ -187,19 +166,19 @@ describe('component', () => {
 
         @Component(
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
-            ComponentProperty<string, typeof TestComponent>(({ access }) => ({
+            ComponentProperty<string, typeof TestComponent>(({ get }) => ({
               componentDef: {
                 setup(setup) {
                   setup.perComponent({
                     a: testKey,
-                    by: (ctx: ComponentContext<TestComponent>) => access(ctx.component).get(),
+                    by: ({ component }: ComponentContext<TestComponent>) => get(component),
                   });
                 },
               },
-            })).With(component => ({
-              get: () => component.property,
-              set: value => component.property = value,
-            })),
+            })).With({
+              get: component => component.property,
+              set: (component, value) => component.property = value,
+            }),
         )
         class TestComponent {
 
@@ -215,10 +194,10 @@ describe('component', () => {
 
         @Component(
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
-            ComponentProperty<string, typeof TestComponent>(noop).With(component => ({
-              get: () => component.property,
-              set: value => component.property = value,
-            })),
+            ComponentProperty<string, typeof TestComponent>(noop).With({
+              get: component => component.property,
+              set: (component, value) => component.property = value,
+            }),
         )
         class TestComponent {
 
@@ -236,12 +215,12 @@ describe('component', () => {
 
         @Component(
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
-            ComponentProperty<string, typeof TestComponent>(({ access }) => ({
+            ComponentProperty<string, typeof TestComponent>(({ get }) => ({
               componentDef: {
                 setup(setup) {
                   setup.perComponent({
                     a: testKey,
-                    by: (ctx: ComponentContext<TestComponent>) => access(ctx).get(),
+                    by: ({ component }: ComponentContext<TestComponent>) => get(component),
                   });
                 },
               },
@@ -258,12 +237,12 @@ describe('component', () => {
 
         @Component(
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
-            ComponentProperty<string, typeof TestComponent>(({ access }) => ({
+            ComponentProperty<string, typeof TestComponent>(({ set }) => ({
               componentDef: {
                 setup(setup) {
                   setup.perComponent({
                     a: testFnKey,
-                    by: (ctx: ComponentContext<TestComponent>) => (value: string) => access(ctx).set(value),
+                    by: ({ component }: ComponentContext<TestComponent>) => (value: string) => set(component, value),
                   });
                 },
               },

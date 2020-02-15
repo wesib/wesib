@@ -2,7 +2,6 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { noop } from 'call-thru';
 import { Class } from '../../common';
 import { ComponentProperty, ComponentPropertyDecorator } from '../../component';
 import { ComponentClass } from '../../component/definition';
@@ -10,7 +9,7 @@ import { DomPropertiesSupport } from './dom-properties-support.feature';
 import { DomPropertyDef } from './dom-property-def';
 import { DomPropertyDescriptor } from './dom-property-descriptor';
 import { domPropertyDescriptor } from './dom-property-descriptor.impl';
-import { DomPropertyUpdateCallback, propertyStateUpdate } from './property-state-update.impl';
+import { propertyStateUpdate } from './property-state-update.impl';
 
 /**
  * Component property decorator that declares a property to add to custom element created for this component.
@@ -30,8 +29,23 @@ export function DomProperty<V = any, T extends ComponentClass = Class>(
 ): ComponentPropertyDecorator<V, T> {
   return ComponentProperty(descriptor => {
 
-    const { key, access } = descriptor;
+    const { key, get } = descriptor;
+    let { set } = descriptor;
     const domDescriptor = domPropertyDescriptor(descriptor, def);
+
+    if (def.updateState !== false) {
+
+      const updateState = propertyStateUpdate<InstanceType<T>>(key, def.updateState);
+      const setValue = set;
+
+      set = (component, newValue) => {
+
+        const oldValue = get(component);
+
+        setValue(component, newValue);
+        updateState.call(component, newValue, oldValue);
+      };
+    }
 
     return {
       componentDef: {
@@ -42,26 +56,8 @@ export function DomProperty<V = any, T extends ComponentClass = Class>(
           setup.perDefinition({ a: DomPropertyDescriptor, is: domDescriptor });
         },
       },
-      access(component) {
-
-        const accessor = access(component);
-        const updateState: DomPropertyUpdateCallback<InstanceType<T>> = def.updateState !== false
-            ? propertyStateUpdate(key, def.updateState)
-            : noop;
-
-        return {
-          get(): V {
-            return accessor.get();
-          },
-          set(newValue: V) {
-
-            const oldValue = component[key];
-
-            accessor.set(newValue);
-            updateState.call(component, newValue, oldValue);
-          },
-        };
-      },
+      get,
+      set,
     };
   });
 }

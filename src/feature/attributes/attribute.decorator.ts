@@ -39,18 +39,11 @@ export function Attribute<T extends ComponentClass>(
           setup.perDefinition({ a: AttributeDescriptor, is: descriptor });
         },
       },
-      access(component) {
-
-        const { element } = ComponentContext.of(component);
-
-        return {
-          get(this: InstanceType<T>): string | null {
-            return element.getAttribute(name);
-          },
-          set(this: InstanceType<T>, newValue: string | null) {
-            element.setAttribute(name, newValue);
-          },
-        };
+      get(component: InstanceType<T>): string | null {
+        return ComponentContext.of(component).element.getAttribute(name);
+      },
+      set(component: InstanceType<T>, newValue: string | null) {
+        ComponentContext.of(component).element.setAttribute(name, newValue);
       },
     };
   });

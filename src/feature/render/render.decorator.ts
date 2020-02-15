@@ -30,20 +30,18 @@ import { RenderDef } from './render-def';
 export function Render<T extends ComponentClass>(
     def?: RenderDef,
 ): ComponentPropertyDecorator<() => any, T> {
-  return ComponentProperty(({ access }) => ({
+  return ComponentProperty(({ get }) => ({
     componentDef: {
       feature: {
         needs: StateSupport,
       },
       define(defContext) {
-        defContext.whenComponent(componentContext => {
-          componentContext.whenReady(() => {
+        defContext.whenComponent(context => {
+          context.whenReady(() => {
 
-            const { component } = componentContext;
-            const accessor = access(component);
-            const render = accessor.get().bind(component) as ((this: void) => ElementRender | void);
+            const { component } = context;
 
-            ElementRender.render(componentContext, render, def);
+            ElementRender.render(context, get(component).bind(component), def);
           });
         });
       },
