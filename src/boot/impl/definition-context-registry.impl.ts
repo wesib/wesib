@@ -2,12 +2,12 @@ import { ContextKey, ContextKey__symbol, ContextRegistry, SingleContextKey } fro
 import { DefinitionContext } from '../../component/definition';
 import { bootstrapDefault } from '../bootstrap-default';
 
-const DefinitionContextRegistry__key = new SingleContextKey<DefinitionContextRegistry>(
+const DefinitionContextRegistry__key = (/*#__PURE__*/ new SingleContextKey<DefinitionContextRegistry>(
     'definition-context-registry',
     {
       byDefault: bootstrapDefault(context => new DefinitionContextRegistry(context)),
     },
-);
+));
 
 /**
  * @internal

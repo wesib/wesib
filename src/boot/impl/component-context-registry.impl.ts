@@ -2,12 +2,12 @@ import { ContextKey, ContextKey__symbol, ContextRegistry, SingleContextKey } fro
 import { ComponentContext } from '../../component';
 import { bootstrapDefault } from '../bootstrap-default';
 
-const ComponentContextRegistry__key = new SingleContextKey<ComponentContextRegistry>(
+const ComponentContextRegistry__key = (/*#__PURE__*/ new SingleContextKey<ComponentContextRegistry>(
     'component-context-registry',
     {
       byDefault: bootstrapDefault(() => new ComponentContextRegistry()),
     },
-);
+));
 
 /**
  * @internal
