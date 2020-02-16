@@ -32,7 +32,7 @@ module.exports = {
     ],
   ],
   restoreMocks: true,
-  testEnvironment: 'jest-environment-jsdom-fifteen',
+  testEnvironment: 'jest-environment-jsdom-sixteen',
   globals: {
     'ts-jest': {
       tsConfig: 'tsconfig.spec.json',
