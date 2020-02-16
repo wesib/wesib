@@ -29,7 +29,7 @@ import { RenderDef } from './render-def';
  */
 export function Render<T extends ComponentClass>(
     def?: RenderDef,
-): ComponentPropertyDecorator<() => any, T> {
+): ComponentPropertyDecorator<() => ElementRender | void, T> {
   return ComponentProperty(({ get }) => ({
     componentDef: {
       feature: {

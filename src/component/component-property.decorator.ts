@@ -25,6 +25,7 @@ export interface ComponentPropertyDecorator<V, T extends ComponentClass = Class>
   /**
    * Decorates component method.
    *
+   * @typeparam P  Property value type.
    * @param proto  Decorated class prototype.
    * @param propertyKey  Decorated property key.
    * @param descriptor  Decorated property descriptor.
@@ -32,11 +33,11 @@ export interface ComponentPropertyDecorator<V, T extends ComponentClass = Class>
    * @returns  Either updated property descriptor, or nothing.
    */
   // eslint-disable-next-line
-  (
+  <P extends V>(
       this: void,
       proto: InstanceType<T>,
       propertyKey: string | symbol,
-      descriptor?: TypedPropertyDescriptor<V>,
+      descriptor?: TypedPropertyDescriptor<P>,
   ): any | void;
 
   /**
