@@ -77,6 +77,26 @@ describe('boot', () => {
           },
         });
       });
+      it('provides different contexts for components of the same type', () => {
+        ComponentDef.define(TestComponent, {
+          extend: {
+            name: 'input',
+            type: Object,
+          },
+        });
+
+        const { elementType } = builder.buildElement(TestComponent);
+        const element1 = new elementType();
+        const element2 = new elementType();
+        const ctx1 = ComponentContext.of(element1);
+        const ctx2 = ComponentContext.of(element2);
+
+        expect(ctx1).not.toBe(ctx2);
+        expect(ctx1.element).toBe(element1);
+        expect(ctx2.element).toBe(element2);
+        expect(ctx1.get(ComponentContext)).toBe(ctx1);
+        expect(ctx2.get(ComponentContext)).toBe(ctx2);
+      });
     });
 
     describe('component factory', () => {

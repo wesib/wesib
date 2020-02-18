@@ -218,11 +218,7 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
       def.define?.(definitionContext);
       definitions.send(definitionContext);
 
-      const elementType = createElementType(
-          definitionContext,
-          whenComponent,
-          createComponentContextRegistry(),
-      );
+      const elementType = createElementType(definitionContext, whenComponent, createComponentContextRegistry);
 
       Object.defineProperty(definitionContext, 'elementType', {
         configurable: true,
@@ -239,7 +235,7 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
   function createElementType<T extends object>(
       definitionContext: DefinitionContext_<T>,
       whenComponent: WhenComponent<T>,
-      componentContextRegistry: ComponentContextRegistry,
+      createRegistry: () => ContextRegistry<ComponentContext_<T>>,
   ): Class {
 
     const elementDef = definitionContext.get(ElementDef);
@@ -255,7 +251,7 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
         const context = createComponent({
           definitionContext,
           whenComponent,
-          registry: componentContextRegistry,
+          registry: createRegistry(),
           element: this,
           createMount: noop,
           elementSuper: key => super[key],
