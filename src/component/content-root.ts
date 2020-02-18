@@ -10,7 +10,7 @@ import { ComponentContext__key } from './component-context.key.impl';
  *
  * @category Core
  */
-export type ContentRoot = ParentNode;
+export type ContentRoot = any;
 
 /**
  * A key of component context value containing a component root element.

@@ -158,7 +158,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    *
    * This is a shorthand for requesting a {@link ContentRoot content root} from component context.
    */
-  get contentRoot(): ContentRoot {
+  get contentRoot(): any {
     return this.get(ContentRoot);
   }
 
