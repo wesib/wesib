@@ -95,9 +95,7 @@ describe('boot', () => {
             ),
         );
 
-        await new Promise(resolve => {
-          bootstrapContext.whenReady(resolve);
-        });
+        await new Promise(bootstrapContext.whenReady);
       });
 
       it('provides `BootstrapContext` value', () => {
@@ -128,7 +126,7 @@ describe('boot', () => {
             ),
         );
 
-        await new Promise(resolve => bootstrapContext.whenReady(resolve));
+        await new Promise(bootstrapContext.whenReady);
 
         expect(defineSpy).toHaveBeenCalledWith(TestComponent, expect.any(Function));
       });

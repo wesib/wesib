@@ -30,8 +30,7 @@ describe('boot', () => {
     })
     class TestBootstrapFeature {}
 
-    bsContext = bootstrapComponents(TestBootstrapFeature);
-    await new Promise(resolve => bsContext.whenReady(resolve));
+    bsContext = await new Promise(bootstrapComponents(TestBootstrapFeature).whenReady);
   });
 
   let key: SingleContextUpKey<string>;

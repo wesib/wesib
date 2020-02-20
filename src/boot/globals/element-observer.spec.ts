@@ -3,7 +3,6 @@ import { Component } from '../../component';
 import { ComponentFactory } from '../../component/definition';
 import { MockElement, testComponentFactory } from '../../spec/test-element';
 import { bootstrapComponents } from '../bootstrap';
-import { BootstrapContext } from '../bootstrap-context';
 import { ElementObserver } from './element-observer';
 import Mock = jest.Mock;
 
@@ -46,7 +45,7 @@ describe('boot', () => {
         [lastMutation] = mutations;
       });
 
-      const bsContext = await new Promise<BootstrapContext>(resolve => bootstrapComponents().whenReady(resolve));
+      const bsContext = await new Promise(bootstrapComponents().whenReady);
 
       observer = bsContext.get(ElementObserver)(callback);
     });

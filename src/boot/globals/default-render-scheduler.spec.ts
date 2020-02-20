@@ -2,7 +2,6 @@ import Mock = jest.Mock;
 import { immediateRenderScheduler, RenderSchedule, RenderScheduler, setRenderScheduler } from 'render-scheduler';
 import { Feature } from '../../feature';
 import { bootstrapComponents } from '../bootstrap';
-import { BootstrapContext } from '../bootstrap-context';
 import { BootstrapWindow } from './bootstrap-window';
 import { DefaultRenderScheduler } from './default-render-scheduler';
 
@@ -32,9 +31,7 @@ describe('boot', () => {
       })
       class TestFeature {}
 
-      const bsContext = await new Promise<BootstrapContext>(
-          resolve => bootstrapComponents(TestFeature).whenReady(resolve),
-      );
+      const bsContext = await new Promise(bootstrapComponents(TestFeature).whenReady);
 
       scheduler = bsContext.get(DefaultRenderScheduler);
     });
