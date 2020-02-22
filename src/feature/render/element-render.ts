@@ -26,6 +26,7 @@ const enum RenderStatus {
   Pending,
   Scheduled,
   Complete,
+  Cancelled = -1,
 }
 
 /**
@@ -66,18 +67,13 @@ export const ElementRender = {
       scheduleRender();
     } else {
       context.whenOn(supply => {
-        if (!status) { // There is an update to render
+        supply.whenOff(cancelRender); // Prevent rendering while offline
+        if (status <= 0) { // There is an update to render. Either pending or previously cancelled.
           scheduleRender();
         }
-        supply.whenOff(() => {
-          if (cancelRender()) { // Prevent rendering while offline
-            status = RenderStatus.Pending; // Require rendering next time online
-          }
-        });
       }).whenOff(reason => {
         // Component destroyed
         cancelRender();
-        status = RenderStatus.Complete;
         stateSupply.off(reason);
       });
     }
@@ -90,12 +86,17 @@ export const ElementRender = {
     function cancelRender(): boolean {
       if (status === RenderStatus.Scheduled) { // Scheduled, but not rendered yet
         schedule(noop);
+        status = RenderStatus.Cancelled;
         return true;
       }
       return false;
     }
 
     function renderElement(): void {
+      if (status < 0) {
+        // Prevent excessive rendering
+        return;
+      }
       status = RenderStatus.Complete;
       for (;;) {
 
