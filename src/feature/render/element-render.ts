@@ -2,6 +2,7 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
+import { noop } from 'call-thru';
 import { DefaultRenderScheduler } from '../../boot/globals';
 import { ComponentContext } from '../../component';
 import { ComponentState } from '../state';
@@ -20,6 +21,12 @@ export type ElementRender =
  * @returns Either delegated render, or nothing.
  */
     (this: void) => void | ElementRender;
+
+const enum RenderStatus {
+  Pending,
+  Scheduled,
+  Complete,
+}
 
 /**
  * @category Feature
@@ -46,34 +53,50 @@ export const ElementRender = {
     const stateTracker = context.get(ComponentState).track(path);
     const schedule = context.get(DefaultRenderScheduler)();
 
-    let rendered = false;
+    let status = RenderStatus.Pending;
     const stateSupply = stateTracker.onUpdate(() => {
       if (offline || context.connected) {
         scheduleRender();
       } else {
-        rendered = false;
+        status = RenderStatus.Pending; // Require rendering next time online
       }
     });
 
     if (offline) {
       scheduleRender();
     } else {
-      context.whenOn(() => {
-        if (!rendered) {
+      context.whenOn(supply => {
+        if (!status) { // There is an update to render
           scheduleRender();
         }
+        supply.whenOff(() => {
+          if (cancelRender()) { // Prevent rendering while offline
+            status = RenderStatus.Pending; // Require rendering next time online
+          }
+        });
       }).whenOff(reason => {
+        // Component destroyed
+        cancelRender();
+        status = RenderStatus.Complete;
         stateSupply.off(reason);
-        rendered = true;
       });
     }
 
     function scheduleRender(): void {
-      rendered = true;
+      status = RenderStatus.Scheduled;
       schedule(renderElement);
     }
 
+    function cancelRender(): boolean {
+      if (status === RenderStatus.Scheduled) { // Scheduled, but not rendered yet
+        schedule(noop);
+        return true;
+      }
+      return false;
+    }
+
     function renderElement(): void {
+      status = RenderStatus.Complete;
       for (;;) {
 
         const newRender = render();

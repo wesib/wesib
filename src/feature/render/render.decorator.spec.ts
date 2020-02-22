@@ -1,4 +1,10 @@
-import { immediateRenderScheduler, RenderSchedule, RenderScheduleOptions, RenderScheduler } from 'render-scheduler';
+import {
+  immediateRenderScheduler,
+  newManualRenderScheduler,
+  RenderSchedule,
+  RenderScheduleOptions,
+  RenderScheduler,
+} from 'render-scheduler';
 import { DefaultRenderScheduler } from '../../boot/globals';
 import { Component, ComponentContext } from '../../component';
 import { ComponentClass, CustomElements, DefinitionContext } from '../../component/definition';
@@ -159,6 +165,52 @@ describe('feature/render', () => {
         connected = false;
         component.property = 'other';
         expect(mockRender).toHaveBeenCalledTimes(1);
+      });
+      it('is not rendered after component destruction', () => {
+
+        const scheduler = newManualRenderScheduler();
+
+        mockRenderSchedule.mockImplementation(scheduler());
+        connected = true;
+        element.connectedCallback();
+        component.property = 'other';
+        context.destroy();
+        scheduler.render();
+        expect(mockRender).not.toHaveBeenCalled();
+      });
+      it('is rendered when offline component goes online', () => {
+
+        const scheduler = newManualRenderScheduler();
+
+        mockRenderSchedule.mockImplementation(scheduler());
+        connected = true;
+        element.connectedCallback();
+        component.property = 'other';
+
+        connected = false;
+        element.disconnectedCallback();
+        scheduler.render();
+        expect(mockRender).not.toHaveBeenCalled();
+
+        connected = true;
+        element.connectedCallback();
+        scheduler.render();
+        expect(mockRender).not.toHaveBeenCalled();
+      });
+      it('is not rescheduled when rendered component goes online again', () => {
+        connected = true;
+        element.connectedCallback();
+        expect(mockRender).toHaveBeenCalledTimes(1);
+        element.property = 'other';
+        expect(mockRender).toHaveBeenCalledTimes(2);
+        mockRender.mockClear();
+
+        connected = false;
+        element.disconnectedCallback();
+
+        connected = true;
+        element.connectedCallback();
+        expect(mockRender).not.toHaveBeenCalled();
       });
       it('uses decorated method', () => {
         connected = true;
