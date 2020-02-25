@@ -123,13 +123,21 @@ describe('feature/dom-properties', () => {
         element.field = 'new';
         expect(element.field).toBe('new');
       });
-      it('updates the component state on field update', () => {
+      it('updates the component state on value update', () => {
 
         const updateStateSpy = jest.spyOn(context, 'updateState');
 
         element.field = 'new';
 
         expect(updateStateSpy).toHaveBeenCalledWith([DomPropertyPath__root, 'field'], 'new', 'initial');
+      });
+      it('does not update the component state when value did not change', () => {
+
+        const updateStateSpy = jest.spyOn(context, 'updateState');
+
+        element.field = 'initial';
+
+        expect(updateStateSpy).not.toHaveBeenCalled();
       });
       it('does not update the component state when disabled', () => {
 
@@ -163,6 +171,15 @@ describe('feature/dom-properties', () => {
 
         expect(element.customStatePathField).toEqual(119);
         expect(updateStateSpy).toHaveBeenCalledWith(customUpdateStatePath, 119, 911);
+      });
+      it('does not update the component state with custom path when value did not change', () => {
+
+        const updateStateSpy = jest.spyOn(context, 'updateState');
+
+        element.customStatePathField = 911;
+
+        expect(element.customStatePathField).toEqual(911);
+        expect(updateStateSpy).not.toHaveBeenCalled();
       });
       it('calls component method', () => {
         expect(element.elementMethod('1', '2', '3')).toBe(`${propertyValue}: 1, 2, 3`);
