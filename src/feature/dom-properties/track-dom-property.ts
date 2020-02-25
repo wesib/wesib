@@ -1,3 +1,7 @@
+/**
+ * @packageDocumentation
+ * @module @wesib/wesib
+ */
 import { nextArgs } from 'call-thru';
 import { EventSupply, eventSupply, EventSupply__symbol, OnEvent, StatePath, ValueTracker } from 'fun-events';
 import { ComponentContext } from '../../component';
