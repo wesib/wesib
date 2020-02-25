@@ -6,7 +6,7 @@ import { ComponentState } from '../state';
 import { domPropertyPathTo } from './dom-property-path';
 import { trackDomProperty } from './track-dom-property';
 
-describe('feature/domProperties', () => {
+describe('feature/dom-properties', () => {
   describe('trackDomProperty', () => {
 
     let element: any;
