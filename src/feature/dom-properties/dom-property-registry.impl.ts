@@ -31,7 +31,6 @@ export class DomPropertyRegistry {
     );
   }
 
-
   define<T extends object>(elementType: Class<T>): void {
 
     const prototype = elementType.prototype;

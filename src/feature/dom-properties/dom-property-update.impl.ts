@@ -16,7 +16,7 @@ export type DomPropertyUpdateCallback<T extends object> = <K extends keyof T>(
 /**
  * @internal
  */
-export function propertyStateUpdate<T extends object>(
+export function domPropertyUpdate<T extends object>(
     propertyKey: PropertyKey,
     updateState: true | DomPropertyUpdateReceiver<T> | StatePath = true,
 ): DomPropertyUpdateCallback<T> {

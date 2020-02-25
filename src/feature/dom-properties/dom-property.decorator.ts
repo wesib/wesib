@@ -9,7 +9,7 @@ import { DomPropertiesSupport } from './dom-properties-support.feature';
 import { DomPropertyDef } from './dom-property-def';
 import { DomPropertyDescriptor } from './dom-property-descriptor';
 import { domPropertyDescriptor } from './dom-property-descriptor.impl';
-import { propertyStateUpdate } from './property-state-update.impl';
+import { domPropertyUpdate } from './dom-property-update.impl';
 
 /**
  * Component property decorator that declares a property to add to custom element created for this component.
@@ -35,7 +35,7 @@ export function DomProperty<V = any, T extends ComponentClass = Class>(
 
     if (def.updateState !== false) {
 
-      const updateState = propertyStateUpdate<InstanceType<T>>(key, def.updateState);
+      const updateState = domPropertyUpdate<InstanceType<T>>(key, def.updateState);
       const setValue = set;
 
       set = (component, newValue) => {
