@@ -5,37 +5,35 @@
 import { nextArgs } from 'call-thru';
 import { EventSupply, eventSupply, EventSupply__symbol, OnEvent, StatePath, ValueTracker } from 'fun-events';
 import { ComponentContext } from '../../component';
-import { ComponentState } from '../state';
-import { domPropertyPathTo } from './dom-property-path';
+import { ComponentState, statePropertyPathTo } from '../state';
 
 /**
- * Creates a tracker of custom element's DOM property value.
+ * Creates a tracker of component state value.
  *
- * Requires [[DomPropertiesSupport]] feature to be enabled and property to be defined. E.g. with {@link DomProperty
- * @DomProperty} decorator.
+ * Requires [[StateSupport]] feature to be enabled and property to be defined. E.g. with {@link StateProperty
+ * @StateProperty} decorator.
  *
  * @category Feature
- * @typeparam T  A type of DOM property value.
+ * @typeparam T  A type of state property value.
  * @param context  Target component context.
  * @param key  Property key.
- * @param path  Custom property state path.
+ * @param path  Property state path.
  *
- * @returns New DOM property value tracker.
+ * @returns New state property value tracker.
  */
-export function trackDomProperty<T = any>(
+export function trackStateProperty<T = any>(
     context: ComponentContext,
     key: PropertyKey,
-    path: StatePath = domPropertyPathTo(key),
+    path: StatePath = statePropertyPathTo(key),
 ): ValueTracker<T> {
 
-  const { element } = context;
   const state = context.get(ComponentState).track(path);
   const supply = eventSupply();
   const on: OnEvent<[T, T]> = state.onUpdate.thru(
       (_path, newValue, oldValue) => nextArgs(newValue, oldValue),
   ).tillOff(supply);
 
-  class DomPropertyTracker extends ValueTracker<T> {
+  class StatePropertyTracker extends ValueTracker<T> {
 
     get on(): OnEvent<[T, T]> {
       return on;
@@ -46,16 +44,16 @@ export function trackDomProperty<T = any>(
     }
 
     get it(): T {
-      return element[key];
+      return context.component[key];
     }
 
     set it(value: T) {
       if (!supply.isOff) {
-        element[key] = value;
+        context.component[key] = value;
       }
     }
 
   }
 
-  return new DomPropertyTracker();
+  return new StatePropertyTracker();
 }

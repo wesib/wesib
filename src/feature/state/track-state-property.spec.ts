@@ -2,19 +2,17 @@ import { noop } from 'call-thru';
 import { ContextRegistry } from 'context-values';
 import { StatePath, StateTracker, ValueTracker } from 'fun-events';
 import { ComponentContext } from '../../component';
-import { ComponentState } from '../state';
-import { domPropertyPathTo } from './dom-property-path';
-import { trackDomProperty } from './track-dom-property';
+import { ComponentState, statePropertyPathTo, trackStateProperty } from '../state';
 
-describe('feature/dom-properties', () => {
-  describe('trackDomProperty', () => {
+describe('feature/state', () => {
+  describe('trackStateProperty', () => {
 
-    let element: any;
+    let component: any;
     let context: ComponentContext;
     let state: StateTracker;
 
     beforeEach(() => {
-      element = {};
+      component = {};
       state = new StateTracker();
 
       const registry = new ContextRegistry<ComponentContext>();
@@ -24,7 +22,7 @@ describe('feature/dom-properties', () => {
       const values = registry.newValues();
 
       context = {
-        element,
+        component,
         get: values.get,
       } as ComponentContext;
     });
@@ -32,17 +30,17 @@ describe('feature/dom-properties', () => {
     let tracker: ValueTracker<string | null>;
 
     beforeEach(() => {
-      tracker = trackDomProperty(context, 'test');
+      tracker = trackStateProperty(context, 'test');
     });
 
     describe('it', () => {
       it('reflects property value', () => {
-        element.test = 'test value';
+        component.test = 'test value';
         expect(tracker.it).toBe('test value');
       });
       it('sets property value', () => {
         tracker.it = 'new value';
-        expect(element.test).toBe('new value');
+        expect(component.test).toBe('new value');
       });
     });
 
@@ -54,7 +52,7 @@ describe('feature/dom-properties', () => {
 
         tracker.on(onUpdate);
         tracker.read(read);
-        state.update(domPropertyPathTo('test'), 'new value', 'old value');
+        state.update(statePropertyPathTo('test'), 'new value', 'old value');
         expect(onUpdate).toHaveBeenCalledWith('new value', 'old value');
         expect(read).toHaveBeenCalledWith('new value');
       });
@@ -62,7 +60,7 @@ describe('feature/dom-properties', () => {
 
         const path: StatePath = ['test', 'path'];
 
-        tracker = trackDomProperty(context, 'test', path);
+        tracker = trackStateProperty(context, 'test', path);
 
         const onUpdate = jest.fn();
         const read = jest.fn();

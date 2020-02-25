@@ -9,14 +9,14 @@ import { DomPropertiesSupport } from './dom-properties-support.feature';
 import { DomPropertyDef } from './dom-property-def';
 import { DomPropertyDescriptor } from './dom-property-descriptor';
 import { domPropertyDescriptor } from './dom-property-descriptor.impl';
-import { propertyStateUpdate } from './property-state-update.impl';
+import { domPropertyUpdate } from './dom-property-update.impl';
 
 /**
- * Component property decorator that declares a property to add to custom element created for this component.
+ * Creates component property decorator that declares a property to add to custom element created for this component.
  *
  * The value of declared element's property will be read from and written to decorated one.
  *
- * This decorator can be applied both to plain properties and to property accessors.
+ * By default does not update component state if property value didn't change.
  *
  * @category Feature
  * @typeparam T  A type of decorated component class.
@@ -35,7 +35,7 @@ export function DomProperty<V = any, T extends ComponentClass = Class>(
 
     if (def.updateState !== false) {
 
-      const updateState = propertyStateUpdate<InstanceType<T>>(key, def.updateState);
+      const updateState = domPropertyUpdate<InstanceType<T>>(key, def.updateState);
       const setValue = set;
 
       set = (component, newValue) => {

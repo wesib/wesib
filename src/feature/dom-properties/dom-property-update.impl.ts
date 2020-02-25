@@ -16,7 +16,7 @@ export type DomPropertyUpdateCallback<T extends object> = <K extends keyof T>(
 /**
  * @internal
  */
-export function propertyStateUpdate<T extends object>(
+export function domPropertyUpdate<T extends object>(
     propertyKey: PropertyKey,
     updateState: true | DomPropertyUpdateReceiver<T> | StatePath = true,
 ): DomPropertyUpdateCallback<T> {
@@ -27,7 +27,11 @@ export function propertyStateUpdate<T extends object>(
 
     return (component, newValue, oldValue) => update(component, path, newValue, oldValue);
   }
-  return (component, newValue, oldValue) => ComponentContext.of(component).updateState(updateState, newValue, oldValue);
+  return (component, newValue, oldValue) => {
+    if (newValue !== oldValue) {
+      ComponentContext.of(component).updateState(updateState, newValue, oldValue);
+    }
+  };
 }
 
 function updateDomPropertyState<T extends object, K extends keyof T>(
@@ -36,5 +40,7 @@ function updateDomPropertyState<T extends object, K extends keyof T>(
     newValue: T[K],
     oldValue: T[K],
 ): void {
-  ComponentContext.of(component).updateState(path, newValue, oldValue);
+  if (newValue !== oldValue) {
+    ComponentContext.of(component).updateState(path, newValue, oldValue);
+  }
 }
