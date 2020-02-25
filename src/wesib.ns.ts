@@ -1,3 +1,7 @@
+/**
+ * @packageDocumentation
+ * @module @wesib/wesib
+ */
 import { NamespaceDef } from 'namespace-aliaser';
 
 /**

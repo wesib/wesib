@@ -1,3 +1,7 @@
+/**
+ * @packageDocumentation
+ * @module @wesib/wesib
+ */
 import { FnContextKey, FnContextRef } from 'context-values/updatable';
 import { newRenderSchedule, RenderScheduler } from 'render-scheduler';
 import { bootstrapDefault } from '../bootstrap-default';

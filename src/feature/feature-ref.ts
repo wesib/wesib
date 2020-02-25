@@ -1,6 +1,6 @@
 /**
  * @packageDocumentation
- * @module wesib/wesib
+ * @module @wesib/wesib
  */
 import { AfterEvent, AfterEvent__symbol, EventKeeper } from 'fun-events';
 import { FeatureStatus } from './feature-status';

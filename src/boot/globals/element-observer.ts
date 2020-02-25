@@ -1,6 +1,6 @@
 /**
  * @packageDocumentation
- * @module wesib/wesib
+ * @module @wesib/wesib
  */
 import { filterIt, itsEach, overArray } from 'a-iterable';
 import { FnContextKey } from 'context-values/updatable';

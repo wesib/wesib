@@ -1,4 +1,8 @@
 /**
+ * @packageDocumentation
+ * @module @wesib/wesib
+ */
+/**
  * Checks whether the given DOM node is element.
  *
  * @category Utility
