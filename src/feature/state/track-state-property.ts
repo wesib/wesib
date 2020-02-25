@@ -5,7 +5,8 @@
 import { nextArgs } from 'call-thru';
 import { EventSupply, eventSupply, EventSupply__symbol, OnEvent, StatePath, ValueTracker } from 'fun-events';
 import { ComponentContext } from '../../component';
-import { ComponentState, statePropertyPathTo } from '../state';
+import { ComponentState } from './component-state';
+import { statePropertyPathTo } from './state-property-path';
 
 /**
  * Creates a tracker of component state value.
