@@ -35,7 +35,7 @@ export function trackDomProperty<T = any>(
       (_path, newValue, oldValue) => nextArgs(newValue, oldValue),
   ).tillOff(supply);
 
-  class AttributeTracker extends ValueTracker<T> {
+  class DomPropertyTracker extends ValueTracker<T> {
 
     get on(): OnEvent<[T, T]> {
       return on;
@@ -57,5 +57,5 @@ export function trackDomProperty<T = any>(
 
   }
 
-  return new AttributeTracker();
+  return new DomPropertyTracker();
 }
