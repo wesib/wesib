@@ -5,7 +5,7 @@
 import { ComponentProperty, ComponentPropertyDecorator } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { StateSupport } from '../state';
-import { ElementRender } from './element-render';
+import { ElementRenderer } from './element-renderer';
 import { RenderDef } from './render-def';
 
 /**
@@ -19,7 +19,7 @@ import { RenderDef } from './render-def';
  *
  * This decorator automatically enables [[StateSupport]] feature.
  *
- * Utilizes [[ElementRender.render]] function to define rendering.
+ * Utilizes [[ElementRenderer.render]] function to enable rendering.
  *
  * @category Feature
  * @typeparam T  A type of decorated component class.
@@ -29,7 +29,7 @@ import { RenderDef } from './render-def';
  */
 export function Render<T extends ComponentClass>(
     def?: RenderDef,
-): ComponentPropertyDecorator<() => ElementRender | void, T> {
+): ComponentPropertyDecorator<() => ElementRenderer | void, T> {
   return ComponentProperty(({ get }) => ({
     componentDef: {
       feature: {
@@ -41,7 +41,7 @@ export function Render<T extends ComponentClass>(
 
             const { component } = context;
 
-            ElementRender.render(context, get(component).bind(component), def);
+            ElementRenderer.render(context, get(component).bind(component), def);
           });
         });
       },

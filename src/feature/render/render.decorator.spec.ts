@@ -10,7 +10,7 @@ import { Component, ComponentContext } from '../../component';
 import { MockElement, testElement } from '../../spec/test-element';
 import { DomProperty, domPropertyPathTo } from '../dom-properties';
 import { ComponentState } from '../state';
-import { ElementRender } from './element-render';
+import { ElementRenderer } from './element-renderer';
 import { RenderDef } from './render-def';
 import { Render } from './render.decorator';
 import Mock = jest.Mock;
@@ -26,10 +26,10 @@ describe('feature/render', () => {
       mockRenderScheduler = jest.fn((_options?: RenderScheduleOptions) => mockRenderSchedule);
     });
 
-    let mockRender: Mock;
+    let mockRenderer: Mock;
 
     beforeEach(() => {
-      mockRender = jest.fn();
+      mockRenderer = jest.fn();
     });
 
     let connected: boolean;
@@ -47,28 +47,28 @@ describe('feature/render', () => {
     });
     it('is not scheduled initially', async () => {
       await bootstrap();
-      expect(mockRender).not.toHaveBeenCalled();
+      expect(mockRenderer).not.toHaveBeenCalled();
     });
     it('is scheduled on state update', async () => {
 
       const { component } = await bootstrap();
 
       component.property = 'other';
-      expect(mockRender).toHaveBeenCalled();
+      expect(mockRenderer).toHaveBeenCalled();
     });
     it('is scheduled on state part update', async () => {
 
       const { component } = await bootstrap({ path: domPropertyPathTo('property2') });
 
       component.property2 = 'other';
-      expect(mockRender).toHaveBeenCalled();
+      expect(mockRenderer).toHaveBeenCalled();
     });
     it('is scheduled on another state part update', async () => {
 
       const { component } = await bootstrap({ path: domPropertyPathTo('property2') });
 
       component.property = 'other';
-      expect(mockRender).not.toHaveBeenCalled();
+      expect(mockRenderer).not.toHaveBeenCalled();
     });
     it('is not scheduled on state update while offline', async () => {
 
@@ -76,7 +76,7 @@ describe('feature/render', () => {
 
       connected = false;
       component.property = 'other';
-      expect(mockRender).not.toHaveBeenCalled();
+      expect(mockRenderer).not.toHaveBeenCalled();
     });
     it('is scheduled when connected', async () => {
 
@@ -84,7 +84,7 @@ describe('feature/render', () => {
 
       connected = true;
       element.connectedCallback();
-      expect(mockRender).toHaveBeenCalled();
+      expect(mockRenderer).toHaveBeenCalled();
     });
     it('is re-scheduled when connected after state update', async () => {
 
@@ -93,7 +93,7 @@ describe('feature/render', () => {
       component.property = 'other';
       connected = true;
       element.connectedCallback();
-      expect(mockRender).toHaveBeenCalledTimes(1);
+      expect(mockRenderer).toHaveBeenCalledTimes(1);
     });
     it('is not re-scheduled when connected without state update', async () => {
 
@@ -102,7 +102,7 @@ describe('feature/render', () => {
       connected = true;
       element.connectedCallback();
       element.connectedCallback();
-      expect(mockRender).toHaveBeenCalledTimes(1);
+      expect(mockRenderer).toHaveBeenCalledTimes(1);
     });
     it('is not re-scheduled after component destruction', async () => {
 
@@ -114,7 +114,7 @@ describe('feature/render', () => {
       context.destroy();
       connected = false;
       component.property = 'other';
-      expect(mockRender).toHaveBeenCalledTimes(1);
+      expect(mockRenderer).toHaveBeenCalledTimes(1);
     });
     it('is not rendered after component destruction', async () => {
 
@@ -130,7 +130,7 @@ describe('feature/render', () => {
       component.property = 'other';
       context.destroy();
       scheduler.render();
-      expect(mockRender).not.toHaveBeenCalled();
+      expect(mockRenderer).not.toHaveBeenCalled();
     });
     it('is rendered when offline component goes online', async () => {
 
@@ -146,12 +146,12 @@ describe('feature/render', () => {
       connected = false;
       element.disconnectedCallback();
       scheduler.render();
-      expect(mockRender).not.toHaveBeenCalled();
+      expect(mockRenderer).not.toHaveBeenCalled();
 
       connected = true;
       element.connectedCallback();
       scheduler.render();
-      expect(mockRender).toHaveBeenCalled();
+      expect(mockRenderer).toHaveBeenCalled();
     });
     it('is not re-rendered when component goes offline while rendering', async () => {
 
@@ -170,12 +170,12 @@ describe('feature/render', () => {
       element.connectedCallback();
 
       scheduler.render();
-      expect(mockRender).not.toHaveBeenCalled();
+      expect(mockRenderer).not.toHaveBeenCalled();
 
       connected = true;
       element.connectedCallback();
       scheduler.render();
-      expect(mockRender).toHaveBeenCalled();
+      expect(mockRenderer).toHaveBeenCalled();
     });
     it('is not rescheduled when rendered component goes online again', async () => {
 
@@ -183,17 +183,17 @@ describe('feature/render', () => {
 
       connected = true;
       element.connectedCallback();
-      expect(mockRender).toHaveBeenCalledTimes(1);
+      expect(mockRenderer).toHaveBeenCalledTimes(1);
       element.property = 'other';
-      expect(mockRender).toHaveBeenCalledTimes(2);
-      mockRender.mockClear();
+      expect(mockRenderer).toHaveBeenCalledTimes(2);
+      mockRenderer.mockClear();
 
       connected = false;
       element.disconnectedCallback();
 
       connected = true;
       element.connectedCallback();
-      expect(mockRender).not.toHaveBeenCalled();
+      expect(mockRenderer).not.toHaveBeenCalled();
     });
     it('uses decorated method', async () => {
 
@@ -201,21 +201,21 @@ describe('feature/render', () => {
 
       connected = true;
       element.connectedCallback();
-      expect(mockRender).toHaveBeenCalledWith();
-      expect(mockRender.mock.instances[0]).toBe(component);
+      expect(mockRenderer).toHaveBeenCalledWith();
+      expect(mockRenderer.mock.instances[0]).toBe(component);
     });
 
     describe('Offline', () => {
       it('is scheduled initially', async () => {
         await bootstrap({ offline: true });
-        expect(mockRender).toHaveBeenCalled();
+        expect(mockRenderer).toHaveBeenCalled();
       });
       it('is scheduled on state update', async () => {
 
         const { component } = await bootstrap({ offline: true });
 
         component.property = 'other';
-        expect(mockRender).toHaveBeenCalled();
+        expect(mockRenderer).toHaveBeenCalled();
       });
       it('is scheduled on state update while offline', async () => {
 
@@ -223,30 +223,30 @@ describe('feature/render', () => {
 
         connected = false;
         component.property = 'other';
-        expect(mockRender).toHaveBeenCalled();
+        expect(mockRenderer).toHaveBeenCalled();
       });
     });
 
     describe('Delegated', () => {
       it('is scheduled', async () => {
 
-        const { element } = await bootstrap({}, () => mockRender);
+        const { element } = await bootstrap({}, () => mockRenderer);
 
         element.connectedCallback();
-        expect(mockRender).toHaveBeenCalledTimes(1);
+        expect(mockRenderer).toHaveBeenCalledTimes(1);
       });
       it('is re-scheduled on state update', async () => {
 
-        const { component } = await bootstrap({}, () => mockRender);
-        const { element } = await bootstrap({}, () => mockRender);
+        const { component } = await bootstrap({}, () => mockRenderer);
+        const { element } = await bootstrap({}, () => mockRenderer);
 
         element.connectedCallback();
         component.property = 'other';
-        expect(mockRender).toHaveBeenCalledTimes(2);
+        expect(mockRenderer).toHaveBeenCalledTimes(2);
       });
       it('does not re-create schedule on state update', async () => {
 
-        const { component, element } = await bootstrap({}, () => mockRender);
+        const { component, element } = await bootstrap({}, () => mockRenderer);
 
         element.connectedCallback();
         mockRenderScheduler.mockClear();
@@ -256,25 +256,25 @@ describe('feature/render', () => {
       });
       it('is scheduled with a replacement function', async () => {
 
-        const { component, element } = await bootstrap({}, () => mockRender);
+        const { component, element } = await bootstrap({}, () => mockRenderer);
 
         element.connectedCallback();
 
         const replacement = jest.fn();
 
-        mockRender.mockImplementation(() => replacement);
+        mockRenderer.mockImplementation(() => replacement);
 
         component.property = 'other';
-        expect(mockRender).toHaveBeenCalledTimes(2);
+        expect(mockRenderer).toHaveBeenCalledTimes(2);
         expect(replacement).toHaveBeenCalled();
 
         component.property = 'third';
-        expect(mockRender).toHaveBeenCalledTimes(2);
+        expect(mockRenderer).toHaveBeenCalledTimes(2);
         expect(replacement).toHaveBeenCalledTimes(2);
       });
     });
 
-    async function bootstrap(def?: RenderDef, render: ElementRender = mockRender): Promise<ComponentContext> {
+    async function bootstrap(def?: RenderDef, renderer: ElementRenderer = mockRenderer): Promise<ComponentContext> {
 
       @Component({
         name: 'test-component',
@@ -290,7 +290,7 @@ describe('feature/render', () => {
       class TestComponent {
 
         @Render(def)
-        readonly render = render;
+        readonly render = renderer;
 
         @DomProperty()
         property = 'value';

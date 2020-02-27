@@ -5,7 +5,7 @@
 import { StatePath } from 'fun-events';
 
 /**
- * Element render definition.
+ * Element rendering definition.
  *
  * @category Feature
  */
@@ -22,7 +22,7 @@ export interface RenderDef {
   readonly offline?: boolean;
 
   /**
-   * A path to component state part the render should track.
+   * A path to component state part the renderer should track.
    *
    * The rendering would trigger only when the target state part is updated. This can be useful e.g. when component has
    * multiple independent sub-views.

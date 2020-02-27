@@ -9,18 +9,18 @@ import { ComponentState } from '../state';
 import { RenderDef } from './render-def';
 
 /**
- * Component element render function interface.
+ * Component's element renderer signature.
  *
  * It has no arguments. It may return either nothing, or a function. In the latter case the returned function will be
- * called immediately to render the element. It may, in turn, return a render function, and so on.
+ * called immediately to render the element. It may, in turn, return a renderer function, and so on.
  *
  * @category Feature
  */
-export type ElementRender =
+export type ElementRenderer =
 /**
- * @returns Either delegated render, or nothing.
+ * @returns Either delegated renderer, or nothing.
  */
-    (this: void) => void | ElementRender;
+    (this: void) => void | ElementRenderer;
 
 const enum RenderStatus {
   Pending,
@@ -32,21 +32,21 @@ const enum RenderStatus {
 /**
  * @category Feature
  */
-export const ElementRender = {
+export const ElementRenderer = {
 
   /**
    * Enables component element rendering.
    *
-   * The `render` call will be scheduled by [[DefaultRenderScheduler]] once component state updated.
+   * A `renderer` function call will be scheduled by [[DefaultRenderScheduler]] once component state updated.
    *
    * @param context  Target component context.
-   * @param render  Element render function.
-   * @param def  Optional element render definition.
+   * @param renderer  Element renderer function.
+   * @param def  Optional element rendering definition.
    */
   render(
       this: void,
       context: ComponentContext,
-      render: ElementRender,
+      renderer: ElementRenderer,
       def: RenderDef = {},
   ): void {
 
@@ -57,33 +57,33 @@ export const ElementRender = {
     let status = RenderStatus.Pending;
     const stateSupply = stateTracker.onUpdate(() => {
       if (offline || context.connected) {
-        scheduleRender();
+        scheduleRenderer();
       } else {
         status = RenderStatus.Pending; // Require rendering next time online
       }
     });
 
     if (offline) {
-      scheduleRender();
+      scheduleRenderer();
     } else {
       context.whenOn(supply => {
-        supply.whenOff(cancelRender); // Prevent rendering while offline
+        supply.whenOff(cancelRenderer); // Prevent rendering while offline
         if (status <= 0) { // There is an update to render. Either pending or previously cancelled.
-          scheduleRender();
+          scheduleRenderer();
         }
       }).whenOff(reason => {
         // Component destroyed
-        cancelRender();
+        cancelRenderer();
         stateSupply.off(reason);
       });
     }
 
-    function scheduleRender(): void {
+    function scheduleRenderer(): void {
       status = RenderStatus.Scheduled;
       schedule(renderElement);
     }
 
-    function cancelRender(): void {
+    function cancelRenderer(): void {
       if (status === RenderStatus.Scheduled) { // Scheduled, but not rendered yet
         schedule(noop);
         status = RenderStatus.Cancelled;
@@ -105,13 +105,13 @@ export const ElementRender = {
       status = RenderStatus.Complete;
       for (;;) {
 
-        const newRender = render();
+        const newRenderer = renderer();
 
-        if (newRender === render || typeof newRender !== 'function') {
+        if (newRenderer === renderer || typeof newRenderer !== 'function') {
           break;
         }
 
-        render = newRender;
+        renderer = newRenderer;
       }
     }
   },
