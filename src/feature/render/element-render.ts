@@ -83,13 +83,11 @@ export const ElementRender = {
       schedule(renderElement);
     }
 
-    function cancelRender(): boolean {
+    function cancelRender(): void {
       if (status === RenderStatus.Scheduled) { // Scheduled, but not rendered yet
         schedule(noop);
         status = RenderStatus.Cancelled;
-        return true;
       }
-      return false;
     }
 
     function renderElement(): void {
