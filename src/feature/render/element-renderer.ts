@@ -93,11 +93,14 @@ export const ElementRenderer = {
     function renderElement(): void {
       if (status < 0) {
         // Prevent cancelled rendering
+
         /*
         Should never happen since render-scheduler v1.1
         As disconnecting in another schedule would correctly cancel this one,
         because it is not executed yet and thus will be replaced by `noop`.
         */
+
+        /* istanbul ignore next */
         return;
       }
       status = RenderStatus.Complete;
