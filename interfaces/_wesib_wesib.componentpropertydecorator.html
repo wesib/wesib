@@ -115,7 +115,7 @@
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/wesib/wesib/blob/d7b846c/src/component/component-property.decorator.ts#L23">src/component/component-property.decorator.ts:23</a></li>
+								<li>Defined in <a href="https://github.com/wesib/wesib/blob/e1112b0/src/component/component-property.decorator.ts#L23">src/component/component-property.decorator.ts:23</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -172,6 +172,7 @@
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_wesib_wesib.componentpropertydecorator.html#as" class="tsd-kind-icon">As</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_wesib_wesib.componentpropertydecorator.html#bind" class="tsd-kind-icon">Bind</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_wesib_wesib.componentpropertydecorator.html#by" class="tsd-kind-icon">By</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_wesib_wesib.componentpropertydecorator.html#with" class="tsd-kind-icon">With</a></li>
 							</ul>
@@ -191,7 +192,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/d7b846c/src/component/component-property.decorator.ts#L51">src/component/component-property.decorator.ts:51</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/e1112b0/src/component/component-property.decorator.ts#L51">src/component/component-property.decorator.ts:51</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -223,6 +224,47 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="bind" class="tsd-anchor"></a>
+					<h3>Bind</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">Bind<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, binder<span class="tsd-signature-symbol">: </span><a href="../modules/_wesib_wesib.componentproperty.html#binder" class="tsd-signature-type">Binder</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">V</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span>, key<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">symbol</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/_wesib_wesib.html#componentdecorator" class="tsd-signature-type">ComponentDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/e1112b0/src/component/component-property.decorator.ts#L93">src/component/component-property.decorator.ts:93</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Builds component decorator assuming the decorated property is bound to component with by the given <code>binder</code>.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>this: <span class="tsd-signature-type">void</span></h5>
+								</li>
+								<li>
+									<h5>binder: <a href="../modules/_wesib_wesib.componentproperty.html#binder" class="tsd-signature-type">Binder</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">V</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>A binder of virtual property accessor</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> key: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">symbol</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Virtual property key. Defaults to <a href="../modules/_wesib_wesib.html#anonymouscomponentproperty__symbol">AnonymousComponentProperty__symbol</a>..</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../modules/_wesib_wesib.html#componentdecorator" class="tsd-signature-type">ComponentDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>New component decorator.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
 					<a name="by" class="tsd-anchor"></a>
 					<h3>By</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
@@ -232,7 +274,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/d7b846c/src/component/component-property.decorator.ts#L65">src/component/component-property.decorator.ts:65</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/e1112b0/src/component/component-property.decorator.ts#L65">src/component/component-property.decorator.ts:65</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -273,12 +315,12 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/d7b846c/src/component/component-property.decorator.ts#L79">src/component/component-property.decorator.ts:79</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/e1112b0/src/component/component-property.decorator.ts#L79">src/component/component-property.decorator.ts:79</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Builds component decorator assuming the decorated property is available via the given <code>access</code> specifier.</p>
+									<p>Builds component decorator assuming the decorated property is available via the given <code>accessor</code>.</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -326,6 +368,9 @@
 						<ul>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
 								<a href="_wesib_wesib.componentpropertydecorator.html#as" class="tsd-kind-icon">As</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="_wesib_wesib.componentpropertydecorator.html#bind" class="tsd-kind-icon">Bind</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
 								<a href="_wesib_wesib.componentpropertydecorator.html#by" class="tsd-kind-icon">By</a>

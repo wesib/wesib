@@ -92,7 +92,7 @@
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/wesib/wesib/blob/d7b846c/src/component/component-property.decorator.ts#L324">src/component/component-property.decorator.ts:324</a></li>
+								<li>Defined in <a href="https://github.com/wesib/wesib/blob/e1112b0/src/component/component-property.decorator.ts#L381">src/component/component-property.decorator.ts:381</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -145,6 +145,7 @@
 							<h3>Interfaces</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter"><a href="../interfaces/_wesib_wesib.componentproperty.accessor.html" class="tsd-kind-icon">Accessor</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter"><a href="../interfaces/_wesib_wesib.componentproperty.boundaccessor.html" class="tsd-kind-icon">Bound<wbr>Accessor</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter"><a href="../interfaces/_wesib_wesib.componentproperty.definition.html" class="tsd-kind-icon">Definition</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter"><a href="../interfaces/_wesib_wesib.componentproperty.descriptor.html" class="tsd-kind-icon">Descriptor</a></li>
 							</ul>
@@ -152,6 +153,7 @@
 						<section class="tsd-index-section ">
 							<h3>Type aliases</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter"><a href="_wesib_wesib.componentproperty.html#binder" class="tsd-kind-icon">Binder</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter"><a href="_wesib_wesib.componentproperty.html#definer" class="tsd-kind-icon">Definer</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter"><a href="_wesib_wesib.componentproperty.html#provider" class="tsd-kind-icon">Provider</a></li>
 							</ul>
@@ -162,12 +164,87 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Type aliases</h2>
 				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
+					<a name="binder" class="tsd-anchor"></a>
+					<h3>Binder</h3>
+					<div class="tsd-signature tsd-kind-icon">Binder&lt;V, T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, component<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">symbol</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="../interfaces/_wesib_wesib.componentproperty.boundaccessor.html" class="tsd-signature-type">BoundAccessor</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">V</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/e1112b0/src/component/component-property.decorator.ts#L167">src/component/component-property.decorator.ts:167</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Property accessor binder signature.</p>
+						</div>
+						<p>This is a function that binds a <a href="../interfaces/_wesib_wesib.componentproperty.boundaccessor.html">property accessor</a> to target component.</p>
+					</div>
+					<h4 class="tsd-type-parameters-title">Type parameters</h4>
+					<ul class="tsd-type-parameters">
+						<li>
+							<h4>V</h4>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Property value type.</p>
+								</div>
+							</div>
+						</li>
+						<li>
+							<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span></h4>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>A type of component.</p>
+								</div>
+							</div>
+						</li>
+					</ul>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-siganture">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, component<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">symbol</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_wesib_wesib.componentproperty.boundaccessor.html" class="tsd-signature-type">BoundAccessor</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">V</span><span class="tsd-signature-symbol">&gt;</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<div class="tsd-comment tsd-typography">
+										</div>
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>this: <span class="tsd-signature-type">void</span></h5>
+											</li>
+											<li>
+												<h5>component: <span class="tsd-signature-type">T</span></h5>
+												<div class="tsd-comment tsd-typography">
+													<div class="lead">
+														<p>Target component to bind property accessor to.</p>
+													</div>
+												</div>
+											</li>
+											<li>
+												<h5>key: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">symbol</span></h5>
+												<div class="tsd-comment tsd-typography">
+													<div class="lead">
+														<p>Property key.</p>
+													</div>
+												</div>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <a href="../interfaces/_wesib_wesib.componentproperty.boundaccessor.html" class="tsd-signature-type">BoundAccessor</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">V</span><span class="tsd-signature-symbol">&gt;</span></h4>
+										<p>Property accessor bound to <code>component</code>.</p>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
 					<a name="definer" class="tsd-anchor"></a>
 					<h3>Definer</h3>
 					<div class="tsd-signature tsd-kind-icon">Definer&lt;V, T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, descriptor<span class="tsd-signature-symbol">: </span><a href="../interfaces/_wesib_wesib.componentproperty.descriptor.html" class="tsd-signature-type">Descriptor</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">V</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="../interfaces/_wesib_wesib.componentproperty.definition.html" class="tsd-signature-type">Definition</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">V</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/d7b846c/src/component/component-property.decorator.ts#L225">src/component/component-property.decorator.ts:225</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/e1112b0/src/component/component-property.decorator.ts#L282">src/component/component-property.decorator.ts:282</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -234,7 +311,7 @@
 					<div class="tsd-signature tsd-kind-icon">Provider&lt;V, T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, component<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">symbol</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">V</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/d7b846c/src/component/component-property.decorator.ts#L97">src/component/component-property.decorator.ts:97</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/e1112b0/src/component/component-property.decorator.ts#L111">src/component/component-property.decorator.ts:111</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -319,10 +396,16 @@
 						<a href="../interfaces/_wesib_wesib.componentproperty.accessor.html" class="tsd-kind-icon">Accessor</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter">
+						<a href="../interfaces/_wesib_wesib.componentproperty.boundaccessor.html" class="tsd-kind-icon">Bound<wbr>Accessor</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter">
 						<a href="../interfaces/_wesib_wesib.componentproperty.definition.html" class="tsd-kind-icon">Definition</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter">
 						<a href="../interfaces/_wesib_wesib.componentproperty.descriptor.html" class="tsd-kind-icon">Descriptor</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
+						<a href="_wesib_wesib.componentproperty.html#binder" class="tsd-kind-icon">Binder</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
 						<a href="_wesib_wesib.componentproperty.html#definer" class="tsd-kind-icon">Definer</a>

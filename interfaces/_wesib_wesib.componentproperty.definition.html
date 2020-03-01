@@ -77,8 +77,7 @@
 					</div>
 					<p>When applying to decorated property, this definition updates its definition.</p>
 					<p>When applying to virtual property assumed by one of [[ComponentPropertyDescriptor]] methods, most of returned
-						values ignored. Except for <a href="_wesib_wesib.componentproperty.definition.html#componentdef">component definition</a> and {@link Definition.access
-					access specifier}.</p>
+					values ignored. Except for <a href="_wesib_wesib.componentproperty.definition.html#componentdef">component definition</a>, <a href="_wesib_wesib.componentproperty.definition.html#get">value reader</a>, and <a href="_wesib_wesib.componentproperty.definition.html#set">value setter</a>.</p>
 				</div>
 			</section>
 			<section class="tsd-panel tsd-type-parameters">
@@ -140,7 +139,7 @@
 					<div class="tsd-signature tsd-kind-icon">component<wbr>Def<span class="tsd-signature-symbol">:</span> <a href="../modules/_wesib_wesib.html#componentdef" class="tsd-signature-type">ComponentDef</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/d7b846c/src/component/component-property.decorator.ts#L255">src/component/component-property.decorator.ts:255</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/e1112b0/src/component/component-property.decorator.ts#L312">src/component/component-property.decorator.ts:312</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -156,7 +155,7 @@
 					<div class="tsd-signature tsd-kind-icon">configurable<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/d7b846c/src/component/component-property.decorator.ts#L269">src/component/component-property.decorator.ts:269</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/e1112b0/src/component/component-property.decorator.ts#L326">src/component/component-property.decorator.ts:326</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -172,7 +171,7 @@
 					<div class="tsd-signature tsd-kind-icon">enumerable<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/d7b846c/src/component/component-property.decorator.ts#L262">src/component/component-property.decorator.ts:262</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/e1112b0/src/component/component-property.decorator.ts#L319">src/component/component-property.decorator.ts:319</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -195,7 +194,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/d7b846c/src/component/component-property.decorator.ts#L283">src/component/component-property.decorator.ts:283</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/e1112b0/src/component/component-property.decorator.ts#L340">src/component/component-property.decorator.ts:340</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -238,7 +237,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/d7b846c/src/component/component-property.decorator.ts#L296">src/component/component-property.decorator.ts:296</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/e1112b0/src/component/component-property.decorator.ts#L353">src/component/component-property.decorator.ts:353</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -291,6 +290,9 @@
 					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter">
 						<a href="_wesib_wesib.componentproperty.accessor.html" class="tsd-kind-icon">Accessor</a>
 					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter">
+						<a href="_wesib_wesib.componentproperty.boundaccessor.html" class="tsd-kind-icon">Bound<wbr>Accessor</a>
+					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter">
@@ -317,6 +319,9 @@
 				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter">
 						<a href="_wesib_wesib.componentproperty.descriptor.html" class="tsd-kind-icon">Descriptor</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
+						<a href="../modules/_wesib_wesib.componentproperty.html#binder" class="tsd-kind-icon">Binder</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
 						<a href="../modules/_wesib_wesib.componentproperty.html#definer" class="tsd-kind-icon">Definer</a>
