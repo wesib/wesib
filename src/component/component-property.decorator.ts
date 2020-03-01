@@ -69,7 +69,7 @@ export interface ComponentPropertyDecorator<V, T extends ComponentClass = Class>
   ): ComponentDecorator<T>;
 
   /**
-   * Builds component decorator assuming the decorated property is available via the given `access` specifier.
+   * Builds component decorator assuming the decorated property is available via the given `accessor`.
    *
    * @param accessor  Virtual property accessor.
    * @param key  Virtual property key. Defaults to [[AnonymousComponentProperty__symbol]].
@@ -79,6 +79,20 @@ export interface ComponentPropertyDecorator<V, T extends ComponentClass = Class>
   With(
       this: void,
       accessor: ComponentProperty.Accessor<V, InstanceType<T>>,
+      key?: string | symbol,
+  ): ComponentDecorator<T>;
+
+  /**
+   * Builds component decorator assuming the decorated property is bound to component with by the given `binder`.
+   *
+   * @param binder  A binder of virtual property accessor
+   * @param key  Virtual property key. Defaults to [[AnonymousComponentProperty__symbol]]..
+   *
+   * @returns New component decorator.
+   */
+  Bind(
+      this: void,
+      binder: ComponentProperty.Binder<V, InstanceType<T>>,
       key?: string | symbol,
   ): ComponentDecorator<T>;
 
@@ -139,6 +153,49 @@ export namespace ComponentProperty {
      * @param key  Property key.
      */
     set(this: void, component: T, value: V, key: string | symbol): void;
+
+  }
+
+  /**
+   * Property accessor binder signature.
+   *
+   * This is a function that binds a {@link BoundAccessor property accessor} to target component.
+   *
+   * @typeparam V  Property value type.
+   * @typeparam T  A type of component.
+   */
+  export type Binder<V, T extends object = any> =
+  /**
+   * @param component  Target component to bind property accessor to.
+   * @param key  Property key.
+   *
+   * @returns Property accessor bound to `component`.
+   */
+      (
+          this: void,
+          component: T,
+          key: string | symbol,
+      ) => BoundAccessor<V>;
+
+  export interface BoundAccessor<V> {
+
+    /**
+     * Reads bound component's property value.
+     *
+     * An attempt to read the value would throw when omitted.
+     *
+     * @returns Property value.
+     */
+    get?(): V;
+
+    /**
+     * Assigns bound component's new property value.
+     *
+     * An attempt to assign the value would throw when omitted.
+     *
+     * @param value  New property value.
+     */
+    set?(value: V): void;
 
   }
 
@@ -239,8 +296,8 @@ export namespace ComponentProperty {
    * When applying to decorated property, this definition updates its definition.
    *
    * When applying to virtual property assumed by one of [[ComponentPropertyDescriptor]] methods, most of returned
-   * values ignored. Except for {@link Definition.componentDef component definition} and {@link Definition.access
-   * access specifier}.
+   * values ignored. Except for {@link Definition.componentDef component definition}, {@link Definition.get value
+   * reader}, and {@link Definition.set value setter}.
    *
    * @typeparam V  Property value type.
    * @typeparam T  A type of component class.
@@ -346,10 +403,10 @@ export function ComponentProperty<V, T extends ComponentClass = Class>(
           configurable: !!desc.configurable,
           get: getValue
               ? ((component: InstanceType<T>) => getValue.call(component))
-              : (() => { throw new TypeError(`"${String(propertyKey)}" is not readable`); }),
+              : notReadableAccessor(propertyKey),
           set: setValue
               ? ((component, value) => setValue.call(component, value))
-              : (() => { throw new TypeError(`"${String(propertyKey)}" is read-only`); }),
+              : notWritableAccessor(propertyKey),
         }) || {};
 
         ComponentDef.define(type, componentDef);
@@ -397,11 +454,11 @@ export function ComponentProperty<V, T extends ComponentClass = Class>(
       provider: ComponentProperty.Provider<V, InstanceType<T>>,
       key?: string | symbol,
   ): ComponentDecorator<T> => decorateWith(
-      ({
+      {
         get(component, key) {
           return provider(component, key);
         },
-      } as ComponentProperty.Accessor<V>),
+      } as ComponentProperty.Accessor<V>,
       key,
       false,
   );
@@ -411,6 +468,55 @@ export function ComponentProperty<V, T extends ComponentClass = Class>(
   result.With = (access, key) => decorateWith(access, key, true);
   result.By = By;
   result.As = (value, key?) => By(valueProvider(value), key);
+  result.Bind = (binder, key = AnonymousComponentProperty__symbol) => {
+
+    const accessor__symbol = Symbol(`${String(key)}:accessor`);
+    const accessor = (component: any): {
+      get(): V;
+      set(value: V): void;
+    } => {
+
+      const existing = component[accessor__symbol];
+
+      if (existing) {
+        return existing;
+      }
+
+      const accessor = binder(component, key);
+
+      return component[accessor__symbol] = {
+        get: accessor.get ? accessor.get.bind(accessor) : notReadableAccessor(key),
+        set: accessor.set ? accessor.set.bind(accessor) : notWritableAccessor(key),
+      };
+    };
+
+    return decorateWith(
+        {
+          get(component) {
+            return accessor(component).get();
+          },
+          set(component, value) {
+            return accessor(component).set(value);
+          },
+        },
+        key,
+        true,
+    );
+  };
 
   return result;
+}
+
+/**
+ * @internal
+ */
+function notReadableAccessor(propertyKey: string | symbol): () => never {
+  return () => { throw new TypeError(`"${String(propertyKey)}" is not readable`); };
+}
+
+/**
+ * @internal
+ */
+function notWritableAccessor(propertyKey: string | symbol): () => never {
+  return () => { throw new TypeError(`"${String(propertyKey)}" is not writable`); };
 }

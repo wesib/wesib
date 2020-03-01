@@ -4,9 +4,9 @@ import { FnContextKey } from 'context-values/updatable';
 import { BootstrapContext } from '../boot';
 import { bootstrapComponents } from '../boot/bootstrap';
 import { ComponentContext } from './component-context';
-import { ComponentProperty } from './component-property.decorator';
+import { AnonymousComponentProperty__symbol, ComponentProperty } from './component-property.decorator';
 import { Component } from './component.decorator';
-import { ComponentClass } from './definition';
+import { ComponentClass, ComponentFactory } from './definition';
 
 describe('component', () => {
 
@@ -256,14 +256,196 @@ describe('component', () => {
         expect(() => context.get(testFnKey)('new value')).toThrow(TypeError);
       });
     });
+    describe('Bind', () => {
+      it('binds accessors to each components', async () => {
+
+        const binder: ComponentProperty.Binder<string> = (component: any, key) => {
+
+          const accessor: ComponentProperty.BoundAccessor<string> = {
+            get: () => component[key],
+            set: value => component[key] = value,
+          };
+
+          return component.accessor = accessor;
+        };
+
+        @Component(
+            // eslint-disable-next-line @typescript-eslint/no-use-before-define
+            ComponentProperty<string, typeof TestComponent>(({ get, set }) => ({
+              componentDef: {
+                define(defContext) {
+                  defContext.whenComponent(context => {
+                    context.whenReady(({ component }) => {
+                      expect(get(component)).toBe('default'); // Ensure accessor initiated
+                      set(component, 'init');
+                    });
+                  });
+                },
+              },
+            })).Bind(binder, 'property'),
+        )
+        class TestComponent {
+
+          property = 'default';
+          accessor!: ComponentProperty.BoundAccessor<string>;
+
+        }
+
+        const factory = await bootstrapFactory(TestComponent);
+        const component1 = factory.mountTo(element).context.component;
+        const component2 = factory.mountTo(document.createElement('other-component')).context.component;
+
+        expect(component1.property).toBe('init');
+        expect(component2.property).toBe('init');
+        expect(component1.accessor.get!()).toBe('init');
+        expect(component2.accessor.get!()).toBe('init');
+
+        component1.property = 'other';
+        expect(component1.property).toBe('other');
+        expect(component2.property).toBe('init');
+        expect(component1.accessor.get!()).toBe('other');
+        expect(component2.accessor.get!()).toBe('init');
+
+        component2.accessor.set!('third');
+        expect(component1.property).toBe('other');
+        expect(component2.property).toBe('third');
+        expect(component1.accessor.get!()).toBe('other');
+        expect(component2.accessor.get!()).toBe('third');
+      });
+      it('binds anonymous property accessor by default', async () => {
+
+        const binder: ComponentProperty.Binder<string> = (component: any, key) => {
+
+          const accessor: ComponentProperty.BoundAccessor<string> = {
+            get: () => component[key],
+            set: value => component[key] = value,
+          };
+
+          return component.accessor = accessor;
+        };
+
+        @Component(
+            // eslint-disable-next-line @typescript-eslint/no-use-before-define
+            ComponentProperty<string, typeof TestComponent>(({ get, set }) => ({
+              componentDef: {
+                define(defContext) {
+                  defContext.whenComponent(context => {
+                    context.whenReady(({ component }) => {
+                      expect(get(component)).toBe('default'); // Ensure accessor initiated
+                      set(component, 'init');
+                    });
+                  });
+                },
+              },
+            })).Bind(binder),
+        )
+        class TestComponent {
+
+          accessor!: ComponentProperty.BoundAccessor<string>;
+          [AnonymousComponentProperty__symbol] = 'default';
+
+        }
+
+        const { component } = await bootstrap(TestComponent);
+
+        expect(component[AnonymousComponentProperty__symbol]).toBe('init');
+        expect(component.accessor.get!()).toBe('init');
+
+        component[AnonymousComponentProperty__symbol] = 'other';
+        expect(component.accessor.get!()).toBe('other');
+
+        component.accessor.set!('third');
+        expect(component[AnonymousComponentProperty__symbol]).toBe('third');
+      });
+      it('throws on attempt to assign property value by non-writable accessor', async () => {
+
+        const binder: ComponentProperty.Binder<string> = (component: any, key) => {
+
+          const accessor: ComponentProperty.BoundAccessor<string> = {
+            set: value => component[key] = value,
+          };
+
+          return component.accessor = accessor;
+        };
+
+        @Component(
+            // eslint-disable-next-line @typescript-eslint/no-use-before-define
+            ComponentProperty<string, typeof TestComponent>(({ set }) => ({
+              componentDef: {
+                define(defContext) {
+                  defContext.whenComponent(context => {
+                    context.whenReady(({ component }) => {
+                      set(component, 'init'); // Ensure accessor initiated
+                    });
+                  });
+                },
+              },
+            })).Bind(binder, 'property'),
+        )
+        class TestComponent {
+
+          property = 'default';
+          accessor!: ComponentProperty.BoundAccessor<string>;
+
+        }
+
+        const { component } = await bootstrap(TestComponent);
+
+        expect(component.property).toBe('init');
+        expect(() => component.accessor.get!()).toThrow(TypeError);
+      });
+    });
+    it('throws on attempt to read property value by non-readable accessor', async () => {
+
+      const binder: ComponentProperty.Binder<string> = (component: any, key) => {
+
+        const accessor: ComponentProperty.BoundAccessor<string> = {
+          get: () => component[key],
+        };
+
+        return component.accessor = accessor;
+      };
+
+      @Component(
+          // eslint-disable-next-line @typescript-eslint/no-use-before-define
+          ComponentProperty<string, typeof TestComponent>(({ get }) => ({
+            componentDef: {
+              define(defContext) {
+                defContext.whenComponent(context => {
+                  context.whenReady(({ component }) => {
+                    expect(get(component)).toBe('init'); // Ensure accessor initiated
+                  });
+                });
+              },
+            },
+          })).Bind(binder, 'property'),
+      )
+      class TestComponent {
+
+        property = 'init';
+        accessor!: ComponentProperty.BoundAccessor<string>;
+
+      }
+
+      const { component } = await bootstrap(TestComponent);
+
+      expect(component.property).toBe('init');
+      expect(() => component.accessor.set!('other')).toThrow(TypeError);
+    });
   });
 
-  async function bootstrap<T extends object>(type: ComponentClass<T>): Promise<ComponentContext<T>> {
+  async function bootstrapFactory<T extends object>(type: ComponentClass<T>): Promise<ComponentFactory<T>> {
 
     const bsContext = await new Promise<BootstrapContext>(
         bootstrapComponents(type).whenReady,
     );
-    const factory = await bsContext.whenDefined(type);
+
+    return await bsContext.whenDefined(type);
+  }
+
+  async function bootstrap<T extends object>(type: ComponentClass<T>): Promise<ComponentContext<T>> {
+
+    const factory = await bootstrapFactory(type);
 
     return factory.mountTo(element).context;
   }
