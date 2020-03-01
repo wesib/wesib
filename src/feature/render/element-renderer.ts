@@ -91,17 +91,15 @@ export const ElementRenderer = {
     }
 
     function renderElement(): void {
-      /*
-
-      Should never happen since render-scheduler v1.1
-      As disconnecting in another schedule would correctly cancel this one,
-      because it is not executed yet and thus will be replaced by `noop`.
-
       if (status < 0) {
-        // Prevent excessive rendering
+        // Prevent cancelled rendering
+        /*
+        Should never happen since render-scheduler v1.1
+        As disconnecting in another schedule would correctly cancel this one,
+        because it is not executed yet and thus will be replaced by `noop`.
+        */
         return;
       }
-      */
       status = RenderStatus.Complete;
       for (;;) {
 
