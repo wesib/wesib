@@ -12,6 +12,7 @@
     "**/*.impl.ts"
   ],
   "excludeNotExported": true,
+  "excludePrivate": true,
   "mode": "modules",
   "name": "Wesib: Web Components Building Blocks",
   "out": "./target/typedoc",
