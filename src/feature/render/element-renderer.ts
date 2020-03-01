@@ -91,6 +91,7 @@ export const ElementRenderer = {
     }
 
     function renderElement(): void {
+      /* istanbul ignore next */
       if (status < 0) {
         // Prevent cancelled rendering
 
@@ -99,8 +100,6 @@ export const ElementRenderer = {
         As disconnecting in another schedule would correctly cancel this one,
         because it is not executed yet and thus will be replaced by `noop`.
         */
-
-        /* istanbul ignore next */
         return;
       }
       status = RenderStatus.Complete;
