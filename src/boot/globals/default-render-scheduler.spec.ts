@@ -2,6 +2,7 @@ import Mock = jest.Mock;
 import { immediateRenderScheduler, RenderSchedule, RenderScheduler, setRenderScheduler } from 'render-scheduler';
 import { Feature } from '../../feature';
 import { bootstrapComponents } from '../bootstrap';
+import { BootstrapContext } from '../bootstrap-context';
 import { BootstrapWindow } from './bootstrap-window';
 import { DefaultRenderScheduler } from './default-render-scheduler';
 
@@ -19,37 +20,48 @@ describe('boot', () => {
     });
 
     let mockWindow: BootstrapWindow;
-    let scheduler: DefaultRenderScheduler;
 
-    beforeEach(async () => {
+    beforeEach(() => {
       mockWindow = { name: 'bootstrap-window' } as any;
-
-      @Feature({
-        setup(setup) {
-          setup.provide({ a: BootstrapWindow, is: mockWindow });
-        },
-      })
-      class TestFeature {}
-
-      const bsContext = await new Promise(bootstrapComponents(TestFeature).whenReady);
-
-      scheduler = bsContext.get(DefaultRenderScheduler);
     });
 
-    it('utilizes default render scheduler', () => {
+    it('utilizes default render scheduler', async () => {
+
+      const scheduler = await bootstrap();
+
       scheduler();
       expect(mockScheduler).toHaveBeenCalled();
     });
-    it('substitutes bootstrap window by default', () => {
+    it('utilizes default render scheduler with `null` fallback', async () => {
 
+      const bsContext = await bootstrapContext();
+      const scheduler = bsContext.get(DefaultRenderScheduler, { or: null })!;
+
+      scheduler();
+      expect(mockScheduler).toHaveBeenCalled();
+    });
+    it('substitutes bootstrap window by default', async () => {
+
+      const scheduler = await bootstrap();
       const node = document.createElement('div');
       const error = (): void => { /* log error */ };
 
       scheduler({ node, error });
       expect(mockScheduler).toHaveBeenCalledWith({ window: mockWindow, node, error });
     });
-    it('respects explicit parameters', () => {
+    it('substitutes bootstrap window to provided scheduler', async () => {
 
+      const customScheduler = jest.fn();
+      const scheduler = await bootstrap(customScheduler);
+      const node = document.createElement('div');
+      const error = (): void => { /* log error */ };
+
+      scheduler({ node, error });
+      expect(customScheduler).toHaveBeenCalledWith({ window: mockWindow, node, error });
+    });
+    it('respects explicit parameters', async () => {
+
+      const scheduler = await bootstrap();
       const window: Window = { name: 'window' } as any;
       const node = document.createElement('div');
       const error = (): void => { /* log error */ };
@@ -57,5 +69,26 @@ describe('boot', () => {
       scheduler({ window, node, error });
       expect(mockScheduler).toHaveBeenCalledWith({ window, node, error });
     });
+
+    function bootstrapContext(scheduler?: RenderScheduler): Promise<BootstrapContext> {
+      @Feature({
+        setup(setup) {
+          setup.provide({ a: BootstrapWindow, is: mockWindow });
+          if (scheduler) {
+            setup.provide({ a: DefaultRenderScheduler, is: scheduler });
+          }
+        },
+      })
+      class TestFeature {}
+
+      return new Promise(bootstrapComponents(TestFeature).whenReady);
+    }
+
+    async function bootstrap(scheduler?: RenderScheduler): Promise<DefaultRenderScheduler> {
+
+      const bsContext = await bootstrapContext(scheduler);
+
+      return bsContext.get(DefaultRenderScheduler);
+    }
   });
 });

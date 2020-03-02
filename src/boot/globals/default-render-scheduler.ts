@@ -2,9 +2,10 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { FnContextKey, FnContextRef } from 'context-values/updatable';
+import { ContextValueOpts, ContextValues } from 'context-values';
+import { ContextUpKey, ContextUpRef } from 'context-values/updatable';
+import { AfterEvent, afterThe, EventKeeper, nextAfterEvent } from 'fun-events';
 import { newRenderSchedule, RenderScheduler } from 'render-scheduler';
-import { bootstrapDefault } from '../bootstrap-default';
 import { BootstrapWindow } from './bootstrap-window';
 
 /**
@@ -14,6 +15,59 @@ import { BootstrapWindow } from './bootstrap-window';
  */
 export type DefaultRenderScheduler = RenderScheduler;
 
+class DefaultRenderSchedulerKey extends ContextUpKey<DefaultRenderScheduler, RenderScheduler> {
+
+  readonly upKey: ContextUpKey.UpKey<DefaultRenderScheduler, RenderScheduler>;
+
+  constructor() {
+    super('default-render-scheduler');
+    this.upKey = this.createUpKey(
+        opts => opts.seed.keep.thru(
+            (...fns) => {
+              if (fns.length) {
+                return toDefaultRenderScheduler(opts.context, fns[fns.length - 1]);
+              }
+
+              const defaultProvider = (): AfterEvent<[DefaultRenderScheduler]> => afterThe(
+                  toDefaultRenderScheduler(opts.context, newRenderSchedule),
+              );
+
+              return nextAfterEvent(opts.byDefault(defaultProvider) || defaultProvider());
+            },
+        ),
+    );
+  }
+
+  grow<Ctx extends ContextValues>(
+      opts: ContextValueOpts<
+          Ctx,
+          DefaultRenderScheduler,
+          EventKeeper<RenderScheduler[]> | RenderScheduler,
+          AfterEvent<RenderScheduler[]>>,
+      ): DefaultRenderScheduler {
+
+    let delegated!: DefaultRenderScheduler;
+
+    opts.context.get(
+        this.upKey,
+        'or' in opts ? { or: opts.or != null ? afterThe(opts.or) : opts.or } : undefined,
+    )!(scheduler => delegated = toDefaultRenderScheduler(opts.context, scheduler));
+
+    return (...args) => delegated(...args);
+  }
+
+}
+
+function toDefaultRenderScheduler(
+    context: ContextValues,
+    scheduler: RenderScheduler,
+): DefaultRenderScheduler {
+  return (options = {}) => scheduler({
+    ...options,
+    window: options.window || context.get(BootstrapWindow),
+  });
+}
+
 /**
  * A key of bootstrap, definition, or component context value containing [[DefaultRenderScheduler]] instance.
  *
@@ -21,17 +75,6 @@ export type DefaultRenderScheduler = RenderScheduler;
  *
  * @category Core
  */
-export const DefaultRenderScheduler:
-    FnContextRef<Parameters<DefaultRenderScheduler>, ReturnType<DefaultRenderScheduler>> = (
-    /*#__PURE__*/ new FnContextKey<Parameters<DefaultRenderScheduler>, ReturnType<DefaultRenderScheduler>>(
-        'default-render-scheduler',
-        {
-          byDefault: bootstrapDefault(
-              context => (options = {}) => newRenderSchedule({
-                ...options,
-                window: options.window || context.get(BootstrapWindow),
-              }),
-          ),
-        },
-    )
+export const DefaultRenderScheduler: ContextUpRef<DefaultRenderScheduler, RenderScheduler> = (
+    /*#__PURE__*/ new DefaultRenderSchedulerKey()
 );
