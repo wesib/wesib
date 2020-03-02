@@ -3,6 +3,7 @@
  * @module @wesib/wesib
  */
 import { noop } from 'call-thru';
+import { RenderExecution } from 'render-scheduler';
 import { DefaultRenderScheduler } from '../../boot/globals';
 import { ComponentContext } from '../../component';
 import { ComponentState } from '../state';
@@ -18,9 +19,14 @@ import { RenderDef } from './render-def';
  */
 export type ElementRenderer =
 /**
+ * @param execution  Render shot execution context.
+ *
  * @returns Either delegated renderer, or nothing.
  */
-    (this: void) => void | ElementRenderer;
+    (
+        this: void,
+        execution: RenderExecution,
+    ) => void | ElementRenderer;
 
 const enum RenderStatus {
   Pending,
@@ -90,7 +96,7 @@ export const ElementRenderer = {
       }
     }
 
-    function renderElement(): void {
+    function renderElement(execution: RenderExecution): void {
       /* istanbul ignore next */
       if (status < 0) {
         // Prevent cancelled rendering
@@ -105,7 +111,7 @@ export const ElementRenderer = {
       status = RenderStatus.Complete;
       for (;;) {
 
-        const newRenderer = renderer();
+        const newRenderer = renderer(execution);
 
         if (newRenderer === renderer || typeof newRenderer !== 'function') {
           break;

@@ -36,7 +36,6 @@ describe('feature/render', () => {
 
     beforeEach(() => {
       connected = true;
-
     });
 
     it('enables component state', async () => {
@@ -201,7 +200,13 @@ describe('feature/render', () => {
 
       connected = true;
       element.connectedCallback();
-      expect(mockRenderer).toHaveBeenCalledWith();
+      expect(mockRenderer).toHaveBeenCalledWith(expect.objectContaining({
+        config: expect.objectContaining({
+          window,
+          error: expect.any(Function),
+        }),
+        postpone: expect.any(Function),
+      }));
       expect(mockRenderer.mock.instances[0]).toBe(component);
     });
 
