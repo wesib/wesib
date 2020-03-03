@@ -2,6 +2,7 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
+import { RenderExecution } from 'render-scheduler';
 import { ComponentProperty, ComponentPropertyDecorator } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { StateSupport } from '../state';
@@ -29,7 +30,7 @@ import { RenderDef } from './render-def';
  */
 export function Render<T extends ComponentClass>(
     def?: RenderDef,
-): ComponentPropertyDecorator<() => ElementRenderer | void, T> {
+): ComponentPropertyDecorator<(execution: RenderExecution) => ElementRenderer | void, T> {
   return ComponentProperty(({ get }) => ({
     componentDef: {
       feature: {
