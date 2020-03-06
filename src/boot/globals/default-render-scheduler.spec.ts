@@ -40,6 +40,16 @@ describe('boot', () => {
       scheduler();
       expect(mockScheduler).toHaveBeenCalled();
     });
+    it('respects fallback render scheduler', async () => {
+
+      const bsContext = await bootstrapContext();
+      const fallback = jest.fn();
+      const scheduler = bsContext.get(DefaultRenderScheduler, { or: fallback })!;
+
+      scheduler();
+      expect(fallback).toHaveBeenCalled();
+      expect(mockScheduler).not.toHaveBeenCalled();
+    });
     it('substitutes bootstrap window by default', async () => {
 
       const scheduler = await bootstrap();
