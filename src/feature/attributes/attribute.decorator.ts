@@ -43,7 +43,14 @@ export function Attribute<T extends ComponentClass>(
         return ComponentContext.of(component).element.getAttribute(name);
       },
       set(component: InstanceType<T>, newValue: string | null) {
-        ComponentContext.of(component).element.setAttribute(name, newValue);
+
+        const { element }: { element: Element } = ComponentContext.of(component);
+
+        if (newValue != null) {
+          element.setAttribute(name, newValue);
+        } else {
+          element.removeAttribute(name);
+        }
       },
     };
   });

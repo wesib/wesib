@@ -33,7 +33,7 @@ export function attributeStateUpdate<T extends object>(
 function updateAttributeState<T extends object>(
     component: T,
     path: StatePath,
-    newValue: string,
+    newValue: string | null,
     oldValue: string | null,
 ): void {
   ComponentContext.of(component).updateState(path, newValue, oldValue);

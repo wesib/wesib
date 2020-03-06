@@ -46,13 +46,13 @@ export type AttributeUpdateReceiver<T extends object> =
 /**
  * @param component  Component instance.
  * @param path  The changed attribute state path in the form of `[AttributePath__root, attributeName]`.
- * @param newValue  New attribute value.
- * @param oldValue  Previous attribute value, or `null` if there were no value assigned.
+ * @param newValue  New attribute value, or `null` when attribute removed.
+ * @param oldValue  Previous attribute value, or `null` if attribute did not exist.
  */
     (
         this: void,
         component: T,
         path: AttributePath,
-        newValue: string,
+        newValue: string | null,
         oldValue: string | null,
     ) => void;

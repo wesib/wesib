@@ -12,6 +12,7 @@ describe('feature/attributes', () => {
       elementSpy = {
         getAttribute: jest.fn(),
         setAttribute: jest.fn(),
+        removeAttribute: jest.fn(),
       } as any;
       contextSpy = {
         updateState: jest.fn(),
@@ -66,6 +67,9 @@ describe('feature/attributes', () => {
 
       component.attr = 'value2';
       expect(elementSpy.setAttribute).toHaveBeenCalledWith('attr', 'value2');
+
+      component.attr = null;
+      expect(elementSpy.removeAttribute).toHaveBeenCalledWith('attr');
     });
   });
 });
