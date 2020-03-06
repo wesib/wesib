@@ -40,7 +40,7 @@ import { AttributesSupport } from './attributes-support.feature';
  */
 export function AttributeChanged<T extends ComponentClass>(
     def?: AttributeDef<InstanceType<T>> | string,
-): ComponentPropertyDecorator<(newValue: string, oldValue: string | null) => void, T> {
+): ComponentPropertyDecorator<(newValue: string | null, oldValue: string | null) => void, T> {
   return ComponentProperty(({ type, key }) => {
 
     const { name, change } = parseAttributeDescriptor(type.prototype, key, def);
@@ -57,7 +57,7 @@ export function AttributeChanged<T extends ComponentClass>(
               name,
               change(
                   component: InstanceType<T>,
-                  newValue: string,
+                  newValue: string | null,
                   oldValue: string | null,
               ) {
 

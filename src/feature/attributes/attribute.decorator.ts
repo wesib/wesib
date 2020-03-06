@@ -12,7 +12,8 @@ import { AttributesSupport } from './attributes-support.feature';
 /**
  * Creates a decorator for component's property that accesses custom element's attribute.
  *
- * The decorated property accesses corresponding attribute on read, and updates it on setting.
+ * The decorated property accesses corresponding attribute on read, and updates it on setting. `null` value corresponds
+ * to absent attribute. Setting to `null` removes corresponding attribute.
  *
  * This decorator automatically enables [[AttributesSupport]] feature.
  *

@@ -15,10 +15,10 @@ import { MultiContextKey, MultiContextRef } from 'context-values';
 export type AttributeChangedCallback<T extends object> =
 /**
  * @param component  Component instance.
- * @param newValue  New attribute value.
- * @param oldValue  Previous attribute value, or `null` if there were no value assigned.
+ * @param newValue  New attribute value, or `null` when attribute removed.
+ * @param oldValue  Previous attribute value, or `null` if attribute did not exist.
  */
-    (this: void, component: T, newValue: string, oldValue: string | null) => void;
+    (this: void, component: T, newValue: string | null, oldValue: string | null) => void;
 
 /**
  * Custom element attribute descriptor.
