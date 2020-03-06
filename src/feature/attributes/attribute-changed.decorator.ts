@@ -5,7 +5,7 @@
 import { ComponentProperty, ComponentPropertyDecorator } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { AttributeDef } from './attribute-def';
-import { AttributeChangedCallback, AttributeDescriptor } from './attribute-descriptor';
+import { AttributeDescriptor } from './attribute-descriptor';
 import { parseAttributeDescriptor } from './attribute-descriptor.impl';
 import { AttributesSupport } from './attributes-support.feature';
 
@@ -41,7 +41,7 @@ import { AttributesSupport } from './attributes-support.feature';
 export function AttributeChanged<T extends ComponentClass>(
     def?: AttributeDef<InstanceType<T>> | string,
 ): ComponentPropertyDecorator<(newValue: string | null, oldValue: string | null) => void, T> {
-  return ComponentProperty(({ type, key }) => {
+  return ComponentProperty(({ type, get, key }) => {
 
     const { name, change } = parseAttributeDescriptor(type.prototype, key, def);
 
@@ -61,9 +61,9 @@ export function AttributeChanged<T extends ComponentClass>(
                   oldValue: string | null,
               ) {
 
-                const callback: AttributeChangedCallback<InstanceType<T>> = (component as any)[key];
+                const callback = get(component);
 
-                callback(component, newValue, oldValue);
+                callback.call(component, newValue, oldValue);
                 change(component, newValue, oldValue);
               },
             },
