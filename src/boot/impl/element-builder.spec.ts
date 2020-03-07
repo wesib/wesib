@@ -550,6 +550,7 @@ describe('boot', () => {
 
           expect(disconnected).not.toHaveBeenCalled();
         });
+
         describe('destroy', () => {
           it('disconnects element', () => {
             doMount();
@@ -558,10 +559,11 @@ describe('boot', () => {
 
             const disconnected = jest.fn();
 
-            context.whenOff(disconnected);
+            context.whenOff(noop).whenOff(disconnected);
             context.destroy();
 
-            expect(disconnected).toHaveBeenCalledWith();
+            expect(context.connected).toBe(false);
+            expect(disconnected).toHaveBeenCalledWith(undefined);
           });
         });
       });

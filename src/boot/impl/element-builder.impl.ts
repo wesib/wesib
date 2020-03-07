@@ -294,7 +294,7 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
     const status = trackValue<ComponentStatus>(ComponentStatus.Building);
     const destructionReason = trackValue<[any] | undefined>();
 
-    status.on(noop).whenOff(reason => destructionReason.it = [reason]);
+    eventSupplyOf(status).whenOff(reason => destructionReason.it = [reason]);
 
     const destroyed: OnEvent<[any]> = destructionReason.read.thru(reason => reason ? nextArgs(reason[0]) : nextSkip());
     const whenDestroyed: OnEvent<[any]> = destroyed.once;
@@ -308,7 +308,7 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
 
           const offSupply = eventSupply();
 
-          whenOff.once(() => offSupply.off());
+          whenOff.once(() => offSupply.off()).cuts(offSupply);
 
           return nextArgs(offSupply);
         },
