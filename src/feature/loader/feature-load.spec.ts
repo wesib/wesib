@@ -676,11 +676,9 @@ describe('feature load', () => {
 
         const load = bsContext.get(FeatureKey.of(feature));
 
-        supply.needs(
-            load(
-                loader => resolve([loader!, supply, load]),
-            ).needs(supply),
-        );
+        load.tillOff(supply)(
+            loader => resolve([loader!, supply, load]),
+        ).cuts(supply);
       });
     }
 
