@@ -1,7 +1,6 @@
 import { noop } from 'call-thru';
 import { SingleContextKey } from 'context-values';
 import { FnContextKey } from 'context-values/updatable';
-import { BootstrapContext } from '../boot';
 import { bootstrapComponents } from '../boot/bootstrap';
 import { ComponentContext } from './component-context';
 import { AnonymousComponentProperty__symbol, ComponentProperty } from './component-property.decorator';
@@ -436,9 +435,7 @@ describe('component', () => {
 
   async function bootstrapFactory<T extends object>(type: ComponentClass<T>): Promise<ComponentFactory<T>> {
 
-    const bsContext = await new Promise<BootstrapContext>(
-        bootstrapComponents(type).whenReady,
-    );
+    const bsContext = await bootstrapComponents(type).whenReady;
 
     return await bsContext.whenDefined(type);
   }

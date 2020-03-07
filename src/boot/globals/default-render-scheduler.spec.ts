@@ -80,7 +80,7 @@ describe('boot', () => {
       expect(mockScheduler).toHaveBeenCalledWith({ window, node, error });
     });
 
-    function bootstrapContext(scheduler?: RenderScheduler): Promise<BootstrapContext> {
+    async function bootstrapContext(scheduler?: RenderScheduler): Promise<BootstrapContext> {
       @Feature({
         setup(setup) {
           setup.provide({ a: BootstrapWindow, is: mockWindow });
@@ -91,7 +91,7 @@ describe('boot', () => {
       })
       class TestFeature {}
 
-      return new Promise(bootstrapComponents(TestFeature).whenReady);
+      return bootstrapComponents(TestFeature).whenReady;
     }
 
     async function bootstrap(scheduler?: RenderScheduler): Promise<DefaultRenderScheduler> {

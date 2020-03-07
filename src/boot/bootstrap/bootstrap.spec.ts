@@ -30,7 +30,7 @@ describe('boot', () => {
     })
     class TestBootstrapFeature {}
 
-    bsContext = await new Promise(bootstrapComponents(TestBootstrapFeature).whenReady);
+    bsContext = await bootstrapComponents(TestBootstrapFeature).whenReady;
   });
 
   let key: SingleContextUpKey<string>;
@@ -607,8 +607,8 @@ describe('boot', () => {
 
         const featureRef = bsContext.load(testFeature);
 
-        featureRef.read(receive.mockImplementation(loaded => {
-          if (loaded.ready) {
+        featureRef.read(receive.mockImplementation(({ ready }) => {
+          if (ready) {
             resolve(featureRef);
           }
         }));

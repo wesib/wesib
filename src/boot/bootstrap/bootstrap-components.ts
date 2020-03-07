@@ -84,7 +84,7 @@ function initBootstrap(
     }
 
     async whenDefined<C extends object>(componentType: ComponentClass<C>): Promise<ComponentFactory<C>> {
-      await new Promise(this.whenReady);
+      await this.whenReady;
       await this.get(CustomElements).whenDefined(componentType);
       return componentFactoryOf(componentType);
     }
