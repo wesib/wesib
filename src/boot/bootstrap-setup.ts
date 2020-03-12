@@ -3,7 +3,7 @@
  * @module @wesib/wesib
  */
 import { ContextValueSpec } from 'context-values';
-import { OnEvent } from 'fun-events';
+import { EventReceiver, EventSupply, OnEvent } from 'fun-events';
 import { Class } from '../common';
 import { ComponentContext } from '../component';
 import { ComponentClass, DefinitionContext, DefinitionSetup } from '../component/definition';
@@ -26,28 +26,68 @@ export interface BootstrapSetup {
   readonly feature: Class;
 
   /**
-   * An `OnEvent` sender of component definition events.
-   *
-   * The registered receiver will be notified when new component class is defined, but before its custom element class
-   * constructed.
-   */
-  readonly onDefinition: OnEvent<[DefinitionContext]>;
-
-  /**
-   * An `OnEvent` sender of component construction events.
-   *
-   * The registered receiver will be notified right before component is constructed.
-   */
-  readonly onComponent: OnEvent<[ComponentContext]>;
-
-  /**
-   * An `OnEvent` sender of feature readiness event.
+   * Builds an `OnEvent` sender of feature readiness event.
    *
    * The registered receiver will be notified once bootstrap is complete and the feature is loaded.
    *
-   * If the above conditions satisfied, the receiver will be notified immediately.
+   * If the above conditions satisfied already, the receiver will be notified immediately.
+   *
+   * @returns `OnEvent` sender of ready feature context.
    */
-  readonly whenReady: OnEvent<[FeatureContext]>;
+  whenReady(): OnEvent<[FeatureContext]>;
+
+  /**
+   * Registers a receiver of feature readiness event.
+   *
+   * The registered receiver will be notified once bootstrap is complete and the feature is loaded.
+   *
+   * If the above conditions satisfied already, the receiver will be notified immediately.
+   *
+   * @param receiver  Target receiver of ready feature context.
+   *
+   * @returns Feature readiness event supply.
+   */
+  whenReady(receiver: EventReceiver<[FeatureContext]>): EventSupply;
+
+  /**
+   * Builds an `OnEvent` sender of component definition events.
+   *
+   * The registered receiver will be notified when new component class is defined, but before its custom element class
+   * constructed.
+   *
+   * @returns `OnEvent` sender of component definition contexts.
+   */
+  onDefinition(): OnEvent<[DefinitionContext]>;
+
+  /**
+   * Starts sending component definition events to the given `receiver`.
+   *
+   * The receiver will be notified when new component class is defined, but before its custom element class
+   * constructed.
+   *
+   * @param receiver  Target receiver of component definition contexts.
+   *
+   * @returns Component definition events supply.
+   */
+  onDefinition(receiver: EventReceiver<[DefinitionContext]>): EventSupply;
+
+  /**
+   * Builds an `OnEvent` sender of component construction events.
+   *
+   * The registered receiver will be notified right before component is constructed.
+   *
+   * @returns `OnEvent` sender of constructed component contexts.
+   */
+  onComponent(): OnEvent<[ComponentContext]>;
+
+  /**
+   * Starts sending component construction events to the given `receiver`.
+   *
+   * @param receiver  Target receiver of constructed component contexts.
+   *
+   * @returns Component construction events supply.
+   */
+  onComponent(receiver: EventReceiver<[ComponentContext]>): EventSupply;
 
   /**
    * Provides bootstrap context value before context creation.

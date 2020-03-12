@@ -30,7 +30,7 @@ export function trackStateProperty<T = any>(
 
   const state = context.get(ComponentState).track(path);
   const supply = eventSupply();
-  const on: OnEvent<[T, T]> = state.onUpdate.thru(
+  const on: OnEvent<[T, T]> = state.onUpdate().thru(
       (_path, newValue, oldValue) => nextArgs(newValue, oldValue),
   ).tillOff(supply);
 

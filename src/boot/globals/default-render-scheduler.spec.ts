@@ -91,7 +91,7 @@ describe('boot', () => {
       })
       class TestFeature {}
 
-      return bootstrapComponents(TestFeature).whenReady;
+      return bootstrapComponents(TestFeature).whenReady();
     }
 
     async function bootstrap(scheduler?: RenderScheduler): Promise<DefaultRenderScheduler> {

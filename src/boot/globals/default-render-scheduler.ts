@@ -22,7 +22,7 @@ class DefaultRenderSchedulerKey extends ContextUpKey<DefaultRenderScheduler, Ren
   constructor() {
     super('default-render-scheduler');
     this.upKey = this.createUpKey(
-        opts => opts.seed.keep.thru(
+        opts => opts.seed.keepThru(
             (...fns) => {
               if (fns.length) {
                 return toDefaultRenderScheduler(opts.context, fns[fns.length - 1]);
@@ -51,7 +51,7 @@ class DefaultRenderSchedulerKey extends ContextUpKey<DefaultRenderScheduler, Ren
     opts.context.get(
         this.upKey,
         'or' in opts ? { or: opts.or != null ? afterThe(opts.or) : opts.or } : undefined,
-    )!(scheduler => delegated = toDefaultRenderScheduler(opts.context, scheduler));
+    )!.to(scheduler => delegated = toDefaultRenderScheduler(opts.context, scheduler));
 
     return (...args) => delegated(...args);
   }

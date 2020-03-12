@@ -3,7 +3,7 @@
  * @module @wesib/wesib
  */
 import { ContextKey, ContextKey__symbol, ContextValues, ContextValueSpec } from 'context-values';
-import { OnEvent } from 'fun-events';
+import { EventReceiver, EventSupply, OnEvent } from 'fun-events';
 import { Class } from '../../common';
 import { ComponentContext } from '../component-context';
 import { ComponentClass } from './component-class';
@@ -44,17 +44,40 @@ export abstract class DefinitionContext<T extends object = any> extends ContextV
   abstract readonly elementType: Class;
 
   /**
-   * An `OnEvent` sender of component definition context upon its readiness.
+   * Custom element definition.
+   */
+  get elementDef(): ElementDef {
+    return this.get(ElementDef);
+  }
+
+  /**
+   * Builds an `OnEvent` sender of component definition context upon its readiness.
    *
    * The custom element class is not constructed until component definition is complete.
    * The registered receiver will be notified when the custom element class is constructed.
    *
    * If the custom element class is constructed already, the receiver will be notified immediately.
+   *
+   * @returns `OnEvent` sender of this component definition context upon its readiness.
    */
-  abstract readonly whenReady: OnEvent<[this]>;
+  abstract whenReady(): OnEvent<[this]>;
 
   /**
-   * An `OnEvent` sender of component context upon its instantiation.
+   * Registers a receiver of component definition readiness event.
+   *
+   * The custom element class is not constructed until component definition is complete.
+   * The registered receiver will be notified when the custom element class is constructed.
+   *
+   * If the custom element class is constructed already, the receiver will be notified immediately.
+   *
+   * @param receiver  Target receiver of this component definition context upon its readiness.
+   *
+   * @returns Component definition readiness event supply.
+   */
+  abstract whenReady(receiver: EventReceiver<[this]>): EventSupply;
+
+  /**
+   * Builds an `OnEvent` sender of component context upon its instantiation.
    *
    * If component instantiated after the receiver is registered, that receiver would receive an instantiated component's
    * context immediately.
@@ -62,15 +85,26 @@ export abstract class DefinitionContext<T extends object = any> extends ContextV
    * If component already exists when the receiver is registered, that receiver would receive instantiated component's
    * context only when/if component is {@link ComponentContext.whenOn connected}. This is to prevent resource leaking
    * on disconnected components that may be never used again.
+   *
+   * @returns `OnEvent` sender of instantiated component context.
    */
-  abstract readonly whenComponent: OnEvent<[ComponentContext<T>]>;
+  abstract whenComponent(): OnEvent<[ComponentContext<T>]>;
 
   /**
-   * Custom element definition.
+   * Starts sending component instantiation events to the given `receiver`.
+   *
+   * If component instantiated after the receiver is registered, that receiver would receive an instantiated component's
+   * context immediately.
+   *
+   * If component already exists when the receiver is registered, that receiver would receive instantiated component's
+   * context only when/if component is {@link ComponentContext.whenOn connected}. This is to prevent resource leaking
+   * on disconnected components that may be never used again.
+   *
+   * @param receiver  Target receiver of instantiate component contexts.
+   *
+   * @returns Component instantiation events supply.
    */
-  get elementDef(): ElementDef {
-    return this.get(ElementDef);
-  }
+  abstract whenComponent(receiver: EventReceiver<[ComponentContext<T>]>): EventSupply;
 
   /**
    * Provides a value available in the context of each component of the defined component type.

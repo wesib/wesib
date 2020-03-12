@@ -75,7 +75,7 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
       const whenComponent = new WhenComponent<T>();
       let componentContextRegistry$perType!: ComponentContextRegistry;
       const ready = trackValue(false);
-      const whenReady: OnEvent<[]> = ready.read.thru(cls => cls ? nextArgs() : nextSkip());
+      const whenReady: OnEvent<[]> = ready.read().thru(cls => cls ? nextArgs() : nextSkip());
       // eslint-disable-next-line prefer-const
       let definitionContext: DefinitionContext;
 

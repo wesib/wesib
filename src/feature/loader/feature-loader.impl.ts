@@ -383,8 +383,8 @@ function newFeatureContext(
   const componentContextRegistry = bsContext.get(ComponentContextRegistry);
   const registry = new ContextRegistry<FeatureContext>(bsContext);
   const elementBuilder = bsContext.get(ElementBuilder);
-  const onDefinition = elementBuilder.definitions.on.tillOff(unloader.supply);
-  const onComponent = elementBuilder.components.on.tillOff(unloader.supply);
+  const onDefinition = elementBuilder.definitions.on().tillOff(unloader.supply);
+  const onComponent = elementBuilder.components.on().tillOff(unloader.supply);
 
   class Context extends FeatureContext {
 

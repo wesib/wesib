@@ -45,7 +45,7 @@ describe('boot', () => {
         [lastMutation] = mutations;
       });
 
-      const bsContext = await bootstrapComponents().whenReady;
+      const bsContext = await bootstrapComponents().whenReady();
 
       observer = bsContext.get(ElementObserver)(callback);
     });
