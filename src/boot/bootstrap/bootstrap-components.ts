@@ -3,16 +3,7 @@
  * @module @wesib/wesib
  */
 import { nextArgs, nextSkip } from 'call-thru';
-import {
-  AfterEvent,
-  afterEventBy,
-  EventReceiver,
-  EventSupply,
-  OnEvent,
-  receiveAfterEvent,
-  receiveOnEvent,
-  trackValue,
-} from 'fun-events';
+import { AfterEvent, afterEventBy, EventReceiver, EventSupply, OnEvent, trackValue } from 'fun-events';
 import { newNamespaceAliaser } from 'namespace-aliaser';
 import { Class } from '../../common';
 import { ComponentClass, ComponentFactory, CustomElements } from '../../component/definition';
@@ -94,11 +85,9 @@ function initBootstrap(
     whenReady(): OnEvent<[BootstrapContext]>;
     whenReady(receiver: EventReceiver<[BootstrapContext]>): EventSupply;
     whenReady(receiver?: EventReceiver<[BootstrapContext]>): OnEvent<[BootstrapContext]> | EventSupply {
-      return (this.whenReady = receiveOnEvent(
-          stage.read().thru(
-              s => s ? nextArgs(this) : nextSkip(),
-          ).once(),
-      ))(receiver);
+      return (this.whenReady = stage.read().thru(
+          s => s ? nextArgs(this) : nextSkip(),
+      ).once().F)(receiver);
     }
 
     load(feature: Class<any>): FeatureRef {
@@ -168,9 +157,9 @@ function initBootstrap(
         read(): AfterEvent<[FeatureStatus]>;
         read(receiver: EventReceiver<[FeatureStatus]>): EventSupply;
         read(receiver?: EventReceiver<[FeatureStatus]>): AfterEvent<[FeatureStatus]> | EventSupply {
-          return (this.read = receiveAfterEvent(status.tillOff(supply).keepThru(
+          return (this.read = status.tillOff(supply).keepThru(
               info => info.status,
-          )))(receiver);
+          ).F)(receiver);
         }
 
         dismiss(reason?: any): Promise<void> {
