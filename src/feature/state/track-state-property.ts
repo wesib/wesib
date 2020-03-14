@@ -3,11 +3,51 @@
  * @module @wesib/wesib
  */
 import { nextArgs } from 'call-thru';
-import { EventSupply, eventSupply, EventSupply__symbol, OnEvent, StatePath, ValueTracker } from 'fun-events';
+import {
+  EventSupply,
+  eventSupply,
+  EventSupply__symbol,
+  eventSupplyOf,
+  OnEvent,
+  StatePath,
+  ValueTracker,
+} from 'fun-events';
 import { EventReceiver } from 'fun-events/d.ts/base';
 import { ComponentContext } from '../../component';
 import { ComponentState } from './component-state';
 import { statePropertyPathTo } from './state-property-path';
+
+class StatePropertyTracker<T> extends ValueTracker<T> {
+
+  readonly [EventSupply__symbol] = eventSupply();
+
+  constructor(
+      private readonly _context: ComponentContext,
+      private readonly _key: PropertyKey,
+      private readonly _path: StatePath,
+  ) {
+    super();
+  }
+
+  get it(): T {
+    return this._context.component[this._key];
+  }
+
+  set it(value: T) {
+    if (!eventSupplyOf(this).isOff) {
+      this._context.component[this._key] = value;
+    }
+  }
+
+  on(): OnEvent<[T, T]>;
+  on(receiver: EventReceiver<[T, T]>): EventSupply;
+  on(receiver?: EventReceiver<[T, T]>): OnEvent<[T, T]> | EventSupply {
+    return (this.on = this._context.get(ComponentState).track(this._path).onUpdate().thru(
+        (_path, newValue, oldValue) => nextArgs(newValue, oldValue),
+    ).tillOff(this).F)(receiver);
+  }
+
+}
 
 /**
  * Creates a tracker of component state value.
@@ -28,34 +68,5 @@ export function trackStateProperty<T = any>(
     key: PropertyKey,
     path: StatePath = statePropertyPathTo(key),
 ): ValueTracker<T> {
-
-  const supply = eventSupply();
-
-  class StatePropertyTracker extends ValueTracker<T> {
-
-    get [EventSupply__symbol](): EventSupply {
-      return supply;
-    }
-
-    get it(): T {
-      return context.component[key];
-    }
-
-    set it(value: T) {
-      if (!supply.isOff) {
-        context.component[key] = value;
-      }
-    }
-
-    on(): OnEvent<[T, T]>;
-    on(receiver: EventReceiver<[T, T]>): EventSupply;
-    on(receiver?: EventReceiver<[T, T]>): OnEvent<[T, T]> | EventSupply {
-      return (this.on = context.get(ComponentState).track(path).onUpdate().thru(
-          (_path, newValue, oldValue) => nextArgs(newValue, oldValue),
-      ).tillOff(supply).F)(receiver);
-    }
-
-  }
-
-  return new StatePropertyTracker();
+  return new StatePropertyTracker(context, key, path);
 }
