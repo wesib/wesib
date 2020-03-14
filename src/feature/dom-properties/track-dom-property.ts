@@ -4,15 +4,15 @@
  */
 import { nextArgs } from 'call-thru';
 import {
-  EventSupply,
+  EventReceiver,
   eventSupply,
+  EventSupply,
   EventSupply__symbol,
   eventSupplyOf,
   OnEvent,
   StatePath,
   ValueTracker,
 } from 'fun-events';
-import { EventReceiver } from 'fun-events/d.ts/base';
 import { ComponentContext } from '../../component';
 import { ComponentState } from '../state';
 import { domPropertyPathTo } from './dom-property-path';
