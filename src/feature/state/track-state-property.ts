@@ -4,6 +4,7 @@
  */
 import { nextArgs } from 'call-thru';
 import { EventSupply, eventSupply, EventSupply__symbol, OnEvent, StatePath, ValueTracker } from 'fun-events';
+import { EventReceiver } from 'fun-events/d.ts/base';
 import { ComponentContext } from '../../component';
 import { ComponentState } from './component-state';
 import { statePropertyPathTo } from './state-property-path';
@@ -28,17 +29,9 @@ export function trackStateProperty<T = any>(
     path: StatePath = statePropertyPathTo(key),
 ): ValueTracker<T> {
 
-  const state = context.get(ComponentState).track(path);
   const supply = eventSupply();
-  const on: OnEvent<[T, T]> = state.onUpdate().thru(
-      (_path, newValue, oldValue) => nextArgs(newValue, oldValue),
-  ).tillOff(supply);
 
   class StatePropertyTracker extends ValueTracker<T> {
-
-    get on(): OnEvent<[T, T]> {
-      return on;
-    }
 
     get [EventSupply__symbol](): EventSupply {
       return supply;
@@ -52,6 +45,14 @@ export function trackStateProperty<T = any>(
       if (!supply.isOff) {
         context.component[key] = value;
       }
+    }
+
+    on(): OnEvent<[T, T]>;
+    on(receiver: EventReceiver<[T, T]>): EventSupply;
+    on(receiver?: EventReceiver<[T, T]>): OnEvent<[T, T]> | EventSupply {
+      return (this.on = context.get(ComponentState).track(path).onUpdate().thru(
+          (_path, newValue, oldValue) => nextArgs(newValue, oldValue),
+      ).tillOff(supply).F)(receiver);
     }
 
   }

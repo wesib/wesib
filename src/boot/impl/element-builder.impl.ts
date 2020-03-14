@@ -2,25 +2,27 @@ import { nextArgs, nextSkip, noop, valueProvider } from 'call-thru';
 import { ContextRegistry, ContextValues, ContextValueSpec, SingleContextKey, SingleContextRef } from 'context-values';
 import {
   EventEmitter,
+  EventReceiver,
   eventSupply,
   EventSupply,
-  EventSupply__symbol, eventSupplyOf,
+  EventSupply__symbol,
+  eventSupplyOf,
   OnEvent,
   trackValue,
   ValueTracker,
 } from 'fun-events';
 import { Class } from '../../common';
 import {
-  ComponentContext as ComponentContext_,
+  ComponentContext,
   ComponentContext__symbol,
   ComponentDef,
   ComponentEvent,
-  ComponentMount as ComponentMount_,
+  ComponentMount,
 } from '../../component';
 import {
   ComponentClass,
-  ComponentFactory as ComponentFactory_,
-  DefinitionContext as DefinitionContext_,
+  ComponentFactory,
+  DefinitionContext,
   DefinitionSetup,
   ElementDef,
 } from '../../component/definition';
@@ -35,9 +37,9 @@ import { WhenComponent } from './when-component.impl';
  * @internal
  */
 export interface ElementBuilder {
-  readonly definitions: EventEmitter<[DefinitionContext_]>;
-  readonly components: EventEmitter<[ComponentContext_]>;
-  buildElement<T extends object>(this: void, componentType: ComponentClass<T>): ComponentFactory_<T>;
+  readonly definitions: EventEmitter<[DefinitionContext]>;
+  readonly components: EventEmitter<[ComponentContext]>;
+  buildElement<T extends object>(this: void, componentType: ComponentClass<T>): ComponentFactory<T>;
 }
 
 /**
@@ -63,8 +65,8 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
 
   const definitionContextRegistry$global = bsContext.get(DefinitionContextRegistry);
   const componentContextRegistry$global = bsContext.get(ComponentContextRegistry);
-  const definitions = new EventEmitter<[DefinitionContext_]>();
-  const components = new EventEmitter<[ComponentContext_]>();
+  const definitions = new EventEmitter<[DefinitionContext]>();
+  const components = new EventEmitter<[ComponentContext]>();
 
   return {
     definitions,
@@ -77,13 +79,13 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
       const ready = trackValue(false);
       const whenReady: OnEvent<[]> = ready.read().thru(cls => cls ? nextArgs() : nextSkip());
       // eslint-disable-next-line prefer-const
-      let definitionContext: DefinitionContext;
+      let definitionContext: DefinitionContext$;
 
-      function createComponentContextRegistry(): ContextRegistry<ComponentContext_<T>> {
+      function createComponentContextRegistry(): ContextRegistry<ComponentContext<T>> {
         return componentContextRegistry$global.append(componentContextRegistry$perType);
       }
 
-      class ComponentFactory extends ComponentFactory_ < T > {
+      class ComponentFactory$ extends ComponentFactory < T > {
 
         get componentType(): ComponentClass<T> {
           return definitionContext.componentType;
@@ -97,7 +99,7 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
           return definitionContext.elementDef;
         }
 
-        mountTo(element: any): ComponentMount_<T> {
+        mountTo(element: any): ComponentMount<T> {
           if (element[ComponentContext__symbol]) {
             throw new Error(`Element ${element} already bound to component`);
           }
@@ -110,11 +112,11 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
             elementSuper(key) {
               return element[key];
             },
-            createMount(context: ComponentContext_<T>) {
+            createMount(context: ComponentContext<T>) {
 
-              class ComponentMount extends ComponentMount_<T> {
+              class ComponentMount$ extends ComponentMount<T> {
 
-                get context(): ComponentContext_<T> {
+                get context(): ComponentContext<T> {
                   return context;
                 }
 
@@ -136,9 +138,9 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
 
               }
 
-              return new ComponentMount();
+              return new ComponentMount$();
             },
-          }).mount as ComponentMount_<T>;
+          }).mount as ComponentMount<T>;
 
           mount.checkConnected();
           componentCreated(mount.context);
@@ -148,19 +150,14 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
 
       }
 
-      const componentFactory = new ComponentFactory();
+      const componentFactory = new ComponentFactory$();
 
-      class DefinitionContext extends DefinitionContext_<T> {
+      class DefinitionContext$ extends DefinitionContext<T> {
 
         readonly get: ContextValues['get'];
-        readonly whenReady: OnEvent<[this]>;
 
         get componentType(): ComponentClass<T> {
           return componentType;
-        }
-
-        get whenComponent(): OnEvent<[ComponentContext_<T>]> {
-          return whenComponent.onCreated;
         }
 
         get elementType(): Class {
@@ -170,28 +167,27 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
         constructor() {
           super();
 
-          const context = this;
-
-          this.whenReady = whenReady.thru_(valueProvider(this)).once as OnEvent<[this]>;
-
           const definitionContextRegistry = new DefinitionContextRegistry(
               definitionContextRegistry$global.seedIn(this),
           );
 
-          definitionContextRegistry.provide({ a: DefinitionContext_, is: this });
-          definitionContextRegistry.provide({ a: ComponentFactory_, is: componentFactory });
+          definitionContextRegistry.provide({ a: DefinitionContext, is: this });
+          definitionContextRegistry.provide({ a: ComponentFactory, is: componentFactory });
           this.get = definitionContextRegistry.newValues().get;
           componentContextRegistry$perType = new ComponentContextRegistry(definitionContextRegistry.seedIn(this));
+
+          const whenReady = this.whenReady().F;
+          const whenComponent = this.whenComponent().F;
 
           const definitionSetup: DefinitionSetup<T> = {
             get componentType() {
               return componentType;
             },
             get whenReady() {
-              return context.whenReady;
+              return whenReady;
             },
             get whenComponent() {
-              return context.whenComponent;
+              return whenComponent;
             },
             perDefinition(spec) {
               return definitionContextRegistry.provide(spec);
@@ -205,15 +201,27 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
           postDefSetup(componentType).setup(definitionSetup);
         }
 
+        whenReady(): OnEvent<[this]>;
+        whenReady(receiver: EventReceiver<[this]>): EventSupply;
+        whenReady(receiver?: EventReceiver<[this]>): EventSupply | OnEvent<[this]> {
+          return (this.whenReady = (whenReady.thru_(valueProvider(this)).once() as OnEvent<[this]>).F)(receiver);
+        }
+
+        whenComponent(): OnEvent<[ComponentContext<T>]>;
+        whenComponent(receiver: EventReceiver<[ComponentContext<T>]>): EventSupply;
+        whenComponent(receiver?: EventReceiver<[ComponentContext<T>]>): OnEvent<[ComponentContext<T>]> | EventSupply {
+          return (this.whenComponent = whenComponent.onCreated.F)(receiver);
+        }
+
         perComponent<Deps extends any[], Src, Seed>(
-            spec: ContextValueSpec<ComponentContext_<T>, any, Deps, Src, Seed>,
+            spec: ContextValueSpec<ComponentContext<T>, any, Deps, Src, Seed>,
         ): () => void {
           return componentContextRegistry$perType.provide(spec);
         }
 
       }
 
-      definitionContext = new DefinitionContext();
+      definitionContext = new DefinitionContext$();
 
       def.define?.(definitionContext);
       definitions.send(definitionContext);
@@ -233,9 +241,9 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
   };
 
   function createElementType<T extends object>(
-      definitionContext: DefinitionContext_<T>,
+      definitionContext: DefinitionContext<T>,
       whenComponent: WhenComponent<T>,
-      createRegistry: () => ContextRegistry<ComponentContext_<T>>,
+      createRegistry: () => ContextRegistry<ComponentContext<T>>,
   ): Class {
 
     const elementDef = definitionContext.get(ElementDef);
@@ -243,7 +251,7 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
     class Element extends elementDef.extend.type {
 
       // Component context reference
-      [ComponentContext__symbol]: ComponentContext_<T>;
+      [ComponentContext__symbol]: ComponentContext<T>;
 
       constructor() {
         super();
@@ -282,54 +290,27 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
         createMount,
         elementSuper,
       }: {
-        definitionContext: DefinitionContext_<T>;
+        definitionContext: DefinitionContext<T>;
         whenComponent: WhenComponent<T>;
         registry: ComponentContextRegistry;
         element: any;
         elementSuper(name: PropertyKey): any;
-        createMount(context: ComponentContext_<T>): ComponentMount_<T> | undefined;
+        createMount(context: ComponentContext<T>): ComponentMount<T> | undefined;
       },
-  ): ComponentContext_<T> {
+  ): ComponentContext<T> {
 
     const status = trackValue<ComponentStatus>(ComponentStatus.Building);
     const destructionReason = trackValue<[any] | undefined>();
 
     eventSupplyOf(status).whenOff(reason => destructionReason.it = [reason]);
 
-    const destroyed: OnEvent<[any]> = destructionReason.read.thru(reason => reason ? nextArgs(reason[0]) : nextSkip());
-    const whenDestroyed: OnEvent<[any]> = destroyed.once;
-
-    const whenOff: OnEvent<[]> = status.read.thru_(sts => sts === ComponentStatus.Off ? nextArgs() : nextSkip());
-    const whenOn: OnEvent<[EventSupply]> = status.read.thru_(
-        sts => {
-          if (sts !== ComponentStatus.On) {
-            return nextSkip();
-          }
-
-          const offSupply = eventSupply();
-
-          whenOff.once(() => offSupply.off()).cuts(offSupply);
-
-          return nextArgs(offSupply);
-        },
-    );
-
-    let mount: ComponentMount_<T> | undefined;
+    let mount: ComponentMount<T> | undefined;
     const values = registry.newValues();
 
-    class ComponentContext extends ComponentContext_<T> {
+    class ComponentContext$ extends ComponentContext<T> {
 
       readonly get = values.get;
       readonly elementSuper = elementSuper;
-      readonly whenReady: OnEvent<[this]>;
-
-      constructor() {
-        super();
-
-        const whenReady: OnEvent<[this]> = status.read.thru(sts => sts ? nextArgs(this) : nextSkip());
-
-        this.whenReady = whenReady.once;
-      }
 
       get componentType(): ComponentClass<T> {
         return definitionContext.componentType;
@@ -343,7 +324,7 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
         throw new Error('The component is not constructed yet. Consider to use a `whenReady()` callback');
       }
 
-      get mount(): ComponentMount_<T> | undefined {
+      get mount(): ComponentMount<T> | undefined {
         return mount || (mount = createMount(this));
       }
 
@@ -355,16 +336,44 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
         return eventSupplyOf(status);
       }
 
-      get whenOn(): OnEvent<[EventSupply]> {
-        return whenOn;
+      whenReady(): OnEvent<[this]>;
+      whenReady(receiver: EventReceiver<[this]>): EventSupply;
+      whenReady(receiver?: EventReceiver<[this]>): OnEvent<[this]> | EventSupply {
+        return (this.whenReady = status.read().thru(sts => sts ? nextArgs(this) : nextSkip()).once().F)(receiver);
       }
 
-      get whenOff(): OnEvent<[]> {
-        return whenOff;
+      whenOn(): OnEvent<[EventSupply]>;
+      whenOn(receiver: EventReceiver<[EventSupply]>): EventSupply;
+      whenOn(receiver?: EventReceiver<[EventSupply]>): OnEvent<[EventSupply]> | EventSupply {
+        return (this.whenOn = status.read().thru_(
+            sts => {
+              if (sts !== ComponentStatus.On) {
+                return nextSkip();
+              }
+
+              const offSupply = eventSupply();
+
+              this.whenOff().once(() => offSupply.off()).cuts(offSupply);
+
+              return nextArgs(offSupply);
+            },
+        ).F)(receiver);
       }
 
-      get whenDestroyed(): OnEvent<[any]> {
-        return whenDestroyed;
+      whenOff(): OnEvent<[]>;
+      whenOff(receiver: EventReceiver<[]>): EventSupply;
+      whenOff(receiver?: EventReceiver<[]>): EventSupply | OnEvent<[]> {
+        return (this.whenOff = status.read().thru_(
+            sts => sts === ComponentStatus.Off ? nextArgs() : nextSkip(),
+        ).F)(receiver);
+      }
+
+      whenDestroyed(): OnEvent<[any]>;
+      whenDestroyed(receiver: EventReceiver<[any]>): EventSupply;
+      whenDestroyed(receiver?: EventReceiver<[any]>): OnEvent<[any]> | EventSupply {
+        return (this.whenDestroyed = destructionReason.read().thru(
+            reason => reason ? nextArgs(reason[0]) : nextSkip(),
+        ).once().F)(receiver);
       }
 
       destroy(reason?: any): void {
@@ -373,17 +382,17 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
 
     }
 
-    const context = new ComponentContext();
+    const context = new ComponentContext$();
     let lastRev = 0;
 
     context.whenDestroyed(() => removeElement(context));
-    registry.provide({ a: ComponentContext_, is: context });
+    registry.provide({ a: ComponentContext, is: context });
 
     augmentElement();
 
     whenComponent.readNotifier.once(notifier => lastRev = notifier(context, lastRev));
     context.whenOn(supply => {
-      whenComponent.readNotifier({
+      whenComponent.readNotifier.to({
         supply,
         receive(_, notifier) {
           lastRev = notifier(context, lastRev);
@@ -423,7 +432,7 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
  * @param type  Component class constructor.
  * @param context  Target component context.
  */
-function newComponent<T extends object>(type: ComponentClass<T>, context: ComponentContext_<T>): T {
+function newComponent<T extends object>(type: ComponentClass<T>, context: ComponentContext<T>): T {
 
   const proto = type.prototype as any;
   const prevContext = proto[ComponentContext__symbol];
@@ -445,13 +454,13 @@ function elementStatus(element: any): ValueTracker<ComponentStatus> {
   return element[ComponentStatus__symbol];
 }
 
-function componentCreated(context: ComponentContext_): void {
-  context.whenOn.once(
+function componentCreated(context: ComponentContext): void {
+  context.whenOn().once(
       () => context.dispatchEvent(new ComponentEvent('wesib:component', { bubbles: true })),
   );
 }
 
-function removeElement(context: ComponentContext_): void {
+function removeElement(context: ComponentContext): void {
 
   const { element, mount } = context;
 

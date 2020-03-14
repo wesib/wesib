@@ -3,7 +3,15 @@
  * @module @wesib/wesib
  */
 import { nextArgs } from 'call-thru';
-import { EventSupply, eventSupply, EventSupply__symbol, OnEvent, StatePath, ValueTracker } from 'fun-events';
+import {
+  EventReceiver,
+  EventSupply,
+  eventSupply,
+  EventSupply__symbol,
+  OnEvent,
+  StatePath,
+  ValueTracker,
+} from 'fun-events';
 import { ComponentContext } from '../../component';
 import { ComponentState } from '../state';
 import { attributePathTo } from './attribute-path';
@@ -28,17 +36,9 @@ export function trackAttribute(
 ): ValueTracker<string | null> {
 
   const { element }: { element: Element } = context;
-  const state = context.get(ComponentState).track(path);
   const supply = eventSupply();
-  const on: OnEvent<[string | null, string | null]> = state.onUpdate.thru(
-      (_path, newValue, oldValue) => nextArgs(newValue, oldValue),
-  ).tillOff(supply);
 
   class AttributeTracker extends ValueTracker<string | null> {
-
-    get on(): OnEvent<[string | null, string | null]> {
-      return on;
-    }
 
     get [EventSupply__symbol](): EventSupply {
       return supply;
@@ -56,6 +56,16 @@ export function trackAttribute(
           element.setAttribute(name, value);
         }
       }
+    }
+
+    on(): OnEvent<[string | null, string | null]>;
+    on(receiver: EventReceiver<[string | null, string | null]>): EventSupply;
+    on(
+        receiver?: EventReceiver<[string | null, string | null]>,
+    ): OnEvent<[string | null, string | null]> | EventSupply {
+      return (this.on = context.get(ComponentState).track(path).onUpdate().thru(
+          (_path, newValue, oldValue) => nextArgs(newValue, oldValue),
+      ).tillOff(supply).F)(receiver);
     }
 
   }

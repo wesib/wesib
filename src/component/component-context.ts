@@ -126,6 +126,32 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   }
 
   /**
+   * Builds an `OnEvent` sender of component readiness event.
+   *
+   * The component is constructed shortly after custom element. So the component may not exist when requested
+   * e.g. inside component constructor or {@link DefinitionContext.whenComponent component instantiation event}
+   * receiver. The registered receiver will be notified when the component is constructed.
+   *
+   * If the component is constructed already, the receiver will be notified immediately.
+   *
+   * @returns An `OnEvent` sender of this context upon component readiness.
+   */
+  abstract whenReady(): OnEvent<[this]>;
+
+  /**
+   * Registers a receiver of component readiness event.
+   *
+   * The component is constructed shortly after custom element. So the component may not exist when requested
+   * e.g. inside component constructor or {@link DefinitionContext.whenComponent component instantiation event}
+   * receiver. The registered receiver will be notified when the component is constructed.
+   *
+   * @param receiver  Target receiver of this component upon component readiness.
+   *
+   * @returns Component readiness event supply.
+   */
+  abstract whenReady(receiver: EventReceiver<[this]>): EventSupply;
+
+  /**
    * Builds an `OnEvent` sender of custom element connection events.
    *
    * The registered receiver is called when custom element is connected, i.e. its `connectedCallback()` method is
@@ -168,32 +194,6 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    * @returns Custom element disconnection events supply.
    */
   abstract whenOff(receiver: EventReceiver<[]>): EventSupply;
-
-  /**
-   * Builds an `OnEvent` sender of component readiness event.
-   *
-   * The component is constructed shortly after custom element. So the component may not exist when requested
-   * e.g. inside component constructor or {@link DefinitionContext.whenComponent component instantiation event}
-   * receiver. The registered receiver will be notified when the component is constructed.
-   *
-   * If the component is constructed already, the receiver will be notified immediately.
-   *
-   * @returns An `OnEvent` sender of this context upon component readiness.
-   */
-  abstract whenReady(): OnEvent<[this]>;
-
-  /**
-   * Registers a receiver of component readiness event.
-   *
-   * The component is constructed shortly after custom element. So the component may not exist when requested
-   * e.g. inside component constructor or {@link DefinitionContext.whenComponent component instantiation event}
-   * receiver. The registered receiver will be notified when the component is constructed.
-   *
-   * @param receiver  Target receiver of this component upon component readiness.
-   *
-   * @returns Component readiness event supply.
-   */
-  abstract whenReady(receiver: EventReceiver<[this]>): EventSupply;
 
   /**
    * Builds an `OnEvent` sender of component destruction event.

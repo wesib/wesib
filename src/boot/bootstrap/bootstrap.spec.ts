@@ -576,7 +576,7 @@ describe('boot', () => {
 
           const featureRef = await loadFeatureStatus();
 
-          expect(afterSupplied(featureRef)).toBe(featureRef.read);
+          expect(afterSupplied(featureRef)).toBe(featureRef.read());
         });
       });
       describe('off', () => {

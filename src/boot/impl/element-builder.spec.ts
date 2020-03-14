@@ -302,7 +302,7 @@ describe('boot', () => {
       it('allows to listen for component events', () => {
 
         const listener = jest.fn().mockName('event listener');
-        const supply = componentContext.on('test-event')(listener);
+        const supply = componentContext.on('test-event').to(listener);
 
         expect(addEventListenerSpy).toHaveBeenCalledWith('test-event', expect.any(Function), undefined);
 

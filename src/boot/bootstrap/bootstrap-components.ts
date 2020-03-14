@@ -66,7 +66,7 @@ function initBootstrap(
   const stage = trackValue<BootstrapStage>(BootstrapStage.Init);
   const values = bootstrapContextRegistry.values;
 
-  class Context extends BootstrapContext {
+  class BootstrapContext$ extends BootstrapContext {
 
     readonly get = values.get;
 
@@ -174,7 +174,7 @@ function initBootstrap(
 
   }
 
-  const bootstrapContext = new Context();
+  const bootstrapContext = new BootstrapContext$();
 
   return {
     bootstrapContext,

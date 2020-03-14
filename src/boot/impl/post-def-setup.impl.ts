@@ -16,12 +16,12 @@ export function onPostDefSetup(
   const { on } = postDefSetup(componentType);
 
   return onEventBy(receiver => {
-    on({
+    on.to({
       supply: receiver.supply.needs(unloader.supply),
       receive(ctx, setup) {
 
-        const whenReady = setup.whenReady.tillOff(unloader.supply);
-        const whenComponent = setup.whenComponent.tillOff(unloader.supply);
+        const whenReady = setup.whenReady().tillOff(unloader.supply).F;
+        const whenComponent = setup.whenComponent().tillOff(unloader.supply).F;
 
         receiver.receive(ctx, {
           get componentType() {
@@ -67,7 +67,7 @@ export function postDefSetup<T extends object>(componentType: ComponentClass<T>)
 
   const tracker = trackValue<DefinitionSetup<T>>();
   const emitter = new EventEmitter<[DefinitionSetup]>();
-  const onSetup: OnEvent<[DefinitionSetup<T>]> = tracker.read.thru(setup => setup ? nextArgs(setup) : nextSkip());
+  const onSetup: OnEvent<[DefinitionSetup<T>]> = tracker.read().thru(setup => setup ? nextArgs(setup) : nextSkip());
   const on = onAny(onSetup, emitter);
   const superType = superClassOf(componentType, type => ComponentDef__symbol in type);
 
@@ -75,7 +75,7 @@ export function postDefSetup<T extends object>(componentType: ComponentClass<T>)
 
     const superPostDefSetup = postDefSetup(superType);
 
-    on(setup => superPostDefSetup.send(setup));
+    on.to(setup => superPostDefSetup.send(setup));
   }
 
   const result: PostDefSetup<T> = {

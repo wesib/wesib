@@ -435,7 +435,7 @@ describe('component', () => {
 
   async function bootstrapFactory<T extends object>(type: ComponentClass<T>): Promise<ComponentFactory<T>> {
 
-    const bsContext = await bootstrapComponents(type).whenReady;
+    const bsContext = await bootstrapComponents(type).whenReady();
 
     return await bsContext.whenDefined(type);
   }
