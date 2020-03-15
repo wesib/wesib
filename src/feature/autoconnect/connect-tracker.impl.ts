@@ -30,7 +30,8 @@ export class ConnectTracker {
     const { _context } = this;
 
     this._supply = new DomEventDispatcher(root)
-        .on<ShadowDomEvent>('wesib:shadowAttached')(event => trackShadow(event.shadowRoot));
+        .on<ShadowDomEvent>('wesib:shadowAttached')
+        .to(event => trackShadow(event.shadowRoot));
 
     const newObserver = this._context.get(ElementObserver);
     const observer = this._observer = newObserver(records => updateConnections(records));

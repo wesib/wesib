@@ -2,7 +2,7 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { AfterEvent, AfterEvent__symbol, EventKeeper } from 'fun-events';
+import { AfterEvent, AfterEvent__symbol, EventKeeper, EventReceiver, EventSupply } from 'fun-events';
 import { FeatureStatus } from './feature-status';
 
 /**
@@ -17,22 +17,33 @@ import { FeatureStatus } from './feature-status';
 export abstract class FeatureRef implements EventKeeper<[FeatureStatus]> {
 
   /**
-   * An `AfterEvent` sender of feature load status updates.
-   *
-   * The `[AfterEvent__symbol]` property is an alias of this one.
-   */
-  abstract readonly read: AfterEvent<[FeatureStatus]>;
-
-  get [AfterEvent__symbol](): AfterEvent<[FeatureStatus]> {
-    return this.read;
-  }
-
-  /**
    * A promise resolved when feature is unloaded.
    *
    * This happens after all feature references dismissed.
    */
   abstract readonly down: Promise<void>;
+
+  /**
+   * Builds an `AfterEvent` keeper of feature load status.
+   *
+   * The `[AfterEvent__symbol]` property is an alias of this one.
+   *
+   * @returns `AfterEvent` sender of feature load status.
+   */
+  abstract read(): AfterEvent<[FeatureStatus]>;
+
+  /**
+   * Starts sending feature load status and updates to the given `receiver`.
+   *
+   * @param receiver  Target receiver of feature load status.
+   *
+   * @returns Feature load status supply.
+   */
+  abstract read(receiver: EventReceiver<[FeatureStatus]>): EventSupply;
+
+  [AfterEvent__symbol](): AfterEvent<[FeatureStatus]> {
+    return this.read();
+  }
 
   /**
    * Dismisses feature reference.

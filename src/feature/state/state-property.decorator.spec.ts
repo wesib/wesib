@@ -15,7 +15,7 @@ describe('feature/state', () => {
       element = document.createElement('test-component');
     });
 
-    let onUpdate: Mock<void, [StatePath, string, string]>;
+    let onUpdate: Mock<void, [StatePath, any, any]>;
 
     beforeEach(() => {
       onUpdate = jest.fn();
@@ -75,7 +75,7 @@ describe('feature/state', () => {
 
       }
 
-      const bsContext = await bootstrapComponents(TestComponent).whenReady;
+      const bsContext = await bootstrapComponents(TestComponent).whenReady();
       const factory = await bsContext.whenDefined(TestComponent);
       const { context } = factory.mountTo(element);
 

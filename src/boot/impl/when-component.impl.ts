@@ -34,7 +34,7 @@ export class WhenComponent<T extends object> {
 
       ++currentRev.it;
     });
-    this.readNotifier = currentRev.read.keep.thru_(
+    this.readNotifier = currentRev.read().keepThru_(
         rev => (context, notifiedRev) => {
           created.send(context, notifiedRev);
           return rev;

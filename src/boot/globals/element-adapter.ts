@@ -34,7 +34,7 @@ class ElementAdapterKey extends ContextUpKey<ElementAdapter, ElementAdapter> {
   constructor() {
     super('element-adapter');
     this.upKey = this.createUpKey(
-        opts => opts.seed.keep.thru((...adapters) => {
+        opts => opts.seed.keepThru((...adapters) => {
 
           const combined: ElementAdapter = adapters.reduce(
               (prev, adapter) => element => prev(element) || adapter(element),
@@ -63,7 +63,7 @@ class ElementAdapterKey extends ContextUpKey<ElementAdapter, ElementAdapter> {
     opts.context.get(
         this.upKey,
         'or' in opts ? { or: opts.or != null ? afterThe(opts.or) : opts.or } : undefined,
-    )!(adapter => delegated = adapter);
+    )!.to(adapter => delegated = adapter);
 
     return element => delegated(element);
   }

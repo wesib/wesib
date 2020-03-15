@@ -3,7 +3,7 @@
  * @module @wesib/wesib
  */
 import { ContextKey, ContextKey__symbol, ContextValues } from 'context-values';
-import { EventSupply, EventSupply__symbol, EventSupplyPeer, OnEvent, StatePath } from 'fun-events';
+import { EventReceiver, EventSupply, EventSupply__symbol, EventSupplyPeer, OnEvent, StatePath } from 'fun-events';
 import { OnDomEvent } from 'fun-events/dom';
 import { ComponentContext__key } from './component-context.key.impl';
 import { ComponentEventDispatcher__key } from './component-event.key.impl';
@@ -82,43 +82,6 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   abstract readonly [EventSupply__symbol]: EventSupply;
 
   /**
-   * An `OnEvent` sender of custom element connection events.
-   *
-   * The registered receivers are called when custom element is connected, i.e. its `connectedCallback()` method is
-   * called. If component is connected already the receiver is called immediately.
-   *
-   * Sends a connection supply that is cut off once custom element is disconnected.
-   */
-  abstract readonly whenOn: OnEvent<[EventSupply]>;
-
-  /**
-   * An `OnEvent` sender of custom element disconnection events.
-   *
-   * The registered receivers are called when custom element is disconnected, i.e. its `disconnectedCallback()` method
-   * is called. If component is ready but disconnected, the receiver is called immediately.
-   */
-  abstract readonly whenOff: OnEvent<[]>;
-
-  /**
-   * An `OnEvent` sender of component readiness event.
-   *
-   * The component is constructed shortly after custom element. So the component may not exist when requested
-   * e.g. inside component constructor or {@link DefinitionContext.whenComponent component instantiation event}
-   * receiver. The registered receiver will be notified when the component is constructed.
-   *
-   * If the component is constructed already, the receiver will be notified immediately.
-   */
-  abstract readonly whenReady: OnEvent<[this]>;
-
-  /**
-   * An `OnEvent` sender of component destruction reason event.
-   *
-   * The registered receiver is notified when [[destroy]] method is called. If the component is destroyed already
-   * the receiver is notified immediately.
-   */
-  abstract readonly whenDestroyed: OnEvent<[any]>;
-
-  /**
    * Updates component's state.
    *
    * This is a shorthand for invoking a component {@link StateUpdater state updater} .
@@ -161,6 +124,98 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   get contentRoot(): any {
     return this.get(ContentRoot);
   }
+
+  /**
+   * Builds an `OnEvent` sender of component readiness event.
+   *
+   * The component is constructed shortly after custom element. So the component may not exist when requested
+   * e.g. inside component constructor or {@link DefinitionContext.whenComponent component instantiation event}
+   * receiver. The registered receiver will be notified when the component is constructed.
+   *
+   * If the component is constructed already, the receiver will be notified immediately.
+   *
+   * @returns An `OnEvent` sender of this context upon component readiness.
+   */
+  abstract whenReady(): OnEvent<[this]>;
+
+  /**
+   * Registers a receiver of component readiness event.
+   *
+   * The component is constructed shortly after custom element. So the component may not exist when requested
+   * e.g. inside component constructor or {@link DefinitionContext.whenComponent component instantiation event}
+   * receiver. The registered receiver will be notified when the component is constructed.
+   *
+   * @param receiver  Target receiver of this component upon component readiness.
+   *
+   * @returns Component readiness event supply.
+   */
+  abstract whenReady(receiver: EventReceiver<[this]>): EventSupply;
+
+  /**
+   * Builds an `OnEvent` sender of custom element connection events.
+   *
+   * The registered receiver is called when custom element is connected, i.e. its `connectedCallback()` method is
+   * called. If component is connected already the receiver is called immediately.
+   *
+   * @returns An `OnEvent` sender of connection supply that is cut off once custom element is disconnected.
+   */
+  abstract whenOn(): OnEvent<[EventSupply]>;
+
+  /**
+   * Registers a receiver of custom element connection events.
+   *
+   * The registered receiver is called when custom element is connected, i.e. its `connectedCallback()` method is
+   * called. If component is connected already the receiver is called immediately.
+   *
+   * @param receiver  Target receiver of connection supply that is cut off once custom element is disconnected.
+   *
+   * @returns Custom element connection events supply.
+   */
+  abstract whenOn(receiver: EventReceiver<[EventSupply]>): EventSupply;
+
+  /**
+   * Builds an `OnEvent` sender of custom element disconnection events.
+   *
+   * The registered receiver is called when custom element is disconnected, i.e. its `disconnectedCallback()` method
+   * is called. If component is ready but disconnected, the receiver is called immediately.
+   *
+   * @returns An `OnEvent` sender of custom element disconnection events.
+   */
+  abstract whenOff(): OnEvent<[]>;
+
+  /**
+   * Registers a receiver of custom element disconnection events.
+   *
+   * The registered receiver is called when custom element is disconnected, i.e. its `disconnectedCallback()` method
+   * is called. If component is ready but disconnected, the receiver is called immediately.
+   *
+   * @param receiver  Target receiver of custom element disconnection events.
+   *
+   * @returns Custom element disconnection events supply.
+   */
+  abstract whenOff(receiver: EventReceiver<[]>): EventSupply;
+
+  /**
+   * Builds an `OnEvent` sender of component destruction event.
+   *
+   * The registered receiver is notified when [[destroy]] method is called. If the component is destroyed already
+   * the receiver is notified immediately.
+   *
+   * @returns An `OnEvent` sender of component destruction reason.
+   */
+  abstract whenDestroyed(): OnEvent<[any]>;
+
+  /**
+   * Registers a receiver of component destruction event.
+   *
+   * The registered receiver is notified when [[destroy]] method is called. If the component is destroyed already
+   * the receiver is notified immediately.
+   *
+   * @param receiver  Target receiver of component destruction reason.
+   *
+   * @returns Component destruction event supply.
+   */
+  abstract whenDestroyed(receiver: EventReceiver<[any]>): EventSupply;
 
   /**
    * Returns a `super` property value inherited from custom element parent.

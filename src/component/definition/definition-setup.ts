@@ -3,7 +3,7 @@
  * @module @wesib/wesib
  */
 import { ContextValueSpec } from 'context-values';
-import { OnEvent } from 'fun-events';
+import { EventReceiver, EventSupply, OnEvent } from 'fun-events';
 import { ComponentContext } from '../component-context';
 import { ComponentClass } from './component-class';
 import { DefinitionContext } from './definition-context';
@@ -24,17 +24,33 @@ export interface DefinitionSetup<T extends object = any> {
   readonly componentType: ComponentClass<T>;
 
   /**
-   * An `OnEvent` sender of component definition context upon its readiness.
+   * Builds an `OnEvent` sender of component definition context upon its readiness.
    *
    * The custom element class is not constructed until component definition is complete.
    * The registered receiver will be notified when the custom element class is constructed.
    *
    * If the custom element class is constructed already, the receiver will be notified immediately.
+   *
+   * @returns `OnEvent` sender of component definition context upon its readiness.
    */
-  readonly whenReady: OnEvent<[DefinitionContext<T>]>;
+  whenReady(): OnEvent<[DefinitionContext<T>]>;
 
   /**
-   * An `OnEvent` sender of component context upon its instantiation.
+   * Registers a receiver of component definition readiness event.
+   *
+   * The custom element class is not constructed until component definition is complete.
+   * The registered receiver will be notified when the custom element class is constructed.
+   *
+   * If the custom element class is constructed already, the receiver will be notified immediately.
+   *
+   * @param receiver  Target receiver of component definition context upon its readiness.
+   *
+   * @returns Component definition readiness event supply.
+   */
+  whenReady(receiver: EventReceiver<[DefinitionContext<T>]>): EventSupply;
+
+  /**
+   * Builds an `OnEvent` sender of component context upon its instantiation.
    *
    * If component instantiated after the receiver is registered, that receiver would receive an instantiated component's
    * context immediately.
@@ -42,8 +58,26 @@ export interface DefinitionSetup<T extends object = any> {
    * If component already exists when the receiver is registered, that receiver would receive instantiated component's
    * context only when/if component is {@link ComponentContext.whenOn connected}. This is to prevent resource leaking
    * on disconnected components that may be never used again.
+   *
+   * @returns `OnEvent` sender of instantiated component context.
    */
-  readonly whenComponent: OnEvent<[ComponentContext<T>]>;
+  whenComponent(): OnEvent<[ComponentContext<T>]>;
+
+  /**
+   * Starts sending component instantiation events to the given `receiver`.
+   *
+   * If component instantiated after the receiver is registered, that receiver would receive an instantiated component's
+   * context immediately.
+   *
+   * If component already exists when the receiver is registered, that receiver would receive instantiated component's
+   * context only when/if component is {@link ComponentContext.whenOn connected}. This is to prevent resource leaking
+   * on disconnected components that may be never used again.
+   *
+   * @param receiver  Target receiver of instantiate component contexts.
+   *
+   * @returns Component instantiation events supply.
+   */
+  whenComponent(receiver: EventReceiver<[ComponentContext<T>]>): EventSupply;
 
   /**
    * Provides a value available in component definition context.

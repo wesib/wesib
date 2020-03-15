@@ -1,5 +1,5 @@
 import { filterIt, mapIt } from 'a-iterable';
-import { isPresent, nextArgs, NextCall, NextSkip, nextSkip } from 'call-thru';
+import { isPresent, nextArg, nextArgs, NextCall, NextSkip, nextSkip } from 'call-thru';
 import { ContextRegistry, ContextValueOpts, ContextValues, ContextValueSpec } from 'context-values';
 import { ContextUpKey } from 'context-values/updatable';
 import {
@@ -9,6 +9,7 @@ import {
   afterEventBy,
   afterThe,
   EventKeeper,
+  EventReceiver,
   EventSupply,
   nextAfterEvent,
   OnEvent,
@@ -62,7 +63,7 @@ export class FeatureKey extends ContextUpKey<AfterEvent<[FeatureLoader?]>, Featu
   ): AfterEvent<[FeatureLoader?]> | null | undefined {
     return loadFeature(
         opts.context.get(BootstrapContext),
-        opts.seed.keep.thru(preferredFeatureClause),
+        opts.seed.keepThru(preferredFeatureClause),
     );
   }
 
@@ -105,7 +106,7 @@ function loadFeature(
     return afterAll({
       clause: from,
       deps: loadFeatureDeps(bsContext, from),
-    }).keep.thru_(({ clause: [clause], deps }): NextCall<OnEventCallChain, [FeatureLoader?]> => {
+    }).keepThru_(({ clause: [clause], deps }): NextCall<OnEventCallChain, [FeatureLoader?]> => {
       if (!clause) {
         return nextArgs();
       }
@@ -120,7 +121,7 @@ function loadFeature(
 
       if (target !== origin) {
         // Originated from replacement feature provider. Reuse its loader.
-        return nextAfterEvent(source = bsContext.get(FeatureKey.of(origin)).keep.thru_(
+        return nextAfterEvent(source = bsContext.get(FeatureKey.of(origin)).keepThru_(
             loader => {
               loader!.to(stageId);
               stageId = loader!.stage;
@@ -134,12 +135,12 @@ function loadFeature(
       const ownSource = afterThe(ownLoader);
 
       return nextAfterEvent(source = afterEventBy<[FeatureLoader]>(
-          rcv => ownSource(rcv).whenOff(() => {
+          rcv => ownSource.to(rcv).whenOff(() => {
             stageId = ownLoader.unload();
           }),
       ).share()); // Can be accessed again when reused
-    })(receiver);
-  }).keep.thru(
+    }).to(receiver);
+  }).keepThru(
       preventDuplicateLoader(),
   );
 }
@@ -169,7 +170,7 @@ function loadFeatureDeps(
     bsContext: BootstrapContext,
     from: AfterEvent<[FeatureClause?]>,
 ): AfterEvent<FeatureLoader[]> {
-  return from.keep.thru_(clause => {
+  return from.keepThru_(clause => {
     if (!clause) {
       return nextArgs();
     }
@@ -187,7 +188,7 @@ function loadFeatureDeps(
                 needs,
                 dep => bsContext.get(FeatureKey.of(dep)),
             ),
-        ).keep.thru_(presentFeatureDeps),
+        ).keepThru_(presentFeatureDeps),
     );
   });
 }
@@ -383,25 +384,13 @@ function newFeatureContext(
   const componentContextRegistry = bsContext.get(ComponentContextRegistry);
   const registry = new ContextRegistry<FeatureContext>(bsContext);
   const elementBuilder = bsContext.get(ElementBuilder);
-  const onDefinition = elementBuilder.definitions.on.tillOff(unloader.supply);
-  const onComponent = elementBuilder.components.on.tillOff(unloader.supply);
 
-  class Context extends FeatureContext {
+  class FeatureContext$ extends FeatureContext {
 
     readonly get = registry.newValues().get;
-    readonly whenReady: OnEvent<[FeatureContext]>;
 
     constructor() {
       super();
-
-      const whenReady: OnEvent<[FeatureContext]> = afterAll({
-        st: loader.state,
-        bs: trackValue<BootstrapContext>().by(bsContext.whenReady),
-      }).thru(
-          ({ st: [ready], bs: [bs] }) => bs && ready ? nextArgs(this) : nextSkip(),
-      );
-
-      this.whenReady = whenReady.once;
       registry.provide({ a: FeatureContext, is: this });
       componentRegistry = new ComponentRegistry(this);
     }
@@ -410,12 +399,30 @@ function newFeatureContext(
       return loader.request.feature;
     }
 
-    get onDefinition(): OnEvent<[DefinitionContext]> {
-      return onDefinition;
+    whenReady(): OnEvent<[FeatureContext]>;
+    whenReady(receiver: EventReceiver<[FeatureContext]>): EventSupply;
+    whenReady(receiver?: EventReceiver<[FeatureContext]>): OnEvent<[FeatureContext]> | EventSupply {
+      return (this.whenReady = afterAll({
+        st: loader.state,
+        bs: trackValue<BootstrapContext>().by(bsContext.whenReady()),
+      }).thru(
+          ({
+            st: [ready],
+            bs: [bs],
+          }) => bs && ready ? nextArg(this) : nextSkip(),
+      ).once().F)(receiver);
     }
 
-    get onComponent(): OnEvent<[ComponentContext]> {
-      return onComponent;
+    onDefinition(): OnEvent<[DefinitionContext]>;
+    onDefinition(receiver: EventReceiver<[DefinitionContext]>): EventSupply;
+    onDefinition(receiver?: EventReceiver<[DefinitionContext]>): OnEvent<[DefinitionContext]> | EventSupply {
+      return (this.onDefinition = elementBuilder.definitions.on().tillOff(unloader.supply).F)(receiver);
+    }
+
+    onComponent(): OnEvent<[ComponentContext]>;
+    onComponent(receiver: EventReceiver<[ComponentContext]>): EventSupply;
+    onComponent(receiver?: EventReceiver<[ComponentContext]>): EventSupply | OnEvent<[ComponentContext]> {
+      return (this.onComponent = elementBuilder.components.on().tillOff(unloader.supply).F)(receiver);
     }
 
     provide<Deps extends any[], Src, Seed>(
@@ -446,5 +453,5 @@ function newFeatureContext(
 
   }
 
-  return [new Context(), unloader.supply];
+  return [new FeatureContext$(), unloader.supply];
 }

@@ -3,10 +3,57 @@
  * @module @wesib/wesib
  */
 import { nextArgs } from 'call-thru';
-import { EventSupply, eventSupply, EventSupply__symbol, OnEvent, StatePath, ValueTracker } from 'fun-events';
+import {
+  EventReceiver,
+  EventSupply,
+  eventSupply,
+  EventSupply__symbol,
+  eventSupplyOf,
+  OnEvent,
+  StatePath,
+  ValueTracker,
+} from 'fun-events';
 import { ComponentContext } from '../../component';
 import { ComponentState } from '../state';
 import { attributePathTo } from './attribute-path';
+
+class AttributeTracker extends ValueTracker<string | null> {
+
+  readonly [EventSupply__symbol] = eventSupply();
+
+  constructor(
+      private readonly _context: ComponentContext,
+      private readonly _name: string,
+      private readonly _path: StatePath,
+  ) {
+    super();
+  }
+
+  get it(): string | null {
+    return this._context.element.getAttribute(this._name);
+  }
+
+  set it(value: string | null) {
+    if (!eventSupplyOf(this).isOff) {
+      if (value == null) {
+        this._context.element.removeAttribute(this._name);
+      } else {
+        this._context.element.setAttribute(this._name, value);
+      }
+    }
+  }
+
+  on(): OnEvent<[string | null, string | null]>;
+  on(receiver: EventReceiver<[string | null, string | null]>): EventSupply;
+  on(
+      receiver?: EventReceiver<[string | null, string | null]>,
+  ): OnEvent<[string | null, string | null]> | EventSupply {
+    return (this.on = this._context.get(ComponentState).track(this._path).onUpdate().thru(
+        (_path, newValue, oldValue) => nextArgs(newValue, oldValue),
+    ).tillOff(this).F)(receiver);
+  }
+
+}
 
 /**
  * Creates a tracker of custom element's attribute value.
@@ -26,39 +73,5 @@ export function trackAttribute(
     name: string,
     path: StatePath = attributePathTo(name),
 ): ValueTracker<string | null> {
-
-  const { element }: { element: Element } = context;
-  const state = context.get(ComponentState).track(path);
-  const supply = eventSupply();
-  const on: OnEvent<[string | null, string | null]> = state.onUpdate.thru(
-      (_path, newValue, oldValue) => nextArgs(newValue, oldValue),
-  ).tillOff(supply);
-
-  class AttributeTracker extends ValueTracker<string | null> {
-
-    get on(): OnEvent<[string | null, string | null]> {
-      return on;
-    }
-
-    get [EventSupply__symbol](): EventSupply {
-      return supply;
-    }
-
-    get it(): string | null {
-      return element.getAttribute(name);
-    }
-
-    set it(value: string | null) {
-      if (!supply.isOff) {
-        if (value == null) {
-          element.removeAttribute(name);
-        } else {
-          element.setAttribute(name, value);
-        }
-      }
-    }
-
-  }
-
-  return new AttributeTracker();
+  return new AttributeTracker(context, name, path);
 }

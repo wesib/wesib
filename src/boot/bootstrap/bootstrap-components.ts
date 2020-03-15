@@ -3,7 +3,7 @@
  * @module @wesib/wesib
  */
 import { nextArgs, nextSkip } from 'call-thru';
-import { AfterEvent, afterEventBy, OnEvent, trackValue } from 'fun-events';
+import { AfterEvent, afterEventBy, EventReceiver, EventSupply, OnEvent, trackValue } from 'fun-events';
 import { newNamespaceAliaser } from 'namespace-aliaser';
 import { Class } from '../../common';
 import { ComponentClass, ComponentFactory, CustomElements } from '../../component/definition';
@@ -31,7 +31,7 @@ export function bootstrapComponents(...features: Class[]): BootstrapContext {
   const feature = features.length === 1 ? features[0] : bootstrapFeature(features);
 
   bootstrapContext.get(FeatureRequester).request(feature);
-  bootstrapContext.get(FeatureKey.of(feature))(loader => {
+  bootstrapContext.get(FeatureKey.of(feature)).to(loader => {
     loader!.init().then(complete);
   });
 
@@ -66,27 +66,28 @@ function initBootstrap(
   const stage = trackValue<BootstrapStage>(BootstrapStage.Init);
   const values = bootstrapContextRegistry.values;
 
-  class Context extends BootstrapContext {
+  class BootstrapContext$ extends BootstrapContext {
 
     readonly get = values.get;
-    readonly whenReady: OnEvent<[BootstrapContext]>;
 
     constructor() {
       super();
-
-      const whenReady: OnEvent<[BootstrapContext]> = stage.read.thru(
-          s => s ? nextArgs(this) : nextSkip(),
-      );
-
-      this.whenReady = whenReady.once;
       bootstrapContextRegistry.provide({ a: DefaultNamespaceAliaser, by: newNamespaceAliaser });
       bootstrapContextRegistry.provide({ a: BootstrapContext, is: this });
     }
 
     async whenDefined<C extends object>(componentType: ComponentClass<C>): Promise<ComponentFactory<C>> {
-      await this.whenReady;
+      await this.whenReady();
       await this.get(CustomElements).whenDefined(componentType);
       return componentFactoryOf(componentType);
+    }
+
+    whenReady(): OnEvent<[BootstrapContext]>;
+    whenReady(receiver: EventReceiver<[BootstrapContext]>): EventSupply;
+    whenReady(receiver?: EventReceiver<[BootstrapContext]>): OnEvent<[BootstrapContext]> | EventSupply {
+      return (this.whenReady = stage.read().thru(
+          s => s ? nextArgs(this) : nextSkip(),
+      ).once().F)(receiver);
     }
 
     load(feature: Class<any>): FeatureRef {
@@ -107,7 +108,7 @@ function initBootstrap(
           },
         });
 
-        this.get(FeatureKey.of(feature))({
+        this.get(FeatureKey.of(feature)).to({
           supply: receiver.supply,
           receive(_ctx, ldr) {
 
@@ -143,21 +144,22 @@ function initBootstrap(
       }).share();
 
       let whenDown: Promise<void>;
-      const supply = status(({ down }) => {
+      const supply = status.to(({ down }) => {
         whenDown = down!;
       });
-      const read: AfterEvent<[FeatureStatus]> = status.keep.thru(
-          info => info.status,
-      ).tillOff(supply);
 
       class Ref extends FeatureRef {
 
-        get read(): AfterEvent<[FeatureStatus]> {
-          return read;
-        }
-
         get down(): Promise<void> {
           return whenDown;
+        }
+
+        read(): AfterEvent<[FeatureStatus]>;
+        read(receiver: EventReceiver<[FeatureStatus]>): EventSupply;
+        read(receiver?: EventReceiver<[FeatureStatus]>): AfterEvent<[FeatureStatus]> | EventSupply {
+          return (this.read = status.tillOff(supply).keepThru(
+              info => info.status,
+          ).F)(receiver);
         }
 
         dismiss(reason?: any): Promise<void> {
@@ -172,7 +174,7 @@ function initBootstrap(
 
   }
 
-  const bootstrapContext = new Context();
+  const bootstrapContext = new BootstrapContext$();
 
   return {
     bootstrapContext,

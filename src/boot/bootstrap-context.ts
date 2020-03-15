@@ -3,7 +3,7 @@
  * @module @wesib/wesib
  */
 import { ContextKey, ContextKey__symbol, ContextValues } from 'context-values';
-import { OnEvent } from 'fun-events';
+import { EventReceiver, EventSupply, OnEvent } from 'fun-events';
 import { Class } from '../common';
 import { ComponentClass, ComponentFactory } from '../component/definition';
 import { FeatureRef } from '../feature';
@@ -29,13 +29,28 @@ export abstract class BootstrapContext extends ContextValues {
   }
 
   /**
-   * An `OnEvent` sender of bootstrap readiness event.
+   * Builds an `OnEvent` sender of bootstrap readiness event.
    *
    * The registered receiver will be notified once bootstrap is complete.
    *
    * If bootstrap is complete already, the receiver will be notified immediately.
+   *
+   * @returns `OnEvent` sender of ready bootstrap context.
    */
-  abstract readonly whenReady: OnEvent<[BootstrapContext]>;
+  abstract whenReady(): OnEvent<[BootstrapContext]>;
+
+  /**
+   * Registers a `receiver` of bootstrap readiness event.
+   *
+   * The registered receiver will be notified once bootstrap is complete.
+   *
+   * If bootstrap is complete already, the receiver will be notified immediately.
+   *
+   * @param receiver  Target receiver of reay bootstrap context.
+   *
+   * @returns Bootstrap readiness event supply.
+   */
+  abstract whenReady(receiver: EventReceiver<[BootstrapContext]>): EventSupply;
 
   /**
    * Allows to wait for component definition.

@@ -67,7 +67,7 @@ describe('component', () => {
 
         const mockListener = jest.fn();
 
-        dispatcher.on('click')(mockListener);
+        dispatcher.on('click').to(mockListener);
         expect(element.addEventListener).toHaveBeenCalledWith('click', expect.any(Function), undefined);
 
         const event = new KeyboardEvent('click');
