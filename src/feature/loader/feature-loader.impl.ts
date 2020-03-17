@@ -1,6 +1,6 @@
 import { filterIt, mapIt } from 'a-iterable';
-import { isPresent, nextArg, nextArgs, NextCall, NextSkip, nextSkip } from 'call-thru';
-import { ContextRegistry, ContextValueOpts, ContextValues, ContextValueSpec } from 'context-values';
+import { isPresent, nextArgs, NextCall, NextSkip, nextSkip } from 'call-thru';
+import { ContextValueOpts, ContextValues } from 'context-values';
 import { ContextUpKey } from 'context-values/updatable';
 import {
   afterAll,
@@ -9,27 +9,14 @@ import {
   afterEventBy,
   afterThe,
   EventKeeper,
-  EventReceiver,
-  EventSupply,
   nextAfterEvent,
-  OnEvent,
   OnEventCallChain,
   trackValue,
 } from 'fun-events';
 import { BootstrapContext } from '../../boot';
-import {
-  BootstrapContextRegistry,
-  ComponentContextRegistry,
-  DefinitionContextRegistry,
-  ElementBuilder,
-  newUnloader,
-  onPostDefSetup,
-} from '../../boot/impl';
 import { ArraySet, Class } from '../../common';
-import { ComponentContext } from '../../component';
-import { ComponentClass, DefinitionContext, DefinitionSetup } from '../../component/definition';
 import { FeatureContext } from '../feature-context';
-import { ComponentRegistry } from './component-registry.impl';
+import { FeatureContext$ } from './feature-context.impl';
 import { FeatureClause, FeatureRequest } from './feature-request.impl';
 
 const FeatureKey__symbol = (/*#__PURE__*/ Symbol('feature-key'));
@@ -305,7 +292,8 @@ class SetupFeatureStage extends FeatureStage {
     await this.perDep(loader => loader.setup());
 
     const { bsContext, request: { def } } = this.loader;
-    const [context, supply] = newFeatureContext(bsContext, this.loader);
+    const context = new FeatureContext$(bsContext, this.loader);
+    const supply = context._unloader.supply;
 
     def.setup?.(context);
 
@@ -371,87 +359,4 @@ class ActiveFeatureStage extends FeatureStage {
     return Promise.resolve(this);
   }
 
-}
-
-function newFeatureContext(
-    bsContext: BootstrapContext,
-    loader: FeatureLoader,
-): [FeatureContext, EventSupply] {
-
-  const unloader = newUnloader();
-  let componentRegistry: ComponentRegistry;
-  const definitionContextRegistry = bsContext.get(DefinitionContextRegistry);
-  const componentContextRegistry = bsContext.get(ComponentContextRegistry);
-  const registry = new ContextRegistry<FeatureContext>(bsContext);
-  const elementBuilder = bsContext.get(ElementBuilder);
-
-  class FeatureContext$ extends FeatureContext {
-
-    readonly get = registry.newValues().get;
-
-    constructor() {
-      super();
-      registry.provide({ a: FeatureContext, is: this });
-      componentRegistry = new ComponentRegistry(this);
-    }
-
-    get feature(): Class {
-      return loader.request.feature;
-    }
-
-    whenReady(): OnEvent<[FeatureContext]>;
-    whenReady(receiver: EventReceiver<[FeatureContext]>): EventSupply;
-    whenReady(receiver?: EventReceiver<[FeatureContext]>): OnEvent<[FeatureContext]> | EventSupply {
-      return (this.whenReady = afterAll({
-        st: loader.state,
-        bs: trackValue<BootstrapContext>().by(bsContext.whenReady()),
-      }).thru(
-          ({
-            st: [ready],
-            bs: [bs],
-          }) => bs && ready ? nextArg(this) : nextSkip(),
-      ).once().F)(receiver);
-    }
-
-    onDefinition(): OnEvent<[DefinitionContext]>;
-    onDefinition(receiver: EventReceiver<[DefinitionContext]>): EventSupply;
-    onDefinition(receiver?: EventReceiver<[DefinitionContext]>): OnEvent<[DefinitionContext]> | EventSupply {
-      return (this.onDefinition = elementBuilder.definitions.on().tillOff(unloader.supply).F)(receiver);
-    }
-
-    onComponent(): OnEvent<[ComponentContext]>;
-    onComponent(receiver: EventReceiver<[ComponentContext]>): EventSupply;
-    onComponent(receiver?: EventReceiver<[ComponentContext]>): EventSupply | OnEvent<[ComponentContext]> {
-      return (this.onComponent = elementBuilder.components.on().tillOff(unloader.supply).F)(receiver);
-    }
-
-    provide<Deps extends any[], Src, Seed>(
-        spec: ContextValueSpec<BootstrapContext, any, Deps, Src, Seed>,
-    ): () => void {
-      return unloader.add(() => bsContext.get(BootstrapContextRegistry).provide(spec));
-    }
-
-    perDefinition<Deps extends any[], Src, Seed>(
-        spec: ContextValueSpec<DefinitionContext, any, Deps, Src, Seed>,
-    ): () => void {
-      return unloader.add(() => definitionContextRegistry.provide(spec));
-    }
-
-    perComponent<Deps extends any[], Src, Seed>(
-        spec: ContextValueSpec<ComponentContext, any, Deps, Src, Seed>,
-    ): () => void {
-      return unloader.add(() => componentContextRegistry.provide(spec));
-    }
-
-    setupDefinition<T extends object>(componentType: ComponentClass<T>): OnEvent<[DefinitionSetup]> {
-      return onPostDefSetup(componentType, unloader);
-    }
-
-    define<T extends object>(componentType: ComponentClass<T>): void {
-      componentRegistry.define(componentType);
-    }
-
-  }
-
-  return [new FeatureContext$(), unloader.supply];
 }
