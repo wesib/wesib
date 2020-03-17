@@ -1,7 +1,6 @@
-import { ContextRegistry } from 'context-values';
-import { ComponentContext, ComponentMount } from '../../component';
-import { ComponentClass } from '../../component/definition';
+import { ComponentMount } from '../../component';
 import { ComponentContext$ } from './component-context.impl';
+import { DefinitionContext$ } from './definition-context.impl';
 
 class ComponentMount$<T extends object> extends ComponentMount<T> {
 
@@ -35,11 +34,10 @@ export class MountComponentContext$<T extends object> extends ComponentContext$<
   readonly mount: ComponentMount<T>;
 
   constructor(
+      definitionContext: DefinitionContext$<T>,
       element: any,
-      componentType: ComponentClass<T>,
-      createRegistry: () => ContextRegistry<ComponentContext<T>>,
   ) {
-    super(element, componentType, createRegistry, key => element[key]);
+    super(definitionContext, element, key => element[key]);
     this.mount = new ComponentMount$<T>(this);
   }
 

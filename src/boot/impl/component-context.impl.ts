@@ -1,7 +1,5 @@
 import { nextArgs, nextSkip } from 'call-thru';
-import { ContextRegistry } from 'context-values';
 import {
-  EventEmitter,
   EventReceiver,
   eventSupply,
   EventSupply,
@@ -12,7 +10,7 @@ import {
 } from 'fun-events';
 import { ComponentContext, ComponentContext__symbol, ComponentEvent } from '../../component';
 import { ComponentClass } from '../../component/definition';
-import { WhenComponent } from './when-component.impl';
+import { DefinitionContext$ } from './definition-context.impl';
 
 const enum ComponentStatus {
   Building,
@@ -31,19 +29,22 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
   private readonly _destructionReason = trackValue<[any] | undefined>();
 
   constructor(
+      readonly _definitionContext: DefinitionContext$<T>,
       readonly element: any,
-      readonly componentType: ComponentClass<T>,
-      createRegistry: () => ContextRegistry<ComponentContext<T>>,
       readonly elementSuper: (name: PropertyKey) => any,
   ) {
     super();
 
-    const registry = createRegistry();
+    const registry = _definitionContext._newComponentRegistry();
 
     registry.provide({ a: ComponentContext, is: this });
     this.get = registry.newValues().get;
 
     eventSupplyOf(this._status).whenOff(reason => this._destructionReason.it = [reason]);
+  }
+
+  get componentType(): ComponentClass<T> {
+    return this._definitionContext.componentType;
   }
 
   get component(): T {
@@ -102,17 +103,15 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
     this._status.done(reason);
   }
 
-  _createComponent(
-      whenComponent: WhenComponent<T>,
-      components: EventEmitter<[ComponentContext]>,
-  ): this {
+  _createComponent(): this {
+
+    const whenComponent = this._definitionContext._whenComponent;
 
     let lastRev = 0;
 
     this.whenDestroyed(() => removeElement(this));
 
     Object.defineProperty(this.element, ComponentContext__symbol, { value: this });
-
     whenComponent.readNotifier.once(notifier => lastRev = notifier(this, lastRev));
     this.whenOn(supply => {
       whenComponent.readNotifier.to({
@@ -122,9 +121,9 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
         },
       });
     });
-    components.send(this);
+    this._definitionContext._elementBuilder.components.send(this);
 
-    const component = newComponent(this.componentType, this);
+    const component = newComponent(this);
 
     Object.defineProperty(this, 'component', {
       configurable: true,
@@ -149,19 +148,9 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
 
 }
 
-/**
- * Creates new component of the given type.
- *
- * It makes component context available under `[ComponentContext__symbol]` key in constructed component.
- * The component context is also available inside component constructor by temporarily assigning it to component
- * prototype.
- *
- * @typeparam T  A type of component.
- * @param type  Component class constructor.
- * @param context  Target component context.
- */
-function newComponent<T extends object>(type: ComponentClass<T>, context: ComponentContext<T>): T {
+function newComponent<T extends object>(context: ComponentContext<T>): T {
 
+  const type = context.componentType;
   const proto = type.prototype as any;
   const prevContext = proto[ComponentContext__symbol];
 

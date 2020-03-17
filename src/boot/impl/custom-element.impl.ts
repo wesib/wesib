@@ -1,10 +1,8 @@
-import { ContextRegistry } from 'context-values';
-import { EventEmitter } from 'fun-events';
 import { Class } from '../../common';
-import { ComponentContext, ComponentContext__symbol } from '../../component';
-import { DefinitionContext, ElementDef } from '../../component/definition';
+import { ComponentContext__symbol } from '../../component';
+import { ElementDef } from '../../component/definition';
 import { ComponentContext$ } from './component-context.impl';
-import { WhenComponent } from './when-component.impl';
+import { DefinitionContext$ } from './definition-context.impl';
 
 class CustomComponentContext$<T extends object> extends ComponentContext$<T> {
 
@@ -18,10 +16,7 @@ class CustomComponentContext$<T extends object> extends ComponentContext$<T> {
  * @internal
  */
 export function customElementType<T extends object>(
-    definitionContext: DefinitionContext<T>,
-    whenComponent: WhenComponent<T>,
-    components: EventEmitter<[ComponentContext]>,
-    createRegistry: () => ContextRegistry<ComponentContext<T>>,
+    definitionContext: DefinitionContext$<T>,
 ): Class {
 
   const elementDef = definitionContext.get(ElementDef);
@@ -35,13 +30,12 @@ export function customElementType<T extends object>(
       super();
 
       const context = new CustomComponentContext$(
+          definitionContext,
           this,
-          definitionContext.componentType,
-          createRegistry,
           key => super[key],
       );
 
-      context._createComponent(whenComponent, components);
+      context._createComponent();
       context._created();
     }
 
