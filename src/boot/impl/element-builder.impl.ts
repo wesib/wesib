@@ -2,18 +2,12 @@ import { nextArgs, nextSkip, valueProvider } from 'call-thru';
 import { ContextRegistry, ContextValues, ContextValueSpec, SingleContextKey, SingleContextRef } from 'context-values';
 import { EventEmitter, EventReceiver, EventSupply, OnEvent, trackValue } from 'fun-events';
 import { Class } from '../../common';
-import { ComponentContext, ComponentContext__symbol, ComponentDef, ComponentMount } from '../../component';
-import {
-  ComponentClass,
-  ComponentFactory,
-  DefinitionContext,
-  DefinitionSetup,
-  ElementDef,
-} from '../../component/definition';
+import { ComponentContext, ComponentDef } from '../../component';
+import { ComponentClass, ComponentFactory, DefinitionContext, DefinitionSetup } from '../../component/definition';
 import { BootstrapContext } from '../bootstrap-context';
 import { bootstrapDefault } from '../bootstrap-default';
 import { ComponentContextRegistry } from './component-context-registry.impl';
-import { MountComponentContext$ } from './component-mount.impl';
+import { ComponentFactory$ } from './component-factory.impl';
 import { customElementType } from './custom-element.impl';
 import { DefinitionContextRegistry } from './definition-context-registry.impl';
 import { postDefSetup } from './post-def-setup.impl';
@@ -55,51 +49,6 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
       let componentContextRegistry$perType!: ComponentContextRegistry;
       const ready = trackValue(false);
       const whenReady: OnEvent<[]> = ready.read().thru(cls => cls ? nextArgs() : nextSkip());
-      // eslint-disable-next-line prefer-const
-      let definitionContext: DefinitionContext$;
-
-      function createComponentContextRegistry(): ContextRegistry<ComponentContext<T>> {
-        return componentContextRegistry$global.append(componentContextRegistry$perType);
-      }
-
-      class ComponentFactory$ extends ComponentFactory < T > {
-
-        get componentType(): ComponentClass<T> {
-          return definitionContext.componentType;
-        }
-
-        get elementType(): Class {
-          return definitionContext.elementType;
-        }
-
-        get elementDef(): ElementDef {
-          return definitionContext.elementDef;
-        }
-
-        mountTo(element: any): ComponentMount<T> {
-          if (element[ComponentContext__symbol]) {
-            throw new Error(`Element ${element} already bound to component`);
-          }
-
-          const context = new MountComponentContext$(
-              element,
-              definitionContext.componentType,
-              createComponentContextRegistry,
-          );
-
-          context._createComponent(whenComponent, components);
-
-          const { mount } = context;
-
-          mount.checkConnected();
-          context._created();
-
-          return mount;
-        }
-
-      }
-
-      const componentFactory = new ComponentFactory$();
 
       class DefinitionContext$ extends DefinitionContext<T> {
 
@@ -121,22 +70,30 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
           );
 
           definitionContextRegistry.provide({ a: DefinitionContext, is: this });
-          definitionContextRegistry.provide({ a: ComponentFactory, is: componentFactory });
+          definitionContextRegistry.provide({
+            a: ComponentFactory,
+            by: () => new ComponentFactory$<T>(
+                this,
+                () => componentContextRegistry$global.append(componentContextRegistry$perType),
+                whenComponent,
+                components,
+            ),
+          });
           this.get = definitionContextRegistry.newValues().get;
           componentContextRegistry$perType = new ComponentContextRegistry(definitionContextRegistry.seedIn(this));
 
-          const whenReady = this.whenReady().F;
-          const whenComponent = this.whenComponent().F;
+          const whenReady$ = this.whenReady().F;
+          const whenComponent$ = this.whenComponent().F;
 
           const definitionSetup: DefinitionSetup<T> = {
             get componentType() {
               return componentType;
             },
             get whenReady() {
-              return whenReady;
+              return whenReady$;
             },
             get whenComponent() {
-              return whenComponent;
+              return whenComponent$;
             },
             perDefinition(spec) {
               return definitionContextRegistry.provide(spec);
@@ -170,7 +127,7 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
 
       }
 
-      definitionContext = new DefinitionContext$();
+      const definitionContext = new DefinitionContext$();
 
       def.define?.(definitionContext);
       definitions.send(definitionContext);
@@ -179,7 +136,8 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
           definitionContext,
           whenComponent,
           components,
-          createComponentContextRegistry,
+          (): ContextRegistry<ComponentContext<T>> => componentContextRegistry$global.append(
+              componentContextRegistry$perType),
       );
 
       Object.defineProperty(definitionContext, 'elementType', {
@@ -190,7 +148,7 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
 
       ready.it = true;
 
-      return componentFactory;
+      return definitionContext.get(ComponentFactory);
     },
   };
 
