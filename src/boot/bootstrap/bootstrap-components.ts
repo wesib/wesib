@@ -2,9 +2,9 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { nextArgs, nextSkip } from 'call-thru';
-import { AfterEvent, afterEventBy, EventReceiver, EventSupply, OnEvent, trackValue } from 'fun-events';
-import { newNamespaceAliaser } from 'namespace-aliaser';
+import { nextArgs, nextSkip } from '@proc7ts/call-thru';
+import { AfterEvent, afterEventBy, EventReceiver, EventSupply, OnEvent, trackValue } from '@proc7ts/fun-events';
+import { newNamespaceAliaser } from '@proc7ts/namespace-aliaser';
 import { Class } from '../../common';
 import { ComponentClass, ComponentFactory, CustomElements } from '../../component/definition';
 import { FeatureDef, FeatureRef, FeatureStatus } from '../../feature';

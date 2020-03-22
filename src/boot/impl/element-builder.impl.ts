@@ -1,5 +1,5 @@
-import { SingleContextKey, SingleContextRef } from 'context-values';
-import { EventEmitter } from 'fun-events';
+import { SingleContextKey, SingleContextRef } from '@proc7ts/context-values';
+import { EventEmitter } from '@proc7ts/fun-events';
 import { ComponentContext } from '../../component';
 import { ComponentClass, ComponentFactory, DefinitionContext } from '../../component/definition';
 import { BootstrapContext } from '../bootstrap-context';

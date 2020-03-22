@@ -1,4 +1,4 @@
-import { StatePath } from 'fun-events';
+import { StatePath } from '@proc7ts/fun-events';
 import { ComponentContext } from '../../component';
 import { StatePropertyPath, statePropertyPathTo } from './state-property-path';
 import { StatePropertyUpdateReceiver } from './state-property.decorator';

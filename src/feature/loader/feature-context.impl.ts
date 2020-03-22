@@ -1,6 +1,6 @@
-import { nextArg, nextSkip } from 'call-thru';
-import { ContextRegistry, ContextValueSpec } from 'context-values';
-import { afterAll, EventReceiver, EventSupply, OnEvent, trackValue } from 'fun-events';
+import { nextArg, nextSkip } from '@proc7ts/call-thru';
+import { ContextRegistry, ContextValueSpec } from '@proc7ts/context-values';
+import { afterAll, EventReceiver, EventSupply, OnEvent, trackValue } from '@proc7ts/fun-events';
 import { BootstrapContext } from '../../boot';
 import {
   BootstrapContextRegistry,

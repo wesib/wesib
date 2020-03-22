@@ -1,4 +1,4 @@
-import { nextArgs, nextSkip } from 'call-thru';
+import { nextArgs, nextSkip } from '@proc7ts/call-thru';
 import {
   EventReceiver,
   eventSupply,
@@ -7,7 +7,7 @@ import {
   eventSupplyOf,
   OnEvent,
   trackValue,
-} from 'fun-events';
+} from '@proc7ts/fun-events';
 import { ComponentContext, ComponentContext__symbol, ComponentEvent } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { DefinitionContext$ } from './definition-context.impl';

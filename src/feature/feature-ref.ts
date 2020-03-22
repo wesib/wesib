@@ -2,7 +2,7 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { AfterEvent, AfterEvent__symbol, EventKeeper, EventReceiver, EventSupply } from 'fun-events';
+import { AfterEvent, AfterEvent__symbol, EventKeeper, EventReceiver, EventSupply } from '@proc7ts/fun-events';
 import { FeatureStatus } from './feature-status';
 
 /**

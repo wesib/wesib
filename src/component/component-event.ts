@@ -2,8 +2,8 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { SingleContextRef } from 'context-values';
-import { OnDomEvent } from 'fun-events/dom';
+import { SingleContextRef } from '@proc7ts/context-values';
+import { OnDomEvent } from '@proc7ts/fun-events/dom';
 import { ComponentContext } from './component-context';
 import { ComponentEventDispatcher__key } from './component-event.key.impl';
 

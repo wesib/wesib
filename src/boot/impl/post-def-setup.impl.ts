@@ -1,5 +1,5 @@
-import { nextArgs, nextSkip } from 'call-thru';
-import { EventEmitter, onAny, OnEvent, onEventBy, trackValue } from 'fun-events';
+import { nextArgs, nextSkip } from '@proc7ts/call-thru';
+import { EventEmitter, onAny, OnEvent, onEventBy, trackValue } from '@proc7ts/fun-events';
 import { superClassOf } from '../../common';
 import { ComponentDef__symbol } from '../../component';
 import { ComponentClass, DefinitionSetup } from '../../component/definition';

@@ -2,7 +2,7 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { valueProvider } from 'call-thru';
+import { valueProvider } from '@proc7ts/call-thru';
 import { Class, decoratePropertyAccessor, PropertyAccessorDescriptor } from '../common';
 import { ComponentDef, ComponentDef__symbol } from './component-def';
 import { Component, ComponentDecorator } from './component.decorator';

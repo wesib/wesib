@@ -1,7 +1,7 @@
-import { valueProvider } from 'call-thru';
-import { ContextValues, SingleContextKey } from 'context-values';
-import { SingleContextUpKey } from 'context-values/updatable';
-import { AfterEvent, EventEmitter, eventSupply, EventSupply } from 'fun-events';
+import { valueProvider } from '@proc7ts/call-thru';
+import { ContextValues, SingleContextKey } from '@proc7ts/context-values';
+import { SingleContextUpKey } from '@proc7ts/context-values/updatable';
+import { AfterEvent, EventEmitter, eventSupply, EventSupply } from '@proc7ts/fun-events';
 import { BootstrapContext } from '../../boot';
 import { BootstrapContextRegistry, ComponentContextRegistry, DefinitionContextRegistry } from '../../boot/impl';
 import { Class } from '../../common';

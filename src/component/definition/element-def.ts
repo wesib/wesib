@@ -2,8 +2,8 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { SingleContextKey, SingleContextRef } from 'context-values';
-import { QualifiedName } from 'namespace-aliaser';
+import { SingleContextKey, SingleContextRef } from '@proc7ts/context-values';
+import { QualifiedName } from '@proc7ts/namespace-aliaser';
 import { BootstrapWindow } from '../../boot/globals';
 import { Class } from '../../common';
 import { ComponentDef } from '../component-def';

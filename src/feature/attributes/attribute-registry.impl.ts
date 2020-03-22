@@ -1,4 +1,4 @@
-import { ContextKey, ContextKey__symbol, SingleContextKey } from 'context-values';
+import { ContextKey, ContextKey__symbol, SingleContextKey } from '@proc7ts/context-values';
 import { BootstrapWindow } from '../../boot/globals';
 import { Class, mergeFunctions } from '../../common';
 import { ComponentContext, ComponentMount } from '../../component';

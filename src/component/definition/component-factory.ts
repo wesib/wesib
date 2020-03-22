@@ -2,7 +2,7 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { ContextKey, ContextKey__symbol, SingleContextKey } from 'context-values';
+import { ContextKey, ContextKey__symbol, SingleContextKey } from '@proc7ts/context-values';
 import { Class } from '../../common';
 import { ComponentMount } from '../component-mount';
 import { ComponentClass } from './component-class';

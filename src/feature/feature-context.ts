@@ -2,8 +2,8 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { ContextKey, ContextKey__symbol, ContextValueSpec, SingleContextKey } from 'context-values';
-import { EventReceiver, EventSupply, OnEvent } from 'fun-events';
+import { ContextKey, ContextKey__symbol, ContextValueSpec, SingleContextKey } from '@proc7ts/context-values';
+import { EventReceiver, EventSupply, OnEvent } from '@proc7ts/fun-events';
 import { BootstrapContext, BootstrapSetup } from '../boot';
 import { Class } from '../common';
 import { ComponentContext } from '../component';

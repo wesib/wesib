@@ -1,6 +1,6 @@
-import { nextArgs, nextSkip, valueProvider } from 'call-thru';
-import { ContextValues, ContextValueSpec } from 'context-values';
-import { EventReceiver, EventSupply, OnEvent, trackValue } from 'fun-events';
+import { nextArgs, nextSkip, valueProvider } from '@proc7ts/call-thru';
+import { ContextValues, ContextValueSpec } from '@proc7ts/context-values';
+import { EventReceiver, EventSupply, OnEvent, trackValue } from '@proc7ts/fun-events';
 import { Class } from '../../common';
 import { ComponentContext, ComponentDef } from '../../component';
 import { ComponentClass, ComponentFactory, DefinitionContext, DefinitionSetup } from '../../component/definition';

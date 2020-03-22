@@ -2,7 +2,7 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { StatePath } from 'fun-events';
+import { StatePath } from '@proc7ts/fun-events';
 
 /**
  * Element rendering definition.

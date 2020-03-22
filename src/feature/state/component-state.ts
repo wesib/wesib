@@ -2,8 +2,8 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { ContextKey, ContextKey__symbol, SingleContextKey } from 'context-values';
-import { StateTracker } from 'fun-events';
+import { ContextKey, ContextKey__symbol, SingleContextKey } from '@proc7ts/context-values';
+import { StateTracker } from '@proc7ts/fun-events';
 
 /**
  * @internal

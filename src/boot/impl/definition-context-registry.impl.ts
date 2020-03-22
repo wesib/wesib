@@ -1,4 +1,4 @@
-import { ContextKey, ContextKey__symbol, ContextRegistry, SingleContextKey } from 'context-values';
+import { ContextKey, ContextKey__symbol, ContextRegistry, SingleContextKey } from '@proc7ts/context-values';
 import { DefinitionContext } from '../../component/definition';
 import { bootstrapDefault } from '../bootstrap-default';
 

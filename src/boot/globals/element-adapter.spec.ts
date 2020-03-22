@@ -1,4 +1,4 @@
-import { ContextRegistry, ContextValues } from 'context-values';
+import { ContextRegistry, ContextValues } from '@proc7ts/context-values';
 import { ComponentContext, ComponentContext__symbol } from '../../component';
 import { ElementAdapter } from './element-adapter';
 import Mock = jest.Mock;

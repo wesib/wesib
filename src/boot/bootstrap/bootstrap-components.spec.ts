@@ -1,5 +1,5 @@
-import { asis, noop } from 'call-thru';
-import { SingleContextKey } from 'context-values';
+import { asis, noop } from '@proc7ts/call-thru';
+import { SingleContextKey } from '@proc7ts/context-values';
 import { Class } from '../../common';
 import { Component, ComponentDef, ComponentDef__symbol } from '../../component';
 import { CustomElements } from '../../component/definition';

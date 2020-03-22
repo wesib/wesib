@@ -4,7 +4,7 @@ import {
   RenderSchedule,
   RenderScheduleOptions,
   RenderScheduler,
-} from 'render-scheduler';
+} from '@proc7ts/render-scheduler';
 import { DefaultRenderScheduler } from '../../boot/globals';
 import { Component, ComponentContext } from '../../component';
 import { MockElement, testElement } from '../../spec/test-element';

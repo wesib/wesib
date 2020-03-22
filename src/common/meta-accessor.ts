@@ -2,7 +2,7 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { flatMapIt, mapIt } from 'a-iterable';
+import { flatMapIt, mapIt } from '@proc7ts/a-iterable';
 import { Class, superClassOf } from './classes';
 
 /**

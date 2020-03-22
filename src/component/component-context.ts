@@ -2,9 +2,16 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { ContextKey, ContextKey__symbol, ContextValues } from 'context-values';
-import { EventReceiver, EventSupply, EventSupply__symbol, EventSupplyPeer, OnEvent, StatePath } from 'fun-events';
-import { OnDomEvent } from 'fun-events/dom';
+import { ContextKey, ContextKey__symbol, ContextValues } from '@proc7ts/context-values';
+import {
+  EventReceiver,
+  EventSupply,
+  EventSupply__symbol,
+  EventSupplyPeer,
+  OnEvent,
+  StatePath,
+} from '@proc7ts/fun-events';
+import { OnDomEvent } from '@proc7ts/fun-events/dom';
 import { ComponentContext__key } from './component-context.key.impl';
 import { ComponentEventDispatcher__key } from './component-event.key.impl';
 import { ComponentMount } from './component-mount';

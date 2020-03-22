@@ -2,8 +2,8 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { noop } from 'call-thru';
-import { RenderExecution } from 'render-scheduler';
+import { noop } from '@proc7ts/call-thru';
+import { RenderExecution } from '@proc7ts/render-scheduler';
 import { DefaultRenderScheduler } from '../../boot/globals';
 import { ComponentContext } from '../../component';
 import { ComponentState } from '../state';

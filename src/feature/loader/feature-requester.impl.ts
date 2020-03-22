@@ -1,4 +1,4 @@
-import { ContextKey, ContextKey__symbol, SingleContextKey } from 'context-values';
+import { ContextKey, ContextKey__symbol, SingleContextKey } from '@proc7ts/context-values';
 import { BootstrapContext, bootstrapDefault } from '../../boot';
 import { BootstrapContextRegistry } from '../../boot/impl';
 import { Class } from '../../common';

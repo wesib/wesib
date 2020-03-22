@@ -2,8 +2,8 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { ContextValueSpec } from 'context-values';
-import { EventReceiver, EventSupply, OnEvent } from 'fun-events';
+import { ContextValueSpec } from '@proc7ts/context-values';
+import { EventReceiver, EventSupply, OnEvent } from '@proc7ts/fun-events';
 import { Class } from '../common';
 import { ComponentContext } from '../component';
 import { ComponentClass, DefinitionContext, DefinitionSetup } from '../component/definition';

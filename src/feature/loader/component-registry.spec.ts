@@ -1,4 +1,4 @@
-import { noop } from 'call-thru';
+import { noop } from '@proc7ts/call-thru';
 import { BootstrapContext } from '../../boot';
 import { BootstrapContextRegistry, ElementBuilder } from '../../boot/impl';
 import { Class, mergeFunctions } from '../../common';

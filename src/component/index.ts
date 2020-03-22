@@ -1,7 +1,3 @@
-/**
- * @packageDocumentation
- * @module @wesib/wesib
- */
 export * from './component.decorator';
 export * from './component-context';
 export * from './component-def';

@@ -2,7 +2,7 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { SingleContextKey, SingleContextRef } from 'context-values';
+import { SingleContextKey, SingleContextRef } from '@proc7ts/context-values';
 import { BootstrapWindow } from './bootstrap-window';
 
 /**

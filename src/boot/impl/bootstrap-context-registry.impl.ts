@@ -1,4 +1,10 @@
-import { ContextKey, ContextKey__symbol, ContextRegistry, ContextValues, SingleContextKey } from 'context-values';
+import {
+  ContextKey,
+  ContextKey__symbol,
+  ContextRegistry,
+  ContextValues,
+  SingleContextKey,
+} from '@proc7ts/context-values';
 import { BootstrapContext } from '../bootstrap-context';
 
 const BootstrapContextRegistry__key = (

@@ -1,4 +1,4 @@
-import { itsEmpty, overArray } from 'a-iterable';
+import { itsEmpty, overArray } from '@proc7ts/a-iterable';
 import { Component } from '../../component';
 import { ComponentFactory } from '../../component/definition';
 import { MockElement, testComponentFactory } from '../../spec/test-element';

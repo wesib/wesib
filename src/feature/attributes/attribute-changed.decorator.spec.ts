@@ -1,4 +1,4 @@
-import { noop } from 'call-thru';
+import { noop } from '@proc7ts/call-thru';
 import { Component, ComponentContext } from '../../component';
 import { MockElement, testElement } from '../../spec/test-element';
 import { AttributeChanged } from './attribute-changed.decorator';

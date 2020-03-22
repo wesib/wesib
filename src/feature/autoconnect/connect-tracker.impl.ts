@@ -1,7 +1,7 @@
-import { filterIt, itsEach, overArray } from 'a-iterable';
-import { ContextKey, ContextKey__symbol, SingleContextKey } from 'context-values';
-import { noEventSupply } from 'fun-events';
-import { DomEventDispatcher } from 'fun-events/dom';
+import { filterIt, itsEach, overArray } from '@proc7ts/a-iterable';
+import { ContextKey, ContextKey__symbol, SingleContextKey } from '@proc7ts/context-values';
+import { noEventSupply } from '@proc7ts/fun-events';
+import { DomEventDispatcher } from '@proc7ts/fun-events/dom';
 import { BootstrapContext } from '../../boot';
 import { BootstrapRoot, ElementObserver } from '../../boot/globals';
 import { isElement } from '../../common';

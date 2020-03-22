@@ -2,7 +2,7 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { MultiContextKey, MultiContextRef } from 'context-values';
+import { MultiContextKey, MultiContextRef } from '@proc7ts/context-values';
 
 /**
  * Custom element attribute change callback signature.

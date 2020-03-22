@@ -1,6 +1,6 @@
-import { noop } from 'call-thru';
-import { SingleContextUpKey } from 'context-values/updatable';
-import { afterSupplied, afterThe } from 'fun-events';
+import { noop } from '@proc7ts/call-thru';
+import { SingleContextUpKey } from '@proc7ts/context-values/updatable';
+import { afterSupplied, afterThe } from '@proc7ts/fun-events';
 import { Class } from '../../common';
 import { Component, ComponentContext, ComponentMount } from '../../component';
 import { ComponentFactory, CustomElements, DefinitionContext } from '../../component/definition';

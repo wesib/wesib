@@ -1,7 +1,7 @@
-import { filterIt, mapIt } from 'a-iterable';
-import { isPresent, nextArgs, NextCall, NextSkip, nextSkip } from 'call-thru';
-import { ContextValueOpts, ContextValues } from 'context-values';
-import { ContextUpKey } from 'context-values/updatable';
+import { filterIt, mapIt } from '@proc7ts/a-iterable';
+import { isPresent, nextArgs, NextCall, NextSkip, nextSkip } from '@proc7ts/call-thru';
+import { ContextValueOpts, ContextValues } from '@proc7ts/context-values';
+import { ContextUpKey } from '@proc7ts/context-values/updatable';
 import {
   afterAll,
   afterEach,
@@ -12,7 +12,7 @@ import {
   nextAfterEvent,
   OnEventCallChain,
   trackValue,
-} from 'fun-events';
+} from '@proc7ts/fun-events';
 import { BootstrapContext } from '../../boot';
 import { ArraySet, Class } from '../../common';
 import { FeatureContext } from '../feature-context';

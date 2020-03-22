@@ -1,7 +1,3 @@
-/**
- * @packageDocumentation
- * @module @wesib/wesib
- */
 export * from './array-set';
 export * from './classes';
 export * from './decorators';

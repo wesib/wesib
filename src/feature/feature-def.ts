@@ -2,7 +2,7 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { itsReduction } from 'a-iterable';
+import { itsReduction } from '@proc7ts/a-iterable';
 import { BootstrapSetup } from '../boot';
 import { ArraySet, Class, mergeFunctions, MetaAccessor } from '../common';
 import { FeatureContext } from './feature-context';

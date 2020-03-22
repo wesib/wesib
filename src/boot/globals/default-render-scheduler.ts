@@ -2,10 +2,10 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { ContextValueOpts, ContextValues } from 'context-values';
-import { ContextUpKey, ContextUpRef } from 'context-values/updatable';
-import { AfterEvent, afterThe, EventKeeper, nextAfterEvent } from 'fun-events';
-import { newRenderSchedule, RenderScheduler } from 'render-scheduler';
+import { ContextValueOpts, ContextValues } from '@proc7ts/context-values';
+import { ContextUpKey, ContextUpRef } from '@proc7ts/context-values/updatable';
+import { AfterEvent, afterThe, EventKeeper, nextAfterEvent } from '@proc7ts/fun-events';
+import { newRenderSchedule, RenderScheduler } from '@proc7ts/render-scheduler';
 import { BootstrapWindow } from './bootstrap-window';
 
 /**

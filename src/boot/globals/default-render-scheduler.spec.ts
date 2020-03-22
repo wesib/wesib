@@ -1,5 +1,10 @@
 import Mock = jest.Mock;
-import { immediateRenderScheduler, RenderSchedule, RenderScheduler, setRenderScheduler } from 'render-scheduler';
+import {
+  immediateRenderScheduler,
+  RenderSchedule,
+  RenderScheduler,
+  setRenderScheduler,
+} from '@proc7ts/render-scheduler';
 import { Feature } from '../../feature';
 import { bootstrapComponents } from '../bootstrap';
 import { BootstrapContext } from '../bootstrap-context';

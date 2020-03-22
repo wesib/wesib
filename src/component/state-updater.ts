@@ -2,9 +2,9 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { noop, valueProvider } from 'call-thru';
-import { FnContextKey, FnContextRef } from 'context-values/updatable';
-import { StatePath } from 'fun-events';
+import { noop, valueProvider } from '@proc7ts/call-thru';
+import { FnContextKey, FnContextRef } from '@proc7ts/context-values/updatable';
+import { StatePath } from '@proc7ts/fun-events';
 
 /**
  * Component state updater function.

@@ -1,6 +1,6 @@
-import { SingleContextKey } from 'context-values';
-import { eventSupplyOf } from 'fun-events';
-import { DomEventDispatcher, OnDomEvent } from 'fun-events/dom';
+import { SingleContextKey } from '@proc7ts/context-values';
+import { eventSupplyOf } from '@proc7ts/fun-events';
+import { DomEventDispatcher, OnDomEvent } from '@proc7ts/fun-events/dom';
 import { ComponentContext__key } from './component-context.key.impl';
 import { ComponentEventDispatcher } from './component-event';
 

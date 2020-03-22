@@ -1,4 +1,4 @@
-import { StatePath } from 'fun-events';
+import { StatePath } from '@proc7ts/fun-events';
 import { Component, ComponentContext } from '../../component';
 import { ComponentClass, ComponentFactory } from '../../component/definition';
 import { MockElement, testComponentFactory, testElement } from '../../spec/test-element';

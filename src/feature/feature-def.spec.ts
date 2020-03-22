@@ -1,4 +1,4 @@
-import { noop } from 'call-thru';
+import { noop } from '@proc7ts/call-thru';
 import { Class } from '../common';
 import { FeatureContext } from './feature-context';
 import { FeatureDef, FeatureDef__symbol } from './feature-def';

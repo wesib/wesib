@@ -1,5 +1,5 @@
-import { ContextRegistry } from 'context-values';
-import { eventSupply, EventSupply__symbol } from 'fun-events';
+import { ContextRegistry } from '@proc7ts/context-values';
+import { eventSupply, EventSupply__symbol } from '@proc7ts/fun-events';
 import { MockElement } from '../spec/test-element';
 import { ComponentContext, ComponentContext__symbol } from './component-context';
 import { ComponentEvent, ComponentEventDispatcher } from './component-event';

@@ -2,7 +2,7 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { nextArgs } from 'call-thru';
+import { nextArgs } from '@proc7ts/call-thru';
 import {
   EventReceiver,
   EventSupply,
@@ -12,7 +12,7 @@ import {
   OnEvent,
   StatePath,
   ValueTracker,
-} from 'fun-events';
+} from '@proc7ts/fun-events';
 import { ComponentContext } from '../../component';
 import { ComponentState } from '../state';
 import { attributePathTo } from './attribute-path';

@@ -1,4 +1,4 @@
-import { ContextRegistry } from 'context-values';
+import { ContextRegistry } from '@proc7ts/context-values';
 import { BootstrapWindow } from './bootstrap-window';
 
 describe('boot', () => {

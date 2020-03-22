@@ -1,6 +1,6 @@
-import { noop } from 'call-thru';
-import { ContextKey, SingleContextKey } from 'context-values';
-import { EventSupply } from 'fun-events';
+import { noop } from '@proc7ts/call-thru';
+import { ContextKey, SingleContextKey } from '@proc7ts/context-values';
+import { EventSupply } from '@proc7ts/fun-events';
 import { Class } from '../../common';
 import { ComponentContext, ComponentDef, ComponentDef__symbol, ComponentEvent, ComponentMount } from '../../component';
 import { ComponentClass, ComponentFactory, DefinitionContext } from '../../component/definition';

@@ -1,4 +1,4 @@
-import { StatePath } from 'fun-events';
+import { StatePath } from '@proc7ts/fun-events';
 import { bootstrapComponents } from '../../boot/bootstrap';
 import { ComponentContext } from '../../component';
 import { ComponentState } from './component-state';

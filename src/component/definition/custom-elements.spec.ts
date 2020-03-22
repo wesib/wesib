@@ -1,5 +1,5 @@
-import { ContextRegistry } from 'context-values';
-import { NamespaceDef, newNamespaceAliaser } from 'namespace-aliaser';
+import { ContextRegistry } from '@proc7ts/context-values';
+import { NamespaceDef, newNamespaceAliaser } from '@proc7ts/namespace-aliaser';
 import { BootstrapContext } from '../../boot';
 import { BootstrapWindow, DefaultNamespaceAliaser } from '../../boot/globals';
 import { ComponentFactory__symbol } from '../../boot/impl/component-factory.symbol.impl';

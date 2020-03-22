@@ -2,7 +2,7 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { AIterable } from 'a-iterable';
+import { AIterable } from '@proc7ts/a-iterable';
 import { isArray } from './types.impl';
 
 /**
