@@ -77,8 +77,10 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
     try {
       this._status.done(reason);
     } finally {
-      removeElement(this.element);
+      delete (this.component as any)[ComponentContext__symbol];
+      delete this.element[ComponentContext__symbol];
       this._component = componentDestroyed;
+      removeElement(this.element);
     }
   }
 

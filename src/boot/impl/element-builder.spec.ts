@@ -367,8 +367,13 @@ describe('boot', () => {
           expect(done).toHaveBeenCalledWith(reason);
         });
         it('makes component unavailable', () => {
+
+          const { element, component } = componentContext;
+
           componentContext.destroy();
           expect(() => componentContext.component).toThrow(TypeError);
+          expect(element[ComponentDef__symbol]).toBeUndefined();
+          expect(component[ComponentDef__symbol]).toBeUndefined();
         });
       });
     });

@@ -106,13 +106,13 @@ describe('feature/render', () => {
     it('is not re-scheduled after component destruction', async () => {
 
       const context = await bootstrap();
-      const { component, element } = context;
+      const { element } = context;
 
       connected = true;
       element.connectedCallback();
       context.destroy();
       connected = false;
-      component.property = 'other';
+      context.updateState(domPropertyPathTo('property'), 'other', 'init');
       expect(mockRenderer).toHaveBeenCalledTimes(1);
     });
     it('is not rendered after component destruction', async () => {
