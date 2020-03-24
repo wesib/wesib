@@ -2,6 +2,7 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
+import { eventSupplyOf } from '@proc7ts/fun-events';
 import { ComponentContext, StateUpdater } from '../../component';
 import { FeatureDef, FeatureDef__symbol } from '../feature-def';
 import { ComponentState } from './component-state';
@@ -17,7 +18,7 @@ const StateSupport__feature: FeatureDef = {
 
         const state = new ComponentState();
 
-        context.whenDestroyed(reason => state.done(reason));
+        eventSupplyOf(context).whenOff(reason => state.done(reason));
 
         return state;
       },

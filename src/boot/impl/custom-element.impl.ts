@@ -40,11 +40,11 @@ export function customElementType<T extends object>(
     }
 
     connectedCallback(): void {
-      this[ComponentContext__symbol]._connect(true);
+      this[ComponentContext__symbol]._connect();
     }
 
     disconnectedCallback(): void {
-      this[ComponentContext__symbol]._connect(false);
+      this[ComponentContext__symbol].destroy();
     }
 
   }

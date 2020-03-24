@@ -164,9 +164,9 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    * The registered receiver is called when custom element is connected, i.e. its `connectedCallback()` method is
    * called. If component is connected already the receiver is called immediately.
    *
-   * @returns An `OnEvent` sender of connection supply that is cut off once custom element is disconnected.
+   * @returns An `OnEvent` sender of this component context when connected.
    */
-  abstract whenOn(): OnEvent<[EventSupply]>;
+  abstract whenConnected(): OnEvent<[this]>;
 
   /**
    * Registers a receiver of custom element connection events.
@@ -174,55 +174,11 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    * The registered receiver is called when custom element is connected, i.e. its `connectedCallback()` method is
    * called. If component is connected already the receiver is called immediately.
    *
-   * @param receiver  Target receiver of connection supply that is cut off once custom element is disconnected.
+   * @param receiver  Target receiver of this component context when connected.
    *
    * @returns Custom element connection events supply.
    */
-  abstract whenOn(receiver: EventReceiver<[EventSupply]>): EventSupply;
-
-  /**
-   * Builds an `OnEvent` sender of custom element disconnection events.
-   *
-   * The registered receiver is called when custom element is disconnected, i.e. its `disconnectedCallback()` method
-   * is called. If component is ready but disconnected, the receiver is called immediately.
-   *
-   * @returns An `OnEvent` sender of custom element disconnection events.
-   */
-  abstract whenOff(): OnEvent<[]>;
-
-  /**
-   * Registers a receiver of custom element disconnection events.
-   *
-   * The registered receiver is called when custom element is disconnected, i.e. its `disconnectedCallback()` method
-   * is called. If component is ready but disconnected, the receiver is called immediately.
-   *
-   * @param receiver  Target receiver of custom element disconnection events.
-   *
-   * @returns Custom element disconnection events supply.
-   */
-  abstract whenOff(receiver: EventReceiver<[]>): EventSupply;
-
-  /**
-   * Builds an `OnEvent` sender of component destruction event.
-   *
-   * The registered receiver is notified when [[destroy]] method is called. If the component is destroyed already
-   * the receiver is notified immediately.
-   *
-   * @returns An `OnEvent` sender of component destruction reason.
-   */
-  abstract whenDestroyed(): OnEvent<[any]>;
-
-  /**
-   * Registers a receiver of component destruction event.
-   *
-   * The registered receiver is notified when [[destroy]] method is called. If the component is destroyed already
-   * the receiver is notified immediately.
-   *
-   * @param receiver  Target receiver of component destruction reason.
-   *
-   * @returns Component destruction event supply.
-   */
-  abstract whenDestroyed(receiver: EventReceiver<[any]>): EventSupply;
+  abstract whenConnected(receiver: EventReceiver<[this]>): EventSupply;
 
   /**
    * Returns a `super` property value inherited from custom element parent.
@@ -264,6 +220,8 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    * After this method call the component should no longer be used.
    *
    * Note that component destruction is virtual. It is up to developer to decide when component is no longer needed.
+   * However the component is destroyed automatically once disconnected, i.e. when custom element's
+   * `disconnectedCallback()` method is called.
    *
    * @param reason  Optional reason of destruction.
    */

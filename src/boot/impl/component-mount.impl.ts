@@ -12,16 +12,25 @@ class ComponentMount$<T extends object> extends ComponentMount<T> {
     return this.context.connected;
   }
 
-  set connected(value: boolean) {
-    this.context._connect(value);
+  connect(): void {
+    this.context._connect();
   }
 
   checkConnected(): boolean {
 
     const el: Element = this.context.element;
     const doc = el.ownerDocument;
+    const connected = doc != null && doc.contains(el);
 
-    return this.connected = doc != null && doc.contains(el);
+    if (connected !== this.connected) {
+      if (connected) {
+        this.connect();
+      } else {
+        this.context.destroy();
+      }
+    }
+
+    return connected;
   }
 
 }
