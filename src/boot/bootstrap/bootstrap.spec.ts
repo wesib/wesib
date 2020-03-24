@@ -428,10 +428,10 @@ describe('boot', () => {
         expect(whenComponent21).toHaveBeenCalledTimes(1);
       });
       it('does not notify again when component is connected again', () => {
-        mount1.connected = false;
-        mount1.connected = true;
-        mount2.connected = true;
-        mount2.connected = true;
+        mount1.connect();
+        mount1.connect();
+        mount2.connect();
+        mount2.connect();
         expect(whenComponent11).toHaveBeenCalledTimes(1);
         expect(whenComponent12).toHaveBeenCalledTimes(1);
       });
@@ -440,18 +440,6 @@ describe('boot', () => {
         const whenComponent13 = jest.fn();
 
         mount1.context.get(DefinitionContext).whenComponent(whenComponent13);
-        expect(whenComponent13).toHaveBeenCalledWith(mount1.context);
-        expect(whenComponent13).toHaveBeenCalledTimes(1);
-      });
-      it('notifies new receiver when already instantiated component gets connected', () => {
-        mount1.connected = false;
-
-        const whenComponent13 = jest.fn();
-
-        mount1.context.get(DefinitionContext).whenComponent(whenComponent13);
-        expect(whenComponent13).not.toHaveBeenCalled();
-
-        mount1.connected = true;
         expect(whenComponent13).toHaveBeenCalledWith(mount1.context);
         expect(whenComponent13).toHaveBeenCalledTimes(1);
       });

@@ -83,8 +83,8 @@ export abstract class DefinitionContext<T extends object = any> extends ContextV
    * context immediately.
    *
    * If component already exists when the receiver is registered, that receiver would receive instantiated component's
-   * context only when/if component is {@link ComponentContext.whenOn connected}. This is to prevent resource leaking
-   * on disconnected components that may be never used again.
+   * context only when/if component is {@link ComponentContext.whenConnected connected}. This is to prevent resource
+   * leaks on destroyed components.
    *
    * @returns `OnEvent` sender of instantiated component context.
    */
@@ -97,8 +97,8 @@ export abstract class DefinitionContext<T extends object = any> extends ContextV
    * context immediately.
    *
    * If component already exists when the receiver is registered, that receiver would receive instantiated component's
-   * context only when/if component is {@link ComponentContext.whenOn connected}. This is to prevent resource leaking
-   * on disconnected components that may be never used again.
+   * context only when/if component is {@link ComponentContext.whenConnected connected}. This is to prevent resource
+   * leaks on destroyed components.
    *
    * @param receiver  Target receiver of instantiate component contexts.
    *

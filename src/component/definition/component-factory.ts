@@ -82,7 +82,7 @@ export abstract class ComponentFactory<T extends object = any> {
 
     const mount = this.mountTo(element);
 
-    mount.connected = true;
+    mount.connect();
 
     return mount;
   }

@@ -27,11 +27,9 @@ export abstract class ComponentMount<T extends object = any> {
   /**
    * Component connection state.
    *
-   * Updating this property triggers appropriate listeners registered in [[ComponentContext]].
-   *
    * The initial state is set by [[checkConnected]] method.
    */
-  abstract connected: boolean;
+  abstract readonly connected: boolean;
 
   /**
    * Mounted component.
@@ -48,9 +46,17 @@ export abstract class ComponentMount<T extends object = any> {
   }
 
   /**
+   * Forcibly connects mounted component element to the document.
+   */
+  abstract connect(): void;
+
+  /**
    * Checks whether the mounted component element is actually connected to its owning document.
    *
    * Updates the `connected` property and returns its value.
+   *
+   * When component is disconnected after it has been connected, the component is {@link ComponentContext.destroy
+   * destroyed}.
    *
    * @returns `true` if the component element is connected, or `false` otherwise.
    */

@@ -1,3 +1,4 @@
+import { eventSupplyOf } from '@proc7ts/fun-events';
 import { Component, ComponentContext } from '../component';
 import { ComponentClass } from '../component/definition';
 import { Feature } from '../feature';
@@ -122,10 +123,10 @@ describe('component instantiation', () => {
       });
     });
 
-    describe('whenOn listener', () => {
+    describe('whenConnected receiver', () => {
       it('is notified when custom element connected', async () => {
 
-        const listenerSpy = jest.fn();
+        const whenConnected = jest.fn();
 
         @Component({
           name: 'test-component',
@@ -136,8 +137,8 @@ describe('component instantiation', () => {
         class TestComponent {
 
           constructor(ctx: ComponentContext) {
-            ctx.whenOn(listenerSpy);
-            ctx.whenOn(() => expect(ctx.connected).toBe(true));
+            ctx.whenConnected(whenConnected);
+            ctx.whenConnected(() => expect(ctx.connected).toBe(true));
           }
 
         }
@@ -146,14 +147,14 @@ describe('component instantiation', () => {
 
         element.connectedCallback();
 
-        expect(listenerSpy).toHaveBeenCalled();
+        expect(whenConnected).toHaveBeenCalled();
       });
     });
 
-    describe('whenOff listener', () => {
+    describe('destruction callback', () => {
       it('is notified when custom element disconnected', async () => {
 
-        const listenerSpy = jest.fn();
+        const whenDestroyed = jest.fn();
 
         @Component({
           name: 'test-component',
@@ -164,19 +165,20 @@ describe('component instantiation', () => {
         class TestComponent {
 
           constructor(ctx: ComponentContext) {
-            ctx.whenOff(listenerSpy);
-            ctx.whenOff(() => expect(ctx.connected).toBe(false));
+            eventSupplyOf(ctx)
+                .whenOff(whenDestroyed)
+                .whenOff(() => expect(ctx.connected).toBe(false));
           }
 
         }
 
         const element: any = new (await testElement(TestComponent))();
 
-        expect(listenerSpy).not.toHaveBeenCalled();
+        expect(whenDestroyed).not.toHaveBeenCalled();
 
         element.disconnectedCallback();
 
-        expect(listenerSpy).toHaveBeenCalled();
+        expect(whenDestroyed).toHaveBeenCalled();
       });
     });
   });

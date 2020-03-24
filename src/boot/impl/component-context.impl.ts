@@ -1,4 +1,4 @@
-import { nextArgs, nextSkip } from '@proc7ts/call-thru';
+import { nextArg, nextArgs, nextSkip, valueProvider } from '@proc7ts/call-thru';
 import {
   EventReceiver,
   eventSupply,
@@ -15,8 +15,7 @@ import { DefinitionContext$ } from './definition-context.impl';
 const enum ComponentStatus {
   Building,
   Ready,
-  Off,
-  On,
+  Connected,
 }
 
 /**
@@ -26,7 +25,6 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
 
   readonly get: ComponentContext<T>['get'];
   private _status = trackValue<ComponentStatus>(ComponentStatus.Building);
-  private readonly _destructionReason = trackValue<[any] | undefined>();
 
   constructor(
       readonly _definitionContext: DefinitionContext$<T>,
@@ -39,8 +37,6 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
 
     registry.provide({ a: ComponentContext, is: this });
     this.get = registry.newValues().get;
-
-    eventSupplyOf(this._status).whenOff(reason => this._destructionReason.it = [reason]);
   }
 
   get componentType(): ComponentClass<T> {
@@ -48,15 +44,19 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
   }
 
   get component(): T {
-    throw new Error('The component is not constructed yet. Consider to use a `whenReady()` callback');
+    return this._component();
   }
 
   get connected(): boolean {
-    return this._status.it === ComponentStatus.On;
+    return this._status.it === ComponentStatus.Connected && !eventSupplyOf(this).isOff;
   }
 
   get [EventSupply__symbol](): EventSupply {
     return eventSupplyOf(this._status);
+  }
+
+  _component(): T {
+    throw new TypeError('Component is not constructed yet. Consider to use a `whenReady()` callback');
   }
 
   whenReady(): OnEvent<[this]>;
@@ -65,42 +65,21 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
     return (this.whenReady = this._status.read().thru(sts => sts ? nextArgs(this) : nextSkip()).once().F)(receiver);
   }
 
-  whenOn(): OnEvent<[EventSupply]>;
-  whenOn(receiver: EventReceiver<[EventSupply]>): EventSupply;
-  whenOn(receiver?: EventReceiver<[EventSupply]>): OnEvent<[EventSupply]> | EventSupply {
-    return (this.whenOn = this._status.read().thru_(
-        status => {
-          if (status !== ComponentStatus.On) {
-            return nextSkip();
-          }
-
-          const offSupply = eventSupply();
-
-          this.whenOff().once(() => offSupply.off()).cuts(offSupply);
-
-          return nextArgs(offSupply);
-        },
+  whenConnected(): OnEvent<[this]>;
+  whenConnected(receiver: EventReceiver<[this]>): EventSupply;
+  whenConnected(receiver?: EventReceiver<[this]>): OnEvent<[this]> | EventSupply {
+    return (this.whenConnected = this._status.read().thru_(
+        status => status === ComponentStatus.Connected ? nextArg(this) : nextSkip(),
     ).F)(receiver);
-  }
-
-  whenOff(): OnEvent<[]>;
-  whenOff(receiver: EventReceiver<[]>): EventSupply;
-  whenOff(receiver?: EventReceiver<[]>): EventSupply | OnEvent<[]> {
-    return (this.whenOff = this._status.read().thru_(
-        sts => sts === ComponentStatus.Off ? nextArgs() : nextSkip(),
-    ).F)(receiver);
-  }
-
-  whenDestroyed(): OnEvent<[any]>;
-  whenDestroyed(receiver: EventReceiver<[any]>): EventSupply;
-  whenDestroyed(receiver?: EventReceiver<[any]>): OnEvent<[any]> | EventSupply {
-    return (this.whenDestroyed = this._destructionReason.read().thru(
-        reason => reason ? nextArgs(reason[0]) : nextSkip(),
-    ).once().F)(receiver);
   }
 
   destroy(reason?: any): void {
-    this._status.done(reason);
+    try {
+      this._status.done(reason);
+    } finally {
+      removeElement(this.element);
+      this._component = componentDestroyed;
+    }
   }
 
   _createComponent(): this {
@@ -109,13 +88,11 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
 
     let lastRev = 0;
 
-    this.whenDestroyed(() => removeElement(this));
-
-    Object.defineProperty(this.element, ComponentContext__symbol, { value: this });
+    this.element[ComponentContext__symbol] = this;
     whenComponent.readNotifier.once(notifier => lastRev = notifier(this, lastRev));
-    this.whenOn(supply => {
+    this.whenConnected(() => {
       whenComponent.readNotifier.to({
-        supply,
+        supply: eventSupply().needs(this),
         receive: (_, notifier) => {
           lastRev = notifier(this, lastRev);
         },
@@ -125,23 +102,18 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
 
     const component = newComponent(this);
 
-    Object.defineProperty(this, 'component', {
-      configurable: true,
-      enumerable: true,
-      value: component,
-    });
-
+    this._component = valueProvider(component);
     this._status.it = ComponentStatus.Ready;
 
     return this;
   }
 
-  _connect(connect: boolean): void {
-    this._status.it = connect ? ComponentStatus.On : ComponentStatus.Off;
+  _connect(): void {
+    this._status.it = ComponentStatus.Connected;
   }
 
   _created(): void {
-    this.whenOn().once(
+    this.whenConnected().once(
         () => this.dispatchEvent(new ComponentEvent('wesib:component', { bubbles: true })),
     );
   }
@@ -159,7 +131,7 @@ function newComponent<T extends object>(context: ComponentContext<T>): T {
 
     const component = new type(context);
 
-    Object.defineProperty(component, ComponentContext__symbol, { value: context });
+    (component as any)[ComponentContext__symbol] = context;
 
     return component;
   } finally {
@@ -167,17 +139,15 @@ function newComponent<T extends object>(context: ComponentContext<T>): T {
   }
 }
 
-function removeElement(context: ComponentContext): void {
+function removeElement(element: Element): void {
 
-  const { element, mount } = context;
-
-  if (mount) {
-    mount.connected = false; // Disconnect mounted element
-  }
-
-  const parentNode: Element = element.parentElement;
+  const { parentNode } = element;
 
   if (parentNode) {
     parentNode.removeChild(element);
   }
+}
+
+function componentDestroyed(): never {
+  throw new TypeError('Component destroyed already');
 }

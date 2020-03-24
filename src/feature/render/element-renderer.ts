@@ -56,33 +56,26 @@ export const ElementRenderer = {
       def: RenderDef = {},
   ): void {
 
-    const { offline, path = [] } = def;
+    const { path = [] } = def;
     const stateTracker = context.get(ComponentState).track(path);
     const schedule = context.get(DefaultRenderScheduler)();
 
     let status = RenderStatus.Pending;
-    const stateSupply = stateTracker.onUpdate(() => {
-      if (offline || context.connected) {
-        scheduleRenderer();
-      } else {
-        status = RenderStatus.Pending; // Require rendering next time online
-      }
-    });
 
-    if (offline) {
-      scheduleRenderer();
-    } else {
-      context.whenOn(supply => {
-        supply.whenOff(cancelRenderer); // Prevent rendering while offline
-        if (status <= 0) { // There is an update to render. Either pending or previously cancelled.
-          scheduleRenderer();
-        }
-      }).whenOff(reason => {
-        // Component destroyed
-        cancelRenderer();
-        stateSupply.off(reason);
-      });
-    }
+    stateTracker.onUpdate(() => {
+      if (context.connected) {
+        scheduleRenderer();
+      }
+    }).needs(context);
+
+    context.whenConnected(() => {
+      if (status <= 0) { // There is an update to render. Either pending or previously cancelled.
+        scheduleRenderer();
+      }
+    }).whenOff(() => {
+      // Component destroyed
+      cancelRenderer();
+    });
 
     function scheduleRenderer(): void {
       status = RenderStatus.Scheduled;
