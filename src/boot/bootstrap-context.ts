@@ -5,7 +5,7 @@
 import { ContextKey, ContextKey__symbol, ContextValues } from '@proc7ts/context-values';
 import { EventReceiver, EventSupply, OnEvent } from '@proc7ts/fun-events';
 import { Class } from '../common';
-import { ComponentClass, ComponentFactory } from '../component/definition';
+import { ComponentClass, DefinitionContext } from '../component/definition';
 import { FeatureRef } from '../feature';
 import { BootstrapContext__key } from './bootstrap-context.key.impl';
 
@@ -59,11 +59,11 @@ export abstract class BootstrapContext extends ContextValues {
    *
    * @param componentType  Component class constructor.
    *
-   * @return A promise that is resolved to component factory when the given `componentType` is registered.
+   * @return A promise that is resolved to component definition context when the given `componentType` is registered.
    *
    * @throws TypeError  If `componentType` does not contain a component definition.
    */
-  abstract whenDefined<C extends object>(componentType: ComponentClass<C>): Promise<ComponentFactory<C>>;
+  abstract whenDefined<C extends object>(componentType: ComponentClass<C>): Promise<DefinitionContext<C>>;
 
   /**
    * Allows to loads the given `feature`.

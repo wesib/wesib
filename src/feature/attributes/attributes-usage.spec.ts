@@ -1,7 +1,7 @@
 import { BootstrapWindow } from '../../boot/globals';
 import { Component, ComponentContext } from '../../component';
-import { ComponentClass, ComponentFactory } from '../../component/definition';
-import { MockElement, testComponentFactory, testElement } from '../../spec/test-element';
+import { ComponentClass, DefinitionContext } from '../../component/definition';
+import { MockElement, testDefinition, testElement } from '../../spec/test-element';
 import { Feature } from '../feature.decorator';
 import { AttributeChanged } from './attribute-changed.decorator';
 import { AttributePath__root } from './attribute-path';
@@ -149,12 +149,12 @@ describe('feature/attributes', () => {
 
     describe('mounted attribute', () => {
 
-      let factory: ComponentFactory;
+      let defContext: DefinitionContext;
 
       beforeEach(async () => {
-        factory = await testComponentFactory(testComponent);
+        defContext = await testDefinition(testComponent);
         element = new MockElement();
-        factory.mountTo(element);
+        defContext.mountTo(element);
       });
 
       it('creates mutation observer', () => {
@@ -212,7 +212,7 @@ describe('feature/attributes', () => {
         }
 
         const noAttrElement = new MockElement();
-        const noAttrFactory = await testComponentFactory(NoAttrComponent);
+        const noAttrFactory = await testDefinition(NoAttrComponent);
 
         noAttrFactory.mountTo(noAttrElement);
 

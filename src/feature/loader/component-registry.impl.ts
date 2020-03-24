@@ -1,5 +1,4 @@
 import { ElementBuilder } from '../../boot/impl';
-import { ComponentFactory__symbol } from '../../boot/impl/component-factory.symbol.impl';
 import { ComponentClass, CustomElements } from '../../component/definition';
 import { FeatureContext } from '../feature-context';
 
@@ -25,11 +24,9 @@ export class ComponentRegistry {
     this._definitionQueue.push(() => {
 
       const elementBuilder = this._context.get(ElementBuilder);
-      const factory = elementBuilder.buildElement(componentType);
+      const defContext = elementBuilder.buildElement(componentType);
 
-      (componentType as any)[ComponentFactory__symbol] = factory;
-
-      this.customElements.define(componentType, factory.elementType);
+      this.customElements.define(componentType, defContext.elementType);
     });
   }
 

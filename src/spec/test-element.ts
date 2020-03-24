@@ -1,9 +1,9 @@
 import { bootstrapComponents } from '../boot/bootstrap';
 import { Class } from '../common';
-import { ComponentClass, ComponentFactory, CustomElements } from '../component/definition';
+import { ComponentClass, CustomElements, DefinitionContext } from '../component/definition';
 import { Feature } from '../feature';
 
-export function testComponentFactory<T extends object>(componentType: Class<T>): Promise<ComponentFactory<T>> {
+export function testDefinition<T extends object>(componentType: Class<T>): Promise<DefinitionContext<T>> {
 
   const customElements: CustomElements = {
 

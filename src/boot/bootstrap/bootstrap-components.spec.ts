@@ -7,7 +7,7 @@ import { FeatureContext, FeatureDef } from '../../feature';
 import { BootstrapContext } from '../bootstrap-context';
 import { DefaultNamespaceAliaser } from '../globals';
 import { BootstrapContextRegistry, ComponentContextRegistry, DefinitionContextRegistry, ElementBuilder } from '../impl';
-import { ComponentFactory__symbol } from '../impl/component-factory.symbol.impl';
+import { DefinitionContext__symbol } from '../impl/definition-context.symbol.impl';
 import { bootstrapComponents } from './bootstrap-components';
 import Mock = jest.Mock;
 import SpyInstance = jest.SpyInstance;
@@ -60,7 +60,7 @@ describe('boot', () => {
         class Element {}
         const componentFactory = { elementType: Element, componentType: TestComponent };
 
-        (TestComponent as any)[ComponentFactory__symbol] = componentFactory;
+        (TestComponent as any)[DefinitionContext__symbol] = componentFactory;
 
         expect(await context.whenDefined(TestComponent)).toBe(componentFactory);
         expect(whenDefinedSpy).toHaveBeenCalledWith(TestComponent);
@@ -141,7 +141,7 @@ describe('boot', () => {
         class Element {}
 
         const componentFactory = { elementType: Element, componentType: TestComponent };
-        (TestComponent as any)[ComponentFactory__symbol] = componentFactory;
+        (TestComponent as any)[DefinitionContext__symbol] = componentFactory;
 
         expect(await featureContext.whenDefined(TestComponent)).toBe(componentFactory);
         expect(whenDefinedSpy).toHaveBeenCalledWith(TestComponent);
@@ -213,13 +213,13 @@ describe('boot', () => {
 
             class Element {}
 
-            (TestComponent as any)[ComponentFactory__symbol] = { elementType: Element, componentType: TestComponent };
+            (TestComponent as any)[DefinitionContext__symbol] = { elementType: Element, componentType: TestComponent };
 
             await bootstrapContext.whenDefined(TestComponent);
 
             expect(whenDefinedSpy).toHaveBeenCalledWith(TestComponent);
           });
-          it('fails if component factory is absent', async () => {
+          it('fails if component definition is absent', async () => {
             expect(await bootstrapContext.whenDefined(TestComponent).catch(asis)).toBeInstanceOf(TypeError);
             expect(whenDefinedSpy).toHaveBeenCalledWith(TestComponent);
           });

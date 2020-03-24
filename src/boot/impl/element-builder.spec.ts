@@ -3,7 +3,7 @@ import { ContextKey, SingleContextKey } from '@proc7ts/context-values';
 import { eventSupplyOf } from '@proc7ts/fun-events';
 import { Class } from '../../common';
 import { ComponentContext, ComponentDef, ComponentDef__symbol, ComponentEvent, ComponentMount } from '../../component';
-import { ComponentClass, ComponentFactory, DefinitionContext } from '../../component/definition';
+import { ComponentClass, DefinitionContext } from '../../component/definition';
 import { MockElement } from '../../spec/test-element';
 import { BootstrapContext } from '../bootstrap-context';
 import { BootstrapContextRegistry } from './bootstrap-context-registry.impl';
@@ -43,15 +43,15 @@ describe('boot', () => {
     });
 
     describe('buildElement', () => {
-      it('builds component factory', () => {
-        expect(builder.buildElement(TestComponent)).toBeInstanceOf(ComponentFactory);
+      it('builds component definition context', () => {
+        expect(builder.buildElement(TestComponent)).toBeInstanceOf(DefinitionContext);
       });
       it('builds custom element', () => {
 
-        const factory = builder.buildElement(TestComponent);
+        const defContext = builder.buildElement(TestComponent);
 
-        expect(factory.elementType.prototype).toBeInstanceOf(HTMLElement);
-        expect(factory.elementDef).toEqual({
+        expect(defContext.elementType.prototype).toBeInstanceOf(HTMLElement);
+        expect(defContext.elementDef).toEqual({
           name: 'test-component',
           extend: {
             type: HTMLElement,
@@ -66,10 +66,10 @@ describe('boot', () => {
           },
         });
 
-        const factory = builder.buildElement(TestComponent);
+        const defContext = builder.buildElement(TestComponent);
 
-        expect(factory.elementType.prototype).toBeInstanceOf(HTMLInputElement);
-        expect(factory.elementDef).toEqual({
+        expect(defContext.elementType.prototype).toBeInstanceOf(HTMLInputElement);
+        expect(defContext.elementDef).toEqual({
           name: 'test-component',
           extend: {
             name: 'input',
@@ -96,19 +96,6 @@ describe('boot', () => {
         expect(ctx2.element).toBe(element2);
         expect(ctx1.get(ComponentContext)).toBe(ctx1);
         expect(ctx2.get(ComponentContext)).toBe(ctx2);
-      });
-    });
-
-    describe('component factory', () => {
-
-      let factory: ComponentFactory;
-
-      beforeEach(() => {
-        factory = builder.buildElement(TestComponent);
-      });
-
-      it('refers the component type', () => {
-        expect(factory.componentType).toBe(TestComponent);
       });
     });
 
@@ -209,17 +196,20 @@ describe('boot', () => {
         );
       });
 
-      let factory: ComponentFactory;
+      let defContext: DefinitionContext;
 
       beforeEach(() => {
-        factory = builder.buildElement(TestComponent);
+        defContext = builder.buildElement(TestComponent);
       });
 
+      it('is returned by element builder', () => {
+        expect(defContext).toBe(definitionContext);
+      });
+      it('refers the component type', () => {
+        expect(defContext.componentType).toBe(TestComponent);
+      });
       it('contains itself', () => {
         expect(definitionContext.get(DefinitionContext)).toBe(definitionContext);
-      });
-      it('contains component factory', () => {
-        expect(definitionContext.get(ComponentFactory)).toBe(factory);
       });
       it('contains definition context values', () => {
         expect(definitionContext.get(key)).toBe('definition value');
@@ -380,14 +370,14 @@ describe('boot', () => {
 
     describe('mounted element', () => {
 
-      let factory: ComponentFactory;
+      let defContext: DefinitionContext;
       let element: any;
       let mount: ComponentMount;
       let context: ComponentContext;
       let dispatchEventSpy: Mock<void, [Event]>;
 
       beforeEach(() => {
-        factory = builder.buildElement(TestComponent);
+        defContext = builder.buildElement(TestComponent);
         dispatchEventSpy = jest.fn();
         class Element {
 
@@ -403,7 +393,7 @@ describe('boot', () => {
       });
 
       function doMount(): void {
-        mount = factory.mountTo(element);
+        mount = defContext.mountTo(element);
         context = mount.context;
       }
 
@@ -421,7 +411,7 @@ describe('boot', () => {
       });
       it('fails is already bound', () => {
         doMount();
-        expect(() => factory.mountTo(element)).toThrow('already bound');
+        expect(() => defContext.mountTo(element)).toThrow('already bound');
       });
       it('dispatches component event when connected', () => {
         doMount();
@@ -529,16 +519,16 @@ describe('boot', () => {
 
     describe('connected element', () => {
 
-      let factory: ComponentFactory;
+      let defContext: DefinitionContext;
       let element: any;
       let mount: ComponentMount;
       let context: ComponentContext;
 
       beforeEach(() => {
-        factory = builder.buildElement(TestComponent);
+        defContext = builder.buildElement(TestComponent);
 
         element = new MockElement();
-        mount = factory.connectTo(element);
+        mount = defContext.connectTo(element);
         context = mount.context;
       });
 

@@ -2,8 +2,8 @@ import Mock = jest.Mock;
 import Mocked = jest.Mocked;
 import { BootstrapRoot, ElementObserver } from '../../boot/globals';
 import { Component } from '../../component';
-import { ComponentFactory } from '../../component/definition';
-import { MockElement, testComponentFactory } from '../../spec/test-element';
+import { DefinitionContext } from '../../component/definition';
+import { MockElement, testDefinition } from '../../spec/test-element';
 import { Feature } from '../feature.decorator';
 import { ShadowDomEvent } from '../shadow-dom';
 import { AutoConnectSupport } from './auto-connect-support.feature';
@@ -42,7 +42,7 @@ describe('feature/autoconnect', () => {
       element = document.createElement('div');
     });
 
-    let factory: ComponentFactory;
+    let defContext: DefinitionContext;
 
     beforeEach(async () => {
 
@@ -61,7 +61,7 @@ describe('feature/autoconnect', () => {
       })
       class TestComponent {}
 
-      factory = await testComponentFactory(TestComponent);
+      defContext = await testDefinition(TestComponent);
     });
 
     it('starts tracking', () => {
@@ -82,7 +82,7 @@ describe('feature/autoconnect', () => {
 
       jest.spyOn(element, 'shadowRoot', 'get').mockImplementation(() => shadowRoot);
 
-      factory.mountTo(element);
+      defContext.mountTo(element);
       root.appendChild(element);
       update([{ type: 'childList', addedNodes: [element] as any, removedNodes: [] as any }]);
 
@@ -90,7 +90,7 @@ describe('feature/autoconnect', () => {
     });
     it('tracks attached shadow root', () => {
       root.appendChild(element);
-      factory.mountTo(element);
+      defContext.mountTo(element);
 
       const shadowRoot = element.attachShadow({ mode: 'closed' });
 
@@ -102,7 +102,7 @@ describe('feature/autoconnect', () => {
     });
     it('starts shadow root tracking only once', () => {
       root.appendChild(element);
-      factory.mountTo(element);
+      defContext.mountTo(element);
 
       const shadowRoot = element.attachShadow({ mode: 'closed' });
 
@@ -117,7 +117,7 @@ describe('feature/autoconnect', () => {
       const shadowRoot = element.attachShadow({ mode: 'closed' });
 
       jest.spyOn(element, 'shadowRoot', 'get').mockImplementation(() => shadowRoot);
-      factory.mountTo(element);
+      defContext.mountTo(element);
 
       root.appendChild(element);
       update([{ type: 'childList', addedNodes: [element] as any, removedNodes: [] as any }]);
@@ -131,7 +131,7 @@ describe('feature/autoconnect', () => {
       const shadowRoot = element.attachShadow({ mode: 'closed' });
 
       jest.spyOn(element, 'shadowRoot', 'get').mockImplementation(() => shadowRoot);
-      factory.mountTo(element);
+      defContext.mountTo(element);
 
       root.appendChild(element);
       update([{ type: 'childList', addedNodes: [element] as any, removedNodes: [] as any }]);

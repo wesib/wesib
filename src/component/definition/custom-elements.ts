@@ -5,7 +5,7 @@
 import { ContextKey, ContextKey__symbol, ContextValues, SingleContextKey } from '@proc7ts/context-values';
 import { html__naming, isQualifiedName, QualifiedName } from '@proc7ts/namespace-aliaser';
 import { BootstrapWindow, DefaultNamespaceAliaser } from '../../boot/globals';
-import { componentFactoryOf } from '../../boot/impl/component-factory.symbol.impl';
+import { definitionContextOf } from '../../boot/impl/definition-context.symbol.impl';
 import { Class, PromiseResolver } from '../../common';
 import { ComponentClass } from './component-class';
 
@@ -81,8 +81,8 @@ function createCustomElements(values: ContextValues): CustomElements {
         return;
       }
 
-      const factory = componentFactoryOf(componentTypeOrName);
-      const { name, extend } = factory.elementDef;
+      const defContext = definitionContextOf(componentTypeOrName);
+      const { name, extend } = defContext.elementDef;
 
       if (!name) {
         componentResolver(componentTypeOrName).resolve(undefined);
@@ -106,8 +106,8 @@ function createCustomElements(values: ContextValues): CustomElements {
         return customElements.whenDefined(html__naming.name(componentTypeOrName, nsAlias));
       }
 
-      const factory = componentFactoryOf(componentTypeOrName);
-      const { name } = factory.elementDef;
+      const defContext = definitionContextOf(componentTypeOrName);
+      const { name } = defContext.elementDef;
 
       if (!name) {
         return componentResolver(componentTypeOrName).promise;

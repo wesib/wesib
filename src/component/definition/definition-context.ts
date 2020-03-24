@@ -6,6 +6,7 @@ import { ContextKey, ContextKey__symbol, ContextValues, ContextValueSpec } from 
 import { EventReceiver, EventSupply, OnEvent } from '@proc7ts/fun-events';
 import { Class } from '../../common';
 import { ComponentContext } from '../component-context';
+import { ComponentMount } from '../component-mount';
 import { ComponentClass } from './component-class';
 import { DefinitionContext__key } from './definition.context.key.impl';
 import { ElementDef } from './element-def';
@@ -75,6 +76,46 @@ export abstract class DefinitionContext<T extends object = any> extends ContextV
    * @returns Component definition readiness event supply.
    */
   abstract whenReady(receiver: EventReceiver<[this]>): EventSupply;
+
+  /**
+   * Mounts a component to arbitrary element.
+   *
+   * This method creates a component, but instead of creating a custom element for, it mounts it to the target
+   * `element`.
+   *
+   * It is up to the features to update the target element. They can use a `ComponentContext.mount` property to check
+   * whether the component is mounted or is constructed in standard way.
+   *
+   * The constructed component will be in disconnected state. To update its connection state either update a
+   * `ComponentMount.connected` property, or use a `connectTo()` method.
+   *
+   * @param element  Target element to mount new component to.
+   *
+   * @returns New component mount.
+   *
+   * @throws Error If target element is already bound to some component.
+   */
+  abstract mountTo(element: any): ComponentMount<T>;
+
+  /**
+   * Connects a component to arbitrary element.
+   *
+   * This method does the same as `mountTo()`, but also marks the mounted component as connected.
+   *
+   * @param element  Target element to mount new component to.
+   *
+   * @returns New component mount.
+   *
+   * @throws Error If target element is already bound to some component.
+   */
+  connectTo(element: any): ComponentMount<T> {
+
+    const mount = this.mountTo(element);
+
+    mount.connect();
+
+    return mount;
+  }
 
   /**
    * Builds an `OnEvent` sender of component context upon its instantiation.

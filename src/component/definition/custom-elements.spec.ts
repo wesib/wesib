@@ -2,11 +2,11 @@ import { ContextRegistry } from '@proc7ts/context-values';
 import { NamespaceDef, newNamespaceAliaser } from '@proc7ts/namespace-aliaser';
 import { BootstrapContext } from '../../boot';
 import { BootstrapWindow, DefaultNamespaceAliaser } from '../../boot/globals';
-import { ComponentFactory__symbol } from '../../boot/impl/component-factory.symbol.impl';
+import { DefinitionContext__symbol } from '../../boot/impl/definition-context.symbol.impl';
 import { Class } from '../../common';
 import { ComponentClass } from './component-class';
-import { ComponentFactory } from './component-factory';
 import { CustomElements } from './custom-elements';
+import { DefinitionContext } from './definition-context';
 import Mocked = jest.Mocked;
 
 describe('component', () => {
@@ -45,7 +45,7 @@ describe('component', () => {
     beforeEach(() => {
       TestComponent = class {
 
-        static [ComponentFactory__symbol]: Partial<ComponentFactory> = {
+        static [DefinitionContext__symbol]: Partial<DefinitionContext> = {
           elementDef: {
             name: 'test-component',
             extend: {
@@ -72,7 +72,7 @@ describe('component', () => {
         const ns = new NamespaceDef('test/url', 'test');
         class NsComponent {
 
-          static [ComponentFactory__symbol]: Partial<ComponentFactory> = {
+          static [DefinitionContext__symbol]: Partial<DefinitionContext> = {
             elementDef: {
               name: ['other', ns],
               extend: {
@@ -98,7 +98,7 @@ describe('component', () => {
 
         class AnonymousComponent {
 
-          static [ComponentFactory__symbol]: Partial<ComponentFactory> = {
+          static [DefinitionContext__symbol]: Partial<DefinitionContext> = {
             elementDef: {
               extend: {
                 get type() {
@@ -118,7 +118,7 @@ describe('component', () => {
 
         class BaseElement {
 
-          static [ComponentFactory__symbol]: Partial<ComponentFactory> = {
+          static [DefinitionContext__symbol]: Partial<DefinitionContext> = {
             elementDef: {
               extend: {
                 type: BaseElement,
@@ -128,7 +128,7 @@ describe('component', () => {
 
         }
 
-        (TestComponent as any)[ComponentFactory__symbol] = {
+        (TestComponent as any)[DefinitionContext__symbol] = {
           elementDef: {
             name: 'test-component',
             extend: {
@@ -146,7 +146,7 @@ describe('component', () => {
         class BaseElement {
         }
 
-        (TestComponent as any)[ComponentFactory__symbol] = {
+        (TestComponent as any)[DefinitionContext__symbol] = {
           elementDef: {
             name: 'test-component',
             extend: {
@@ -179,7 +179,7 @@ describe('component', () => {
         const ns = new NamespaceDef('test/url', 'test');
         class NsComponent {
 
-          static [ComponentFactory__symbol]: Partial<ComponentFactory> = {
+          static [DefinitionContext__symbol]: Partial<DefinitionContext> = {
             elementDef: {
               name: ['other', ns],
               extend: {
@@ -224,7 +224,7 @@ describe('component', () => {
 
         class AnonymousComponent {
 
-          static [ComponentFactory__symbol]: Partial<ComponentFactory> = {
+          static [DefinitionContext__symbol]: Partial<DefinitionContext> = {
             elementDef: {
               extend: {
                 get type() {

@@ -5,7 +5,7 @@ import { bootstrapComponents } from '../boot/bootstrap';
 import { ComponentContext } from './component-context';
 import { AnonymousComponentProperty__symbol, ComponentProperty } from './component-property.decorator';
 import { Component } from './component.decorator';
-import { ComponentClass, ComponentFactory } from './definition';
+import { ComponentClass, DefinitionContext } from './definition';
 
 describe('component', () => {
 
@@ -290,9 +290,9 @@ describe('component', () => {
 
         }
 
-        const factory = await bootstrapFactory(TestComponent);
-        const component1 = factory.mountTo(element).context.component;
-        const component2 = factory.mountTo(document.createElement('other-component')).context.component;
+        const defContext = await bootstrapDefinition(TestComponent);
+        const component1 = defContext.mountTo(element).context.component;
+        const component2 = defContext.mountTo(document.createElement('other-component')).context.component;
 
         expect(component1.property).toBe('init');
         expect(component2.property).toBe('init');
@@ -433,7 +433,7 @@ describe('component', () => {
     });
   });
 
-  async function bootstrapFactory<T extends object>(type: ComponentClass<T>): Promise<ComponentFactory<T>> {
+  async function bootstrapDefinition<T extends object>(type: ComponentClass<T>): Promise<DefinitionContext<T>> {
 
     const bsContext = await bootstrapComponents(type).whenReady();
 
@@ -442,8 +442,8 @@ describe('component', () => {
 
   async function bootstrap<T extends object>(type: ComponentClass<T>): Promise<ComponentContext<T>> {
 
-    const factory = await bootstrapFactory(type);
+    const defContext = await bootstrapDefinition(type);
 
-    return factory.mountTo(element).context;
+    return defContext.mountTo(element).context;
   }
 });

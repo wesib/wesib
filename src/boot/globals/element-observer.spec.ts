@@ -1,7 +1,7 @@
 import { itsEmpty, overArray } from '@proc7ts/a-iterable';
 import { Component } from '../../component';
-import { ComponentFactory } from '../../component/definition';
-import { MockElement, testComponentFactory } from '../../spec/test-element';
+import { DefinitionContext } from '../../component/definition';
+import { MockElement, testDefinition } from '../../spec/test-element';
 import { bootstrapComponents } from '../bootstrap';
 import { ElementObserver } from './element-observer';
 import Mock = jest.Mock;
@@ -9,7 +9,7 @@ import Mock = jest.Mock;
 describe('boot', () => {
   describe('ElementObserver', () => {
 
-    let factory: ComponentFactory;
+    let defContext: DefinitionContext;
 
     beforeEach(async () => {
 
@@ -21,7 +21,7 @@ describe('boot', () => {
       })
       class TestComponent {}
 
-      factory = await testComponentFactory(TestComponent);
+      defContext = await testDefinition(TestComponent);
     });
 
     let root: Element;
@@ -98,7 +98,7 @@ describe('boot', () => {
       });
       it('connects when element is added to document', async () => {
 
-        const mount = factory.mountTo(element);
+        const mount = defContext.mountTo(element);
 
         expect(mount.connected).toBe(false);
 
@@ -110,7 +110,7 @@ describe('boot', () => {
       it('disconnects when element is removed from document', async () => {
         root.appendChild(element);
 
-        const mount = factory.mountTo(element);
+        const mount = defContext.mountTo(element);
 
         await Promise.resolve();
         expect(mount.connected).toBe(true);

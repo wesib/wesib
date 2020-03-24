@@ -6,13 +6,13 @@ import { nextArgs, nextSkip } from '@proc7ts/call-thru';
 import { AfterEvent, afterEventBy, EventReceiver, EventSupply, OnEvent, trackValue } from '@proc7ts/fun-events';
 import { newNamespaceAliaser } from '@proc7ts/namespace-aliaser';
 import { Class } from '../../common';
-import { ComponentClass, ComponentFactory, CustomElements } from '../../component/definition';
+import { ComponentClass, CustomElements, DefinitionContext } from '../../component/definition';
 import { FeatureDef, FeatureRef, FeatureStatus } from '../../feature';
 import { FeatureKey, FeatureLoader, FeatureRequester } from '../../feature/loader';
 import { BootstrapContext } from '../bootstrap-context';
 import { DefaultNamespaceAliaser } from '../globals';
 import { BootstrapContextRegistry } from '../impl';
-import { componentFactoryOf } from '../impl/component-factory.symbol.impl';
+import { definitionContextOf } from '../impl/definition-context.symbol.impl';
 
 /**
  * Bootstraps components.
@@ -76,10 +76,10 @@ function initBootstrap(
       bootstrapContextRegistry.provide({ a: BootstrapContext, is: this });
     }
 
-    async whenDefined<C extends object>(componentType: ComponentClass<C>): Promise<ComponentFactory<C>> {
+    async whenDefined<C extends object>(componentType: ComponentClass<C>): Promise<DefinitionContext<C>> {
       await this.whenReady();
       await this.get(CustomElements).whenDefined(componentType);
-      return componentFactoryOf(componentType);
+      return definitionContextOf(componentType);
     }
 
     whenReady(): OnEvent<[BootstrapContext]>;

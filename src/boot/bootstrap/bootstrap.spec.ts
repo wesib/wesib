@@ -3,7 +3,7 @@ import { SingleContextUpKey } from '@proc7ts/context-values/updatable';
 import { afterSupplied, afterThe } from '@proc7ts/fun-events';
 import { Class } from '../../common';
 import { Component, ComponentContext, ComponentMount } from '../../component';
-import { ComponentFactory, CustomElements, DefinitionContext } from '../../component/definition';
+import { CustomElements, DefinitionContext } from '../../component/definition';
 import { Feature, FeatureDef, FeatureRef, FeatureStatus } from '../../feature';
 import { MockElement } from '../../spec/test-element';
 import { BootstrapContext } from '../bootstrap-context';
@@ -379,8 +379,8 @@ describe('boot', () => {
       let whenComponent11: Mock<void, [ComponentContext]>;
       let whenComponent12: Mock<void, [ComponentContext]>;
       let whenComponent21: Mock<void, [ComponentContext]>;
-      let factory1: ComponentFactory;
-      let factory2: ComponentFactory;
+      let defContext1: DefinitionContext;
+      let defContext2: DefinitionContext;
       let mount1: ComponentMount;
       let mount2: ComponentMount;
 
@@ -411,12 +411,12 @@ describe('boot', () => {
 
         await loadFeature(TestFeature);
 
-        [factory1, factory2] = await Promise.all([
+        [defContext1, defContext2] = await Promise.all([
           bsContext.whenDefined(TestComponent1),
           bsContext.whenDefined(TestComponent2),
         ]);
-        mount1 = factory1.mountTo(element1);
-        mount2 = factory2.mountTo(element2);
+        mount1 = defContext1.mountTo(element1);
+        mount2 = defContext2.mountTo(element2);
       });
 
       it('notifies on component instantiation', () => {
@@ -447,7 +447,7 @@ describe('boot', () => {
         mount2.context.get(DefinitionContext).whenComponent({
           receive(eventContext) {
             eventContext.onRecurrent(noop);
-            factory2.mountTo(element3);
+            defContext2.mountTo(element3);
           },
         });
         expect(whenComponent21).toHaveBeenCalledTimes(2);

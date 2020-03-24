@@ -1,7 +1,7 @@
 import { StatePath } from '@proc7ts/fun-events';
 import { Component, ComponentContext } from '../../component';
-import { ComponentClass, ComponentFactory } from '../../component/definition';
-import { MockElement, testComponentFactory, testElement } from '../../spec/test-element';
+import { ComponentClass, DefinitionContext } from '../../component/definition';
+import { MockElement, testDefinition, testElement } from '../../spec/test-element';
 import { DomPropertyPath__root } from './dom-property-path';
 import { DomMethod, DomProperty } from './dom-property.decorator';
 import Mock = jest.Mock;
@@ -83,14 +83,14 @@ describe('feature/dom-properties', () => {
     });
     describe('mounted element', () => {
 
-      let factory: ComponentFactory;
+      let defContext: DefinitionContext;
 
       beforeEach(async () => {
-        factory = await testComponentFactory(testComponent);
+        defContext = await testDefinition(testComponent);
         element = {
           dispatchEvent: jest.fn(),
         };
-        factory.mountTo(element);
+        defContext.mountTo(element);
       });
 
       tests();

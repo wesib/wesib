@@ -7,7 +7,7 @@ import { EventReceiver, EventSupply, OnEvent } from '@proc7ts/fun-events';
 import { BootstrapContext, BootstrapSetup } from '../boot';
 import { Class } from '../common';
 import { ComponentContext } from '../component';
-import { ComponentClass, ComponentFactory, DefinitionContext, DefinitionSetup } from '../component/definition';
+import { ComponentClass, DefinitionContext, DefinitionSetup } from '../component/definition';
 import { FeatureRef } from './feature-ref';
 
 /**
@@ -141,7 +141,7 @@ export abstract class FeatureContext extends BootstrapContext implements Bootstr
    */
   abstract define<T extends object>(componentType: ComponentClass<T>): void;
 
-  whenDefined<C extends object>(componentType: ComponentClass<C>): Promise<ComponentFactory<C>> {
+  whenDefined<C extends object>(componentType: ComponentClass<C>): Promise<DefinitionContext<C>> {
     return this.get(BootstrapContext).whenDefined(componentType);
   }
 

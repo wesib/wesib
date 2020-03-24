@@ -1,7 +1,7 @@
 import { SingleContextKey, SingleContextRef } from '@proc7ts/context-values';
 import { EventEmitter } from '@proc7ts/fun-events';
 import { ComponentContext } from '../../component';
-import { ComponentClass, ComponentFactory, DefinitionContext } from '../../component/definition';
+import { ComponentClass, DefinitionContext } from '../../component/definition';
 import { BootstrapContext } from '../bootstrap-context';
 import { bootstrapDefault } from '../bootstrap-default';
 import { DefinitionContext$ } from './definition-context.impl';
@@ -12,7 +12,7 @@ import { DefinitionContext$ } from './definition-context.impl';
 export interface ElementBuilder {
   readonly definitions: EventEmitter<[DefinitionContext]>;
   readonly components: EventEmitter<[ComponentContext]>;
-  buildElement<T extends object>(this: void, componentType: ComponentClass<T>): ComponentFactory<T>;
+  buildElement<T extends object>(this: void, componentType: ComponentClass<T>): DefinitionContext<T>;
 }
 
 /**
@@ -33,7 +33,9 @@ function newElementBuilder(bsContext: BootstrapContext): ElementBuilder {
 
       const definitionContext = new DefinitionContext$(bsContext, this, componentType);
 
-      return definitionContext._factory();
+      definitionContext._define();
+
+      return definitionContext;
     },
   };
 

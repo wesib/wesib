@@ -2,13 +2,14 @@ import { nextArgs, nextSkip, valueProvider } from '@proc7ts/call-thru';
 import { ContextValues, ContextValueSpec } from '@proc7ts/context-values';
 import { EventReceiver, EventSupply, OnEvent, trackValue } from '@proc7ts/fun-events';
 import { Class } from '../../common';
-import { ComponentContext, ComponentDef } from '../../component';
-import { ComponentClass, ComponentFactory, DefinitionContext, DefinitionSetup } from '../../component/definition';
+import { ComponentContext, ComponentContext__symbol, ComponentDef, ComponentMount } from '../../component';
+import { ComponentClass, DefinitionContext, DefinitionSetup } from '../../component/definition';
 import { BootstrapContext } from '../bootstrap-context';
 import { ComponentContextRegistry } from './component-context-registry.impl';
-import { ComponentFactory$ } from './component-factory.impl';
+import { MountComponentContext$ } from './component-mount.impl';
 import { customElementType } from './custom-element.impl';
 import { DefinitionContextRegistry } from './definition-context-registry.impl';
+import { DefinitionContext__symbol } from './definition-context.symbol.impl';
 import { ElementBuilder } from './element-builder.impl';
 import { postDefSetup } from './post-def-setup.impl';
 import { WhenComponent } from './when-component.impl';
@@ -38,10 +39,6 @@ export class DefinitionContext$<T extends object> extends DefinitionContext<T> {
     );
 
     definitionContextRegistry.provide({ a: DefinitionContext, is: this });
-    definitionContextRegistry.provide({
-      a: ComponentFactory,
-      by: () => new ComponentFactory$<T>(this),
-    });
     this.get = definitionContextRegistry.newValues().get;
     this._perTypeRegistry = new ComponentContextRegistry(definitionContextRegistry.seedIn(this));
 
@@ -67,13 +64,30 @@ export class DefinitionContext$<T extends object> extends DefinitionContext<T> {
   }
 
   get elementType(): Class {
-    throw new Error('Custom element class is not constructed yet. Consider to use a `whenReady()` callback');
+    return this._elementType();
   }
 
   whenReady(): OnEvent<[this]>;
   whenReady(receiver: EventReceiver<[this]>): EventSupply;
   whenReady(receiver?: EventReceiver<[this]>): EventSupply | OnEvent<[this]> {
     return (this.whenReady = (this._whenReady.thru_(valueProvider(this)).once() as OnEvent<[this]>).F)(receiver);
+  }
+
+  mountTo(element: any): ComponentMount<T> {
+    if (element[ComponentContext__symbol]) {
+      throw new Error(`Element ${element} already bound to component`);
+    }
+
+    const context = new MountComponentContext$(this, element);
+
+    context._createComponent();
+
+    const { mount } = context;
+
+    mount.checkConnected();
+    context._created();
+
+    return mount;
   }
 
   whenComponent(): OnEvent<[ComponentContext<T>]>;
@@ -92,21 +106,16 @@ export class DefinitionContext$<T extends object> extends DefinitionContext<T> {
     return this._bsContext.get(ComponentContextRegistry).append(this._perTypeRegistry);
   }
 
-  _factory(): ComponentFactory<T> {
+  _elementType(): Class {
+    throw new Error('Custom element class is not constructed yet. Consider to use a `whenReady()` callback');
+  }
+
+  _define(): void {
     this._def.define?.(this);
     this._elementBuilder.definitions.send(this);
-
-    const elementType = customElementType(this);
-
-    Object.defineProperty(this, 'elementType', {
-      configurable: true,
-      enumerable: true,
-      value: elementType,
-    });
-
+    this._elementType = valueProvider(customElementType(this));
+    (this.componentType as any)[DefinitionContext__symbol] = this;
     this._ready.it = true;
-
-    return this.get(ComponentFactory);
   }
 
 }
