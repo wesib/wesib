@@ -34,6 +34,7 @@ describe('component', () => {
         get: registry.newValues().get,
       } as any;
 
+      registry.provide({ a: BootstrapContext, is: context });
       registry.provide({ a: BootstrapWindow, is: mockWindow });
       registry.provide({ a: DefaultNamespaceAliaser, by: newNamespaceAliaser });
     });
@@ -165,13 +166,13 @@ describe('component', () => {
     });
 
     describe('whenDefined', () => {
-      it('awaits for component definition', () => {
+      it('awaits for component definition', async () => {
 
         const promise = Promise.resolve<any>('defined');
 
         mockCustomElements.whenDefined.mockReturnValue(promise);
 
-        expect(customElements.whenDefined(TestComponent)).toBe(promise);
+        expect(await customElements.whenDefined(TestComponent)).toBe('defined');
         expect(mockCustomElements.whenDefined).toHaveBeenCalledWith('test-component');
       });
       it('waits for component definition in namespace', async () => {
@@ -201,23 +202,23 @@ describe('component', () => {
 
         expect(mockCustomElements.whenDefined).toHaveBeenCalledWith('test-other');
       });
-      it('awaits for non-component element definition', () => {
+      it('awaits for non-component element definition', async () => {
 
         const promise = Promise.resolve<any>('defined');
 
         mockCustomElements.whenDefined.mockReturnValue(promise);
 
-        expect(customElements.whenDefined('test-component')).toBe(promise);
+        expect(await customElements.whenDefined('test-component')).toBe('defined');
         expect(mockCustomElements.whenDefined).toHaveBeenCalledWith('test-component');
       });
-      it('awaits for non-component element definition in namespace', () => {
+      it('awaits for non-component element definition in namespace', async () => {
 
         const ns = new NamespaceDef('test/url', 'test');
         const promise = Promise.resolve<any>('defined');
 
         mockCustomElements.whenDefined.mockReturnValue(promise);
 
-        expect(customElements.whenDefined(['other', ns])).toBe(promise);
+        expect(await customElements.whenDefined(['other', ns])).toBe('defined');
         expect(mockCustomElements.whenDefined).toHaveBeenCalledWith('test-other');
       });
       it('waits for anonymous component definition', async () => {

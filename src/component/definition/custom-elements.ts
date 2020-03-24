@@ -2,8 +2,9 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { ContextKey, ContextKey__symbol, ContextValues, SingleContextKey } from '@proc7ts/context-values';
+import { ContextKey, ContextKey__symbol, SingleContextKey } from '@proc7ts/context-values';
 import { html__naming, isQualifiedName, QualifiedName } from '@proc7ts/namespace-aliaser';
+import { BootstrapContext, bootstrapDefault } from '../../boot';
 import { BootstrapWindow, DefaultNamespaceAliaser } from '../../boot/globals';
 import { definitionContextOf } from '../../boot/impl/definition-context.symbol.impl';
 import { Class, PromiseResolver } from '../../common';
@@ -15,7 +16,7 @@ import { ComponentClass } from './component-class';
 const CustomElements__key = (/*#__PURE__*/ new SingleContextKey<CustomElements>(
     'custom-elements',
     {
-      byDefault: createCustomElements,
+      byDefault: bootstrapDefault(createCustomElements),
     },
 ));
 
@@ -68,12 +69,12 @@ export abstract class CustomElements {
 /**
  * @internal
  */
-function createCustomElements(values: ContextValues): CustomElements {
+function createCustomElements(bsContext: BootstrapContext): CustomElements {
 
-  const customElements: CustomElementRegistry = values.get(BootstrapWindow).customElements;
-  const nsAlias = values.get(DefaultNamespaceAliaser);
+  const customElements: CustomElementRegistry = bsContext.get(BootstrapWindow).customElements;
+  const nsAlias = bsContext.get(DefaultNamespaceAliaser);
 
-  class WindowCustomElements extends CustomElements {
+  class CustomElements$ extends CustomElements {
 
     define(componentTypeOrName: ComponentClass | string, elementType: Class): void {
       if (isQualifiedName(componentTypeOrName)) {
@@ -118,7 +119,7 @@ function createCustomElements(values: ContextValues): CustomElements {
 
   }
 
-  return new WindowCustomElements();
+  return new CustomElements$();
 }
 
 /**
@@ -129,7 +130,10 @@ const ComponentResolver__symbol = (/*#__PURE__*/ Symbol('component-resolver'));
 /**
  * @internal
  */
-function componentResolver(componentType: ComponentClass): PromiseResolver<void> {
-  return (componentType as any)[ComponentResolver__symbol]
-      || ((componentType as any)[ComponentResolver__symbol] = new PromiseResolver());
+function componentResolver(componentType: any): PromiseResolver {
+  // eslint-disable-next-line no-prototype-builtins
+  if (componentType.hasOwnProperty(ComponentResolver__symbol)) {
+    return componentType[ComponentResolver__symbol];
+  }
+  return componentType[ComponentResolver__symbol] = new PromiseResolver();
 }
