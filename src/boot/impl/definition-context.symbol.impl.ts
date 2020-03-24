@@ -9,12 +9,9 @@ export const DefinitionContext__symbol = (/*#__PURE__*/ Symbol('definition-conte
  * @internal
  */
 export function definitionContextOf<T extends object>(componentType: ComponentClass<T>): DefinitionContext<T> {
-
-  const context = (componentType as any)[DefinitionContext__symbol];
-
-  if (!context) {
+  // eslint-disable-next-line no-prototype-builtins
+  if (!componentType.hasOwnProperty(DefinitionContext__symbol)) {
     throw new TypeError(`Component is not defined: ${componentType}`);
   }
-
-  return context;
+  return (componentType as any)[DefinitionContext__symbol];
 }
