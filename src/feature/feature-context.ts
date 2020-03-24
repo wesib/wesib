@@ -141,7 +141,7 @@ export abstract class FeatureContext extends BootstrapContext implements Bootstr
    */
   abstract define<T extends object>(componentType: ComponentClass<T>): void;
 
-  whenDefined<C extends object>(componentType: ComponentClass<C>): Promise<DefinitionContext<C>> {
+  whenDefined<C extends object>(componentType: ComponentClass<C>): OnEvent<[DefinitionContext<C>]> {
     return this.get(BootstrapContext).whenDefined(componentType);
   }
 

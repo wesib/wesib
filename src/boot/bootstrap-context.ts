@@ -59,11 +59,9 @@ export abstract class BootstrapContext extends ContextValues {
    *
    * @param componentType  Component class constructor.
    *
-   * @return A promise that is resolved to component definition context when the given `componentType` is registered.
-   *
-   * @throws TypeError  If `componentType` does not contain a component definition.
+   * @return An `OnEvent` sender of definition context sent when the given `componentType` is registered.
    */
-  abstract whenDefined<C extends object>(componentType: ComponentClass<C>): Promise<DefinitionContext<C>>;
+  abstract whenDefined<C extends object>(componentType: ComponentClass<C>): OnEvent<[DefinitionContext<C>]>;
 
   /**
    * Allows to loads the given `feature`.

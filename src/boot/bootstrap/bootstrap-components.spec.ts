@@ -220,7 +220,8 @@ describe('boot', () => {
             expect(whenDefinedSpy).toHaveBeenCalledWith(TestComponent);
           });
           it('fails if component definition is absent', async () => {
-            expect(await bootstrapContext.whenDefined(TestComponent).catch(asis)).toBeInstanceOf(TypeError);
+            expect(await Promise.resolve(bootstrapContext.whenDefined(TestComponent)).catch(asis))
+                .toBeInstanceOf(TypeError);
             expect(whenDefinedSpy).toHaveBeenCalledWith(TestComponent);
           });
           it('fails if component registry fails', async () => {
@@ -229,7 +230,8 @@ describe('boot', () => {
 
             whenDefinedSpy.mockImplementation(() => Promise.reject(error));
 
-            expect(await bootstrapContext.whenDefined(TestComponent).catch(asis)).toBe(error);
+            expect(await Promise.resolve(bootstrapContext.whenDefined(TestComponent)).catch(asis))
+                .toBe(error);
             expect(whenDefinedSpy).toHaveBeenCalledWith(TestComponent);
           });
         });

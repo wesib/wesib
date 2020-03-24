@@ -3,7 +3,15 @@
  * @module @wesib/wesib
  */
 import { nextArgs, nextSkip } from '@proc7ts/call-thru';
-import { AfterEvent, afterEventBy, EventReceiver, EventSupply, OnEvent, trackValue } from '@proc7ts/fun-events';
+import {
+  AfterEvent,
+  afterEventBy,
+  EventReceiver,
+  EventSupply,
+  OnEvent,
+  onPromise,
+  trackValue,
+} from '@proc7ts/fun-events';
 import { newNamespaceAliaser } from '@proc7ts/namespace-aliaser';
 import { Class } from '../../common';
 import { ComponentClass, CustomElements, DefinitionContext } from '../../component/definition';
@@ -76,10 +84,16 @@ function initBootstrap(
       bootstrapContextRegistry.provide({ a: BootstrapContext, is: this });
     }
 
-    async whenDefined<C extends object>(componentType: ComponentClass<C>): Promise<DefinitionContext<C>> {
-      await this.whenReady();
-      await this.get(CustomElements).whenDefined(componentType);
-      return definitionContextOf(componentType);
+    whenDefined<C extends object>(componentType: ComponentClass<C>): OnEvent<[DefinitionContext<C>]> {
+      return onPromise(
+          Promise.resolve(this.whenReady())
+              .then(
+                  () => this.get(CustomElements).whenDefined(componentType),
+              )
+              .then(
+                  () => definitionContextOf(componentType),
+              ),
+      );
     }
 
     whenReady(): OnEvent<[BootstrapContext]>;

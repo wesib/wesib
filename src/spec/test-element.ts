@@ -1,9 +1,10 @@
+import { OnEvent } from '@proc7ts/fun-events';
 import { bootstrapComponents } from '../boot/bootstrap';
 import { Class } from '../common';
 import { ComponentClass, CustomElements, DefinitionContext } from '../component/definition';
 import { Feature } from '../feature';
 
-export function testDefinition<T extends object>(componentType: Class<T>): Promise<DefinitionContext<T>> {
+export function testDefinition<T extends object>(componentType: Class<T>): OnEvent<[DefinitionContext<T>]> {
 
   const customElements: CustomElements = {
 
