@@ -3,24 +3,16 @@
  * @module @wesib/wesib
  */
 import { nextArgs, nextSkip } from '@proc7ts/call-thru';
-import {
-  AfterEvent,
-  afterEventBy,
-  EventReceiver,
-  EventSupply,
-  OnEvent,
-  onPromise,
-  trackValue,
-} from '@proc7ts/fun-events';
+import { AfterEvent, afterEventBy, EventReceiver, EventSupply, OnEvent, trackValue } from '@proc7ts/fun-events';
 import { newNamespaceAliaser } from '@proc7ts/namespace-aliaser';
 import { Class } from '../../common';
-import { ComponentClass, CustomElements, DefinitionContext } from '../../component/definition';
+import { ComponentClass, DefinitionContext } from '../../component/definition';
 import { FeatureDef, FeatureRef, FeatureStatus } from '../../feature';
 import { FeatureKey, FeatureLoader, FeatureRequester } from '../../feature/loader';
 import { BootstrapContext } from '../bootstrap-context';
 import { DefaultNamespaceAliaser } from '../globals';
 import { BootstrapContextRegistry } from '../impl';
-import { definitionContextOf } from '../impl/definition-context.symbol.impl';
+import { whenDefined } from '../impl/when-defined.impl';
 
 /**
  * Bootstraps components.
@@ -85,15 +77,7 @@ function initBootstrap(
     }
 
     whenDefined<C extends object>(componentType: ComponentClass<C>): OnEvent<[DefinitionContext<C>]> {
-      return onPromise(
-          Promise.resolve(this.whenReady())
-              .then(
-                  () => this.get(CustomElements).whenDefined(componentType),
-              )
-              .then(
-                  () => definitionContextOf(componentType),
-              ),
-      );
+      return whenDefined(this, componentType);
     }
 
     whenReady(): OnEvent<[BootstrapContext]>;

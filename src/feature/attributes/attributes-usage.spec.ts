@@ -212,9 +212,9 @@ describe('feature/attributes', () => {
         }
 
         const noAttrElement = new MockElement();
-        const noAttrFactory = await testDefinition(NoAttrComponent);
+        const noAttrDefContext = await testDefinition(NoAttrComponent);
 
-        noAttrFactory.mountTo(noAttrElement);
+        noAttrDefContext.mountTo(noAttrElement);
 
         expect(Observer).not.toHaveBeenCalled();
       });
