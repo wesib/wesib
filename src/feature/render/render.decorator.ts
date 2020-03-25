@@ -6,6 +6,7 @@ import { RenderExecution } from '@proc7ts/render-scheduler';
 import { ComponentProperty, ComponentPropertyDecorator } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { StateSupport } from '../state';
+import { ElementRenderCtl } from './element-render-ctl';
 import { ElementRenderer } from './element-renderer';
 import { RenderDef } from './render-def';
 
@@ -20,7 +21,7 @@ import { RenderDef } from './render-def';
  *
  * This decorator automatically enables [[StateSupport]] feature.
  *
- * Utilizes [[ElementRenderer.render]] function to enable rendering.
+ * Enables rendering with {@link ElementRenderCtl.renderBy element render control}.
  *
  * @category Feature
  * @typeparam T  A type of decorated component class.
@@ -41,8 +42,9 @@ export function Render<T extends ComponentClass>(
           context.whenReady(() => {
 
             const { component } = context;
+            const renderer = get(component).bind(component);
 
-            ElementRenderer.render(context, get(component).bind(component), def);
+            context.get(ElementRenderCtl).renderBy(renderer, def);
           });
         });
       },
