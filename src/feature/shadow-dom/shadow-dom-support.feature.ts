@@ -41,7 +41,7 @@ function attachShadow(context: ComponentContext, init: ShadowRootInit): ShadowRo
 
   if (shadowRoot) {
     (shadowRoot as any)[ComponentContext__symbol] = context;
-    context.whenConnected().once(() => context.dispatchEvent(new ShadowDomEvent(
+    context.whenConnected(() => context.dispatchEvent(new ShadowDomEvent(
         'wesib:shadowAttached',
         { bubbles: true },
     )));

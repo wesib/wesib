@@ -70,7 +70,7 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
   whenConnected(receiver?: EventReceiver<[this]>): OnEvent<[this]> | EventSupply {
     return (this.whenConnected = this._status.read().thru_(
         status => status === ComponentStatus.Connected ? nextArg(this) : nextSkip(),
-    ).F)(receiver);
+    ).once().F)(receiver);
   }
 
   destroy(reason?: any): void {
@@ -115,7 +115,7 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
   }
 
   _created(): void {
-    this.whenConnected().once(
+    this.whenConnected(
         () => this.dispatchEvent(new ComponentEvent('wesib:component', { bubbles: true })),
     );
   }

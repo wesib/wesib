@@ -1,4 +1,3 @@
-import { noop } from '@proc7ts/call-thru';
 import { ContextKey, SingleContextKey } from '@proc7ts/context-values';
 import { eventSupplyOf } from '@proc7ts/fun-events';
 import { Class } from '../../common';
@@ -348,13 +347,15 @@ describe('boot', () => {
         });
         it('cuts off connection events supply', () => {
 
-          const done = jest.fn();
+          const whenOff = jest.fn();
+          const whenConnected = jest.fn();
           const reason = 'Destruction reason';
 
-          componentContext.whenConnected(noop).whenOff(done);
           componentContext.destroy(reason);
+          componentContext.whenConnected(whenConnected).whenOff(whenOff);
 
-          expect(done).toHaveBeenCalledWith(reason);
+          expect(whenConnected).not.toHaveBeenCalled();
+          expect(whenOff).toHaveBeenCalledWith(reason);
         });
         it('makes component unavailable', () => {
 
@@ -483,7 +484,7 @@ describe('boot', () => {
 
           const connected = jest.fn();
 
-          context.whenConnected().once(connected);
+          context.whenConnected(connected);
 
           expect(connected).not.toHaveBeenCalled();
         });
