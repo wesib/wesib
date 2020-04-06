@@ -46,6 +46,8 @@ export interface ElementRenderCtl {
 
 /**
  * A key of component context value containing {@link ElementRenderCtl element render control}.
+ *
+ * @category Feature
  */
 export const ElementRenderCtl: ContextRef<ElementRenderCtl> = (
     /*#__PURE__*/ new SingleContextKey<ElementRenderCtl>(
