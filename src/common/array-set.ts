@@ -2,18 +2,16 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { AIterable } from '@proc7ts/a-iterable';
 import { isArray } from './types.impl';
 
 /**
  * @category Utility
  */
-export class ArraySet<T> extends AIterable<T> {
+export class ArraySet<T> implements Iterable<T> {
 
   readonly items: Set<T>;
 
   constructor(value?: T | readonly T[]) {
-    super();
     this.items = value == null ? new Set() : isArray(value) ? new Set(value) : new Set([value]);
   }
 

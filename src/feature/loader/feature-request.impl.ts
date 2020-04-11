@@ -42,7 +42,7 @@ export class FeatureRequest {
       is: isClause,
     }));
 
-    new ArraySet(this.def.has).forEach(feature => {
+    for (const feature of new ArraySet(this.def.has)) {
 
       const clause: FeatureNeedClause = [this, 'has', feature];
 
@@ -52,9 +52,9 @@ export class FeatureRequest {
       const request = requester.request(feature, [...clauses, clause]);
 
       this._revokeBy(() => request.unuse());
-    });
+    }
 
-    new ArraySet(this.def.needs).forEach(feature => {
+    for (const feature of new ArraySet(this.def.needs)) {
 
       const clause: FeatureNeedClause = [this, 'needs', feature];
 
@@ -62,7 +62,7 @@ export class FeatureRequest {
 
       this._revokeBy(() => request.unuse());
       this._revokeBy(registry.provide({ a: FeatureKey.of(feature), is: clause }));
-    });
+    }
 
     this._uses = 1;
 
