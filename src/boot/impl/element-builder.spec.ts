@@ -233,11 +233,15 @@ describe('boot', () => {
         });
       });
 
+      let connectedCallbackSpy: Mock;
+      let disconnectedCallbackSpy: Mock;
       let addEventListenerSpy: Mock;
       let removeEventListenerSpy: Mock;
       let dispatchEventSpy: Mock<boolean, [Event]>;
 
       beforeEach(() => {
+        connectedCallbackSpy = jest.fn();
+        disconnectedCallbackSpy = jest.fn();
         addEventListenerSpy = jest.fn();
         removeEventListenerSpy = jest.fn();
         dispatchEventSpy = jest.fn();
@@ -250,6 +254,14 @@ describe('boot', () => {
                   addEventListener = addEventListenerSpy;
                   removeEventListener = removeEventListenerSpy;
                   dispatchEvent = dispatchEventSpy;
+
+                  connectedCallback(): void {
+                    connectedCallbackSpy();
+                  }
+
+                  disconnectedCallback(): void {
+                    disconnectedCallbackSpy();
+                  }
 
                 },
               },
@@ -276,31 +288,49 @@ describe('boot', () => {
       it('is not mounted', () => {
         expect(componentContext.mount).toBeUndefined();
       });
-      it('dispatches component event when first connected', () => {
-        expect(dispatchEventSpy).not.toHaveBeenCalled();
 
-        componentContext.element.connectedCallback();
+      describe('connectedCallback', () => {
+        it('calls `connectedCallback()` of original element when connected', () => {
+          componentContext.element.connectedCallback();
+          expect(connectedCallbackSpy).toHaveBeenCalledWith();
+        });
+        it('dispatches component event when first connected', () => {
+          expect(dispatchEventSpy).not.toHaveBeenCalled();
 
-        expect(dispatchEventSpy).toHaveBeenCalledWith(expect.any(ComponentEvent));
-        expect(dispatchEventSpy).toHaveBeenCalledWith(expect.objectContaining({
-          type: 'wesib:component',
-          cancelable: false,
-          bubbles: true,
-        }));
+          componentContext.element.connectedCallback();
+
+          expect(dispatchEventSpy).toHaveBeenCalledWith(expect.any(ComponentEvent));
+          expect(dispatchEventSpy).toHaveBeenCalledWith(expect.objectContaining({
+            type: 'wesib:component',
+            cancelable: false,
+            bubbles: true,
+          }));
+        });
       });
-      it('allows to listen for component events', () => {
 
-        const listener = jest.fn().mockName('event listener');
-        const supply = componentContext.on('test-event').to(listener);
-
-        expect(addEventListenerSpy).toHaveBeenCalledWith('test-event', expect.any(Function), undefined);
-
-        const actualListener = addEventListenerSpy.mock.calls[0][1];
-
-        supply.off();
-
-        expect(removeEventListenerSpy).toHaveBeenCalledWith('test-event', actualListener);
+      describe('disconnectedCallback', () => {
+        it('calls `disconnectedCallback()` of original element when disconnected', () => {
+          componentContext.element.disconnectedCallback();
+          expect(disconnectedCallbackSpy).toHaveBeenCalledWith();
+        });
       });
+
+      describe('on', () => {
+        it('listens for component events', () => {
+
+          const listener = jest.fn().mockName('event listener');
+          const supply = componentContext.on('test-event').to(listener);
+
+          expect(addEventListenerSpy).toHaveBeenCalledWith('test-event', expect.any(Function), undefined);
+
+          const actualListener = addEventListenerSpy.mock.calls[0][1];
+
+          supply.off();
+
+          expect(removeEventListenerSpy).toHaveBeenCalledWith('test-event', actualListener);
+        });
+      });
+
       it('can not access values of another component type', () => {
 
         class AnotherComponent {
@@ -322,6 +352,15 @@ describe('boot', () => {
       });
 
       describe('destroy', () => {
+        it('is called by `disconnectedCallback()`', () => {
+
+          const destroyed = jest.fn();
+
+          eventSupplyOf(componentContext).whenOff(destroyed);
+          componentContext.element.disconnectedCallback();
+
+          expect(destroyed).toHaveBeenCalledWith(undefined);
+        });
         it('notifies destruction callbacks', () => {
 
           const destroyed = jest.fn();

@@ -62,7 +62,9 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
   whenReady(): OnEvent<[this]>;
   whenReady(receiver: EventReceiver<[this]>): EventSupply;
   whenReady(receiver?: EventReceiver<[this]>): OnEvent<[this]> | EventSupply {
-    return (this.whenReady = this._status.read().thru(sts => sts ? nextArgs(this) : nextSkip()).once().F)(receiver);
+    return (this.whenReady = this._status.read().thru_(
+        status => status ? nextArgs(this) : nextSkip(),
+    ).once().F)(receiver);
   }
 
   whenConnected(): OnEvent<[this]>;

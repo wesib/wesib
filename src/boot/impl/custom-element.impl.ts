@@ -35,6 +35,9 @@ export function customElementType<T extends object>(
           key => super[key],
       );
 
+      if (super.connectedCallback) {
+        context.whenConnected(() => super.connectedCallback());
+      }
       context._createComponent();
       context._created();
     }
@@ -45,6 +48,7 @@ export function customElementType<T extends object>(
 
     disconnectedCallback(): void {
       this[ComponentContext__symbol].destroy();
+      super.disconnectedCallback?.();
     }
 
   }
