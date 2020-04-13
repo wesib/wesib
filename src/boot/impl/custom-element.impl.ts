@@ -35,14 +35,12 @@ export function customElementType<T extends object>(
           key => super[key],
       );
 
-      if (super.connectedCallback) {
-        context.whenConnected(() => super.connectedCallback());
-      }
       context._createComponent();
       context._created();
     }
 
     connectedCallback(): void {
+      super.connectedCallback?.();
       this[ComponentContext__symbol]._connect();
     }
 
