@@ -2,6 +2,7 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
+import { itsEach, itsFirst } from '@proc7ts/a-iterable';
 import { isArray } from './types.impl';
 
 /**
@@ -16,19 +17,19 @@ export class ArraySet<T> implements Iterable<T> {
   }
 
   get value(): T | T[] | undefined {
-    switch (this.items.size) {
-    case 0: return;
-    case 1: return this.items[Symbol.iterator]().next().value;
-    default: return [...this.items];
-    }
+    return this.items.size < 2 ? itsFirst(this.items) : Array.from(this.items);
   }
 
   [Symbol.iterator](): IterableIterator<T> {
     return this.items[Symbol.iterator]();
   }
 
-  add(...items: T[]): this {
-    items.forEach(item => this.items.add(item));
+  add(...items: readonly T[]): this {
+    return this.addAll(items);
+  }
+
+  addAll(items: Iterable<T>): this {
+    itsEach(items, item => this.items.add(item));
     return this;
   }
 
@@ -37,13 +38,12 @@ export class ArraySet<T> implements Iterable<T> {
   }
 
   merge(items: readonly T[] | T | undefined): this {
-    if (items == null) {
-      return this;
-    }
     if (isArray(items)) {
-      return this.add(...items);
+      this.addAll(items);
+    } else if (items != null) {
+      this.items.add(items);
     }
-    return this.add(items);
+    return this;
   }
 
 }

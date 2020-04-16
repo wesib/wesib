@@ -1,6 +1,7 @@
 import { ContextKey, ContextKey__symbol, SingleContextKey } from '@proc7ts/context-values';
 import { BootstrapWindow } from '../../boot/globals';
-import { Class, mergeFunctions } from '../../common';
+import { ArraySet, Class, mergeFunctions } from '../../common';
+import { isArray } from '../../common/types.impl';
 import { ComponentContext, ComponentMount } from '../../component';
 import { DefinitionContext } from '../../component/definition';
 import { AttributeChangedCallback, AttributeDescriptor } from './attribute-descriptor';
@@ -41,23 +42,20 @@ export class AttributeRegistry<T extends object = any> {
   define(elementType: Class): void {
 
     const attrs = this.attrs;
-    const observedAttributes = Array.from(attrs.keys());
 
-    if (!observedAttributes.length) {
+    if (!attrs.size) {
       return; // No attributes defined
     }
 
     Object.defineProperty(elementType, 'observedAttributes', {
       configurable: true,
       enumerable: true,
-      value: observedAttributes,
+      value: observedAttributes(elementType, attrs.keys()),
     });
     Object.defineProperty(elementType.prototype, 'attributeChangedCallback', {
       configurable: true,
       enumerable: true,
-      value: function (name: string, oldValue: string | null, newValue: string) {
-        attrs.get(name)!(ComponentContext.of<T>(this).component, newValue, oldValue);
-      },
+      value: attributeChangedCallback(elementType, attrs),
     });
   }
 
@@ -94,4 +92,57 @@ export class AttributeRegistry<T extends object = any> {
     });
   }
 
+}
+
+/**
+ * @internal
+ */
+type ElementAttributeChanged = (
+    this: any,
+    name: string,
+    oldValue: string | null,
+    newValue: string | null,
+) => void;
+
+/**
+ * @internal
+ */
+function observedAttributes(
+    elementType: Class,
+    attrs: Iterable<string>,
+): readonly string[] {
+
+  const alreadyObserved: readonly string[] | undefined = (elementType as any).observedAttributes;
+
+  return Array.from(isArray<string>(alreadyObserved)
+      ? new ArraySet(alreadyObserved).addAll(attrs).items
+      : attrs);
+}
+
+/**
+ * @internal
+ */
+function attributeChangedCallback<T extends object>(
+    elementType: Class,
+    attrs: Map<string, AttributeChangedCallback<T>>,
+): ElementAttributeChanged {
+
+  const prevCallback: ElementAttributeChanged | undefined = elementType.prototype.attributeChangedCallback;
+
+  if (!prevCallback) {
+    return function (name, oldValue, newValue) {
+      attrs.get(name)!(ComponentContext.of<T>(this).component, newValue, oldValue);
+    };
+  }
+
+  return function (name, oldValue, newValue) {
+
+    const attrChanged = attrs.get(name);
+
+    if (attrChanged) {
+      attrChanged(ComponentContext.of<T>(this).component, newValue, oldValue);
+    } else {
+      prevCallback.call(this, name, oldValue, newValue);
+    }
+  };
 }
