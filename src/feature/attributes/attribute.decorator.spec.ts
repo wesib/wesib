@@ -28,7 +28,7 @@ describe('feature/attributes', () => {
         [ComponentContext__symbol] = contextSpy;
 
         @Attribute()
-        attr!: string;
+        testAttr!: string;
 
       }
 
@@ -36,10 +36,10 @@ describe('feature/attributes', () => {
 
       elementSpy.getAttribute.mockReturnValue('value1');
 
-      expect(component.attr).toBe('value1');
+      expect(component.testAttr).toBe('value1');
 
-      component.attr = 'value2';
-      expect(elementSpy.setAttribute).toHaveBeenCalledWith('attr', 'value2');
+      component.testAttr = 'value2';
+      expect(elementSpy.setAttribute).toHaveBeenCalledWith('test-attr', 'value2');
     });
     it('declares attribute property', () => {
 
@@ -49,11 +49,11 @@ describe('feature/attributes', () => {
         [ComponentContext__symbol] = contextSpy;
 
         @Attribute()
-        get attr(): string | null {
+        get testAttr(): string | null {
           return '';
         }
 
-        set attr(_value: string | null) {
+        set testAttr(_value: string | null) {
           /* do not set */
         }
 
@@ -63,13 +63,13 @@ describe('feature/attributes', () => {
 
       elementSpy.getAttribute.mockReturnValue('value1');
 
-      expect(component.attr).toBe('value1');
+      expect(component.testAttr).toBe('value1');
 
-      component.attr = 'value2';
-      expect(elementSpy.setAttribute).toHaveBeenCalledWith('attr', 'value2');
+      component.testAttr = 'value2';
+      expect(elementSpy.setAttribute).toHaveBeenCalledWith('test-attr', 'value2');
 
-      component.attr = null;
-      expect(elementSpy.removeAttribute).toHaveBeenCalledWith('attr');
+      component.testAttr = null;
+      expect(elementSpy.removeAttribute).toHaveBeenCalledWith('test-attr');
     });
   });
 });

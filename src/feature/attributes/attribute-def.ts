@@ -16,10 +16,10 @@ import { AttributePath } from './attribute-path';
 export interface AttributeDef<T extends object> {
 
   /**
-   * Attribute name.
+   * Attribute name, either _camelCase_ or _dash-style_.
    *
    * This is required if annotated property's key is not a string (i.e. a symbol). Otherwise,
-   * the attribute name is equal to the property name by default.
+   * the attribute name is equal to the property name converted to _dash-style_ by default.
    */
   readonly name?: string;
 

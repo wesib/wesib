@@ -4,13 +4,13 @@
  */
 import { StatePath } from '@proc7ts/fun-events';
 import { Class } from '../../common';
-import { isArray } from '../../common/types.impl';
 import { Component, ComponentDecorator } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { AttributeUpdateReceiver } from './attribute-def';
 import { AttributeDescriptor } from './attribute-descriptor';
 import { attributeStateUpdate } from './attribute-state-update.impl';
 import { AttributesSupport } from './attributes-support.feature';
+import { property2attributeName } from './property2attribute-name';
 
 /**
  * Creates a component decorator declaring supported custom element's attributes.
@@ -19,43 +19,42 @@ import { AttributesSupport } from './attributes-support.feature';
  *
  * @category Feature
  * @typeparam T  A type of decorated component class.
- * @param items  Attributes definition options. Either an attribute definition item, or an array of such items.
+ * @param items  Attributes definition options.
  *
  * @return New component decorator.
  */
 export function Attributes<T extends ComponentClass = Class>(
-    items: Attributes.Item<InstanceType<T>> | readonly Attributes.Item<InstanceType<T>>[],
+    ...items: readonly Attributes.Item<InstanceType<T>>[]
 ): ComponentDecorator<T> {
   return Component({
     feature: { needs: AttributesSupport },
     setup(setup) {
-
-      const defineByItem = (item: Attributes.Item<InstanceType<T>>): void => {
+      for (const item of items) {
         if (typeof item === 'string') {
+
+          const name = property2attributeName(item);
+
           setup.perDefinition({
             a: AttributeDescriptor,
             is: {
-              name: item,
-              change: attributeStateUpdate(item),
+              name,
+              change: attributeStateUpdate(name),
             },
           });
         } else {
-          Object.keys(item).forEach(name => {
+          for (const [key, updateState] of Object.entries(item)) {
+
+            const name = property2attributeName(key);
+
             setup.perDefinition({
               a: AttributeDescriptor,
               is: {
                 name,
-                change: attributeStateUpdate(name, item[name]),
+                change: attributeStateUpdate(name, updateState),
               },
             });
-          });
+          }
         }
-      };
-
-      if (isArray<Attributes.Item<InstanceType<T>>>(items)) {
-        items.forEach(defineByItem);
-      } else {
-        defineByItem(items);
       }
     },
   });
@@ -66,7 +65,7 @@ export namespace Attributes {
   /**
    * Attribute definition item.
    *
-   * This is either an attribute name, or a per-attribute options map.
+   * This is either an attribute name (_camelCase_ or _dash-style_), or a per-attribute options map.
    *
    * @typeparam T  A type of component.
    */
@@ -75,7 +74,8 @@ export namespace Attributes {
   /**
    * Per-attribute definition options.
    *
-   * This is a map with attribute names as keys and their state update instructions as values.
+   * This is a map with attribute names as keys (either _camelCase_ or _dash-style_), and their state update
+   * instructions as values.
    *
    * The state update instruction can be one of:
    * - `false` to not update the component state,

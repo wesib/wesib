@@ -77,10 +77,10 @@ or `@Attributes` component class decorator.
 import { Attribute, AttributeChanged, Attributes, Component } from '@wesib/wesib';
 
 @Component('my-component') // Custom element name
-@Attributes([
+@Attributes(
   'attribute-one',
   'another-attribute',   
-])
+)
 export class MyComponent {
 
   @Attribute('attribute-two') // Attribute name. When omitted the property name is used

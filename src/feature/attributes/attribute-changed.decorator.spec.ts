@@ -19,14 +19,14 @@ describe('feature/attributes', () => {
       class TestComponent {
 
         @AttributeChanged()
-        attr = attrSpy;
+        testAttr = attrSpy;
 
       }
 
       const element = new (await testElement(TestComponent));
       const component = ComponentContext.of(element).component;
 
-      element.attributeChangedCallback('attr', 'old', 'new');
+      element.attributeChangedCallback('test-attr', 'old', 'new');
 
       expect(attrSpy).toHaveBeenCalledWith('new', 'old');
       expect(attrSpy.mock.instances[0]).toBe(component);
@@ -42,16 +42,16 @@ describe('feature/attributes', () => {
       class TestComponent {
 
         @AttributeChanged({})
-        attr = noop;
+        testAttr = noop;
 
       }
 
       const element = new (await testElement(TestComponent));
       const updateStateSpy = jest.spyOn(ComponentContext.of(element), 'updateState');
 
-      element.attributeChangedCallback('attr', 'old', 'new');
+      element.attributeChangedCallback('test-attr', 'old', 'new');
 
-      expect(updateStateSpy).toHaveBeenCalledWith(attributePathTo('attr'), 'new', 'old');
+      expect(updateStateSpy).toHaveBeenCalledWith(attributePathTo('test-attr'), 'new', 'old');
     });
     it('updates the state with custom function', async () => {
 
@@ -66,7 +66,7 @@ describe('feature/attributes', () => {
       class TestComponent {
 
         @AttributeChanged({ updateState: updateSpy })
-        attr = noop;
+        testAttr = noop;
 
       }
 
@@ -74,10 +74,10 @@ describe('feature/attributes', () => {
       const component = ComponentContext.of(element).component;
       const updateStateSpy = jest.spyOn(ComponentContext.of(element), 'updateState');
 
-      element.attributeChangedCallback('attr', 'old', 'new');
+      element.attributeChangedCallback('test-attr', 'old', 'new');
 
       expect(updateStateSpy).not.toHaveBeenCalled();
-      expect(updateSpy).toHaveBeenCalledWith(component, attributePathTo('attr'), 'new', 'old');
+      expect(updateSpy).toHaveBeenCalledWith(component, attributePathTo('test-attr'), 'new', 'old');
     });
     it('updates the state with custom key', async () => {
 
@@ -91,7 +91,7 @@ describe('feature/attributes', () => {
       })
       class TestComponent {
 
-        @AttributeChanged({ name: 'my-attr', updateState: key })
+        @AttributeChanged({ name: 'myAttr', updateState: key })
         attr = noop;
 
       }
@@ -116,14 +116,14 @@ describe('feature/attributes', () => {
       class TestComponent {
 
         @AttributeChanged({ updateState: false })
-        attr = attrSpy;
+        testAttr = attrSpy;
 
       }
 
       const element = new (await testElement(TestComponent));
       const updateStateSpy = jest.spyOn(ComponentContext.of(element), 'updateState');
 
-      element.attributeChangedCallback('attr', 'old', 'new');
+      element.attributeChangedCallback('test-attr', 'old', 'new');
 
       expect(attrSpy).toHaveBeenCalledWith('new', 'old');
       expect(updateStateSpy).not.toHaveBeenCalled();
@@ -140,7 +140,7 @@ describe('feature/attributes', () => {
       })
       class TestComponent {
 
-        @AttributeChanged('my-attr')
+        @AttributeChanged('myAttr')
         attr = attrSpy;
 
       }

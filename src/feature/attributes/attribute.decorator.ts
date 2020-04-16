@@ -19,7 +19,7 @@ import { AttributesSupport } from './attributes-support.feature';
  *
  * @category Feature
  * @typeparam T  A type of decorated component class.
- * @param def  Attribute definition or just an attribute name.
+ * @param def  Attribute definition or just an attribute name (either _camelCase_ or _dash-style_).
  *
  * @return Component property decorator.
  */

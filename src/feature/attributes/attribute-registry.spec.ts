@@ -11,7 +11,7 @@ describe('feature/attributes', () => {
 
     it('declares `observedAttributes` static property', async () => {
 
-      @Attributes(['test-attr-1', 'test-attr-2'])
+      @Attributes('test-attr-1', 'test-attr-2')
       class TestComponent {}
 
       const elementType = await bootstrap(TestComponent);
@@ -31,18 +31,21 @@ describe('feature/attributes', () => {
           type: BaseElement,
         },
       })
-      @Attributes(['test-attr-1', 'test-attr-2'])
+      @Attributes('firstTestAttr', 'secondTestAttr')
       class TestComponent {}
 
       const elementType = await bootstrap(TestComponent);
 
-      expect(elementType).toHaveProperty('observedAttributes', ['inherited-attr', 'test-attr-1', 'test-attr-2']);
+      expect(elementType).toHaveProperty(
+          'observedAttributes',
+          ['inherited-attr', 'first-test-attr', 'second-test-attr'],
+      );
     });
     it('declares `attributeChangedCallback` method', async () => {
 
       const attrChanged = jest.fn();
 
-      @Attributes({ 'test-attr': attrChanged })
+      @Attributes({ testAttr: attrChanged })
       class TestComponent {}
 
       const elementType = await bootstrap(TestComponent);
@@ -75,7 +78,7 @@ describe('feature/attributes', () => {
           type: BaseElement,
         },
       })
-      @Attributes([{ 'test-attr': attrChanged }])
+      @Attributes({ testAttr: attrChanged })
       class TestComponent {}
 
       const elementType = await bootstrap(TestComponent);
