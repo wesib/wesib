@@ -121,6 +121,7 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="@wesib_wesib.ArraySet.html#_Symbol_iterator_" class="tsd-kind-icon">[<wbr>Symbol.iterator]</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="@wesib_wesib.ArraySet.html#add" class="tsd-kind-icon">add</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="@wesib_wesib.ArraySet.html#addAll" class="tsd-kind-icon">add<wbr>All</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="@wesib_wesib.ArraySet.html#merge" class="tsd-kind-icon">merge</a></li>
 							</ul>
 						</section>
@@ -139,7 +140,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/17c037e/src/common/array-set.ts#L12">wesib/wesib/src/common/array-set.ts:12</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/8c24266/src/common/array-set.ts#L13">wesib/wesib/src/common/array-set.ts:13</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -161,7 +162,7 @@
 					<div class="tsd-signature tsd-kind-icon">items<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Set</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/17c037e/src/common/array-set.ts#L12">wesib/wesib/src/common/array-set.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/8c24266/src/common/array-set.ts#L13">wesib/wesib/src/common/array-set.ts:13</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -178,7 +179,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/17c037e/src/common/array-set.ts#L35">wesib/wesib/src/common/array-set.ts:35</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/8c24266/src/common/array-set.ts#L36">wesib/wesib/src/common/array-set.ts:36</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -195,7 +196,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/17c037e/src/common/array-set.ts#L18">wesib/wesib/src/common/array-set.ts:18</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/8c24266/src/common/array-set.ts#L19">wesib/wesib/src/common/array-set.ts:19</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></h4>
@@ -215,7 +216,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/17c037e/src/common/array-set.ts#L26">wesib/wesib/src/common/array-set.ts:26</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/8c24266/src/common/array-set.ts#L23">wesib/wesib/src/common/array-set.ts:23</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -226,19 +227,42 @@
 					<a name="add" class="tsd-anchor"></a>
 					<h3>add</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">add<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>items<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+						<li class="tsd-signature tsd-kind-icon">add<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>items<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/17c037e/src/common/array-set.ts#L30">wesib/wesib/src/common/array-set.ts:30</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/8c24266/src/common/array-set.ts#L27">wesib/wesib/src/common/array-set.ts:27</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>items: <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></h5>
+									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>items: <span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="addAll" class="tsd-anchor"></a>
+					<h3>add<wbr>All</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">add<wbr>All<span class="tsd-signature-symbol">(</span>items<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/8c24266/src/common/array-set.ts#L31">wesib/wesib/src/common/array-set.ts:31</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>items: <span class="tsd-signature-type">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
@@ -255,7 +279,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/17c037e/src/common/array-set.ts#L39">wesib/wesib/src/common/array-set.ts:39</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/8c24266/src/common/array-set.ts#L40">wesib/wesib/src/common/array-set.ts:40</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -305,6 +329,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="@wesib_wesib.ArraySet.html#add" class="tsd-kind-icon">add</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="@wesib_wesib.ArraySet.html#addAll" class="tsd-kind-icon">add<wbr>All</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="@wesib_wesib.ArraySet.html#merge" class="tsd-kind-icon">merge</a>

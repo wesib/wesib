@@ -106,10 +106,10 @@ bootstrapComponents(MyComponent);</code></pre>
 				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { Attribute, AttributeChanged, Attributes, Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'@wesib/wesib'</span>;
 
 <span class="hljs-meta">@Component</span>(<span class="hljs-string">'my-component'</span>) <span class="hljs-comment">// Custom element name</span>
-<span class="hljs-meta">@Attributes</span>([
+<span class="hljs-meta">@Attributes</span>(
   <span class="hljs-string">'attribute-one'</span>,
   <span class="hljs-string">'another-attribute'</span>,   
-])
+)
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> MyComponent {
 
   <span class="hljs-meta">@Attribute</span>(<span class="hljs-string">'attribute-two'</span>) <span class="hljs-comment">// Attribute name. When omitted the property name is used</span>
