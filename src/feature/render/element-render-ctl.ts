@@ -14,6 +14,8 @@ import { RenderDef } from './render-def';
  *
  * Controls rendering by {@link ElementRenderer element renderers}.
  *
+ * Available in component context. Requires {@link StateSupport state support} to be enabled.
+ *
  * @category Feature
  */
 export interface ElementRenderCtl {
