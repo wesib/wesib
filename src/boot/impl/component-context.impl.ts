@@ -29,7 +29,6 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
   constructor(
       readonly _definitionContext: DefinitionContext$<T>,
       readonly element: any,
-      readonly elementSuper: (name: PropertyKey) => any,
   ) {
     super();
 

@@ -181,13 +181,6 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   abstract whenConnected(receiver: EventReceiver<[this]>): EventSupply;
 
   /**
-   * Returns a `super` property value inherited from custom element parent.
-   *
-   * @param key  Target property key.
-   */
-  abstract elementSuper(key: PropertyKey): any;
-
-  /**
    * Returns a DOM event producer for the given event type.
    *
    * This is a shorthand for invoking a component event producer function available under

@@ -29,11 +29,7 @@ export function customElementType<T extends object>(
     constructor() {
       super();
 
-      const context = new CustomComponentContext$(
-          definitionContext,
-          this,
-          key => super[key],
-      );
+      const context = new CustomComponentContext$(definitionContext, this);
 
       context._createComponent();
       context._created();

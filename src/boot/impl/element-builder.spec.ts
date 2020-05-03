@@ -441,10 +441,6 @@ describe('boot', () => {
         doMount();
         expect(ComponentContext.of(element)).toBe(context);
       });
-      it('has access ot overridden element properties', () => {
-        doMount();
-        expect(context.elementSuper('property')).toBe('overridden');
-      });
       it('is mounted', () => {
         doMount();
         expect(context.mount).toBe(mount);

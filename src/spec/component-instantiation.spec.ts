@@ -22,13 +22,7 @@ describe('component instantiation', () => {
       @Component({
         name: 'test-component',
         extend: {
-          type: class extends MockElement {
-
-            get inheritedProperty(): string {
-              return 'inherited-value';
-            }
-
-          },
+          type: MockElement,
         },
       })
       @Feature({
@@ -72,9 +66,6 @@ describe('component instantiation', () => {
     });
     it('sets component type', () => {
       expect(context.componentType).toBe(testComponent);
-    });
-    it('allows to access inherited element properties', () => {
-      expect(context.elementSuper('inheritedProperty')).toEqual('inherited-value');
     });
 
     describe('onComponent listener', () => {
