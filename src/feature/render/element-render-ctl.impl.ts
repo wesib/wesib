@@ -34,8 +34,12 @@ export class ElementRenderCtl$ implements ElementRenderCtl {
   ): EventSupply {
 
     const { path = [] } = def;
+    const error = def.error && def.error.bind(def);
     const stateTracker = this._context.get(ComponentState).track(path);
-    const schedule = this._context.get(DefaultRenderScheduler)({ node: this._context.element });
+    const schedule = this._context.get(DefaultRenderScheduler)({
+      node: this._context.element,
+      error,
+    });
 
     let status = RenderStatus.Pending;
     const supply = stateTracker.onUpdate(() => {

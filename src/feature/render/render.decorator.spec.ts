@@ -64,12 +64,31 @@ describe('feature/render', () => {
       component.property2 = 'other';
       expect(mockRenderer).toHaveBeenCalled();
     });
-    it('is scheduled on another state part update', async () => {
+    it('is scheduled on specified state part update', async () => {
 
       const { component } = await bootstrap({ path: domPropertyPathTo('property2') });
 
       component.property = 'other';
       expect(mockRenderer).not.toHaveBeenCalled();
+      component.property2 = 'third';
+      expect(mockRenderer).toHaveBeenCalled();
+    });
+    it('reports errors by calling the given method', async () => {
+      mockRenderScheduler = jest.fn(immediateRenderScheduler);
+
+      const error = new Error('test');
+
+      mockRenderer.mockImplementation(() => {
+        throw error;
+      });
+
+      const logError = jest.fn();
+      const renderDef = { error: logError };
+      const { component } = await bootstrap(renderDef);
+
+      component.property = 'other';
+      expect(logError).toHaveBeenCalledWith(error);
+      expect(logError.mock.instances[0]).toBe(renderDef);
     });
     it('is not scheduled on state update while offline', async () => {
 
@@ -80,6 +99,7 @@ describe('feature/render', () => {
       expect(mockRenderer).not.toHaveBeenCalled();
     });
     it('is scheduled when connected', async () => {
+      connected = false;
 
       const { element } = await bootstrap();
 

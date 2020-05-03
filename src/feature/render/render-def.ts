@@ -21,4 +21,11 @@ export interface RenderDef {
    */
   readonly path?: StatePath;
 
+  /**
+   * Reports rendering error. E.g. a render shot execution failure.
+   *
+   * @param messages  Error messages to report.
+   */
+  error?(...messages: any[]): void;
+
 }

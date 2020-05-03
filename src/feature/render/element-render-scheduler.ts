@@ -47,6 +47,13 @@ export interface ElementRenderScheduleOptions extends RenderScheduleOptions, Ren
    */
   readonly path?: StatePath;
 
+  /**
+   * Reports rendering error. E.g. a render shot execution failure.
+   *
+   * @param messages  Error messages to report.
+   */
+  error?(...messages: any[]): void;
+
 }
 
 /**
@@ -59,18 +66,16 @@ function newElementRenderScheduler(context: ContextValues): ElementRenderSchedul
   const renderCtl = context.get(ElementRenderCtl);
   const state = context.get(ComponentState);
 
-  return (
-      {
-        path = [ElementRenderShot__root, ++scheduleSeq],
-      }: ElementRenderScheduleOptions = {},
-  ): RenderSchedule => {
+  return (opts = {}): RenderSchedule => {
 
+    const { path = [ElementRenderShot__root, ++scheduleSeq] } = opts;
+    const error = opts.error && opts.error.bind(opts);
     let recentShot: RenderShot = noop;
     const renderer: ElementRenderer = execution => {
       recentShot(execution);
     };
 
-    renderCtl.renderBy(renderer, { path });
+    renderCtl.renderBy(renderer, { path, error });
 
     return (shot: RenderShot): void => {
 

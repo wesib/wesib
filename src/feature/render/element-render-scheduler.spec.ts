@@ -91,6 +91,26 @@ describe('feature/render', () => {
       context.get(ElementRenderCtl).renderNow();
       expect(shot).toHaveBeenCalledTimes(1);
     });
+    it('reports errors by calling the given method', async () => {
+      mockRenderScheduler = jest.fn(immediateRenderScheduler);
+
+      const error = new Error('test');
+      const logError = jest.fn();
+      const context = await bootstrap();
+
+      context.element.connectedCallback();
+
+      const scheduler = context.get(ElementRenderScheduler);
+      const options = { error: logError };
+      const schedule = scheduler(options);
+      const shot = (): never => {
+        throw error;
+      };
+
+      schedule(shot);
+      expect(logError).toHaveBeenCalledWith(error);
+      expect(logError.mock.instances[0]).toBe(options);
+    });
 
     async function bootstrap(): Promise<ComponentContext> {
 
