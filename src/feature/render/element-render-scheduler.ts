@@ -69,13 +69,12 @@ function newElementRenderScheduler(context: ContextValues): ElementRenderSchedul
   return (opts = {}): RenderSchedule => {
 
     const { path = [ElementRenderShot__root, ++scheduleSeq] } = opts;
-    const error = opts.error && opts.error.bind(opts);
     let recentShot: RenderShot = noop;
     const renderer: ElementRenderer = execution => {
       recentShot(execution);
     };
 
-    renderCtl.renderBy(renderer, { path, error });
+    renderCtl.renderBy(renderer, RenderDef.merge(opts, { path }));
 
     return (shot: RenderShot): void => {
 

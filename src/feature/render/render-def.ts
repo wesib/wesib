@@ -29,3 +29,28 @@ export interface RenderDef {
   error?(...messages: any[]): void;
 
 }
+
+/**
+ * @category Feature
+ */
+export const RenderDef = {
+
+  /**
+   * Merges two element rendering definitions.
+   *
+   * @param base  Base definition to extend.
+   * @param extension  Definition extension.
+   *
+   * @return `base` element rendering definition with options overridden by `extension`.
+   */
+  merge(this: void, base: RenderDef, extension: RenderDef): RenderDef {
+
+    const { path = base.path, error } = extension;
+
+    return {
+      path,
+      error: error ? error.bind(extension) : base.error && base.error.bind(base),
+    };
+  },
+
+};
