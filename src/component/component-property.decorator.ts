@@ -295,7 +295,7 @@ export namespace ComponentProperty {
    *
    * When applying to decorated property, this definition updates its definition.
    *
-   * When applying to virtual property assumed by one of [[ComponentPropertyDescriptor]] methods, most of returned
+   * When applying to virtual property assumed by one of [[ComponentPropertyDecorator]] methods, most of returned
    * values ignored. Except for {@link Definition.componentDef component definition}, {@link Definition.get value
    * reader}, and {@link Definition.set value setter}.
    *

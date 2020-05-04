@@ -12,6 +12,16 @@ import { StatePath } from '@proc7ts/fun-events';
 export interface RenderDef {
 
   /**
+   * When to start the rendering.
+   *
+   * One of:
+   * - `settled` - start rendering when component is {@link ComponentContext.settled settled}.
+   * - `connected` (the default) - start rendering when component's element is {@link ComponentContext.connected
+   *   connected} to document.
+   */
+  readonly when?: 'settled' | 'connected';
+
+  /**
    * A path to component state part the renderer should track.
    *
    * The rendering would trigger only when the target state part is updated. This can be useful e.g. when component has

@@ -56,8 +56,8 @@ export interface DefinitionSetup<T extends object = any> {
    * context immediately.
    *
    * If component already exists when the receiver is registered, that receiver would receive instantiated component's
-   * context only when/if component is {@link ComponentContext.whenOn connected}. This is to prevent resource leaking
-   * on disconnected components that may be never used again.
+   * context only when/if component is {@link ComponentContext.whenConnected connected}. This is to prevent resource
+   * leaking on disconnected components that may be never used again.
    *
    * @returns `OnEvent` sender of instantiated component context.
    */
@@ -70,8 +70,8 @@ export interface DefinitionSetup<T extends object = any> {
    * context immediately.
    *
    * If component already exists when the receiver is registered, that receiver would receive instantiated component's
-   * context only when/if component is {@link ComponentContext.whenOn connected}. This is to prevent resource leaking
-   * on disconnected components that may be never used again.
+   * context only when/if component is {@link ComponentContext.whenConnected connected}. This is to prevent resource
+   * leaking on disconnected components that may be never used again.
    *
    * @param receiver  Target receiver of instantiate component contexts.
    *

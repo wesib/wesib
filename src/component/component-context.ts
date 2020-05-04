@@ -70,16 +70,30 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   /**
    * Component mount.
    *
-   * This is defined when component is mounted to arbitrary element by [[ComponentFactory.mountTo]]. Ot is `undefined`
+   * This is defined when component is mounted to arbitrary element by [[DefinitionContext.mountTo]]. Ot is `undefined`
    * for components created in standard way.
    */
   abstract readonly mount: ComponentMount<T> | undefined;
 
   /**
-   * Whether the custom element is connected.
+   * Whether the component is settled.
    *
-   * This becomes `true` right before [[whenOn]] event is sent, and becomes `false` right before [[whenOff]] event is
-   * sent.
+   * Component settlement happens:
+   * - when [[settle]] method is called,
+   * - when component is {@link DefinitionContext.mountTo mounted} to element, or
+   * - when component's element is [[connected]].
+   *
+   * It is guaranteed that component settlement won't happen inside custom element's constructor. So the settlement
+   * event may be used e.g. to start DOM manipulations, as the latter is prohibited inside custom element constructor.
+   *
+   * This becomes `true` right before [[whenSettled]] event is sent.
+   */
+  abstract readonly settled: boolean;
+
+  /**
+   * Whether the component's element is connected.
+   *
+   * This becomes `true` right before [[whenConnected]] event is sent.
    */
   abstract readonly connected: boolean;
 
@@ -159,24 +173,65 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   abstract whenReady(receiver: EventReceiver<[this]>): EventSupply;
 
   /**
-   * Builds an `OnEvent` sender of custom element connection events.
+   * Settles component.
    *
-   * The registered receiver is called when custom element is connected, i.e. its `connectedCallback()` method is
-   * called. If component is connected already the receiver is called immediately.
+   * Calling this method has no effect if component is [[settled]] already, when component is not
+   * {@link whenReady ready} yet, or custom element's constructor is not exited.
+   *
+   * Calling this method may trigger DOM manipulations (the latter is prohibited inside custom element's constructor).
+   * This may be desired for rendering optimizations. E.g. to render element's content _before_ adding it to document.
+   *
+   * This method is called automatically when {@link DefinitionContext.mountTo mounting} component to element.
+   */
+  abstract settle(): void;
+
+  /**
+   * Builds an `OnEvent` sender of component settlement event.
+   *
+   * The registered receiver is called when component is [[settled]]. If settled already the receiver is called
+   * immediately.
+   *
+   * @returns An `OnEvent` sender of this component context when settled.
+   */
+  abstract whenSettled(): OnEvent<[this]>;
+
+  /**
+   * Registers a receiver of component settlement event.
+   *
+   * The registered receiver is called when component is [[settled]]. If settled already the receiver is called
+   * immediately.
+   *
+   * @param receiver  Target receiver of this component context when connected.
+   *
+   * @returns Component settlement event supply.
+   */
+  abstract whenSettled(receiver: EventReceiver<[this]>): EventSupply;
+
+  /**
+   * Builds an `OnEvent` sender of component's element connection event.
+   *
+   * The registered receiver is called when component's element is connected. I.e. when custom element's
+   * `connectedCallback()` method is called, or when the element this component is {@link mount mounted to} is
+   * {@link ComponentMount.connect connected}.
+   *
+   * If connected already the receiver is called immediately.
    *
    * @returns An `OnEvent` sender of this component context when connected.
    */
   abstract whenConnected(): OnEvent<[this]>;
 
   /**
-   * Registers a receiver of custom element connection events.
+   * Registers a receiver of component's element connection event.
    *
-   * The registered receiver is called when custom element is connected, i.e. its `connectedCallback()` method is
-   * called. If component is connected already the receiver is called immediately.
+   * The registered receiver is called when component's element is connected. I.e. when custom element's
+   * `connectedCallback()` method is called, or when the element this component is {@link mount mounted to} is
+   * {@link ComponentMount.connect connected}.
+   *
+   * If connected already the receiver is called immediately.
    *
    * @param receiver  Target receiver of this component context when connected.
    *
-   * @returns Custom element connection events supply.
+   * @returns Component's element connection event supply.
    */
   abstract whenConnected(receiver: EventReceiver<[this]>): EventSupply;
 
