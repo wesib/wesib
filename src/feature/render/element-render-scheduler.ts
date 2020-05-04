@@ -41,6 +41,16 @@ export type ElementRenderScheduler =
 export interface ElementRenderScheduleOptions extends RenderScheduleOptions, RenderDef {
 
   /**
+   * When to start the rendering.
+   *
+   * One of:
+   * - `settled` - start rendering when component is {@link ComponentContext.settled settled}.
+   * - `connected` (the default) - start rendering when component's element is {@link ComponentContext.connected
+   *   connected} to document.
+   */
+  readonly when?: 'settled' | 'connected';
+
+  /**
    * A path to component state part the schedule should update when new render shot is scheduled.
    *
    * An unique one will be constructed when omitted.
@@ -68,14 +78,14 @@ function newElementRenderScheduler(context: ContextValues): ElementRenderSchedul
 
   return (opts = {}): RenderSchedule => {
 
-    const { path = [ElementRenderShot__root, ++scheduleSeq] } = opts;
+    const { when, path = [ElementRenderShot__root, ++scheduleSeq] } = opts;
     const error = opts.error && opts.error.bind(opts);
     let recentShot: RenderShot = noop;
     const renderer: ElementRenderer = execution => {
       recentShot(execution);
     };
 
-    renderCtl.renderBy(renderer, { path, error });
+    renderCtl.renderBy(renderer, { when, path, error });
 
     return (shot: RenderShot): void => {
 
