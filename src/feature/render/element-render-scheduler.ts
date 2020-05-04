@@ -31,8 +31,7 @@ export type ElementRenderScheduler =
 /**
  * Options for render schedule.
  *
- * This is passed to {@link ElementRenderScheduler element render scheduler} when constructing new
- * {@link RenderSchedule schedule}.
+ * This is passed to {@link ElementRenderScheduler element render scheduler} when constructing new render schedule.
  *
  * Generic `RenderSchedule` options are ignored.
  *

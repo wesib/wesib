@@ -70,7 +70,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   /**
    * Component mount.
    *
-   * This is defined when component is mounted to arbitrary element by [[ComponentFactory.mountTo]]. Ot is `undefined`
+   * This is defined when component is mounted to arbitrary element by [[DefinitionContext.mountTo]]. Ot is `undefined`
    * for components created in standard way.
    */
   abstract readonly mount: ComponentMount<T> | undefined;
@@ -80,7 +80,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    *
    * Component settlement happens:
    * - when [[settle]] method is called,
-   * - when component is {@link ComponentMount.mountTo mounted} to element, or
+   * - when component is {@link DefinitionContext.mountTo mounted} to element, or
    * - when component's element is [[connected]].
    *
    * It is guaranteed that component settlement won't happen inside custom element's constructor. So the settlement
@@ -181,7 +181,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    * Calling this method may trigger DOM manipulations (the latter is prohibited inside custom element's constructor).
    * This may be desired for rendering optimizations. E.g. to render element's content _before_ adding it to document.
    *
-   * This method is called automatically when {@link ComponentMount.mountTo mounting} component to element.
+   * This method is called automatically when {@link DefinitionContext.mountTo mounting} component to element.
    */
   abstract settle(): void;
 
