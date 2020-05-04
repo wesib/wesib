@@ -15,6 +15,8 @@ import { DefinitionContext$ } from './definition-context.impl';
 const enum ComponentStatus {
   Building,
   Ready,
+  Built,
+  Settled,
   Connected,
 }
 
@@ -46,8 +48,12 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
     return this._component();
   }
 
+  get settled(): boolean {
+    return this._status.it >= ComponentStatus.Settled && !eventSupplyOf(this).isOff;
+  }
+
   get connected(): boolean {
-    return this._status.it === ComponentStatus.Connected && !eventSupplyOf(this).isOff;
+    return this._status.it >= ComponentStatus.Connected && !eventSupplyOf(this).isOff;
   }
 
   get [EventSupply__symbol](): EventSupply {
@@ -66,11 +72,26 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
     ).once().F)(receiver);
   }
 
+  settle(): void {
+    if (this._status.it === ComponentStatus.Built) {
+      // Prevent settling until exiting custom element constructor
+      this._status.it = ComponentStatus.Settled;
+    }
+  }
+
+  whenSettled(): OnEvent<[this]>;
+  whenSettled(receiver: EventReceiver<[this]>): EventSupply;
+  whenSettled(receiver?: EventReceiver<[this]>): OnEvent<[this]> | EventSupply {
+    return (this.whenSettled = this._status.read().thru_(
+        status => status >= ComponentStatus.Settled ? nextArg(this) : nextSkip(),
+    ).once().F)(receiver);
+  }
+
   whenConnected(): OnEvent<[this]>;
   whenConnected(receiver: EventReceiver<[this]>): EventSupply;
   whenConnected(receiver?: EventReceiver<[this]>): OnEvent<[this]> | EventSupply {
     return (this.whenConnected = this._status.read().thru_(
-        status => status === ComponentStatus.Connected ? nextArg(this) : nextSkip(),
+        status => status >= ComponentStatus.Connected ? nextArg(this) : nextSkip(),
     ).once().F)(receiver);
   }
 
@@ -106,7 +127,7 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
     const component = newComponent(this);
 
     this._component = valueProvider(component);
-    this._status.it = ComponentStatus.Ready;
+    this._status.it = ComponentStatus.Ready; // Issue `whenReady` event
 
     return this;
   }
@@ -116,6 +137,9 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
   }
 
   _created(): void {
+    if (this._status.it < ComponentStatus.Built) { // Mounted component can be connected already
+      this._status.it = ComponentStatus.Built; // Can settle now
+    }
     this.whenConnected(
         () => this.dispatchEvent(new ComponentEvent('wesib:component', { bubbles: true })),
     );

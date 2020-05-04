@@ -38,6 +38,12 @@ describe('boot', () => {
           name: 'test-component',
         };
 
+        constructor(ctx: ComponentContext) {
+          ctx.settle();
+          // eslint-disable-next-line jest/no-standalone-expect
+          expect(ctx.settled).toBe(false);
+        }
+
       };
     });
 
@@ -289,12 +295,63 @@ describe('boot', () => {
         expect(componentContext.mount).toBeUndefined();
       });
 
+      describe('settled', () => {
+        it('is `false` by default', () => {
+          expect(componentContext.settled).toBe(false);
+        });
+      });
+
+      describe('settle', () => {
+        it('settles component', () => {
+
+          const whenSettled = jest.fn();
+          const supply = componentContext.whenSettled(whenSettled);
+
+          expect(whenSettled).not.toHaveBeenCalled();
+
+          componentContext.settle();
+          expect(componentContext.settled).toBe(true);
+          expect(whenSettled).toHaveBeenCalledWith(componentContext);
+          expect(supply.isOff).toBe(true);
+        });
+        it('does nothing when connected already', () => {
+          componentContext.element.connectedCallback();
+          componentContext.settle();
+          expect(componentContext.settled).toBe(true);
+          expect(componentContext.connected).toBe(true);
+        });
+      });
+
       describe('connectedCallback', () => {
-        it('calls `connectedCallback()` of original element when connected', () => {
+        it('makes component settled', () => {
+
+          const whenSettled = jest.fn();
+          const supply = componentContext.whenSettled(whenSettled);
+
+          expect(whenSettled).not.toHaveBeenCalled();
+
+          componentContext.element.connectedCallback();
+          expect(componentContext.settled).toBe(true);
+          expect(whenSettled).toHaveBeenCalledWith(componentContext);
+          expect(supply.isOff).toBe(true);
+        });
+        it('makes component connected', () => {
+
+          const whenConnected = jest.fn();
+          const supply = componentContext.whenConnected(whenConnected);
+
+          expect(whenConnected).not.toHaveBeenCalled();
+
+          componentContext.element.connectedCallback();
+          expect(componentContext.connected).toBe(true);
+          expect(whenConnected).toHaveBeenCalledWith(componentContext);
+          expect(supply.isOff).toBe(true);
+        });
+        it('calls `connectedCallback()` of original element', () => {
           componentContext.element.connectedCallback();
           expect(connectedCallbackSpy).toHaveBeenCalledWith();
         });
-        it('dispatches component event when first connected', () => {
+        it('dispatches component event', () => {
           expect(dispatchEventSpy).not.toHaveBeenCalled();
 
           componentContext.element.connectedCallback();
@@ -405,6 +462,12 @@ describe('boot', () => {
           expect(element[ComponentDef__symbol]).toBeUndefined();
           expect(component[ComponentDef__symbol]).toBeUndefined();
         });
+        it('makes component disconnected', () => {
+          componentContext.element.connectedCallback();
+          componentContext.destroy();
+          expect(componentContext.connected).toBe(false);
+          expect(componentContext.settled).toBe(false);
+        });
       });
     });
 
@@ -483,6 +546,16 @@ describe('boot', () => {
           doMount();
 
           expect(mount.connected).toBe(true);
+        });
+        it('is settled initially when element is not in document', () => {
+
+          element.ownerDocument = {
+            contains: jest.fn(() => false),
+          };
+
+          doMount();
+
+          expect(context.settled).toBe(true);
         });
         it('is not connected initially when element is not in document', () => {
 
