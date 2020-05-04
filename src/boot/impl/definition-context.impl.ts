@@ -86,6 +86,7 @@ export class DefinitionContext$<T extends object> extends DefinitionContext<T> {
 
     mount.checkConnected();
     context._created();
+    context.settle();
 
     return mount;
   }

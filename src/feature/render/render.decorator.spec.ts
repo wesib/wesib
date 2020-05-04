@@ -34,12 +34,6 @@ describe('feature/render', () => {
       mockRenderer = jest.fn();
     });
 
-    let connected: boolean;
-
-    beforeEach(() => {
-      connected = true;
-    });
-
     it('enables component state', async () => {
 
       const context = await bootstrap();
@@ -52,26 +46,29 @@ describe('feature/render', () => {
     });
     it('is scheduled on state update', async () => {
 
-      const { component } = await bootstrap();
+      const { component, element } = await bootstrap();
 
+      element.connectedCallback();
       component.property = 'other';
       expect(mockRenderer).toHaveBeenCalled();
     });
     it('is scheduled on state part update', async () => {
 
-      const { component } = await bootstrap({ path: domPropertyPathTo('property2') });
+      const { element, component } = await bootstrap({ path: domPropertyPathTo('property2') });
 
+      element.connectedCallback();
       component.property2 = 'other';
       expect(mockRenderer).toHaveBeenCalled();
     });
     it('is scheduled on specified state part update', async () => {
 
-      const { component } = await bootstrap({ path: domPropertyPathTo('property2') });
+      const { element, component } = await bootstrap({ path: domPropertyPathTo('property2') });
 
+      element.connectedCallback();
       component.property = 'other';
-      expect(mockRenderer).not.toHaveBeenCalled();
+      expect(mockRenderer).toHaveBeenCalledTimes(1);
       component.property2 = 'third';
-      expect(mockRenderer).toHaveBeenCalled();
+      expect(mockRenderer).toHaveBeenCalledTimes(2);
     });
     it('reports errors by calling the given method', async () => {
       mockRenderScheduler = jest.fn(immediateRenderScheduler);
@@ -84,9 +81,9 @@ describe('feature/render', () => {
 
       const logError = jest.fn();
       const renderDef = { error: logError };
-      const { component } = await bootstrap(renderDef);
+      const { element } = await bootstrap(renderDef);
 
-      component.property = 'other';
+      element.connectedCallback();
       expect(logError).toHaveBeenCalledWith(error);
       expect(logError.mock.instances[0]).toBe(renderDef);
     });
@@ -94,46 +91,54 @@ describe('feature/render', () => {
 
       const { component } = await bootstrap();
 
-      connected = false;
       component.property = 'other';
       expect(mockRenderer).not.toHaveBeenCalled();
     });
     it('is scheduled when connected', async () => {
-      connected = false;
 
       const { element } = await bootstrap();
 
-      connected = true;
       element.connectedCallback();
+      expect(mockRenderer).toHaveBeenCalled();
+    });
+    it('is not scheduled when settled by default', async () => {
+
+      const context = await bootstrap();
+
+      context.settle();
+      expect(mockRenderer).not.toHaveBeenCalled();
+    });
+    it('is not scheduled on settle if `when` set to `settled`', async () => {
+
+      const context = await bootstrap({ when: 'settled' });
+
+      context.settle();
       expect(mockRenderer).toHaveBeenCalled();
     });
     it('is re-scheduled when connected after state update', async () => {
 
       const { component, element } = await bootstrap();
 
+      element.connectedCallback();
       component.property = 'other';
-      connected = true;
-      element.connectedCallback();
-      expect(mockRenderer).toHaveBeenCalledTimes(1);
+      expect(mockRenderer).toHaveBeenCalledTimes(2);
     });
-    it('is not re-scheduled when connected without state update', async () => {
+    it('is re-scheduled when settled after state update and `when` set to `settled`', async () => {
 
-      const { element } = await bootstrap();
+      const context = await bootstrap({ when: 'settled' });
 
-      connected = true;
-      element.connectedCallback();
-      element.connectedCallback();
-      expect(mockRenderer).toHaveBeenCalledTimes(1);
+      context.settle();
+      context.component.property = 'other';
+
+      expect(mockRenderer).toHaveBeenCalledTimes(2);
     });
     it('is not re-scheduled after component destruction', async () => {
 
       const context = await bootstrap();
       const { element } = context;
 
-      connected = true;
       element.connectedCallback();
       context.destroy();
-      connected = false;
       context.updateState(domPropertyPathTo('property'), 'other', 'init');
       expect(mockRenderer).toHaveBeenCalledTimes(1);
     });
@@ -146,7 +151,6 @@ describe('feature/render', () => {
       const context = await bootstrap();
       const { component, element } = context;
 
-      connected = true;
       element.connectedCallback();
       component.property = 'other';
       context.destroy();
@@ -157,7 +161,6 @@ describe('feature/render', () => {
 
       const { component, element } = await bootstrap();
 
-      connected = true;
       element.connectedCallback();
       expect(mockRenderer).toHaveBeenCalledWith(expect.objectContaining({
         config: expect.objectContaining({
@@ -179,8 +182,7 @@ describe('feature/render', () => {
       });
       it('is re-scheduled on state update', async () => {
 
-        const { component } = await bootstrap({}, () => mockRenderer);
-        const { element } = await bootstrap({}, () => mockRenderer);
+        const { element, component } = await bootstrap({}, () => mockRenderer);
 
         element.connectedCallback();
         component.property = 'other';
@@ -222,10 +224,17 @@ describe('feature/render', () => {
       });
 
       describe('renderNow', () => {
+        beforeEach(() => {
+          mockRenderScheduler.mockImplementation(noopRenderScheduler);
+        });
+
         it('renders component immediately', async () => {
 
           const context = await bootstrap();
           const renderCtl = context.get(ElementRenderCtl);
+
+          context.element.connectedCallback();
+          expect(mockRenderer).not.toHaveBeenCalled();
 
           renderCtl.renderNow();
           expect(mockRenderer).toHaveBeenCalledTimes(1);
@@ -234,6 +243,9 @@ describe('feature/render', () => {
 
           const context = await bootstrap();
           const renderCtl = context.get(ElementRenderCtl);
+
+          context.element.connectedCallback();
+          expect(mockRenderer).not.toHaveBeenCalled();
 
           renderCtl.renderNow();
           renderCtl.renderNow();
@@ -245,8 +257,12 @@ describe('feature/render', () => {
           const context = await bootstrap();
           const renderCtl = context.get(ElementRenderCtl);
 
+          context.element.connectedCallback();
+          expect(mockRenderer).not.toHaveBeenCalled();
+
           renderCtl.renderNow();
           context.element.property = 'other';
+
           renderCtl.renderNow();
           expect(mockRenderer).toHaveBeenCalledTimes(2);
         });
@@ -280,11 +296,8 @@ describe('feature/render', () => {
       }
 
       const element = new (await testElement(TestComponent))();
-      const context = ComponentContext.of(element);
 
-      jest.spyOn(context, 'connected', 'get').mockImplementation(() => connected);
-
-      return context;
+      return ComponentContext.of(element);
     }
   });
 });

@@ -7,7 +7,7 @@ import { ComponentContext } from './component-context';
 /**
  * A mount of the component to an element.
  *
- * This is constructed when a component is mounted to arbitrary element by [[ComponentFactory.mountTo]] method.
+ * This is constructed when a component is mounted to arbitrary element by [[DefinitionContext.mountTo]] method.
  *
  * Mounted components do not maintain their connection state automatically. It is a calling code responsibility to set
  * their connection state by updating [[ComponentMount.connected]] property. E.g. by calling a

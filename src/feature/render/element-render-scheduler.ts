@@ -31,14 +31,23 @@ export type ElementRenderScheduler =
 /**
  * Options for render schedule.
  *
- * This is passed to {@link ElementRenderScheduler element render scheduler} when constructing new
- * {@link RenderSchedule schedule}.
+ * This is passed to {@link ElementRenderScheduler element render scheduler} when constructing new render schedule.
  *
  * Generic `RenderSchedule` options are ignored.
  *
  * @category Feature
  */
 export interface ElementRenderScheduleOptions extends RenderScheduleOptions, RenderDef {
+
+  /**
+   * When to start the rendering.
+   *
+   * One of:
+   * - `settled` - start rendering when component is {@link ComponentContext.settled settled}.
+   * - `connected` (the default) - start rendering when component's element is {@link ComponentContext.connected
+   *   connected} to document.
+   */
+  readonly when?: 'settled' | 'connected';
 
   /**
    * A path to component state part the schedule should update when new render shot is scheduled.
