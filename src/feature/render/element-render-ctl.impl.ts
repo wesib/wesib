@@ -39,17 +39,17 @@ export class ElementRenderCtl$ implements ElementRenderCtl {
       ...RenderDef.merge(def, { path }),
       node: this._context.element,
     });
-    const whenSettled = when === 'settled';
+    const whenConnected = when === 'connected';
     let status = RenderStatus.Pending;
     const startRendering = (): 0 | void => status /* there is an update to render */ && scheduleRenderer();
-    const onUpdate = whenSettled
-        ? () => this._context.settled && scheduleRenderer()
-        : () => this._context.connected && scheduleRenderer();
+    const onUpdate = whenConnected
+        ? () => this._context.connected && scheduleRenderer()
+        : () => this._context.settled && scheduleRenderer();
     const supply = stateTracker.onUpdate(onUpdate)
         .needs(this._context)
         .whenOff(cancelRenderer);
 
-    (whenSettled ? this._context.whenSettled() : this._context.whenConnected()).to(startRendering);
+    (whenConnected ? this._context.whenConnected() : this._context.whenSettled()).to(startRendering);
 
     const immediateSchedule = immediateRenderScheduler();
 

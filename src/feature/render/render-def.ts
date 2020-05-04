@@ -15,9 +15,9 @@ export interface RenderDef {
    * When to start the rendering.
    *
    * One of:
-   * - `settled` - start rendering when component is {@link ComponentContext.settled settled}.
-   * - `connected` (the default) - start rendering when component's element is {@link ComponentContext.connected
-   *   connected} to document.
+   * - `settled` (the default) - start rendering when component is {@link ComponentContext.settled settled}.
+   * - `connected` - start rendering when component's element is {@link ComponentContext.connected connected}
+   *   to document.
    */
   readonly when?: 'settled' | 'connected';
 

@@ -87,12 +87,19 @@ describe('feature/render', () => {
       expect(logError).toHaveBeenCalledWith(error);
       expect(logError.mock.instances[0]).toBe(renderDef);
     });
-    it('is not scheduled on state update while offline', async () => {
+    it('is not scheduled on state update when not settled', async () => {
 
       const { component } = await bootstrap();
 
       component.property = 'other';
       expect(mockRenderer).not.toHaveBeenCalled();
+    });
+    it('is scheduled when settled', async () => {
+
+      const context = await bootstrap();
+
+      context.settle();
+      expect(mockRenderer).toHaveBeenCalled();
     });
     it('is scheduled when connected', async () => {
 
@@ -101,35 +108,35 @@ describe('feature/render', () => {
       element.connectedCallback();
       expect(mockRenderer).toHaveBeenCalled();
     });
-    it('is not scheduled when settled by default', async () => {
+    it('(when: connected) is scheduled when connected', async () => {
 
-      const context = await bootstrap();
+      const { element } = await bootstrap({ when: 'connected' });
+
+      element.connectedCallback();
+      expect(mockRenderer).toHaveBeenCalled();
+    });
+    it('(when: connected) is not scheduled on settle', async () => {
+
+      const context = await bootstrap({ when: 'connected' });
 
       context.settle();
       expect(mockRenderer).not.toHaveBeenCalled();
     });
-    it('is not scheduled on settle if `when` set to `settled`', async () => {
+    it('is re-scheduled after when settled after state update', async () => {
 
-      const context = await bootstrap({ when: 'settled' });
-
-      context.settle();
-      expect(mockRenderer).toHaveBeenCalled();
-    });
-    it('is re-scheduled when connected after state update', async () => {
-
-      const { component, element } = await bootstrap();
-
-      element.connectedCallback();
-      component.property = 'other';
-      expect(mockRenderer).toHaveBeenCalledTimes(2);
-    });
-    it('is re-scheduled when settled after state update and `when` set to `settled`', async () => {
-
-      const context = await bootstrap({ when: 'settled' });
+      const context = await bootstrap();
 
       context.settle();
       context.component.property = 'other';
 
+      expect(mockRenderer).toHaveBeenCalledTimes(2);
+    });
+    it('(when: connected) is re-scheduled when connected after state update', async () => {
+
+      const { component, element } = await bootstrap({ when: 'connected' });
+
+      element.connectedCallback();
+      component.property = 'other';
       expect(mockRenderer).toHaveBeenCalledTimes(2);
     });
     it('is not re-scheduled after component destruction', async () => {
