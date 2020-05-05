@@ -115,7 +115,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    * @param newValue  New value.
    * @param oldValue  Previous value.
    */
-  readonly updateState: StateUpdater = updateComponentState.bind(this);
+  readonly updateState: StateUpdater;
 
   /**
    * Extracts component context from its custom element or from component itself.
@@ -135,6 +135,13 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
     }
 
     return context;
+  }
+
+  constructor() {
+    super();
+    this.updateState = <V>(key: StatePath, newValue: V, oldValue: V): void => {
+      this.get(StateUpdater)(key, newValue, oldValue);
+    };
   }
 
   /**
@@ -275,11 +282,4 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    */
   abstract destroy(reason?: any): void;
 
-}
-
-/**
- * @internal
- */
-function updateComponentState<V>(this: ComponentContext<any>, key: StatePath, newValue: V, oldValue: V): void {
-  this.get(StateUpdater)(key, newValue, oldValue);
 }

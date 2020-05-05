@@ -80,7 +80,7 @@ describe('component instantiation', () => {
       it('is resolved on component instantiation', async () => {
 
         let context!: ComponentContext;
-        const component = await new Promise(resolve => {
+        const component = await new Promise((resolve, reject) => {
 
           @Component({
             name: 'test-component',
@@ -100,7 +100,7 @@ describe('component instantiation', () => {
           class TestComponent {
           }
 
-          testElement(TestComponent).then(cls => new cls());
+          testElement(TestComponent).then(cls => new cls()).catch(reject);
         });
 
         expect(component).toBeDefined();

@@ -191,6 +191,7 @@ describe('boot', () => {
 
       expect(receiver).toHaveBeenCalledWith('provided');
 
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       featureRef.dismiss();
       await featureRef.down;
       expect(receiver).toHaveBeenCalledWith('default');
@@ -224,6 +225,7 @@ describe('boot', () => {
 
       expect(receiver).toHaveBeenCalledWith('provided');
 
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       featureRef.dismiss();
       await featureRef.down;
       expect(receiver).toHaveBeenCalledWith('default');

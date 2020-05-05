@@ -114,9 +114,11 @@ function observedAttributes(
 
   const alreadyObserved: readonly string[] | undefined = (elementType as any).observedAttributes;
 
-  return Array.from(isArray<string>(alreadyObserved)
-      ? new ArraySet(alreadyObserved).addAll(attrs).items
-      : attrs);
+  return Array.from(
+      isArray<string>(alreadyObserved)
+          ? new ArraySet(alreadyObserved).addAll(attrs).items
+          : attrs,
+  );
 }
 
 /**
@@ -130,12 +132,12 @@ function attributeChangedCallback<T extends object>(
   const prevCallback: ElementAttributeChanged | undefined = elementType.prototype.attributeChangedCallback;
 
   if (!prevCallback) {
-    return function (name, oldValue, newValue) {
+    return function (this: any, name, oldValue, newValue) {
       attrs.get(name)!(ComponentContext.of<T>(this).component, newValue, oldValue);
     };
   }
 
-  return function (name, oldValue, newValue) {
+  return function (this: any, name, oldValue, newValue) {
 
     const attrChanged = attrs.get(name);
 

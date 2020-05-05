@@ -32,7 +32,7 @@ export function bootstrapComponents(...features: Class[]): BootstrapContext {
 
   bootstrapContext.get(FeatureRequester).request(feature);
   bootstrapContext.get(FeatureKey.of(feature)).to(loader => {
-    loader!.init().then(complete);
+    loader!.init().then(complete).catch(console.error);
   });
 
   return bootstrapContext;
@@ -130,7 +130,7 @@ function initBootstrap(
                   },
                   down: loader.down,
                 };
-              });
+              }).catch(console.error);
             }
           },
         }).whenOff(() => {

@@ -1,6 +1,6 @@
 import { nextArgs, nextSkip, valueProvider } from '@proc7ts/call-thru';
 import { ContextValues, ContextValueSpec } from '@proc7ts/context-values';
-import { EventReceiver, EventSupply, OnEvent, trackValue } from '@proc7ts/fun-events';
+import { EventReceiver, EventSupply, OnEvent, trackValue, ValueTracker } from '@proc7ts/fun-events';
 import { Class } from '../../common';
 import { ComponentContext, ComponentContext__symbol, ComponentDef, ComponentMount } from '../../component';
 import { ComponentClass, DefinitionContext, DefinitionSetup } from '../../component/definition';
@@ -22,8 +22,8 @@ export class DefinitionContext$<T extends object> extends DefinitionContext<T> {
   readonly get: ContextValues['get'];
   private readonly _def: ComponentDef.Options<T>;
   readonly _whenComponent = new WhenComponent<T>();
-  private readonly _ready = trackValue(false);
-  private readonly _whenReady: OnEvent<[]> = this._ready.read().thru(ready => ready ? nextArgs() : nextSkip());
+  private readonly _ready: ValueTracker<boolean>;
+  private readonly _whenReady: OnEvent<[]>;
   private readonly _perTypeRegistry: ComponentContextRegistry;
 
   constructor(
@@ -32,6 +32,8 @@ export class DefinitionContext$<T extends object> extends DefinitionContext<T> {
       readonly componentType: ComponentClass<T>,
   ) {
     super();
+    this._ready = trackValue(false);
+    this._whenReady = this._ready.read().thru(ready => ready ? nextArgs() : nextSkip());
     this._def = ComponentDef.of(componentType);
 
     const definitionContextRegistry = new DefinitionContextRegistry(
