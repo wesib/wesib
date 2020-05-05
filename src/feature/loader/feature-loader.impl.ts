@@ -63,17 +63,17 @@ function preferredFeatureClause(...clauses: FeatureClause[]): FeatureClause | un
 
   for (const clause of clauses) {
     switch (clause[1]) {
-      case 'is':
-        required = true;
-        if (!preferred) {
-          preferred = clause;
-        }
-        break;
-      case 'has':
+    case 'is':
+      required = true;
+      if (!preferred) {
         preferred = clause;
-        break;
-      case 'needs':
-        required = true;
+      }
+      break;
+    case 'has':
+      preferred = clause;
+      break;
+    case 'needs':
+      required = true;
     }
   }
 
