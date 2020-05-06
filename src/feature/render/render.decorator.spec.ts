@@ -146,7 +146,7 @@ describe('feature/render', () => {
 
       element.connectedCallback();
       context.destroy();
-      context.updateState(domPropertyPathTo('property'), 'other', 'init');
+      expect(() => context.updateState(domPropertyPathTo('property'), 'other', 'init')).toThrow('Context destroyed');
       expect(mockRenderer).toHaveBeenCalledTimes(1);
     });
     it('is not rendered after component destruction', async () => {
