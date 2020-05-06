@@ -3,7 +3,7 @@
  * @module @wesib/wesib
  */
 import { ContextValueOpts, ContextValues } from '@proc7ts/context-values';
-import { ContextUpKey, ContextUpRef } from '@proc7ts/context-values/updatable';
+import { contextDestroyed, ContextUpKey, ContextUpRef } from '@proc7ts/context-values/updatable';
 import { AfterEvent, afterThe, EventKeeper, nextAfterEvent } from '@proc7ts/fun-events';
 import { newRenderSchedule, RenderScheduler } from '@proc7ts/render-scheduler';
 import { BootstrapWindow } from './bootstrap-window';
@@ -46,12 +46,16 @@ class DefaultRenderSchedulerKey extends ContextUpKey<DefaultRenderScheduler, Ren
           AfterEvent<RenderScheduler[]>>,
       ): DefaultRenderScheduler {
 
-    let delegated!: DefaultRenderScheduler;
+    let delegated: DefaultRenderScheduler;
 
     opts.context.get(
         this.upKey,
         'or' in opts ? { or: opts.or != null ? afterThe(opts.or) : opts.or } : undefined,
-    )!.to(scheduler => delegated = toDefaultRenderScheduler(opts.context, scheduler));
+    )!.to(
+        scheduler => delegated = toDefaultRenderScheduler(opts.context, scheduler),
+    ).whenOff(
+        reason => delegated = contextDestroyed(reason),
+    );
 
     return (...args) => delegated(...args);
   }

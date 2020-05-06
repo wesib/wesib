@@ -1,11 +1,13 @@
 import Mock = jest.Mock;
+import { ContextSupply } from '@proc7ts/context-values/updatable';
+import { eventSupply } from '@proc7ts/fun-events';
 import {
   immediateRenderScheduler,
   RenderSchedule,
   RenderScheduler,
   setRenderScheduler,
 } from '@proc7ts/render-scheduler';
-import { Feature } from '../../feature';
+import { Feature, FeatureDef } from '../../feature';
 import { bootstrapComponents } from '../bootstrap';
 import { BootstrapContext } from '../bootstrap-context';
 import { BootstrapWindow } from './bootstrap-window';
@@ -84,24 +86,47 @@ describe('boot', () => {
       scheduler({ window, node, error });
       expect(mockScheduler).toHaveBeenCalledWith({ window, node, error });
     });
+    it('throws when context is destroyed', async () => {
 
-    async function bootstrapContext(scheduler?: RenderScheduler): Promise<BootstrapContext> {
-      @Feature({
+      const contextSupply = eventSupply();
+      const scheduler = await bootstrap(undefined, {
         setup(setup) {
-          setup.provide({ a: BootstrapWindow, is: mockWindow });
-          if (scheduler) {
-            setup.provide({ a: DefaultRenderScheduler, is: scheduler });
-          }
+          setup.provide({ a: ContextSupply, is: contextSupply });
         },
-      })
+      });
+
+      const reason = new Error('test');
+
+      contextSupply.off(reason);
+      expect(() => scheduler()).toThrow(reason);
+    });
+
+    async function bootstrapContext(
+        scheduler?: RenderScheduler,
+        feature: FeatureDef.Options = {},
+    ): Promise<BootstrapContext> {
+      @Feature(
+          {
+            setup(setup) {
+              setup.provide({ a: BootstrapWindow, is: mockWindow });
+              if (scheduler) {
+                setup.provide({ a: DefaultRenderScheduler, is: scheduler });
+              }
+            },
+          },
+          feature,
+      )
       class TestFeature {}
 
       return bootstrapComponents(TestFeature).whenReady();
     }
 
-    async function bootstrap(scheduler?: RenderScheduler): Promise<DefaultRenderScheduler> {
+    async function bootstrap(
+        scheduler?: RenderScheduler,
+        feature?: FeatureDef.Options,
+    ): Promise<DefaultRenderScheduler> {
 
-      const bsContext = await bootstrapContext(scheduler);
+      const bsContext = await bootstrapContext(scheduler, feature);
 
       return bsContext.get(DefaultRenderScheduler);
     }
