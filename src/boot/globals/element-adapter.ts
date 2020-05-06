@@ -3,7 +3,7 @@
  * @module @wesib/wesib
  */
 import { ContextValueOpts, ContextValues } from '@proc7ts/context-values';
-import { ContextUpKey, ContextUpRef } from '@proc7ts/context-values/updatable';
+import { contextDestroyed, ContextUpKey, ContextUpRef } from '@proc7ts/context-values/updatable';
 import { AfterEvent, afterThe, EventKeeper, nextAfterEvent } from '@proc7ts/fun-events';
 import { ComponentContext, ComponentContext__symbol } from '../../component';
 
@@ -63,7 +63,11 @@ class ElementAdapterKey extends ContextUpKey<ElementAdapter, ElementAdapter> {
     opts.context.get(
         this.upKey,
         'or' in opts ? { or: opts.or != null ? afterThe(opts.or) : opts.or } : undefined,
-    )!.to(adapter => delegated = adapter);
+    )!.to(
+        adapter => delegated = adapter,
+    ).whenOff(
+        reason => delegated = contextDestroyed(reason),
+    );
 
     return element => delegated(element);
   }

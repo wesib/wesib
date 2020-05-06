@@ -1,4 +1,6 @@
 import { ContextRegistry, ContextValues } from '@proc7ts/context-values';
+import { ContextSupply } from '@proc7ts/context-values/updatable';
+import { eventSupply } from '@proc7ts/fun-events';
 import { ComponentContext, ComponentContext__symbol } from '../../component';
 import { ElementAdapter } from './element-adapter';
 import Mock = jest.Mock;
@@ -21,6 +23,18 @@ describe('boot', () => {
     });
     it('returns a value when fallback is `null`', () => {
       expect(context.get(ElementAdapter, { or: null })).toBeInstanceOf(Function);
+    });
+    it('throws when context is destroyed', () => {
+
+      const contextSupply = eventSupply();
+
+      registry.provide({ a: ContextSupply, is: contextSupply });
+
+      const adapter = context.get(ElementAdapter);
+      const reason = new Error('test');
+
+      contextSupply.off(reason);
+      expect(() => adapter(element)).toThrow(reason);
     });
     it('respects fallback value', () => {
 
