@@ -149,10 +149,14 @@ export const RenderDef = {
     const { on = [] } = spec;
 
     if (typeof on === 'object' && isEventSender(on)) {
-      return onSupplied(on);
+      return onSupplied(on).tillOff(context);
     }
 
-    const trigger = context.get(ComponentState).track(on).onUpdate();
+    const trigger = context
+        .get(ComponentState)
+        .track(on)
+        .onUpdate()
+        .tillOff(context);
 
     if (Array.isArray(on) && !on.length) {
       return trigger.thru_(

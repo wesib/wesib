@@ -1,4 +1,5 @@
 import { ContextRegistry } from '@proc7ts/context-values';
+import { eventSupply, EventSupply__symbol } from '@proc7ts/fun-events';
 import { ComponentContext } from '../../component';
 import { ComponentState } from '../state';
 import { RenderDef, RenderPath__root } from './render-def';
@@ -90,6 +91,7 @@ describe('feature/render', () => {
 
         context = {
           get: registry.newValues().get,
+          [EventSupply__symbol]: eventSupply(),
         } as ComponentContext;
       });
 
