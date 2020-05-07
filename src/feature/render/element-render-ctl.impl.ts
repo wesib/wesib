@@ -33,10 +33,11 @@ export class ElementRenderCtl$ implements ElementRenderCtl {
       def: RenderDef = {},
   ): EventSupply {
 
-    const { when, path = [] } = def;
+    const options = RenderDef.options(this._context, def);
+    const { when, path = [] } = options;
     const stateTracker = this._context.get(ComponentState).track(path);
     const schedule = this._context.get(DefaultRenderScheduler)({
-      ...RenderDef.merge(def, { path }),
+      ...RenderDef.fulfill(options, { path }),
       node: this._context.element,
     });
     const whenConnected = when === 'connected';

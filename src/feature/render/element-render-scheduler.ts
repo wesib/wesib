@@ -37,7 +37,7 @@ export type ElementRenderScheduler =
  *
  * @category Feature
  */
-export interface ElementRenderScheduleOptions extends RenderScheduleOptions, RenderDef {
+export interface ElementRenderScheduleOptions extends RenderScheduleOptions, RenderDef.Options {
 
   /**
    * When to start the rendering.
@@ -83,7 +83,7 @@ function newElementRenderScheduler(context: ContextValues): ElementRenderSchedul
       recentShot(execution);
     };
 
-    renderCtl.renderBy(renderer, RenderDef.merge(opts, { path }));
+    renderCtl.renderBy(renderer, RenderDef.fulfill(opts, { path }));
 
     return (shot: RenderShot): void => {
 
