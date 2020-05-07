@@ -74,7 +74,7 @@ function newElementRenderScheduler(context: ContextValues): ElementRenderSchedul
     renderCtl.renderBy(renderer, RenderDef.fulfill({ on: recentShot.on() }, opts));
 
     return (shot: RenderShot): void => {
-      recentShot.it = shot;
+      recentShot.it = execution => shot(execution); // Ensure render shot always updated
     };
   };
 }
