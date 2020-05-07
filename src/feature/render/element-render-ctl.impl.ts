@@ -1,12 +1,13 @@
-import { noop } from '@proc7ts/call-thru';
-import { EventSupply } from '@proc7ts/fun-events';
+import { nextArgs, nextSkip, noop } from '@proc7ts/call-thru';
+import { EventSupply, isEventSender, OnEvent, onSupplied } from '@proc7ts/fun-events';
+import { StatePath } from '@proc7ts/fun-events/d.ts/state/state-path';
 import { immediateRenderScheduler, RenderExecution } from '@proc7ts/render-scheduler';
 import { DefaultRenderScheduler } from '../../boot/globals';
 import { ComponentContext } from '../../component';
 import { ComponentState } from '../state';
 import { ElementRenderCtl } from './element-render-ctl';
 import { ElementRenderer } from './element-renderer';
-import { RenderDef } from './render-def';
+import { RenderDef, RenderPath__root } from './render-def';
 
 /**
  * @internal
@@ -33,20 +34,20 @@ export class ElementRenderCtl$ implements ElementRenderCtl {
       def: RenderDef = {},
   ): EventSupply {
 
-    const options = RenderDef.options(this._context, def);
-    const { when, path = [] } = options;
-    const stateTracker = this._context.get(ComponentState).track(path);
+    const spec = RenderDef.spec(this._context, def);
+    const trigger = renderTrigger(this._context, spec);
     const schedule = this._context.get(DefaultRenderScheduler)({
-      ...RenderDef.fulfill(options, { path }),
+      ...RenderDef.fulfill(spec),
       node: this._context.element,
     });
-    const whenConnected = when === 'connected';
+    const whenConnected = spec.when === 'connected';
     let status = RenderStatus.Pending;
     const startRendering = (): 0 | void => status /* there is an update to render */ && scheduleRenderer();
     const onUpdate = whenConnected
         ? () => this._context.connected && scheduleRenderer()
         : () => this._context.settled && scheduleRenderer();
-    const supply = stateTracker.onUpdate(onUpdate)
+    const supply = trigger
+        .to(onUpdate)
         .needs(this._context)
         .whenOff(cancelRenderer);
 
@@ -95,4 +96,26 @@ export class ElementRenderCtl$ implements ElementRenderCtl {
     this._renders.forEach(render => render());
   }
 
+}
+
+/**
+ * @internal
+ */
+function renderTrigger(
+    context: ComponentContext,
+    { on = [] }: RenderDef.Spec,
+): OnEvent<[]> {
+  if (typeof on === 'object' && isEventSender(on)) {
+    return onSupplied(on);
+  }
+
+  const trigger = context.get(ComponentState).track(on).onUpdate();
+
+  if (Array.isArray(on) && !on.length) {
+    return trigger.thru_(
+        (path: StatePath.Normalized) => path[0] === RenderPath__root ? nextSkip : nextArgs(),
+    );
+  }
+
+  return trigger;
 }
