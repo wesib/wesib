@@ -2,8 +2,10 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { EventSender, StatePath } from '@proc7ts/fun-events';
+import { nextArgs, nextSkip, valueByRecipe } from '@proc7ts/call-thru';
+import { EventSender, isEventSender, OnEvent, onSupplied, StatePath } from '@proc7ts/fun-events';
 import { ComponentContext } from '../../component';
+import { ComponentState } from '../state';
 
 /**
  * Element rendering definition.
@@ -109,7 +111,7 @@ export const RenderDef = {
       context: ComponentContext,
       def: RenderDef,
   ): RenderDef.Spec {
-    return typeof def === 'function' ? def(context) : def;
+    return valueByRecipe(def, context);
   },
 
   /**
@@ -128,6 +130,37 @@ export const RenderDef = {
       on,
       error: error ? error.bind(base) : defaults.error && defaults.error.bind(defaults),
     };
+  },
+
+  /**
+   * Builds a trigger issuing rendering updates.
+   *
+   * @param context  Rendered component context.
+   * @param spec  Rendering specifier.
+   *
+   * @returns `OnEvent` sender that sends an event each time the rendering required.
+   */
+  trigger(
+      this: void,
+      context: ComponentContext,
+      spec: RenderDef.Spec = {},
+  ): OnEvent<[]> {
+
+    const { on = [] } = spec;
+
+    if (typeof on === 'object' && isEventSender(on)) {
+      return onSupplied(on);
+    }
+
+    const trigger = context.get(ComponentState).track(on).onUpdate();
+
+    if (Array.isArray(on) && !on.length) {
+      return trigger.thru_(
+          (path: StatePath.Normalized) => path[0] === RenderPath__root ? nextSkip : nextArgs(),
+      );
+    }
+
+    return trigger;
   },
 
 };

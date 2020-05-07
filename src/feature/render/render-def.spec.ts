@@ -1,5 +1,7 @@
+import { ContextRegistry } from '@proc7ts/context-values';
 import { ComponentContext } from '../../component';
-import { RenderDef } from './render-def';
+import { ComponentState } from '../state';
+import { RenderDef, RenderPath__root } from './render-def';
 
 describe('feature/render', () => {
   describe('RenderDef', () => {
@@ -71,6 +73,37 @@ describe('feature/render', () => {
           expect(error2).toHaveBeenCalledWith(message);
           expect(error2.mock.instances[0]).toBe(spec2);
         });
+      });
+    });
+
+    describe('trigger', () => {
+
+      let context: ComponentContext;
+      let state: ComponentState;
+
+      beforeEach(() => {
+        state = new ComponentState();
+
+        const registry = new ContextRegistry();
+
+        registry.provide({ a: ComponentState, is: state });
+
+        context = {
+          get: registry.newValues().get,
+        } as ComponentContext;
+      });
+
+      it('is full state except render root by default', () => {
+
+        const receiver = jest.fn();
+
+        RenderDef.trigger(context).to(receiver);
+
+        state.update([RenderPath__root], 'new', 'old');
+        expect(receiver).not.toHaveBeenCalled();
+
+        state.update('some', 'new', 'old');
+        expect(receiver).toHaveBeenCalledTimes(1);
       });
     });
   });
