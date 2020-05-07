@@ -114,6 +114,12 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="@wesib_wesib.ComponentContext.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="@wesib_wesib.ComponentContext.html#_EventSupply__symbol_" class="tsd-kind-icon">[<wbr>Event<wbr>Supply__symbol]</a></li>
@@ -122,6 +128,7 @@
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="@wesib_wesib.ComponentContext.html#connected" class="tsd-kind-icon">connected</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="@wesib_wesib.ComponentContext.html#element" class="tsd-kind-icon">element</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="@wesib_wesib.ComponentContext.html#mount" class="tsd-kind-icon">mount</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="@wesib_wesib.ComponentContext.html#settled" class="tsd-kind-icon">settled</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="@wesib_wesib.ComponentContext.html#updateState" class="tsd-kind-icon">update<wbr>State</a></li>
 							</ul>
 						</section>
@@ -137,11 +144,12 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="@wesib_wesib.ComponentContext.html#destroy" class="tsd-kind-icon">destroy</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="@wesib_wesib.ComponentContext.html#dispatchEvent" class="tsd-kind-icon">dispatch<wbr>Event</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="@wesib_wesib.ComponentContext.html#elementSuper" class="tsd-kind-icon">element<wbr>Super</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="@wesib_wesib.ComponentContext.html#get" class="tsd-kind-icon">get</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="@wesib_wesib.ComponentContext.html#on" class="tsd-kind-icon">on</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="@wesib_wesib.ComponentContext.html#settle" class="tsd-kind-icon">settle</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="@wesib_wesib.ComponentContext.html#whenConnected" class="tsd-kind-icon">when<wbr>Connected</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="@wesib_wesib.ComponentContext.html#whenReady" class="tsd-kind-icon">when<wbr>Ready</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="@wesib_wesib.ComponentContext.html#whenSettled" class="tsd-kind-icon">when<wbr>Settled</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static"><a href="@wesib_wesib.ComponentContext.html#of" class="tsd-kind-icon">of</a></li>
 							</ul>
 						</section>
@@ -149,14 +157,34 @@
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Component<wbr>Context<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="@wesib_wesib.ComponentContext.html" class="tsd-signature-type">ComponentContext</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/7bf308d/src/component/component-context.ts#L138">wesib/wesib/src/component/component-context.ts:138</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <a href="@wesib_wesib.ComponentContext.html" class="tsd-signature-type">ComponentContext</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="_EventSupply__symbol_" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> [<wbr>Event<wbr>Supply__symbol]</h3>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> <span class="tsd-flag ts-flagAbstract">Abstract</span> [<wbr>Event<wbr>Supply__symbol]</h3>
 					<div class="tsd-signature tsd-kind-icon">[<wbr>Event<wbr>Supply__symbol]<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">EventSupply</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/8c24266/src/component/component-context.ts#L89">wesib/wesib/src/component/component-context.ts:89</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/7bf308d/src/component/component-context.ts#L103">wesib/wesib/src/component/component-context.ts:103</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -167,11 +195,11 @@
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="component" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> component</h3>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> <span class="tsd-flag ts-flagAbstract">Abstract</span> component</h3>
 					<div class="tsd-signature tsd-kind-icon">component<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">T</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/8c24266/src/component/component-context.ts#L68">wesib/wesib/src/component/component-context.ts:68</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/7bf308d/src/component/component-context.ts#L68">wesib/wesib/src/component/component-context.ts:68</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -185,11 +213,11 @@
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="componentType" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> component<wbr>Type</h3>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> <span class="tsd-flag ts-flagAbstract">Abstract</span> component<wbr>Type</h3>
 					<div class="tsd-signature tsd-kind-icon">component<wbr>Type<span class="tsd-signature-symbol">:</span> <a href="../interfaces/@wesib_wesib.ComponentClass.html" class="tsd-signature-type">ComponentClass</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/8c24266/src/component/component-context.ts#L52">wesib/wesib/src/component/component-context.ts:52</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/7bf308d/src/component/component-context.ts#L52">wesib/wesib/src/component/component-context.ts:52</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -200,28 +228,27 @@
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="connected" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> connected</h3>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> <span class="tsd-flag ts-flagAbstract">Abstract</span> connected</h3>
 					<div class="tsd-signature tsd-kind-icon">connected<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/8c24266/src/component/component-context.ts#L84">wesib/wesib/src/component/component-context.ts:84</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/7bf308d/src/component/component-context.ts#L98">wesib/wesib/src/component/component-context.ts:98</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Whether the custom element is connected.</p>
+							<p>Whether the component&#39;s element is connected.</p>
 						</div>
-						<p>This becomes <code>true</code> right before [[whenOn]] event is sent, and becomes <code>false</code> right before [[whenOff]] event is
-						sent.</p>
+						<p>This becomes <code>true</code> right before <a href="@wesib_wesib.ComponentContext.html#whenConnected">whenConnected</a> event is sent.</p>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="element" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> element</h3>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> <span class="tsd-flag ts-flagAbstract">Abstract</span> element</h3>
 					<div class="tsd-signature tsd-kind-icon">element<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/8c24266/src/component/component-context.ts#L59">wesib/wesib/src/component/component-context.ts:59</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/7bf308d/src/component/component-context.ts#L59">wesib/wesib/src/component/component-context.ts:59</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -233,28 +260,52 @@
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="mount" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> mount</h3>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> <span class="tsd-flag ts-flagAbstract">Abstract</span> mount</h3>
 					<div class="tsd-signature tsd-kind-icon">mount<span class="tsd-signature-symbol">:</span> <a href="@wesib_wesib.ComponentMount.html" class="tsd-signature-type">ComponentMount</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/8c24266/src/component/component-context.ts#L76">wesib/wesib/src/component/component-context.ts:76</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/7bf308d/src/component/component-context.ts#L76">wesib/wesib/src/component/component-context.ts:76</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>Component mount.</p>
 						</div>
-						<p>This is defined when component is mounted to arbitrary element by [[ComponentFactory.mountTo]]. Ot is <code>undefined</code>
+						<p>This is defined when component is mounted to arbitrary element by <a href="@wesib_wesib.DefinitionContext.html#mountTo">DefinitionContext.mountTo</a>. Ot is <code>undefined</code>
 						for components created in standard way.</p>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="updateState" class="tsd-anchor"></a>
-					<h3>update<wbr>State</h3>
-					<div class="tsd-signature tsd-kind-icon">update<wbr>State<span class="tsd-signature-symbol">:</span> <a href="../modules/@wesib_wesib.html#StateUpdater" class="tsd-signature-type">StateUpdater</a><span class="tsd-signature-symbol"> = updateComponentState.bind(this)</span></div>
+					<a name="settled" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> <span class="tsd-flag ts-flagAbstract">Abstract</span> settled</h3>
+					<div class="tsd-signature tsd-kind-icon">settled<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/8c24266/src/component/component-context.ts#L104">wesib/wesib/src/component/component-context.ts:104</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/7bf308d/src/component/component-context.ts#L91">wesib/wesib/src/component/component-context.ts:91</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Whether the component is settled.</p>
+						</div>
+						<p>Component settlement happens:</p>
+						<ul>
+							<li>when <a href="@wesib_wesib.ComponentContext.html#settle">settle</a> method is called,</li>
+							<li>when component is <a href="@wesib_wesib.DefinitionContext.html#mountTo">mounted</a> to element, or</li>
+							<li>when component&#39;s element is <a href="@wesib_wesib.ComponentContext.html#connected">connected</a>.</li>
+						</ul>
+						<p>It is guaranteed that component settlement won&#39;t happen inside custom element&#39;s constructor. So the settlement
+						event may be used e.g. to start DOM manipulations, as the latter is prohibited inside custom element constructor.</p>
+						<p>This becomes <code>true</code> right before <a href="@wesib_wesib.ComponentContext.html#whenSettled">whenSettled</a> event is sent.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="updateState" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> update<wbr>State</h3>
+					<div class="tsd-signature tsd-kind-icon">update<wbr>State<span class="tsd-signature-symbol">:</span> <a href="../modules/@wesib_wesib.html#StateUpdater" class="tsd-signature-type">StateUpdater</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/7bf308d/src/component/component-context.ts#L118">wesib/wesib/src/component/component-context.ts:118</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -293,7 +344,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/8c24266/src/component/component-context.ts#L131">wesib/wesib/src/component/component-context.ts:131</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/7bf308d/src/component/component-context.ts#L152">wesib/wesib/src/component/component-context.ts:152</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -316,7 +367,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/8c24266/src/component/component-context.ts#L45">wesib/wesib/src/component/component-context.ts:45</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/7bf308d/src/component/component-context.ts#L45">wesib/wesib/src/component/component-context.ts:45</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -341,7 +392,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/8c24266/src/component/component-context.ts#L228">wesib/wesib/src/component/component-context.ts:228</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/7bf308d/src/component/component-context.ts#L283">wesib/wesib/src/component/component-context.ts:283</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -377,7 +428,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/8c24266/src/component/component-context.ts#L211">wesib/wesib/src/component/component-context.ts:211</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/7bf308d/src/component/component-context.ts#L266">wesib/wesib/src/component/component-context.ts:266</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -396,37 +447,6 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="elementSuper" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> element<wbr>Super</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">element<wbr>Super<span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PropertyKey</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/8c24266/src/component/component-context.ts#L188">wesib/wesib/src/component/component-context.ts:188</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Returns a <code>super</code> property value inherited from custom element parent.</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>key: <span class="tsd-signature-type">PropertyKey</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Target property key.</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -575,7 +595,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/8c24266/src/component/component-context.ts#L200">wesib/wesib/src/component/component-context.ts:200</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/7bf308d/src/component/component-context.ts#L255">wesib/wesib/src/component/component-context.ts:255</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -606,6 +626,33 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="settle" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> settle</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">settle<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/7bf308d/src/component/component-context.ts#L193">wesib/wesib/src/component/component-context.ts:193</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Settles component.</p>
+								</div>
+								<p>Calling this method has no effect if component is <a href="@wesib_wesib.ComponentContext.html#settled">settled</a> already, when component is not
+								<a href="@wesib_wesib.ComponentContext.html#whenReady">ready</a> yet, or custom element&#39;s constructor is not exited.</p>
+								<p>Calling this method may trigger DOM manipulations (the latter is prohibited inside custom element&#39;s constructor).
+								This may be desired for rendering optimizations. E.g. to render element&#39;s content <em>before</em> adding it to document.</p>
+								<p>This method is called automatically when <a href="@wesib_wesib.DefinitionContext.html#mountTo">mounting</a> component to element.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="whenConnected" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> when<wbr>Connected</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -616,15 +663,17 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/8c24266/src/component/component-context.ts#L169">wesib/wesib/src/component/component-context.ts:169</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/7bf308d/src/component/component-context.ts#L228">wesib/wesib/src/component/component-context.ts:228</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Builds an <code>OnEvent</code> sender of custom element connection events.</p>
+									<p>Builds an <code>OnEvent</code> sender of component&#39;s element connection event.</p>
 								</div>
-								<p>The registered receiver is called when custom element is connected, i.e. its <code>connectedCallback()</code> method is
-								called. If component is connected already the receiver is called immediately.</p>
+								<p>The registered receiver is called when component&#39;s element is connected. I.e. when custom element&#39;s
+									<code>connectedCallback()</code> method is called, or when the element this component is <a href="@wesib_wesib.ComponentContext.html#mount">mounted to</a> is
+								<a href="@wesib_wesib.ComponentMount.html#connect">connected</a>.</p>
+								<p>If connected already the receiver is called immediately.</p>
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">OnEvent</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">this</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>An <code>OnEvent</code> sender of this component context when connected.</p>
@@ -632,15 +681,17 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/8c24266/src/component/component-context.ts#L181">wesib/wesib/src/component/component-context.ts:181</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/7bf308d/src/component/component-context.ts#L243">wesib/wesib/src/component/component-context.ts:243</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Registers a receiver of custom element connection events.</p>
+									<p>Registers a receiver of component&#39;s element connection event.</p>
 								</div>
-								<p>The registered receiver is called when custom element is connected, i.e. its <code>connectedCallback()</code> method is
-								called. If component is connected already the receiver is called immediately.</p>
+								<p>The registered receiver is called when component&#39;s element is connected. I.e. when custom element&#39;s
+									<code>connectedCallback()</code> method is called, or when the element this component is <a href="@wesib_wesib.ComponentContext.html#mount">mounted to</a> is
+								<a href="@wesib_wesib.ComponentMount.html#connect">connected</a>.</p>
+								<p>If connected already the receiver is called immediately.</p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -652,7 +703,7 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">EventSupply</span></h4>
-							<p>Custom element connection events supply.</p>
+							<p>Component&#39;s element connection event supply.</p>
 						</li>
 					</ul>
 				</section>
@@ -667,7 +718,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/8c24266/src/component/component-context.ts#L146">wesib/wesib/src/component/component-context.ts:146</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/7bf308d/src/component/component-context.ts#L167">wesib/wesib/src/component/component-context.ts:167</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -685,7 +736,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/8c24266/src/component/component-context.ts#L159">wesib/wesib/src/component/component-context.ts:159</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/7bf308d/src/component/component-context.ts#L180">wesib/wesib/src/component/component-context.ts:180</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -710,6 +761,57 @@
 						</li>
 					</ul>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="whenSettled" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> when<wbr>Settled</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">when<wbr>Settled<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">OnEvent</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">this</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">when<wbr>Settled<span class="tsd-signature-symbol">(</span>receiver<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EventReceiver</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">this</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EventSupply</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/7bf308d/src/component/component-context.ts#L203">wesib/wesib/src/component/component-context.ts:203</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Builds an <code>OnEvent</code> sender of component settlement event.</p>
+								</div>
+								<p>The registered receiver is called when component is <a href="@wesib_wesib.ComponentContext.html#settled">settled</a>. If settled already the receiver is called
+								immediately.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">OnEvent</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">this</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>An <code>OnEvent</code> sender of this component context when settled.</p>
+						</li>
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/7bf308d/src/component/component-context.ts#L215">wesib/wesib/src/component/component-context.ts:215</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Registers a receiver of component settlement event.</p>
+								</div>
+								<p>The registered receiver is called when component is <a href="@wesib_wesib.ComponentContext.html#settled">settled</a>. If settled already the receiver is called
+								immediately.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>receiver: <span class="tsd-signature-type">EventReceiver</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">this</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Target receiver of this component context when connected.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">EventSupply</span></h4>
+							<p>Component settlement event supply.</p>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static">
 					<a name="of" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> of</h3>
@@ -720,7 +822,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/8c24266/src/component/component-context.ts#L115">wesib/wesib/src/component/component-context.ts:115</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/7bf308d/src/component/component-context.ts#L129">wesib/wesib/src/component/component-context.ts:129</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -773,6 +875,9 @@
 					<li class="current tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter">
 						<a href="@wesib_wesib.ComponentContext.html" class="tsd-kind-icon">Component<wbr>Context</a>
 						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="@wesib_wesib.ComponentContext.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="@wesib_wesib.ComponentContext.html#_EventSupply__symbol_" class="tsd-kind-icon">[<wbr>Event<wbr>Supply__symbol]</a>
 							</li>
@@ -792,6 +897,9 @@
 								<a href="@wesib_wesib.ComponentContext.html#mount" class="tsd-kind-icon">mount</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="@wesib_wesib.ComponentContext.html#settled" class="tsd-kind-icon">settled</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="@wesib_wesib.ComponentContext.html#updateState" class="tsd-kind-icon">update<wbr>State</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
@@ -806,9 +914,6 @@
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="@wesib_wesib.ComponentContext.html#dispatchEvent" class="tsd-kind-icon">dispatch<wbr>Event</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="@wesib_wesib.ComponentContext.html#elementSuper" class="tsd-kind-icon">element<wbr>Super</a>
-							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
 								<a href="@wesib_wesib.ComponentContext.html#get" class="tsd-kind-icon">get</a>
 							</li>
@@ -816,10 +921,16 @@
 								<a href="@wesib_wesib.ComponentContext.html#on" class="tsd-kind-icon">on</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="@wesib_wesib.ComponentContext.html#settle" class="tsd-kind-icon">settle</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="@wesib_wesib.ComponentContext.html#whenConnected" class="tsd-kind-icon">when<wbr>Connected</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="@wesib_wesib.ComponentContext.html#whenReady" class="tsd-kind-icon">when<wbr>Ready</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="@wesib_wesib.ComponentContext.html#whenSettled" class="tsd-kind-icon">when<wbr>Settled</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static">
 								<a href="@wesib_wesib.ComponentContext.html#of" class="tsd-kind-icon">of</a>
@@ -849,6 +960,7 @@
 			<ul class="tsd-legend">
 				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
 				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
 				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
 			</ul>
