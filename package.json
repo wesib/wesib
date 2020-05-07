@@ -23,7 +23,7 @@
   "peerDependencies": {
     "@proc7ts/call-thru": "^3.0.0",
     "@proc7ts/context-values": "^3.1.0",
-    "@proc7ts/fun-events": "^9.0.0",
+    "@proc7ts/fun-events": "^9.0.1",
     "@proc7ts/namespace-aliaser": "^2.0.3",
     "@proc7ts/render-scheduler": "^1.2.0"
   },
@@ -34,7 +34,7 @@
     "@proc7ts/call-thru": "^3.0.0",
     "@proc7ts/context-values": "^3.1.0",
     "@proc7ts/eslint-config": "^1.0.4",
-    "@proc7ts/fun-events": "^9.0.0",
+    "@proc7ts/fun-events": "^9.0.1",
     "@proc7ts/namespace-aliaser": "^2.0.3",
     "@proc7ts/render-scheduler": "^1.2.0",
     "@rollup/plugin-commonjs": "^11.1.0",

@@ -4,9 +4,8 @@
  */
 import { noop } from '@proc7ts/call-thru';
 import { ContextRef, ContextValues, SingleContextKey } from '@proc7ts/context-values';
-import { StatePath } from '@proc7ts/fun-events';
+import { trackValue } from '@proc7ts/fun-events';
 import { RenderSchedule, RenderScheduleOptions, RenderShot } from '@proc7ts/render-scheduler';
-import { ComponentState } from '../state';
 import { ElementRenderCtl } from './element-render-ctl';
 import { ElementRenderer } from './element-renderer';
 import { RenderDef } from './render-def';
@@ -16,7 +15,7 @@ import { RenderDef } from './render-def';
  *
  * Schedules render shots to be executed by {@link ElementRenderCtl element render control}.
  *
- * Available in component context. Requires {@link StateSupport state support} to be enabled.
+ * Available in component context.
  *
  * @category Feature
  */
@@ -37,7 +36,7 @@ export type ElementRenderScheduler =
  *
  * @category Feature
  */
-export interface ElementRenderScheduleOptions extends RenderScheduleOptions, RenderDef {
+export interface ElementRenderScheduleOptions extends RenderScheduleOptions, RenderDef.Options {
 
   /**
    * When to start the rendering.
@@ -48,13 +47,6 @@ export interface ElementRenderScheduleOptions extends RenderScheduleOptions, Ren
    *   connected} to document.
    */
   readonly when?: 'settled' | 'connected';
-
-  /**
-   * A path to component state part the schedule should update when new render shot is scheduled.
-   *
-   * An unique one will be constructed when omitted.
-   */
-  readonly path?: StatePath;
 
   /**
    * Reports rendering error. E.g. a render shot execution failure.
@@ -70,27 +62,19 @@ export interface ElementRenderScheduleOptions extends RenderScheduleOptions, Ren
  */
 function newElementRenderScheduler(context: ContextValues): ElementRenderScheduler {
 
-  const ElementRenderShot__root = Symbol('element-render-shot');
-  let scheduleSeq = 0;
   const renderCtl = context.get(ElementRenderCtl);
-  const state = context.get(ComponentState);
 
   return (opts = {}): RenderSchedule => {
 
-    const { path = [ElementRenderShot__root, ++scheduleSeq] } = opts;
-    let recentShot: RenderShot = noop;
+    const recentShot = trackValue<RenderShot>(noop);
     const renderer: ElementRenderer = execution => {
-      recentShot(execution);
+      recentShot.it(execution);
     };
 
-    renderCtl.renderBy(renderer, RenderDef.merge(opts, { path }));
+    renderCtl.renderBy(renderer, RenderDef.fulfill({ on: recentShot.on() }, opts));
 
     return (shot: RenderShot): void => {
-
-      const prevShot = shot;
-
-      recentShot = shot;
-      state.update(path, shot, prevShot);
+      recentShot.it = shot;
     };
   };
 }

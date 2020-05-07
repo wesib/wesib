@@ -13,7 +13,7 @@ import { DomProperty, domPropertyPathTo } from '../dom-properties';
 import { ComponentState } from '../state';
 import { ElementRenderCtl } from './element-render-ctl';
 import { ElementRenderer } from './element-renderer';
-import { RenderDef } from './render-def';
+import { RenderDef, RenderPath__root } from './render-def';
 import { Render } from './render.decorator';
 import Mock = jest.Mock;
 
@@ -49,24 +49,45 @@ describe('feature/render', () => {
       const { component, element } = await bootstrap();
 
       element.connectedCallback();
+      expect(mockRenderer).toHaveBeenCalledTimes(1);
+
       component.property = 'other';
-      expect(mockRenderer).toHaveBeenCalled();
+      expect(mockRenderer).toHaveBeenCalledTimes(2);
     });
     it('is scheduled on state part update', async () => {
 
-      const { element, component } = await bootstrap({ path: domPropertyPathTo('property2') });
+      const { element, component } = await bootstrap({ on: domPropertyPathTo('property2') });
 
       element.connectedCallback();
+      expect(mockRenderer).toHaveBeenCalledTimes(1);
+
       component.property2 = 'other';
-      expect(mockRenderer).toHaveBeenCalled();
+      expect(mockRenderer).toHaveBeenCalledTimes(2);
     });
     it('is scheduled on specified state part update', async () => {
 
-      const { element, component } = await bootstrap({ path: domPropertyPathTo('property2') });
+      const { element, component } = await bootstrap({ on: domPropertyPathTo('property2') });
 
       element.connectedCallback();
+      expect(mockRenderer).toHaveBeenCalledTimes(1);
+
       component.property = 'other';
       expect(mockRenderer).toHaveBeenCalledTimes(1);
+
+      component.property2 = 'third';
+      expect(mockRenderer).toHaveBeenCalledTimes(2);
+    });
+    it('is not scheduled on ignored sub-state update', async () => {
+
+      const context = await bootstrap();
+      const { element, component } = context;
+
+      element.connectedCallback();
+      expect(mockRenderer).toHaveBeenCalledTimes(1);
+
+      context.updateState([RenderPath__root, 'some'], 'new', 'old');
+      expect(mockRenderer).toHaveBeenCalledTimes(1);
+
       component.property2 = 'third';
       expect(mockRenderer).toHaveBeenCalledTimes(2);
     });

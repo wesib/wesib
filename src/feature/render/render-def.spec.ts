@@ -1,48 +1,75 @@
+import { ComponentContext } from '../../component';
 import { RenderDef } from './render-def';
 
 describe('feature/render', () => {
   describe('RenderDef', () => {
-    describe('merge', () => {
-      it('merges path', () => {
+    describe('spec', () => {
 
-        const path1 = ['path1'];
-        const path2 = ['path2'];
+      let context: ComponentContext;
+      let spec: RenderDef.Spec;
 
-        expect(RenderDef.merge({}, { path: path2 })).toEqual({ path: path2 });
-        expect(RenderDef.merge({ path: path1 }, { path: path2 })).toEqual({ path: path2 });
-        expect(RenderDef.merge({ path: path1 }, {})).toEqual({ path: path1 });
+      beforeEach(() => {
+        context = { name: 'context' } as any;
+        spec = {
+          on: ['path1', 'path2'],
+        };
+      });
+
+      it('retains specifier as is', () => {
+        expect(RenderDef.spec(context, spec)).toBe(spec);
+      });
+      it('calls provider to build specifier', () => {
+
+        const provider: RenderDef.Provider = jest.fn(() => spec);
+
+        expect(RenderDef.spec(context, provider)).toBe(spec);
+        expect(provider).toHaveBeenCalledWith(context);
+      });
+    });
+
+    describe('fulfill', () => {
+      describe('on', () => {
+        it('is fulfilled by defaults', () => {
+
+          const path1 = ['path1'];
+          const path2 = ['path2'];
+
+          expect(RenderDef.fulfill({}, { on: path2 })).toEqual({ on: path2 });
+          expect(RenderDef.fulfill({ on: path1 }, { on: path2 })).toEqual({ on: path1 });
+          expect(RenderDef.fulfill({ on: path1 }, {})).toEqual({ on: path1 });
+        });
       });
 
       describe('error', () => {
 
         let error1: jest.Mock<any, any>;
         let error2: jest.Mock<any, any>;
-        let def1: RenderDef;
-        let def2: RenderDef;
+        let spec1: RenderDef.Spec;
+        let spec2: RenderDef.Spec;
         let message: any;
 
         beforeEach(() => {
           error1 = jest.fn();
           error2 = jest.fn();
-          def1 = { error: error1 };
-          def2 = { error: error2 };
+          spec1 = { error: error1 };
+          spec2 = { error: error2 };
           message = 'test';
         });
 
-        it('prefers base when not overridden', () => {
-          RenderDef.merge(def1, {}).error!(message);
+        it('prefers base when no default', () => {
+          RenderDef.fulfill(spec1, {}).error!(message);
           expect(error1).toHaveBeenCalledWith(message);
-          expect(error1.mock.instances[0]).toBe(def1);
+          expect(error1.mock.instances[0]).toBe(spec1);
         });
-        it('overrides with extension', () => {
-          RenderDef.merge(def1, def2).error!(message);
-          expect(error2).toHaveBeenCalledWith(message);
-          expect(error2.mock.instances[0]).toBe(def2);
+        it('prefers base when present', () => {
+          RenderDef.fulfill(spec1, spec2).error!(message);
+          expect(error1).toHaveBeenCalledWith(message);
+          expect(error1.mock.instances[0]).toBe(spec1);
         });
-        it('prefers extension', () => {
-          RenderDef.merge({}, def2).error!(message);
+        it('uses defaults when absent', () => {
+          RenderDef.fulfill({}, spec2).error!(message);
           expect(error2).toHaveBeenCalledWith(message);
-          expect(error2.mock.instances[0]).toBe(def2);
+          expect(error2.mock.instances[0]).toBe(spec2);
         });
       });
     });
