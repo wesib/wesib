@@ -148,8 +148,9 @@ describe('feature/render', () => {
       const context = await bootstrap();
 
       context.settle();
-      context.component.property = 'other';
+      expect(mockRenderer).toHaveBeenCalledTimes(1);
 
+      context.component.property = 'other';
       expect(mockRenderer).toHaveBeenCalledTimes(2);
     });
     it('(when: connected) is re-scheduled when connected after state update', async () => {
@@ -157,6 +158,8 @@ describe('feature/render', () => {
       const { component, element } = await bootstrap({ when: 'connected' });
 
       element.connectedCallback();
+      expect(mockRenderer).toHaveBeenCalledTimes(1);
+
       component.property = 'other';
       expect(mockRenderer).toHaveBeenCalledTimes(2);
     });
@@ -166,8 +169,10 @@ describe('feature/render', () => {
       const { element } = context;
 
       element.connectedCallback();
+      expect(mockRenderer).toHaveBeenCalledTimes(1);
+
       context.destroy();
-      expect(() => context.updateState(domPropertyPathTo('property'), 'other', 'init')).toThrow('Context destroyed');
+      context.updateState(domPropertyPathTo('property'), 'other', 'init');
       expect(mockRenderer).toHaveBeenCalledTimes(1);
     });
     it('is not rendered after component destruction', async () => {
