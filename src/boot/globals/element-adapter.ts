@@ -2,7 +2,7 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { ContextValueOpts, ContextValues } from '@proc7ts/context-values';
+import { ContextValueSlot } from '@proc7ts/context-values';
 import { contextDestroyed, ContextUpKey, ContextUpRef } from '@proc7ts/context-values/updatable';
 import { AfterEvent, afterThe, EventKeeper, nextAfterEvent } from '@proc7ts/fun-events';
 import { ComponentContext, ComponentContext__symbol } from '../../component';
@@ -34,42 +34,44 @@ class ElementAdapterKey extends ContextUpKey<ElementAdapter, ElementAdapter> {
   constructor() {
     super('element-adapter');
     this.upKey = this.createUpKey(
-        opts => opts.seed.keepThru((...adapters) => {
+        slot => slot.insert(slot.seed.keepThru((...adapters) => {
 
           const combined: ElementAdapter = adapters.reduce(
               (prev, adapter) => element => prev(element) || adapter(element),
               defaultElementAdapter,
           );
 
-          const defaultProvider = (): AfterEvent<[ElementAdapter]> => afterThe(defaultElementAdapter);
+          if (combined !== defaultElementAdapter) {
+            return combined;
+          }
+          if (slot.hasFallback && slot.or) {
+            return nextAfterEvent(slot.or);
+          }
 
-          return combined !== defaultElementAdapter
-              ? combined
-              : nextAfterEvent(opts.byDefault(defaultProvider) || defaultProvider());
-        }),
+          return defaultElementAdapter;
+        })),
     );
   }
 
-  grow<Ctx extends ContextValues>(
-      opts: ContextValueOpts<
-          Ctx,
+  grow(
+      slot: ContextValueSlot<
           ElementAdapter,
           EventKeeper<ElementAdapter[]> | ElementAdapter,
           AfterEvent<ElementAdapter[]>>,
-  ): ElementAdapter {
+  ): void {
 
     let delegated: ElementAdapter;
 
-    opts.context.get(
+    slot.context.get(
         this.upKey,
-        'or' in opts ? { or: opts.or != null ? afterThe(opts.or) : opts.or } : undefined,
+        slot.hasFallback ? { or: slot.or != null ? afterThe(slot.or) : slot.or } : undefined,
     )!.to(
         adapter => delegated = adapter,
     ).whenOff(
         reason => delegated = contextDestroyed(reason),
     );
 
-    return element => delegated(element);
+    slot.insert(element => delegated(element));
   }
 
 }

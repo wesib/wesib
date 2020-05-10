@@ -1,6 +1,6 @@
 import { filterIt, mapIt } from '@proc7ts/a-iterable';
 import { isPresent, nextArgs, NextCall, NextSkip, nextSkip } from '@proc7ts/call-thru';
-import { ContextValueOpts, ContextValues } from '@proc7ts/context-values';
+import { ContextValueSlot } from '@proc7ts/context-values';
 import { ContextUpKey } from '@proc7ts/context-values/updatable';
 import {
   afterAll,
@@ -41,17 +41,16 @@ export class FeatureKey extends ContextUpKey<AfterEvent<[FeatureLoader?]>, Featu
     super(`feature:${feature.name}`);
   }
 
-  grow<Ctx extends ContextValues>(
-      opts: ContextValueOpts<
-          Ctx,
+  grow(
+      slot: ContextValueSlot<
           AfterEvent<[FeatureLoader?]>,
           EventKeeper<FeatureClause[]> | FeatureClause,
           AfterEvent<FeatureClause[]>>,
-  ): AfterEvent<[FeatureLoader?]> | null | undefined {
-    return loadFeature(
-        opts.context.get(BootstrapContext),
-        opts.seed.keepThru(preferredFeatureClause),
-    );
+  ): void {
+    slot.insert(loadFeature(
+        slot.context.get(BootstrapContext),
+        slot.seed.keepThru(preferredFeatureClause),
+    ));
   }
 
 }

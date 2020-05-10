@@ -2,7 +2,7 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { ContextValueOpts, ContextValues } from '@proc7ts/context-values';
+import { ContextValues, ContextValueSlot } from '@proc7ts/context-values';
 import { contextDestroyed, ContextUpKey, ContextUpRef } from '@proc7ts/context-values/updatable';
 import { AfterEvent, afterThe, EventKeeper, nextAfterEvent } from '@proc7ts/fun-events';
 import { newRenderSchedule, RenderScheduler } from '@proc7ts/render-scheduler';
@@ -22,42 +22,39 @@ class DefaultRenderSchedulerKey extends ContextUpKey<DefaultRenderScheduler, Ren
   constructor() {
     super('default-render-scheduler');
     this.upKey = this.createUpKey(
-        opts => opts.seed.keepThru(
+        slot => slot.insert(slot.seed.keepThru(
             (...fns) => {
               if (fns.length) {
-                return toDefaultRenderScheduler(opts.context, fns[fns.length - 1]);
+                return toDefaultRenderScheduler(slot.context, fns[fns.length - 1]);
               }
-
-              const defaultProvider = (): AfterEvent<[DefaultRenderScheduler]> => afterThe(
-                  toDefaultRenderScheduler(opts.context, newRenderSchedule),
-              );
-
-              return nextAfterEvent(opts.byDefault(defaultProvider) || defaultProvider());
+              if (slot.hasFallback && slot.or) {
+                return nextAfterEvent(slot.or);
+              }
+              return toDefaultRenderScheduler(slot.context, newRenderSchedule);
             },
-        ),
+        )),
     );
   }
 
-  grow<Ctx extends ContextValues>(
-      opts: ContextValueOpts<
-          Ctx,
+  grow(
+      slot: ContextValueSlot<
           DefaultRenderScheduler,
           EventKeeper<RenderScheduler[]> | RenderScheduler,
           AfterEvent<RenderScheduler[]>>,
-      ): DefaultRenderScheduler {
+  ): void {
 
     let delegated: DefaultRenderScheduler;
 
-    opts.context.get(
+    slot.context.get(
         this.upKey,
-        'or' in opts ? { or: opts.or != null ? afterThe(opts.or) : opts.or } : undefined,
+        slot.hasFallback ? { or: slot.or != null ? afterThe(slot.or) : slot.or } : undefined,
     )!.to(
-        scheduler => delegated = toDefaultRenderScheduler(opts.context, scheduler),
+        scheduler => delegated = toDefaultRenderScheduler(slot.context, scheduler),
     ).whenOff(
         reason => delegated = contextDestroyed(reason),
     );
 
-    return (...args) => delegated(...args);
+    slot.insert((...args) => delegated(...args));
   }
 
 }

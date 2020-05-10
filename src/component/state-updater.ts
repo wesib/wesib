@@ -2,8 +2,8 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { noop, valueProvider } from '@proc7ts/call-thru';
-import { ContextValueOpts, ContextValues } from '@proc7ts/context-values';
+import { noop } from '@proc7ts/call-thru';
+import { ContextValueSlot } from '@proc7ts/context-values';
 import { ContextUpKey, ContextUpRef } from '@proc7ts/context-values/updatable';
 import { AfterEvent, afterThe, EventKeeper, nextAfterEvent, statePath, StatePath } from '@proc7ts/fun-events';
 import { mergeFunctions } from '../common';
@@ -50,7 +50,7 @@ class StateUpdaterKey extends ContextUpKey<StateUpdater, StateUpdater.Normalized
   constructor() {
     super('state-updater');
     this.upKey = this.createUpKey(
-        opts => opts.seed.keepThru(
+        slot => slot.insert(slot.seed.keepThru(
             (...fns) => {
               if (fns.length) {
 
@@ -61,35 +61,34 @@ class StateUpdaterKey extends ContextUpKey<StateUpdater, StateUpdater.Normalized
 
                 return (path, newValue, oldValue) => combined(statePath(path), newValue, oldValue);
               }
-
-              const defaultProvider = valueProvider(afterThe(noop));
-
-              return nextAfterEvent(opts.byDefault(defaultProvider) || defaultProvider());
+              if (slot.hasFallback && slot.or) {
+                return nextAfterEvent(slot.or);
+              }
+              return noop;
             },
-        ),
+        )),
     );
   }
 
-  grow<Ctx extends ContextValues>(
-      opts: ContextValueOpts<
-          Ctx,
+  grow(
+      slot: ContextValueSlot<
           StateUpdater,
           EventKeeper<StateUpdater.Normalized[]> | StateUpdater.Normalized,
           AfterEvent<StateUpdater.Normalized[]>>,
-      ): StateUpdater {
+  ): void {
 
     let delegated: StateUpdater;
 
-    opts.context.get(
+    slot.context.get(
         this.upKey,
-        'or' in opts ? { or: opts.or != null ? afterThe(opts.or) : opts.or } : undefined,
+        slot.hasFallback ? { or: slot.or != null ? afterThe(slot.or) : slot.or } : undefined,
     )!.to(
         fn => delegated = fn,
     ).whenOff(
         () => delegated = noop,
     );
 
-    return (path, newValue, oldValue) => delegated(path, newValue, oldValue);
+    slot.insert((path, newValue, oldValue) => delegated(path, newValue, oldValue));
   }
 
 }
