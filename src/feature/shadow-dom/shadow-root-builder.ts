@@ -3,8 +3,9 @@
  * @module @wesib/wesib
  */
 import { FnContextKey, FnContextRef } from '@proc7ts/context-values/updatable';
-import { ComponentContext } from '../../component';
+import { ComponentContext, ComponentContext__symbol } from '../../component';
 import { ShadowContentDef } from './attach-shadow.decorator';
+import { ShadowDomEvent } from './shadow-dom-event';
 
 /**
  * Shadow root builder function type.
@@ -12,7 +13,7 @@ import { ShadowContentDef } from './attach-shadow.decorator';
  * An instance of this function is available in component context and is used by {@link AttachShadow @AttachShadow}
  * decorator to attach shadow root to decorated component's custom element.
  *
- * By default, if shadow root already exists for the component's element, it uses it.
+ * By default, if shadow root already exists for the component's element, it uses one.
  *
  * Dispatches a `wesib:shadowAttached` event for the found or attached shadow root.
  *
@@ -35,5 +36,48 @@ export type ShadowRootBuilder =
 export const ShadowRootBuilder: FnContextRef<Parameters<ShadowRootBuilder>, ReturnType<ShadowRootBuilder>> = (
     /*#__PURE__*/ new FnContextKey<Parameters<ShadowRootBuilder>, ReturnType<ShadowRootBuilder>>(
         'shadow-root-builder',
+        {
+          byDefault() {
+            return attachShadow;
+          },
+        },
     )
 );
+
+/**
+ * @internal
+ */
+function attachShadow(context: ComponentContext, init: ShadowRootInit): ShadowRoot | undefined {
+
+  const element = context.element;
+  const shadowRoot = shadowRootOf(element, init);
+
+  if (shadowRoot) {
+    (shadowRoot as any)[ComponentContext__symbol] = context;
+    context.whenConnected(() => context.dispatchEvent(new ShadowDomEvent(
+        'wesib:shadowAttached',
+        { bubbles: true },
+    )));
+  }
+
+  return shadowRoot;
+}
+
+/**
+ * @internal
+ */
+function shadowRootOf(element: Element, init: ShadowRootInit): ShadowRoot | undefined {
+
+  const existing = element.shadowRoot;
+
+  if (existing) {
+    // Shadow root already attached. Using it.
+    return existing;
+  }
+  if ('attachShadow' in element) {
+    return element.attachShadow(init);
+  }
+
+  return; // Unable to attach shadow root.
+}
+

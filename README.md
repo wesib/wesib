@@ -155,12 +155,8 @@ Features
 
 Apart from custom elements definition and IoC container, everything in Wesib is an opt-in feature.
 
-Some features are built-in and enabled when appropriate decorator is used. E.g. `AttributesSupport` feature is enabled
-when one of element attribute decorators used, `DomPropertiesSupport` is enabled when one of element property decorators
-used, etc.
-
-It is possible to define custom features too to extend Wesib. E.g. to augment the components, extend custom elements
-(like `@Attribute` or `@DomProperty` decorators do), or provide some context values.
+It is possible to define custom features to extend Wesib. E.g. to define or augment existing components, extend custom
+elements (like `@Attribute` or `@DomProperty` decorators do), or provide some context values.
 
 The feature is a class decorated with `@Feature` decorator:
 ```typescript
@@ -287,10 +283,8 @@ It is possible to attach shadow root to custom element by decorating the compone
 If shadow DOM is supported, then a shadow root will be attached to element. Otherwise, an element itself will be used
 as shadow root. In both cases the shadow root will be available in component context under `[ShadowContentRoot]` key.
 
-The `@AttachShadow` decorator automatically enables a `ShadowDomSupport` feature.
-
 A `ComponentContext.contentRoot` property is always available. It either contains a shadow root, or element itself.
-This is a DOM node to use to insert the DOM nodes to component.
+This is a root DOM node component element contents.
 
 
 Rendering
