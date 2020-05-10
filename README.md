@@ -276,9 +276,7 @@ export class MyComponent {
 }
 ```
 
-However, the component state update notification is no-op by default. To enable state tracking changes
-a `StateSupport` feature must be enabled. Then a `ComponentState` instance will be available in component context.
-The component state allows to track the component state updates.
+A `ComponentState` instance available in component context allows to track the component state updates.
 
 
 Shadow DOM
@@ -286,7 +284,7 @@ Shadow DOM
 
 It is possible to attach shadow root to custom element by decorating the component with `@AttachShadow` decorator.
 
-If shadow DOM is supported, then a shadow root will be attached to element. Otherwise an element itself will be used
+If shadow DOM is supported, then a shadow root will be attached to element. Otherwise, an element itself will be used
 as shadow root. In both cases the shadow root will be available in component context under `[ShadowContentRoot]` key.
 
 The `@AttachShadow` decorator automatically enables a `ShadowDomSupport` feature.

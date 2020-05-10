@@ -107,9 +107,6 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    *
    * This is a shorthand for invoking a component {@link StateUpdater state updater} .
    *
-   * Note that state update has no effect unless [[StateSupport]] feature is enabled or [[StateUpdater]] context value
-   * is provided by other means.
-   *
    * @typeparam V  A type of changed value.
    * @param key  Changed value key.
    * @param newValue  New value.
