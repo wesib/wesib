@@ -163,11 +163,8 @@ bootstrapComponents(MyComponent);</code></pre>
 					<h2>Features</h2>
 				</a>
 				<p>Apart from custom elements definition and IoC container, everything in Wesib is an opt-in feature.</p>
-				<p>Some features are built-in and enabled when appropriate decorator is used. E.g. <code>AttributesSupport</code> feature is enabled
-					when one of element attribute decorators used, <code>DomPropertiesSupport</code> is enabled when one of element property decorators
-				used, etc.</p>
-				<p>It is possible to define custom features too to extend Wesib. E.g. to augment the components, extend custom elements
-				(like <code>@Attribute</code> or <code>@DomProperty</code> decorators do), or provide some context values.</p>
+				<p>It is possible to define custom features to extend Wesib. E.g. to define or augment existing components, extend custom
+				elements (like <code>@Attribute</code> or <code>@DomProperty</code> decorators do), or provide some context values.</p>
 				<p>The feature is a class decorated with <code>@Feature</code> decorator:</p>
 				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> {
   ComponentContext,
@@ -270,18 +267,15 @@ bootstrapComponents(MyFeature);</code></pre>
   }
 
 }</code></pre>
-				<p>However, the component state update notification is no-op by default. To enable state tracking changes
-					a <code>StateSupport</code> feature must be enabled. Then a <code>ComponentState</code> instance will be available in component context.
-				The component state allows to track the component state updates.</p>
+				<p>A <code>ComponentState</code> instance available in component context allows to track the component state updates.</p>
 				<a href="#shadow-dom" id="shadow-dom" style="color: inherit; text-decoration: none;">
 					<h2>Shadow DOM</h2>
 				</a>
 				<p>It is possible to attach shadow root to custom element by decorating the component with <code>@AttachShadow</code> decorator.</p>
-				<p>If shadow DOM is supported, then a shadow root will be attached to element. Otherwise an element itself will be used
+				<p>If shadow DOM is supported, then a shadow root will be attached to element. Otherwise, an element itself will be used
 				as shadow root. In both cases the shadow root will be available in component context under <code>[ShadowContentRoot]</code> key.</p>
-				<p>The <code>@AttachShadow</code> decorator automatically enables a <code>ShadowDomSupport</code> feature.</p>
 				<p>A <code>ComponentContext.contentRoot</code> property is always available. It either contains a shadow root, or element itself.
-				This is a DOM node to use to insert the DOM nodes to component.</p>
+				This is a root DOM node component element contents.</p>
 				<a href="#rendering" id="rendering" style="color: inherit; text-decoration: none;">
 					<h2>Rendering</h2>
 				</a>
