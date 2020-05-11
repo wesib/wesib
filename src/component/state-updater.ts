@@ -99,11 +99,9 @@ class StateUpdaterKey extends ContextUpKey<StateUpdater, StateUpdater.Normalized
  * Features are calling this function by default when component state changes, e.g. attribute value or DOM property
  * modified.
  *
- * Note that this value is not provided, unless a {@link StateSupport state support} enabled.
+ * Does nothing by default and after component destruction.
  *
  * When multiple state updaters provided, they all will be called on each state update, in reverse order.
- *
- * Does nothing after component destruction.
  *
  * @category Core
  */

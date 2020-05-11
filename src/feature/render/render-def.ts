@@ -56,7 +56,7 @@ export namespace RenderDef {
      *
      * This can be one of the following:
      * - A path to component state part the renderer should track. The rendering would trigger only when the target
-     *   state part is updated. This requires {@link StateSupport component state support} to be enabled.
+     *   state part is updated.
      * - Arbitrary event sender. The rendering would be triggered on any event from this sender.
      *
      * A root state path is tracked when omitted.

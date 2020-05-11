@@ -9,7 +9,6 @@ import {
 import { DefaultRenderScheduler } from '../../boot/globals';
 import { Component, ComponentContext } from '../../component';
 import { MockElement, testElement } from '../../spec/test-element';
-import { StateSupport } from '../state';
 import { ElementRenderCtl } from './element-render-ctl';
 import { ElementRenderScheduler } from './element-render-scheduler';
 
@@ -120,7 +119,6 @@ describe('feature/render', () => {
           type: MockElement,
         },
         feature: {
-          needs: StateSupport,
           setup(setup) {
             setup.provide({ a: DefaultRenderScheduler, is: mockRenderScheduler });
           },

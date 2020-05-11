@@ -5,7 +5,6 @@
 import { RenderExecution } from '@proc7ts/render-scheduler';
 import { ComponentProperty, ComponentPropertyDecorator } from '../../component';
 import { ComponentClass } from '../../component/definition';
-import { StateSupport } from '../state';
 import { ElementRenderCtl } from './element-render-ctl';
 import { ElementRenderer } from './element-renderer';
 import { RenderDef } from './render-def';
@@ -18,8 +17,6 @@ import { RenderDef } from './render-def';
  * The decorated method should have no arguments. It may return either nothing, or a function. In the latter case the
  * returned function will be called immediately to render the element. It may, in turn, return a renderer function,
  * and so on.
- *
- * This decorator automatically enables [[StateSupport]] feature.
  *
  * Enables rendering with {@link ElementRenderCtl.renderBy element render control}.
  *
@@ -34,9 +31,6 @@ export function Render<T extends ComponentClass>(
 ): ComponentPropertyDecorator<(execution: RenderExecution) => ElementRenderer | void, T> {
   return ComponentProperty(({ get }) => ({
     componentDef: {
-      feature: {
-        needs: StateSupport,
-      },
       define(defContext) {
         defContext.whenComponent(context => {
           context.whenReady(() => {

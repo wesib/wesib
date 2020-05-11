@@ -52,9 +52,6 @@ class StatePropertyTracker<T> extends ValueTracker<T> {
 /**
  * Creates a tracker of component state value.
  *
- * Requires [[StateSupport]] feature to be enabled and property to be defined. E.g. with {@link StateProperty
- * @StateProperty} decorator.
- *
  * @category Feature
  * @typeparam T  A type of state property value.
  * @param context  Target component context.

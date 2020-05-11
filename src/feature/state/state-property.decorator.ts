@@ -8,14 +8,11 @@ import { ComponentProperty, ComponentPropertyDecorator } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { StatePropertyPath } from './state-property-path';
 import { statePropertyUpdate } from './state-property-update.impl';
-import { StateSupport } from './state-support.feature';
 
 /**
  * Creates a decorator of component property containing part of component state.
  *
  * Once such property updated, the component state is {@link ComponentContext.updateState also updated}.
- *
- * Enables [[StateSupport]] feature when applied.
  *
  * @category Feature
  * @typeparam T  A type of decorated component class.
@@ -42,11 +39,6 @@ export function StateProperty<V = any, T extends ComponentClass = Class>(
     }
 
     return {
-      componentDef: {
-        feature: {
-          needs: StateSupport,
-        },
-      },
       get,
       set,
     };

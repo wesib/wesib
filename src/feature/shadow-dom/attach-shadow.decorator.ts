@@ -6,7 +6,6 @@ import { Class } from '../../common';
 import { Component, ComponentContext, ComponentDecorator, ContentRoot } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { ShadowContentRoot } from './shadow-content-root';
-import { ShadowDomSupport } from './shadow-dom-support.feature';
 import { ShadowRootBuilder } from './shadow-root-builder';
 
 /**
@@ -25,9 +24,6 @@ export type ShadowContentDef = Readonly<ShadowRootInit>;
 
 /**
  * Creates a component decorator that attaches shadow root to decorated component instance.
- *
- * The returned component decorator enables [[ShadowDomSupport]] feature and attaches shadow content root to the
- * component.
  *
  * @category Feature
  * @typeparam T  A type of decorated component class.
@@ -55,6 +51,5 @@ export function AttachShadow<T extends ComponentClass = Class>(
         },
       });
     },
-    feature: { needs: ShadowDomSupport },
   });
 }
