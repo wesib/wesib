@@ -141,6 +141,23 @@ describe('boot', () => {
       await loadFeature(TestComponent);
       expect(mockCustomElements.define).toHaveBeenCalledWith(TestComponent, expect.any(Function));
     });
+    it('notifies on component definition', async () => {
+
+      const onDefinition = jest.fn();
+
+      @Component({
+        name: 'test-component',
+        feature: {
+          setup(setup) {
+            setup.onDefinition(onDefinition);
+          },
+        },
+      })
+      class TestComponent {}
+
+      await loadFeature(TestComponent);
+      expect(onDefinition).toHaveBeenCalledWith(expect.objectContaining({ componentType: TestComponent }));
+    });
     it('registers the component when used as dependency', async () => {
       @Component('test-component')
       class TestComponent {}
@@ -247,7 +264,7 @@ describe('boot', () => {
           context.get(key).to(receiver);
         }
 
-}
+      }
 
       @Feature({
         setup(setup) {
