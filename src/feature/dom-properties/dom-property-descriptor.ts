@@ -2,8 +2,6 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { MultiContextKey, MultiContextRef } from '@proc7ts/context-values';
-
 /**
  * Component's element property descriptor.
  *
@@ -25,12 +23,3 @@ export interface DomPropertyDescriptor {
   readonly descriptor: PropertyDescriptor;
 
 }
-
-/**
- * A key of component definition context value containing custom element property descriptors.
- *
- * @category Feature
- */
-export const DomPropertyDescriptor: MultiContextRef<DomPropertyDescriptor> = (
-    /*#__PURE__*/ new MultiContextKey<DomPropertyDescriptor>('dom-property-descriptor')
-);

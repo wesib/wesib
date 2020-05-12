@@ -45,27 +45,25 @@ export const DomPropertyRegistry: ContextRef<DomPropertyRegistry> = (
  */
 class DomPropertyRegistry$ implements DomPropertyRegistry {
 
-  private _props?: Map<PropertyKey, PropertyDescriptor>;
+  private readonly props = new Map<PropertyKey, PropertyDescriptor>();
 
-  constructor(private readonly _context: DefinitionContext) {
-  }
-
-  get props(): Map<PropertyKey, PropertyDescriptor> {
-    if (this._props) {
-      return this._props;
-    }
-
-    return this._props = new Map<PropertyKey, PropertyDescriptor>(
-        this._context.get(DomPropertyDescriptor)
-            .map(({ key, descriptor }) => [key, descriptor]),
+  constructor(defContext: DefinitionContext) {
+    defContext.whenReady(
+        ({ elementType }) => this.define(elementType),
     );
+    defContext.whenComponent(({ mount }) => {
+      if (mount) {
+        // Mount element properties
+        this.mount(mount);
+      }
+    });
   }
 
-  declareDomProperty(_descriptor: DomPropertyDescriptor): void {
-    // TODO Declare DOM property
+  declareDomProperty({ key, descriptor }: DomPropertyDescriptor): void {
+    this.props.set(key, descriptor);
   }
 
-  define<T extends object>(elementType: Class<T>): void {
+  private define<T extends object>(elementType: Class<T>): void {
 
     const prototype = elementType.prototype;
 
@@ -74,10 +72,7 @@ class DomPropertyRegistry$ implements DomPropertyRegistry {
     });
   }
 
-  mount<T extends object>(mount: ComponentMount<T>): void {
-
-    const element = mount.element;
-
+  private mount<T extends object>({ element }: ComponentMount<T>): void {
     this.props.forEach((desc, key) => {
       Object.defineProperty(element, key, desc);
     });

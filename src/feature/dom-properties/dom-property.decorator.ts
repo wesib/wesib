@@ -5,10 +5,9 @@
 import { Class } from '../../common';
 import { ComponentProperty, ComponentPropertyDecorator } from '../../component';
 import { ComponentClass } from '../../component/definition';
-import { DomPropertiesSupport } from './dom-properties-support.feature';
 import { DomPropertyDef } from './dom-property-def';
-import { DomPropertyDescriptor } from './dom-property-descriptor';
 import { domPropertyDescriptor } from './dom-property-descriptor.impl';
+import { DomPropertyRegistry } from './dom-property-registry';
 import { domPropertyUpdate } from './dom-property-update.impl';
 
 /**
@@ -49,11 +48,8 @@ export function DomProperty<V = any, T extends ComponentClass = Class>(
 
     return {
       componentDef: {
-        feature: {
-          needs: DomPropertiesSupport,
-        },
-        setup(setup) {
-          setup.perDefinition({ a: DomPropertyDescriptor, is: domDescriptor });
+        define(defContext) {
+          defContext.get(DomPropertyRegistry).declareDomProperty(domDescriptor);
         },
       },
       get,
