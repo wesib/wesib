@@ -5,17 +5,14 @@
 import { ComponentContext, ComponentProperty, ComponentPropertyDecorator } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { AttributeDef } from './attribute-def';
-import { AttributeDescriptor } from './attribute-descriptor';
 import { parseAttributeDescriptor } from './attribute-descriptor.impl';
-import { AttributesSupport } from './attributes-support.feature';
+import { AttributeRegistry } from './attribute-registry';
 
 /**
  * Creates a decorator for component's property that accesses custom element's attribute.
  *
  * The decorated property accesses corresponding attribute on read, and updates it on setting. `null` value corresponds
  * to absent attribute. Setting to `null` removes corresponding attribute.
- *
- * This decorator automatically enables [[AttributesSupport]] feature.
  *
  * @category Feature
  * @typeparam T  A type of decorated component class.
@@ -33,11 +30,8 @@ export function Attribute<T extends ComponentClass>(
 
     return {
       componentDef: {
-        feature: {
-          needs: AttributesSupport,
-        },
-        setup(setup) {
-          setup.perDefinition({ a: AttributeDescriptor, is: descriptor });
+        define(defContext) {
+          defContext.get(AttributeRegistry).declareAttribute(descriptor);
         },
       },
       get(component: InstanceType<T>): string | null {

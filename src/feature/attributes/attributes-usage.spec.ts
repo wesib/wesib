@@ -5,8 +5,8 @@ import { MockElement, testDefinition, testElement } from '../../spec/test-elemen
 import { Feature } from '../feature.decorator';
 import { AttributeChanged } from './attribute-changed.decorator';
 import { AttributePath__root } from './attribute-path';
+import { AttributeRegistry } from './attribute-registry';
 import { Attribute } from './attribute.decorator';
-import { AttributesSupport } from './attributes-support.feature';
 import Mock = jest.Mock;
 import Mocked = jest.Mocked;
 
@@ -105,9 +105,6 @@ describe('feature/attributes', () => {
           },
           name: 'no-attr-component',
         })
-        @Feature({
-          needs: AttributesSupport,
-        })
         class NoAttrComponent {
         }
 
@@ -204,9 +201,9 @@ describe('feature/attributes', () => {
             type: Object,
           },
           name: 'no-attr-component',
-        })
-        @Feature({
-          needs: AttributesSupport,
+          define(defContext) {
+            defContext.get(AttributeRegistry); // Ensure `AttributeRegistry` created without attributes.
+          },
         })
         class NoAttrComponent {
         }

@@ -1,4 +1,4 @@
-import { ContextKey, ContextKey__symbol, SingleContextKey } from '@proc7ts/context-values';
+import { SingleContextKey } from '@proc7ts/context-values';
 import { BootstrapWindow } from '../../boot/globals';
 import { ArraySet, Class, mergeFunctions } from '../../common';
 import { isArray } from '../../common/types.impl';
@@ -6,42 +6,60 @@ import { ComponentContext, ComponentMount } from '../../component';
 import { DefinitionContext } from '../../component/definition';
 import { AttributeChangedCallback, AttributeDescriptor } from './attribute-descriptor';
 
-const AttributeRegistry__key = (/*#__PURE__*/ new SingleContextKey<AttributeRegistry>('attribute-registry'));
+/**
+ * A registry of component's element attributes.
+ *
+ * @category Feature
+ */
+export interface AttributeRegistry {
+
+  /**
+   * Declares component element's attribute.
+   *
+   * @param descriptor  Attribute descriptor.
+   */
+  declareAttribute(descriptor: AttributeDescriptor): void;
+
+}
+
+/**
+ * A key of definition context value containing {@link AttributeRegistry attribute registry}.
+ *
+ * @category Feature
+ */
+export const AttributeRegistry = (/*#__PURE__*/ new SingleContextKey<AttributeRegistry>(
+    'attribute-registry',
+    {
+      byDefault(context) {
+        return new AttributeRegistry$(context.get(DefinitionContext));
+      },
+    },
+));
 
 /**
  * @internal
  */
-export class AttributeRegistry<T extends object = any> {
+class AttributeRegistry$ implements AttributeRegistry {
 
-  static get [ContextKey__symbol](): ContextKey<AttributeRegistry> {
-    return AttributeRegistry__key;
-  }
-
-  private _attrs?: Map<string, AttributeChangedCallback<T>>;
+  private readonly attrs = new Map<string, AttributeChangedCallback<any>>();
 
   constructor(private readonly _context: DefinitionContext) {
-  }
-
-  get attrs(): Map<string, AttributeChangedCallback<T>> {
-    if (this._attrs) {
-      return this._attrs;
-    }
-
-    const attrs = new Map<string, AttributeChangedCallback<T>>();
-
-    this._context.get(AttributeDescriptor).forEach(desc => {
-
-      const { name, change } = desc;
-
-      attrs.set(name, mergeFunctions(attrs.get(name), change));
+    _context.whenReady(({ elementType }) => this.define(elementType));
+    _context.whenComponent(({ mount }) => {
+      if (mount) {
+        // Mount element attributes
+        this.mount(mount);
+      }
     });
-
-    return this._attrs = attrs;
   }
 
-  define(elementType: Class): void {
+  declareAttribute({ name, change }: AttributeDescriptor): void {
+    this.attrs.set(name, mergeFunctions(this.attrs.get(name), change));
+  }
 
-    const attrs = this.attrs;
+  private define(elementType: Class): void {
+
+    const { attrs } = this;
 
     if (!attrs.size) {
       return; // No attributes defined
@@ -59,10 +77,10 @@ export class AttributeRegistry<T extends object = any> {
     });
   }
 
-  mount(mount: ComponentMount<T>): void {
+  private mount(mount: ComponentMount): void {
 
     const element = mount.element;
-    const attrs = this.attrs;
+    const { attrs } = this;
     const attributeFilter = Array.from(attrs.keys());
 
     if (!attributeFilter.length) {
@@ -77,7 +95,7 @@ export class AttributeRegistry<T extends object = any> {
               const attributeName = record.attributeName as string;
 
               return attrs.get(attributeName)!(
-                  ComponentContext.of<T>(element).component,
+                  ComponentContext.of(element).component,
                   element.getAttribute(attributeName),
                   record.oldValue,
               );

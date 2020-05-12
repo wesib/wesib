@@ -3,7 +3,6 @@ import { Class } from '../../common';
 import { Component, ComponentContext, ComponentContext__symbol } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { attributePathTo } from './attribute-path';
-import { AttributesSupport } from './attributes-support.feature';
 import { Attributes } from './attributes.decorator';
 
 describe('feature/attributes', () => {
@@ -101,7 +100,7 @@ describe('feature/attributes', () => {
 
   async function bootstrap(component: ComponentClass): Promise<Class> {
 
-    const bsContext = await bootstrapComponents(AttributesSupport, component).whenReady();
+    const bsContext = await bootstrapComponents(component).whenReady();
     const defContext = await bsContext.whenDefined(component);
 
     return defContext.elementType;

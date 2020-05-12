@@ -2,7 +2,6 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { MultiContextKey, MultiContextRef } from '@proc7ts/context-values';
 
 /**
  * Custom element attribute change callback signature.
@@ -21,9 +20,9 @@ export type AttributeChangedCallback<T extends object> =
     (this: void, component: T, newValue: string | null, oldValue: string | null) => void;
 
 /**
- * Custom element attribute descriptor.
+ * Component's element attribute descriptor.
  *
- * Descriptors are to be registered in component's definition context in order to make them available to component.
+ * Descriptors are to be {@link AttributeRegistry.declareAttribute declared} in order to add them to element.
  * The {@link Attribute @Attribute}, {@link Attributes @Attributes}, and {@link AttributeChanged @AttributeChanged}
  * decorators are doing so.
  *
@@ -42,12 +41,3 @@ export interface AttributeDescriptor<T extends object = any> {
   readonly change: AttributeChangedCallback<T>;
 
 }
-
-/**
- * A key of component definition context value containing attribute descriptors.
- *
- * @category Feature
- */
-export const AttributeDescriptor: MultiContextRef<AttributeDescriptor> = (
-    /*#__PURE__*/ new MultiContextKey<AttributeDescriptor>('attribute-descriptor')
-);

@@ -15,6 +15,9 @@ import { BootstrapWindow } from './bootstrap-window';
  */
 export type DefaultRenderScheduler = RenderScheduler;
 
+/**
+ * @internal
+ */
 class DefaultRenderSchedulerKey extends ContextUpKey<DefaultRenderScheduler, RenderScheduler> {
 
   readonly upKey: ContextUpKey.UpKey<DefaultRenderScheduler, RenderScheduler>;
@@ -59,6 +62,9 @@ class DefaultRenderSchedulerKey extends ContextUpKey<DefaultRenderScheduler, Ren
 
 }
 
+/**
+ * @internal
+ */
 function toDefaultRenderScheduler(
     context: ContextValues,
     scheduler: RenderScheduler,
