@@ -3,7 +3,7 @@
  * @module @wesib/wesib
  */
 import { FeatureDef, FeatureDef__symbol } from '../feature-def';
-import { DomPropertyRegistry } from './dom-property-registry.impl';
+import { DomPropertyRegistry } from './dom-property-registry';
 
 /**
  * @internal

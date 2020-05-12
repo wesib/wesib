@@ -1,19 +1,49 @@
-import { ContextKey, ContextKey__symbol, SingleContextKey } from '@proc7ts/context-values';
+/**
+ * @packageDocumentation
+ * @module @wesib/wesib
+ */
+import { ContextRef, SingleContextKey } from '@proc7ts/context-values';
 import { Class } from '../../common';
 import { ComponentMount } from '../../component';
 import { DefinitionContext } from '../../component/definition';
 import { DomPropertyDescriptor } from './dom-property-descriptor';
 
-const DomPropertyRegistry__key = (/*#__PURE__*/ new SingleContextKey<DomPropertyRegistry>('dom-property-registry'));
+/**
+ * A registry of component's element properties.
+ *
+ * @category Feature
+ */
+export interface DomPropertyRegistry {
+
+  /**
+   * Declares component element's property.
+   *
+   * @param descriptor  Property descriptor.
+   */
+  declareDomProperty(descriptor: DomPropertyDescriptor): void;
+
+}
+
+/**
+ * A key of component definition context value containing {@link DomPropertyRegistry DOM property registry}.
+ *
+ * @category Feature
+ */
+export const DomPropertyRegistry: ContextRef<DomPropertyRegistry> = (
+    /*#__PURE__*/ new SingleContextKey<DomPropertyRegistry>(
+        'dom-property-registry',
+        {
+          byDefault(context) {
+            return new DomPropertyRegistry$(context.get(DefinitionContext));
+          },
+        },
+    )
+);
 
 /**
  * @internal
  */
-export class DomPropertyRegistry {
-
-  static get [ContextKey__symbol](): ContextKey<DomPropertyRegistry> {
-    return DomPropertyRegistry__key;
-  }
+class DomPropertyRegistry$ implements DomPropertyRegistry {
 
   private _props?: Map<PropertyKey, PropertyDescriptor>;
 
@@ -29,6 +59,10 @@ export class DomPropertyRegistry {
         this._context.get(DomPropertyDescriptor)
             .map(({ key, descriptor }) => [key, descriptor]),
     );
+  }
+
+  declareDomProperty(_descriptor: DomPropertyDescriptor): void {
+    // TODO Declare DOM property
   }
 
   define<T extends object>(elementType: Class<T>): void {

@@ -5,9 +5,9 @@
 import { MultiContextKey, MultiContextRef } from '@proc7ts/context-values';
 
 /**
- * Custom element property descriptor.
+ * Component's element property descriptor.
  *
- * Descriptors are to be registered in component's definition context in order to make them available to component.
+ * Descriptors used to {@link DomPropertyRegistry.declareDomProperty declare} element properties.
  * The {@link DomProperty @DomProperty} decorator is doing so.
  *
  * @category Feature
