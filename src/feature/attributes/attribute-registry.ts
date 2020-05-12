@@ -2,7 +2,7 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { SingleContextKey } from '@proc7ts/context-values';
+import { ContextRef, SingleContextKey } from '@proc7ts/context-values';
 import { BootstrapWindow } from '../../boot/globals';
 import { ArraySet, Class, mergeFunctions } from '../../common';
 import { isArray } from '../../common/types.impl';
@@ -31,14 +31,16 @@ export interface AttributeRegistry {
  *
  * @category Feature
  */
-export const AttributeRegistry = (/*#__PURE__*/ new SingleContextKey<AttributeRegistry>(
-    'attribute-registry',
-    {
-      byDefault(context) {
-        return new AttributeRegistry$(context.get(DefinitionContext));
-      },
-    },
-));
+export const AttributeRegistry: ContextRef<AttributeRegistry> = (
+    /*#__PURE__*/ new SingleContextKey<AttributeRegistry>(
+        'attribute-registry',
+        {
+          byDefault(context) {
+            return new AttributeRegistry$(context.get(DefinitionContext));
+          },
+        },
+    )
+);
 
 /**
  * @internal
