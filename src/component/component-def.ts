@@ -83,9 +83,9 @@ export namespace ComponentDef {
      *
      * This function is called before the custom element is defined.
      *
-     * @param context  Component definition context.
+     * @param defContext  Component definition context.
      */
-    define?(context: DefinitionContext<T>): void;
+    define?(defContext: DefinitionContext<T>): void;
 
   }
 

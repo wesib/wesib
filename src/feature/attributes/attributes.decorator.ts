@@ -7,9 +7,8 @@ import { Class } from '../../common';
 import { Component, ComponentDecorator } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { AttributeUpdateReceiver } from './attribute-def';
-import { AttributeDescriptor } from './attribute-descriptor';
+import { AttributeRegistry } from './attribute-registry';
 import { attributeStateUpdate } from './attribute-state-update.impl';
-import { AttributesSupport } from './attributes-support.feature';
 import { property2attributeName } from './property2attribute-name';
 
 /**
@@ -27,31 +26,27 @@ export function Attributes<T extends ComponentClass = Class>(
     ...items: readonly Attributes.Item<InstanceType<T>>[]
 ): ComponentDecorator<T> {
   return Component({
-    feature: { needs: AttributesSupport },
-    setup(setup) {
+    define(defContext) {
+
+      const registry = defContext.get(AttributeRegistry);
+
       for (const item of items) {
         if (typeof item === 'string') {
 
           const name = property2attributeName(item);
 
-          setup.perDefinition({
-            a: AttributeDescriptor,
-            is: {
-              name,
-              change: attributeStateUpdate(name),
-            },
+          registry.declareAttribute({
+            name,
+            change: attributeStateUpdate(name),
           });
         } else {
           for (const [key, updateState] of Object.entries(item)) {
 
             const name = property2attributeName(key);
 
-            setup.perDefinition({
-              a: AttributeDescriptor,
-              is: {
-                name,
-                change: attributeStateUpdate(name, updateState),
-              },
+            registry.declareAttribute({
+              name,
+              change: attributeStateUpdate(name, updateState),
             });
           }
         }

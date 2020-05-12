@@ -3,7 +3,7 @@ export * from './attribute-changed.decorator';
 export * from './attribute-def';
 export * from './attribute-descriptor';
 export * from './attribute-path';
+export * from './attribute-registry';
 export * from './attributes.decorator';
-export * from './attributes-support.feature';
 export * from './property2attribute-name';
 export * from './track-attribute';

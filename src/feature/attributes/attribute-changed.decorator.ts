@@ -5,9 +5,8 @@
 import { ComponentProperty, ComponentPropertyDecorator } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { AttributeDef } from './attribute-def';
-import { AttributeDescriptor } from './attribute-descriptor';
 import { parseAttributeDescriptor } from './attribute-descriptor.impl';
-import { AttributesSupport } from './attributes-support.feature';
+import { AttributeRegistry } from './attribute-registry';
 
 /**
  * Creates a component method decorator for custom element attribute change callback.
@@ -30,8 +29,6 @@ import { AttributesSupport } from './attributes-support.feature';
  * }
  * ```
  *
- * This decorator automatically enables [[AttributesSupport]] feature.
- *
  * @category Feature
  * @typeparam T  A type of decorated component class.
  * @param def  Attribute definition or just an attribute name.
@@ -47,25 +44,19 @@ export function AttributeChanged<T extends ComponentClass>(
 
     return {
       componentDef: {
-        feature: {
-          needs: AttributesSupport,
-        },
-        setup(setup) {
-          setup.perDefinition({
-            a: AttributeDescriptor,
-            is: {
-              name,
-              change(
-                  component: InstanceType<T>,
-                  newValue: string | null,
-                  oldValue: string | null,
-              ) {
+        define(defContext) {
+          defContext.get(AttributeRegistry).declareAttribute({
+            name,
+            change(
+                component: InstanceType<T>,
+                newValue: string | null,
+                oldValue: string | null,
+            ) {
 
-                const callback = get(component);
+              const callback = get(component);
 
-                callback.call(component, newValue, oldValue);
-                change(component, newValue, oldValue);
-              },
+              callback.call(component, newValue, oldValue);
+              change(component, newValue, oldValue);
             },
           });
         },
