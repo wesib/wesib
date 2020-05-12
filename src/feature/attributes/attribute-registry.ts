@@ -1,3 +1,7 @@
+/**
+ * @packageDocumentation
+ * @module @wesib/wesib
+ */
 import { SingleContextKey } from '@proc7ts/context-values';
 import { BootstrapWindow } from '../../boot/globals';
 import { ArraySet, Class, mergeFunctions } from '../../common';
@@ -23,7 +27,7 @@ export interface AttributeRegistry {
 }
 
 /**
- * A key of definition context value containing {@link AttributeRegistry attribute registry}.
+ * A key of component definition context value containing {@link AttributeRegistry attribute registry}.
  *
  * @category Feature
  */

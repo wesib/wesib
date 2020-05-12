@@ -22,7 +22,7 @@ export type AttributeChangedCallback<T extends object> =
 /**
  * Component's element attribute descriptor.
  *
- * Descriptors are to be {@link AttributeRegistry.declareAttribute declared} in order to add them to element.
+ * Descriptors are used to {@link AttributeRegistry.declareAttribute declare} element attributes.
  * The {@link Attribute @Attribute}, {@link Attributes @Attributes}, and {@link AttributeChanged @AttributeChanged}
  * decorators are doing so.
  *
