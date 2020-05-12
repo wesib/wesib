@@ -146,6 +146,14 @@ describe('component', () => {
         expect(setup1).toHaveBeenCalledWith(setup);
         expect(setup2).toHaveBeenCalledWith(setup);
       });
+      it('retains `feature` when another one is absent', () => {
+
+        const setup1 = jest.fn();
+        const feature1: FeatureDef = { setup: setup1 };
+
+        expect(ComponentDef.merge({ feature: feature1 }, {})).toEqual({ feature: feature1 });
+        expect(ComponentDef.merge({}, { feature: feature1 })).toEqual({ feature: feature1 });
+      });
       it('does not merge empty definitions', () => {
         expect(ComponentDef.merge({}, {})).toEqual({});
       });
