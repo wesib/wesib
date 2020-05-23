@@ -20,11 +20,11 @@ export function domPropertyDescriptor<V>(
   const descriptor: PropertyAccessorDescriptor<V> = {
     configurable,
     enumerable,
-    get: function (this: any) {
-      return (ComponentContext.of(this).component as any)[componentPropertyKey];
+    get: function (this: any): V {
+      return (ComponentContext.of(this).component as any)[componentPropertyKey] as V;
     },
     set: writable
-        ? function (this: any, value: any) {
+        ? function (this: any, value: V) {
           (ComponentContext.of(this).component as any)[componentPropertyKey] = value;
         }
         : undefined,

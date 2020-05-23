@@ -16,7 +16,7 @@ export const AttributePath__root = (/*#__PURE__*/ Symbol('attribute'));
  *
  * @category Feature
  */
-export type AttributePath = readonly [keyof AttributePath__rootKeys, string];
+export type AttributePath = readonly [keyof AttributePath.RootKeys, string];
 
 /**
  * Constructs a named attribute state path.
@@ -33,7 +33,8 @@ export function attributePathTo(name: string): AttributePath {
 /**
  * @category Feature
  */
-// eslint-disable-next-line @typescript-eslint/class-name-casing
-export interface AttributePath__rootKeys {
-  [AttributePath__root]: true;
+export namespace AttributePath {
+  export interface RootKeys {
+    [AttributePath__root]: true;
+  }
 }

@@ -4,7 +4,7 @@
  */
 import { ContextRef, SingleContextKey } from '@proc7ts/context-values';
 import { BootstrapWindow } from '../../boot/globals';
-import { ArraySet, Class, mergeFunctions } from '../../common';
+import { ArraySet, CustomElementClass, mergeFunctions } from '../../common';
 import { isArray } from '../../common/types.impl';
 import { ComponentContext, ComponentMount } from '../../component';
 import { DefinitionContext } from '../../component/definition';
@@ -50,7 +50,7 @@ class AttributeRegistry$ implements AttributeRegistry {
   private readonly attrs = new Map<string, AttributeChangedCallback<any>>();
 
   constructor(private readonly _context: DefinitionContext) {
-    _context.whenReady(({ elementType }) => this.define(elementType));
+    _context.whenReady(({ elementType }) => this.define(elementType as CustomElementClass));
     _context.whenComponent(({ mount }) => {
       if (mount) {
         // Mount element attributes
@@ -63,7 +63,7 @@ class AttributeRegistry$ implements AttributeRegistry {
     this.attrs.set(name, mergeFunctions(this.attrs.get(name), change));
   }
 
-  private define(elementType: Class): void {
+  private define(elementType: CustomElementClass): void {
 
     const { attrs } = this;
 
@@ -85,7 +85,7 @@ class AttributeRegistry$ implements AttributeRegistry {
 
   private mount(mount: ComponentMount): void {
 
-    const element = mount.element;
+    const { element } = mount as { element: Element };
     const { attrs } = this;
     const attributeFilter = Array.from(attrs.keys());
 
@@ -132,11 +132,11 @@ type ElementAttributeChanged = (
  * @internal
  */
 function observedAttributes(
-    elementType: Class,
+    elementType: CustomElementClass,
     attrs: Iterable<string>,
 ): readonly string[] {
 
-  const alreadyObserved: readonly string[] | undefined = (elementType as any).observedAttributes;
+  const alreadyObserved = (elementType as any).observedAttributes as readonly string[] | undefined;
 
   return Array.from(
       isArray<string>(alreadyObserved)
@@ -149,11 +149,11 @@ function observedAttributes(
  * @internal
  */
 function attributeChangedCallback<T extends object>(
-    elementType: Class,
+    elementType: CustomElementClass,
     attrs: Map<string, AttributeChangedCallback<T>>,
 ): ElementAttributeChanged {
 
-  const prevCallback: ElementAttributeChanged | undefined = elementType.prototype.attributeChangedCallback;
+  const prevCallback = elementType.prototype.attributeChangedCallback;
 
   if (!prevCallback) {
     return function (this: any, name, oldValue, newValue) {

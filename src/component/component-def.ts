@@ -126,6 +126,23 @@ export namespace ComponentDef {
 /**
  * @internal
  */
+type ComponentDefHolder<T extends object> =
+    | ComponentDef.Options<T>
+    | ComponentDef.Holder<T>
+    | ComponentDef.Factory<T>
+    | { [ComponentDef__symbol]?: undefined };
+
+/**
+ * @internal
+ */
+type FeatureDefHolder =
+    | FeatureDef.Holder
+    | FeatureDef.Factory
+    | { [FeatureDef__symbol]?: undefined };
+
+/**
+ * @internal
+ */
 class ComponentMeta extends MetaAccessor<ComponentDef.Options, ComponentDef> {
 
   constructor() {
@@ -150,7 +167,7 @@ class ComponentMeta extends MetaAccessor<ComponentDef.Options, ComponentDef> {
 
   meta<T extends object>(source: ComponentDef<T>, componentType: ComponentClass<T>): ComponentDef.Options<T> {
 
-    const def = (source as any)[ComponentDef__symbol];
+    const def = (source as ComponentDefHolder<T>)[ComponentDef__symbol];
 
     if (def != null) {
       return this.meta(
@@ -158,7 +175,7 @@ class ComponentMeta extends MetaAccessor<ComponentDef.Options, ComponentDef> {
           componentType,
       );
     }
-    if ((source as any)[FeatureDef__symbol] != null) {
+    if ((source as FeatureDefHolder)[FeatureDef__symbol] != null) {
       return {
         feature: FeatureDef.for(componentType, source as FeatureDef),
       };
@@ -167,7 +184,7 @@ class ComponentMeta extends MetaAccessor<ComponentDef.Options, ComponentDef> {
       return { name: source };
     }
 
-    return source as ComponentDef.Options;
+    return source as ComponentDef.Options<T>;
   }
 
 }

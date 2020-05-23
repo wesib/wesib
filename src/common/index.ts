@@ -1,5 +1,6 @@
 export * from './array-set';
 export * from './classes';
+export * from './custom-element';
 export * from './decorators';
 export * from './functions';
 export * from './is-element';

@@ -125,7 +125,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    */
   static of<T extends object>(element: any): ComponentContext<T> {
 
-    const context = element[ComponentContext__symbol];
+    const context = element[ComponentContext__symbol] as ComponentContext<T> | undefined;
 
     if (!context) {
       throw TypeError(`No component context found in ${element}`);
@@ -146,7 +146,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    *
    * This is a shorthand for requesting a {@link ContentRoot content root} from component context.
    */
-  get contentRoot(): any {
+  get contentRoot(): ContentRoot {
     return this.get(ContentRoot);
   }
 

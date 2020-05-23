@@ -1,4 +1,4 @@
-import { Class } from '../../common';
+import { Class, CustomElementClass } from '../../common';
 import { ComponentContext__symbol } from '../../component';
 import { ElementDef } from '../../component/definition';
 import { ComponentContext$ } from './component-context.impl';
@@ -21,7 +21,7 @@ export function customElementType<T extends object>(
 
   const elementDef = definitionContext.get(ElementDef);
 
-  class CustomElement$ extends elementDef.extend.type {
+  class CustomElement$ extends (elementDef.extend.type as CustomElementClass) {
 
     // Component context reference
     [ComponentContext__symbol]: CustomComponentContext$<T>;

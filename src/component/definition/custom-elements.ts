@@ -130,10 +130,17 @@ const ComponentResolver__symbol = (/*#__PURE__*/ Symbol('component-resolver'));
 /**
  * @internal
  */
-function componentResolver(componentType: any): PromiseResolver {
+interface CustomComponentClass<T extends object = any> extends ComponentClass<T> {
+  [ComponentResolver__symbol]?: PromiseResolver;
+}
+
+/**
+ * @internal
+ */
+function componentResolver(componentType: CustomComponentClass): PromiseResolver {
   // eslint-disable-next-line no-prototype-builtins
   if (componentType.hasOwnProperty(ComponentResolver__symbol)) {
-    return componentType[ComponentResolver__symbol];
+    return componentType[ComponentResolver__symbol] as PromiseResolver;
   }
   return componentType[ComponentResolver__symbol] = new PromiseResolver();
 }

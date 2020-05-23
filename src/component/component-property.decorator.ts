@@ -393,7 +393,7 @@ export function ComponentProperty<V, T extends ComponentClass = Class>(
       desc => {
 
         const { get: getValue, set: setValue } = desc;
-        const type = proto.constructor;
+        const type = proto.constructor as T;
         const { get, set, configurable, enumerable, componentDef = {} } = define({
           type,
           key: propertyKey,
@@ -471,7 +471,15 @@ export function ComponentProperty<V, T extends ComponentClass = Class>(
   result.Bind = (binder, key = AnonymousComponentProperty__symbol) => {
 
     const accessor__symbol = Symbol(`${String(key)}:accessor`);
-    const accessor = (component: any): {
+
+    interface HostComponent {
+      [accessor__symbol]?: {
+        get(): V;
+        set(value: V): void;
+      };
+    }
+
+    const accessor = (component: HostComponent): {
       get(): V;
       set(value: V): void;
     } => {
@@ -482,7 +490,7 @@ export function ComponentProperty<V, T extends ComponentClass = Class>(
         return existing;
       }
 
-      const accessor = binder(component, key);
+      const accessor = binder(component as InstanceType<T>, key);
 
       return component[accessor__symbol] = {
         get: accessor.get ? accessor.get.bind(accessor) : notReadableAccessor(key),

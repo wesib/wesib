@@ -100,5 +100,5 @@ export interface ElementObserverInit extends MutationObserverInit {
  * @internal
  */
 function mountOf(node: any): ComponentMount | undefined {
-  return node[ComponentContext__symbol]?.mount;
+  return node[ComponentContext__symbol]?.mount as ComponentMount | undefined;
 }

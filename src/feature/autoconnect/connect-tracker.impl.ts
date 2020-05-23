@@ -7,7 +7,12 @@ import { BootstrapRoot, ElementObserver } from '../../boot/globals';
 import { isElement } from '../../common';
 import { ShadowDomEvent } from '../shadow-dom';
 
-const shadowConnectTracker__symbol = (/*#__PURE__*/ Symbol('shadow-connect-tracker'));
+const ShadowConnectTracker__symbol = (/*#__PURE__*/ Symbol('shadow-connect-tracker'));
+
+interface TrackedShadowRoot extends ShadowRoot {
+  [ShadowConnectTracker__symbol]?: ConnectTracker;
+}
+
 const ConnectTracker__key = (/*#__PURE__*/ new SingleContextKey<ConnectTracker>('connect-tracker'));
 
 /**
@@ -25,9 +30,9 @@ export class ConnectTracker {
   constructor(private readonly _context: BootstrapContext) {
   }
 
-  track(root: Node = this._context.get(BootstrapRoot)): void {
+  track(root: Node = this._context.get(BootstrapRoot) as Node): void {
 
-    const { _context } = this;
+    const context = this._context;
 
     this._supply = new DomEventDispatcher(root)
         .on<ShadowDomEvent>('wesib:shadowAttached')
@@ -66,15 +71,15 @@ export class ConnectTracker {
       }
     }
 
-    function trackShadow(shadowRoot: ShadowRoot): void {
-      if ((shadowRoot as any)[shadowConnectTracker__symbol]) {
+    function trackShadow(shadowRoot: TrackedShadowRoot): void {
+      if (shadowRoot[ShadowConnectTracker__symbol]) {
         // Already tracked
         return;
       }
 
-      const shadowTracker = new ConnectTracker(_context);
+      const shadowTracker = new ConnectTracker(context);
 
-      (shadowRoot as any)[shadowConnectTracker__symbol] = shadowTracker;
+      shadowRoot[ShadowConnectTracker__symbol] = shadowTracker;
 
       shadowTracker.track(shadowRoot);
     }
@@ -97,12 +102,12 @@ function untrackNested(element: Element): void {
   }
 }
 
-function untrackShadow(shadowRoot: ShadowRoot): void {
+function untrackShadow(shadowRoot: TrackedShadowRoot): void {
 
-  const shadowTracker: ConnectTracker = (shadowRoot as any)[shadowConnectTracker__symbol];
+  const shadowTracker = shadowRoot[ShadowConnectTracker__symbol];
 
   if (shadowTracker) {
-    delete (shadowRoot as any)[shadowConnectTracker__symbol];
+    delete shadowRoot[ShadowConnectTracker__symbol];
     shadowTracker._untrack();
   }
 }

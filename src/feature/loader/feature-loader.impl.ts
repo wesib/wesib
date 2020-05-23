@@ -21,6 +21,10 @@ import { FeatureClause, FeatureRequest } from './feature-request.impl';
 
 const FeatureKey__symbol = (/*#__PURE__*/ Symbol('feature-key'));
 
+interface FeatureClass extends Class {
+  [FeatureKey__symbol]?: FeatureKey;
+}
+
 /**
  * @internal
  */
@@ -29,8 +33,8 @@ export class FeatureKey extends ContextUpKey<AfterEvent<[FeatureLoader?]>, Featu
   static of(feature: Class): FeatureKey {
     // eslint-disable-next-line no-prototype-builtins
     return feature.hasOwnProperty(FeatureKey__symbol)
-        ? (feature as any)[FeatureKey__symbol]
-        : ((feature as any)[FeatureKey__symbol] = new FeatureKey(feature));
+        ? ((feature as FeatureClass)[FeatureKey__symbol] as FeatureKey)
+        : ((feature as FeatureClass)[FeatureKey__symbol] = new FeatureKey(feature));
   }
 
   get upKey(): this {

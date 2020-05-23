@@ -56,13 +56,17 @@ export interface PostDefSetup<T extends object = any> {
 
 const PostDefSetup__symbol = (/*#__PURE__*/ Symbol('post-def-setup'));
 
+interface PostDefComponentClass<T extends object> extends ComponentClass<T> {
+  [PostDefSetup__symbol]?: PostDefSetup<T>;
+}
+
 /**
  * @internal
  */
-export function postDefSetup<T extends object>(componentType: ComponentClass<T>): PostDefSetup<T> {
+export function postDefSetup<T extends object>(componentType: PostDefComponentClass<T>): PostDefSetup<T> {
   // eslint-disable-next-line no-prototype-builtins
   if (componentType.hasOwnProperty(PostDefSetup__symbol)) {
-    return (componentType as any)[PostDefSetup__symbol];
+    return componentType[PostDefSetup__symbol] as PostDefSetup<T>;
   }
 
   const tracker = trackValue<DefinitionSetup<T>>();

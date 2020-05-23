@@ -30,7 +30,7 @@ class StatePropertyTracker<T> extends ValueTracker<T> {
   }
 
   get it(): T {
-    return this._context.component[this._key];
+    return this._context.component[this._key] as T;
   }
 
   set it(value: T) {

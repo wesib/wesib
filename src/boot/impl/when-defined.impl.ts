@@ -8,16 +8,20 @@ import { definitionContextOf } from './definition-context.symbol.impl';
  */
 export const WhenDefined__symbol = (/*#__PURE__*/ Symbol('when-defined'));
 
+interface WhenDefinedComponentClass<T extends object> extends ComponentClass<T> {
+  [WhenDefined__symbol]?: OnEvent<[DefinitionContext<T>]>;
+}
+
 /**
  * @internal
  */
 export function whenDefined<T extends object>(
     bsContext: BootstrapContext,
-    componentType: ComponentClass<T>,
+    componentType: WhenDefinedComponentClass<T>,
 ): OnEvent<[DefinitionContext<T>]> {
   // eslint-disable-next-line no-prototype-builtins
   if (componentType.hasOwnProperty(WhenDefined__symbol)) {
-    return (componentType as any)[WhenDefined__symbol];
+    return componentType[WhenDefined__symbol] as OnEvent<[DefinitionContext<T>]>;
   }
 
   const result: OnEvent<[DefinitionContext<T>]> = onPromise(
@@ -26,5 +30,5 @@ export function whenDefined<T extends object>(
           .then(() => definitionContextOf(componentType)),
   );
 
-  return (componentType as any)[WhenDefined__symbol] = result;
+  return componentType[WhenDefined__symbol] = result;
 }

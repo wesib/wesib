@@ -18,7 +18,7 @@ export abstract class MetaAccessor<M, S = M> {
 
   own(type: Class): M | undefined {
     // eslint-disable-next-line no-prototype-builtins
-    return type.hasOwnProperty(this.symbol) ? (type as any)[this.symbol] : undefined;
+    return type.hasOwnProperty(this.symbol) ? (type as any)[this.symbol] as M : undefined;
   }
 
   of(type: Class): M | undefined {

@@ -16,7 +16,7 @@ describe('common', () => {
 
     it('merges function results', () => {
 
-      const merged: Function = mergeFunctions(firstSpy, secondSpy, mergeSpy);
+      const merged: (...args: any[]) => any = mergeFunctions(firstSpy, secondSpy, mergeSpy);
       const self = { name: 'this' };
       const args = ['foo', 'bar'];
 
@@ -35,7 +35,7 @@ describe('common', () => {
     });
     it('returns the second function result by default', () => {
 
-      const merged: Function = mergeFunctions(firstSpy, secondSpy);
+      const merged: (...args: any[]) => any = mergeFunctions(firstSpy, secondSpy);
       const self = { name: 'this' };
       const args = ['foo', 'bar'];
 

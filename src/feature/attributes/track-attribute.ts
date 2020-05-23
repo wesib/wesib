@@ -30,15 +30,15 @@ class AttributeTracker extends ValueTracker<string | null> {
   }
 
   get it(): string | null {
-    return this._context.element.getAttribute(this._name);
+    return (this._context.element as Element).getAttribute(this._name);
   }
 
   set it(value: string | null) {
     if (!eventSupplyOf(this).isOff) {
       if (value == null) {
-        this._context.element.removeAttribute(this._name);
+        (this._context.element as Element).removeAttribute(this._name);
       } else {
-        this._context.element.setAttribute(this._name, value);
+        (this._context.element as Element).setAttribute(this._name, value);
       }
     }
   }

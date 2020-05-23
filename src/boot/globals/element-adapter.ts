@@ -79,8 +79,8 @@ class ElementAdapterKey extends ContextUpKey<ElementAdapter, ElementAdapter> {
 /**
  * @internal
  */
-function defaultElementAdapter(element: any): ComponentContext {
-  return element[ComponentContext__symbol];
+function defaultElementAdapter(element: any): ComponentContext | undefined {
+  return element[ComponentContext__symbol] as ComponentContext | undefined;
 }
 
 /**

@@ -42,7 +42,7 @@ export abstract class ComponentMount<T extends object = any> {
    * An element the component is mounted to.
    */
   get element(): any {
-    return this.context.element;
+    return this.context.element as unknown;
   }
 
   /**

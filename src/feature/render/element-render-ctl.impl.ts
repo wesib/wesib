@@ -36,7 +36,7 @@ export class ElementRenderCtl$ implements ElementRenderCtl {
     const trigger = RenderDef.trigger(this._context, spec);
     const schedule = this._context.get(DefaultRenderScheduler)({
       ...RenderDef.fulfill(spec),
-      node: this._context.element,
+      node: this._context.element as Element,
     });
     const whenConnected = spec.when === 'connected';
     let status = RenderStatus.Pending;

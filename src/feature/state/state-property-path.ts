@@ -16,7 +16,7 @@ export const StatePropertyPath__root = (/*#__PURE__*/ Symbol('state-property'));
  *
  * @category Feature
  */
-export type StatePropertyPath<K extends PropertyKey = PropertyKey> = readonly [keyof StatePropertyPath__rootKeys, K];
+export type StatePropertyPath<K extends PropertyKey = PropertyKey> = readonly [keyof StatePropertyPath.RootKeys, K];
 
 /**
  * Constructs a named component property state path.
@@ -33,7 +33,8 @@ export function statePropertyPathTo<K extends PropertyKey = PropertyKey>(key: K)
 /**
  * @category Feature
  */
-// eslint-disable-next-line @typescript-eslint/class-name-casing
-export interface StatePropertyPath__rootKeys {
-  [StatePropertyPath__root]: true;
+export namespace StatePropertyPath {
+  export interface RootKeys {
+    [StatePropertyPath__root]: true;
+  }
 }

@@ -1,4 +1,3 @@
-import { ComponentClass } from '../../component/definition';
 import { AttributeDef } from './attribute-def';
 import { AttributeChangedCallback, AttributeDescriptor } from './attribute-descriptor';
 import { attributeStateUpdate } from './attribute-state-update.impl';
@@ -7,14 +6,14 @@ import { property2attributeName } from './property2attribute-name';
 /**
  * @internal
  */
-export function parseAttributeDescriptor<T extends ComponentClass>(
-    target: InstanceType<T>,
+export function parseAttributeDescriptor<T extends object>(
+    target: T,
     propertyKey: string | symbol,
-    opts?: AttributeDef<InstanceType<T>> | string,
-): AttributeDescriptor<InstanceType<T>> {
+    opts?: AttributeDef<T> | string,
+): AttributeDescriptor<T> {
 
   let name: string;
-  let change: AttributeChangedCallback<InstanceType<T>>;
+  let change: AttributeChangedCallback<T>;
 
   if (typeof opts === 'string') {
     name = property2attributeName(opts);

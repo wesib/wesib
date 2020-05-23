@@ -30,6 +30,7 @@ export interface Class<T extends object = any> extends Function {
  */
 export function superClassOf(type: Class, satisfying: (type: Class) => boolean = () => true): Class | undefined {
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const prototype = Object.getPrototypeOf(type.prototype);
 
   if (prototype == null) {

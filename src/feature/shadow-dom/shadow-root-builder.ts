@@ -49,7 +49,7 @@ export const ShadowRootBuilder: FnContextRef<Parameters<ShadowRootBuilder>, Retu
  */
 function attachShadow(context: ComponentContext, init: ShadowRootInit): ShadowRoot | undefined {
 
-  const element = context.element;
+  const element = context.element as Element;
   const shadowRoot = shadowRootOf(element, init);
 
   if (shadowRoot) {

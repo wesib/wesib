@@ -149,8 +149,12 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
 
 function newComponent<T extends object>(context: ComponentContext<T>): T {
 
+  type ComponentProto = T & {
+    [ComponentContext__symbol]?: ComponentContext<T>;
+  };
+
   const type = context.componentType;
-  const proto = type.prototype as any;
+  const proto = type.prototype as ComponentProto;
   const prevContext = proto[ComponentContext__symbol];
 
   proto[ComponentContext__symbol] = context;

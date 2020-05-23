@@ -44,15 +44,20 @@ export function fieldAccessorDescriptor<T, K extends keyof T>(
 ): PropertyAccessorDescriptor<T[K]> {
 
   const value__symbol = Symbol(`${String(fieldKey)}:value`);
+
+  interface ValueHost {
+    [value__symbol]: T[K];
+  }
+
   const initial: T[K] = target[fieldKey];
 
   return {
     configurable: true,
     enumerable: true,
-    get(this: any) {
+    get(this: ValueHost): T[K] {
       return value__symbol in this ? this[value__symbol] : initial;
     },
-    set(this: any, newValue) {
+    set(this: ValueHost, newValue) {
       this[value__symbol] = newValue;
     },
   };
@@ -106,19 +111,24 @@ export function toPropertyAccessorDescriptor<V>(
   }
 
   const value__symbol = Symbol('value');
+
+  interface ValueHost {
+    [value__symbol]: V;
+  }
+
   const initial = desc.value as V;
 
   const accessorDesc: PropertyAccessorDescriptor<V> = {
     ...desc,
     writable: undefined,
     value: undefined,
-    get(this: any) {
+    get(this: ValueHost) {
       return value__symbol in this ? this[value__symbol] : initial;
     },
   };
 
   if (desc.writable) {
-    accessorDesc.set = function (this: any, newValue: V) {
+    accessorDesc.set = function (this: ValueHost, newValue: V) {
       this[value__symbol] = newValue;
     };
   }

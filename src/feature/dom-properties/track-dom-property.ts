@@ -30,7 +30,7 @@ class DomPropertyTracker<T> extends ValueTracker<T> {
   }
 
   get it(): T {
-    return this._context.element[this._key];
+    return this._context.element[this._key] as T;
   }
 
   set it(value: T) {

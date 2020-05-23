@@ -10,7 +10,7 @@ import { BootstrapWindow } from './bootstrap-window';
  *
  * @category Core
  */
-export type BootstrapRoot = any;
+export type BootstrapRoot = Element;
 
 /**
  * A key of bootstrap context value containing a bootstrap root.

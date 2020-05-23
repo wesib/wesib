@@ -81,7 +81,7 @@ export class MockElement {
 
     this._attributes[name] = value;
 
-    const observedAttributes: string[] = this._target.observedAttributes;
+    const observedAttributes = this._target.observedAttributes as string[];
 
     if (observedAttributes && observedAttributes.includes(name)) {
       this.attributeChangedCallback(name, oldValue, value);

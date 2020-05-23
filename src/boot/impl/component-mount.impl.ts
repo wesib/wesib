@@ -18,7 +18,7 @@ class ComponentMount$<T extends object> extends ComponentMount<T> {
 
   checkConnected(): boolean {
 
-    const el: Element = this.context.element;
+    const el = this.context.element as Element;
     const doc = el.ownerDocument;
     const connected = doc != null && doc.contains(el);
 

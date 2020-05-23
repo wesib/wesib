@@ -35,11 +35,11 @@ export function Attribute<T extends ComponentClass>(
         },
       },
       get(component: InstanceType<T>): string | null {
-        return ComponentContext.of(component).element.getAttribute(name);
+        return (ComponentContext.of(component).element as Element).getAttribute(name);
       },
       set(component: InstanceType<T>, newValue: string | null) {
 
-        const { element }: { element: Element } = ComponentContext.of(component);
+        const { element } = ComponentContext.of(component) as { element: Element };
 
         if (newValue != null) {
           element.setAttribute(name, newValue);

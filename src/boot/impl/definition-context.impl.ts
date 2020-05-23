@@ -3,13 +3,13 @@ import { ContextValues, ContextValueSpec } from '@proc7ts/context-values';
 import { EventReceiver, EventSupply, OnEvent, trackValue, ValueTracker } from '@proc7ts/fun-events';
 import { Class } from '../../common';
 import { ComponentContext, ComponentContext__symbol, ComponentDef, ComponentMount } from '../../component';
-import { ComponentClass, DefinitionContext, DefinitionSetup } from '../../component/definition';
+import { DefinitionContext, DefinitionSetup } from '../../component/definition';
 import { BootstrapContext } from '../bootstrap-context';
 import { ComponentContextRegistry } from './component-context-registry.impl';
 import { MountComponentContext$ } from './component-mount.impl';
 import { customElementType } from './custom-element.impl';
 import { DefinitionContextRegistry } from './definition-context-registry.impl';
-import { DefinitionContext__symbol } from './definition-context.symbol.impl';
+import { ComponentDefinitionClass, DefinitionContext__symbol } from './definition-context.symbol.impl';
 import { ElementBuilder } from './element-builder.impl';
 import { postDefSetup } from './post-def-setup.impl';
 import { WhenComponent } from './when-component.impl';
@@ -29,7 +29,7 @@ export class DefinitionContext$<T extends object> extends DefinitionContext<T> {
   constructor(
       readonly _bsContext: BootstrapContext,
       readonly _elementBuilder: ElementBuilder,
-      readonly componentType: ComponentClass<T>,
+      readonly componentType: ComponentDefinitionClass<T>,
   ) {
     super();
     this._ready = trackValue(false);
@@ -77,7 +77,7 @@ export class DefinitionContext$<T extends object> extends DefinitionContext<T> {
 
   mountTo(element: any): ComponentMount<T> {
     if (element[ComponentContext__symbol]) {
-      throw new Error(`Element ${element} already bound to component`);
+      throw new Error(`Element ${String(element)} already bound to component`);
     }
 
     const context = new MountComponentContext$(this, element);
@@ -117,7 +117,7 @@ export class DefinitionContext$<T extends object> extends DefinitionContext<T> {
     this._def.define?.(this);
     this._elementBuilder.definitions.send(this);
     this._elementType = valueProvider(customElementType(this));
-    (this.componentType as any)[DefinitionContext__symbol] = this;
+    this.componentType[DefinitionContext__symbol] = this;
     this._ready.it = true;
   }
 

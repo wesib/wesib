@@ -17,10 +17,12 @@ import { BootstrapContext } from './bootstrap-context';
 export function bootstrapDefault<Value, Key extends ContextKey<any, any, any>>(
     provide: (this: void, context: BootstrapContext, key: Key) => Value | null | undefined,
 ): ContextKeyDefault<Value, Key> {
-  return (context, key) => {
+  return (context, key): Value | null | undefined => {
 
     const bootstrapContext = context.get(BootstrapContext);
 
-    return context === bootstrapContext ? provide(bootstrapContext, key) : bootstrapContext.get(key);
+    return context === bootstrapContext
+        ? provide(bootstrapContext, key)
+        : bootstrapContext.get(key) as Value;
   };
 }
