@@ -2,9 +2,9 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { noop } from '@proc7ts/call-thru';
 import { ContextRef, ContextValues, SingleContextKey } from '@proc7ts/context-values';
 import { trackValue } from '@proc7ts/fun-events';
+import { noop } from '@proc7ts/primitives';
 import { RenderSchedule, RenderScheduleOptions, RenderShot } from '@proc7ts/render-scheduler';
 import { ElementRenderCtl } from './element-render-ctl';
 import { ElementRenderer } from './element-renderer';

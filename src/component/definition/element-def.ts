@@ -4,8 +4,8 @@
  */
 import { SingleContextKey, SingleContextRef } from '@proc7ts/context-values';
 import { QualifiedName } from '@proc7ts/namespace-aliaser';
+import { Class } from '@proc7ts/primitives';
 import { BootstrapWindow } from '../../boot/globals';
-import { Class } from '../../common';
 import { ComponentDef } from '../component-def';
 import { DefinitionContext__key } from './definition.context.key.impl';
 

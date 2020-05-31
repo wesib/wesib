@@ -1,6 +1,6 @@
 import { nextArgs, nextSkip } from '@proc7ts/call-thru';
 import { EventEmitter, onAny, OnEvent, onEventBy, trackValue } from '@proc7ts/fun-events';
-import { superClassOf } from '../../common';
+import { superClassOf } from '@proc7ts/primitives/src/class/super-class-of';
 import { ComponentDef__symbol } from '../../component';
 import { ComponentClass, DefinitionSetup } from '../../component/definition';
 import { Unloader } from './unloader.impl';

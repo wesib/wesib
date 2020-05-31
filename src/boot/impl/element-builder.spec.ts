@@ -1,6 +1,6 @@
 import { ContextKey, SingleContextKey } from '@proc7ts/context-values';
 import { eventSupplyOf } from '@proc7ts/fun-events';
-import { Class } from '../../common';
+import { Class } from '@proc7ts/primitives';
 import { ComponentContext, ComponentDef, ComponentDef__symbol, ComponentEvent, ComponentMount } from '../../component';
 import { ComponentClass, DefinitionContext } from '../../component/definition';
 import { MockElement } from '../../spec/test-element';

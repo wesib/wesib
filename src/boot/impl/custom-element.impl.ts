@@ -1,4 +1,5 @@
-import { Class, CustomElementClass } from '../../common';
+import { Class } from '@proc7ts/primitives';
+import { CustomElementClass } from '../../common';
 import { ComponentContext__symbol } from '../../component';
 import { ElementDef } from '../../component/definition';
 import { ComponentContext$ } from './component-context.impl';

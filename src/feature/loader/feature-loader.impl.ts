@@ -1,5 +1,5 @@
 import { filterIt, mapIt } from '@proc7ts/a-iterable';
-import { isPresent, nextArgs, NextCall, NextSkip, nextSkip } from '@proc7ts/call-thru';
+import { nextArgs, NextCall, NextSkip, nextSkip } from '@proc7ts/call-thru';
 import { ContextValueSlot } from '@proc7ts/context-values';
 import { ContextUpKey } from '@proc7ts/context-values/updatable';
 import {
@@ -13,8 +13,8 @@ import {
   OnEventCallChain,
   trackValue,
 } from '@proc7ts/fun-events';
+import { Class, isPresent, setOfElements } from '@proc7ts/primitives';
 import { BootstrapContext } from '../../boot';
-import { ArraySet, Class } from '../../common';
 import { FeatureContext } from '../feature-context';
 import { FeatureContext$ } from './feature-context.impl';
 import { FeatureClause, FeatureRequest } from './feature-request.impl';
@@ -166,7 +166,7 @@ function loadFeatureDeps(
     }
 
     const [{ def }] = clause;
-    const needs = new ArraySet(def.needs);
+    const needs = setOfElements(def.needs);
 
     if (!needs.size) {
       return nextArgs();

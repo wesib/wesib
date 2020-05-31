@@ -1,5 +1,5 @@
-import { noop } from '@proc7ts/call-thru';
 import { EventSupply } from '@proc7ts/fun-events';
+import { noop } from '@proc7ts/primitives';
 import { immediateRenderScheduler, RenderExecution } from '@proc7ts/render-scheduler';
 import { DefaultRenderScheduler } from '../../boot/globals';
 import { ComponentContext } from '../../component';

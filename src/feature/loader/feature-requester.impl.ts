@@ -1,7 +1,7 @@
 import { ContextKey, ContextKey__symbol, SingleContextKey } from '@proc7ts/context-values';
+import { Class } from '@proc7ts/primitives';
 import { BootstrapContext, bootstrapDefault } from '../../boot';
 import { BootstrapContextRegistry } from '../../boot/impl';
-import { Class } from '../../common';
 import { FeatureNeedClause, FeatureRequest } from './feature-request.impl';
 
 const FeatureRequester__key = (/*#__PURE__*/ new SingleContextKey<FeatureRequester>(

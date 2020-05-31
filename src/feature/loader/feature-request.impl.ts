@@ -1,4 +1,4 @@
-import { ArraySet, Class, mergeFunctions } from '../../common';
+import { Class, mergeFunctions, setOfElements } from '@proc7ts/primitives';
 import { ComponentDef, ComponentDef__symbol } from '../../component';
 import { FeatureDef } from '../feature-def';
 import { FeatureNeedsError } from '../feature-needs-error';
@@ -42,7 +42,7 @@ export class FeatureRequest {
       is: isClause,
     }));
 
-    for (const feature of new ArraySet(this.def.has)) {
+    for (const feature of setOfElements(this.def.has)) {
 
       const clause: FeatureNeedClause = [this, 'has', feature];
 
@@ -54,7 +54,7 @@ export class FeatureRequest {
       this._revokeBy(() => request.unuse());
     }
 
-    for (const feature of new ArraySet(this.def.needs)) {
+    for (const feature of setOfElements(this.def.needs)) {
 
       const clause: FeatureNeedClause = [this, 'needs', feature];
 

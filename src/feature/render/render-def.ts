@@ -2,8 +2,9 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { nextArgs, nextSkip, valueByRecipe } from '@proc7ts/call-thru';
+import { nextArgs, nextSkip } from '@proc7ts/call-thru';
 import { EventSender, isEventSender, OnEvent, onSupplied, StatePath } from '@proc7ts/fun-events';
+import { valueByRecipe } from '@proc7ts/primitives';
 import { ComponentContext } from '../../component';
 import { ComponentState } from '../state';
 

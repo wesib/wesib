@@ -1,7 +1,6 @@
-import { noop } from '@proc7ts/call-thru';
 import { SingleContextUpKey } from '@proc7ts/context-values/updatable';
 import { afterSupplied, afterThe } from '@proc7ts/fun-events';
-import { Class } from '../../common';
+import { Class, noop } from '@proc7ts/primitives';
 import { Component, ComponentContext, ComponentMount } from '../../component';
 import { CustomElements, DefinitionContext } from '../../component/definition';
 import { Feature, FeatureDef, FeatureRef, FeatureStatus } from '../../feature';

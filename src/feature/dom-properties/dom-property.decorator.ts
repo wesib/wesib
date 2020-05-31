@@ -2,7 +2,7 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { Class } from '../../common';
+import { Class } from '@proc7ts/primitives';
 import { ComponentProperty, ComponentPropertyDecorator } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { DomPropertyDef } from './dom-property-def';

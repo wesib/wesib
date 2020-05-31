@@ -2,7 +2,8 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { Class, TypedClassDecorator } from '../common';
+import { Class } from '@proc7ts/primitives';
+import { TypedClassDecorator } from '../common';
 import { FeatureDef } from './feature-def';
 
 /**

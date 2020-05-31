@@ -1,4 +1,4 @@
-import { PropertyAccessorDescriptor } from '../../common';
+import { PropertyAccessorDescriptor } from '@proc7ts/primitives';
 import { ComponentContext, ComponentProperty } from '../../component';
 import { DomPropertyDef } from './dom-property-def';
 import { DomPropertyDescriptor } from './dom-property-descriptor';

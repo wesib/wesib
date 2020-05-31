@@ -1,7 +1,7 @@
-import { noop } from '@proc7ts/call-thru';
 import { ContextKey__symbol, ContextRegistry, ContextValues } from '@proc7ts/context-values';
 import { ContextSupply } from '@proc7ts/context-values/updatable';
 import { eventSupply } from '@proc7ts/fun-events';
+import { noop } from '@proc7ts/primitives';
 import { StateUpdater } from './state-updater';
 
 describe('component', () => {

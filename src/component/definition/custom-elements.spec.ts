@@ -1,9 +1,9 @@
 import { ContextRegistry } from '@proc7ts/context-values';
 import { NamespaceDef, newNamespaceAliaser } from '@proc7ts/namespace-aliaser';
+import { Class } from '@proc7ts/primitives';
 import { BootstrapContext } from '../../boot';
 import { BootstrapWindow, DefaultNamespaceAliaser } from '../../boot/globals';
 import { DefinitionContext__symbol } from '../../boot/impl/definition-context.symbol.impl';
-import { Class } from '../../common';
 import { ComponentClass } from './component-class';
 import { CustomElements } from './custom-elements';
 import { DefinitionContext } from './definition-context';

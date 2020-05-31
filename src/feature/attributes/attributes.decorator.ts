@@ -3,7 +3,7 @@
  * @module @wesib/wesib
  */
 import { StatePath } from '@proc7ts/fun-events';
-import { Class } from '../../common';
+import { Class } from '@proc7ts/primitives';
 import { Component, ComponentDecorator } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { AttributeUpdateReceiver } from './attribute-def';

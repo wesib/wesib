@@ -4,7 +4,8 @@
  */
 import { itsReduction } from '@proc7ts/a-iterable';
 import { isQualifiedName, QualifiedName } from '@proc7ts/namespace-aliaser';
-import { mergeFunctions, MetaAccessor } from '../common';
+import { mergeFunctions } from '@proc7ts/primitives';
+import { MetaAccessor } from '../common';
 import { FeatureDef, FeatureDef__symbol } from '../feature';
 import { ComponentClass, DefinitionContext, DefinitionSetup, ElementDef } from './definition';
 

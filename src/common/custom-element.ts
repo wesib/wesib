@@ -2,7 +2,8 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { Class } from './classes';
+
+import { Class } from '@proc7ts/primitives';
 
 /**
  * Custom element.

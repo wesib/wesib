@@ -1,6 +1,6 @@
 import { itsEach, overArray } from '@proc7ts/a-iterable';
-import { noop, valueProvider } from '@proc7ts/call-thru';
 import { EventSupply, eventSupply } from '@proc7ts/fun-events';
+import { noop, valueProvider } from '@proc7ts/primitives';
 
 /**
  * @internal

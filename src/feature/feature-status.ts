@@ -2,7 +2,7 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { Class } from '../common';
+import { Class } from '@proc7ts/primitives';
 
 /**
  * Feature load status.

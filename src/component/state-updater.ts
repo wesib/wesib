@@ -2,11 +2,10 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { noop } from '@proc7ts/call-thru';
 import { ContextValueSlot } from '@proc7ts/context-values';
 import { ContextUpKey, ContextUpRef } from '@proc7ts/context-values/updatable';
 import { AfterEvent, afterThe, EventKeeper, nextAfterEvent, statePath, StatePath } from '@proc7ts/fun-events';
-import { mergeFunctions } from '../common';
+import { mergeFunctions, noop } from '@proc7ts/primitives';
 
 /**
  * Component state updater signature.

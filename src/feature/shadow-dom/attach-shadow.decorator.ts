@@ -2,7 +2,7 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { Class } from '../../common';
+import { Class } from '@proc7ts/primitives';
 import { Component, ComponentContext, ComponentDecorator, ContentRoot } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { ShadowContentRoot } from './shadow-content-root';

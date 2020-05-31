@@ -2,10 +2,11 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
+import { itsEach } from '@proc7ts/a-iterable';
 import { ContextRef, SingleContextKey } from '@proc7ts/context-values';
+import { mergeFunctions } from '@proc7ts/primitives';
 import { BootstrapWindow } from '../../boot/globals';
-import { ArraySet, CustomElementClass, mergeFunctions } from '../../common';
-import { isArray } from '../../common/types.impl';
+import { CustomElementClass } from '../../common';
 import { ComponentContext, ComponentMount } from '../../component';
 import { DefinitionContext } from '../../component/definition';
 import { AttributeChangedCallback, AttributeDescriptor } from './attribute-descriptor';
@@ -138,11 +139,16 @@ function observedAttributes(
 
   const alreadyObserved = (elementType as any).observedAttributes as readonly string[] | undefined;
 
-  return Array.from(
-      isArray<string>(alreadyObserved)
-          ? new ArraySet(alreadyObserved).addAll(attrs).items
-          : attrs,
-  );
+  if (Array.isArray(alreadyObserved)) {
+
+    const newAttrs = new Set<string>(alreadyObserved);
+
+    itsEach(attrs, attr => newAttrs.add(attr));
+
+    attrs = newAttrs;
+  }
+
+  return Array.from(attrs);
 }
 
 /**

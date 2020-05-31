@@ -4,7 +4,7 @@
  */
 import { ContextValueSpec } from '@proc7ts/context-values';
 import { EventReceiver, EventSupply, OnEvent } from '@proc7ts/fun-events';
-import { Class } from '../common';
+import { Class } from '@proc7ts/primitives';
 import { ComponentContext } from '../component';
 import { ComponentClass, DefinitionContext, DefinitionSetup } from '../component/definition';
 import { FeatureContext } from '../feature';

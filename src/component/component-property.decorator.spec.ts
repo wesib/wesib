@@ -1,6 +1,6 @@
-import { noop } from '@proc7ts/call-thru';
 import { SingleContextKey } from '@proc7ts/context-values';
 import { FnContextKey } from '@proc7ts/context-values/updatable';
+import { noop } from '@proc7ts/primitives';
 import { bootstrapComponents } from '../boot/bootstrap';
 import { ComponentContext } from './component-context';
 import { AnonymousComponentProperty__symbol, ComponentProperty } from './component-property.decorator';

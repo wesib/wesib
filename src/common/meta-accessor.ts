@@ -3,7 +3,7 @@
  * @module @wesib/wesib
  */
 import { flatMapIt, mapIt } from '@proc7ts/a-iterable';
-import { Class, superClassOf } from './classes';
+import { Class, superClassOf } from '@proc7ts/primitives';
 
 /**
  * @category Utility

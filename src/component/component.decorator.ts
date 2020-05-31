@@ -2,7 +2,7 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { Class } from '../common';
+import { Class } from '@proc7ts/primitives';
 import { ComponentDef, ComponentDef__symbol } from './component-def';
 import { ComponentClass } from './definition';
 

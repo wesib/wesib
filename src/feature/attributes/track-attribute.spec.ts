@@ -1,6 +1,6 @@
-import { noop } from '@proc7ts/call-thru';
 import { ContextRegistry } from '@proc7ts/context-values';
 import { StatePath, StateTracker, ValueTracker } from '@proc7ts/fun-events';
+import { noop } from '@proc7ts/primitives';
 import { ComponentContext } from '../../component';
 import { ComponentState } from '../state';
 import { attributePathTo } from './attribute-path';

@@ -1,7 +1,6 @@
-import { noop } from '@proc7ts/call-thru';
+import { Class, mergeFunctions, noop } from '@proc7ts/primitives';
 import { BootstrapContext } from '../../boot';
 import { BootstrapContextRegistry, ElementBuilder } from '../../boot/impl';
-import { Class, mergeFunctions } from '../../common';
 import { ComponentDef, ComponentDef__symbol } from '../../component';
 import { ComponentClass, CustomElements } from '../../component/definition';
 import { FeatureContext } from '../feature-context';

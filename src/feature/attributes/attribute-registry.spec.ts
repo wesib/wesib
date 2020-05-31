@@ -1,5 +1,5 @@
+import { Class } from '@proc7ts/primitives';
 import { bootstrapComponents } from '../../boot/bootstrap';
-import { Class } from '../../common';
 import { Component, ComponentContext, ComponentContext__symbol } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { attributePathTo } from './attribute-path';

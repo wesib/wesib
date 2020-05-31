@@ -3,8 +3,9 @@
  * @module @wesib/wesib
  */
 import { itsReduction } from '@proc7ts/a-iterable';
+import { Class, elementOrArray, extendSetOfElements, mergeFunctions, setOfElements } from '@proc7ts/primitives';
 import { BootstrapSetup } from '../boot';
-import { ArraySet, Class, mergeFunctions, MetaAccessor } from '../common';
+import { MetaAccessor } from '../common';
 import { FeatureContext } from './feature-context';
 
 /**
@@ -111,8 +112,8 @@ class FeatureMeta extends MetaAccessor<FeatureDef.Options, FeatureDef> {
     return itsReduction<FeatureDef.Options, FeatureDef.Options>(
         defs,
         (prev, def) => ({
-          needs: new ArraySet(prev.needs).merge(def.needs).value,
-          has: new ArraySet(prev.has).merge(def.has).value,
+          needs: elementOrArray(extendSetOfElements(setOfElements(prev.needs), def.needs)),
+          has: elementOrArray(extendSetOfElements(setOfElements(prev.has), def.has)),
           setup: mergeFunctions<[BootstrapSetup], void, Class>(prev.setup, def.setup),
           init: mergeFunctions<[FeatureContext], void, Class>(prev.init, def.init),
         }),

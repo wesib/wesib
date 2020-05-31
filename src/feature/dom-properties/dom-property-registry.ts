@@ -3,7 +3,7 @@
  * @module @wesib/wesib
  */
 import { ContextRef, SingleContextKey } from '@proc7ts/context-values';
-import { Class } from '../../common';
+import { Class } from '@proc7ts/primitives';
 import { ComponentMount } from '../../component';
 import { DefinitionContext } from '../../component/definition';
 import { DomPropertyDescriptor } from './dom-property-descriptor';

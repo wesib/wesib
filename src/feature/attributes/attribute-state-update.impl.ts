@@ -2,8 +2,8 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { noop } from '@proc7ts/call-thru';
 import { StatePath } from '@proc7ts/fun-events';
+import { noop } from '@proc7ts/primitives';
 import { ComponentContext } from '../../component';
 import { AttributeUpdateReceiver } from './attribute-def';
 import { AttributeChangedCallback } from './attribute-descriptor';

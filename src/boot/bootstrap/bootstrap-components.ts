@@ -5,7 +5,7 @@
 import { nextArgs, nextSkip } from '@proc7ts/call-thru';
 import { AfterEvent, afterEventBy, EventReceiver, EventSupply, OnEvent, trackValue } from '@proc7ts/fun-events';
 import { newNamespaceAliaser } from '@proc7ts/namespace-aliaser';
-import { Class } from '../../common';
+import { Class } from '@proc7ts/primitives';
 import { ComponentClass, DefinitionContext } from '../../component/definition';
 import { FeatureDef, FeatureRef, FeatureStatus } from '../../feature';
 import { FeatureKey, FeatureLoader, FeatureRequester } from '../../feature/loader';

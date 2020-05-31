@@ -2,8 +2,12 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { Class } from './classes';
-import { fieldAccessorDescriptor, PropertyAccessorDescriptor, toPropertyAccessorDescriptor } from './reflect';
+import {
+  Class,
+  fieldAccessorDescriptor,
+  PropertyAccessorDescriptor,
+  toPropertyAccessorDescriptor,
+} from '@proc7ts/primitives';
 
 /**
  * Typed class decorator.
