@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>StateUpdater | Wesib: Web Components Building Blocks</title>
+	<title>ElementDef | Wesib: Web Components Building Blocks</title>
 	<meta name="description" content="Documentation for Wesib: Web Components Building Blocks">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -54,13 +54,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="@wesib_wesib.html">@wesib/wesib</a>
+					<a href="../modules/@wesib_wesib.html">@wesib/wesib</a>
 				</li>
 				<li>
-					<a href="@wesib_wesib.StateUpdater.html">StateUpdater</a>
+					<a href="@wesib_wesib.ElementDef.html">ElementDef</a>
 				</li>
 			</ul>
-			<h1>Namespace StateUpdater</h1>
+			<h1>Interface ElementDef</h1>
 		</div>
 	</div>
 </header>
@@ -70,99 +70,66 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>A key of component context value containing a component <a href="@wesib_wesib.StateUpdater.html">state updater</a> function.</p>
+						<p>Custom element definition meta.</p>
 					</div>
-					<p>Features are calling this function by default when component state changes, e.g. attribute value or DOM property
-					modified.</p>
-					<p>Does nothing by default and after component destruction.</p>
-					<p>When multiple state updaters provided, they all will be called on each state update, in reverse order.</p>
 				</div>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">ElementDef</span>
+					</li>
+				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Type aliases</h3>
+							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-type-alias tsd-parent-kind-namespace"><a href="@wesib_wesib.StateUpdater.html#Normalized" class="tsd-kind-icon">Normalized</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="@wesib_wesib.ElementDef.html#extend" class="tsd-kind-icon">extend</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="@wesib_wesib.ElementDef.html#name" class="tsd-kind-icon">name</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Type aliases</h2>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-namespace">
-					<a name="Normalized" class="tsd-anchor"></a>
-					<h3>Normalized</h3>
-					<div class="tsd-signature tsd-kind-icon">Normalized<span class="tsd-signature-symbol">:</span> &lt;V&gt;<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, path<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">StatePath.Normalized</span>, newValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">V</span>, oldValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">V</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="extend" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> extend</h3>
+					<div class="tsd-signature tsd-kind-icon">extend<span class="tsd-signature-symbol">:</span> <a href="component_definition.Extend.html" class="tsd-signature-type">Extend</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/52f5665/src/component/state-updater.ts#L32">wesib/wesib/src/component/state-updater.ts:32</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/5452a76/src/component/definition/element-def.ts#L33">wesib/wesib/src/component/definition/element-def.ts:33</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Normalized component state updater signature.</p>
+							<p>Existing element to extend by custom one.</p>
 						</div>
-						<p>Accepts normalized state path.</p>
 					</div>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter-signature">
-								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias tsd-has-type-parameter">
-									<li class="tsd-signature tsd-kind-icon">&lt;V&gt;<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, path<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">StatePath.Normalized</span>, newValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">V</span>, oldValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">V</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-								</ul>
-								<ul class="tsd-descriptions">
-									<li class="tsd-description">
-										<div class="tsd-comment tsd-typography">
-										</div>
-										<h4 class="tsd-type-parameters-title">Type parameters</h4>
-										<ul class="tsd-type-parameters">
-											<li>
-												<h4>V</h4>
-												<div class="tsd-comment tsd-typography">
-													<p>Updated value type</p>
-												</div>
-											</li>
-										</ul>
-										<h4 class="tsd-parameters-title">Parameters</h4>
-										<ul class="tsd-parameters">
-											<li>
-												<h5>this: <span class="tsd-signature-type">void</span></h5>
-											</li>
-											<li>
-												<h5>path: <span class="tsd-signature-type">StatePath.Normalized</span></h5>
-												<div class="tsd-comment tsd-typography">
-													<div class="lead">
-														<p>Normalized path of updated state node.</p>
-													</div>
-												</div>
-											</li>
-											<li>
-												<h5>newValue: <span class="tsd-signature-type">V</span></h5>
-												<div class="tsd-comment tsd-typography">
-													<div class="lead">
-														<p>New value.</p>
-													</div>
-												</div>
-											</li>
-											<li>
-												<h5>oldValue: <span class="tsd-signature-type">V</span></h5>
-												<div class="tsd-comment tsd-typography">
-													<div class="lead">
-														<p>Replaced value.</p>
-													</div>
-												</div>
-											</li>
-										</ul>
-										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-									</li>
-								</ul>
-							</li>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="name" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> name</h3>
+					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">QualifiedName</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/5452a76/src/component/definition/element-def.ts#L28">wesib/wesib/src/component/definition/element-def.ts:28</a></li>
 						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Custom element name.</p>
+						</div>
+						<p>The name may belong to some namespace to avoid naming conflicts. I.e. it can be either a string, or
+						name/namespace tuple.</p>
+						<p>When omitted an anonymous component will be registered. Such component is not bound to custom element, but it
+						still can be mounted.</p>
 					</div>
 				</section>
 			</section>
@@ -173,13 +140,49 @@
 					<li class="globals  ">
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
+					<li class="label tsd-is-external">
+						<span>Internals</span>
+					</li>
+					<li class="current tsd-kind-module">
+						<a href="../modules/@wesib_wesib.html">@wesib/wesib</a>
+					</li>
+					<li class=" tsd-kind-namespace">
+						<a href="../modules/component_definition.html">component/definition</a>
+					</li>
+					<li class=" tsd-kind-namespace">
+						<a href="../modules/feature_attributes.html">feature/attributes</a>
+					</li>
+					<li class=" tsd-kind-namespace tsd-has-type-parameter">
+						<a href="../modules/feature_dom-properties.html">feature/dom-<wbr>properties</a>
+					</li>
+					<li class=" tsd-kind-namespace tsd-has-type-parameter">
+						<a href="../modules/feature_state.html">feature/state</a>
+					</li>
+					<li class="label tsd-is-external">
+						<span>Externals</span>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="../modules/@proc7ts_primitives.html">@proc7ts/primitives</a>
+					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-type-alias tsd-parent-kind-namespace">
-						<a href="@wesib_wesib.StateUpdater.html#Normalized" class="tsd-kind-icon">Normalized</a>
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-interface tsd-parent-kind-module">
+						<a href="@wesib_wesib.ElementDef.html" class="tsd-kind-icon">Element<wbr>Def</a>
+						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="@wesib_wesib.ElementDef.html#extend" class="tsd-kind-icon">extend</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="@wesib_wesib.ElementDef.html#name" class="tsd-kind-icon">name</a>
+							</li>
+						</ul>
 					</li>
+				</ul>
+				<ul class="after-current">
 				</ul>
 			</nav>
 		</div>
@@ -190,8 +193,6 @@
 		<h2>Legend</h2>
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
-				<li class="tsd-kind-namespace"><span class="tsd-kind-icon">Namespace</span></li>
-				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
 				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
 				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
 				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
@@ -201,6 +202,7 @@
 			<ul class="tsd-legend">
 				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
 				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
