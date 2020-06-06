@@ -6,6 +6,7 @@
     "Utility",
     "*"
   ],
+  "disableAutoModuleName": true,
   "exclude": [
     "**/spec/**/*.ts",
     "**/index.ts",
