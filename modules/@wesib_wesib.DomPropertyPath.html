@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ElementDef | Wesib: Web Components Building Blocks</title>
+	<title>DomPropertyPath | Wesib: Web Components Building Blocks</title>
 	<meta name="description" content="Documentation for Wesib: Web Components Building Blocks">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -54,13 +54,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/@wesib_wesib.html">@wesib/wesib</a>
+					<a href="@wesib_wesib.html">@wesib/wesib</a>
 				</li>
 				<li>
-					<a href="@wesib_wesib.ElementDef.html">ElementDef</a>
+					<a href="@wesib_wesib.DomPropertyPath.html">DomPropertyPath</a>
 				</li>
 			</ul>
-			<h1>Interface ElementDef</h1>
+			<h1>Namespace DomPropertyPath&lt;K&gt;</h1>
 		</div>
 	</div>
 </header>
@@ -69,16 +69,13 @@
 		<div class="col-8 col-content">
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p>Custom element definition meta.</p>
-					</div>
 				</div>
 			</section>
-			<section class="tsd-panel tsd-hierarchy">
-				<h3>Hierarchy</h3>
-				<ul class="tsd-hierarchy">
+			<section class="tsd-panel tsd-type-parameters">
+				<h3>Type parameters</h3>
+				<ul class="tsd-type-parameters">
 					<li>
-						<span class="target">ElementDef</span>
+						<h4>K<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PropertyKey</span></h4>
 					</li>
 				</ul>
 			</section>
@@ -87,49 +84,11 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Properties</h3>
+							<h3>Interfaces</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="@wesib_wesib.ElementDef.html#extend" class="tsd-kind-icon">extend</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="@wesib_wesib.ElementDef.html#name" class="tsd-kind-icon">name</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-namespace"><a href="../interfaces/@wesib_wesib.DomPropertyPath.RootKeys.html" class="tsd-kind-icon">Root<wbr>Keys</a></li>
 							</ul>
 						</section>
-					</div>
-				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="extend" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> extend</h3>
-					<div class="tsd-signature tsd-kind-icon">extend<span class="tsd-signature-symbol">:</span> <a href="component_definition.Extend.html" class="tsd-signature-type">Extend</a></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/039bf4c/src/component/definition/element-def.ts#L33">wesib/wesib/src/component/definition/element-def.ts:33</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Existing element to extend by custom one.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="name" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> name</h3>
-					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">QualifiedName</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/039bf4c/src/component/definition/element-def.ts#L28">wesib/wesib/src/component/definition/element-def.ts:28</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Custom element name.</p>
-						</div>
-						<p>The name may belong to some namespace to avoid naming conflicts. I.e. it can be either a string, or
-						name/namespace tuple.</p>
-						<p>When omitted an anonymous component will be registered. Such component is not bound to custom element, but it
-						still can be mounted.</p>
 					</div>
 				</section>
 			</section>
@@ -140,40 +99,13 @@
 					<li class="globals  ">
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
-					<li class="current tsd-kind-module">
-						<a href="../modules/@wesib_wesib.html">@wesib/wesib</a>
-					</li>
-					<li class=" tsd-kind-namespace">
-						<a href="../modules/component_definition.html">component/definition</a>
-					</li>
-					<li class=" tsd-kind-namespace">
-						<a href="../modules/feature_attributes.html">feature/attributes</a>
-					</li>
-					<li class=" tsd-kind-namespace tsd-has-type-parameter">
-						<a href="../modules/feature_dom-properties.html">feature/dom-<wbr>properties</a>
-					</li>
-					<li class=" tsd-kind-namespace tsd-has-type-parameter">
-						<a href="../modules/feature_state.html">feature/state</a>
-					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-module">
-						<a href="@wesib_wesib.ElementDef.html" class="tsd-kind-icon">Element<wbr>Def</a>
-						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="@wesib_wesib.ElementDef.html#extend" class="tsd-kind-icon">extend</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="@wesib_wesib.ElementDef.html#name" class="tsd-kind-icon">name</a>
-							</li>
-						</ul>
+					<li class=" tsd-kind-interface tsd-parent-kind-namespace">
+						<a href="../interfaces/@wesib_wesib.DomPropertyPath.RootKeys.html" class="tsd-kind-icon">Root<wbr>Keys</a>
 					</li>
-				</ul>
-				<ul class="after-current">
 				</ul>
 			</nav>
 		</div>
@@ -184,6 +116,8 @@
 		<h2>Legend</h2>
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
+				<li class="tsd-kind-namespace"><span class="tsd-kind-icon">Namespace</span></li>
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
 				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
 				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
 				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
@@ -193,7 +127,6 @@
 			<ul class="tsd-legend">
 				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
 				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>

@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ComponentEventDispatcher | Wesib: Web Components Building Blocks</title>
+	<title>Accessor | Wesib: Web Components Building Blocks</title>
 	<meta name="description" content="Documentation for Wesib: Web Components Building Blocks">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -57,10 +57,13 @@
 					<a href="../modules/@wesib_wesib.html">@wesib/wesib</a>
 				</li>
 				<li>
-					<a href="@wesib_wesib.ComponentEventDispatcher.html">ComponentEventDispatcher</a>
+					<a href="../modules/@wesib_wesib.ComponentProperty.html">ComponentProperty</a>
+				</li>
+				<li>
+					<a href="@wesib_wesib.ComponentProperty.Accessor.html">Accessor</a>
 				</li>
 			</ul>
-			<h1>Interface ComponentEventDispatcher</h1>
+			<h1>Interface Accessor&lt;V, T&gt;</h1>
 		</div>
 	</div>
 </header>
@@ -70,17 +73,37 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Component event dispatcher is used to listen for and dispatch component events.</p>
+						<p>Component property accessor.</p>
 					</div>
-					<p>It is available in bootstrap context context.</p>
-					<p>By default treats a component element as event target.</p>
+					<p>Allows to read and write property value.</p>
 				</div>
+			</section>
+			<section class="tsd-panel tsd-type-parameters">
+				<h3>Type parameters</h3>
+				<ul class="tsd-type-parameters">
+					<li>
+						<h4>V</h4>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Property value type.</p>
+							</div>
+						</div>
+					</li>
+					<li>
+						<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span></h4>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>A type of component.</p>
+							</div>
+						</div>
+					</li>
+				</ul>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">ComponentEventDispatcher</span>
+						<span class="target">Accessor</span>
 					</li>
 				</ul>
 			</section>
@@ -91,8 +114,8 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="@wesib_wesib.ComponentEventDispatcher.html#dispatch" class="tsd-kind-icon">dispatch</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter"><a href="@wesib_wesib.ComponentEventDispatcher.html#on" class="tsd-kind-icon">on</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="@wesib_wesib.ComponentProperty.Accessor.html#get" class="tsd-kind-icon">get</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="@wesib_wesib.ComponentProperty.Accessor.html#set" class="tsd-kind-icon">set</a></li>
 							</ul>
 						</section>
 					</div>
@@ -101,73 +124,91 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
-					<a name="dispatch" class="tsd-anchor"></a>
-					<h3>dispatch</h3>
+					<a name="get" class="tsd-anchor"></a>
+					<h3>get</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">dispatch<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><a href="../modules/@wesib_wesib.html#ComponentEvent.Event" class="tsd-signature-type">Event</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, component<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">symbol</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">V</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/ee27c95/src/component/component-event.ts#L57">wesib/wesib/src/component/component-event.ts:57</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/ee27c95/src/component/component-property.decorator.ts#L144">wesib/wesib/src/component/component-property.decorator.ts:144</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Dispatches the DOM event for the given component.</p>
+									<p>Reads property value.</p>
 								</div>
+								<p>May throw if the property is not readable.</p>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>event: <a href="../modules/@wesib_wesib.html#ComponentEvent.Event" class="tsd-signature-type">Event</a></h5>
+									<h5>this: <span class="tsd-signature-type">void</span></h5>
+								</li>
+								<li>
+									<h5>component: <span class="tsd-signature-type">T</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>An event to dispatch.</p>
+										<p>Target component instance.</p>
+									</div>
+								</li>
+								<li>
+									<h5>key: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">symbol</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Property key.</p>
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
-							<p><code>true</code> if either event&#39;s <code>cancelable</code> attribute value is <code>false</code> or its <code>preventDefault()</code> method was not
-							invoked, or <code>false</code> otherwise.</p>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">V</span></h4>
+							<p>Property value.</p>
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter">
-					<a name="on" class="tsd-anchor"></a>
-					<h3>on</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">on&lt;E&gt;<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">OnDomEvent</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">E</span><span class="tsd-signature-symbol">&gt;</span></li>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="set" class="tsd-anchor"></a>
+					<h3>set</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">set<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, component<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">V</span>, key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">symbol</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/ee27c95/src/component/component-event.ts#L66">wesib/wesib/src/component/component-event.ts:66</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/ee27c95/src/component/component-property.decorator.ts#L155">wesib/wesib/src/component/component-property.decorator.ts:155</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Returns an <code>OnDomEvent</code> sender of DOM events of the given type.</p>
+									<p>Assigns new property value.</p>
 								</div>
+								<p>May throw is the property is not writable.</p>
 							</div>
-							<h4 class="tsd-type-parameters-title">Type parameters</h4>
-							<ul class="tsd-type-parameters">
-								<li>
-									<h4>E<span class="tsd-signature-symbol">: </span><a href="../modules/@wesib_wesib.html#ComponentEvent.Event" class="tsd-signature-type">Event</a></h4>
-								</li>
-							</ul>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>type: <span class="tsd-signature-type">string</span></h5>
+									<h5>this: <span class="tsd-signature-type">void</span></h5>
+								</li>
+								<li>
+									<h5>component: <span class="tsd-signature-type">T</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>An event type to listen for.</p>
+										<p>Target component instance.</p>
+									</div>
+								</li>
+								<li>
+									<h5>value: <span class="tsd-signature-type">V</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>New property value.</p>
+									</div>
+								</li>
+								<li>
+									<h5>key: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">symbol</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Property key.</p>
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">OnDomEvent</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">E</span><span class="tsd-signature-symbol">&gt;</span></h4>
-							<p>A producer of DOM event events of the given type.</p>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -179,28 +220,43 @@
 					<li class="globals  ">
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
-					<li class="current tsd-kind-module">
-						<a href="../modules/@wesib_wesib.html">@wesib/wesib</a>
-					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-module">
-						<a href="@wesib_wesib.ComponentEventDispatcher.html" class="tsd-kind-icon">Component<wbr>Event<wbr>Dispatcher</a>
+					<li class="current tsd-kind-interface tsd-parent-kind-namespace tsd-has-type-parameter">
+						<a href="@wesib_wesib.ComponentProperty.Accessor.html" class="tsd-kind-icon">Accessor</a>
 						<ul>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
-								<a href="@wesib_wesib.ComponentEventDispatcher.html#dispatch" class="tsd-kind-icon">dispatch</a>
+								<a href="@wesib_wesib.ComponentProperty.Accessor.html#get" class="tsd-kind-icon">get</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter">
-								<a href="@wesib_wesib.ComponentEventDispatcher.html#on" class="tsd-kind-icon">on</a>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="@wesib_wesib.ComponentProperty.Accessor.html#set" class="tsd-kind-icon">set</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
+					<li class=" tsd-kind-interface tsd-parent-kind-namespace tsd-has-type-parameter">
+						<a href="@wesib_wesib.ComponentProperty.BoundAccessor.html" class="tsd-kind-icon">Bound<wbr>Accessor</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-namespace tsd-has-type-parameter">
+						<a href="@wesib_wesib.ComponentProperty.Definition.html" class="tsd-kind-icon">Definition</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-namespace tsd-has-type-parameter">
+						<a href="@wesib_wesib.ComponentProperty.Descriptor.html" class="tsd-kind-icon">Descriptor</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-namespace tsd-has-type-parameter">
+						<a href="../modules/@wesib_wesib.ComponentProperty.html#Binder" class="tsd-kind-icon">Binder</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-namespace tsd-has-type-parameter">
+						<a href="../modules/@wesib_wesib.ComponentProperty.html#Definer" class="tsd-kind-icon">Definer</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-namespace tsd-has-type-parameter">
+						<a href="../modules/@wesib_wesib.ComponentProperty.html#Provider" class="tsd-kind-icon">Provider</a>
+					</li>
 				</ul>
 			</nav>
 		</div>

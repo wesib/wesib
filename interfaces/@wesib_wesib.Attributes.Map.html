@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>AutoConnectSupport | Wesib: Web Components Building Blocks</title>
+	<title>Map | Wesib: Web Components Building Blocks</title>
 	<meta name="description" content="Documentation for Wesib: Web Components Building Blocks">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -57,10 +57,13 @@
 					<a href="../modules/@wesib_wesib.html">@wesib/wesib</a>
 				</li>
 				<li>
-					<a href="@wesib_wesib.AutoConnectSupport.html">AutoConnectSupport</a>
+					<a href="../modules/@wesib_wesib.Attributes.html">Attributes</a>
+				</li>
+				<li>
+					<a href="@wesib_wesib.Attributes.Map.html">Map</a>
 				</li>
 			</ul>
-			<h1>Class AutoConnectSupport</h1>
+			<h1>Interface Map&lt;T&gt;</h1>
 		</div>
 	</div>
 </header>
@@ -70,56 +73,57 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>A feature responsible for mounted components connection state tracking.</p>
+						<p>Per-attribute definition options.</p>
 					</div>
-					<p>By default, a mounted component connection state is not tracked automatically. So, a
-					<a href="@wesib_wesib.ComponentMount.html#checkConnected">ComponentMount.checkConnected</a> should be called to update it.</p>
-					<p>This feature tracks the DOM tree manipulations within <a href="../modules/@wesib_wesib.html#BootstrapRoot">BootstrapRoot</a> with <a href="../interfaces/@wesib_wesib.ElementObserver.html">ElementObserver</a>. The latter updates
-					the mounted component connection when its element is added or removed from the document.</p>
-					<p>Tracks mounted components connection state within shadow root if shadow root attachment is reported by
-					<a href="@wesib_wesib.ShadowDomEvent.html">wesib:shadowAttached</a> event.</p>
+					<p>This is a map with attribute names as keys (either <em>camelCase</em> or <em>dash-style</em>), and their state update
+					instructions as values.</p>
+					<p>The state update instruction can be one of:</p>
+					<ul>
+						<li><code>false</code> to not update the component state,</li>
+						<li><code>true</code> to update the component state with changed attribute key,</li>
+						<li>a state value key to update, or</li>
+						<li>an attribute update receiver function with custom state update logic.</li>
+					</ul>
 				</div>
+			</section>
+			<section class="tsd-panel tsd-type-parameters">
+				<h3>Type parameters</h3>
+				<ul class="tsd-type-parameters">
+					<li>
+						<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span></h4>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>A type of component.</p>
+							</div>
+						</div>
+					</li>
+				</ul>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">AutoConnectSupport</span>
+						<span class="target">Map</span>
 					</li>
 				</ul>
 			</section>
-			<section class="tsd-panel-group tsd-index-group">
-				<h2>Index</h2>
-				<section class="tsd-panel tsd-index-panel">
-					<div class="tsd-index-content">
-						<section class="tsd-index-section ">
-							<h3>Accessors</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-static"><a href="@wesib_wesib.AutoConnectSupport.html#_FeatureDef__symbol_" class="tsd-kind-icon">[<wbr>Feature<wbr>Def__symbol]</a></li>
-							</ul>
-						</section>
+			<section class="tsd-panel tsd-kind-interface tsd-parent-kind-namespace tsd-has-type-parameter">
+				<h3 class="tsd-before-signature">Indexable</h3>
+				<div class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">[</span>name: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">StatePath</span><span class="tsd-signature-symbol"> | </span><a href="../modules/@wesib_wesib.html#AttributeUpdateReceiver" class="tsd-signature-type">AttributeUpdateReceiver</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></div>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Per-attribute definition options.</p>
 					</div>
-				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Accessors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
-					<a name="_FeatureDef__symbol_" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> [<wbr>Feature<wbr>Def__symbol]</h3>
-					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> [FeatureDef__symbol]<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/@wesib_wesib.html#FeatureDef" class="tsd-signature-type">FeatureDef</a></li>
+					<p>This is a map with attribute names as keys (either <em>camelCase</em> or <em>dash-style</em>), and their state update
+					instructions as values.</p>
+					<p>The state update instruction can be one of:</p>
+					<ul>
+						<li><code>false</code> to not update the component state,</li>
+						<li><code>true</code> to update the component state with changed attribute key,</li>
+						<li>a state value key to update, or</li>
+						<li>an attribute update receiver function with custom state update logic.</li>
 					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/ee27c95/src/feature/autoconnect/auto-connect-support.feature.ts#L36">wesib/wesib/src/feature/autoconnect/auto-connect-support.feature.ts:36</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-returns-title">Returns <a href="../modules/@wesib_wesib.html#FeatureDef" class="tsd-signature-type">FeatureDef</a></h4>
-						</li>
-					</ul>
-				</section>
+				</div>
 			</section>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -128,25 +132,20 @@
 					<li class="globals  ">
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
-					<li class="current tsd-kind-module">
-						<a href="../modules/@wesib_wesib.html">@wesib/wesib</a>
-					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-class tsd-parent-kind-module">
-						<a href="@wesib_wesib.AutoConnectSupport.html" class="tsd-kind-icon">Auto<wbr>Connect<wbr>Support</a>
-						<ul>
-							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
-								<a href="@wesib_wesib.AutoConnectSupport.html#_FeatureDef__symbol_" class="tsd-kind-icon">[<wbr>Feature<wbr>Def__symbol]</a>
-							</li>
-						</ul>
+					<li class="current tsd-kind-interface tsd-parent-kind-namespace tsd-has-type-parameter">
+						<a href="@wesib_wesib.Attributes.Map.html" class="tsd-kind-icon">Map</a>
 					</li>
 				</ul>
 				<ul class="after-current">
+					<li class=" tsd-kind-type-alias tsd-parent-kind-namespace tsd-has-type-parameter">
+						<a href="../modules/@wesib_wesib.Attributes.html#Item" class="tsd-kind-icon">Item</a>
+					</li>
 				</ul>
 			</nav>
 		</div>
