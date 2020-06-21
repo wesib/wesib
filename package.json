@@ -25,7 +25,8 @@
     "@proc7ts/context-values": "^4.2.0",
     "@proc7ts/fun-events": "^9.2.0",
     "@proc7ts/namespace-aliaser": "^2.0.3",
-    "@proc7ts/render-scheduler": "^1.2.0"
+    "@proc7ts/render-scheduler": "^1.2.0",
+    "@proc7ts/rollup-helpers": "^1.0.0"
   },
   "dependencies": {
     "@proc7ts/a-iterable": "^2.7.0",
