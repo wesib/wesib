@@ -7,6 +7,7 @@ import typescript from 'typescript';
 import pkg from './package.json';
 
 export default {
+  input: './src/index.ts',
   plugins: [
     commonjs(),
     ts({
@@ -18,7 +19,6 @@ export default {
     nodeResolve(),
     sourcemaps(),
   ],
-  input: './src/index.ts',
   external: externalModules(),
   output: [
     {
