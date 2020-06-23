@@ -40,7 +40,7 @@ The examples can be found in [@wesib/examples].
 Components
 ----------
 
-Wesib allows to define custom components by decorating a component class with `@Component` decorator:
+Wesib allows defining custom element by decorating a component class with `@Component` decorator:
 ```typescript
 import { Component } from '@wesib/wesib';
 
@@ -49,8 +49,8 @@ export class MyComponent {
   // ...component definition
 }
 ```
-No need to extend `HTMLElement` or any other class. Instead Wesib creates custom element accordingly to its definition
-built either programmatically or using component decorators.
+No need to extend `HTMLElement` or any other class. Instead, Wesib creates a custom element accordingly to its
+definition built either programmatically or using component decorators.
 
 To register custom component(s) call `bootstrapComponents()` function like this:
 ```typescript
@@ -64,8 +64,8 @@ After that the custom element can be used anywhere in the document:
 <my-component></my-component>
 ```
 
-The component instance is created along with custom element and bound to it. All the logic of custom element is
-delegated to bound component instance.
+The component instance created along with a custom element and bound to it. All the logic of custom element delegated
+to the bound component instance.
 
 
 Element Attributes
@@ -231,7 +231,7 @@ import {
 export class MyFeature {} 
 ```  
 
-To enable custom feature just pass it to `bootstrapComponents()` like this:
+To enable a custom feature just pass it to `bootstrapComponents()` like this:
 ```typescript
 import { bootstrapComponents } from '@wesib/wesib';
 
