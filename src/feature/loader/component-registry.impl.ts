@@ -7,11 +7,11 @@ import { FeatureContext } from '../feature-context';
  */
 export class ComponentRegistry {
 
-  private _definitionQueue: (() => void)[] = [];
+  private _definitionQueue?: (() => void)[] = [];
 
   constructor(private readonly _context: FeatureContext) {
     _context.whenReady(() => {
-      this._definitionQueue.forEach(definition => definition());
+      this._definitionQueue!.forEach(definition => definition());
       delete this._definitionQueue;
     });
   }
@@ -21,7 +21,7 @@ export class ComponentRegistry {
   }
 
   define<T extends object>(componentType: ComponentClass<T>): void {
-    this._definitionQueue.push(() => {
+    this._definitionQueue!.push(() => {
 
       const elementBuilder = this._context.get(ElementBuilder);
       const defContext = elementBuilder.buildElement(componentType);

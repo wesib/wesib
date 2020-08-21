@@ -240,7 +240,7 @@ export class FeatureLoader {
 
     const prevStage = this._stage;
 
-    delete this._stage; // Unloaded feature should never be accessed again.
+    delete (this as any)._stage; // Unloaded feature should never be accessed again.
 
     const stage = await prevStage;
     const stageId = await stage.stop();
