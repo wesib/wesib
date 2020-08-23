@@ -113,9 +113,7 @@ describe('feature/attributes', () => {
         expect(noAttrElement.constructor).not.toEqual(expect.objectContaining({
           observedAttributes: expect.anything(),
         }));
-        expect(noAttrElement).not.toMatchObject({
-          attributeChangedCallback: expect.anything(),
-        });
+        expect(Reflect.ownKeys(noAttrElement.constructor.prototype)).not.toContain('attributeChangedCallback');
       });
       it('accesses attribute value', () => {
 
