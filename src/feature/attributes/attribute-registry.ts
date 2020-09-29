@@ -2,9 +2,9 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { itsEach } from '@proc7ts/a-iterable';
 import { ContextRef, SingleContextKey } from '@proc7ts/context-values';
 import { mergeFunctions } from '@proc7ts/primitives';
+import { itsEach } from '@proc7ts/push-iterator';
 import { BootstrapWindow } from '../../boot/globals';
 import { CustomElementClass } from '../../common';
 import { ComponentContext, ComponentMount } from '../../component';

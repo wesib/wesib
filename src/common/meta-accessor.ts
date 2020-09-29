@@ -2,8 +2,8 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { flatMapIt, mapIt } from '@proc7ts/a-iterable';
 import { Class, superClassOf } from '@proc7ts/primitives';
+import { mapIt, overElementsOf, overOne } from '@proc7ts/push-iterator';
 
 /**
  * @category Utility
@@ -34,7 +34,7 @@ export abstract class MetaAccessor<M, S = M> {
 
     const prevMeta = this.own(type);
     const updates = mapIt(sources, source => this.meta(source, type));
-    const newMeta: M = this.merge(prevMeta ? flatMapIt([[prevMeta], updates]) : updates);
+    const newMeta: M = this.merge(prevMeta ? overElementsOf(overOne(prevMeta), updates) : updates);
 
     Object.defineProperty(
         type,

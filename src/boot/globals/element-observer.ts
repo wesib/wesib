@@ -2,8 +2,8 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { filterIt, itsEach, overArray } from '@proc7ts/a-iterable';
 import { FnContextKey } from '@proc7ts/context-values/updatable';
+import { filterIt, itsEach, overArray } from '@proc7ts/push-iterator';
 import { isElement } from '../../common';
 import { ComponentContext__symbol, ComponentMount } from '../../component';
 import { bootstrapDefault } from '../bootstrap-default';

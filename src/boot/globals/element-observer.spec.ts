@@ -1,4 +1,4 @@
-import { itsEmpty, overArray } from '@proc7ts/a-iterable';
+import { itsEmpty, overArray } from '@proc7ts/push-iterator';
 import { Component } from '../../component';
 import { DefinitionContext } from '../../component/definition';
 import { MockElement, testDefinition } from '../../spec/test-element';
