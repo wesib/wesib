@@ -1,4 +1,3 @@
-import { filterIt, mapIt } from '@proc7ts/a-iterable';
 import { nextArgs, NextCall, NextSkip, nextSkip } from '@proc7ts/call-thru';
 import { ContextValueSlot } from '@proc7ts/context-values';
 import { ContextUpKey } from '@proc7ts/context-values/updatable';
@@ -14,6 +13,7 @@ import {
   trackValue,
 } from '@proc7ts/fun-events';
 import { Class, isPresent, setOfElements } from '@proc7ts/primitives';
+import { filterIt, mapIt } from '@proc7ts/push-iterator';
 import { BootstrapContext } from '../../boot';
 import { FeatureContext } from '../feature-context';
 import { FeatureContext$ } from './feature-context.impl';
