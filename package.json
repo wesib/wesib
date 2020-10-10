@@ -27,7 +27,7 @@
     }
   },
   "peerDependencies": {
-    "@proc7ts/context-values": "^4.4.1",
+    "@proc7ts/context-values": "^4.5.0",
     "@proc7ts/fun-events": "^9.3.0",
     "@proc7ts/namespace-aliaser": "^2.1.0",
     "@proc7ts/render-scheduler": "^1.3.0"
@@ -38,7 +38,7 @@
     "@proc7ts/push-iterator": "^2.1.0"
   },
   "devDependencies": {
-    "@proc7ts/context-values": "^4.4.1",
+    "@proc7ts/context-values": "^4.5.0",
     "@proc7ts/eslint-config": "^2.0.5",
     "@proc7ts/fun-events": "^9.3.0",
     "@proc7ts/namespace-aliaser": "^2.1.0",
