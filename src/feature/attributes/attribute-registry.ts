@@ -4,7 +4,6 @@
  */
 import { ContextRef, SingleContextKey } from '@proc7ts/context-values';
 import { mergeFunctions } from '@proc7ts/primitives';
-import { itsEach } from '@proc7ts/push-iterator';
 import { BootstrapWindow } from '../../boot/globals';
 import { CustomElementClass } from '../../common';
 import { ComponentContext, ComponentMount } from '../../component';
@@ -75,7 +74,7 @@ class AttributeRegistry$ implements AttributeRegistry {
     Object.defineProperty(elementType, 'observedAttributes', {
       configurable: true,
       enumerable: true,
-      value: observedAttributes(elementType, attrs.keys()),
+      value: observedAttributes(elementType, [...attrs.keys()]),
     });
     Object.defineProperty(elementType.prototype, 'attributeChangedCallback', {
       configurable: true,
@@ -88,7 +87,7 @@ class AttributeRegistry$ implements AttributeRegistry {
 
     const { element } = mount as { element: Element };
     const { attrs } = this;
-    const attributeFilter = Array.from(attrs.keys());
+    const attributeFilter = [...attrs.keys()];
 
     if (!attributeFilter.length) {
       return; // No attributes defined
@@ -134,7 +133,7 @@ type ElementAttributeChanged = (
  */
 function observedAttributes(
     elementType: CustomElementClass,
-    attrs: Iterable<string>,
+    attrs: readonly string[],
 ): readonly string[] {
 
   const alreadyObserved = (elementType as any).observedAttributes as readonly string[] | undefined;
@@ -143,12 +142,12 @@ function observedAttributes(
 
     const newAttrs = new Set<string>(alreadyObserved);
 
-    itsEach(attrs, attr => newAttrs.add(attr));
+    attrs.forEach(attr => newAttrs.add(attr));
 
-    attrs = newAttrs;
+    attrs = [...newAttrs];
   }
 
-  return Array.from(attrs);
+  return attrs;
 }
 
 /**

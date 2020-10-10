@@ -13,7 +13,6 @@ import {
   trackValue,
 } from '@proc7ts/fun-events';
 import { Class, isPresent, setOfElements } from '@proc7ts/primitives';
-import { filterIt, mapIt } from '@proc7ts/push-iterator';
 import { BootstrapContext } from '../../boot';
 import { FeatureContext } from '../feature-context';
 import { FeatureContext$ } from './feature-context.impl';
@@ -174,22 +173,14 @@ function loadFeatureDeps(
 
     return nextAfterEvent(
         afterEach(
-            ...mapIt(
-                needs,
-                dep => bsContext.get(FeatureKey.of(dep)),
-            ),
+            ...[...needs].map(dep => bsContext.get(FeatureKey.of(dep))),
         ).keepThru_(presentFeatureDeps),
     );
   });
 }
 
 function presentFeatureDeps(...deps: [FeatureLoader?][]): NextCall<OnEventCallChain, FeatureLoader[]> {
-  return nextArgs<FeatureLoader[]>(
-      ...filterIt<FeatureLoader | undefined, FeatureLoader>(
-          mapIt(deps, dep => dep[0]),
-          isPresent,
-      ),
-  );
+  return nextArgs<FeatureLoader[]>(...deps.map(([dep]) => dep).filter(isPresent));
 }
 
 /**

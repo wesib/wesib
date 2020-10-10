@@ -3,7 +3,6 @@
  * @module @wesib/wesib
  */
 import { Class, elementOrArray, extendSetOfElements, mergeFunctions, setOfElements } from '@proc7ts/primitives';
-import { itsReduction } from '@proc7ts/push-iterator';
 import { BootstrapSetup } from '../boot';
 import { MetaAccessor } from '../common';
 import { FeatureContext } from './feature-context';
@@ -108,9 +107,8 @@ class FeatureMeta extends MetaAccessor<FeatureDef.Options, FeatureDef> {
     super(FeatureDef__symbol);
   }
 
-  merge(defs: Iterable<FeatureDef.Options>): FeatureDef.Options {
-    return itsReduction<FeatureDef.Options, FeatureDef.Options>(
-        defs,
+  merge(defs: readonly FeatureDef.Options[]): FeatureDef.Options {
+    return defs.reduce<FeatureDef.Options>(
         (prev, def) => ({
           needs: elementOrArray(extendSetOfElements(setOfElements(prev.needs), def.needs)),
           has: elementOrArray(extendSetOfElements(setOfElements(prev.has), def.has)),
@@ -197,8 +195,7 @@ export const FeatureDef = {
    * @returns Merged feature definition.
    */
   all(this: void, ...defs: readonly FeatureDef[]): FeatureDef {
-    return itsReduction<FeatureDef, FeatureDef.Factory>(
-        defs,
+    return defs.reduce(
         (prev, def) => ({
           [FeatureDef__symbol](featureType: Class) {
             return FeatureDef.merge(

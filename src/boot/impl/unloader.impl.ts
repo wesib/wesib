@@ -1,6 +1,5 @@
 import { EventSupply, eventSupply } from '@proc7ts/fun-events';
 import { noop, valueProvider } from '@proc7ts/primitives';
-import { itsEach, reverseArray } from '@proc7ts/push-iterator';
 
 /**
  * @internal
@@ -22,16 +21,13 @@ export function newUnloader(): Unloader {
 
     const unload = adder();
 
-    unloads.push(unload);
+    unloads.unshift(unload);
 
     return unload;
   };
   const supply = eventSupply(() => {
     add = doNotAdd;
-    itsEach(
-        reverseArray(unloads),
-        unload => unload(),
-    );
+    unloads.forEach(unload => unload());
     unloads.length = 0;
   });
 
