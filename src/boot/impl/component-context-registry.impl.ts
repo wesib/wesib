@@ -1,9 +1,12 @@
-import { ContextKey, ContextKey__symbol, ContextRegistry, SingleContextKey } from '@proc7ts/context-values';
+import { ContextRef, ContextRegistry, SingleContextKey } from '@proc7ts/context-values';
 import { ComponentContext } from '../../component';
 import { bootstrapDefault } from '../bootstrap-default';
 
-const ComponentContextRegistry__key = (/*#__PURE__*/ new SingleContextKey<ComponentContextRegistry>(
-    'component-context-registry',
+export type PerComponentRegistry = ComponentContextRegistry;
+
+export const PerComponentRegistry: ContextRef<PerComponentRegistry> = (
+    /*#__PURE__*/ new SingleContextKey<ComponentContextRegistry>(
+    'per-component-registry',
     {
       byDefault: bootstrapDefault(() => new ComponentContextRegistry()),
     },
@@ -13,9 +16,4 @@ const ComponentContextRegistry__key = (/*#__PURE__*/ new SingleContextKey<Compon
  * @internal
  */
 export class ComponentContextRegistry extends ContextRegistry<ComponentContext> {
-
-  static get [ContextKey__symbol](): ContextKey<ComponentContextRegistry> {
-    return ComponentContextRegistry__key;
-  }
-
 }

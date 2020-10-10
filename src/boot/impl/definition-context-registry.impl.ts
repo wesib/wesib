@@ -1,11 +1,20 @@
-import { ContextKey, ContextKey__symbol, ContextRegistry, SingleContextKey } from '@proc7ts/context-values';
+import { ContextRef, ContextRegistry, SingleContextKey } from '@proc7ts/context-values';
 import { DefinitionContext } from '../../component/definition';
 import { bootstrapDefault } from '../bootstrap-default';
 
-const DefinitionContextRegistry__key = (/*#__PURE__*/ new SingleContextKey<DefinitionContextRegistry>(
-    'definition-context-registry',
+/**
+ * @internal
+ */
+export type PerDefinitionRegistry = DefinitionContextRegistry;
+
+/**
+ * @internal
+ */
+export const PerDefinitionRegistry: ContextRef<PerDefinitionRegistry> = (
+    /*#__PURE__*/ new SingleContextKey<DefinitionContextRegistry>(
+    'per-definition-registry',
     {
-      byDefault: bootstrapDefault(context => new DefinitionContextRegistry(context)),
+      byDefault: bootstrapDefault(bsContext => new DefinitionContextRegistry(bsContext)),
     },
 ));
 
@@ -13,9 +22,4 @@ const DefinitionContextRegistry__key = (/*#__PURE__*/ new SingleContextKey<Defin
  * @internal
  */
 export class DefinitionContextRegistry extends ContextRegistry<DefinitionContext> {
-
-  static get [ContextKey__symbol](): ContextKey<DefinitionContextRegistry> {
-    return DefinitionContextRegistry__key;
-  }
-
 }

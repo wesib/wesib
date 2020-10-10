@@ -5,11 +5,11 @@ import { Class } from '@proc7ts/primitives';
 import { BootstrapContext } from '../../boot';
 import {
   BootstrapContextRegistry,
-  ComponentContextRegistry,
-  DefinitionContextRegistry,
   ElementBuilder,
   newUnloader,
   onPostDefSetup,
+  PerComponentRegistry,
+  PerDefinitionRegistry,
 } from '../../boot/impl';
 import { ComponentContext } from '../../component';
 import { ComponentClass, DefinitionContext, DefinitionSetup } from '../../component/definition';
@@ -80,13 +80,13 @@ export class FeatureContext$ extends FeatureContext {
   perDefinition<Deps extends any[], Src, Seed>(
       spec: ContextValueSpec<DefinitionContext, any, Deps, Src, Seed>,
   ): () => void {
-    return this._unloader.add(() => this._bsContext.get(DefinitionContextRegistry).provide(spec));
+    return this._unloader.add(() => this._bsContext.get(PerDefinitionRegistry).provide(spec));
   }
 
   perComponent<Deps extends any[], Src, Seed>(
       spec: ContextValueSpec<ComponentContext, any, Deps, Src, Seed>,
   ): () => void {
-    return this._unloader.add(() => this._bsContext.get(ComponentContextRegistry).provide(spec));
+    return this._unloader.add(() => this._bsContext.get(PerComponentRegistry).provide(spec));
   }
 
   setupDefinition<T extends object>(componentType: ComponentClass<T>): OnEvent<[DefinitionSetup]> {

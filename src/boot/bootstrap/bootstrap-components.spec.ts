@@ -5,7 +5,14 @@ import { CustomElements, DefinitionContext } from '../../component/definition';
 import { FeatureContext, FeatureDef } from '../../feature';
 import { BootstrapContext } from '../bootstrap-context';
 import { DefaultNamespaceAliaser } from '../globals';
-import { BootstrapContextRegistry, ComponentContextRegistry, DefinitionContextRegistry, ElementBuilder } from '../impl';
+import {
+  BootstrapContextRegistry,
+  ComponentContextRegistry,
+  DefinitionContextRegistry,
+  ElementBuilder,
+  PerComponentRegistry,
+  PerDefinitionRegistry,
+} from '../impl';
 import { DefinitionContext__symbol } from '../impl/definition-context.symbol.impl';
 import { bootstrapComponents } from './bootstrap-components';
 import Mock = jest.Mock;
@@ -24,12 +31,11 @@ describe('boot', () => {
       bootstrapComponents();
       expect(createBootstrapContextRegistrySpy).toHaveBeenCalledWith();
     });
-    it('provides definition value registry', () => {
-      expect(bootstrapComponents().get(DefinitionContextRegistry)).toBeInstanceOf(DefinitionContextRegistry);
+    it('provides per-definition context registry', () => {
+      expect(bootstrapComponents().get(PerDefinitionRegistry)).toBeInstanceOf(DefinitionContextRegistry);
     });
-    it('provides component value registry', () => {
-      bootstrapComponents().get(ComponentContextRegistry);
-      expect(bootstrapComponents().get(ComponentContextRegistry)).toBeInstanceOf(ComponentContextRegistry);
+    it('provides per-component context registry', () => {
+      expect(bootstrapComponents().get(PerComponentRegistry)).toBeInstanceOf(ComponentContextRegistry);
     });
     it('provides element builder', () => {
       expect(bootstrapComponents().get(ElementBuilder)).toBeDefined();
@@ -147,8 +153,8 @@ describe('boot', () => {
       });
       it('proxies `perDefinition()`', () => {
 
-        const definitionContextRegistry = bsContext.get(DefinitionContextRegistry);
-        const spy = jest.spyOn(definitionContextRegistry, 'provide');
+        const perDefinitionRegistry = bsContext.get(PerDefinitionRegistry);
+        const spy = jest.spyOn(perDefinitionRegistry, 'provide');
 
         const key = new SingleContextKey<string>('test-value-key');
         const provider = (): string => 'test-value';
@@ -159,8 +165,8 @@ describe('boot', () => {
       });
       it('proxies `perComponent()`', () => {
 
-        const componentContextRegistry = bsContext.get(ComponentContextRegistry);
-        const spy = jest.spyOn(componentContextRegistry, 'provide');
+        const perComponentRegistry = bsContext.get(PerComponentRegistry);
+        const spy = jest.spyOn(perComponentRegistry, 'provide');
 
         const key = new SingleContextKey<string>('test-value-key');
         const provider = (): string => 'test-value';

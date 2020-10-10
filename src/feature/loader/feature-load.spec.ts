@@ -3,7 +3,7 @@ import { SingleContextUpKey } from '@proc7ts/context-values/updatable';
 import { AfterEvent, EventEmitter, eventSupply, EventSupply } from '@proc7ts/fun-events';
 import { Class, valueProvider } from '@proc7ts/primitives';
 import { BootstrapContext } from '../../boot';
-import { BootstrapContextRegistry, ComponentContextRegistry, DefinitionContextRegistry } from '../../boot/impl';
+import { BootstrapContextRegistry, PerComponentRegistry, PerDefinitionRegistry } from '../../boot/impl';
 import { ComponentDef } from '../../component';
 import { CustomElements } from '../../component/definition';
 import { FeatureContext } from '../feature-context';
@@ -32,10 +32,10 @@ describe('feature load', () => {
   });
 
   let mockCustomElements: Mocked<CustomElements>;
-  let definitionContextRegistry: DefinitionContextRegistry;
-  let definitionValues: ContextValues;
-  let componentContextRegistry: ComponentContextRegistry;
-  let componentValues: ContextValues;
+  let perDefinitionRegistry: PerDefinitionRegistry;
+  let perDefinitionValues: ContextValues;
+  let perComponentRegistry: PerComponentRegistry;
+  let perComponentValues: ContextValues;
 
   beforeEach(() => {
     mockCustomElements = {
@@ -43,10 +43,10 @@ describe('feature load', () => {
     } as any;
     bsRegistry.provide({ a: CustomElements, is: mockCustomElements });
 
-    definitionContextRegistry = bsContext.get(DefinitionContextRegistry);
-    definitionValues = definitionContextRegistry.newValues();
-    componentContextRegistry = bsContext.get(ComponentContextRegistry);
-    componentValues = componentContextRegistry.newValues();
+    perDefinitionRegistry = bsContext.get(PerDefinitionRegistry);
+    perDefinitionValues = perDefinitionRegistry.newValues();
+    perComponentRegistry = bsContext.get(PerComponentRegistry);
+    perComponentValues = perComponentRegistry.newValues();
   });
 
   let TestFeature: Class;
@@ -322,7 +322,7 @@ describe('feature load', () => {
         const key = new SingleContextUpKey<string>('test-key', { byDefault: () => 'default' });
         const receive = jest.fn();
 
-        definitionValues.get(key).to(receive);
+        perDefinitionValues.get(key).to(receive);
 
         FeatureDef.define(
             TestFeature,
@@ -347,7 +347,7 @@ describe('feature load', () => {
         const key = new SingleContextUpKey<string>('test-key', { byDefault: () => 'default' });
         const receive = jest.fn();
 
-        componentValues.get(key).to(receive);
+        perComponentValues.get(key).to(receive);
 
         FeatureDef.define(
             TestFeature,
@@ -566,7 +566,7 @@ describe('feature load', () => {
           const key = new SingleContextUpKey<string>('test-key', { byDefault: () => 'default' });
           const receive = jest.fn();
 
-          definitionValues.get(key).to(receive);
+          perDefinitionValues.get(key).to(receive);
 
           FeatureDef.define(
               TestFeature,
@@ -594,7 +594,7 @@ describe('feature load', () => {
           const key = new SingleContextUpKey<string>('test-key', { byDefault: () => 'default' });
           const receive = jest.fn();
 
-          componentValues.get(key).to(receive);
+          perComponentValues.get(key).to(receive);
 
           FeatureDef.define(
               TestFeature,
