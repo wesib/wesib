@@ -3,7 +3,7 @@
  * @module @wesib/wesib
  */
 import { FnContextKey } from '@proc7ts/context-values/updatable';
-import { filterIt, itsEach, overArray } from '@proc7ts/push-iterator';
+import { filterArray, itsEach, overArray } from '@proc7ts/push-iterator';
 import { isElement } from '../../common';
 import { ComponentContext__symbol, ComponentMount } from '../../component';
 import { bootstrapDefault } from '../bootstrap-default';
@@ -58,10 +58,7 @@ export const ElementObserver: FnContextKey<[MutationCallback], ElementObserver> 
                     node => mountOf(node)?.checkConnected(),
                 );
                 itsEach(
-                    filterIt(
-                        overArray(mutation.addedNodes),
-                        isElement,
-                    ),
+                    filterArray(mutation.addedNodes, isElement),
                     element => adapter(element)?.mount?.checkConnected(),
                 );
               });

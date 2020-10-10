@@ -1,7 +1,7 @@
 import { ContextKey, ContextKey__symbol, SingleContextKey } from '@proc7ts/context-values';
 import { noEventSupply } from '@proc7ts/fun-events';
 import { DomEventDispatcher } from '@proc7ts/fun-events/dom';
-import { filterIt, itsEach, overArray } from '@proc7ts/push-iterator';
+import { filterArray, itsEach } from '@proc7ts/push-iterator';
 import { BootstrapContext } from '../../boot';
 import { BootstrapRoot, ElementObserver } from '../../boot/globals';
 import { isElement } from '../../common';
@@ -46,17 +46,11 @@ export class ConnectTracker {
     function updateConnections(records: MutationRecord[]): void {
       records.forEach(record => {
         itsEach(
-            filterIt<Node, Element>(
-                overArray(record.removedNodes),
-                isElement,
-            ),
+            filterArray<Node, Element>(record.removedNodes, isElement),
             untrackNested,
         );
         itsEach(
-            filterIt<Node, Element>(
-                overArray(record.addedNodes),
-                isElement,
-            ),
+            filterArray<Node, Element>(record.addedNodes, isElement),
             trackNested,
         );
       });

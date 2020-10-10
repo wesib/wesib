@@ -3,7 +3,6 @@
  * @module @wesib/wesib
  */
 import { Class, superClassOf } from '@proc7ts/primitives';
-import { mapIt, overElementsOf, overOne } from '@proc7ts/push-iterator';
 
 /**
  * @category Utility
@@ -30,11 +29,11 @@ export abstract class MetaAccessor<M, S = M> {
     return ownDef ? (superDef ? this.merge([superDef, ownDef]) : ownDef) : superDef;
   }
 
-  define<C extends Class>(type: C, sources: Iterable<S>): C {
+  define<C extends Class>(type: C, sources: readonly S[]): C {
 
     const prevMeta = this.own(type);
-    const updates = mapIt(sources, source => this.meta(source, type));
-    const newMeta: M = this.merge(prevMeta ? overElementsOf(overOne(prevMeta), updates) : updates);
+    const updates = sources.map(source => this.meta(source, type));
+    const newMeta: M = this.merge(prevMeta ? [prevMeta, ...updates] : updates);
 
     Object.defineProperty(
         type,
@@ -48,7 +47,7 @@ export abstract class MetaAccessor<M, S = M> {
     return type;
   }
 
-  abstract merge(metas: Iterable<M>): M;
+  abstract merge(metas: readonly M[]): M;
 
   protected abstract meta(source: S, type: Class): M;
 

@@ -1,4 +1,4 @@
-import { itsEmpty, overArray } from '@proc7ts/push-iterator';
+import { overArray } from '@proc7ts/push-iterator';
 import { Component } from '../../component';
 import { DefinitionContext } from '../../component/definition';
 import { MockElement, testDefinition } from '../../spec/test-element';
@@ -82,7 +82,7 @@ describe('boot', () => {
         expect(lastMutations).toHaveLength(1);
         expect(lastMutation.type).toBe('childList');
         expect([...overArray(lastMutation.addedNodes)]).toEqual([element]);
-        expect(itsEmpty(overArray(lastMutation.removedNodes))).toBe(true);
+        expect(lastMutation.removedNodes).toHaveLength(0);
       });
       it('reports element removal', async () => {
         root.appendChild(element);
@@ -93,7 +93,7 @@ describe('boot', () => {
         expect(callback).toHaveBeenLastCalledWith(lastMutations, observer);
         expect(lastMutations).toHaveLength(1);
         expect(lastMutation.type).toBe('childList');
-        expect(itsEmpty(overArray(lastMutation.addedNodes))).toBe(true);
+        expect(lastMutation.addedNodes).toHaveLength(0);
         expect([...overArray(lastMutation.removedNodes)]).toEqual([element]);
       });
       it('connects when element is added to document', async () => {

@@ -4,7 +4,6 @@
  */
 import { isQualifiedName, QualifiedName } from '@proc7ts/namespace-aliaser';
 import { mergeFunctions } from '@proc7ts/primitives';
-import { itsReduction } from '@proc7ts/push-iterator';
 import { MetaAccessor } from '../common';
 import { FeatureDef, FeatureDef__symbol } from '../feature';
 import { ComponentClass, DefinitionContext, DefinitionSetup, ElementDef } from './definition';
@@ -150,9 +149,8 @@ class ComponentMeta extends MetaAccessor<ComponentDef.Options, ComponentDef> {
     super(ComponentDef__symbol);
   }
 
-  merge<T extends object>(defs: Iterable<ComponentDef.Options<T>>): ComponentDef.Options<T> {
-    return itsReduction<ComponentDef.Options<T>, ComponentDef.Options<T>>(
-        defs,
+  merge<T extends object>(defs: readonly ComponentDef.Options<T>[]): ComponentDef.Options<T> {
+    return defs.reduce(
         (prev, def) => ({
           ...prev,
           ...def,
@@ -258,8 +256,7 @@ export const ComponentDef = {
    * @returns Merged component definition.
    */
   all<T extends object>(this: void, ...defs: ComponentDef<T>[]): ComponentDef<T> {
-    return itsReduction<ComponentDef<T>, ComponentDef.Factory<T>>(
-        defs,
+    return defs.reduce<ComponentDef.Factory<T>>(
         (prev, def) => ({
           [ComponentDef__symbol](componentType: ComponentClass<T>) {
             return ComponentDef.merge(
