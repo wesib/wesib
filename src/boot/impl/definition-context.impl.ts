@@ -36,9 +36,7 @@ export class DefinitionContext$<T extends object> extends DefinitionContext<T> {
     this._whenReady = this._ready.read().thru(ready => ready ? nextArgs() : nextSkip());
     this._def = ComponentDef.of(componentType);
 
-    const definitionContextRegistry = new DefinitionContextRegistry(
-        _bsContext.get(PerDefinitionRegistry).seedIn(this),
-    );
+    const definitionContextRegistry = new DefinitionContextRegistry(_bsContext.get(PerDefinitionRegistry).seeds());
 
     definitionContextRegistry.provide({ a: DefinitionContext, is: this });
 
