@@ -43,7 +43,9 @@ export class DefinitionContext$<T extends object> extends DefinitionContext<T> {
     definitionContextRegistry.provide({ a: DefinitionContext, is: this });
 
     this.get = definitionContextRegistry.newValues().get;
-    this._perComponentRegistry = new ComponentContextRegistry(this);
+
+    const parentPerComponentRegistry = _bsContext.get(PerComponentRegistry).append(seedKey => this.get(seedKey));
+    this._perComponentRegistry = new ComponentContextRegistry(parentPerComponentRegistry.seeds());
 
     const whenReady$ = this.whenReady().F;
     const whenComponent$ = this.whenComponent().F;
@@ -107,7 +109,7 @@ export class DefinitionContext$<T extends object> extends DefinitionContext<T> {
   }
 
   _newComponentRegistry(): ComponentContextRegistry {
-    return this._bsContext.get(PerComponentRegistry).append(this._perComponentRegistry);
+    return new ComponentContextRegistry(this._perComponentRegistry.seeds());
   }
 
   _elementType(): Class {
