@@ -197,7 +197,6 @@ describe('feature/render', () => {
       element.connectedCallback();
       expect(mockRenderer).toHaveBeenCalledWith(expect.objectContaining({
         config: expect.objectContaining({
-          window,
           error: expect.any(Function),
         }),
         postpone: expect.any(Function),
