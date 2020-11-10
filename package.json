@@ -17,13 +17,14 @@
   "bugs": {
     "url": "https://github.com/wesib/wesib/issues"
   },
-  "main": "dist/wesib.js",
-  "module": "dist/wesib.mjs",
+  "type": "module",
+  "main": "dist/wesib.cjs",
+  "module": "dist/wesib.js",
   "types": "index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/wesib.mjs",
-      "require": "./dist/wesib.js"
+      "import": "./dist/wesib.js",
+      "require": "./dist/wesib.cjs"
     }
   },
   "peerDependencies": {
