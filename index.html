@@ -85,7 +85,7 @@
 				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@wesib/wesib&#x27;</span>;
 
 <span class="hljs-meta">@Component</span>(<span class="hljs-string">&#x27;my-component&#x27;</span>) <span class="hljs-comment">// Custom element name</span>
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> MyComponent {
+<span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyComponent</span> </span>{
   <span class="hljs-comment">// ...component definition</span>
 }</code></pre>
 				<p>No need to extend <code>HTMLElement</code> or any other class. Instead, Wesib creates a custom element accordingly to its
@@ -110,13 +110,13 @@ bootstrapComponents(MyComponent);</code></pre>
   <span class="hljs-string">&#x27;attribute-one&#x27;</span>,
   <span class="hljs-string">&#x27;another-attribute&#x27;</span>,   
 )
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> MyComponent {
+<span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyComponent</span> </span>{
 
   <span class="hljs-meta">@Attribute</span>(<span class="hljs-string">&#x27;attribute-two&#x27;</span>) <span class="hljs-comment">// Attribute name. When omitted the property name is used</span>
   attribute2!: <span class="hljs-built_in">string</span> | <span class="hljs-literal">null</span>; <span class="hljs-comment">// Attribute value is accessed instead.</span>
 
   <span class="hljs-meta">@AttributeChanged</span>(<span class="hljs-string">&#x27;attribute-three&#x27;</span>) <span class="hljs-comment">// Attribute name. When omitted the method name is used  </span>
-  setAttribute3(newValue: <span class="hljs-built_in">string</span>, oldValue: <span class="hljs-built_in">string</span> | <span class="hljs-literal">null</span>) {
+  <span class="hljs-function"><span class="hljs-title">setAttribute3</span>(<span class="hljs-params">newValue: <span class="hljs-built_in">string</span>, oldValue: <span class="hljs-built_in">string</span> | <span class="hljs-literal">null</span></span>)</span> {
     <span class="hljs-comment">// This is called on attribute value modification with new and old values</span>
   }
 
@@ -133,7 +133,7 @@ bootstrapComponents(MyComponent);</code></pre>
 				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { DomProperty, Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@wesib/wesib&#x27;</span>;
 
 <span class="hljs-meta">@Component</span>(<span class="hljs-string">&#x27;my-component&#x27;</span>) <span class="hljs-comment">// Custom element name</span>
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> MyComponent {
+<span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyComponent</span> </span>{
 
   <span class="hljs-meta">@DomProperty</span>(<span class="hljs-string">&#x27;elementProperty&#x27;</span>) <span class="hljs-comment">// Element property name. The decorated property name is used if omitted.</span>
   customProperty = <span class="hljs-number">12</span>; <span class="hljs-comment">// Element&#x27;s `elementProperty` is backed by this one.</span>
@@ -149,11 +149,11 @@ bootstrapComponents(MyComponent);</code></pre>
 				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { ComponentContext, Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@wesib/wesib&#x27;</span>;
 
 <span class="hljs-meta">@Component</span>(<span class="hljs-string">&#x27;my-component&#x27;</span>) <span class="hljs-comment">// Custom element name</span>
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> MyComponent {
+<span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyComponent</span> </span>{
 
   <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> _service: MyService;
 
-  <span class="hljs-keyword">constructor</span>(<span class="hljs-params">context: ComponentContext</span>) {
+  <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params">context: ComponentContext</span>)</span> {
     <span class="hljs-built_in">this</span>._service = context.get(MyService); <span class="hljs-comment">// Obtain a `MyService` instance provided by some feature elsewhere.</span>
   }
 
@@ -175,18 +175,18 @@ bootstrapComponents(MyComponent);</code></pre>
 } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@wesib/wesib&#x27;</span>;
 
 <span class="hljs-meta">@Feature</span>({
-  needs: [
+  <span class="hljs-attr">needs</span>: [
     OtherFeature1, <span class="hljs-comment">// Requires other features to be enabled.</span>
     MyComponent, <span class="hljs-comment">// The required component will be defined too.  </span>
   ],
-  setup(setup: FeatureSetup) { 
+  <span class="hljs-function"><span class="hljs-title">setup</span>(<span class="hljs-params">setup: FeatureSetup</span>)</span> { 
     setup.provide({ 
-      a: GlobalService,              <span class="hljs-comment">// Provide a `GlobalService` available globally</span>
-      <span class="hljs-keyword">as</span>: <span class="hljs-function">() =&gt;</span> <span class="hljs-keyword">new</span> GlobalService(), <span class="hljs-comment">// in all IoC contexts</span>
+      <span class="hljs-attr">a</span>: GlobalService,              <span class="hljs-comment">// Provide a `GlobalService` available globally</span>
+      <span class="hljs-attr">as</span>: <span class="hljs-function">() =&gt;</span> <span class="hljs-keyword">new</span> GlobalService(), <span class="hljs-comment">// in all IoC contexts</span>
     }); 
     setup.perDefinition({
-      a: DefinitionService,
-      by: <span class="hljs-function">(<span class="hljs-params">definitionContext: DefinitionContext</span>) =&gt;</span> {
+      <span class="hljs-attr">a</span>: DefinitionService,
+      <span class="hljs-attr">by</span>: <span class="hljs-function">(<span class="hljs-params">definitionContext: DefinitionContext</span>) =&gt;</span> {
         <span class="hljs-comment">// Provide a `DefinitionService` available during component definition.</span>
         <span class="hljs-comment">// Such service will be provided per component class</span>
         <span class="hljs-comment">// and will be available during custom element construction,</span>
@@ -195,8 +195,8 @@ bootstrapComponents(MyComponent);</code></pre>
       },
     });
     setup.perComponent({
-      a: MyService,
-      by: <span class="hljs-function">(<span class="hljs-params">componentContext: ComponentContext</span>) =&gt;</span> {
+      <span class="hljs-attr">a</span>: MyService,
+      <span class="hljs-attr">by</span>: <span class="hljs-function">(<span class="hljs-params">componentContext: ComponentContext</span>) =&gt;</span> {
         <span class="hljs-comment">// Provide a `MyService` available to components.</span>
         <span class="hljs-comment">// Such service will be provided per component instance</span>
         <span class="hljs-comment">// and will be available to component instance and `onComponent()` listeners.</span>
@@ -204,7 +204,7 @@ bootstrapComponents(MyComponent);</code></pre>
       },
     });
   },
-  init(context: FeatureContext) {
+  <span class="hljs-function"><span class="hljs-title">init</span>(<span class="hljs-params">context: FeatureContext</span>)</span> {
     <span class="hljs-comment">// Bootstrap the feature by calling methods of provided context.</span>
 
     context.onDefinition(<span class="hljs-function">(<span class="hljs-params">definitionContext: DefinitionContext</span>) =&gt;</span> {
@@ -234,7 +234,7 @@ bootstrapComponents(MyComponent);</code></pre>
     });
   }  
 })
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> MyFeature {} </code></pre>
+<span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyFeature</span> </span>{} </code></pre>
 				<p>To enable a custom feature just pass it to <code>bootstrapComponents()</code> like this:</p>
 				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { bootstrapComponents } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@wesib/wesib&#x27;</span>;
 
@@ -250,14 +250,14 @@ bootstrapComponents(MyFeature);</code></pre>
 				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { Component, ComponentContext } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@wesib/wesib&#x27;</span>;
 
 <span class="hljs-meta">@Component</span>(<span class="hljs-string">&#x27;my-component&#x27;</span>) <span class="hljs-comment">// Custom element name</span>
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> MyComponent {
+<span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyComponent</span> </span>{
 
-  data: <span class="hljs-built_in">any</span>;
+  <span class="hljs-attr">data</span>: <span class="hljs-built_in">any</span>;
 
-  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> _context: ComponentContext</span>) {
+  <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> _context: ComponentContext</span>)</span> {
   }
 
-  <span class="hljs-keyword">async</span> loadData() {
+  <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-title">loadData</span>(<span class="hljs-params"></span>)</span> {
 
     <span class="hljs-keyword">const</span> newData = <span class="hljs-keyword">await</span> fetch(<span class="hljs-string">&#x27;/api/data&#x27;</span>).then(<span class="hljs-function"><span class="hljs-params">response</span> =&gt;</span> response.json());
     <span class="hljs-keyword">const</span> oldData = <span class="hljs-built_in">this</span>.data;
@@ -286,16 +286,16 @@ bootstrapComponents(MyFeature);</code></pre>
 				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { Attribute, Component, ComponentContext, Render } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@wesib/wesib&#x27;</span>;
 
 <span class="hljs-meta">@Component</span>(<span class="hljs-string">&#x27;greet-text&#x27;</span>)
-<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> GreetTextComponent {
+<span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">GreetTextComponent</span> </span>{
 
   <span class="hljs-meta">@Attribute</span>()
-  name: <span class="hljs-built_in">string</span> | <span class="hljs-literal">null</span>;
+  <span class="hljs-attr">name</span>: <span class="hljs-built_in">string</span> | <span class="hljs-literal">null</span>;
 
-  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> _context: ComponentContext</span>) {
+  <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> _context: ComponentContext</span>)</span> {
   }
 
   <span class="hljs-meta">@Render</span>()
-  render() {
+  <span class="hljs-function"><span class="hljs-title">render</span>(<span class="hljs-params"></span>)</span> {
     <span class="hljs-built_in">this</span>._context.contentRoot.innerText = <span class="hljs-string">`Hello, <span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span>!`</span>;
   }
 
