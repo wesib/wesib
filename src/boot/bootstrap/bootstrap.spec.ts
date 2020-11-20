@@ -546,7 +546,7 @@ describe('boot', () => {
 
       class Replacement {}
       FeatureDef.define(Replacement, { init: initSpy, has: testFeature });
-      await new Promise(resolve => {
+      await new Promise<void>(resolve => {
         bsContext.load(Replacement).read(({ ready }) => {
           if (ready) {
             resolve();
@@ -563,7 +563,7 @@ describe('boot', () => {
 
       class Replacement {}
       FeatureDef.define(Replacement, { has: testFeature });
-      await new Promise(resolve => {
+      await new Promise<void>(resolve => {
         bsContext.load(Replacement).read(({ ready }) => {
           if (ready) {
             resolve();
