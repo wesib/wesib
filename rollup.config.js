@@ -40,6 +40,7 @@ export default {
         flatDts({
           tsconfig: 'tsconfig.main.json',
           lib: true,
+          internal: ['**/impl/**', '**/*.impl'],
         }),
       ],
     },
