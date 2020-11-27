@@ -38,7 +38,7 @@
   },
   "devDependencies": {
     "@proc7ts/context-values": "^4.7.1",
-    "@proc7ts/eslint-config": "^2.0.5",
+    "@run-z/eslint-config": "^1.0.0",
     "@proc7ts/fun-events": "^9.4.2",
     "@proc7ts/namespace-aliaser": "^2.2.2",
     "@proc7ts/render-scheduler": "^1.4.2",
