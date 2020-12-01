@@ -30,6 +30,6 @@ export interface CustomElement extends Element {
  * @category Utility
  */
 export interface CustomElementClass<T extends CustomElement = CustomElement> extends Class<T> {
-  observedAttributes: readonly string[] | undefined;
+  observedAttributes?: readonly string[];
   new(): T;
 }

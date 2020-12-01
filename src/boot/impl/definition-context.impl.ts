@@ -2,7 +2,13 @@ import { nextArgs, nextSkip } from '@proc7ts/call-thru';
 import { ContextValues, ContextValueSpec } from '@proc7ts/context-values';
 import { EventReceiver, EventSupply, OnEvent, trackValue, ValueTracker } from '@proc7ts/fun-events';
 import { Class, valueProvider } from '@proc7ts/primitives';
-import { ComponentContext, ComponentContext__symbol, ComponentDef, ComponentMount } from '../../component';
+import {
+  ComponentContext,
+  ComponentContext__symbol,
+  ComponentContextHolder,
+  ComponentDef,
+  ComponentMount,
+} from '../../component';
 import { DefinitionContext, DefinitionSetup } from '../../component/definition';
 import { BootstrapContext } from '../bootstrap-context';
 import { ComponentContextRegistry, PerComponentRegistry } from './component-context-registry.impl';
@@ -76,7 +82,7 @@ export class DefinitionContext$<T extends object> extends DefinitionContext<T> {
     return (this.whenReady = (this._whenReady.thru_(valueProvider(this)).once() as OnEvent<[this]>).F)(receiver);
   }
 
-  mountTo(element: any): ComponentMount<T> {
+  mountTo(element: ComponentContextHolder): ComponentMount<T> {
     if (element[ComponentContext__symbol]) {
       throw new Error(`Element ${String(element)} already bound to component`);
     }

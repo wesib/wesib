@@ -1,5 +1,5 @@
 import { PropertyAccessorDescriptor } from '@proc7ts/primitives';
-import { ComponentContext, ComponentProperty } from '../../component';
+import { ComponentContext, ComponentContextHolder, ComponentProperty } from '../../component';
 import { DomPropertyDef } from './dom-property-def';
 import { DomPropertyDescriptor } from './dom-property-descriptor';
 
@@ -16,16 +16,18 @@ export function domPropertyDescriptor<V>(
     }: DomPropertyDef,
 ): DomPropertyDescriptor {
 
-  const componentPropertyKey = propertyDesc.key;
+  type ComponentType = { [TKey in ComponentProperty.Descriptor<V>['key']]: V };
+
+  const componentPropertyKey = propertyDesc.key as string;
   const descriptor: PropertyAccessorDescriptor<V> = {
     configurable,
     enumerable,
-    get: function (this: any): V {
-      return (ComponentContext.of(this).component as any)[componentPropertyKey] as V;
+    get: function (this: ComponentContextHolder): V {
+      return ComponentContext.of<ComponentType>(this).component[componentPropertyKey];
     },
     set: writable
-        ? function (this: any, value: V) {
-          (ComponentContext.of(this).component as any)[componentPropertyKey] = value;
+        ? function (this: ComponentContextHolder, value: V) {
+          ComponentContext.of<ComponentType>(this).component[componentPropertyKey] = value;
         }
         : undefined,
   };

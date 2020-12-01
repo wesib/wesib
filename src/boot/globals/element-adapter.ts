@@ -5,7 +5,7 @@
 import { ContextValueSlot } from '@proc7ts/context-values';
 import { contextDestroyed, ContextUpKey, ContextUpRef } from '@proc7ts/context-values/updatable';
 import { AfterEvent, afterThe, EventKeeper, nextAfterEvent } from '@proc7ts/fun-events';
-import { ComponentContext, ComponentContext__symbol } from '../../component';
+import { ComponentContext, ComponentContext__symbol, ComponentContextHolder } from '../../component';
 
 /**
  * Element adapter is a function able to convert a raw element to component. E.g. mount a component to it.
@@ -79,8 +79,8 @@ class ElementAdapterKey extends ContextUpKey<ElementAdapter, ElementAdapter> {
 /**
  * @internal
  */
-function defaultElementAdapter(element: any): ComponentContext | undefined {
-  return element[ComponentContext__symbol] as ComponentContext | undefined;
+function defaultElementAdapter(element: ComponentContextHolder): ComponentContext | undefined {
+  return element[ComponentContext__symbol];
 }
 
 /**

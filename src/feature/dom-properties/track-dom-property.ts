@@ -17,25 +17,37 @@ import { ComponentContext } from '../../component';
 import { ComponentState } from '../state';
 import { domPropertyPathTo } from './dom-property-path';
 
+/**
+ * @internal
+ */
+type DomElementWithProperty<T> = {
+  [key in keyof any]: T;
+};
+
+/**
+ * @internal
+ */
 class DomPropertyTracker<T> extends ValueTracker<T> {
 
   readonly [EventSupply__symbol] = eventSupply();
+  private readonly _key: string;
 
   constructor(
       private readonly _context: ComponentContext,
-      private readonly _key: PropertyKey,
+      key: PropertyKey,
       private readonly _path: StatePath,
   ) {
     super();
+    this._key = key as string;
   }
 
   get it(): T {
-    return this._context.element[this._key] as T;
+    return (this._context.element as DomElementWithProperty<T>)[this._key];
   }
 
   set it(value: T) {
     if (!eventSupplyOf(this).isOff) {
-      this._context.element[this._key] = value;
+      (this._context.element as DomElementWithProperty<T>)[this._key] = value;
     }
   }
 

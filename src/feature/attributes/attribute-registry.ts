@@ -136,7 +136,7 @@ function observedAttributes(
     attrs: readonly string[],
 ): readonly string[] {
 
-  const alreadyObserved = (elementType as any).observedAttributes as readonly string[] | undefined;
+  const alreadyObserved = elementType.observedAttributes;
 
   if (Array.isArray(alreadyObserved)) {
 

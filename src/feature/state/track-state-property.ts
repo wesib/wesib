@@ -17,20 +17,29 @@ import { ComponentContext } from '../../component';
 import { ComponentState } from './component-state';
 import { statePropertyPathTo } from './state-property-path';
 
+/**
+ * @internal
+ */
+type ComponentWithProperty<T> = {
+  [key in keyof any]: T;
+};
+
 class StatePropertyTracker<T> extends ValueTracker<T> {
 
   readonly [EventSupply__symbol] = eventSupply();
+  private readonly _key: string;
 
   constructor(
-      private readonly _context: ComponentContext,
-      private readonly _key: PropertyKey,
+      private readonly _context: ComponentContext<ComponentWithProperty<T>>,
+      key: PropertyKey,
       private readonly _path: StatePath,
   ) {
     super();
+    this._key = key as string;
   }
 
   get it(): T {
-    return this._context.component[this._key] as T;
+    return this._context.component[this._key];
   }
 
   set it(value: T) {

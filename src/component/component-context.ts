@@ -125,10 +125,10 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    */
   static of<T extends object>(element: any): ComponentContext<T> {
 
-    const context = element[ComponentContext__symbol] as ComponentContext<T> | undefined;
+    const context = (element as ComponentContextHolder<T>)[ComponentContext__symbol];
 
     if (!context) {
-      throw TypeError(`No component context found in ${element}`);
+      throw TypeError(`No component context found in ${String(element)}`);
     }
 
     return context;
@@ -279,4 +279,13 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    */
   abstract destroy(reason?: any): void;
 
+}
+
+/**
+ * An object potentially containing component context.
+ *
+ * Either element or component instance.
+ */
+export interface ComponentContextHolder<T extends object = any> {
+  [ComponentContext__symbol]?: ComponentContext<T>;
 }

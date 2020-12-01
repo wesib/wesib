@@ -9,7 +9,7 @@ import {
   trackValue,
 } from '@proc7ts/fun-events';
 import { valueProvider } from '@proc7ts/primitives';
-import { ComponentContext, ComponentContext__symbol, ComponentEvent } from '../../component';
+import { ComponentContext, ComponentContext__symbol, ComponentContextHolder, ComponentEvent } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { DefinitionContext$ } from './definition-context.impl';
 
@@ -100,8 +100,8 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
     try {
       this._status.done(reason);
     } finally {
-      delete (this.component as any)[ComponentContext__symbol];
-      delete this.element[ComponentContext__symbol];
+      delete (this.component as ComponentContextHolder)[ComponentContext__symbol];
+      delete (this.element as ComponentContextHolder)[ComponentContext__symbol];
       this._component = componentDestroyed;
       removeElement(this.element);
     }
@@ -113,7 +113,7 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
 
     let lastRev = 0;
 
-    this.element[ComponentContext__symbol] = this;
+    (this.element as ComponentContextHolder)[ComponentContext__symbol] = this;
     whenComponent.readNotifier.once(notifier => lastRev = notifier(this, lastRev));
     this.whenConnected(() => {
       whenComponent.readNotifier.to({
@@ -163,7 +163,7 @@ function newComponent<T extends object>(context: ComponentContext<T>): T {
 
     const component = new type(context);
 
-    (component as any)[ComponentContext__symbol] = context;
+    (component as ComponentContextHolder)[ComponentContext__symbol] = context;
 
     return component;
   } finally {

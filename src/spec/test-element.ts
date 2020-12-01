@@ -1,6 +1,7 @@
 import { OnEvent } from '@proc7ts/fun-events';
 import { Class } from '@proc7ts/primitives';
 import { bootstrapComponents } from '../boot/bootstrap';
+import { CustomElementClass } from '../common';
 import { ComponentClass, CustomElements, DefinitionContext } from '../component/definition';
 import { Feature } from '../feature';
 
@@ -61,11 +62,11 @@ export class MockElement {
   readonly dispatchEvent = jest.fn();
   readonly addEventListener = jest.fn();
   readonly removeEventListener = jest.fn();
-  private readonly _target: any;
+  private readonly _target: CustomElementClass;
   private readonly _attributes: { [name: string]: string | null } = {};
 
   constructor() {
-    this._target = new.target;
+    this._target = new.target as unknown as CustomElementClass;
   }
 
   getAttribute(name: string): string | null {
