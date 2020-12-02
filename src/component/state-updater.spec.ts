@@ -37,8 +37,8 @@ describe('component', () => {
     it('calls provided updaters in reverse order', () => {
 
       const calls: number[] = [];
-      const updater1 = jest.fn(() => calls.push(1));
-      const updater2 = jest.fn(() => calls.push(2));
+      const updater1 = jest.fn().mockImplementation(() => calls.push(1));
+      const updater2 = jest.fn().mockImplementation(() => calls.push(2));
 
       registry.provide({ a: StateUpdater, is: updater1 });
       registry.provide({ a: StateUpdater, is: updater2 });

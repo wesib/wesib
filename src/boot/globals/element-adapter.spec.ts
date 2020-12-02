@@ -39,7 +39,7 @@ describe('boot', () => {
     it('respects fallback value', () => {
 
       const componentContext: ComponentContext = { name: 'component context' } as any;
-      const fallback = jest.fn(() => componentContext);
+      const fallback = jest.fn((_element: any) => componentContext);
       const adapter = context.get(ElementAdapter, { or: fallback });
 
       expect(adapter(element)).toBe(componentContext);

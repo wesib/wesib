@@ -280,7 +280,7 @@ describe('component', () => {
       it('accepts built component definition', () => {
 
         const def: ComponentDef = { name: 'test-component' };
-        const mockBuildDef = jest.fn(() => def);
+        const mockBuildDef = jest.fn((_type: ComponentClass) => def);
         const componentType = ComponentDef.define(TestComponent, { [ComponentDef__symbol]: mockBuildDef });
 
         expect(mockBuildDef).toHaveBeenCalledWith(TestComponent);
@@ -300,7 +300,7 @@ describe('component', () => {
         class Dep {}
 
         const def: FeatureDef = { needs: Dep };
-        const mockBuildDef = jest.fn(() => def);
+        const mockBuildDef = jest.fn((_type: ComponentClass) => def);
         const componentType = ComponentDef.define(TestComponent, { [FeatureDef__symbol]: mockBuildDef });
 
         expect(mockBuildDef).toHaveBeenCalledWith(TestComponent);

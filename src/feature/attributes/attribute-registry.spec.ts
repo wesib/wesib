@@ -65,7 +65,11 @@ describe('feature/attributes', () => {
 
         static observedAttributes = ['inherited-attr'];
 
-        attributeChangedCallback(): void {/* attribute changed */}
+        attributeChangedCallback(
+            _name: string,
+            _newValue: string | null,
+            _oldValue: string | null,
+        ): void {/* attribute changed */}
 
       }
 

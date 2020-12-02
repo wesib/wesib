@@ -159,9 +159,13 @@ describe('component', () => {
 
         customElements.define(TestComponent, elementType);
 
-        expect(mockCustomElements.define).toHaveBeenCalledWith('test-component', elementType, {
-          extends: 'input',
-        });
+        expect(mockCustomElements.define as jest.SpyInstance).toHaveBeenCalledWith(
+            'test-component',
+            elementType,
+            {
+              extends: 'input',
+            },
+        );
       });
     });
 

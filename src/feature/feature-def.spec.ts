@@ -255,7 +255,7 @@ describe('feature', () => {
       it('accepts built feature definition', () => {
 
         const def: FeatureDef = { needs: Feature1 };
-        const mockBuildDef = jest.fn(() => def);
+        const mockBuildDef = jest.fn((_type: Class) => def);
         const featureType = FeatureDef.define(TestFeature, { [FeatureDef__symbol]: mockBuildDef });
 
         expect(mockBuildDef).toHaveBeenCalledWith(TestFeature);
