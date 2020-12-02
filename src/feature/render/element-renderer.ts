@@ -2,7 +2,7 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { RenderExecution } from '@proc7ts/render-scheduler';
+import { RenderExecution } from '@frontmeans/render-scheduler';
 
 /**
  * Component's element renderer signature.

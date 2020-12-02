@@ -2,7 +2,7 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { isQualifiedName, QualifiedName } from '@proc7ts/namespace-aliaser';
+import { isQualifiedName, QualifiedName } from '@frontmeans/namespace-aliaser';
 import { mergeFunctions } from '@proc7ts/primitives';
 import { MetaAccessor } from '../common';
 import { FeatureDef, FeatureDef__symbol } from '../feature';

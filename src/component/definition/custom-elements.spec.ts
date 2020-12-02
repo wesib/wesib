@@ -1,5 +1,5 @@
+import { NamespaceDef, newNamespaceAliaser } from '@frontmeans/namespace-aliaser';
 import { ContextRegistry } from '@proc7ts/context-values';
-import { NamespaceDef, newNamespaceAliaser } from '@proc7ts/namespace-aliaser';
 import { Class } from '@proc7ts/primitives';
 import { BootstrapContext } from '../../boot';
 import { BootstrapWindow, DefaultNamespaceAliaser } from '../../boot/globals';

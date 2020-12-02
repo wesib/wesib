@@ -1,12 +1,12 @@
 import Mock = jest.Mock;
-import { ContextSupply } from '@proc7ts/context-values/updatable';
-import { eventSupply } from '@proc7ts/fun-events';
 import {
   immediateRenderScheduler,
   RenderSchedule,
   RenderScheduler,
   setRenderScheduler,
-} from '@proc7ts/render-scheduler';
+} from '@frontmeans/render-scheduler';
+import { ContextSupply } from '@proc7ts/context-values/updatable';
+import { eventSupply } from '@proc7ts/fun-events';
 import { Feature, FeatureDef } from '../../feature';
 import { bootstrapComponents } from '../bootstrap';
 import { BootstrapContext } from '../bootstrap-context';

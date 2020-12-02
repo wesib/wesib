@@ -2,8 +2,8 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
+import { html__naming, isQualifiedName, QualifiedName } from '@frontmeans/namespace-aliaser';
 import { ContextKey, ContextKey__symbol, SingleContextKey } from '@proc7ts/context-values';
-import { html__naming, isQualifiedName, QualifiedName } from '@proc7ts/namespace-aliaser';
 import { Class } from '@proc7ts/primitives';
 import { BootstrapContext, bootstrapDefault } from '../../boot';
 import { BootstrapWindow, DefaultNamespaceAliaser } from '../../boot/globals';

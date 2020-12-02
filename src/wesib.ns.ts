@@ -2,7 +2,7 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { NamespaceDef } from '@proc7ts/namespace-aliaser';
+import { NamespaceDef } from '@frontmeans/namespace-aliaser';
 
 /**
  * Default Wesib namespace definition.

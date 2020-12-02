@@ -2,10 +2,10 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
+import { newRenderSchedule, RenderScheduler } from '@frontmeans/render-scheduler';
 import { ContextValues, ContextValueSlot } from '@proc7ts/context-values';
 import { contextDestroyed, ContextUpKey, ContextUpRef } from '@proc7ts/context-values/updatable';
 import { AfterEvent, afterThe, EventKeeper, nextAfterEvent } from '@proc7ts/fun-events';
-import { newRenderSchedule, RenderScheduler } from '@proc7ts/render-scheduler';
 import { BootstrapWindow } from './bootstrap-window';
 
 /**

@@ -1,4 +1,4 @@
-import { NamespaceDef, QualifiedName } from '@proc7ts/namespace-aliaser';
+import { NamespaceDef, QualifiedName } from '@frontmeans/namespace-aliaser';
 import { FeatureDef, FeatureDef__symbol } from '../feature';
 import { ComponentDef, ComponentDef__symbol } from './component-def';
 import { ComponentClass, DefinitionContext, DefinitionSetup } from './definition';

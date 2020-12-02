@@ -2,10 +2,10 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
+import { RenderSchedule, RenderScheduleOptions, RenderShot } from '@frontmeans/render-scheduler';
 import { ContextRef, ContextValues, SingleContextKey } from '@proc7ts/context-values';
 import { trackValue } from '@proc7ts/fun-events';
 import { noop } from '@proc7ts/primitives';
-import { RenderSchedule, RenderScheduleOptions, RenderShot } from '@proc7ts/render-scheduler';
 import { ElementRenderCtl } from './element-render-ctl';
 import { ElementRenderer } from './element-renderer';
 import { RenderDef } from './render-def';
