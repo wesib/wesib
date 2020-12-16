@@ -14,8 +14,6 @@ import { property2attributeName } from './property2attribute-name';
 /**
  * Creates a component decorator declaring supported custom element's attributes.
  *
- * This decorator automatically enables [[AttributesSupport]] feature.
- *
  * @category Feature
  * @typeParam T - A type of decorated component class.
  * @param items - Attributes definition options.

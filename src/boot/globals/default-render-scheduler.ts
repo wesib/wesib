@@ -76,7 +76,7 @@ function toDefaultRenderScheduler(
 }
 
 /**
- * A key of bootstrap, definition, or component context value containing [[DefaultRenderScheduler]] instance.
+ * A key of bootstrap, definition, or component context value containing {@link DefaultRenderScheduler} instance.
  *
  * Uses the default `RenderScheduler` (`newRenderSchedule()`) for {@link BootstrapWindow bootstrap window}.
  *

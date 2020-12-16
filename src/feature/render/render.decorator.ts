@@ -12,7 +12,7 @@ import { RenderDef } from './render-def';
 /**
  * Component property decorator that declares a rendering method for the component.
  *
- * The decorated method call will be scheduled by [[DefaultRenderScheduler]] once component state updated.
+ * The decorated method call will be scheduled by {@link DefaultRenderScheduler} once component state updated.
  *
  * The decorated method should have no arguments. It may return either nothing, or a function. In the latter case the
  * returned function will be called immediately to render the element. It may, in turn, return a renderer function,

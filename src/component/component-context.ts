@@ -26,7 +26,7 @@ export const ComponentContext__symbol = (/*#__PURE__*/ Symbol('component-context
  * Passed to component constructor as its only parameter.
  *
  * Extends `ContextValues` interface. The values are provided by corresponding providers registered with
- * [[BootstrapSetup.perComponent]] and [[DefinitionSetup.perComponent]] methods.
+ * {@link BootstrapSetup.perComponent}} and {@link DefinitionSetup.perComponent} methods.
  *
  * @category Core
  * @typeParam T - A type of component.
@@ -45,7 +45,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    *
    * @param element - Custom element instance created for the component or the component itself.
    *
-   * @return Component context reference stored under [[ComponentContext__symbol]] key.
+   * @return Component context reference stored under {@link ComponentContext__symbol} key.
    *
    * @throws TypeError  When the given `element` does not contain component context reference.
    */
@@ -76,15 +76,15 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    * A component instance.
    *
    * It is an error accessing this property before the component is created, e.g. from inside of component constructor
-   * or {@link DefinitionContext.whenComponent component instantiation event} receiver. A [[whenReady]] callback could
-   * be utilized to work this around.
+   * or {@link DefinitionContext.whenComponent component instantiation event} receiver. A {@link whenReady} callback
+   * could be utilized to work this around.
    */
   abstract readonly component: T;
 
   /**
    * Component mount.
    *
-   * This is defined when component is mounted to arbitrary element by [[DefinitionContext.mountTo]]. Ot is `undefined`
+   * This is set when component is mounted to arbitrary element by {@link DefinitionContext.mountTo}. It is `undefined`
    * for components created in standard way.
    */
   abstract readonly mount: ComponentMount<T> | undefined;
@@ -93,21 +93,21 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    * Whether the component is settled.
    *
    * Component settlement happens:
-   * - when [[settle]] method is called,
+   * - when {@link settle} method is called,
    * - when component is {@link DefinitionContext.mountTo mounted} to element, or
-   * - when component's element is [[connected]].
+   * - when component's element is {@link connected}.
    *
    * It is guaranteed that component settlement won't happen inside custom element's constructor. So the settlement
    * event may be used e.g. to start DOM manipulations, as the latter is prohibited inside custom element constructor.
    *
-   * This becomes `true` right before [[whenSettled]] event is sent.
+   * This becomes `true` right before {@link whenSettled} event is sent.
    */
   abstract readonly settled: boolean;
 
   /**
    * Whether the component's element is connected.
    *
-   * This becomes `true` right before [[whenConnected]] event is sent.
+   * This becomes `true` right before {@link whenConnected} event is sent.
    */
   abstract readonly connected: boolean;
 
@@ -125,7 +125,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   /**
    * An `OnEvent` sender of component settlement event.
    *
-   * The registered receiver is called when component is [[settled]]. If settled already the receiver is called
+   * The registered receiver is called when component is {@link settled}. If settled already the receiver is called
    * immediately.
    */
   abstract readonly whenSettled: OnEvent<[this]>;
@@ -177,7 +177,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   /**
    * Settles component.
    *
-   * Calling this method has no effect if component is [[settled]] already, when component is not
+   * Calling this method has no effect if component is {@link settled} already, when component is not
    * {@link whenReady ready} yet, or custom element's constructor is not exited.
    *
    * Calling this method may trigger DOM manipulations (the latter is prohibited inside custom element's constructor).

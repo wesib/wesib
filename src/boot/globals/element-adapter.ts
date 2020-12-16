@@ -84,7 +84,7 @@ function defaultElementAdapter(element: ComponentContextHolder): ComponentContex
 }
 
 /**
- * A key of bootstrap context value containing combined [[ElementAdapter]] instance.
+ * A key of bootstrap context value containing combined {@link ElementAdapter} instance.
  *
  * @category Core
  */

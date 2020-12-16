@@ -15,8 +15,8 @@ import { ElementDef } from './element-def';
  * Component definition context.
  *
  * Extends `ContextValues` interface. The values are provided by corresponding providers registered with
- * [[BootstrapSetup.perDefinition]] and [[DefinitionSetup.perDefinition]] methods. All [[BootstrapContext]] values
- * are available too.
+ * {@link BootstrapSetup.perDefinition} and {@link DefinitionSetup.perDefinition} methods. All {@link BootstrapContext}
+ * values are available too.
  *
  * @category Core
  * @typeParam T - A type of component.
@@ -39,8 +39,7 @@ export abstract class DefinitionContext<T extends object = any> extends ContextV
    * Custom element class constructor.
    *
    * It is an error accessing this property before the element class is created, e.g. from inside of
-   * `DefinitionListener` or `ComponentDef.define()` function. In these cases you may wish to add a `whenReady()`
-   * callback.
+   * {@link ComponentDef.define} function. In such case you may wish to add a `whenReady()` callback.
    */
   abstract readonly elementType: Class;
 

@@ -14,7 +14,7 @@ import { ComponentClass } from './definition';
  * Allows to construct a {@link ComponentDecorator component decorator} by declaring a virtual property to use instead
  * of decorated one.
  *
- * Constructed by [[ComponentProperty]] function.
+ * Constructed by {@link ComponentProperty} function.
  *
  * @category Core
  * @typeParam V - Property value type.
@@ -44,7 +44,7 @@ export interface ComponentPropertyDecorator<V, T extends ComponentClass = Class>
    * Builds component decorator assuming the virtual property has the given value.
    *
    * @param value - Virtual property value.
-   * @param key - Virtual property key. Defaults to [[AnonymousComponentProperty__symbol]].
+   * @param key - Virtual property key. Defaults to {@link AnonymousComponentProperty__symbol}.
    *
    * @returns New component decorator.
    */
@@ -58,7 +58,7 @@ export interface ComponentPropertyDecorator<V, T extends ComponentClass = Class>
    * Builds component decorator assuming the virtual property value is provided by the given `provider`.
    *
    * @param provider - Virtual property read-only value provider.
-   * @param key - Virtual property key. Defaults to [[AnonymousComponentProperty__symbol]].
+   * @param key - Virtual property key. Defaults to {@link AnonymousComponentProperty__symbol}.
    *
    * @returns New component decorator.
    */
@@ -72,7 +72,7 @@ export interface ComponentPropertyDecorator<V, T extends ComponentClass = Class>
    * Builds component decorator assuming the decorated property is available via the given `accessor`.
    *
    * @param accessor - Virtual property accessor.
-   * @param key - Virtual property key. Defaults to [[AnonymousComponentProperty__symbol]].
+   * @param key - Virtual property key. Defaults to {@link AnonymousComponentProperty__symbol}.
    *
    * @returns New component decorator.
    */
@@ -86,7 +86,7 @@ export interface ComponentPropertyDecorator<V, T extends ComponentClass = Class>
    * Builds component decorator assuming the decorated property is bound to component with by the given `binder`.
    *
    * @param binder - A binder of virtual property accessor
-   * @param key - Virtual property key. Defaults to [[AnonymousComponentProperty__symbol]]..
+   * @param key - Virtual property key. Defaults to {@link AnonymousComponentProperty__symbol}..
    *
    * @returns New component decorator.
    */
@@ -202,7 +202,7 @@ export namespace ComponentProperty {
   /**
    * Component property descriptor.
    *
-   * Passed to {@link Definer property definer} by [[ComponentProperty]] function to construct a {@link Definition
+   * Passed to {@link Definer property definer} by {@link ComponentProperty} function to construct a {@link Definition
    * property definition}.
    *
    * @typeParam V - Property value type.
@@ -274,7 +274,7 @@ export namespace ComponentProperty {
   /**
    * Component property definition builder signature.
    *
-   * This is a function called by [[ComponentProperty]] to define the property.
+   * This is a function called by {@link ComponentProperty} to define the property.
    *
    * @typeParam V - Property value type.
    * @typeParam T - A type of component class.
@@ -295,7 +295,7 @@ export namespace ComponentProperty {
    *
    * When applying to decorated property, this definition updates its definition.
    *
-   * When applying to virtual property assumed by one of [[ComponentPropertyDecorator]] methods, most of returned
+   * When applying to virtual property assumed by one of {@link ComponentPropertyDecorator} methods, most of returned
    * values ignored. Except for {@link Definition.componentDef component definition}, {@link Definition.get value
    * reader}, and {@link Definition.set value setter}.
    *
@@ -330,7 +330,7 @@ export namespace ComponentProperty {
      *
      * When specified it changes how the property value is read.
      *
-     * When neither [[get]], nor [[set]] specified, the property access does not change.
+     * When neither {@link get}, nor {@link set} specified, the property access does not change.
      *
      * @param component - Target component instance.
      * @param key - Property key.
@@ -344,7 +344,7 @@ export namespace ComponentProperty {
      *
      * When specified it changes how the property value is assigned.
      *
-     * When neither [[get]], nor [[set]] specified, the property access does not change.
+     * When neither {@link get}, nor {@link set} specified, the property access does not change.
      *
      * @param component - Target component instance.
      * @param value - New property value.

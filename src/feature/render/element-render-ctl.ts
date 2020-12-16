@@ -23,7 +23,7 @@ export interface ElementRenderCtl {
   /**
    * Enables component element rendering by the given `renderer`.
    *
-   * A `renderer` call will be scheduled by [[DefaultRenderScheduler]] once component state updated.
+   * A `renderer` call will be scheduled by {@link DefaultRenderScheduler} once component state updated.
    *
    * @param renderer - Element renderer function.
    * @param def - Optional element rendering definition.

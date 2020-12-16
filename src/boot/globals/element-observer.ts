@@ -27,7 +27,7 @@ export interface ElementObserver extends MutationObserver {
    * Configures the observer callback to begin receiving notifications of changes to the DOM that match the given
    * options.
    * To stop the MutationObserver (so that none of its callbacks will be triggered any longer), call
-   * [[disconnect]].
+   * {@link disconnect}.
    *
    * @param target - A DOM node within the DOM tree to watch for changes, and to be the root of a subtree of nodes
    * to be watched.
@@ -38,7 +38,7 @@ export interface ElementObserver extends MutationObserver {
 }
 
 /**
- * A key of bootstrap context value containing a function constructing a new [[ElementObserver]] instance.
+ * A key of bootstrap context value containing a function constructing a new {@link ElementObserver} instance.
  *
  * @category Core
  */

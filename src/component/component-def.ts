@@ -272,9 +272,9 @@ export const ComponentDef = {
   /**
    * Defines a component.
    *
-   * Either assigns new or extends existing component definition and stores it under [[ComponentDef__symbol]] key.
+   * Either assigns new or extends existing component definition and stores it under {@link ComponentDef__symbol} key.
    *
-   * Each component can be passed directly to [[bootstrapComponents]] function or added as a requirement
+   * Each component can be passed directly to {@link bootstrapComponents} function or added as a requirement
    * of another feature.
    *
    * @typeParam T - A type of component.
