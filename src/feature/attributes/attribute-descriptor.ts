@@ -9,13 +9,13 @@
  * This function is called whenever a new attribute value assigned.
  *
  * @category Feature
- * @typeparam T  A type of component.
+ * @typeParam T - A type of component.
  */
 export type AttributeChangedCallback<T extends object> =
 /**
- * @param component  Component instance.
- * @param newValue  New attribute value, or `null` when attribute removed.
- * @param oldValue  Previous attribute value, or `null` if attribute did not exist.
+ * @param component - Component instance.
+ * @param newValue - New attribute value, or `null` when attribute removed.
+ * @param oldValue - Previous attribute value, or `null` if attribute did not exist.
  */
     (this: void, component: T, newValue: string | null, oldValue: string | null) => void;
 

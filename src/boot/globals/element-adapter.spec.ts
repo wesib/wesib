@@ -1,6 +1,6 @@
 import { ContextRegistry, ContextValues } from '@proc7ts/context-values';
 import { ContextSupply } from '@proc7ts/context-values/updatable';
-import { eventSupply } from '@proc7ts/fun-events';
+import { Supply } from '@proc7ts/primitives';
 import { ComponentContext, ComponentContext__symbol } from '../../component';
 import { ElementAdapter } from './element-adapter';
 import Mock = jest.Mock;
@@ -26,7 +26,7 @@ describe('boot', () => {
     });
     it('throws when context is destroyed', () => {
 
-      const contextSupply = eventSupply();
+      const contextSupply = new Supply();
 
       registry.provide({ a: ContextSupply, is: contextSupply });
 

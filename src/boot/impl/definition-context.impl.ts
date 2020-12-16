@@ -1,7 +1,6 @@
-import { nextArgs, nextSkip } from '@proc7ts/call-thru';
 import { ContextValues, ContextValueSpec } from '@proc7ts/context-values';
-import { EventReceiver, EventSupply, OnEvent, trackValue, ValueTracker } from '@proc7ts/fun-events';
-import { Class, valueProvider } from '@proc7ts/primitives';
+import { mapOn_, onceOn, OnEvent, trackValue, translateOn, ValueTracker } from '@proc7ts/fun-events';
+import { Class, Supply, valueProvider } from '@proc7ts/primitives';
 import {
   ComponentContext,
   ComponentContext__symbol,
@@ -25,6 +24,7 @@ import { WhenComponent } from './when-component.impl';
  */
 export class DefinitionContext$<T extends object> extends DefinitionContext<T> {
 
+  readonly whenReady: OnEvent<[this]>;
   readonly get: ContextValues['get'];
   private readonly _def: ComponentDef.Options<T>;
   readonly _whenComponent = new WhenComponent<T>();
@@ -39,7 +39,7 @@ export class DefinitionContext$<T extends object> extends DefinitionContext<T> {
   ) {
     super();
     this._ready = trackValue(false);
-    this._whenReady = this._ready.read().thru(ready => ready ? nextArgs() : nextSkip());
+    this._whenReady = this._ready.read.do(translateOn((send, ready) => ready && send()));
     this._def = ComponentDef.of(componentType);
 
     const definitionContextRegistry = new DefinitionContextRegistry(_bsContext.get(PerDefinitionRegistry).seeds());
@@ -51,19 +51,14 @@ export class DefinitionContext$<T extends object> extends DefinitionContext<T> {
     const parentPerComponentRegistry = _bsContext.get(PerComponentRegistry).append(seedKey => this.get(seedKey));
     this._perComponentRegistry = new ComponentContextRegistry(parentPerComponentRegistry.seeds());
 
-    const whenReady$ = this.whenReady().F;
-    const whenComponent$ = this.whenComponent().F;
+    this.whenReady = this._whenReady.do(mapOn_(valueProvider(this)), onceOn);
 
     const definitionSetup: DefinitionSetup<T> = {
       get componentType() {
         return componentType;
       },
-      get whenReady() {
-        return whenReady$;
-      },
-      get whenComponent() {
-        return whenComponent$;
-      },
+      whenReady: this.whenReady,
+      whenComponent: this.whenComponent,
       perDefinition: spec => definitionContextRegistry.provide(spec),
       perComponent: spec => this._perComponentRegistry.provide(spec),
     };
@@ -76,10 +71,8 @@ export class DefinitionContext$<T extends object> extends DefinitionContext<T> {
     return this._elementType();
   }
 
-  whenReady(): OnEvent<[this]>;
-  whenReady(receiver: EventReceiver<[this]>): EventSupply;
-  whenReady(receiver?: EventReceiver<[this]>): EventSupply | OnEvent<[this]> {
-    return (this.whenReady = (this._whenReady.thru_(valueProvider(this)).once() as OnEvent<[this]>).F)(receiver);
+  get whenComponent(): OnEvent<[ComponentContext<T>]> {
+    return this._whenComponent.onCreated;
   }
 
   mountTo(element: ComponentContextHolder): ComponentMount<T> {
@@ -100,15 +93,9 @@ export class DefinitionContext$<T extends object> extends DefinitionContext<T> {
     return mount;
   }
 
-  whenComponent(): OnEvent<[ComponentContext<T>]>;
-  whenComponent(receiver: EventReceiver<[ComponentContext<T>]>): EventSupply;
-  whenComponent(receiver?: EventReceiver<[ComponentContext<T>]>): OnEvent<[ComponentContext<T>]> | EventSupply {
-    return (this.whenComponent = this._whenComponent.onCreated.F)(receiver);
-  }
-
-  perComponent<Deps extends any[], Src, Seed>(
-      spec: ContextValueSpec<ComponentContext<T>, any, Deps, Src, Seed>,
-  ): () => void {
+  perComponent<TDeps extends any[], TSrc, TSeed>(
+      spec: ContextValueSpec<ComponentContext<T>, any, TDeps, TSrc, TSeed>,
+  ): Supply {
     return this._perComponentRegistry.provide(spec);
   }
 

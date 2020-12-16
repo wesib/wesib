@@ -55,14 +55,14 @@ export namespace FeatureDef {
      *
      * This method is called before bootstrap context created.
      *
-     * @param setup  Bootstrap setup.
+     * @param setup - Bootstrap setup.
      */
     setup?(setup: BootstrapSetup): void;
 
     /**
      * Bootstraps this feature by calling the given bootstrap context constructed.
      *
-     * @param context  Feature initialization context.
+     * @param context - Feature initialization context.
      */
     init?(context: FeatureContext): void;
 
@@ -88,7 +88,7 @@ export namespace FeatureDef {
     /**
      * Builds feature definition.
      *
-     * @param featureType  A feature class constructor to build definition for.
+     * @param featureType - A feature class constructor to build definition for.
      *
      * @returns Built feature definition.
      */
@@ -155,7 +155,7 @@ export const FeatureDef = {
   /**
    * Extracts feature definition options from its type.
    *
-   * @param featureType  Target feature class constructor.
+   * @param featureType - Target feature class constructor.
    *
    * @returns Feature definition options. May be empty when there is no feature definition found in the given
    * `featureType`.
@@ -167,8 +167,8 @@ export const FeatureDef = {
   /**
    * Builds feature definition options for the given feature class.
    *
-   * @param featureType  Target feature class constructor.
-   * @param def  A feature definition.
+   * @param featureType - Target feature class constructor.
+   * @param def - A feature definition.
    *
    * @returns Feature definition options.
    */
@@ -179,7 +179,7 @@ export const FeatureDef = {
   /**
    * Merges multiple feature definition options.
    *
-   * @param defs  Feature definition options to merge.
+   * @param defs - Feature definition options to merge.
    *
    * @returns Merged feature definition options.
    */
@@ -190,7 +190,7 @@ export const FeatureDef = {
   /**
    * Merges multiple feature definitions.
    *
-   * @param defs  Feature definitions to merge.
+   * @param defs - Feature definitions to merge.
    *
    * @returns Merged feature definition.
    */
@@ -213,9 +213,9 @@ export const FeatureDef = {
    *
    * Either creates new or extends an existing feature definition and stores it under `[FeatureDef__symbol]` key.
    *
-   * @typeparam T  Feature type.
-   * @param featureType  Feature class constructor.
-   * @param defs  Feature definitions.
+   * @typeParam T - Feature type.
+   * @param featureType - Feature class constructor.
+   * @param defs - Feature definitions.
    *
    * @returns The `type` instance.
    */

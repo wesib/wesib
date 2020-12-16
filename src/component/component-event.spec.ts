@@ -1,5 +1,5 @@
 import { ContextRegistry } from '@proc7ts/context-values';
-import { eventSupply, EventSupply__symbol } from '@proc7ts/fun-events';
+import { Supply } from '@proc7ts/primitives';
 import { MockElement } from '../spec/test-element';
 import { ComponentContext, ComponentContext__symbol } from './component-context';
 import { ComponentEvent, ComponentEventDispatcher } from './component-event';
@@ -38,7 +38,7 @@ describe('component', () => {
       element = new MockElement();
       context = {
         element,
-        [EventSupply__symbol]: eventSupply(),
+        supply: new Supply(),
       } as any;
     });
 
@@ -67,7 +67,7 @@ describe('component', () => {
 
         const mockListener = jest.fn();
 
-        dispatcher.on('click').to(mockListener);
+        dispatcher.on('click')(mockListener);
         expect(element.addEventListener).toHaveBeenCalledWith('click', expect.any(Function), undefined);
 
         const event = new KeyboardEvent('click');

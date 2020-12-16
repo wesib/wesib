@@ -15,7 +15,7 @@ import { ComponentContext } from './component-context';
  * do it automatically.
  *
  * @category Core
- * @typeparam T  A type of component.
+ * @typeParam T - A type of component.
  */
 export abstract class ComponentMount<T extends object = any> {
 

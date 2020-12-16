@@ -15,7 +15,7 @@ import { ComponentClass } from './definition';
  * Constructed by [[Component]] function.
  *
  * @category Core
- * @typeparam T  A type of decorated component class.
+ * @typeParam T - A type of decorated component class.
  */
 export type ComponentDecorator<T extends ComponentClass = Class> =
     & ((this: void, type: T) => T | void)
@@ -38,8 +38,8 @@ export type ComponentDecorator<T extends ComponentClass = Class> =
  * This is an alternative to direct call to [[ComponentDef.Options.define]] method.
  *
  * @category Core
- * @typeparam T  A type of decorated component class.
- * @param defs  Component definitions.
+ * @typeParam T - A type of decorated component class.
+ * @param defs - Component definitions.
  *
  * @returns A component class decorator.
  */

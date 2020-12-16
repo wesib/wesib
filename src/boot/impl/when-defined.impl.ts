@@ -25,7 +25,7 @@ export function whenDefined<T extends object>(
   }
 
   const result: OnEvent<[DefinitionContext<T>]> = onPromise(
-      Promise.resolve(bsContext.whenReady())
+      Promise.resolve(bsContext.whenReady)
           .then(() => bsContext.get(CustomElements).whenDefined(componentType))
           .then(() => definitionContextOf(componentType)),
   );

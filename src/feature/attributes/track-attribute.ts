@@ -2,31 +2,27 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { nextArgs } from '@proc7ts/call-thru';
-import {
-  EventReceiver,
-  EventSupply,
-  eventSupply,
-  EventSupply__symbol,
-  eventSupplyOf,
-  OnEvent,
-  StatePath,
-  ValueTracker,
-} from '@proc7ts/fun-events';
+import { OnEvent, StatePath, supplyOn, translateOn, ValueTracker } from '@proc7ts/fun-events';
+import { Supply } from '@proc7ts/primitives';
 import { ComponentContext } from '../../component';
 import { ComponentState } from '../state';
 import { attributePathTo } from './attribute-path';
 
 class AttributeTracker extends ValueTracker<string | null> {
 
-  readonly [EventSupply__symbol] = eventSupply();
+  readonly on: OnEvent<[string | null, string | null]>;
+  readonly supply = new Supply();
 
   constructor(
       private readonly _context: ComponentContext,
       private readonly _name: string,
-      private readonly _path: StatePath,
+      path: StatePath,
   ) {
     super();
+    this.on = this._context.get(ComponentState).track(path).onUpdate.do(
+        translateOn((send, _path, newValue, oldValue) => send(newValue, oldValue)),
+        supplyOn(this),
+    );
   }
 
   get it(): string | null {
@@ -34,7 +30,7 @@ class AttributeTracker extends ValueTracker<string | null> {
   }
 
   set it(value: string | null) {
-    if (!eventSupplyOf(this).isOff) {
+    if (!this.supply.isOff) {
       if (value == null) {
         (this._context.element as Element).removeAttribute(this._name);
       } else {
@@ -43,28 +39,18 @@ class AttributeTracker extends ValueTracker<string | null> {
     }
   }
 
-  on(): OnEvent<[string | null, string | null]>;
-  on(receiver: EventReceiver<[string | null, string | null]>): EventSupply;
-  on(
-      receiver?: EventReceiver<[string | null, string | null]>,
-  ): OnEvent<[string | null, string | null]> | EventSupply {
-    return (this.on = this._context.get(ComponentState).track(this._path).onUpdate().thru(
-        (_path, newValue, oldValue) => nextArgs(newValue, oldValue),
-    ).tillOff(this).F)(receiver);
-  }
-
 }
 
 /**
  * Creates a tracker of custom element's attribute value.
  *
- * Requires [[AttributesSupport]] feature to be enabled and attribute to be defined. E.g. with {@link Attribute
- * @Attribute}, {@link AttributeChanged @AttributeChanged}, or {@link Attributes @Attributes} decorator.
+ * Requires attribute to be defined. E.g. with {@link Attribute @Attribute}, {@link AttributeChanged @AttributeChanged},
+ * or {@link Attributes @Attributes} decorator.
  *
  * @category Feature
- * @param context  Target component context.
- * @param name  Attribute name.
- * @param path  Custom attribute state path.
+ * @param context - Target component context.
+ * @param name - Attribute name.
+ * @param path - Custom attribute state path.
  *
  * @returns New attribute value tracker.
  */

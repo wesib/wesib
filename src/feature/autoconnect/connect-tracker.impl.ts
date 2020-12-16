@@ -1,6 +1,6 @@
+import { DomEventDispatcher } from '@frontmeans/dom-events';
 import { ContextKey, ContextKey__symbol, SingleContextKey } from '@proc7ts/context-values';
-import { noEventSupply } from '@proc7ts/fun-events';
-import { DomEventDispatcher } from '@proc7ts/fun-events/dom';
+import { neverSupply } from '@proc7ts/primitives';
 import { filterArray, itsEach } from '@proc7ts/push-iterator';
 import { BootstrapContext } from '../../boot';
 import { BootstrapRoot, ElementObserver } from '../../boot/globals';
@@ -24,7 +24,7 @@ export class ConnectTracker {
     return ConnectTracker__key;
   }
 
-  private _supply = noEventSupply();
+  private _supply = neverSupply();
   private _observer!: ElementObserver;
 
   constructor(private readonly _context: BootstrapContext) {
@@ -34,9 +34,9 @@ export class ConnectTracker {
 
     const context = this._context;
 
-    this._supply = new DomEventDispatcher(root)
-        .on<ShadowDomEvent>('wesib:shadowAttached')
-        .to(event => trackShadow(event.shadowRoot));
+    this._supply = new DomEventDispatcher(root).on<ShadowDomEvent>('wesib:shadowAttached')(
+        event => trackShadow(event.shadowRoot),
+    );
 
     const newObserver = this._context.get(ElementObserver);
     const observer = this._observer = newObserver(records => updateConnections(records));
@@ -82,7 +82,7 @@ export class ConnectTracker {
   _untrack(): void {
     this._observer.disconnect();
     this._supply.off();
-    this._supply = noEventSupply();
+    this._supply = neverSupply();
   }
 
 }

@@ -1,4 +1,3 @@
-import { nextArgs, NextCall, NextSkip, nextSkip } from '@proc7ts/call-thru';
 import { ContextValueSlot } from '@proc7ts/context-values';
 import { ContextUpKey } from '@proc7ts/context-values/updatable';
 import {
@@ -7,10 +6,14 @@ import {
   AfterEvent,
   afterEventBy,
   afterThe,
+  digAfter_,
   EventKeeper,
-  nextAfterEvent,
-  OnEventCallChain,
+  mapAfter,
+  mapAfter_,
+  shareAfter,
   trackValue,
+  translateAfter,
+  translateAfter_,
 } from '@proc7ts/fun-events';
 import { Class, isPresent, setOfElements } from '@proc7ts/primitives';
 import { BootstrapContext } from '../../boot';
@@ -52,7 +55,7 @@ export class FeatureKey extends ContextUpKey<AfterEvent<[FeatureLoader?]>, Featu
   ): void {
     slot.insert(loadFeature(
         slot.context.get(BootstrapContext),
-        slot.seed.keepThru(preferredFeatureClause),
+        slot.seed.do(mapAfter(preferredFeatureClause)),
     ));
   }
 
@@ -95,25 +98,27 @@ function loadFeature(
     return afterAll({
       clause: from,
       deps: loadFeatureDeps(bsContext, from),
-    }).keepThru_(({ clause: [clause], deps }): NextCall<OnEventCallChain, [FeatureLoader?]> => {
+    }).do(digAfter_(({ clause: [clause], deps }): AfterEvent<[FeatureLoader?]> => {
       if (!clause) {
-        return nextArgs();
+        return afterThe();
       }
 
       const [request, , target] = clause;
 
       if (request.feature === origin) {
-        return nextAfterEvent(source); // Origin didn't change. Reuse the source.
+        return source; // Origin didn't change. Reuse the source.
       }
 
       origin = request.feature;
 
       if (target !== origin) {
         // Originated from replacement feature provider. Reuse its loader.
-        return nextAfterEvent(source = bsContext.get(FeatureKey.of(origin)).keepThru_(
+        return source = bsContext.get(FeatureKey.of(origin)).do(mapAfter_(
             loader => {
-              loader!.to(stageId);
-              stageId = loader!.stage;
+              if (loader) {
+                loader.to(stageId);
+                stageId = loader.stage;
+              }
               return loader;
             },
         ));
@@ -123,35 +128,35 @@ function loadFeature(
       const ownLoader = new FeatureLoader(bsContext, request, deps).to(stageId);
       const ownSource = afterThe(ownLoader);
 
-      return nextAfterEvent(source = afterEventBy<[FeatureLoader]>(
-          rcv => ownSource.to(rcv).whenOff(() => {
+      return source = afterEventBy<[FeatureLoader]>(
+          rcv => ownSource(rcv).whenOff(() => {
             stageId = ownLoader.unload();
           }),
-      ).share()); // Can be accessed again when reused
-    }).to(receiver);
-  }).keepThru(
-      preventDuplicateLoader(),
+      ).do(shareAfter); // Can be accessed again when reused
+    }))(receiver);
+  }).do(
+      translateAfter(preventDuplicateLoader()),
   );
 }
 
 function preventDuplicateLoader():
     (
+        send: (loader?: FeatureLoader) => void,
         loader?: FeatureLoader,
-    ) => NextCall<OnEventCallChain, [FeatureLoader?]> | NextSkip {
+    ) => void {
 
   let lastLoader: FeatureLoader | null | undefined = null; // Initially `null` to differ from `undefined`
 
-  return (loader?: FeatureLoader) => {
-    if (lastLoader === loader) {
-      return nextSkip();
-    }
-    lastLoader = loader;
+  return (send, loader?: FeatureLoader): void => {
+    if (lastLoader !== loader) {
+      lastLoader = loader;
 
-    if (!loader) {
-      return nextArgs<[FeatureLoader?]>();
+      if (loader) {
+        send(loader);
+      } else {
+        send();
+      }
     }
-
-    return nextArgs<[FeatureLoader?]>(loader);
   };
 }
 
@@ -159,28 +164,28 @@ function loadFeatureDeps(
     bsContext: BootstrapContext,
     from: AfterEvent<[FeatureClause?]>,
 ): AfterEvent<FeatureLoader[]> {
-  return from.keepThru_(clause => {
+  return from.do(digAfter_(clause => {
     if (!clause) {
-      return nextArgs();
+      return afterThe();
     }
 
     const [{ def }] = clause;
     const needs = setOfElements(def.needs);
 
     if (!needs.size) {
-      return nextArgs();
+      return afterThe();
     }
 
-    return nextAfterEvent(
-        afterEach(
-            ...[...needs].map(dep => bsContext.get(FeatureKey.of(dep))),
-        ).keepThru_(presentFeatureDeps),
+    return afterEach(
+        ...[...needs].map(dep => bsContext.get(FeatureKey.of(dep))),
+    ).do(
+        translateAfter_(presentFeatureDeps),
     );
-  });
+  }));
 }
 
-function presentFeatureDeps(...deps: [FeatureLoader?][]): NextCall<OnEventCallChain, FeatureLoader[]> {
-  return nextArgs<FeatureLoader[]>(...deps.map(([dep]) => dep).filter(isPresent));
+function presentFeatureDeps(send: (...loaders: FeatureLoader[]) => void, ...deps: [FeatureLoader?][]): void {
+  return send(...deps.map(([dep]) => dep).filter(isPresent));
 }
 
 /**
@@ -288,7 +293,7 @@ class SetupFeatureStage extends FeatureStage {
 
     const { bsContext, request: { def } } = this.loader;
     const context = new FeatureContext$(bsContext, this.loader);
-    const supply = context._unloader.supply;
+    const supply = context.supply;
 
     def.setup?.(context);
 

@@ -26,8 +26,8 @@ export type ShadowContentDef = Readonly<ShadowRootInit>;
  * Creates a component decorator that attaches shadow root to decorated component instance.
  *
  * @category Feature
- * @typeparam T  A type of decorated component class.
- * @param def  Shadow content root definition. Uses `mode: 'open'` by default.
+ * @typeParam T - A type of decorated component class.
+ * @param def - Shadow content root definition. Uses `mode: 'open'` by default.
  *
  * @returns New component decorator.
  */

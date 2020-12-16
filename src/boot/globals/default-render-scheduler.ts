@@ -5,7 +5,7 @@
 import { newRenderSchedule, RenderScheduler } from '@frontmeans/render-scheduler';
 import { ContextValues, ContextValueSlot } from '@proc7ts/context-values';
 import { contextDestroyed, ContextUpKey, ContextUpRef } from '@proc7ts/context-values/updatable';
-import { AfterEvent, afterThe, EventKeeper, nextAfterEvent } from '@proc7ts/fun-events';
+import { AfterEvent, afterThe, digAfter, EventKeeper } from '@proc7ts/fun-events';
 import { BootstrapWindow } from './bootstrap-window';
 
 /**
@@ -25,17 +25,17 @@ class DefaultRenderSchedulerKey extends ContextUpKey<DefaultRenderScheduler, Ren
   constructor() {
     super('default-render-scheduler');
     this.upKey = this.createUpKey(
-        slot => slot.insert(slot.seed.keepThru(
+        slot => slot.insert(slot.seed.do(digAfter(
             (...fns) => {
               if (fns.length) {
-                return toDefaultRenderScheduler(slot.context, fns[fns.length - 1]);
+                return afterThe(toDefaultRenderScheduler(slot.context, fns[fns.length - 1]));
               }
               if (slot.hasFallback && slot.or) {
-                return nextAfterEvent(slot.or);
+                return slot.or;
               }
-              return toDefaultRenderScheduler(slot.context, newRenderSchedule);
+              return afterThe(toDefaultRenderScheduler(slot.context, newRenderSchedule));
             },
-        )),
+        ))),
     );
   }
 
@@ -51,7 +51,7 @@ class DefaultRenderSchedulerKey extends ContextUpKey<DefaultRenderScheduler, Ren
     slot.context.get(
         this.upKey,
         slot.hasFallback ? { or: slot.or != null ? afterThe(slot.or) : slot.or } : undefined,
-    )!.to(
+    )!(
         scheduler => delegated = toDefaultRenderScheduler(slot.context, scheduler),
     ).whenOff(
         reason => delegated = contextDestroyed(reason),

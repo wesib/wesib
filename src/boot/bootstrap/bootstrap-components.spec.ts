@@ -100,7 +100,7 @@ describe('boot', () => {
             ),
         );
 
-        await bsContext.whenReady();
+        await bsContext.whenReady;
       });
 
       it('provides `BootstrapContext` value', () => {
@@ -131,7 +131,7 @@ describe('boot', () => {
             ),
         );
 
-        await bsContext.whenReady();
+        await bsContext.whenReady;
 
         expect(defineSpy).toHaveBeenCalledWith(TestComponent, expect.any(Function));
       });
@@ -238,7 +238,7 @@ describe('boot', () => {
 
             let defined2!: DefinitionContext;
 
-            whenDefined.to(ctx => defined2 = ctx);
+            whenDefined(ctx => defined2 = ctx);
 
             expect(defined2).toBe(defined1);
             expect(whenDefinedSpy).toHaveBeenCalledTimes(1);

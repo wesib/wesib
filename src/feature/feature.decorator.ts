@@ -22,8 +22,8 @@ import { FeatureDef } from './feature-def';
  * This is an alternative to direct call to [[FeatureDef.define]] method.
  *
  * @category Core
- * @typeparam T  A type of decorated feature class.
- * @param defs  Feature definitions.
+ * @typeParam T - A type of decorated feature class.
+ * @param defs - Feature definitions.
  *
  * @returns A feature class decorator.
  */

@@ -29,7 +29,7 @@ export const ComponentDef__symbol = (/*#__PURE__*/ Symbol('component-def'));
  * - feature definition factory.
  *
  * @category Core
- * @typeparam T  A type of component.
+ * @typeParam T - A type of component.
  */
 export type ComponentDef<T extends object = any> =
     | QualifiedName
@@ -74,7 +74,7 @@ export namespace ComponentDef {
      *
      * This method is called before component definition context constructed.
      *
-     * @param setup  Component definition setup.
+     * @param setup - Component definition setup.
      */
     setup?(setup: DefinitionSetup<T>): void;
 
@@ -83,7 +83,7 @@ export namespace ComponentDef {
      *
      * This function is called before the custom element is defined.
      *
-     * @param defContext  Component definition context.
+     * @param defContext - Component definition context.
      */
     define?(defContext: DefinitionContext<T>): void;
 
@@ -92,7 +92,7 @@ export namespace ComponentDef {
   /**
    * Component definition holder.
    *
-   * @typeparam T  A type of component.
+   * @typeParam T - A type of component.
    */
   export interface Holder<T extends object = any> {
 
@@ -106,14 +106,14 @@ export namespace ComponentDef {
   /**
    * Component definition factory.
    *
-   * @typeparam T  A type of component.
+   * @typeParam T - A type of component.
    */
   export interface Factory<T extends object = any> {
 
     /**
      * Builds component definition.
      *
-     * @param componentType  A component class constructor to build definition for.
+     * @param componentType - A component class constructor to build definition for.
      *
      * @returns Built component definition.
      */
@@ -210,8 +210,8 @@ export const ComponentDef = {
   /**
    * Extracts component definition options from its type.
    *
-   * @typeparam T  A type of component.
-   * @param componentType  Target component class constructor.
+   * @typeParam T - A type of component.
+   * @param componentType - Target component class constructor.
    *
    * @returns Component definition options. May be empty if there is not definition attached to component type.
    */
@@ -222,8 +222,8 @@ export const ComponentDef = {
   /**
    * Builds component definition options for the given component class.
    *
-   * @param componentType  Target component class constructor.
-   * @param source  A source of component definition.
+   * @param componentType - Target component class constructor.
+   * @param source - A source of component definition.
    *
    * @returns Component definition.
    */
@@ -238,8 +238,8 @@ export const ComponentDef = {
   /**
    * Merges multiple component definition options.
    *
-   * @typeparam T  A type of component.
-   * @param defs  Component definition options to merge.
+   * @typeParam T - A type of component.
+   * @param defs - Component definition options to merge.
    *
    * @returns Merged component definition options.
    */
@@ -250,8 +250,8 @@ export const ComponentDef = {
   /**
    * Merges multiple component definitions.
    *
-   * @typeparam T  A type of component.
-   * @param defs  Component definitions to merge.
+   * @typeParam T - A type of component.
+   * @param defs - Component definitions to merge.
    *
    * @returns Merged component definition.
    */
@@ -277,9 +277,9 @@ export const ComponentDef = {
    * Each component can be passed directly to [[bootstrapComponents]] function or added as a requirement
    * of another feature.
    *
-   * @typeparam T  A type of component.
-   * @param componentType  Component class constructor.
-   * @param defs  Component definitions.
+   * @typeParam T - A type of component.
+   * @param componentType - Component class constructor.
+   * @param defs - Component definitions.
    *
    * @returns The `type` instance.
    */

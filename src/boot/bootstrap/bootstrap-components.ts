@@ -3,8 +3,17 @@
  * @module @wesib/wesib
  */
 import { newNamespaceAliaser } from '@frontmeans/namespace-aliaser';
-import { nextArgs, nextSkip } from '@proc7ts/call-thru';
-import { AfterEvent, afterEventBy, EventReceiver, EventSupply, OnEvent, trackValue } from '@proc7ts/fun-events';
+import {
+  AfterEvent,
+  afterEventBy,
+  mapAfter,
+  onceOn,
+  OnEvent,
+  shareAfter,
+  supplyAfter,
+  trackValue,
+  valueOn,
+} from '@proc7ts/fun-events';
 import { Class } from '@proc7ts/primitives';
 import { ComponentClass, DefinitionContext } from '../../component/definition';
 import { FeatureDef, FeatureRef, FeatureStatus } from '../../feature';
@@ -20,7 +29,7 @@ import { whenDefined } from '../impl/when-defined.impl';
  * Both features and components can be passed as parameters to this function.
  *
  * @category Core
- * @param features  Features and components to enable.
+ * @param features - Features and components to enable.
  *
  * @returns Bootstrap context instance.
  */
@@ -31,7 +40,7 @@ export function bootstrapComponents(...features: Class[]): BootstrapContext {
   const feature = features.length === 1 ? features[0] : bootstrapFeature(features);
 
   bootstrapContext.get(FeatureRequester).request(feature);
-  bootstrapContext.get(FeatureKey.of(feature)).to(loader => {
+  bootstrapContext.get(FeatureKey.of(feature))(loader => {
     loader!.init().then(complete).catch(console.error);
   });
 
@@ -68,24 +77,21 @@ function initBootstrap(
 
   class BootstrapContext$ extends BootstrapContext {
 
+    readonly whenReady: OnEvent<[BootstrapContext]>;
     readonly get = values.get;
 
     constructor() {
       super();
+      this.whenReady = stage.read.do(
+          valueOn(bsStage => !!bsStage && this),
+          onceOn,
+      );
       bootstrapContextRegistry.provide({ a: DefaultNamespaceAliaser, by: newNamespaceAliaser });
       bootstrapContextRegistry.provide({ a: BootstrapContext, is: this });
     }
 
     whenDefined<C extends object>(componentType: ComponentClass<C>): OnEvent<[DefinitionContext<C>]> {
       return whenDefined(this, componentType);
-    }
-
-    whenReady(): OnEvent<[BootstrapContext]>;
-    whenReady(receiver: EventReceiver<[BootstrapContext]>): EventSupply;
-    whenReady(receiver?: EventReceiver<[BootstrapContext]>): OnEvent<[BootstrapContext]> | EventSupply {
-      return (this.whenReady = stage.read().thru(
-          s => s ? nextArgs(this) : nextSkip(),
-      ).once().F)(receiver);
     }
 
     load(feature: Class<any>): FeatureRef {
@@ -106,7 +112,7 @@ function initBootstrap(
           },
         });
 
-        this.get(FeatureKey.of(feature)).to({
+        this.get(FeatureKey.of(feature))({
           supply: receiver.supply,
           receive(_ctx, ldr) {
 
@@ -139,25 +145,22 @@ function initBootstrap(
         });
 
         info.read(receiver);
-      }).share();
+      }).do(shareAfter);
 
       let whenDown: Promise<void>;
-      const supply = status.to(({ down }) => {
+      const supply = status(({ down }) => {
         whenDown = down!;
       });
 
       class Ref extends FeatureRef {
 
+        readonly read: AfterEvent<[FeatureStatus]> = status.do(
+            supplyAfter(supply),
+            mapAfter(({ status }) => status),
+        );
+
         get down(): Promise<void> {
           return whenDown;
-        }
-
-        read(): AfterEvent<[FeatureStatus]>;
-        read(receiver: EventReceiver<[FeatureStatus]>): EventSupply;
-        read(receiver?: EventReceiver<[FeatureStatus]>): AfterEvent<[FeatureStatus]> | EventSupply {
-          return (this.read = status.tillOff(supply).keepThru(
-              info => info.status,
-          ).F)(receiver);
         }
 
         dismiss(reason?: any): Promise<void> {

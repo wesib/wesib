@@ -104,7 +104,7 @@ describe('feature/attributes', () => {
 
   async function bootstrap(component: ComponentClass): Promise<Class> {
 
-    const bsContext = await bootstrapComponents(component).whenReady();
+    const bsContext = await bootstrapComponents(component).whenReady;
     const defContext = await bsContext.whenDefined(component);
 
     return defContext.elementType;

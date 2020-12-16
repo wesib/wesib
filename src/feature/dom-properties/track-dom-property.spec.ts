@@ -88,7 +88,7 @@ describe('feature/dom-properties', () => {
 
         const reason = 'test reason';
 
-        tracker.done(reason);
+        tracker.supply.off(reason);
 
         expect(updatesOff).toHaveBeenCalledWith(reason);
         expect(readOff).toHaveBeenCalledWith(reason);
@@ -97,7 +97,7 @@ describe('feature/dom-properties', () => {
 
         const reason = 'test reason';
 
-        tracker.done(reason);
+        tracker.supply.off(reason);
 
         const updatesOff = jest.fn();
 
@@ -112,7 +112,7 @@ describe('feature/dom-properties', () => {
       });
       it('rejects property updates', () => {
         tracker.it = 'old';
-        tracker.done();
+        tracker.supply.off();
         tracker.it = 'new';
         expect(tracker.it).toBe('old');
       });

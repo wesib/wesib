@@ -30,8 +30,8 @@ import { AttributeRegistry } from './attribute-registry';
  * ```
  *
  * @category Feature
- * @typeparam T  A type of decorated component class.
- * @param def  Attribute definition or just an attribute name.
+ * @typeParam T - A type of decorated component class.
+ * @param def - Attribute definition or just an attribute name.
  *
  * @return Component method decorator.
  */

@@ -17,18 +17,18 @@ import { ComponentClass } from './definition';
  * Constructed by [[ComponentProperty]] function.
  *
  * @category Core
- * @typeparam V  Property value type.
- * @typeparam T  A type of decorated component class.
+ * @typeParam V - Property value type.
+ * @typeParam T - A type of decorated component class.
  */
 export interface ComponentPropertyDecorator<V, T extends ComponentClass = Class> {
 
   /**
    * Decorates component method.
    *
-   * @typeparam P  Property value type.
-   * @param proto  Decorated class prototype.
-   * @param propertyKey  Decorated property key.
-   * @param descriptor  Decorated property descriptor.
+   * @typeParam P - Property value type.
+   * @param proto - Decorated class prototype.
+   * @param propertyKey - Decorated property key.
+   * @param descriptor - Decorated property descriptor.
    *
    * @returns  Either updated property descriptor, or nothing.
    */
@@ -43,8 +43,8 @@ export interface ComponentPropertyDecorator<V, T extends ComponentClass = Class>
   /**
    * Builds component decorator assuming the virtual property has the given value.
    *
-   * @param value  Virtual property value.
-   * @param key  Virtual property key. Defaults to [[AnonymousComponentProperty__symbol]].
+   * @param value - Virtual property value.
+   * @param key - Virtual property key. Defaults to [[AnonymousComponentProperty__symbol]].
    *
    * @returns New component decorator.
    */
@@ -57,8 +57,8 @@ export interface ComponentPropertyDecorator<V, T extends ComponentClass = Class>
   /**
    * Builds component decorator assuming the virtual property value is provided by the given `provider`.
    *
-   * @param provider  Virtual property read-only value provider.
-   * @param key  Virtual property key. Defaults to [[AnonymousComponentProperty__symbol]].
+   * @param provider - Virtual property read-only value provider.
+   * @param key - Virtual property key. Defaults to [[AnonymousComponentProperty__symbol]].
    *
    * @returns New component decorator.
    */
@@ -71,8 +71,8 @@ export interface ComponentPropertyDecorator<V, T extends ComponentClass = Class>
   /**
    * Builds component decorator assuming the decorated property is available via the given `accessor`.
    *
-   * @param accessor  Virtual property accessor.
-   * @param key  Virtual property key. Defaults to [[AnonymousComponentProperty__symbol]].
+   * @param accessor - Virtual property accessor.
+   * @param key - Virtual property key. Defaults to [[AnonymousComponentProperty__symbol]].
    *
    * @returns New component decorator.
    */
@@ -85,8 +85,8 @@ export interface ComponentPropertyDecorator<V, T extends ComponentClass = Class>
   /**
    * Builds component decorator assuming the decorated property is bound to component with by the given `binder`.
    *
-   * @param binder  A binder of virtual property accessor
-   * @param key  Virtual property key. Defaults to [[AnonymousComponentProperty__symbol]]..
+   * @param binder - A binder of virtual property accessor
+   * @param key - Virtual property key. Defaults to [[AnonymousComponentProperty__symbol]]..
    *
    * @returns New component decorator.
    */
@@ -105,13 +105,13 @@ export namespace ComponentProperty {
    *
    * This function will be called each time the property value is requested.
    *
-   * @typeparam V  Property value type.
-   * @typeparam T  A type of component.
+   * @typeParam V - Property value type.
+   * @typeParam T - A type of component.
    */
   export type Provider<V, T extends object = any> =
   /**
-   * @param component  Component instance.
-   * @param key  Target property key.
+   * @param component - Component instance.
+   * @param key - Target property key.
    *
    * @returns Property value.
    */
@@ -126,8 +126,8 @@ export namespace ComponentProperty {
    *
    * Allows to read and write property value.
    *
-   * @typeparam V  Property value type.
-   * @typeparam T  A type of component.
+   * @typeParam V - Property value type.
+   * @typeParam T - A type of component.
    */
   export interface Accessor<V, T extends object = any> {
 
@@ -136,8 +136,8 @@ export namespace ComponentProperty {
      *
      * May throw if the property is not readable.
      *
-     * @param component  Target component instance.
-     * @param key  Property key.
+     * @param component - Target component instance.
+     * @param key - Property key.
      *
      * @returns Property value.
      */
@@ -148,9 +148,9 @@ export namespace ComponentProperty {
      *
      * May throw is the property is not writable.
      *
-     * @param component  Target component instance.
-     * @param value  New property value.
-     * @param key  Property key.
+     * @param component - Target component instance.
+     * @param value - New property value.
+     * @param key - Property key.
      */
     set(this: void, component: T, value: V, key: string | symbol): void;
 
@@ -161,13 +161,13 @@ export namespace ComponentProperty {
    *
    * This is a function that binds a {@link BoundAccessor property accessor} to target component.
    *
-   * @typeparam V  Property value type.
-   * @typeparam T  A type of component.
+   * @typeParam V - Property value type.
+   * @typeParam T - A type of component.
    */
   export type Binder<V, T extends object = any> =
   /**
-   * @param component  Target component to bind property accessor to.
-   * @param key  Property key.
+   * @param component - Target component to bind property accessor to.
+   * @param key - Property key.
    *
    * @returns Property accessor bound to `component`.
    */
@@ -193,7 +193,7 @@ export namespace ComponentProperty {
      *
      * An attempt to assign the value would throw when omitted.
      *
-     * @param value  New property value.
+     * @param value - New property value.
      */
     set?(value: V): void;
 
@@ -205,8 +205,8 @@ export namespace ComponentProperty {
    * Passed to {@link Definer property definer} by [[ComponentProperty]] function to construct a {@link Definition
    * property definition}.
    *
-   * @typeparam V  Property value type.
-   * @typeparam T  A type of component class.
+   * @typeParam V - Property value type.
+   * @typeParam T - A type of component class.
    */
   export interface Descriptor<V, T extends ComponentClass = Class> {
 
@@ -253,7 +253,7 @@ export namespace ComponentProperty {
      *
      * May throw if the property is not readable.
      *
-     * @param component  Target component instance.
+     * @param component - Target component instance.
      *
      * @returns Property value.
      */
@@ -264,8 +264,8 @@ export namespace ComponentProperty {
      *
      * May throw is the property is not writable.
      *
-     * @param component  Target component instance.
-     * @param value  New property value.
+     * @param component - Target component instance.
+     * @param value - New property value.
      */
     set(this: void, component: InstanceType<T>, value: V): void;
 
@@ -276,12 +276,12 @@ export namespace ComponentProperty {
    *
    * This is a function called by [[ComponentProperty]] to define the property.
    *
-   * @typeparam V  Property value type.
-   * @typeparam T  A type of component class.
+   * @typeParam V - Property value type.
+   * @typeParam T - A type of component class.
    */
   export type Definer<V, T extends ComponentClass = Class> =
   /**
-   * @param descriptor  Component property descriptor.
+   * @param descriptor - Component property descriptor.
    *
    * @returns Component property definition. Or nothing if the property definition is not to be changed.
    */
@@ -299,8 +299,8 @@ export namespace ComponentProperty {
    * values ignored. Except for {@link Definition.componentDef component definition}, {@link Definition.get value
    * reader}, and {@link Definition.set value setter}.
    *
-   * @typeparam V  Property value type.
-   * @typeparam T  A type of component class.
+   * @typeParam V - Property value type.
+   * @typeParam T - A type of component class.
    */
   export interface Definition<V, T extends ComponentClass = Class> {
 
@@ -332,8 +332,8 @@ export namespace ComponentProperty {
      *
      * When neither [[get]], nor [[set]] specified, the property access does not change.
      *
-     * @param component  Target component instance.
-     * @param key  Property key.
+     * @param component - Target component instance.
+     * @param key - Property key.
      *
      * @returns Property value.
      */
@@ -346,9 +346,9 @@ export namespace ComponentProperty {
      *
      * When neither [[get]], nor [[set]] specified, the property access does not change.
      *
-     * @param component  Target component instance.
-     * @param value  New property value.
-     * @param key  Property key.
+     * @param component - Target component instance.
+     * @param value - New property value.
+     * @param key - Property key.
      */
     set?(this: void, component: InstanceType<T>, value: V, key: string | symbol): void;
 
@@ -372,9 +372,9 @@ export const AnonymousComponentProperty__symbol = (/*#__PURE__*/ Symbol('anonymo
  * decorator} by calling appropriate method of returned decorator instance.
  *
  * @category Core
- * @typeparam V  Decorated property value type.
- * @typeparam T  A type of decorated component class.
- * @param define  Component property definition builder.
+ * @typeParam V - Decorated property value type.
+ * @typeParam T - A type of decorated component class.
+ * @param define - Component property definition builder.
  *
  * @returns Component property decorator.
  */

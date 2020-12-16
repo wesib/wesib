@@ -2,17 +2,8 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { nextArgs } from '@proc7ts/call-thru';
-import {
-  EventReceiver,
-  eventSupply,
-  EventSupply,
-  EventSupply__symbol,
-  eventSupplyOf,
-  OnEvent,
-  StatePath,
-  ValueTracker,
-} from '@proc7ts/fun-events';
+import { OnEvent, StatePath, supplyOn, translateOn, ValueTracker } from '@proc7ts/fun-events';
+import { Supply } from '@proc7ts/primitives';
 import { ComponentContext } from '../../component';
 import { ComponentState } from './component-state';
 import { statePropertyPathTo } from './state-property-path';
@@ -26,16 +17,21 @@ type ComponentWithProperty<T> = {
 
 class StatePropertyTracker<T> extends ValueTracker<T> {
 
-  readonly [EventSupply__symbol] = eventSupply();
+  readonly on: OnEvent<[T, T]>;
+  readonly supply = new Supply();
   private readonly _key: string;
 
   constructor(
       private readonly _context: ComponentContext<ComponentWithProperty<T>>,
       key: PropertyKey,
-      private readonly _path: StatePath,
+      path: StatePath,
   ) {
     super();
     this._key = key as string;
+    this.on = _context.get(ComponentState).track(path).onUpdate.do(
+        translateOn((send, _path, newValue, oldValue) => send(newValue, oldValue)),
+        supplyOn(this),
+    );
   }
 
   get it(): T {
@@ -43,17 +39,9 @@ class StatePropertyTracker<T> extends ValueTracker<T> {
   }
 
   set it(value: T) {
-    if (!eventSupplyOf(this).isOff) {
+    if (!this.supply.isOff) {
       this._context.component[this._key] = value;
     }
-  }
-
-  on(): OnEvent<[T, T]>;
-  on(receiver: EventReceiver<[T, T]>): EventSupply;
-  on(receiver?: EventReceiver<[T, T]>): OnEvent<[T, T]> | EventSupply {
-    return (this.on = this._context.get(ComponentState).track(this._path).onUpdate().thru(
-        (_path, newValue, oldValue) => nextArgs(newValue, oldValue),
-    ).tillOff(this).F)(receiver);
   }
 
 }
@@ -62,10 +50,10 @@ class StatePropertyTracker<T> extends ValueTracker<T> {
  * Creates a tracker of component state value.
  *
  * @category Feature
- * @typeparam T  A type of state property value.
- * @param context  Target component context.
- * @param key  Property key.
- * @param path  Property state path.
+ * @typeParam T - A type of state property value.
+ * @param context - Target component context.
+ * @param key - Property key.
+ * @param path - Property state path.
  *
  * @returns New state property value tracker.
  */

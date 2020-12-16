@@ -1,27 +1,25 @@
-import { nextArgs, nextSkip } from '@proc7ts/call-thru';
-import { EventEmitter, onAny, OnEvent, onEventBy, trackValue } from '@proc7ts/fun-events';
-import { superClassOf } from '@proc7ts/primitives';
+import { EventEmitter, onAny, OnEvent, onEventBy, supplyOn, trackValue, valueOn } from '@proc7ts/fun-events';
+import { asis, superClassOf, Supply } from '@proc7ts/primitives';
 import { ComponentDef__symbol } from '../../component';
 import { ComponentClass, DefinitionSetup } from '../../component/definition';
-import { Unloader } from './unloader.impl';
 
 /**
  * @internal
  */
 export function onPostDefSetup(
     componentType: ComponentClass,
-    unloader: Unloader,
+    supply: Supply,
 ): OnEvent<[DefinitionSetup]> {
 
   const { on } = postDefSetup(componentType);
 
   return onEventBy(receiver => {
-    on.to({
-      supply: receiver.supply.needs(unloader.supply),
+    on({
+      supply: receiver.supply.needs(supply),
       receive(ctx, setup) {
 
-        const whenReady = setup.whenReady().tillOff(unloader.supply).F;
-        const whenComponent = setup.whenComponent().tillOff(unloader.supply).F;
+        const whenReady = setup.whenReady.do(supplyOn(supply));
+        const whenComponent = setup.whenComponent.do(supplyOn(supply));
 
         receiver.receive(ctx, {
           get componentType() {
@@ -34,10 +32,10 @@ export function onPostDefSetup(
             return whenComponent;
           },
           perDefinition(spec) {
-            return unloader.add(() => setup.perDefinition(spec));
+            return setup.perDefinition(spec).needs(supply);
           },
           perComponent(spec) {
-            return unloader.add(() => setup.perComponent(spec));
+            return setup.perComponent(spec).needs(supply);
           },
         });
       },
@@ -71,7 +69,7 @@ export function postDefSetup<T extends object>(componentType: PostDefComponentCl
 
   const tracker = trackValue<DefinitionSetup<T>>();
   const emitter = new EventEmitter<[DefinitionSetup]>();
-  const onSetup: OnEvent<[DefinitionSetup<T>]> = tracker.read().thru(setup => setup ? nextArgs(setup) : nextSkip());
+  const onSetup: OnEvent<[DefinitionSetup<T>]> = tracker.read.do(valueOn(asis));
   const on = onAny(onSetup, emitter);
   const superType = superClassOf(componentType, type => ComponentDef__symbol in type);
 
@@ -79,7 +77,7 @@ export function postDefSetup<T extends object>(componentType: PostDefComponentCl
 
     const superPostDefSetup = postDefSetup(superType);
 
-    on.to(setup => superPostDefSetup.send(setup));
+    on(setup => superPostDefSetup.send(setup));
   }
 
   const result: PostDefSetup<T> = {

@@ -1,7 +1,7 @@
 import { ContextValues, SingleContextKey } from '@proc7ts/context-values';
 import { SingleContextUpKey } from '@proc7ts/context-values/updatable';
-import { AfterEvent, EventEmitter, eventSupply, EventSupply } from '@proc7ts/fun-events';
-import { Class, valueProvider } from '@proc7ts/primitives';
+import { AfterEvent, EventEmitter, onceAfter, supplyAfter } from '@proc7ts/fun-events';
+import { Class, Supply, valueProvider } from '@proc7ts/primitives';
 import { BootstrapContext } from '../../boot';
 import { BootstrapContextRegistry, PerComponentRegistry, PerDefinitionRegistry } from '../../boot/impl';
 import { ComponentDef } from '../../component';
@@ -26,7 +26,7 @@ describe('feature load', () => {
     bsContext = {
       get: bsRegistry.values.get,
       load: jest.fn(),
-      whenReady: makeReady.on().F,
+      whenReady: makeReady.on,
     } as any;
     bsRegistry.provide({ a: BootstrapContext, is: bsContext });
   });
@@ -68,7 +68,7 @@ describe('feature load', () => {
         const request = requester.request(TestFeature);
         const receive = jest.fn();
 
-        bsContext.get(FeatureKey.of(TestFeature).seedKey).once(receive);
+        bsContext.get(FeatureKey.of(TestFeature).seedKey).do(onceAfter)(receive);
         expect(receive).toHaveBeenCalledWith([request, 'is', TestFeature]);
 
         expect(request.feature).toBe(TestFeature);
@@ -78,7 +78,7 @@ describe('feature load', () => {
         const receive = jest.fn();
 
         requester.request(TestFeature);
-        bsContext.get(FeatureKey.of(TestFeature)).once(receive);
+        bsContext.get(FeatureKey.of(TestFeature)).do(onceAfter)(receive);
         expect(receive).toHaveBeenCalledWith(expect.anything());
 
         const loader: FeatureLoader = receive.mock.calls[0][0];
@@ -96,8 +96,8 @@ describe('feature load', () => {
 
         requester.request(TestFeature);
 
-        bsContext.get(FeatureKey.of(Dep1).seedKey).once(receive1);
-        bsContext.get(FeatureKey.of(Dep2).seedKey).once(receive2);
+        bsContext.get(FeatureKey.of(Dep1).seedKey).do(onceAfter)(receive1);
+        bsContext.get(FeatureKey.of(Dep2).seedKey).do(onceAfter)(receive2);
 
         expect(receive1).toHaveBeenCalledWith(
             [expect.any(FeatureRequest), 'is', Dep1],
@@ -129,7 +129,7 @@ describe('feature load', () => {
         const request2 = requester.request(Feature2);
         let depLoader: FeatureLoader | undefined;
 
-        bsContext.get(FeatureKey.of(Dep)).to(ldr => depLoader = ldr);
+        bsContext.get(FeatureKey.of(Dep))(ldr => depLoader = ldr);
 
         expect(depLoader).toBeDefined();
 
@@ -147,7 +147,7 @@ describe('feature load', () => {
         const receive = jest.fn();
 
         requester.request(TestFeature);
-        bsContext.get(FeatureKey.of(Provided).seedKey).once(receive);
+        bsContext.get(FeatureKey.of(Provided).seedKey).do(onceAfter)(receive);
 
         expect(receive).toHaveBeenCalledWith(
             [expect.any(FeatureRequest), 'has', Provided],
@@ -172,7 +172,7 @@ describe('feature load', () => {
 
         let loader: FeatureLoader | undefined;
 
-        bsContext.get(FeatureKey.of(TestFeature)).to(l => loader = l);
+        bsContext.get(FeatureKey.of(TestFeature))(l => loader = l);
 
         requester.request(TestFeature);
         expect(loader!.request.feature).toBe(TestFeature);
@@ -200,7 +200,7 @@ describe('feature load', () => {
 
         let loader: FeatureLoader | undefined;
 
-        bsContext.get(FeatureKey.of(TestFeature)).once(ldr => loader = ldr);
+        bsContext.get(FeatureKey.of(TestFeature)).do(onceAfter)(ldr => loader = ldr);
 
         expect(loader!.request.feature).toBe(Provider);
       });
@@ -214,7 +214,7 @@ describe('feature load', () => {
 
         let loader: FeatureLoader | undefined;
 
-        bsContext.get(FeatureKey.of(TestFeature)).once(ldr => loader = ldr);
+        bsContext.get(FeatureKey.of(TestFeature)).do(onceAfter)(ldr => loader = ldr);
 
         expect(loader!.request.feature).toBe(Provider);
       });
@@ -228,7 +228,7 @@ describe('feature load', () => {
 
         let loader: FeatureLoader | undefined;
 
-        bsContext.get(FeatureKey.of(TestFeature)).once(ldr => loader = ldr);
+        bsContext.get(FeatureKey.of(TestFeature)).do(onceAfter)(ldr => loader = ldr);
 
         expect(loader!.request.feature).toBe(Provider);
       });
@@ -244,7 +244,7 @@ describe('feature load', () => {
 
         let loader: FeatureLoader | undefined;
 
-        bsContext.get(FeatureKey.of(TestFeature)).once(ldr => loader = ldr);
+        bsContext.get(FeatureKey.of(TestFeature)).do(onceAfter)(ldr => loader = ldr);
 
         expect(loader!.request.feature).toBe(Provider2);
       });
@@ -267,7 +267,7 @@ describe('feature load', () => {
         const key = new SingleContextUpKey<string>('test', { byDefault: valueProvider('default') });
         const receive = jest.fn();
 
-        bsContext.get(key).to(receive);
+        bsContext.get(key)(receive);
         expect(receive).toHaveBeenLastCalledWith('default');
 
         FeatureDef.define(
@@ -293,7 +293,7 @@ describe('feature load', () => {
         const key = new SingleContextUpKey<string>('test', { byDefault: valueProvider('default') });
         const receive = jest.fn();
 
-        bsContext.get(key).to(receive);
+        bsContext.get(key)(receive);
         expect(receive).toHaveBeenLastCalledWith('default');
 
         class Dep {}
@@ -322,7 +322,7 @@ describe('feature load', () => {
         const key = new SingleContextUpKey<string>('test-key', { byDefault: () => 'default' });
         const receive = jest.fn();
 
-        perDefinitionValues.get(key).to(receive);
+        perDefinitionValues.get(key)(receive);
 
         FeatureDef.define(
             TestFeature,
@@ -347,7 +347,7 @@ describe('feature load', () => {
         const key = new SingleContextUpKey<string>('test-key', { byDefault: () => 'default' });
         const receive = jest.fn();
 
-        perComponentValues.get(key).to(receive);
+        perComponentValues.get(key)(receive);
 
         FeatureDef.define(
             TestFeature,
@@ -394,7 +394,7 @@ describe('feature load', () => {
         const [loader] = await featureLoader();
         const receive = jest.fn();
 
-        bsContext.get(key).to(receive);
+        bsContext.get(key)(receive);
         expect(receive).toHaveBeenLastCalledWith('default');
 
         await loader.setup();
@@ -418,7 +418,7 @@ describe('feature load', () => {
         const [loader] = await featureLoader();
         const receive = jest.fn();
 
-        bsContext.get(key).to(receive);
+        bsContext.get(key)(receive);
         expect(receive).toHaveBeenLastCalledWith('default');
 
         await loader.init();
@@ -433,7 +433,7 @@ describe('feature load', () => {
           const key = new SingleContextUpKey<string>('test', { byDefault: valueProvider('default') });
           const receive = jest.fn();
 
-          bsContext.get(key).to(receive);
+          bsContext.get(key)(receive);
 
           FeatureDef.define(
               TestFeature,
@@ -566,7 +566,7 @@ describe('feature load', () => {
           const key = new SingleContextUpKey<string>('test-key', { byDefault: () => 'default' });
           const receive = jest.fn();
 
-          perDefinitionValues.get(key).to(receive);
+          perDefinitionValues.get(key)(receive);
 
           FeatureDef.define(
               TestFeature,
@@ -594,7 +594,7 @@ describe('feature load', () => {
           const key = new SingleContextUpKey<string>('test-key', { byDefault: () => 'default' });
           const receive = jest.fn();
 
-          perComponentValues.get(key).to(receive);
+          perComponentValues.get(key)(receive);
 
           FeatureDef.define(
               TestFeature,
@@ -666,16 +666,16 @@ describe('feature load', () => {
 
     function featureLoader(
         feature = TestFeature,
-    ): Promise<readonly [FeatureLoader, EventSupply, AfterEvent<[FeatureLoader?]>]> {
+    ): Promise<readonly [FeatureLoader, Supply, AfterEvent<[FeatureLoader?]>]> {
       return new Promise(resolve => {
 
-        const supply = eventSupply();
+        const supply = new Supply();
 
         requester.request(feature);
 
         const load = bsContext.get(FeatureKey.of(feature));
 
-        load.tillOff(supply).to(
+        load.do(supplyAfter(supply))(
             loader => resolve([loader!, supply, load]),
         ).cuts(supply);
       });
@@ -689,7 +689,7 @@ describe('feature load', () => {
       requester.request(replacement);
 
       await new Promise<FeatureLoader>(resolve => {
-        load.to(ldr => {
+        load(ldr => {
           if (ldr && ldr.request.feature === replacement) {
             resolve(ldr);
           }

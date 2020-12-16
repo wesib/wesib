@@ -29,9 +29,9 @@ export interface ElementObserver extends MutationObserver {
    * To stop the MutationObserver (so that none of its callbacks will be triggered any longer), call
    * [[disconnect]].
    *
-   * @param target  A DOM node within the DOM tree to watch for changes, and to be the root of a subtree of nodes
+   * @param target - A DOM node within the DOM tree to watch for changes, and to be the root of a subtree of nodes
    * to be watched.
-   * @param options  An options that describe what DOM mutations should be reported to the observer's callback.
+   * @param options - An options that describe what DOM mutations should be reported to the observer's callback.
    */
   observe(target: Node, options?: ElementObserverInit): void;
 

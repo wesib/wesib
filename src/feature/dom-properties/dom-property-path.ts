@@ -22,7 +22,7 @@ export type DomPropertyPath<K extends PropertyKey = PropertyKey> = readonly [key
  * Constructs a named DOM property state path.
  *
  * @category Feature
- * @param key  Target property key.
+ * @param key - Target property key.
  *
  * @return DOM property state path.
  */

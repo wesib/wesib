@@ -22,7 +22,7 @@ export type StatePropertyPath<K extends PropertyKey = PropertyKey> = readonly [k
  * Constructs a named component property state path.
  *
  * @category Feature
- * @param key  Target property key.
+ * @param key - Target property key.
  *
  * @return DOM property state path.
  */

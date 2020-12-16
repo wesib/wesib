@@ -3,8 +3,8 @@
  * @module @wesib/wesib
  */
 import { ContextKey, ContextKey__symbol, ContextValueSpec, SingleContextKey } from '@proc7ts/context-values';
-import { EventReceiver, EventSupply, OnEvent } from '@proc7ts/fun-events';
-import { Class } from '@proc7ts/primitives';
+import { OnEvent } from '@proc7ts/fun-events';
+import { Class, Supply, SupplyPeer } from '@proc7ts/primitives';
 import { BootstrapContext, BootstrapSetup } from '../boot';
 import { ComponentContext } from '../component';
 import { ComponentClass, DefinitionContext, DefinitionSetup } from '../component/definition';
@@ -20,7 +20,9 @@ const FeatureContext__key = (/*#__PURE__*/ new SingleContextKey<FeatureContext>(
  *
  * @category Core
  */
-export abstract class FeatureContext extends BootstrapContext implements BootstrapSetup {
+export abstract class FeatureContext
+    extends BootstrapContext
+    implements BootstrapSetup, SupplyPeer {
 
   /**
    * A key of feature context value containing the feature context itself.
@@ -35,93 +37,60 @@ export abstract class FeatureContext extends BootstrapContext implements Bootstr
   abstract readonly feature: Class;
 
   /**
-   * Builds an `OnEvent` sender of feature readiness event.
+   * An `OnEvent` sender of feature readiness event.
    *
    * The registered receiver will be notified once bootstrap is complete and the feature is loaded.
    *
    * If the above conditions satisfied already, the receiver will be notified immediately.
-   *
-   * @returns `OnEvent` sender of ready feature context.
    */
-  abstract whenReady(): OnEvent<[FeatureContext]>;
+  abstract readonly whenReady: OnEvent<[FeatureContext]>;
 
   /**
-   * Registers a receiver of feature readiness event.
-   *
-   * The registered receiver will be notified once bootstrap is complete and the feature is loaded.
-   *
-   * If the above conditions satisfied already, the receiver will be notified immediately.
-   *
-   * @param receiver  Target receiver of ready feature context.
-   *
-   * @returns Feature readiness event supply.
-   */
-  abstract whenReady(receiver: EventReceiver<[FeatureContext]>): EventSupply;
-
-  /**
-   * Builds an `OnEvent` sender of component definition events.
+   * An `OnEvent` sender of component definition events.
    *
    * The registered receiver will be notified when new component class is defined, but before its custom element class
    * constructed.
-   *
-   * @returns `OnEvent` sender of component definition contexts.
    */
-  abstract onDefinition(): OnEvent<[DefinitionContext]>;
+  abstract readonly onDefinition: OnEvent<[DefinitionContext]>;
 
   /**
-   * Starts sending component definition events to the given `receiver`.
-   *
-   * The receiver will be notified when new component class is defined, but before its custom element class
-   * constructed.
-   *
-   * @param receiver  Target receiver of component definition contexts.
-   *
-   * @returns Component definition events supply.
-   */
-  abstract onDefinition(receiver: EventReceiver<[DefinitionContext]>): EventSupply;
-
-  /**
-   * Builds an `OnEvent` sender of component construction events.
+   * An `OnEvent` sender of component construction events.
    *
    * The registered receiver will be notified right before component is constructed.
-   *
-   * @returns `OnEvent` sender of constructed component contexts.
    */
-  abstract onComponent(): OnEvent<[ComponentContext]>;
+  abstract readonly onComponent: OnEvent<[ComponentContext]>;
 
   /**
-   * Starts sending component construction events to the given `receiver`.
+   * Feature supply.
    *
-   * @param receiver  Target receiver of constructed component contexts.
-   *
-   * @returns Component construction events supply.
+   * Cut off once feature unloaded.
    */
-  abstract onComponent(receiver: EventReceiver<[ComponentContext]>): EventSupply;
+  abstract readonly supply: Supply;
 
   /**
    * Provides bootstrap context value.
    *
    * Note that this happens when bootstrap context already exists. To provide a value before bootstrap context created
-   * a [[BootstrapSetup.provide]] method can be used.
+   * a {@link BootstrapSetup.provide} method can be used.
    *
-   * @typeparam Deps  Dependencies tuple type.
-   * @typeparam Src  Source value type.
-   * @typeparam Seed  Value seed type.
-   * @param spec  Context value specifier.
+   * @typeParam TDeps - Dependencies tuple type.
+   * @typeParam TSrc - Source value type.
+   * @typeParam TSeed - Value seed type.
+   * @param spec - Context value specifier.
    *
-   * @returns A function that removes the given context value specifier when called.
+   * @returns A value supply that removes the given context value specifier once cut off.
    */
-  abstract provide<Deps extends any[], Src, Seed>(
-      spec: ContextValueSpec<BootstrapContext, any, Deps, Src, Seed>,
-  ): () => void;
+  abstract provide<TDeps extends any[], TSrc, TSeed>(
+      spec: ContextValueSpec<BootstrapContext, any, TDeps, TSrc, TSeed>,
+  ): Supply;
 
-  abstract perDefinition<Deps extends any[], Src, Seed>(
-      spec: ContextValueSpec<DefinitionContext, any, Deps, Src, Seed>,
-  ): () => void;
+  abstract perDefinition<TDeps extends any[], TSrc, TSeed>(
+      spec: ContextValueSpec<DefinitionContext, any, TDeps, TSrc, TSeed>,
+  ): Supply;
 
-  abstract perComponent<Deps extends any[], Src, Seed>(
-      spec: ContextValueSpec<ComponentContext, any, Deps, Src, Seed>,
-  ): () => void;
+  abstract perComponent<TDeps extends any[], TSrc, TSeed>(
+      spec: ContextValueSpec<ComponentContext, any, TDeps, TSrc, TSeed>,
+  ): Supply;
 
   abstract setupDefinition<T extends object>(componentType: ComponentClass<T>): OnEvent<[DefinitionSetup]>;
 
@@ -132,8 +101,8 @@ export abstract class FeatureContext extends BootstrapContext implements Bootstr
    *
    * Note that custom element definition will happen only when all features configuration complete.
    *
-   * @typeparam T  A type of component.
-   * @param componentType  Component class constructor.
+   * @typeParam T - A type of component.
+   * @param componentType - Component class constructor.
    *
    * @return Custom element class constructor registered as custom element.
    *

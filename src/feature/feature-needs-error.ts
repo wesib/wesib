@@ -31,7 +31,7 @@ export class FeatureNeedsError extends Error {
   /**
    * Constructs feature needs error.
    *
-   * @param needs  Feature needs causing the error.
+   * @param needs - Feature needs causing the error.
    */
   constructor(needs: readonly FeatureNeed[]) {
     super(

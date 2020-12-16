@@ -21,8 +21,8 @@ import { RenderDef } from './render-def';
  * Enables rendering with {@link ElementRenderCtl.renderBy element render control}.
  *
  * @category Feature
- * @typeparam T  A type of decorated component class.
- * @param def  Non-mandatory render definition.
+ * @typeParam T - A type of decorated component class.
+ * @param def - Non-mandatory render definition.
  *
  * @returns Component method decorator.
  */

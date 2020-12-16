@@ -16,7 +16,7 @@ import { RenderExecution } from '@frontmeans/render-scheduler';
  */
 export type ElementRenderer =
 /**
- * @param execution  Render shot execution context.
+ * @param execution - Render shot execution context.
  *
  * @returns Either delegated renderer, or nothing.
  */
