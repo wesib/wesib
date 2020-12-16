@@ -14,12 +14,12 @@ import { mergeFunctions, noop } from '@proc7ts/primitives';
  */
 export type StateUpdater =
 /**
- * @typeParam V - Updated value type
+ * @typeParam TValue - Updated value type
  * @param path - Updated state node path.
  * @param newValue - New value.
  * @param oldValue - Replaced value.
  */
-    <V>(this: void, path: StatePath, newValue: V, oldValue: V) => void;
+    <TValue>(this: void, path: StatePath, newValue: TValue, oldValue: TValue) => void;
 
 export namespace StateUpdater {
 
@@ -30,12 +30,12 @@ export namespace StateUpdater {
    */
   export type Normalized =
   /**
-   * @typeParam V - Updated value type
+   * @typeParam TValue - Updated value type
    * @param path - Normalized path of updated state node.
    * @param newValue - New value.
    * @param oldValue - Replaced value.
    */
-      <V>(this: void, path: StatePath.Normalized, newValue: V, oldValue: V) => void;
+      <TValue>(this: void, path: StatePath.Normalized, newValue: TValue, oldValue: TValue) => void;
 
 }
 

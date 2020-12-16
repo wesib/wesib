@@ -17,10 +17,10 @@ import { ComponentClass } from './definition';
  * Constructed by {@link ComponentProperty} function.
  *
  * @category Core
- * @typeParam V - Property value type.
+ * @typeParam TValue - Property value type.
  * @typeParam T - A type of decorated component class.
  */
-export interface ComponentPropertyDecorator<V, T extends ComponentClass = Class> {
+export interface ComponentPropertyDecorator<TValue, T extends ComponentClass = Class> {
 
   /**
    * Decorates component method.
@@ -33,7 +33,7 @@ export interface ComponentPropertyDecorator<V, T extends ComponentClass = Class>
    * @returns  Either updated property descriptor, or nothing.
    */
   // eslint-disable-next-line
-  <P extends V>(
+  <P extends TValue>(
       this: void,
       proto: InstanceType<T>,
       propertyKey: string | symbol,
@@ -50,7 +50,7 @@ export interface ComponentPropertyDecorator<V, T extends ComponentClass = Class>
    */
   As(
       this: void,
-      value: V,
+      value: TValue,
       key?: string | symbol,
   ): ComponentDecorator<T>;
 
@@ -64,7 +64,7 @@ export interface ComponentPropertyDecorator<V, T extends ComponentClass = Class>
    */
   By(
       this: void,
-      provider: ComponentProperty.Provider<V, InstanceType<T>>,
+      provider: ComponentProperty.Provider<TValue, InstanceType<T>>,
       key?: string | symbol,
   ): ComponentDecorator<T>;
 
@@ -78,7 +78,7 @@ export interface ComponentPropertyDecorator<V, T extends ComponentClass = Class>
    */
   With(
       this: void,
-      accessor: ComponentProperty.Accessor<V, InstanceType<T>>,
+      accessor: ComponentProperty.Accessor<TValue, InstanceType<T>>,
       key?: string | symbol,
   ): ComponentDecorator<T>;
 
@@ -92,7 +92,7 @@ export interface ComponentPropertyDecorator<V, T extends ComponentClass = Class>
    */
   Bind(
       this: void,
-      binder: ComponentProperty.Binder<V, InstanceType<T>>,
+      binder: ComponentProperty.Binder<TValue, InstanceType<T>>,
       key?: string | symbol,
   ): ComponentDecorator<T>;
 
@@ -105,10 +105,10 @@ export namespace ComponentProperty {
    *
    * This function will be called each time the property value is requested.
    *
-   * @typeParam V - Property value type.
+   * @typeParam TValue - Property value type.
    * @typeParam T - A type of component.
    */
-  export type Provider<V, T extends object = any> =
+  export type Provider<TValue, T extends object = any> =
   /**
    * @param component - Component instance.
    * @param key - Target property key.
@@ -119,17 +119,17 @@ export namespace ComponentProperty {
           this: void,
           component: T,
           key: string | symbol,
-      ) => V;
+      ) => TValue;
 
   /**
    * Component property accessor.
    *
    * Allows to read and write property value.
    *
-   * @typeParam V - Property value type.
+   * @typeParam TValue - Property value type.
    * @typeParam T - A type of component.
    */
-  export interface Accessor<V, T extends object = any> {
+  export interface Accessor<TValue, T extends object = any> {
 
     /**
      * Reads property value.
@@ -141,7 +141,7 @@ export namespace ComponentProperty {
      *
      * @returns Property value.
      */
-    get(this: void, component: T, key: string | symbol): V;
+    get(this: void, component: T, key: string | symbol): TValue;
 
     /**
      * Assigns new property value.
@@ -152,7 +152,7 @@ export namespace ComponentProperty {
      * @param value - New property value.
      * @param key - Property key.
      */
-    set(this: void, component: T, value: V, key: string | symbol): void;
+    set(this: void, component: T, value: TValue, key: string | symbol): void;
 
   }
 
@@ -161,10 +161,10 @@ export namespace ComponentProperty {
    *
    * This is a function that binds a {@link BoundAccessor property accessor} to target component.
    *
-   * @typeParam V - Property value type.
+   * @typeParam TValue - Property value type.
    * @typeParam T - A type of component.
    */
-  export type Binder<V, T extends object = any> =
+  export type Binder<TValue, T extends object = any> =
   /**
    * @param component - Target component to bind property accessor to.
    * @param key - Property key.
@@ -175,9 +175,9 @@ export namespace ComponentProperty {
           this: void,
           component: T,
           key: string | symbol,
-      ) => BoundAccessor<V>;
+      ) => BoundAccessor<TValue>;
 
-  export interface BoundAccessor<V> {
+  export interface BoundAccessor<TValue> {
 
     /**
      * Reads bound component's property value.
@@ -186,7 +186,7 @@ export namespace ComponentProperty {
      *
      * @returns Property value.
      */
-    get?(): V;
+    get?(): TValue;
 
     /**
      * Assigns bound component's new property value.
@@ -195,7 +195,7 @@ export namespace ComponentProperty {
      *
      * @param value - New property value.
      */
-    set?(value: V): void;
+    set?(value: TValue): void;
 
   }
 
@@ -205,10 +205,10 @@ export namespace ComponentProperty {
    * Passed to {@link Definer property definer} by {@link ComponentProperty} function to construct a {@link Definition
    * property definition}.
    *
-   * @typeParam V - Property value type.
+   * @typeParam TValue - Property value type.
    * @typeParam T - A type of component class.
    */
-  export interface Descriptor<V, T extends ComponentClass = Class> {
+  export interface Descriptor<TValue, T extends ComponentClass = Class> {
 
     /**
      * Component class constructor.
@@ -257,7 +257,7 @@ export namespace ComponentProperty {
      *
      * @returns Property value.
      */
-    get(this: void, component: InstanceType<T>): V;
+    get(this: void, component: InstanceType<T>): TValue;
 
     /**
      * Assigns new property value.
@@ -267,7 +267,7 @@ export namespace ComponentProperty {
      * @param component - Target component instance.
      * @param value - New property value.
      */
-    set(this: void, component: InstanceType<T>, value: V): void;
+    set(this: void, component: InstanceType<T>, value: TValue): void;
 
   }
 
@@ -276,10 +276,10 @@ export namespace ComponentProperty {
    *
    * This is a function called by {@link ComponentProperty} to define the property.
    *
-   * @typeParam V - Property value type.
+   * @typeParam TValue - Property value type.
    * @typeParam T - A type of component class.
    */
-  export type Definer<V, T extends ComponentClass = Class> =
+  export type Definer<TValue, T extends ComponentClass = Class> =
   /**
    * @param descriptor - Component property descriptor.
    *
@@ -287,8 +287,8 @@ export namespace ComponentProperty {
    */
       (
           this: void,
-          descriptor: Descriptor<V, T>,
-      ) => Definition<V, T> | void;
+          descriptor: Descriptor<TValue, T>,
+      ) => Definition<TValue, T> | void;
 
   /**
    * Property definition to apply to existing property.
@@ -299,10 +299,10 @@ export namespace ComponentProperty {
    * values ignored. Except for {@link Definition.componentDef component definition}, {@link Definition.get value
    * reader}, and {@link Definition.set value setter}.
    *
-   * @typeParam V - Property value type.
+   * @typeParam TValue - Property value type.
    * @typeParam T - A type of component class.
    */
-  export interface Definition<V, T extends ComponentClass = Class> {
+  export interface Definition<TValue, T extends ComponentClass = Class> {
 
     /**
      * Component definition to apply to component.
@@ -337,7 +337,7 @@ export namespace ComponentProperty {
      *
      * @returns Property value.
      */
-    get?(this: void, component: InstanceType<T>, key: string | symbol): V;
+    get?(this: void, component: InstanceType<T>, key: string | symbol): TValue;
 
     /**
      * Assigns new property value.
@@ -350,7 +350,7 @@ export namespace ComponentProperty {
      * @param value - New property value.
      * @param key - Property key.
      */
-    set?(this: void, component: InstanceType<T>, value: V, key: string | symbol): void;
+    set?(this: void, component: InstanceType<T>, value: TValue, key: string | symbol): void;
 
   }
 
@@ -372,20 +372,20 @@ export const AnonymousComponentProperty__symbol = (/*#__PURE__*/ Symbol('anonymo
  * decorator} by calling appropriate method of returned decorator instance.
  *
  * @category Core
- * @typeParam V - Decorated property value type.
+ * @typeParam TValue - Decorated property value type.
  * @typeParam T - A type of decorated component class.
  * @param define - Component property definition builder.
  *
  * @returns Component property decorator.
  */
-export function ComponentProperty<V, T extends ComponentClass = Class>(
-    define: ComponentProperty.Definer<V, T>,
-): ComponentPropertyDecorator<V, T> {
+export function ComponentProperty<TValue, T extends ComponentClass = Class>(
+    define: ComponentProperty.Definer<TValue, T>,
+): ComponentPropertyDecorator<TValue, T> {
 
   const decorator = (
       proto: InstanceType<T>,
       propertyKey: string | symbol,
-      descriptor?: TypedPropertyDescriptor<V>,
+      descriptor?: TypedPropertyDescriptor<TValue>,
   ): any | void => decoratePropertyAccessor(
       proto,
       propertyKey,
@@ -411,7 +411,7 @@ export function ComponentProperty<V, T extends ComponentClass = Class>(
 
         ComponentDef.define(type, componentDef);
 
-        const updated: PropertyAccessorDescriptor<V> = {
+        const updated: PropertyAccessorDescriptor<TValue> = {
           ...desc,
           configurable: configurable ?? desc.configurable,
           enumerable: enumerable ?? desc.enumerable,
@@ -421,7 +421,7 @@ export function ComponentProperty<V, T extends ComponentClass = Class>(
           updated.get = get && function (this: InstanceType<T>) {
             return get(this, propertyKey);
           };
-          updated.set = set && function (this: InstanceType<T>, value: V) {
+          updated.set = set && function (this: InstanceType<T>, value: TValue) {
             set(this, value, propertyKey);
           };
         }
@@ -430,7 +430,7 @@ export function ComponentProperty<V, T extends ComponentClass = Class>(
       },
   );
   const decorateWith = (
-      { get, set }: ComponentProperty.Accessor<V, InstanceType<T>>,
+      { get, set }: ComponentProperty.Accessor<TValue, InstanceType<T>>,
       key: string | symbol = AnonymousComponentProperty__symbol,
       writable: boolean,
   ): ComponentDecorator<T> => Component({
@@ -451,19 +451,19 @@ export function ComponentProperty<V, T extends ComponentClass = Class>(
     },
   });
   const By = (
-      provider: ComponentProperty.Provider<V, InstanceType<T>>,
+      provider: ComponentProperty.Provider<TValue, InstanceType<T>>,
       key?: string | symbol,
   ): ComponentDecorator<T> => decorateWith(
       {
         get(component, key) {
           return provider(component, key);
         },
-      } as ComponentProperty.Accessor<V>,
+      } as ComponentProperty.Accessor<TValue>,
       key,
       false,
   );
 
-  const result = decorator as ComponentPropertyDecorator<V, T>;
+  const result = decorator as ComponentPropertyDecorator<TValue, T>;
 
   result.With = (access, key) => decorateWith(access, key, true);
   result.By = By;
@@ -474,14 +474,14 @@ export function ComponentProperty<V, T extends ComponentClass = Class>(
 
     interface HostComponent {
       [accessor__symbol]?: {
-        get(): V;
-        set(value: V): void;
+        get(): TValue;
+        set(value: TValue): void;
       };
     }
 
     const accessor = (component: HostComponent): {
-      get(): V;
-      set(value: V): void;
+      get(): TValue;
+      set(value: TValue): void;
     } => {
 
       const existing = component[accessor__symbol];

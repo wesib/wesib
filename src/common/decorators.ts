@@ -24,14 +24,18 @@ export type TypedClassDecorator<T extends Class> = (type: T) => T | void;
  * @typeParam T - A type of class the decorated property belongs to.
  */
 export type TypedPropertyDecorator<T extends Class> =
-    <V>(target: InstanceType<T>, propertyKey: string | symbol, descriptor?: TypedPropertyDescriptor<V>) => any | void;
+    <TValue>(
+        target: InstanceType<T>,
+        propertyKey: string | symbol,
+        descriptor?: TypedPropertyDescriptor<TValue>,
+    ) => any | void;
 
 /**
  * Property decorator helper converting a field or property to the one with accessor (`get` and optionally `set`).
  *
  * @category Utility
  * @typeParam T - A type of target object.
- * @typeParam V - A property value type.
+ * @typeParam TValue - A property value type.
  * @param target - Target object containing the property.
  * @param propertyKey - Target property key.
  * @param desc - Target property descriptor, or `undefined` for object fields.
@@ -41,17 +45,17 @@ export type TypedPropertyDecorator<T extends Class> =
  * @returns Updated property descriptor to return from decorator to apply to the property, or `undefined` if there is
  * nothing to update.
  */
-export function decoratePropertyAccessor<T, V>(
+export function decoratePropertyAccessor<T, TValue>(
     target: T,
     propertyKey: string | symbol,
-    desc: TypedPropertyDescriptor<V> | undefined,
-    updateDescriptor: (desc: PropertyAccessorDescriptor<V>) => PropertyAccessorDescriptor<V>,
-): PropertyAccessorDescriptor<V> | undefined {
+    desc: TypedPropertyDescriptor<TValue> | undefined,
+    updateDescriptor: (desc: PropertyAccessorDescriptor<TValue>) => PropertyAccessorDescriptor<TValue>,
+): PropertyAccessorDescriptor<TValue> | undefined {
 
   const isField = !desc;
   const accessorDesc = desc
       ? toPropertyAccessorDescriptor(desc)
-      : fieldAccessorDescriptor(target, propertyKey as keyof T) as unknown as PropertyAccessorDescriptor<V>;
+      : fieldAccessorDescriptor(target, propertyKey as keyof T) as unknown as PropertyAccessorDescriptor<TValue>;
   const updatedDesc = updateDescriptor(accessorDesc);
 
   if (isField && updatedDesc) {

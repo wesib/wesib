@@ -23,9 +23,9 @@ import { domPropertyUpdate } from './dom-property-update.impl';
  *
  * @returns Component property decorator.
  */
-export function DomProperty<V = any, T extends ComponentClass = Class>(
+export function DomProperty<TValue = any, T extends ComponentClass = Class>(
     def: DomPropertyDef<T> = {},
-): ComponentPropertyDecorator<V, T> {
+): ComponentPropertyDecorator<TValue, T> {
   return ComponentProperty(descriptor => {
 
     const { key, get } = descriptor;

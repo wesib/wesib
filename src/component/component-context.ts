@@ -151,7 +151,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    *
    * This is a shorthand for invoking a component {@link StateUpdater state updater} .
    *
-   * @typeParam V - A type of changed value.
+   * @typeParam TValue - A type of changed value.
    * @param key - Changed value key.
    * @param newValue - New value.
    * @param oldValue - Previous value.
@@ -160,7 +160,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
 
   constructor() {
     super();
-    this.updateState = <V>(key: StatePath, newValue: V, oldValue: V): void => {
+    this.updateState = <TValue>(key: StatePath, newValue: TValue, oldValue: TValue): void => {
       this.get(StateUpdater)(key, newValue, oldValue);
     };
   }

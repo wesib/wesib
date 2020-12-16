@@ -6,8 +6,8 @@ import { DomPropertyDescriptor } from './dom-property-descriptor';
 /**
  * @internal
  */
-export function domPropertyDescriptor<V>(
-    propertyDesc: ComponentProperty.Descriptor<V>,
+export function domPropertyDescriptor<TValue>(
+    propertyDesc: ComponentProperty.Descriptor<TValue>,
     {
       propertyKey: key = propertyDesc.key,
       configurable = propertyDesc.configurable,
@@ -16,17 +16,17 @@ export function domPropertyDescriptor<V>(
     }: DomPropertyDef,
 ): DomPropertyDescriptor {
 
-  type ComponentType = { [TKey in ComponentProperty.Descriptor<V>['key']]: V };
+  type ComponentType = { [TKey in ComponentProperty.Descriptor<TValue>['key']]: TValue };
 
   const componentPropertyKey = propertyDesc.key as string;
-  const descriptor: PropertyAccessorDescriptor<V> = {
+  const descriptor: PropertyAccessorDescriptor<TValue> = {
     configurable,
     enumerable,
-    get: function (this: ComponentContextHolder): V {
+    get: function (this: ComponentContextHolder): TValue {
       return ComponentContext.of<ComponentType>(this).component[componentPropertyKey];
     },
     set: writable
-        ? function (this: ComponentContextHolder, value: V) {
+        ? function (this: ComponentContextHolder, value: TValue) {
           ComponentContext.of<ComponentType>(this).component[componentPropertyKey] = value;
         }
         : undefined,
