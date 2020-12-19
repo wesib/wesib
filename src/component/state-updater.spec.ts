@@ -1,5 +1,4 @@
-import { ContextKey__symbol, ContextRegistry, ContextValues } from '@proc7ts/context-values';
-import { ContextSupply } from '@proc7ts/context-values/updatable';
+import { ContextKey__symbol, ContextRegistry, ContextSupply, ContextValues } from '@proc7ts/context-values';
 import { noop, Supply } from '@proc7ts/primitives';
 import { StateUpdater } from './state-updater';
 

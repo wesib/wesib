@@ -5,7 +5,7 @@ import {
   RenderScheduler,
   setRenderScheduler,
 } from '@frontmeans/render-scheduler';
-import { ContextSupply } from '@proc7ts/context-values/updatable';
+import { ContextSupply } from '@proc7ts/context-values';
 import { Supply } from '@proc7ts/primitives';
 import { Feature, FeatureDef } from '../../feature';
 import { bootstrapComponents } from '../bootstrap';

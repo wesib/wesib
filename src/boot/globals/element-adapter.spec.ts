@@ -1,5 +1,4 @@
-import { ContextRegistry, ContextValues } from '@proc7ts/context-values';
-import { ContextSupply } from '@proc7ts/context-values/updatable';
+import { ContextRegistry, ContextSupply, ContextValues } from '@proc7ts/context-values';
 import { Supply } from '@proc7ts/primitives';
 import { ComponentContext, ComponentContext__symbol } from '../../component';
 import { ElementAdapter } from './element-adapter';
