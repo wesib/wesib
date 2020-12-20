@@ -100,6 +100,7 @@
 						<section class="tsd-index-section ">
 							<h3>Accessors</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="@wesib_wesib.ComponentState.html#onUpdate" class="tsd-kind-icon">on<wbr>Update</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="@wesib_wesib.ComponentState.html#update" class="tsd-kind-icon">update</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-static"><a href="@wesib_wesib.ComponentState.html#_ContextKey__symbol_" class="tsd-kind-icon">[<wbr>Context<wbr>Key__symbol]</a></li>
 							</ul>
@@ -109,7 +110,6 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="@wesib_wesib.ComponentState.html#_OnEvent__symbol_" class="tsd-kind-icon">[<wbr>OnEvent__symbol]</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="@wesib_wesib.ComponentState.html#done" class="tsd-kind-icon">done</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="@wesib_wesib.ComponentState.html#onUpdate" class="tsd-kind-icon">on<wbr>Update</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="@wesib_wesib.ComponentState.html#track" class="tsd-kind-icon">track</a></li>
 							</ul>
 						</section>
@@ -119,17 +119,43 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Accessors</h2>
 				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
+					<a name="onUpdate" class="tsd-anchor"></a>
+					<h3>on<wbr>Update</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> onUpdate<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">OnStateUpdate</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="@wesib_wesib.ComponentState.html">ComponentState</a>.<a href="@wesib_wesib.ComponentState.html#onUpdate">onUpdate</a></p>
+								<ul>
+									<li>Defined in proc7ts/fun-events/index.d.ts:1358</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>{@link OnStateUpdate state updates sender}.</p>
+								</div>
+								<p>A state update will be sent to it whenever an <code>update()</code> function is called.</p>
+								<p>The <code>[OnEvent__symbol]</code> property is an alias of this one.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">OnStateUpdate</span></h4>
+							<p>State updates sender.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
 					<a name="update" class="tsd-anchor"></a>
 					<h3>update</h3>
 					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> update<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span>&lt;V&gt;<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, path<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">StatePath</span>, newValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">V</span>, oldValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">V</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> update<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span>&lt;T&gt;<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, path<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">StatePath</span>, newValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, oldValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="@wesib_wesib.ComponentState.html">ComponentState</a>.<a href="@wesib_wesib.ComponentState.html#update">update</a></p>
 								<ul>
-									<li>Defined in proc7ts/fun-events/index.d.ts:1359</li>
+									<li>Defined in proc7ts/fun-events/index.d.ts:1370</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -138,18 +164,18 @@
 								</div>
 								<p>All receivers registered with <a href="@wesib_wesib.ComponentState.html#onUpdate">onUpdate</a> will receive this update.</p>
 							</div>
-							<h4 class="tsd-returns-title">Returns &lt;V&gt;<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, path<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">StatePath</span>, newValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">V</span>, oldValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">V</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></h4>
+							<h4 class="tsd-returns-title">Returns &lt;T&gt;<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, path<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">StatePath</span>, newValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, oldValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></h4>
 							<ul class="tsd-parameters">
 								<li class="tsd-parameter-signature">
 									<ul class="tsd-signatures tsd-kind-type-literal tsd-has-type-parameter">
-										<li class="tsd-signature tsd-kind-icon">&lt;V&gt;<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, path<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">StatePath</span>, newValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">V</span>, oldValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">V</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+										<li class="tsd-signature tsd-kind-icon">&lt;T&gt;<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, path<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">StatePath</span>, newValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, oldValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 									</ul>
 									<ul class="tsd-descriptions">
 										<li class="tsd-description">
 											<h4 class="tsd-type-parameters-title">Type parameters</h4>
 											<ul class="tsd-type-parameters">
 												<li>
-													<h4>V</h4>
+													<h4>T</h4>
 													<div class="tsd-comment tsd-typography">
 														<p>A type of changed value.</p>
 													</div>
@@ -164,13 +190,13 @@
 													<h5>path: <span class="tsd-signature-type">StatePath</span></h5>
 												</li>
 												<li>
-													<h5>newValue: <span class="tsd-signature-type">V</span></h5>
+													<h5>newValue: <span class="tsd-signature-type">T</span></h5>
 													<div class="tsd-comment tsd-typography">
 														<p>New value.</p>
 													</div>
 												</li>
 												<li>
-													<h5>oldValue: <span class="tsd-signature-type">V</span></h5>
+													<h5>oldValue: <span class="tsd-signature-type">T</span></h5>
 													<div class="tsd-comment tsd-typography">
 														<p>Previous value.</p>
 													</div>
@@ -194,7 +220,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/2303d14/src/feature/state/component-state.ts#L52">wesib/wesib/src/feature/state/component-state.ts:52</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/ef22e3e/src/feature/state/component-state.ts#L52">wesib/wesib/src/feature/state/component-state.ts:52</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">ContextKey</span><span class="tsd-signature-symbol">&lt;</span><a href="@wesib_wesib.ComponentState.html" class="tsd-signature-type">ComponentState</a><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -215,7 +241,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="@wesib_wesib.ComponentState.html">ComponentState</a>.<a href="@wesib_wesib.ComponentState.html#_OnEvent__symbol_">[OnEvent__symbol]</a></p>
 								<ul>
-									<li>Defined in proc7ts/fun-events/index.d.ts:1348</li>
+									<li>Defined in proc7ts/fun-events/index.d.ts:1359</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">OnStateUpdate</span></h4>
@@ -226,14 +252,14 @@
 					<a name="done" class="tsd-anchor"></a>
 					<h3>done</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">done<span class="tsd-signature-symbol">(</span>reason<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">done<span class="tsd-signature-symbol">(</span>reason<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="@wesib_wesib.ComponentState.html">ComponentState</a>.<a href="@wesib_wesib.ComponentState.html#done">done</a></p>
 								<ul>
-									<li>Defined in proc7ts/fun-events/index.d.ts:1375</li>
+									<li>Defined in proc7ts/fun-events/index.d.ts:1386</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -245,64 +271,13 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> reason: <span class="tsd-signature-type">any</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> reason: <span class="tsd-signature-type">unknown</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>An optional reason to stop tracking.</p>
 									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-					<a name="onUpdate" class="tsd-anchor"></a>
-					<h3>on<wbr>Update</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">on<wbr>Update<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">OnStateUpdate</span></li>
-						<li class="tsd-signature tsd-kind-icon">on<wbr>Update<span class="tsd-signature-symbol">(</span>receiver<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">StateUpdateReceiver</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EventSupply</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Inherited from <a href="@wesib_wesib.ComponentState.html">ComponentState</a>.<a href="@wesib_wesib.ComponentState.html#onUpdate">onUpdate</a></p>
-								<ul>
-									<li>Defined in proc7ts/fun-events/index.d.ts:1339</li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Builds a {@link OnStateUpdate state updates sender}.</p>
-								</div>
-								<p>A state update will be sent to it whenever an <code>update()</code> function is called.</p>
-								<p>The <code>[OnEvent__symbol]</code> property is an alias of this one.</p>
-							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">OnStateUpdate</span></h4>
-							<p>State updates sender.</p>
-						</li>
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Inherited from <a href="@wesib_wesib.ComponentState.html">ComponentState</a>.<a href="@wesib_wesib.ComponentState.html#onUpdate">onUpdate</a></p>
-								<ul>
-									<li>Defined in proc7ts/fun-events/index.d.ts:1347</li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Registers a receiver of state updates.</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>receiver: <span class="tsd-signature-type">StateUpdateReceiver</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>State updates receiver to register.</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">EventSupply</span></h4>
-							<p>A supply of state updates.</p>
 						</li>
 					</ul>
 				</section>
@@ -317,7 +292,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="@wesib_wesib.ComponentState.html">ComponentState</a>.<a href="@wesib_wesib.ComponentState.html#track">track</a></p>
 								<ul>
-									<li>Defined in proc7ts/fun-events/index.d.ts:1367</li>
+									<li>Defined in proc7ts/fun-events/index.d.ts:1378</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -360,6 +335,9 @@
 						<a href="@wesib_wesib.ComponentState.html" class="tsd-kind-icon">Component<wbr>State</a>
 						<ul>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
+								<a href="@wesib_wesib.ComponentState.html#onUpdate" class="tsd-kind-icon">on<wbr>Update</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
 								<a href="@wesib_wesib.ComponentState.html#update" class="tsd-kind-icon">update</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
@@ -370,9 +348,6 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 								<a href="@wesib_wesib.ComponentState.html#done" class="tsd-kind-icon">done</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="@wesib_wesib.ComponentState.html#onUpdate" class="tsd-kind-icon">on<wbr>Update</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 								<a href="@wesib_wesib.ComponentState.html#track" class="tsd-kind-icon">track</a>
