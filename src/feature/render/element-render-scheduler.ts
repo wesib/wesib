@@ -21,7 +21,7 @@ import { RenderDef } from './render-def';
  */
 export type ElementRenderScheduler =
 /**
- * @param options  Options of constructed element render schedule.
+ * @param options - Options of constructed element render schedule.
  *
  * @returns New render schedule.
  */
@@ -51,7 +51,7 @@ export interface ElementRenderScheduleOptions extends RenderScheduleOptions, Ren
   /**
    * Reports rendering error. E.g. a render shot execution failure.
    *
-   * @param messages  Error messages to report.
+   * @param messages - Error messages to report.
    */
   error?(...messages: any[]): void;
 
@@ -71,7 +71,7 @@ function newElementRenderScheduler(context: ContextValues): ElementRenderSchedul
       recentShot.it(execution);
     };
 
-    renderCtl.renderBy(renderer, RenderDef.fulfill({ on: recentShot.on() }, opts));
+    renderCtl.renderBy(renderer, RenderDef.fulfill({ on: recentShot.on }, opts));
 
     return (shot: RenderShot): void => {
       recentShot.it = execution => shot(execution); // Ensure render shot always updated

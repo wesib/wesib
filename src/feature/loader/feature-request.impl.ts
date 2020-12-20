@@ -1,4 +1,4 @@
-import { Class, mergeFunctions, setOfElements } from '@proc7ts/primitives';
+import { Class, setOfElements, Supply, SupplyPeer } from '@proc7ts/primitives';
 import { ComponentDef, ComponentDef__symbol } from '../../component';
 import { FeatureDef } from '../feature-def';
 import { FeatureNeedsError } from '../feature-needs-error';
@@ -18,15 +18,15 @@ export type FeatureNeedClause = [FeatureRequest, 'needs' | 'has', Class];
 /**
  * @internal
  */
-export class FeatureRequest {
+export class FeatureRequest implements SupplyPeer {
 
   readonly def: FeatureDef.Options;
+  readonly supply = new Supply();
   private _uses = 0;
 
   constructor(
       private readonly _requester: FeatureRequester,
       readonly feature: Class,
-      private _revoke: () => void,
   ) {
     this.def = featureDef(feature);
   }
@@ -37,31 +37,30 @@ export class FeatureRequest {
     const { registry } = requester;
     const isClause: FeatureClause = [this, 'is', this.feature];
 
-    this._revokeBy(registry.provide({
+    registry.provide({
       a: FeatureKey.of(this.feature),
       is: isClause,
-    }));
+    }).needs(this);
 
     for (const feature of setOfElements(this.def.has)) {
 
       const clause: FeatureNeedClause = [this, 'has', feature];
 
-      this._revokeBy(registry.provide({ a: FeatureKey.of(feature), is: clause }));
+      registry.provide({ a: FeatureKey.of(feature), is: clause }).needs(this);
 
       // Request the provided feature _after_ provider
       const request = requester.request(feature, [...clauses, clause]);
 
-      this._revokeBy(() => request.unuse());
+      this.supply.whenOff(() => request.unuse());
     }
 
     for (const feature of setOfElements(this.def.needs)) {
 
       const clause: FeatureNeedClause = [this, 'needs', feature];
-
       const request = requester.request(feature, [...clauses, clause]);
 
-      this._revokeBy(() => request.unuse());
-      this._revokeBy(registry.provide({ a: FeatureKey.of(feature), is: clause }));
+      this.supply.whenOff(() => request.unuse());
+      registry.provide({ a: FeatureKey.of(feature), is: clause }).needs(this);
     }
 
     this._uses = 1;
@@ -71,7 +70,9 @@ export class FeatureRequest {
 
   reuse(clauses: readonly FeatureNeedClause[]): this {
     if (!this._uses) {
-      throw new FeatureNeedsError(clauses.map(([{ feature }, reason, need]) => [feature, reason, need]));
+      throw new FeatureNeedsError(clauses.map(
+          ([{ feature }, reason, need]) => [feature, reason, need],
+      ));
     }
 
     ++this._uses;
@@ -81,12 +82,8 @@ export class FeatureRequest {
 
   unuse(): void {
     if (!--this._uses) {
-      this._revoke();
+      this.supply.off();
     }
-  }
-
-  private _revokeBy(revoke: () => void): void {
-    this._revoke = mergeFunctions(revoke, this._revoke);
   }
 
 }

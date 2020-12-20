@@ -6,11 +6,11 @@ import { StatePropertyUpdateReceiver } from './state-property.decorator';
 /**
  * @internal
  */
-export type StatePropertyUpdateCallback<T extends object> = <K extends keyof T>(
+export type StatePropertyUpdateCallback<T extends object> = <TKey extends keyof T>(
     this: void,
     component: T,
-    newValue: T[K],
-    oldValue: T[K],
+    newValue: T[TKey],
+    oldValue: T[TKey],
 ) => void;
 
 /**
@@ -35,11 +35,11 @@ export function statePropertyUpdate<T extends object>(
   };
 }
 
-function updateStatePropertyState<T extends object, K extends keyof T>(
+function updateStatePropertyState<T extends object, TKey extends keyof T>(
     component: T,
-    path: StatePropertyPath<K>,
-    newValue: T[K],
-    oldValue: T[K],
+    path: StatePropertyPath<TKey>,
+    newValue: T[TKey],
+    oldValue: T[TKey],
 ): void {
   if (newValue !== oldValue) {
     ComponentContext.of(component).updateState(path, newValue, oldValue);

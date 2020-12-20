@@ -1,4 +1,4 @@
-import { AfterEvent, EventEmitter, OnEvent, onEventBy, trackValue } from '@proc7ts/fun-events';
+import { AfterEvent, EventEmitter, mapAfter_, OnEvent, onEventBy, trackValue } from '@proc7ts/fun-events';
 import { ComponentContext } from '../../component';
 
 export class WhenComponent<T extends object> {
@@ -34,11 +34,13 @@ export class WhenComponent<T extends object> {
 
       ++currentRev.it;
     });
-    this.readNotifier = currentRev.read().keepThru_(
-        rev => (context, notifiedRev) => {
-          created.send(context, notifiedRev);
-          return rev;
-        },
+    this.readNotifier = currentRev.read.do(
+        mapAfter_(
+            rev => (context, notifiedRev) => {
+              created.send(context, notifiedRev);
+              return rev;
+            },
+        ),
     );
   }
 

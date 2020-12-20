@@ -20,7 +20,7 @@ export interface AttributeRegistry {
   /**
    * Declares component element's attribute.
    *
-   * @param descriptor  Attribute descriptor.
+   * @param descriptor - Attribute descriptor.
    */
   declareAttribute(descriptor: AttributeDescriptor): void;
 

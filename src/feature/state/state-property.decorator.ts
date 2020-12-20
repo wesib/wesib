@@ -15,14 +15,14 @@ import { statePropertyUpdate } from './state-property-update.impl';
  * Once such property updated, the component state is {@link ComponentContext.updateState also updated}.
  *
  * @category Feature
- * @typeparam T  A type of decorated component class.
- * @param def  Custom element property definition.
+ * @typeParam T - A type of decorated component class.
+ * @param def - Custom element property definition.
  *
  * @returns Component property decorator.
  */
-export function StateProperty<V = any, T extends ComponentClass = Class>(
+export function StateProperty<TValue = any, T extends ComponentClass = Class>(
     { updateState }: StatePropertyDef = {},
-): ComponentPropertyDecorator<V, T> {
+): ComponentPropertyDecorator<TValue, T> {
   return ComponentProperty(({ get, set, key }) => {
     if (updateState !== false) {
 
@@ -73,20 +73,20 @@ export interface StatePropertyDef<T extends object = any> {
  * Component state property updates receiver invoked when its value changed.
  *
  * @category Feature
- * @typeparam T  A type of component.
+ * @typeParam T - A type of component.
  */
 export type StatePropertyUpdateReceiver<T extends object> =
 /**
- * @typeparam K  A type of component property keys.
- * @param component  Component instance.
- * @param path  The changed property state path in the form of `[StatePropertyPath__root, propertyKey]`.
- * @param newValue  New property value.
- * @param oldValue  Previous property value.
+ * @typeParam TKey - A type of component property keys.
+ * @param component - Component instance.
+ * @param path - The changed property state path in the form of `[StatePropertyPath__root, propertyKey]`.
+ * @param newValue - New property value.
+ * @param oldValue - Previous property value.
  */
-    <K extends keyof T>(
+    <TKey extends keyof T>(
         this: void,
         component: T,
-        path: StatePropertyPath<K>,
-        newValue: T[K],
-        oldValue: T[K],
+        path: StatePropertyPath<TKey>,
+        newValue: T[TKey],
+        oldValue: T[TKey],
     ) => void;

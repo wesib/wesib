@@ -6,11 +6,11 @@ import { DomPropertyPath, domPropertyPathTo } from './dom-property-path';
 /**
  * @internal
  */
-export type DomPropertyUpdateCallback<T extends object> = <K extends keyof T>(
+export type DomPropertyUpdateCallback<T extends object> = <TKey extends keyof T>(
     this: void,
     component: T,
-    newValue: T[K],
-    oldValue: T[K],
+    newValue: T[TKey],
+    oldValue: T[TKey],
 ) => void;
 
 /**
@@ -34,11 +34,11 @@ export function domPropertyUpdate<T extends object>(
   };
 }
 
-function updateDomPropertyState<T extends object, K extends keyof T>(
+function updateDomPropertyState<T extends object, TKey extends keyof T>(
     component: T,
-    path: DomPropertyPath<K>,
-    newValue: T[K],
-    oldValue: T[K],
+    path: DomPropertyPath<TKey>,
+    newValue: T[TKey],
+    oldValue: T[TKey],
 ): void {
   if (newValue !== oldValue) {
     ComponentContext.of(component).updateState(path, newValue, oldValue);

@@ -1,4 +1,3 @@
-import { eventSupplyOf } from '@proc7ts/fun-events';
 import { Component, ComponentContext } from '../component';
 import { ComponentClass } from '../component/definition';
 import { Feature } from '../feature';
@@ -156,7 +155,7 @@ describe('component instantiation', () => {
         class TestComponent {
 
           constructor(ctx: ComponentContext) {
-            eventSupplyOf(ctx)
+            ctx.supply
                 .whenOff(whenDestroyed)
                 .whenOff(() => expect(ctx.connected).toBe(false));
           }

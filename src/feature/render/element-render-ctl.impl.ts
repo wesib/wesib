@@ -1,6 +1,5 @@
 import { immediateRenderScheduler, RenderExecution } from '@frontmeans/render-scheduler';
-import { EventSupply } from '@proc7ts/fun-events';
-import { noop } from '@proc7ts/primitives';
+import { noop, Supply } from '@proc7ts/primitives';
 import { DefaultRenderScheduler } from '../../boot/globals';
 import { ComponentContext } from '../../component';
 import { ElementRenderCtl } from './element-render-ctl';
@@ -30,7 +29,7 @@ export class ElementRenderCtl$ implements ElementRenderCtl {
   renderBy(
       renderer: ElementRenderer,
       def: RenderDef = {},
-  ): EventSupply {
+  ): Supply {
 
     const spec = RenderDef.spec(this._context, def);
     const trigger = RenderDef.trigger(this._context, spec);
@@ -44,12 +43,11 @@ export class ElementRenderCtl$ implements ElementRenderCtl {
     const onUpdate = whenConnected
         ? () => this._context.connected && scheduleRenderer()
         : () => this._context.settled && scheduleRenderer();
-    const supply = trigger
-        .to(onUpdate)
+    const supply = trigger(onUpdate)
         .needs(this._context)
         .whenOff(cancelRenderer);
 
-    (whenConnected ? this._context.whenConnected() : this._context.whenSettled()).to(startRendering);
+    (whenConnected ? this._context.whenConnected : this._context.whenSettled)(startRendering);
 
     const immediateSchedule = immediateRenderScheduler();
 

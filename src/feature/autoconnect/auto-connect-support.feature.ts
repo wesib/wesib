@@ -21,10 +21,10 @@ const AutoConnectSupport__feature: FeatureDef = {
  * A feature responsible for mounted components connection state tracking.
  *
  * By default, a mounted component connection state is not tracked automatically. So, a
- * [[ComponentMount.checkConnected]] should be called to update it.
+ * {@link ComponentMount.checkConnected} should be called to update it.
  *
- * This feature tracks the DOM tree manipulations within [[BootstrapRoot]] with [[ElementObserver]]. The latter updates
- * the mounted component connection when its element is added or removed from the document.
+ * This feature tracks the DOM tree manipulations within {@link BootstrapRoot} with {@link ElementObserver}.
+ * The latter updates the mounted component connection when its element is added or removed from the document.
  *
  * Tracks mounted components connection state within shadow root if shadow root attachment is reported by
  * {@link ShadowDomEvent wesib:shadowAttached} event.

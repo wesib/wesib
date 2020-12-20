@@ -1,5 +1,4 @@
 import { ContextKey, SingleContextKey } from '@proc7ts/context-values';
-import { eventSupplyOf } from '@proc7ts/fun-events';
 import { Class } from '@proc7ts/primitives';
 import { ComponentContext, ComponentDef, ComponentDef__symbol, ComponentEvent, ComponentMount } from '../../component';
 import { ComponentClass, DefinitionContext } from '../../component/definition';
@@ -376,7 +375,7 @@ describe('boot', () => {
         it('listens for component events', () => {
 
           const listener = jest.fn().mockName('event listener');
-          const supply = componentContext.on('test-event').to(listener);
+          const supply = componentContext.on('test-event')(listener);
 
           expect(addEventListenerSpy).toHaveBeenCalledWith('test-event', expect.any(Function), undefined);
 
@@ -413,7 +412,7 @@ describe('boot', () => {
 
           const destroyed = jest.fn();
 
-          eventSupplyOf(componentContext).whenOff(destroyed);
+          componentContext.supply.whenOff(destroyed);
           componentContext.element.disconnectedCallback();
 
           expect(destroyed).toHaveBeenCalledWith(undefined);
@@ -423,7 +422,7 @@ describe('boot', () => {
           const destroyed = jest.fn();
           const reason = 'Destruction reason';
 
-          eventSupplyOf(componentContext).whenOff(destroyed);
+          componentContext.supply.whenOff(destroyed);
           componentContext.destroy(reason);
 
           expect(destroyed).toHaveBeenCalledWith(reason);
@@ -601,7 +600,7 @@ describe('boot', () => {
 
           const disconnected = jest.fn();
 
-          eventSupplyOf(context).whenOff(disconnected);
+          context.supply.whenOff(disconnected);
           expect(disconnected).not.toHaveBeenCalled();
 
           mount.connect();
@@ -618,7 +617,7 @@ describe('boot', () => {
 
           const disconnected = jest.fn();
 
-          eventSupplyOf(context).whenOff(disconnected);
+          context.supply.whenOff(disconnected);
           mount.checkConnected();
 
           expect(disconnected).not.toHaveBeenCalled();
@@ -648,7 +647,7 @@ describe('boot', () => {
 
         const disconnected = jest.fn();
 
-        eventSupplyOf(context).whenOff(disconnected);
+        context.supply.whenOff(disconnected);
 
         const reason = 'test';
 

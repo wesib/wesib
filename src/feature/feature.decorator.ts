@@ -17,13 +17,13 @@ import { FeatureDef } from './feature-def';
  * }
  * ```
  *
- * Such feature can be passed to [[bootstrapComponents]] function or referenced by other features.
+ * Such feature can be passed to {@link bootstrapComponents} function or referenced by other features.
  *
- * This is an alternative to direct call to [[FeatureDef.define]] method.
+ * This is an alternative to direct call to {@link FeatureDef.define} method.
  *
  * @category Core
- * @typeparam T  A type of decorated feature class.
- * @param defs  Feature definitions.
+ * @typeParam T - A type of decorated feature class.
+ * @param defs - Feature definitions.
  *
  * @returns A feature class decorator.
  */

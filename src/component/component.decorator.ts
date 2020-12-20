@@ -12,10 +12,10 @@ import { ComponentClass } from './definition';
  * In addition to being a decorator for component class, it may also serve as {@link ComponentDef component definition}.
  * Thus it can be added as parameter to {@link Component @Component} decorator, or used as class decorator by itself.
  *
- * Constructed by [[Component]] function.
+ * Constructed by {@link Component} function.
  *
  * @category Core
- * @typeparam T  A type of decorated component class.
+ * @typeParam T - A type of decorated component class.
  */
 export type ComponentDecorator<T extends ComponentClass = Class> =
     & ((this: void, type: T) => T | void)
@@ -32,14 +32,14 @@ export type ComponentDecorator<T extends ComponentClass = Class> =
  * }
  * ```
  *
- * Such component can be registered with [[FeatureContext.define]] method or used as a feature, e.g. passed to
- * [[bootstrapComponents]] function, or added to [[FeatureDef.Options.needs]] property of another feature.
+ * Such component can be registered with {@link FeatureContext.define} method or used as a feature, e.g. passed to
+ * {@link bootstrapComponents} function, or added to {@link FeatureDef.Options.needs} property of another feature.
  *
- * This is an alternative to direct call to [[ComponentDef.Options.define]] method.
+ * This is an alternative to direct call to {@link ComponentDef.Options.define} method.
  *
  * @category Core
- * @typeparam T  A type of decorated component class.
- * @param defs  Component definitions.
+ * @typeParam T - A type of decorated component class.
+ * @param defs - Component definitions.
  *
  * @returns A component class decorator.
  */

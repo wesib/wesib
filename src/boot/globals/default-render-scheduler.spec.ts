@@ -5,8 +5,8 @@ import {
   RenderScheduler,
   setRenderScheduler,
 } from '@frontmeans/render-scheduler';
-import { ContextSupply } from '@proc7ts/context-values/updatable';
-import { eventSupply } from '@proc7ts/fun-events';
+import { ContextSupply } from '@proc7ts/context-values';
+import { Supply } from '@proc7ts/primitives';
 import { Feature, FeatureDef } from '../../feature';
 import { bootstrapComponents } from '../bootstrap';
 import { BootstrapContext } from '../bootstrap-context';
@@ -88,7 +88,7 @@ describe('boot', () => {
     });
     it('throws when context is destroyed', async () => {
 
-      const contextSupply = eventSupply();
+      const contextSupply = new Supply();
       const scheduler = await bootstrap(undefined, {
         setup(setup) {
           setup.provide({ a: ContextSupply, is: contextSupply });
@@ -118,7 +118,7 @@ describe('boot', () => {
       )
       class TestFeature {}
 
-      return bootstrapComponents(TestFeature).whenReady();
+      return bootstrapComponents(TestFeature).whenReady;
     }
 
     async function bootstrap(

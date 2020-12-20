@@ -14,11 +14,9 @@ import { property2attributeName } from './property2attribute-name';
 /**
  * Creates a component decorator declaring supported custom element's attributes.
  *
- * This decorator automatically enables [[AttributesSupport]] feature.
- *
  * @category Feature
- * @typeparam T  A type of decorated component class.
- * @param items  Attributes definition options.
+ * @typeParam T - A type of decorated component class.
+ * @param items - Attributes definition options.
  *
  * @return New component decorator.
  */
@@ -62,7 +60,7 @@ export namespace Attributes {
    *
    * This is either an attribute name (_camelCase_ or _dash-style_), or a per-attribute options map.
    *
-   * @typeparam T  A type of component.
+   * @typeParam T - A type of component.
    */
   export type Item<T extends object> = Map<T> | string;
 
@@ -78,7 +76,7 @@ export namespace Attributes {
    * - a state value key to update, or
    * - an attribute update receiver function with custom state update logic.
    *
-   * @typeparam T  A type of component.
+   * @typeParam T - A type of component.
    */
   export interface Map<T extends object> {
     readonly [name: string]: boolean | StatePath | AttributeUpdateReceiver<T>;

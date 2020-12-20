@@ -9,7 +9,7 @@
  * - other characters are left unchanged.
  *
  * @category Feature
- * @param name  Property name to convert.
+ * @param name - Property name to convert.
  *
  * @returns  _dash-style_ attribute name.
  */

@@ -1,14 +1,5 @@
-import { nextArg, nextArgs, nextSkip } from '@proc7ts/call-thru';
-import {
-  EventReceiver,
-  eventSupply,
-  EventSupply,
-  EventSupply__symbol,
-  eventSupplyOf,
-  OnEvent,
-  trackValue,
-} from '@proc7ts/fun-events';
-import { valueProvider } from '@proc7ts/primitives';
+import { onceOn, OnEvent, trackValue, valueOn_ } from '@proc7ts/fun-events';
+import { Supply, valueProvider } from '@proc7ts/primitives';
 import { ComponentContext, ComponentContext__symbol, ComponentContextHolder, ComponentEvent } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { DefinitionContext$ } from './definition-context.impl';
@@ -26,6 +17,9 @@ const enum ComponentStatus {
  */
 export abstract class ComponentContext$<T extends object> extends ComponentContext<T> {
 
+  readonly whenReady: OnEvent<[this]>;
+  readonly whenSettled: OnEvent<[this]>;
+  readonly whenConnected: OnEvent<[this]>;
   readonly get: ComponentContext<T>['get'];
   private _status = trackValue<ComponentStatus>(ComponentStatus.Building);
 
@@ -34,6 +28,19 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
       readonly element: any,
   ) {
     super();
+
+    this.whenReady = this._status.read.do(
+        valueOn_(status => !!status && this),
+        onceOn,
+    );
+    this.whenSettled = this._status.read.do(
+        valueOn_(status => status >= ComponentStatus.Settled && this),
+        onceOn,
+    );
+    this.whenConnected = this._status.read.do(
+        valueOn_(status => status >= ComponentStatus.Connected && this),
+        onceOn,
+    );
 
     const registry = _definitionContext._newComponentRegistry();
 
@@ -50,27 +57,19 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
   }
 
   get settled(): boolean {
-    return this._status.it >= ComponentStatus.Settled && !eventSupplyOf(this).isOff;
+    return this._status.it >= ComponentStatus.Settled && !this.supply.isOff;
   }
 
   get connected(): boolean {
-    return this._status.it >= ComponentStatus.Connected && !eventSupplyOf(this).isOff;
+    return this._status.it >= ComponentStatus.Connected && !this.supply.isOff;
   }
 
-  get [EventSupply__symbol](): EventSupply {
-    return eventSupplyOf(this._status);
+  get supply(): Supply {
+    return this._status.supply;
   }
 
   _component(): T {
     throw new TypeError('Component is not constructed yet. Consider to use a `whenReady()` callback');
-  }
-
-  whenReady(): OnEvent<[this]>;
-  whenReady(receiver: EventReceiver<[this]>): EventSupply;
-  whenReady(receiver?: EventReceiver<[this]>): OnEvent<[this]> | EventSupply {
-    return (this.whenReady = this._status.read().thru_(
-        status => status ? nextArgs(this) : nextSkip(),
-    ).once().F)(receiver);
   }
 
   settle(): void {
@@ -80,25 +79,9 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
     }
   }
 
-  whenSettled(): OnEvent<[this]>;
-  whenSettled(receiver: EventReceiver<[this]>): EventSupply;
-  whenSettled(receiver?: EventReceiver<[this]>): OnEvent<[this]> | EventSupply {
-    return (this.whenSettled = this._status.read().thru_(
-        status => status >= ComponentStatus.Settled ? nextArg(this) : nextSkip(),
-    ).once().F)(receiver);
-  }
-
-  whenConnected(): OnEvent<[this]>;
-  whenConnected(receiver: EventReceiver<[this]>): EventSupply;
-  whenConnected(receiver?: EventReceiver<[this]>): OnEvent<[this]> | EventSupply {
-    return (this.whenConnected = this._status.read().thru_(
-        status => status >= ComponentStatus.Connected ? nextArg(this) : nextSkip(),
-    ).once().F)(receiver);
-  }
-
   destroy(reason?: any): void {
     try {
-      this._status.done(reason);
+      this._status.supply.off(reason);
     } finally {
       delete (this.component as ComponentContextHolder)[ComponentContext__symbol];
       delete (this.element as ComponentContextHolder)[ComponentContext__symbol];
@@ -114,10 +97,10 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
     let lastRev = 0;
 
     (this.element as ComponentContextHolder)[ComponentContext__symbol] = this;
-    whenComponent.readNotifier.once(notifier => lastRev = notifier(this, lastRev));
+    whenComponent.readNotifier.do(onceOn)(notifier => lastRev = notifier(this, lastRev));
     this.whenConnected(() => {
-      whenComponent.readNotifier.to({
-        supply: eventSupply().needs(this),
+      whenComponent.readNotifier({
+        supply: new Supply().needs(this),
         receive: (_, notifier) => {
           lastRev = notifier(this, lastRev);
         },

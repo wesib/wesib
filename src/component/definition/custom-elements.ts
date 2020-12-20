@@ -4,11 +4,10 @@
  */
 import { html__naming, isQualifiedName, QualifiedName } from '@frontmeans/namespace-aliaser';
 import { ContextKey, ContextKey__symbol, SingleContextKey } from '@proc7ts/context-values';
-import { Class } from '@proc7ts/primitives';
+import { Class, newPromiseResolver, PromiseResolver } from '@proc7ts/primitives';
 import { BootstrapContext, bootstrapDefault } from '../../boot';
 import { BootstrapWindow, DefaultNamespaceAliaser } from '../../boot/globals';
 import { definitionContextOf } from '../../boot/impl/definition-context.symbol.impl';
-import { PromiseResolver } from '../../common';
 import { ComponentClass } from './component-class';
 
 /**
@@ -45,9 +44,9 @@ export abstract class CustomElements {
   /**
    * Defines custom element.
    *
-   * @param componentTypeOrName  A component class constructor or custom element name. The latter may belong to
+   * @param componentTypeOrName - A component class constructor or custom element name. The latter may belong to
    * namespace to avoid naming conflicts.
-   * @param elementType  A constructor of custom element to define.
+   * @param elementType - A constructor of custom element to define.
    */
   abstract define(componentTypeOrName: ComponentClass | QualifiedName, elementType: Class): void;
 
@@ -56,7 +55,7 @@ export abstract class CustomElements {
    *
    * This corresponds to `window.customElements.whenDefined()` method.
    *
-   * @param componentTypeOrName  Component class constructor or custom element name possibly belonging to some
+   * @param componentTypeOrName - Component class constructor or custom element name possibly belonging to some
    * namespace.
    *
    * @return A promise that is resolved when custom element is registered.
@@ -112,7 +111,7 @@ function createCustomElements(bsContext: BootstrapContext): CustomElements {
       const { name } = defContext.elementDef;
 
       if (!name) {
-        return componentResolver(componentTypeOrName).promise;
+        return componentResolver(componentTypeOrName).promise();
       }
 
       return customElements.whenDefined(html__naming.name(name, nsAlias));
@@ -143,5 +142,5 @@ function componentResolver(componentType: CustomComponentClass): PromiseResolver
   if (componentType.hasOwnProperty(ComponentResolver__symbol)) {
     return componentType[ComponentResolver__symbol] as PromiseResolver;
   }
-  return componentType[ComponentResolver__symbol] = new PromiseResolver();
+  return componentType[ComponentResolver__symbol] = newPromiseResolver();
 }

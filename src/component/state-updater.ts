@@ -4,7 +4,7 @@
  */
 import { ContextValueSlot } from '@proc7ts/context-values';
 import { ContextUpKey, ContextUpRef } from '@proc7ts/context-values/updatable';
-import { AfterEvent, afterThe, EventKeeper, nextAfterEvent, statePath, StatePath } from '@proc7ts/fun-events';
+import { AfterEvent, afterThe, digAfter, EventKeeper, statePath, StatePath } from '@proc7ts/fun-events';
 import { mergeFunctions, noop } from '@proc7ts/primitives';
 
 /**
@@ -14,12 +14,12 @@ import { mergeFunctions, noop } from '@proc7ts/primitives';
  */
 export type StateUpdater =
 /**
- * @typeparam V  Updated value type
- * @param path  Updated state node path.
- * @param newValue  New value.
- * @param oldValue  Replaced value.
+ * @typeParam TValue - Updated value type
+ * @param path - Updated state node path.
+ * @param newValue - New value.
+ * @param oldValue - Replaced value.
  */
-    <V>(this: void, path: StatePath, newValue: V, oldValue: V) => void;
+    <TValue>(this: void, path: StatePath, newValue: TValue, oldValue: TValue) => void;
 
 export namespace StateUpdater {
 
@@ -30,12 +30,12 @@ export namespace StateUpdater {
    */
   export type Normalized =
   /**
-   * @typeparam V  Updated value type
-   * @param path  Normalized path of updated state node.
-   * @param newValue  New value.
-   * @param oldValue  Replaced value.
+   * @typeParam TValue - Updated value type
+   * @param path - Normalized path of updated state node.
+   * @param newValue - New value.
+   * @param oldValue - Replaced value.
    */
-      <V>(this: void, path: StatePath.Normalized, newValue: V, oldValue: V) => void;
+      <TValue>(this: void, path: StatePath.Normalized, newValue: TValue, oldValue: TValue) => void;
 
 }
 
@@ -49,7 +49,7 @@ class StateUpdaterKey extends ContextUpKey<StateUpdater, StateUpdater.Normalized
   constructor() {
     super('state-updater');
     this.upKey = this.createUpKey(
-        slot => slot.insert(slot.seed.keepThru(
+        slot => slot.insert(slot.seed.do(digAfter(
             (...fns) => {
               if (fns.length) {
 
@@ -58,14 +58,16 @@ class StateUpdaterKey extends ContextUpKey<StateUpdater, StateUpdater.Normalized
                     noop,
                 );
 
-                return (path, newValue, oldValue) => combined(statePath(path), newValue, oldValue);
+                return afterThe((path, newValue, oldValue) => combined(statePath(path), newValue, oldValue));
               }
+
               if (slot.hasFallback && slot.or) {
-                return nextAfterEvent(slot.or);
+                return slot.or;
               }
-              return noop;
+
+              return afterThe(noop);
             },
-        )),
+        ))),
     );
   }
 
@@ -81,7 +83,7 @@ class StateUpdaterKey extends ContextUpKey<StateUpdater, StateUpdater.Normalized
     slot.context.get(
         this.upKey,
         slot.hasFallback ? { or: slot.or != null ? afterThe(slot.or) : slot.or } : undefined,
-    )!.to(
+    )!(
         fn => delegated = fn,
     ).whenOff(
         () => delegated = noop,

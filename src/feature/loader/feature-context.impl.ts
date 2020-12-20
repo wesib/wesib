@@ -1,12 +1,10 @@
-import { nextArg, nextSkip } from '@proc7ts/call-thru';
 import { ContextRegistry, ContextValueSpec } from '@proc7ts/context-values';
-import { afterAll, EventReceiver, EventSupply, OnEvent, trackValue } from '@proc7ts/fun-events';
-import { Class } from '@proc7ts/primitives';
+import { afterAll, onceOn, OnEvent, supplyOn, trackValue, valueOn } from '@proc7ts/fun-events';
+import { Class, Supply } from '@proc7ts/primitives';
 import { BootstrapContext } from '../../boot';
 import {
   BootstrapContextRegistry,
   ElementBuilder,
-  newUnloader,
   onPostDefSetup,
   PerComponentRegistry,
   PerDefinitionRegistry,
@@ -22,7 +20,10 @@ import { FeatureLoader } from './feature-loader.impl';
  */
 export class FeatureContext$ extends FeatureContext {
 
-  readonly _unloader = newUnloader();
+  readonly whenReady: OnEvent<[FeatureContext]>;
+  readonly onDefinition: OnEvent<[DefinitionContext]>;
+  readonly onComponent: OnEvent<[ComponentContext]>;
+  readonly supply = new Supply();
   readonly get: FeatureContext['get'];
   private readonly _componentRegistry: ComponentRegistry;
 
@@ -36,6 +37,17 @@ export class FeatureContext$ extends FeatureContext {
 
     registry.provide({ a: FeatureContext, is: this });
     this.get = registry.newValues().get;
+
+    this.whenReady = afterAll({
+      st: this._loader.state,
+      bs: trackValue<BootstrapContext>().by(_bsContext.whenReady),
+    }).do(
+        valueOn(({ st: [ready], bs: [bs] }) => bs && ready && this),
+        onceOn,
+    );
+    this.onDefinition = _bsContext.get(ElementBuilder).definitions.on.do(supplyOn(this));
+    this.onComponent = this._bsContext.get(ElementBuilder).components.on.do(supplyOn(this));
+
     this._componentRegistry = new ComponentRegistry(this);
   }
 
@@ -43,54 +55,26 @@ export class FeatureContext$ extends FeatureContext {
     return this._loader.request.feature;
   }
 
-  whenReady(): OnEvent<[FeatureContext]>;
-  whenReady(receiver: EventReceiver<[FeatureContext]>): EventSupply;
-  whenReady(receiver?: EventReceiver<[FeatureContext]>): OnEvent<[FeatureContext]> | EventSupply {
-    return (this.whenReady = afterAll({
-      st: this._loader.state,
-      bs: trackValue<BootstrapContext>().by(this._bsContext.whenReady()),
-    }).thru(
-        ({
-          st: [ready],
-          bs: [bs],
-        }) => bs && ready ? nextArg(this) : nextSkip(),
-    ).once().F)(receiver);
+  provide<TDeps extends any[], TSrc, TSeed>(
+      spec: ContextValueSpec<BootstrapContext, any, TDeps, TSrc, TSeed>,
+  ): Supply {
+    return this._bsContext.get(BootstrapContextRegistry).provide(spec).needs(this);
   }
 
-  onDefinition(): OnEvent<[DefinitionContext]>;
-  onDefinition(receiver: EventReceiver<[DefinitionContext]>): EventSupply;
-  onDefinition(receiver?: EventReceiver<[DefinitionContext]>): OnEvent<[DefinitionContext]> | EventSupply {
-    return (this.onDefinition = this._bsContext.get(ElementBuilder).definitions.on()
-        .tillOff(this._unloader.supply).F)(receiver);
+  perDefinition<TDeps extends any[], TSrc, TSeed>(
+      spec: ContextValueSpec<DefinitionContext, any, TDeps, TSrc, TSeed>,
+  ): Supply {
+    return this._bsContext.get(PerDefinitionRegistry).provide(spec).needs(this);
   }
 
-  onComponent(): OnEvent<[ComponentContext]>;
-  onComponent(receiver: EventReceiver<[ComponentContext]>): EventSupply;
-  onComponent(receiver?: EventReceiver<[ComponentContext]>): EventSupply | OnEvent<[ComponentContext]> {
-    return (this.onComponent = this._bsContext.get(ElementBuilder).components.on()
-        .tillOff(this._unloader.supply).F)(receiver);
-  }
-
-  provide<Deps extends any[], Src, Seed>(
-      spec: ContextValueSpec<BootstrapContext, any, Deps, Src, Seed>,
-  ): () => void {
-    return this._unloader.add(() => this._bsContext.get(BootstrapContextRegistry).provide(spec));
-  }
-
-  perDefinition<Deps extends any[], Src, Seed>(
-      spec: ContextValueSpec<DefinitionContext, any, Deps, Src, Seed>,
-  ): () => void {
-    return this._unloader.add(() => this._bsContext.get(PerDefinitionRegistry).provide(spec));
-  }
-
-  perComponent<Deps extends any[], Src, Seed>(
-      spec: ContextValueSpec<ComponentContext, any, Deps, Src, Seed>,
-  ): () => void {
-    return this._unloader.add(() => this._bsContext.get(PerComponentRegistry).provide(spec));
+  perComponent<TDeps extends any[], TSrc, TSeed>(
+      spec: ContextValueSpec<ComponentContext, any, TDeps, TSrc, TSeed>,
+  ): Supply {
+    return this._bsContext.get(PerComponentRegistry).provide(spec).needs(this);
   }
 
   setupDefinition<T extends object>(componentType: ComponentClass<T>): OnEvent<[DefinitionSetup]> {
-    return onPostDefSetup(componentType, this._unloader);
+    return onPostDefSetup(componentType, this.supply);
   }
 
   define<T extends object>(componentType: ComponentClass<T>): void {

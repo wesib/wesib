@@ -29,7 +29,7 @@ describe('boot', () => {
     })
     class TestBootstrapFeature {}
 
-    bsContext = await bootstrapComponents(TestBootstrapFeature).whenReady();
+    bsContext = await bootstrapComponents(TestBootstrapFeature).whenReady;
   });
 
   let key: SingleContextUpKey<string>;
@@ -42,7 +42,7 @@ describe('boot', () => {
 
   describe('context values', () => {
     it('sets up bootstrap context values', async () => {
-      bsContext.get(key).to(receiver);
+      bsContext.get(key)(receiver);
 
       @Feature({
         setup(setup) {
@@ -59,7 +59,7 @@ describe('boot', () => {
       expect(receiver).toHaveBeenLastCalledWith('default');
     });
     it('provides bootstrap context values', async () => {
-      bsContext.get(key).to(receiver);
+      bsContext.get(key)(receiver);
 
       @Feature({
         init(ctx) {
@@ -76,7 +76,7 @@ describe('boot', () => {
       expect(receiver).toHaveBeenLastCalledWith('default');
     });
     it('does not set up bootstrap context values when feature unloaded already', async () => {
-      bsContext.get(key).to(receiver);
+      bsContext.get(key)(receiver);
 
       let bsSetup!: BootstrapSetup;
 
@@ -97,7 +97,7 @@ describe('boot', () => {
 
   describe('component used as feature', () => {
     it('applies feature options', async () => {
-      bsContext.get(key).to(receiver);
+      bsContext.get(key)(receiver);
 
       @Component({
         name: 'test-component',
@@ -114,7 +114,7 @@ describe('boot', () => {
       expect(receiver).toHaveBeenLastCalledWith('component feature value');
     });
     it('applies feature options when used as dependency', async () => {
-      bsContext.get(key).to(receiver);
+      bsContext.get(key)(receiver);
 
       @Component({
         name: 'test-component',
@@ -187,14 +187,14 @@ describe('boot', () => {
       @Component({
         name: 'test-component',
         define(context) {
-          context.get(key).to(receiver);
+          context.get(key)(receiver);
         },
       })
       class TestComponent {}
 
       @Feature({
         setup(setup) {
-          setup.setupDefinition(TestComponent).to(defSetup => {
+          setup.setupDefinition(TestComponent)(defSetup => {
             defSetup.perDefinition({ a: key, is: 'provided' });
           });
         },
@@ -220,14 +220,14 @@ describe('boot', () => {
       @Component({
         name: 'test-component',
         define(context) {
-          context.get(key).to(receiver);
+          context.get(key)(receiver);
         },
       })
       class TestComponent {}
 
       @Feature({
         setup(setup) {
-          setup.setupDefinition(TestComponent).to(defSetup => {
+          setup.setupDefinition(TestComponent)(defSetup => {
             defSetup.perDefinition({ a: key, is: 'provided' });
           });
         },
@@ -260,14 +260,14 @@ describe('boot', () => {
       class TestComponent {
 
         constructor(context: ComponentContext) {
-          context.get(key).to(receiver);
+          context.get(key)(receiver);
         }
 
       }
 
       @Feature({
         setup(setup) {
-          setup.setupDefinition(TestComponent).to(defSetup => {
+          setup.setupDefinition(TestComponent)(defSetup => {
             defSetup.perComponent({ a: key, is: 'provided' });
           });
         },
@@ -295,14 +295,14 @@ describe('boot', () => {
       @Component({
         name: 'sub-type-component',
         define(context) {
-          context.get(key).to(receiver);
+          context.get(key)(receiver);
         },
       })
       class SubTypeComponent extends TestComponent {}
 
       @Feature({
         setup(setup) {
-          setup.setupDefinition(TestComponent).to(defSetup => {
+          setup.setupDefinition(TestComponent)(defSetup => {
             defSetup.perDefinition({ a: key, is: 'provided' });
           });
         },
@@ -333,7 +333,7 @@ describe('boot', () => {
 
         @Feature({
           setup(setup) {
-            setup.setupDefinition(TestComponent).to(defSetup => {
+            setup.setupDefinition(TestComponent)(defSetup => {
               expect(defSetup.componentType).toBe(TestComponent);
               defSetup.whenReady(whenReady);
             });
@@ -358,7 +358,7 @@ describe('boot', () => {
 
         @Feature({
           setup(setup) {
-            setup.setupDefinition(TestComponent).to(defSetup => {
+            setup.setupDefinition(TestComponent)(defSetup => {
               defSetup.whenReady(whenReady);
             });
           },
@@ -416,11 +416,11 @@ describe('boot', () => {
         @Feature({
           needs: [TestComponent1, TestComponent2],
           setup(setup) {
-            setup.setupDefinition(TestComponent1).to(defSetup => {
+            setup.setupDefinition(TestComponent1)(defSetup => {
               defSetup.whenComponent(whenComponent11);
               defSetup.whenComponent(whenComponent12);
             });
-            setup.setupDefinition(TestComponent2).to(defSetup => {
+            setup.setupDefinition(TestComponent2)(defSetup => {
               defSetup.whenComponent(whenComponent21);
             });
           },
@@ -582,7 +582,7 @@ describe('boot', () => {
 
           const featureRef = await loadFeatureStatus();
 
-          expect(afterSupplied(featureRef)).toBe(featureRef.read());
+          expect(afterSupplied(featureRef)).toBe(featureRef.read);
         });
       });
       describe('off', () => {
@@ -599,7 +599,7 @@ describe('boot', () => {
 
           let value: string | undefined;
 
-          bsContext.get(key, { or: afterThe<[string?]>() }).to(v => value = v);
+          bsContext.get(key, { or: afterThe<[string?]>() })(v => value = v);
           expect(value).toBe('provided');
 
           await featureRef.dismiss('reason');

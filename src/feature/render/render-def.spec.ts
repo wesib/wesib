@@ -1,5 +1,5 @@
 import { ContextRegistry } from '@proc7ts/context-values';
-import { eventSupply, EventSupply__symbol } from '@proc7ts/fun-events';
+import { Supply } from '@proc7ts/primitives';
 import { ComponentContext } from '../../component';
 import { ComponentState } from '../state';
 import { RenderDef, RenderPath__root } from './render-def';
@@ -91,7 +91,7 @@ describe('feature/render', () => {
 
         context = {
           get: registry.newValues().get,
-          [EventSupply__symbol]: eventSupply(),
+          supply: new Supply(),
         } as ComponentContext;
       });
 
@@ -99,7 +99,7 @@ describe('feature/render', () => {
 
         const receiver = jest.fn();
 
-        RenderDef.trigger(context).to(receiver);
+        RenderDef.trigger(context)(receiver);
 
         state.update([RenderPath__root], 'new', 'old');
         expect(receiver).not.toHaveBeenCalled();

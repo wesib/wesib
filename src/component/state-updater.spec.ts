@@ -1,7 +1,5 @@
-import { ContextKey__symbol, ContextRegistry, ContextValues } from '@proc7ts/context-values';
-import { ContextSupply } from '@proc7ts/context-values/updatable';
-import { eventSupply } from '@proc7ts/fun-events';
-import { noop } from '@proc7ts/primitives';
+import { ContextKey__symbol, ContextRegistry, ContextSupply, ContextValues } from '@proc7ts/context-values';
+import { noop, Supply } from '@proc7ts/primitives';
 import { StateUpdater } from './state-updater';
 
 describe('component', () => {
@@ -51,7 +49,7 @@ describe('component', () => {
     it('does nothing after component destruction', () => {
 
       const updater1 = jest.fn();
-      const contextSupply = eventSupply();
+      const contextSupply = new Supply();
 
       registry.provide({ a: StateUpdater, is: updater1 });
       registry.provide({ a: ContextSupply, is: contextSupply });
@@ -66,7 +64,7 @@ describe('component', () => {
 
       const whenOff = jest.fn();
 
-      values.get(StateUpdater[ContextKey__symbol].upKey).to(noop).whenOff(whenOff);
+      values.get(StateUpdater[ContextKey__symbol].upKey)(noop).whenOff(whenOff);
       expect(whenOff).toHaveBeenCalledWith(reason);
     });
   });

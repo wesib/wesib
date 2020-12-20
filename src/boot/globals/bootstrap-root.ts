@@ -15,7 +15,7 @@ export type BootstrapRoot = Element;
 /**
  * A key of bootstrap context value containing a bootstrap root.
  *
- * Target value defaults to document body of [[BootstrapWindow]].
+ * Target value defaults to document body of {@link BootstrapWindow}.
  *
  * @category Core
  */

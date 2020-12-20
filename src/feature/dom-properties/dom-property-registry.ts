@@ -18,7 +18,7 @@ export interface DomPropertyRegistry {
   /**
    * Declares component element's property.
    *
-   * @param descriptor  Property descriptor.
+   * @param descriptor - Property descriptor.
    */
   declareDomProperty(descriptor: DomPropertyDescriptor): void;
 

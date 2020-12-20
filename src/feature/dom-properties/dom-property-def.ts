@@ -61,20 +61,20 @@ export interface DomPropertyDef<T extends object = any> {
  * DOM property updates receiver invoked after custom element property change.
  *
  * @category Feature
- * @typeparam T  A type of component.
+ * @typeParam T - A type of component.
  */
 export type DomPropertyUpdateReceiver<T extends object> =
 /**
- * @typeparam K  A type of component property keys.
- * @param component  Component instance.
- * @param path  The changed property state path in the form of `[DomPropertyPath__root, propertyKey]`.
- * @param newValue  New property value.
- * @param oldValue  Previous property value.
+ * @typeParam TKey - A type of component property keys.
+ * @param component - Component instance.
+ * @param path - The changed property state path in the form of `[DomPropertyPath__root, propertyKey]`.
+ * @param newValue - New property value.
+ * @param oldValue - Previous property value.
  */
-    <K extends keyof T>(
+    <TKey extends keyof T>(
         this: void,
         component: T,
-        path: DomPropertyPath<K>,
-        newValue: T[K],
-        oldValue: T[K],
+        path: DomPropertyPath<TKey>,
+        newValue: T[TKey],
+        oldValue: T[TKey],
     ) => void;

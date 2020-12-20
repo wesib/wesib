@@ -2,8 +2,15 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { nextArgs, nextSkip } from '@proc7ts/call-thru';
-import { EventSender, isEventSender, OnEvent, onSupplied, StatePath } from '@proc7ts/fun-events';
+import {
+  EventSender,
+  isEventSender,
+  OnEvent,
+  onSupplied,
+  StatePath,
+  supplyOn,
+  translateOn_,
+} from '@proc7ts/fun-events';
 import { valueByRecipe } from '@proc7ts/primitives';
 import { ComponentContext } from '../../component';
 import { ComponentState } from '../state';
@@ -39,7 +46,7 @@ export namespace RenderDef {
     /**
      * Reports rendering error. E.g. a render shot execution failure.
      *
-     * @param messages  Error messages to report.
+     * @param messages - Error messages to report.
      */
     error?(...messages: any[]): void;
 
@@ -74,7 +81,7 @@ export namespace RenderDef {
    */
   export type Provider =
   /**
-   * @param context  A context of component to render.
+   * @param context - A context of component to render.
    *
    * @returns Rendering specifier.
    */
@@ -102,8 +109,8 @@ export const RenderDef = {
   /**
    * Builds a rendering specifier for component by its definition.
    *
-   * @param context  A context of component to render.
-   * @param def  Arbitrary rendering definition.
+   * @param context - A context of component to render.
+   * @param def - Arbitrary rendering definition.
    *
    * @returns Rendering specifier.
    */
@@ -118,8 +125,8 @@ export const RenderDef = {
   /**
    * Fulfills rendering specifier with the given defaults.
    *
-   * @param base  Base rendering specifier to fulfill.
-   * @param defaults  Defaults that will be applied unless defined in `base` specifier.
+   * @param base - Base rendering specifier to fulfill.
+   * @param defaults - Defaults that will be applied unless defined in `base` specifier.
    *
    * @return `base` rendering specifier fulfilled by `defaults`.
    */
@@ -136,8 +143,8 @@ export const RenderDef = {
   /**
    * Builds a trigger issuing rendering updates.
    *
-   * @param context  Rendered component context.
-   * @param spec  Rendering specifier.
+   * @param context - Rendered component context.
+   * @param spec - Rendering specifier.
    *
    * @returns `OnEvent` sender that sends an event each time the rendering required.
    */
@@ -149,20 +156,21 @@ export const RenderDef = {
 
     const { on = [] } = spec;
 
-    if (typeof on === 'object' && isEventSender(on)) {
-      return onSupplied(on).tillOff(context);
+    if ((typeof on === 'object' || typeof on === 'function') && isEventSender(on)) {
+      return onSupplied(on).do(supplyOn(context));
     }
 
     const trigger = context
         .get(ComponentState)
         .track(on)
-        .onUpdate()
-        .tillOff(context);
+        .onUpdate.do(
+            supplyOn(context),
+        );
 
     if (Array.isArray(on) && !on.length) {
-      return trigger.thru_(
-          (path: StatePath.Normalized) => path[0] === RenderPath__root ? nextSkip : nextArgs(),
-      );
+      return trigger.do(translateOn_(
+          (send, path: StatePath.Normalized) => path[0] !== RenderPath__root && send(),
+      ));
     }
 
     return trigger;

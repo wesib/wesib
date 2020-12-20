@@ -1,4 +1,4 @@
-import { DomEventDispatcher } from '@proc7ts/fun-events/dom';
+import { DomEventDispatcher } from '@frontmeans/dom-events';
 import { BootstrapContext } from '../../boot';
 import { Component, ComponentContext, ComponentEventDispatcher, ContentRoot } from '../../component';
 import { ComponentClass } from '../../component/definition';

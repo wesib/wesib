@@ -3,7 +3,7 @@
  * @module @wesib/wesib
  */
 import { ContextKey, ContextKey__symbol, ContextValueSlot, SimpleContextKey } from '@proc7ts/context-values';
-import { eventSupplyOf, StateTracker } from '@proc7ts/fun-events';
+import { StateTracker } from '@proc7ts/fun-events';
 import { ComponentContext, StateUpdater } from '../../component';
 
 class ComponentStateKey extends SimpleContextKey<ComponentState> {
@@ -26,7 +26,7 @@ class ComponentStateKey extends SimpleContextKey<ComponentState> {
       return;
     } else {
       state = new ComponentState();
-      eventSupplyOf(slot.context.get(ComponentContext)).whenOff(reason => state.done(reason));
+      slot.context.get(ComponentContext).supply.whenOff(reason => state.done(reason));
       slot.insert(state);
     }
 

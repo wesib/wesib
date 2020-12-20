@@ -3,8 +3,8 @@
  * @module @wesib/wesib
  */
 import { ContextValueSpec } from '@proc7ts/context-values';
-import { EventReceiver, EventSupply, OnEvent } from '@proc7ts/fun-events';
-import { Class } from '@proc7ts/primitives';
+import { OnEvent } from '@proc7ts/fun-events';
+import { Class, Supply } from '@proc7ts/primitives';
 import { ComponentContext } from '../component';
 import { ComponentClass, DefinitionContext, DefinitionSetup } from '../component/definition';
 import { FeatureContext } from '../feature';
@@ -13,7 +13,7 @@ import { BootstrapContext } from './index';
 /**
  * Bootstrap context setup.
  *
- * It is passed to [[FeatureDef.Options.setup]] method to set up the bootstrap. E.g. by providing bootstrap context
+ * It is passed to {@link FeatureDef.Options.setup} method to set up the bootstrap. E.g. by providing bootstrap context
  * values.
  *
  * @category Core
@@ -26,118 +26,78 @@ export interface BootstrapSetup {
   readonly feature: Class;
 
   /**
-   * Builds an `OnEvent` sender of feature readiness event.
+   * An `OnEvent` sender of feature readiness event.
    *
    * The registered receiver will be notified once bootstrap is complete and the feature is loaded.
    *
    * If the above conditions satisfied already, the receiver will be notified immediately.
-   *
-   * @returns `OnEvent` sender of ready feature context.
    */
-  whenReady(): OnEvent<[FeatureContext]>;
+  readonly whenReady: OnEvent<[FeatureContext]>;
 
   /**
-   * Registers a receiver of feature readiness event.
-   *
-   * The registered receiver will be notified once bootstrap is complete and the feature is loaded.
-   *
-   * If the above conditions satisfied already, the receiver will be notified immediately.
-   *
-   * @param receiver  Target receiver of ready feature context.
-   *
-   * @returns Feature readiness event supply.
-   */
-  whenReady(receiver: EventReceiver<[FeatureContext]>): EventSupply;
-
-  /**
-   * Builds an `OnEvent` sender of component definition events.
+   * An `OnEvent` sender of component definition events.
    *
    * The registered receiver will be notified when new component class is defined, but before its custom element class
    * constructed.
-   *
-   * @returns `OnEvent` sender of component definition contexts.
    */
-  onDefinition(): OnEvent<[DefinitionContext]>;
+  readonly onDefinition: OnEvent<[DefinitionContext]>;
 
   /**
-   * Starts sending component definition events to the given `receiver`.
-   *
-   * The receiver will be notified when new component class is defined, but before its custom element class
-   * constructed.
-   *
-   * @param receiver  Target receiver of component definition contexts.
-   *
-   * @returns Component definition events supply.
-   */
-  onDefinition(receiver: EventReceiver<[DefinitionContext]>): EventSupply;
-
-  /**
-   * Builds an `OnEvent` sender of component construction events.
+   * An `OnEvent` sender of component construction events.
    *
    * The registered receiver will be notified right before component is constructed.
-   *
-   * @returns `OnEvent` sender of constructed component contexts.
    */
-  onComponent(): OnEvent<[ComponentContext]>;
-
-  /**
-   * Starts sending component construction events to the given `receiver`.
-   *
-   * @param receiver  Target receiver of constructed component contexts.
-   *
-   * @returns Component construction events supply.
-   */
-  onComponent(receiver: EventReceiver<[ComponentContext]>): EventSupply;
+  readonly onComponent: OnEvent<[ComponentContext]>;
 
   /**
    * Provides bootstrap context value before context creation.
    *
-   * @typeparam Deps  Dependencies tuple type.
-   * @typeparam Src  Source value type.
-   * @typeparam Seed  Value seed type.
-   * @param spec  Context value specifier.
+   * @typeParam TDeps - Dependencies tuple type.
+   * @typeParam TSrc - Source value type.
+   * @typeParam TSeed - Value seed type.
+   * @param spec - Context value specifier.
    *
-   * @returns A function that removes the given context value specifier when called.
+   * @returns A value supply that removes the given context value specifier once cut off.
    */
-  provide<Deps extends any[], Src, Seed>(
-      spec: ContextValueSpec<BootstrapContext, any, Deps, Src, Seed>,
-  ): () => void;
+  provide<TDeps extends any[], TSrc, TSeed>(
+      spec: ContextValueSpec<BootstrapContext, any, TDeps, TSrc, TSeed>,
+  ): Supply;
 
   /**
    * Provides a value available in each component definition context.
    *
-   * @typeparam Deps  A type of dependencies.
-   * @typeparam Src  The type of context value sources.
-   * @typeparam Seed  Value seed type.
-   * @param spec  Component definition context value specifier.
+   * @typeParam TDeps - A type of dependencies.
+   * @typeParam TSrc - The type of context value sources.
+   * @typeParam TSeed - Value seed type.
+   * @param spec - Component definition context value specifier.
    *
-   * @returns A function that removes the given context value specifier when called.
+   * @returns A value supply that removes the given context value specifier once cut off.
    */
-  perDefinition<Deps extends any[], Src, Seed>(
-      spec: ContextValueSpec<DefinitionContext, any, Deps, Src, Seed>,
-  ): () => void;
+  perDefinition<TDeps extends any[], TSrc, TSeed>(
+      spec: ContextValueSpec<DefinitionContext, any, TDeps, TSrc, TSeed>,
+  ): Supply;
 
   /**
    * Provides a value available in each component context.
    *
-   * @typeparam Deps  A type of dependencies.
-   * @typeparam Src  The type of context value sources.
-   * @typeparam Seed  Value seed type.
-   * @param spec  Component context value specifier.
+   * @typeParam TDeps - A type of dependencies.
+   * @typeParam TSrc - The type of context value sources.
+   * @typeParam TSeed - Value seed type.
+   * @param spec - Component context value specifier.
    *
-   * @returns A function that removes the given context value specifier when called.
+   * @returns A value supply that removes the given context value specifier once cut off.
    */
-  perComponent<Deps extends any[], Src, Seed>(
-      spec: ContextValueSpec<ComponentContext, any, Deps, Src, Seed>,
-  ): () => void;
+  perComponent<TDeps extends any[], TSrc, TSeed>(
+      spec: ContextValueSpec<ComponentContext, any, TDeps, TSrc, TSeed>,
+  ): Supply;
 
   /**
    * Sets up the definition of component of the given type..
    *
    * Whenever the definition of component of the given type or any of its subtype starts, the returned `OnEvent` sender
-   * sends a [[DefinitionSetup]] instance, that can be used to set up the definition.
+   * sends a {@link DefinitionSetup} instance, that can be used to set up the definition.
    *
-   * @param componentType  Target component type.
+   * @param componentType - Target component type.
    *
    * @returns An `OnEvent` sender of component definition setup instances.
    */

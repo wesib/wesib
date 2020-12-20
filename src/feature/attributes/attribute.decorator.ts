@@ -15,8 +15,8 @@ import { AttributeRegistry } from './attribute-registry';
  * to absent attribute. Setting to `null` removes corresponding attribute.
  *
  * @category Feature
- * @typeparam T  A type of decorated component class.
- * @param def  Attribute definition or just an attribute name (either _camelCase_ or _dash-style_).
+ * @typeParam T - A type of decorated component class.
+ * @param def - Attribute definition or just an attribute name (either _camelCase_ or _dash-style_).
  *
  * @return Component property decorator.
  */

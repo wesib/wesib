@@ -11,7 +11,7 @@ import { AttributePath } from './attribute-path';
  * This is passed to {@link Attribute @Attribute} and {@link AttributeChanged @AttributeChanged} decorators.
  *
  * @category Feature
- * @typeparam T  A type of component.
+ * @typeParam T - A type of component.
  */
 export interface AttributeDef<T extends object> {
 
@@ -40,14 +40,14 @@ export interface AttributeDef<T extends object> {
  * Signature of attribute updates receiver invoked after custom element attribute change.
  *
  * @category Feature
- * @typeparam T  A type of component.
+ * @typeParam T - A type of component.
  */
 export type AttributeUpdateReceiver<T extends object> =
 /**
- * @param component  Component instance.
- * @param path  The changed attribute state path in the form of `[AttributePath__root, attributeName]`.
- * @param newValue  New attribute value, or `null` when attribute removed.
- * @param oldValue  Previous attribute value, or `null` if attribute did not exist.
+ * @param component - Component instance.
+ * @param path - The changed attribute state path in the form of `[AttributePath__root, attributeName]`.
+ * @param newValue - New attribute value, or `null` when attribute removed.
+ * @param oldValue - Previous attribute value, or `null` if attribute did not exist.
  */
     (
         this: void,

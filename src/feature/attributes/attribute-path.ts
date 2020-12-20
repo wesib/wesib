@@ -22,7 +22,7 @@ export type AttributePath = readonly [keyof AttributePath.RootKeys, string];
  * Constructs a named attribute state path.
  *
  * @category Feature
- * @param name  Target attribute name.
+ * @param name - Target attribute name.
  *
  * @return Attribute state path.
  */
