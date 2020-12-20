@@ -193,11 +193,12 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    * This is a shorthand for invoking a component event producer function available under
    * `[ComponentEventProducer.key]` key.
    *
+   * @typeParam TEvent - DOM event type.
    * @param type - An event type to listen for.
    *
    * @returns A producer of DOM event events of the given type.
    */
-  on<E extends Event>(type: string): OnDomEvent<E> {
+  on<TEvent extends Event>(type: string): OnDomEvent<TEvent> {
     return this.get(ComponentEventDispatcher__key).on(type);
   }
 

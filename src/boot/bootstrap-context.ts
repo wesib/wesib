@@ -43,11 +43,12 @@ export abstract class BootstrapContext extends ContextValues {
    *
    * This corresponds to `window.customElements.whenDefined()` method.
    *
+   * @typeParam T - A type of component.
    * @param componentType - Component class constructor.
    *
    * @return An `OnEvent` sender of definition context sent when the given `componentType` is registered.
    */
-  abstract whenDefined<C extends object>(componentType: ComponentClass<C>): OnEvent<[DefinitionContext<C>]>;
+  abstract whenDefined<T extends object>(componentType: ComponentClass<T>): OnEvent<[DefinitionContext<T>]>;
 
   /**
    * Allows to loads the given `feature`.

@@ -90,7 +90,7 @@ function initBootstrap(
       bootstrapContextRegistry.provide({ a: BootstrapContext, is: this });
     }
 
-    whenDefined<C extends object>(componentType: ComponentClass<C>): OnEvent<[DefinitionContext<C>]> {
+    whenDefined<T extends object>(componentType: ComponentClass<T>): OnEvent<[DefinitionContext<T>]> {
       return whenDefined(this, componentType);
     }
 

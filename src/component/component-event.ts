@@ -59,11 +59,12 @@ export interface ComponentEventDispatcher {
   /**
    * Returns an `OnDomEvent` sender of DOM events of the given type.
    *
+   * @typeParam TEvent - DOM event type.
    * @param type - An event type to listen for.
    *
    * @returns A producer of DOM event events of the given type.
    */
-  on<E extends Event>(type: string): OnDomEvent<E>;
+  on<TEvent extends Event>(type: string): OnDomEvent<TEvent>;
 
 }
 

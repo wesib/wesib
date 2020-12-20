@@ -20,7 +20,7 @@ export const ComponentEventDispatcher__key = (/*#__PURE__*/ new SingleContextKey
           dispatch(event: Event): boolean {
             return dispatcher.dispatch(event);
           },
-          on<E extends Event>(type: string): OnDomEvent<E> {
+          on<TEvent extends Event>(type: string): OnDomEvent<TEvent> {
             return dispatcher.on(type);
           },
         };

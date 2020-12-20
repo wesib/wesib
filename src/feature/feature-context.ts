@@ -110,7 +110,7 @@ export abstract class FeatureContext
    */
   abstract define<T extends object>(componentType: ComponentClass<T>): void;
 
-  whenDefined<C extends object>(componentType: ComponentClass<C>): OnEvent<[DefinitionContext<C>]> {
+  whenDefined<T extends object>(componentType: ComponentClass<T>): OnEvent<[DefinitionContext<T>]> {
     return this.get(BootstrapContext).whenDefined(componentType);
   }
 

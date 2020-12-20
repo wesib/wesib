@@ -27,7 +27,12 @@ export function attributeStateUpdate<T extends object>(
     return (component: T, newValue, oldValue) => update(component, path, newValue, oldValue);
   }
 
-  return (component: T, newValue, oldValue) => updateAttributeState(component, updateState, newValue, oldValue);
+  return (component: T, newValue, oldValue) => updateAttributeState(
+      component,
+      updateState,
+      newValue,
+      oldValue,
+  );
 }
 
 function updateAttributeState<T extends object>(

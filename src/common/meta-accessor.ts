@@ -7,7 +7,7 @@ import { Class, superClassOf } from '@proc7ts/primitives';
 /**
  * @category Utility
  */
-export abstract class MetaAccessor<M, S = M> {
+export abstract class MetaAccessor<TMeta, TSrc = TMeta> {
 
   readonly symbol: symbol;
 
@@ -15,25 +15,25 @@ export abstract class MetaAccessor<M, S = M> {
     this.symbol = symbol;
   }
 
-  own(type: Class): M | undefined {
+  own(type: Class): TMeta | undefined {
     // eslint-disable-next-line no-prototype-builtins,@typescript-eslint/no-unsafe-member-access
-    return type.hasOwnProperty(this.symbol) ? (type as any)[this.symbol] as M : undefined;
+    return type.hasOwnProperty(this.symbol) ? (type as any)[this.symbol] as TMeta : undefined;
   }
 
-  of(type: Class): M | undefined {
+  of(type: Class): TMeta | undefined {
 
-    const ownDef: M | undefined = this.own(type);
+    const ownDef: TMeta | undefined = this.own(type);
     const superType = superClassOf(type);
     const superDef = superType && this.of(superType);
 
     return ownDef ? (superDef ? this.merge([superDef, ownDef]) : ownDef) : superDef;
   }
 
-  define<C extends Class>(type: C, sources: readonly S[]): C {
+  define<T extends Class>(type: T, sources: readonly TSrc[]): T {
 
     const prevMeta = this.own(type);
     const updates = sources.map(source => this.meta(source, type));
-    const newMeta: M = this.merge(prevMeta ? [prevMeta, ...updates] : updates);
+    const newMeta: TMeta = this.merge(prevMeta ? [prevMeta, ...updates] : updates);
 
     Object.defineProperty(
         type,
@@ -47,8 +47,8 @@ export abstract class MetaAccessor<M, S = M> {
     return type;
   }
 
-  abstract merge(metas: readonly M[]): M;
+  abstract merge(metas: readonly TMeta[]): TMeta;
 
-  protected abstract meta(source: S, type: Class): M;
+  protected abstract meta(source: TSrc, type: Class): TMeta;
 
 }
