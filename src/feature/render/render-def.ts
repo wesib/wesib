@@ -26,6 +26,9 @@ export type RenderDef =
     | RenderDef.Spec
     | RenderDef.Provider;
 
+/**
+ * @category Feature
+ */
 export namespace RenderDef {
 
   /**

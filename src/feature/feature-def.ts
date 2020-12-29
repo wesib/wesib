@@ -29,6 +29,9 @@ export type FeatureDef =
     | FeatureDef.Holder
     | FeatureDef.Factory;
 
+/**
+ * @category Core
+ */
 export namespace FeatureDef {
 
   /**

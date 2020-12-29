@@ -98,6 +98,9 @@ export interface ComponentPropertyDecorator<TValue, T extends ComponentClass = C
 
 }
 
+/**
+ * @category Core
+ */
 export namespace ComponentProperty {
 
   /**

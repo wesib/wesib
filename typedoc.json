@@ -1,20 +1,12 @@
 {
-  "categorizeByGroup": true,
+  "categorizeByGroup": false,
   "categoryOrder": [
     "Core",
     "Feature",
     "Utility",
     "*"
   ],
-  "disableAutoModuleName": true,
-  "exclude": [
-    "**/spec/**/*.ts",
-    "**/index.ts",
-    "**/*.impl.ts"
-  ],
-  "excludeNotExported": true,
-  "excludePrivate": true,
-  "mode": "modules",
+  "entryPoints": ["src/index.ts"],
   "name": "Wesib: Web Components Building Blocks",
   "out": "./target/typedoc",
   "tsconfig": "tsconfig.main.json"

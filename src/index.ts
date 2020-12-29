@@ -1,3 +1,7 @@
+/**
+ * @packageDocumentation
+ * @module @wesib/wesib
+ */
 export * from './boot';
 export * from './boot/bootstrap';
 export * from './boot/globals';

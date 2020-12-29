@@ -39,6 +39,9 @@ export type ComponentDef<T extends object = any> =
     | FeatureDef.Holder
     | FeatureDef.Factory;
 
+/**
+ * @category Core
+ */
 export namespace ComponentDef {
 
   /**

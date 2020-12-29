@@ -21,6 +21,9 @@ export type StateUpdater =
  */
     <TValue>(this: void, path: StatePath, newValue: TValue, oldValue: TValue) => void;
 
+/**
+ * @category Core
+ */
 export namespace StateUpdater {
 
   /**

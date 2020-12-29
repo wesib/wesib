@@ -234,6 +234,8 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
  * An object potentially containing component context.
  *
  * Either element or component instance.
+ *
+ * @category Core
  */
 export interface ComponentContextHolder<T extends object = any> {
   [ComponentContext__symbol]?: ComponentContext<T>;

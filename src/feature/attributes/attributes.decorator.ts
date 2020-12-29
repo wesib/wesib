@@ -53,6 +53,9 @@ export function Attributes<T extends ComponentClass = Class>(
   });
 }
 
+/**
+ * @category Feature
+ */
 export namespace Attributes {
 
   /**
