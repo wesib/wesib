@@ -7,6 +7,7 @@
 	<meta name="description" content="Documentation for Wesib: Web Components Building Blocks">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
+	<script async src="assets/js/search.js" id="search-script"></script>
 </head>
 <body>
 <header>
@@ -49,12 +50,7 @@
 	</div>
 	<div class="tsd-page-title">
 		<div class="container">
-			<ul class="tsd-breadcrumb">
-				<li>
-					<a href="globals.html">Globals</a>
-				</li>
-			</ul>
-			<h1>Wesib: Web Components Building Blocks</h1>
+			<h1>Project Wesib: Web Components Building Blocks</h1>
 		</div>
 	</div>
 </header>
@@ -82,20 +78,23 @@
 					<h2>Components</h2>
 				</a>
 				<p>Wesib allows defining custom element by decorating a component class with <code>@Component</code> decorator:</p>
-				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@wesib/wesib&#x27;</span>;
+				<pre><code class="language-typescript"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">Component</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@wesib/wesib&#039;</span><span style="color: #000000">;</span>
 
-<span class="hljs-meta">@Component</span>(<span class="hljs-string">&#x27;my-component&#x27;</span>) <span class="hljs-comment">// Custom element name</span>
-<span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyComponent</span> </span>{
-  <span class="hljs-comment">// ...component definition</span>
-}</code></pre>
+<span style="color: #000000">@</span><span style="color: #795E26">Component</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;my-component&#039;</span><span style="color: #000000">) </span><span style="color: #008000">// Custom element name</span>
+<span style="color: #AF00DB">export</span><span style="color: #000000"> </span><span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">MyComponent</span><span style="color: #000000"> {</span>
+<span style="color: #000000">  </span><span style="color: #008000">// ...component definition</span>
+<span style="color: #000000">}</span>
+</code></pre>
 				<p>No need to extend <code>HTMLElement</code> or any other class. Instead, Wesib creates a custom element accordingly to its
 				definition built either programmatically or using component decorators.</p>
 				<p>To register custom component(s) call <code>bootstrapComponents()</code> function like this:</p>
-				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { bootstrapComponents } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@wesib/wesib&#x27;</span>;
+				<pre><code class="language-typescript"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">bootstrapComponents</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@wesib/wesib&#039;</span><span style="color: #000000">;</span>
 
-bootstrapComponents(MyComponent);</code></pre>
+<span style="color: #795E26">bootstrapComponents</span><span style="color: #000000">(</span><span style="color: #001080">MyComponent</span><span style="color: #000000">);</span>
+</code></pre>
 				<p>After that the custom element can be used anywhere in the document:</p>
-				<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">my-component</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">my-component</span>&gt;</span></code></pre>
+				<pre><code class="language-html"><span style="color: #800000">&lt;my-component&gt;&lt;/my-component&gt;</span>
+</code></pre>
 				<p>The component instance created along with a custom element and bound to it. All the logic of custom element delegated
 				to the bound component instance.</p>
 				<a href="#element-attributes" id="element-attributes" style="color: inherit; text-decoration: none;">
@@ -103,42 +102,45 @@ bootstrapComponents(MyComponent);</code></pre>
 				</a>
 				<p>To define custom element attributes use <code>@Attribute</code> or <code>@AttributeChanged</code> component property decorators,
 				or <code>@Attributes</code> component class decorator.</p>
-				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { Attribute, AttributeChanged, Attributes, Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@wesib/wesib&#x27;</span>;
+				<pre><code class="language-typescript"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">Attribute</span><span style="color: #000000">, </span><span style="color: #001080">AttributeChanged</span><span style="color: #000000">, </span><span style="color: #001080">Attributes</span><span style="color: #000000">, </span><span style="color: #001080">Component</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@wesib/wesib&#039;</span><span style="color: #000000">;</span>
 
-<span class="hljs-meta">@Component</span>(<span class="hljs-string">&#x27;my-component&#x27;</span>) <span class="hljs-comment">// Custom element name</span>
-<span class="hljs-meta">@Attributes</span>(
-  <span class="hljs-string">&#x27;attribute-one&#x27;</span>,
-  <span class="hljs-string">&#x27;another-attribute&#x27;</span>,   
-)
-<span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyComponent</span> </span>{
+<span style="color: #000000">@</span><span style="color: #795E26">Component</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;my-component&#039;</span><span style="color: #000000">) </span><span style="color: #008000">// Custom element name</span>
+<span style="color: #000000">@</span><span style="color: #795E26">Attributes</span><span style="color: #000000">(</span>
+<span style="color: #000000">  </span><span style="color: #A31515">&#039;attribute-one&#039;</span><span style="color: #000000">,</span>
+<span style="color: #000000">  </span><span style="color: #A31515">&#039;another-attribute&#039;</span><span style="color: #000000">,   </span>
+<span style="color: #000000">)</span>
+<span style="color: #AF00DB">export</span><span style="color: #000000"> </span><span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">MyComponent</span><span style="color: #000000"> {</span>
 
-  <span class="hljs-meta">@Attribute</span>(<span class="hljs-string">&#x27;attribute-two&#x27;</span>) <span class="hljs-comment">// Attribute name. When omitted the property name is used</span>
-  attribute2!: <span class="hljs-built_in">string</span> | <span class="hljs-literal">null</span>; <span class="hljs-comment">// Attribute value is accessed instead.</span>
+<span style="color: #000000">  @</span><span style="color: #795E26">Attribute</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;attribute-two&#039;</span><span style="color: #000000">) </span><span style="color: #008000">// Attribute name. When omitted the property name is used</span>
+<span style="color: #000000">  </span><span style="color: #001080">attribute2</span><span style="color: #000000">!: </span><span style="color: #267F99">string</span><span style="color: #000000"> | </span><span style="color: #267F99">null</span><span style="color: #000000">; </span><span style="color: #008000">// Attribute value is accessed instead.</span>
 
-  <span class="hljs-meta">@AttributeChanged</span>(<span class="hljs-string">&#x27;attribute-three&#x27;</span>) <span class="hljs-comment">// Attribute name. When omitted the method name is used  </span>
-  <span class="hljs-function"><span class="hljs-title">setAttribute3</span>(<span class="hljs-params">newValue: <span class="hljs-built_in">string</span>, oldValue: <span class="hljs-built_in">string</span> | <span class="hljs-literal">null</span></span>)</span> {
-    <span class="hljs-comment">// This is called on attribute value modification with new and old values</span>
-  }
+<span style="color: #000000">  @</span><span style="color: #795E26">AttributeChanged</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;attribute-three&#039;</span><span style="color: #000000">) </span><span style="color: #008000">// Attribute name. When omitted the method name is used  </span>
+<span style="color: #000000">  </span><span style="color: #795E26">setAttribute3</span><span style="color: #000000">(</span><span style="color: #001080">newValue</span><span style="color: #000000">: </span><span style="color: #267F99">string</span><span style="color: #000000">, </span><span style="color: #001080">oldValue</span><span style="color: #000000">: </span><span style="color: #267F99">string</span><span style="color: #000000"> | </span><span style="color: #267F99">null</span><span style="color: #000000">) {</span>
+<span style="color: #000000">    </span><span style="color: #008000">// This is called on attribute value modification with new and old values</span>
+<span style="color: #000000">  }</span>
 
-}</code></pre>
-				<pre><code class="language-HTML">&lt;my-component
-  attribute-one=&quot;1&quot;  &lt;!-- Can be accessed with element&#x27;s `element.getAttribute(&quot;attribute-one&quot;)` --&gt;
-  attribute-two=&quot;2&quot;  &lt;!-- Can be accessed as `attribute2` property of `MyComponent` --&gt;
-  attribute-three&quot;3&quot; &lt;!-- Triggers `setAttribute3()` method call --&gt;
-&gt;&lt;/my-component&gt;</code></pre>
+<span style="color: #000000">}</span>
+</code></pre>
+				<pre><code class="language-HTML"><span style="color: #800000">&lt;my-component</span>
+<span style="color: #000000">  </span><span style="color: #FF0000">attribute-one</span><span style="color: #000000">=</span><span style="color: #0000FF">&quot;1&quot;</span><span style="color: #000000">  </span><span style="color: #CD3131">&lt;!--</span><span style="color: #000000"> </span><span style="color: #FF0000">Can</span><span style="color: #000000"> </span><span style="color: #FF0000">be</span><span style="color: #000000"> </span><span style="color: #FF0000">accessed</span><span style="color: #000000"> </span><span style="color: #FF0000">with</span><span style="color: #000000"> </span><span style="color: #FF0000">element</span><span style="color: #CD3131">&#039;s</span><span style="color: #000000"> </span><span style="color: #FF0000">`element.getAttribute(</span><span style="color: #CD3131">&quot;attribute-one&quot;)`</span><span style="color: #000000"> </span><span style="color: #FF0000">--</span><span style="color: #800000">&gt;</span>
+<span style="color: #000000">  attribute-two=&quot;2&quot;  </span><span style="color: #008000">&lt;!-- Can be accessed as `attribute2` property of `MyComponent` --&gt;</span>
+<span style="color: #000000">  attribute-three&quot;3&quot; </span><span style="color: #008000">&lt;!-- Triggers `setAttribute3()` method call --&gt;</span>
+<span style="color: #000000">&gt;</span><span style="color: #800000">&lt;/my-component&gt;</span>
+</code></pre>
 				<a href="#element-properties" id="element-properties" style="color: inherit; text-decoration: none;">
 					<h2>Element Properties</h2>
 				</a>
 				<p>To define the properties of custom element use a <code>@DomProperty</code> component property decorator.</p>
-				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { DomProperty, Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@wesib/wesib&#x27;</span>;
+				<pre><code class="language-typescript"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">DomProperty</span><span style="color: #000000">, </span><span style="color: #001080">Component</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@wesib/wesib&#039;</span><span style="color: #000000">;</span>
 
-<span class="hljs-meta">@Component</span>(<span class="hljs-string">&#x27;my-component&#x27;</span>) <span class="hljs-comment">// Custom element name</span>
-<span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyComponent</span> </span>{
+<span style="color: #000000">@</span><span style="color: #795E26">Component</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;my-component&#039;</span><span style="color: #000000">) </span><span style="color: #008000">// Custom element name</span>
+<span style="color: #AF00DB">export</span><span style="color: #000000"> </span><span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">MyComponent</span><span style="color: #000000"> {</span>
 
-  <span class="hljs-meta">@DomProperty</span>(<span class="hljs-string">&#x27;elementProperty&#x27;</span>) <span class="hljs-comment">// Element property name. The decorated property name is used if omitted.</span>
-  customProperty = <span class="hljs-number">12</span>; <span class="hljs-comment">// Element&#x27;s `elementProperty` is backed by this one.</span>
+<span style="color: #000000">  @</span><span style="color: #795E26">DomProperty</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;elementProperty&#039;</span><span style="color: #000000">) </span><span style="color: #008000">// Element property name. The decorated property name is used if omitted.</span>
+<span style="color: #000000">  </span><span style="color: #001080">customProperty</span><span style="color: #000000"> = </span><span style="color: #098658">12</span><span style="color: #000000">; </span><span style="color: #008000">// Element&#039;s `elementProperty` is backed by this one.</span>
 
-}</code></pre>
+<span style="color: #000000">}</span>
+</code></pre>
 				<p>The same can be done for element methods with <code>@DomMethod</code> decorator, which is just a convenient alias for
 				<code>@DomProperty</code>.</p>
 				<a href="#ioc-container" id="ioc-container" style="color: inherit; text-decoration: none;">
@@ -146,18 +148,19 @@ bootstrapComponents(MyComponent);</code></pre>
 				</a>
 				<p>Wesib provides contexts for each component and feature (see below). This context can be used to access provided values.</p>
 				<p>For example, each component class constructor accepts a <code>ComponentContext</code> instance as its only argument.</p>
-				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { ComponentContext, Component } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@wesib/wesib&#x27;</span>;
+				<pre><code class="language-typescript"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">ComponentContext</span><span style="color: #000000">, </span><span style="color: #001080">Component</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@wesib/wesib&#039;</span><span style="color: #000000">;</span>
 
-<span class="hljs-meta">@Component</span>(<span class="hljs-string">&#x27;my-component&#x27;</span>) <span class="hljs-comment">// Custom element name</span>
-<span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyComponent</span> </span>{
+<span style="color: #000000">@</span><span style="color: #795E26">Component</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;my-component&#039;</span><span style="color: #000000">) </span><span style="color: #008000">// Custom element name</span>
+<span style="color: #AF00DB">export</span><span style="color: #000000"> </span><span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">MyComponent</span><span style="color: #000000"> {</span>
 
-  <span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> _service: MyService;
+<span style="color: #000000">  </span><span style="color: #0000FF">private</span><span style="color: #000000"> </span><span style="color: #0000FF">readonly</span><span style="color: #000000"> </span><span style="color: #001080">_service</span><span style="color: #000000">: </span><span style="color: #267F99">MyService</span><span style="color: #000000">;</span>
 
-  <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params">context: ComponentContext</span>)</span> {
-    <span class="hljs-built_in">this</span>._service = context.get(MyService); <span class="hljs-comment">// Obtain a `MyService` instance provided by some feature elsewhere.</span>
-  }
+<span style="color: #000000">  </span><span style="color: #0000FF">constructor</span><span style="color: #000000">(</span><span style="color: #001080">context</span><span style="color: #000000">: </span><span style="color: #267F99">ComponentContext</span><span style="color: #000000">) {</span>
+<span style="color: #000000">    </span><span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #001080">_service</span><span style="color: #000000"> = </span><span style="color: #001080">context</span><span style="color: #000000">.</span><span style="color: #795E26">get</span><span style="color: #000000">(</span><span style="color: #001080">MyService</span><span style="color: #000000">); </span><span style="color: #008000">// Obtain a `MyService` instance provided by some feature elsewhere.</span>
+<span style="color: #000000">  }</span>
 
-}</code></pre>
+<span style="color: #000000">}</span>
+</code></pre>
 				<p>IoC container implementation is based on <a href="https://npmjs.com/package/context-values">context-values</a>.</p>
 				<a href="#features" id="features" style="color: inherit; text-decoration: none;">
 					<h2>Features</h2>
@@ -166,79 +169,81 @@ bootstrapComponents(MyComponent);</code></pre>
 				<p>It is possible to define custom features to extend Wesib. E.g. to define or augment existing components, extend custom
 				elements (like <code>@Attribute</code> or <code>@DomProperty</code> decorators do), or provide some context values.</p>
 				<p>The feature is a class decorated with <code>@Feature</code> decorator:</p>
-				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> {
-  ComponentContext,
-  DefinitionContext,
-  Feature,
-  FeatureContext,
-  FeatureSetup,
-} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@wesib/wesib&#x27;</span>;
+				<pre><code class="language-typescript"><span style="color: #AF00DB">import</span><span style="color: #000000"> {</span>
+<span style="color: #000000">  </span><span style="color: #001080">ComponentContext</span><span style="color: #000000">,</span>
+<span style="color: #000000">  </span><span style="color: #001080">DefinitionContext</span><span style="color: #000000">,</span>
+<span style="color: #000000">  </span><span style="color: #001080">Feature</span><span style="color: #000000">,</span>
+<span style="color: #000000">  </span><span style="color: #001080">FeatureContext</span><span style="color: #000000">,</span>
+<span style="color: #000000">  </span><span style="color: #001080">FeatureSetup</span><span style="color: #000000">,</span>
+<span style="color: #000000">} </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@wesib/wesib&#039;</span><span style="color: #000000">;</span>
 
-<span class="hljs-meta">@Feature</span>({
-  <span class="hljs-attr">needs</span>: [
-    OtherFeature1, <span class="hljs-comment">// Requires other features to be enabled.</span>
-    MyComponent, <span class="hljs-comment">// The required component will be defined too.  </span>
-  ],
-  <span class="hljs-function"><span class="hljs-title">setup</span>(<span class="hljs-params">setup: FeatureSetup</span>)</span> { 
-    setup.provide({ 
-      <span class="hljs-attr">a</span>: GlobalService,              <span class="hljs-comment">// Provide a `GlobalService` available globally</span>
-      <span class="hljs-attr">as</span>: <span class="hljs-function">() =&gt;</span> <span class="hljs-keyword">new</span> GlobalService(), <span class="hljs-comment">// in all IoC contexts</span>
-    }); 
-    setup.perDefinition({
-      <span class="hljs-attr">a</span>: DefinitionService,
-      <span class="hljs-attr">by</span>: <span class="hljs-function">(<span class="hljs-params">definitionContext: DefinitionContext</span>) =&gt;</span> {
-        <span class="hljs-comment">// Provide a `DefinitionService` available during component definition.</span>
-        <span class="hljs-comment">// Such service will be provided per component class</span>
-        <span class="hljs-comment">// and will be available during custom element construction,</span>
-        <span class="hljs-comment">// e.g. to `onDefinition()` listeners.</span>
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> DefinitionService(definitionContext);
-      },
-    });
-    setup.perComponent({
-      <span class="hljs-attr">a</span>: MyService,
-      <span class="hljs-attr">by</span>: <span class="hljs-function">(<span class="hljs-params">componentContext: ComponentContext</span>) =&gt;</span> {
-        <span class="hljs-comment">// Provide a `MyService` available to components.</span>
-        <span class="hljs-comment">// Such service will be provided per component instance</span>
-        <span class="hljs-comment">// and will be available to component instance and `onComponent()` listeners.</span>
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> MyService(componentContext.component);
-      },
-    });
-  },
-  <span class="hljs-function"><span class="hljs-title">init</span>(<span class="hljs-params">context: FeatureContext</span>)</span> {
-    <span class="hljs-comment">// Bootstrap the feature by calling methods of provided context.</span>
+<span style="color: #000000">@</span><span style="color: #795E26">Feature</span><span style="color: #000000">({</span>
+<span style="color: #000000">  </span><span style="color: #001080">needs:</span><span style="color: #000000"> [</span>
+<span style="color: #000000">    </span><span style="color: #001080">OtherFeature1</span><span style="color: #000000">, </span><span style="color: #008000">// Requires other features to be enabled.</span>
+<span style="color: #000000">    </span><span style="color: #001080">MyComponent</span><span style="color: #000000">, </span><span style="color: #008000">// The required component will be defined too.  </span>
+<span style="color: #000000">  ],</span>
+<span style="color: #000000">  </span><span style="color: #795E26">setup</span><span style="color: #000000">(</span><span style="color: #001080">setup</span><span style="color: #000000">: </span><span style="color: #267F99">FeatureSetup</span><span style="color: #000000">) { </span>
+<span style="color: #000000">    </span><span style="color: #001080">setup</span><span style="color: #000000">.</span><span style="color: #795E26">provide</span><span style="color: #000000">({ </span>
+<span style="color: #000000">      </span><span style="color: #001080">a:</span><span style="color: #000000"> </span><span style="color: #001080">GlobalService</span><span style="color: #000000">,              </span><span style="color: #008000">// Provide a `GlobalService` available globally</span>
+<span style="color: #000000">      </span><span style="color: #795E26">as</span><span style="color: #001080">:</span><span style="color: #000000"> () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">GlobalService</span><span style="color: #000000">(), </span><span style="color: #008000">// in all IoC contexts</span>
+<span style="color: #000000">    }); </span>
+<span style="color: #000000">    </span><span style="color: #001080">setup</span><span style="color: #000000">.</span><span style="color: #795E26">perDefinition</span><span style="color: #000000">({</span>
+<span style="color: #000000">      </span><span style="color: #001080">a:</span><span style="color: #000000"> </span><span style="color: #001080">DefinitionService</span><span style="color: #000000">,</span>
+<span style="color: #000000">      </span><span style="color: #795E26">by</span><span style="color: #001080">:</span><span style="color: #000000"> (</span><span style="color: #001080">definitionContext</span><span style="color: #000000">: </span><span style="color: #267F99">DefinitionContext</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">        </span><span style="color: #008000">// Provide a `DefinitionService` available during component definition.</span>
+<span style="color: #000000">        </span><span style="color: #008000">// Such service will be provided per component class</span>
+<span style="color: #000000">        </span><span style="color: #008000">// and will be available during custom element construction,</span>
+<span style="color: #000000">        </span><span style="color: #008000">// e.g. to `onDefinition()` listeners.</span>
+<span style="color: #000000">        </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">DefinitionService</span><span style="color: #000000">(</span><span style="color: #001080">definitionContext</span><span style="color: #000000">);</span>
+<span style="color: #000000">      },</span>
+<span style="color: #000000">    });</span>
+<span style="color: #000000">    </span><span style="color: #001080">setup</span><span style="color: #000000">.</span><span style="color: #795E26">perComponent</span><span style="color: #000000">({</span>
+<span style="color: #000000">      </span><span style="color: #001080">a:</span><span style="color: #000000"> </span><span style="color: #001080">MyService</span><span style="color: #000000">,</span>
+<span style="color: #000000">      </span><span style="color: #795E26">by</span><span style="color: #001080">:</span><span style="color: #000000"> (</span><span style="color: #001080">componentContext</span><span style="color: #000000">: </span><span style="color: #267F99">ComponentContext</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">        </span><span style="color: #008000">// Provide a `MyService` available to components.</span>
+<span style="color: #000000">        </span><span style="color: #008000">// Such service will be provided per component instance</span>
+<span style="color: #000000">        </span><span style="color: #008000">// and will be available to component instance and `onComponent()` listeners.</span>
+<span style="color: #000000">        </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">MyService</span><span style="color: #000000">(</span><span style="color: #001080">componentContext</span><span style="color: #000000">.</span><span style="color: #001080">component</span><span style="color: #000000">);</span>
+<span style="color: #000000">      },</span>
+<span style="color: #000000">    });</span>
+<span style="color: #000000">  },</span>
+<span style="color: #000000">  </span><span style="color: #795E26">init</span><span style="color: #000000">(</span><span style="color: #001080">context</span><span style="color: #000000">: </span><span style="color: #267F99">FeatureContext</span><span style="color: #000000">) {</span>
+<span style="color: #000000">    </span><span style="color: #008000">// Bootstrap the feature by calling methods of provided context.</span>
 
-    context.onDefinition(<span class="hljs-function">(<span class="hljs-params">definitionContext: DefinitionContext</span>) =&gt;</span> {
-      <span class="hljs-comment">// Notified on each component definition.</span>
+<span style="color: #000000">    </span><span style="color: #001080">context</span><span style="color: #000000">.</span><span style="color: #795E26">onDefinition</span><span style="color: #000000">((</span><span style="color: #001080">definitionContext</span><span style="color: #000000">: </span><span style="color: #267F99">DefinitionContext</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">      </span><span style="color: #008000">// Notified on each component definition.</span>
 
-      <span class="hljs-comment">// The service provided with `perDefinition()` method above is available here      </span>
-      <span class="hljs-keyword">const</span> definitionService = definitionContext.get(DefinitionService);
+<span style="color: #000000">      </span><span style="color: #008000">// The service provided with `perDefinition()` method above is available here      </span>
+<span style="color: #000000">      </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">definitionService</span><span style="color: #000000"> = </span><span style="color: #001080">definitionContext</span><span style="color: #000000">.</span><span style="color: #795E26">get</span><span style="color: #000000">(</span><span style="color: #001080">DefinitionService</span><span style="color: #000000">);</span>
 
-      definitionContext.whenReady(<span class="hljs-function">() =&gt;</span> {
-        <span class="hljs-comment">// This is called when element class is defined.</span>
-        <span class="hljs-built_in">console</span>.log(
-          <span class="hljs-string">`Define element class <span class="hljs-subst">${definitionContext.elementType.name}</span>`</span>
-          + <span class="hljs-string">` for component of <span class="hljs-subst">${definitionContext.componentType.name}</span> type`</span>)        
-      });
-    });
-    context.onComponent(<span class="hljs-function">(<span class="hljs-params">componentContext: ComponentContext</span>) =&gt;</span> {
-      <span class="hljs-comment">// Notified on each component instantiation.</span>
+<span style="color: #000000">      </span><span style="color: #001080">definitionContext</span><span style="color: #000000">.</span><span style="color: #795E26">whenReady</span><span style="color: #000000">(() </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">        </span><span style="color: #008000">// This is called when element class is defined.</span>
+<span style="color: #000000">        </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span>
+<span style="color: #000000">          </span><span style="color: #A31515">`Define element class </span><span style="color: #0000FF">${</span><span style="color: #001080">definitionContext</span><span style="color: #000000FF">.</span><span style="color: #001080">elementType</span><span style="color: #000000FF">.</span><span style="color: #001080">name</span><span style="color: #0000FF">}</span><span style="color: #A31515">`</span>
+<span style="color: #000000">          + </span><span style="color: #A31515">` for component of </span><span style="color: #0000FF">${</span><span style="color: #001080">definitionContext</span><span style="color: #000000FF">.</span><span style="color: #001080">componentType</span><span style="color: #000000FF">.</span><span style="color: #001080">name</span><span style="color: #0000FF">}</span><span style="color: #A31515"> type`</span><span style="color: #000000">)        </span>
+<span style="color: #000000">      });</span>
+<span style="color: #000000">    });</span>
+<span style="color: #000000">    </span><span style="color: #001080">context</span><span style="color: #000000">.</span><span style="color: #795E26">onComponent</span><span style="color: #000000">((</span><span style="color: #001080">componentContext</span><span style="color: #000000">: </span><span style="color: #267F99">ComponentContext</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">      </span><span style="color: #008000">// Notified on each component instantiation.</span>
 
-      <span class="hljs-comment">// The service provided with `perComponent()` method above is available here      </span>
-      <span class="hljs-keyword">const</span> myService = componentContext.get(MyService);
+<span style="color: #000000">      </span><span style="color: #008000">// The service provided with `perComponent()` method above is available here      </span>
+<span style="color: #000000">      </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">myService</span><span style="color: #000000"> = </span><span style="color: #001080">componentContext</span><span style="color: #000000">.</span><span style="color: #795E26">get</span><span style="color: #000000">(</span><span style="color: #001080">MyService</span><span style="color: #000000">);</span>
 
-      componentContext.whenReady(<span class="hljs-function">() =&gt;</span> {
-        <span class="hljs-comment">// This is called when component is instantiated,</span>
-        <span class="hljs-comment">// which happens right after custom element instantiation.</span>
-        <span class="hljs-built_in">console</span>.log(componentContext.element, <span class="hljs-string">` is instantiated for`</span>, componentContext.component);
-      });
-    });
-  }  
-})
-<span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyFeature</span> </span>{} </code></pre>
+<span style="color: #000000">      </span><span style="color: #001080">componentContext</span><span style="color: #000000">.</span><span style="color: #795E26">whenReady</span><span style="color: #000000">(() </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">        </span><span style="color: #008000">// This is called when component is instantiated,</span>
+<span style="color: #000000">        </span><span style="color: #008000">// which happens right after custom element instantiation.</span>
+<span style="color: #000000">        </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">componentContext</span><span style="color: #000000">.</span><span style="color: #001080">element</span><span style="color: #000000">, </span><span style="color: #A31515">` is instantiated for`</span><span style="color: #000000">, </span><span style="color: #001080">componentContext</span><span style="color: #000000">.</span><span style="color: #001080">component</span><span style="color: #000000">);</span>
+<span style="color: #000000">      });</span>
+<span style="color: #000000">    });</span>
+<span style="color: #000000">  }  </span>
+<span style="color: #000000">})</span>
+<span style="color: #AF00DB">export</span><span style="color: #000000"> </span><span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">MyFeature</span><span style="color: #000000"> {} </span>
+</code></pre>
 				<p>To enable a custom feature just pass it to <code>bootstrapComponents()</code> like this:</p>
-				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { bootstrapComponents } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@wesib/wesib&#x27;</span>;
+				<pre><code class="language-typescript"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">bootstrapComponents</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@wesib/wesib&#039;</span><span style="color: #000000">;</span>
 
-bootstrapComponents(MyFeature);</code></pre>
+<span style="color: #795E26">bootstrapComponents</span><span style="color: #000000">(</span><span style="color: #001080">MyFeature</span><span style="color: #000000">);</span>
+</code></pre>
 				<p>Note that components are kind of features that, when passed to this function (or enabled with <code>needs</code> option),
 				register themselves as components.</p>
 				<a href="#component-state" id="component-state" style="color: inherit; text-decoration: none;">
@@ -247,26 +252,27 @@ bootstrapComponents(MyFeature);</code></pre>
 				<p>Whenever a component state changes, e.g. when element attribute or property value changes, a state update notification
 				is issued.</p>
 				<p>A state update notification can also be issued by calling a <code>ComponentContext.updateState()</code> method:</p>
-				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { Component, ComponentContext } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@wesib/wesib&#x27;</span>;
+				<pre><code class="language-typescript"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">Component</span><span style="color: #000000">, </span><span style="color: #001080">ComponentContext</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@wesib/wesib&#039;</span><span style="color: #000000">;</span>
 
-<span class="hljs-meta">@Component</span>(<span class="hljs-string">&#x27;my-component&#x27;</span>) <span class="hljs-comment">// Custom element name</span>
-<span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyComponent</span> </span>{
+<span style="color: #000000">@</span><span style="color: #795E26">Component</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;my-component&#039;</span><span style="color: #000000">) </span><span style="color: #008000">// Custom element name</span>
+<span style="color: #AF00DB">export</span><span style="color: #000000"> </span><span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">MyComponent</span><span style="color: #000000"> {</span>
 
-  <span class="hljs-attr">data</span>: <span class="hljs-built_in">any</span>;
+<span style="color: #000000">  </span><span style="color: #001080">data</span><span style="color: #000000">: </span><span style="color: #267F99">any</span><span style="color: #000000">;</span>
 
-  <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> _context: ComponentContext</span>)</span> {
-  }
+<span style="color: #000000">  </span><span style="color: #0000FF">constructor</span><span style="color: #000000">(</span><span style="color: #0000FF">private</span><span style="color: #000000"> </span><span style="color: #0000FF">readonly</span><span style="color: #000000"> </span><span style="color: #001080">_context</span><span style="color: #000000">: </span><span style="color: #267F99">ComponentContext</span><span style="color: #000000">) {</span>
+<span style="color: #000000">  }</span>
 
-  <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-title">loadData</span>(<span class="hljs-params"></span>)</span> {
+<span style="color: #000000">  </span><span style="color: #0000FF">async</span><span style="color: #000000"> </span><span style="color: #795E26">loadData</span><span style="color: #000000">() {</span>
 
-    <span class="hljs-keyword">const</span> newData = <span class="hljs-keyword">await</span> fetch(<span class="hljs-string">&#x27;/api/data&#x27;</span>).then(<span class="hljs-function"><span class="hljs-params">response</span> =&gt;</span> response.json());
-    <span class="hljs-keyword">const</span> oldData = <span class="hljs-built_in">this</span>.data;
+<span style="color: #000000">    </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">newData</span><span style="color: #000000"> = </span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #795E26">fetch</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;/api/data&#039;</span><span style="color: #000000">).</span><span style="color: #795E26">then</span><span style="color: #000000">(</span><span style="color: #001080">response</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">response</span><span style="color: #000000">.</span><span style="color: #795E26">json</span><span style="color: #000000">());</span>
+<span style="color: #000000">    </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">oldData</span><span style="color: #000000"> = </span><span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #001080">data</span><span style="color: #000000">;</span>
 
-    <span class="hljs-built_in">this</span>.data = newData;
-    <span class="hljs-built_in">this</span>._context.updateState(<span class="hljs-string">&#x27;data&#x27;</span>, newData, oldData); <span class="hljs-comment">// Update the state</span>
-  }
+<span style="color: #000000">    </span><span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #001080">data</span><span style="color: #000000"> = </span><span style="color: #001080">newData</span><span style="color: #000000">;</span>
+<span style="color: #000000">    </span><span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #001080">_context</span><span style="color: #000000">.</span><span style="color: #795E26">updateState</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;data&#039;</span><span style="color: #000000">, </span><span style="color: #001080">newData</span><span style="color: #000000">, </span><span style="color: #001080">oldData</span><span style="color: #000000">); </span><span style="color: #008000">// Update the state</span>
+<span style="color: #000000">  }</span>
 
-}</code></pre>
+<span style="color: #000000">}</span>
+</code></pre>
 				<p>A <code>ComponentState</code> instance available in component context allows to track the component state updates.</p>
 				<a href="#shadow-dom" id="shadow-dom" style="color: inherit; text-decoration: none;">
 					<h2>Shadow DOM</h2>
@@ -283,23 +289,24 @@ bootstrapComponents(MyFeature);</code></pre>
 				mechanics to use: direct DOM manipulations, template processing, virtual DOM, etc.</p>
 				<p>However, Wesib is able to notify the renderer on component state updates and trigger its rendering. For that a <code>@Render</code>
 				decorator can be applied to component renderer method:</p>
-				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { Attribute, Component, ComponentContext, Render } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@wesib/wesib&#x27;</span>;
+				<pre><code class="language-typescript"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">Attribute</span><span style="color: #000000">, </span><span style="color: #001080">Component</span><span style="color: #000000">, </span><span style="color: #001080">ComponentContext</span><span style="color: #000000">, </span><span style="color: #001080">Render</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@wesib/wesib&#039;</span><span style="color: #000000">;</span>
 
-<span class="hljs-meta">@Component</span>(<span class="hljs-string">&#x27;greet-text&#x27;</span>)
-<span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">GreetTextComponent</span> </span>{
+<span style="color: #000000">@</span><span style="color: #795E26">Component</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;greet-text&#039;</span><span style="color: #000000">)</span>
+<span style="color: #AF00DB">export</span><span style="color: #000000"> </span><span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">GreetTextComponent</span><span style="color: #000000"> {</span>
 
-  <span class="hljs-meta">@Attribute</span>()
-  <span class="hljs-attr">name</span>: <span class="hljs-built_in">string</span> | <span class="hljs-literal">null</span>;
+<span style="color: #000000">  @</span><span style="color: #795E26">Attribute</span><span style="color: #000000">()</span>
+<span style="color: #000000">  </span><span style="color: #001080">name</span><span style="color: #000000">: </span><span style="color: #267F99">string</span><span style="color: #000000"> | </span><span style="color: #267F99">null</span><span style="color: #000000">;</span>
 
-  <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> <span class="hljs-keyword">readonly</span> _context: ComponentContext</span>)</span> {
-  }
+<span style="color: #000000">  </span><span style="color: #0000FF">constructor</span><span style="color: #000000">(</span><span style="color: #0000FF">private</span><span style="color: #000000"> </span><span style="color: #0000FF">readonly</span><span style="color: #000000"> </span><span style="color: #001080">_context</span><span style="color: #000000">: </span><span style="color: #267F99">ComponentContext</span><span style="color: #000000">) {</span>
+<span style="color: #000000">  }</span>
 
-  <span class="hljs-meta">@Render</span>()
-  <span class="hljs-function"><span class="hljs-title">render</span>(<span class="hljs-params"></span>)</span> {
-    <span class="hljs-built_in">this</span>._context.contentRoot.innerText = <span class="hljs-string">`Hello, <span class="hljs-subst">${<span class="hljs-built_in">this</span>.name}</span>!`</span>;
-  }
+<span style="color: #000000">  @</span><span style="color: #795E26">Render</span><span style="color: #000000">()</span>
+<span style="color: #000000">  </span><span style="color: #795E26">render</span><span style="color: #000000">() {</span>
+<span style="color: #000000">    </span><span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #001080">_context</span><span style="color: #000000">.</span><span style="color: #001080">contentRoot</span><span style="color: #000000">.</span><span style="color: #001080">innerText</span><span style="color: #000000"> = </span><span style="color: #A31515">`Hello, </span><span style="color: #0000FF">${</span><span style="color: #0000FF">this</span><span style="color: #000000FF">.</span><span style="color: #001080">name</span><span style="color: #0000FF">}</span><span style="color: #A31515">!`</span><span style="color: #000000">;</span>
+<span style="color: #000000">  }</span>
 
-}</code></pre>
+<span style="color: #000000">}</span>
+</code></pre>
 				<p>The <code>@Render</code>-decorated method will be called from <code>requestAnimationFrame()</code> callback by default. So, it won&#39;t be
 				called too frequently.</p>
 			</div>
@@ -307,16 +314,373 @@ bootstrapComponents(MyFeature);</code></pre>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 			<nav class="tsd-navigation primary">
 				<ul>
-					<li class="globals  ">
-						<a href="globals.html"><em>Globals</em></a>
+					<li class=" ">
+						<a href="modules.html">Exports</a>
 					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/@wesib_wesib.html">@wesib/wesib</a>
+					<li class=" tsd-kind-namespace">
+						<a href="modules/attributepath.html">Attribute<wbr>Path</a>
+					</li>
+					<li class=" tsd-kind-namespace">
+						<a href="modules/attributes.html">Attributes</a>
+					</li>
+					<li class=" tsd-kind-namespace">
+						<a href="modules/componentdef.html">Component<wbr>Def</a>
+					</li>
+					<li class=" tsd-kind-namespace">
+						<a href="modules/componentproperty.html">Component<wbr>Property</a>
+					</li>
+					<li class=" tsd-kind-namespace">
+						<a href="modules/dompropertypath.html">Dom<wbr>Property<wbr>Path</a>
+					</li>
+					<li class=" tsd-kind-namespace">
+						<a href="modules/elementdef.html">Element<wbr>Def</a>
+					</li>
+					<li class=" tsd-kind-namespace">
+						<a href="modules/featuredef.html">Feature<wbr>Def</a>
+					</li>
+					<li class=" tsd-kind-namespace">
+						<a href="modules/renderdef.html">Render<wbr>Def</a>
+					</li>
+					<li class=" tsd-kind-namespace">
+						<a href="modules/statepropertypath.html">State<wbr>Property<wbr>Path</a>
+					</li>
+					<li class=" tsd-kind-namespace">
+						<a href="modules/stateupdater.html">State<wbr>Updater</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-reference">
+						<a href="modules.html#dommethod" class="tsd-kind-icon">Dom<wbr>Method</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/autoconnectsupport.html" class="tsd-kind-icon">Auto<wbr>Connect<wbr>Support</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/bootstrapcontext.html" class="tsd-kind-icon">Bootstrap<wbr>Context</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="classes/componentcontext.html" class="tsd-kind-icon">Component<wbr>Context</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="classes/componentmount.html" class="tsd-kind-icon">Component<wbr>Mount</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/componentstate.html" class="tsd-kind-icon">Component<wbr>State</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/customelements.html" class="tsd-kind-icon">Custom<wbr>Elements</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="classes/definitioncontext.html" class="tsd-kind-icon">Definition<wbr>Context</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/featurecontext.html" class="tsd-kind-icon">Feature<wbr>Context</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/featureneedserror.html" class="tsd-kind-icon">Feature<wbr>Needs<wbr>Error</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/featureref.html" class="tsd-kind-icon">Feature<wbr>Ref</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="classes/metaaccessor.html" class="tsd-kind-icon">Meta<wbr>Accessor</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/shadowdomevent.html" class="tsd-kind-icon">Shadow<wbr>Dom<wbr>Event</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/attributedef.html" class="tsd-kind-icon">Attribute<wbr>Def</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/attributedescriptor.html" class="tsd-kind-icon">Attribute<wbr>Descriptor</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/attributeregistry.html" class="tsd-kind-icon">Attribute<wbr>Registry</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/bootstrapsetup.html" class="tsd-kind-icon">Bootstrap<wbr>Setup</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/componentclass.html" class="tsd-kind-icon">Component<wbr>Class</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/componentcontextholder.html" class="tsd-kind-icon">Component<wbr>Context<wbr>Holder</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/componenteventdispatcher.html" class="tsd-kind-icon">Component<wbr>Event<wbr>Dispatcher</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/componentpropertydecorator.html" class="tsd-kind-icon">Component<wbr>Property<wbr>Decorator</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/customelement.html" class="tsd-kind-icon">Custom<wbr>Element</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/customelementclass.html" class="tsd-kind-icon">Custom<wbr>Element<wbr>Class</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/definitionsetup.html" class="tsd-kind-icon">Definition<wbr>Setup</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/dompropertydef.html" class="tsd-kind-icon">Dom<wbr>Property<wbr>Def</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/dompropertydescriptor.html" class="tsd-kind-icon">Dom<wbr>Property<wbr>Descriptor</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/dompropertyregistry.html" class="tsd-kind-icon">Dom<wbr>Property<wbr>Registry</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/elementdef.html" class="tsd-kind-icon">Element<wbr>Def</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/elementobserver.html" class="tsd-kind-icon">Element<wbr>Observer</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/elementobserverinit.html" class="tsd-kind-icon">Element<wbr>Observer<wbr>Init</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/elementrenderctl.html" class="tsd-kind-icon">Element<wbr>Render<wbr>Ctl</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/elementrenderscheduleoptions.html" class="tsd-kind-icon">Element<wbr>Render<wbr>Schedule<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/featurestatus.html" class="tsd-kind-icon">Feature<wbr>Status</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/statepropertydef.html" class="tsd-kind-icon">State<wbr>Property<wbr>Def</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#attributechangedcallback" class="tsd-kind-icon">Attribute<wbr>Changed<wbr>Callback</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#attributepath" class="tsd-kind-icon">Attribute<wbr>Path</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#attributeupdatereceiver" class="tsd-kind-icon">Attribute<wbr>Update<wbr>Receiver</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#bootstraproot" class="tsd-kind-icon">Bootstrap<wbr>Root</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#bootstrapwindow" class="tsd-kind-icon">Bootstrap<wbr>Window</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#componentdecorator" class="tsd-kind-icon">Component<wbr>Decorator</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#componentdef" class="tsd-kind-icon">Component<wbr>Def</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#contentroot" class="tsd-kind-icon">Content<wbr>Root</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#defaultnamespacealiaser" class="tsd-kind-icon">Default<wbr>Namespace<wbr>Aliaser</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#defaultrenderscheduler" class="tsd-kind-icon">Default<wbr>Render<wbr>Scheduler</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#dompropertypath" class="tsd-kind-icon">Dom<wbr>Property<wbr>Path</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#dompropertyupdatereceiver" class="tsd-kind-icon">Dom<wbr>Property<wbr>Update<wbr>Receiver</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#elementadapter" class="tsd-kind-icon">Element<wbr>Adapter</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#elementrenderscheduler" class="tsd-kind-icon">Element<wbr>Render<wbr>Scheduler</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#elementrenderer" class="tsd-kind-icon">Element<wbr>Renderer</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#featuredef" class="tsd-kind-icon">Feature<wbr>Def</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#featureneed" class="tsd-kind-icon">Feature<wbr>Need</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#renderdef" class="tsd-kind-icon">Render<wbr>Def</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#shadowcontentdef" class="tsd-kind-icon">Shadow<wbr>Content<wbr>Def</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#shadowcontentroot" class="tsd-kind-icon">Shadow<wbr>Content<wbr>Root</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#shadowrootbuilder" class="tsd-kind-icon">Shadow<wbr>Root<wbr>Builder</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#statepropertypath" class="tsd-kind-icon">State<wbr>Property<wbr>Path</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#statepropertyupdatereceiver" class="tsd-kind-icon">State<wbr>Property<wbr>Update<wbr>Receiver</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#stateupdater" class="tsd-kind-icon">State<wbr>Updater</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#typedclassdecorator" class="tsd-kind-icon">Typed<wbr>Class<wbr>Decorator</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#typedpropertydecorator" class="tsd-kind-icon">Typed<wbr>Property<wbr>Decorator</a>
+					</li>
+					<li class=" tsd-kind-event">
+						<a href="modules.html#componentevent" class="tsd-kind-icon">Component<wbr>Event</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#anonymouscomponentproperty__symbol" class="tsd-kind-icon">Anonymous<wbr>Component<wbr>Property__symbol</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#attributepath__root" class="tsd-kind-icon">Attribute<wbr>Path__root</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#attributeregistry" class="tsd-kind-icon">Attribute<wbr>Registry</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#bootstraproot" class="tsd-kind-icon">Bootstrap<wbr>Root</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#bootstrapwindow" class="tsd-kind-icon">Bootstrap<wbr>Window</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#componentcontext__symbol" class="tsd-kind-icon">Component<wbr>Context__symbol</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#componentdef" class="tsd-kind-icon">Component<wbr>Def</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#componentdef__symbol" class="tsd-kind-icon">Component<wbr>Def__symbol</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#componenteventdispatcher" class="tsd-kind-icon">Component<wbr>Event<wbr>Dispatcher</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#contentroot" class="tsd-kind-icon">Content<wbr>Root</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#defaultnamespacealiaser" class="tsd-kind-icon">Default<wbr>Namespace<wbr>Aliaser</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#defaultrenderscheduler" class="tsd-kind-icon">Default<wbr>Render<wbr>Scheduler</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#dompropertypath__root" class="tsd-kind-icon">Dom<wbr>Property<wbr>Path__root</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#dompropertyregistry" class="tsd-kind-icon">Dom<wbr>Property<wbr>Registry</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#elementadapter" class="tsd-kind-icon">Element<wbr>Adapter</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#elementdef" class="tsd-kind-icon">Element<wbr>Def</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#elementobserver" class="tsd-kind-icon">Element<wbr>Observer</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#elementrenderctl" class="tsd-kind-icon">Element<wbr>Render<wbr>Ctl</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#elementrenderscheduler" class="tsd-kind-icon">Element<wbr>Render<wbr>Scheduler</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#featuredef" class="tsd-kind-icon">Feature<wbr>Def</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#featuredef__symbol" class="tsd-kind-icon">Feature<wbr>Def__symbol</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#renderdef" class="tsd-kind-icon">Render<wbr>Def</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#renderpath__root" class="tsd-kind-icon">Render<wbr>Path__root</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#shadowcontentroot" class="tsd-kind-icon">Shadow<wbr>Content<wbr>Root</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#shadowrootbuilder" class="tsd-kind-icon">Shadow<wbr>Root<wbr>Builder</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#statepropertypath__root" class="tsd-kind-icon">State<wbr>Property<wbr>Path__root</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#stateupdater" class="tsd-kind-icon">State<wbr>Updater</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#wesib__ns" class="tsd-kind-icon">Wesib__NS</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#attachshadow" class="tsd-kind-icon">Attach<wbr>Shadow</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#attribute" class="tsd-kind-icon">Attribute</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#attributechanged" class="tsd-kind-icon">Attribute<wbr>Changed</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#attributes" class="tsd-kind-icon">Attributes</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#component" class="tsd-kind-icon">Component</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#componentproperty" class="tsd-kind-icon">Component<wbr>Property</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#domproperty" class="tsd-kind-icon">Dom<wbr>Property</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#feature" class="tsd-kind-icon">Feature</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#render" class="tsd-kind-icon">Render</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#stateproperty" class="tsd-kind-icon">State<wbr>Property</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#attributepathto" class="tsd-kind-icon">attribute<wbr>Path<wbr>To</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#bootstrapcomponents" class="tsd-kind-icon">bootstrap<wbr>Components</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#bootstrapdefault" class="tsd-kind-icon">bootstrap<wbr>Default</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#decoratepropertyaccessor" class="tsd-kind-icon">decorate<wbr>Property<wbr>Accessor</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#dompropertypathto" class="tsd-kind-icon">dom<wbr>Property<wbr>Path<wbr>To</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#iselement" class="tsd-kind-icon">is<wbr>Element</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#property2attributename" class="tsd-kind-icon">property2attribute<wbr>Name</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#statepropertypathto" class="tsd-kind-icon">state<wbr>Property<wbr>Path<wbr>To</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#trackattribute" class="tsd-kind-icon">track<wbr>Attribute</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#trackdomproperty" class="tsd-kind-icon">track<wbr>Dom<wbr>Property</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#trackstateproperty" class="tsd-kind-icon">track<wbr>State<wbr>Property</a>
+					</li>
 				</ul>
 			</nav>
 		</div>
@@ -327,21 +691,20 @@ bootstrapComponents(MyFeature);</code></pre>
 		<h2>Legend</h2>
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
-				<li class="tsd-kind-namespace"><span class="tsd-kind-icon">Namespace</span></li>
-				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
-				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
-				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
-				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
-				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
-				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
 			</ul>
 			<ul class="tsd-legend">
-				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
-				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
 			</ul>
 			<ul class="tsd-legend">
-				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
-				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
 			</ul>
 		</div>
 	</div>
