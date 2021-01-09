@@ -1,57 +1,24 @@
-import { Class, mergeFunctions, noop } from '@proc7ts/primitives';
+import { Class } from '@proc7ts/primitives';
 import { BootstrapContext } from '../../boot';
-import { BootstrapContextRegistry, ElementBuilder } from '../../boot/impl';
+import { bootstrapComponents } from '../../boot/bootstrap';
+import { ElementBuilder } from '../../boot/impl';
 import { ComponentDef, ComponentDef__symbol } from '../../component';
 import { ComponentClass, CustomElements } from '../../component/definition';
-import { FeatureContext } from '../feature-context';
-import { ComponentRegistry } from './component-registry.impl';
+import { Feature } from '../feature.decorator';
 import Mocked = jest.Mocked;
 
 describe('feature load', () => {
   describe('ComponentRegistry', () => {
 
-    let bsContextRegistry: BootstrapContextRegistry;
-    let mockFeatureContext: Mocked<FeatureContext>;
-    let mockCustomElements: Mocked<CustomElements>;
-    let ready: () => void;
-
-    beforeEach(() => {
-      ready = noop;
-      bsContextRegistry = BootstrapContextRegistry.create();
-      mockFeatureContext = {
-        whenReady(callback: () => void) {
-          ready = mergeFunctions(ready, callback);
-        },
-        get: bsContextRegistry.values.get,
-      } as any;
-      bsContextRegistry.provide({ a: BootstrapContext, is: mockFeatureContext });
-
-      mockCustomElements = {
-        define: jest.fn(),
-        whenDefined: jest.fn(),
-      };
-      bsContextRegistry.provide({ a: CustomElements, is: mockCustomElements });
-    });
-
+    let TestComponent: ComponentClass;
+    let ElementSpy: Class;
     let mockBuilder: Mocked<ElementBuilder>;
 
     beforeEach(() => {
       mockBuilder = {
         buildElement: jest.fn(),
       } as any;
-      bsContextRegistry.provide({ a: ElementBuilder, is: mockBuilder });
-    });
 
-    let registry: ComponentRegistry;
-
-    beforeEach(() => {
-      registry = new ComponentRegistry(mockFeatureContext);
-    });
-
-    let TestComponent: ComponentClass;
-    let ElementSpy: Class;
-
-    beforeEach(() => {
       TestComponent = class {
 
         static [ComponentDef__symbol]: ComponentDef = {
@@ -64,19 +31,50 @@ describe('feature load', () => {
       mockBuilder.buildElement.mockReturnValue({ elementType: ElementSpy } as any);
     });
 
+    let bsContext: BootstrapContext;
+    let mockCustomElements: Mocked<CustomElements>;
+
+    beforeEach(async () => {
+      mockCustomElements = {
+        define: jest.fn(),
+        whenDefined: jest.fn(),
+      };
+
+      @Feature({
+        setup(setup) {
+          setup.provide({ a: CustomElements, is: mockCustomElements });
+          setup.provide({ a: ElementBuilder, is: mockBuilder });
+        },
+      })
+      class TestFeature {
+      }
+
+      bsContext = await bootstrapComponents(TestFeature).whenReady;
+    });
+
     describe('define', () => {
-      it('builds custom element', () => {
-        registry.define(TestComponent);
-        ready();
+      it('builds custom element', async () => {
+        await defineComponent();
 
         expect(mockBuilder.buildElement).toHaveBeenCalledWith(TestComponent);
       });
-      it('defines custom element', () => {
-        registry.define(TestComponent);
-        ready();
+      it('defines custom element', async () => {
+        await defineComponent();
 
         expect(mockCustomElements.define).toHaveBeenCalledWith(TestComponent, ElementSpy);
       });
     });
+
+    async function defineComponent(): Promise<void> {
+      @Feature({
+        init(context) {
+          context.define(TestComponent);
+        },
+      })
+      class ComponentFeature {
+      }
+
+      await bsContext.load(ComponentFeature).whenReady;
+    }
   });
 });

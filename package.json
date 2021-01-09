@@ -38,8 +38,9 @@
   },
   "devDependencies": {
     "@frontmeans/namespace-aliaser": "^2.3.0",
-    "@proc7ts/context-values": "^5.0.0",
+    "@proc7ts/context-values": "^5.1.0-dev.0",
     "@proc7ts/fun-events": "^10.0.1",
+    "@proc7ts/workbench": "^1.0.0-dev.0",
     "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-node-resolve": "^11.0.1",
     "@run-z/eslint-config": "^1.2.1",

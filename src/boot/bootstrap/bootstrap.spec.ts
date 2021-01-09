@@ -55,7 +55,7 @@ describe('boot', () => {
 
       expect(receiver).toHaveBeenLastCalledWith('provided');
 
-      await featureRef.dismiss();
+      featureRef.supply.off();
       expect(receiver).toHaveBeenLastCalledWith('default');
     });
     it('provides bootstrap context values', async () => {
@@ -72,7 +72,7 @@ describe('boot', () => {
 
       expect(receiver).toHaveBeenLastCalledWith('provided');
 
-      await featureRef.dismiss();
+      featureRef.supply.off();
       expect(receiver).toHaveBeenLastCalledWith('default');
     });
     it('does not set up bootstrap context values when feature unloaded already', async () => {
@@ -89,7 +89,7 @@ describe('boot', () => {
 
       const featureRef = await loadFeature(TestFeature);
 
-      await featureRef.dismiss();
+      featureRef.supply.off();
       bsSetup.provide({ a: key, is: 'provided' });
       expect(receiver).toHaveBeenLastCalledWith('default');
     });
@@ -208,8 +208,7 @@ describe('boot', () => {
       expect(receiver).toHaveBeenCalledWith('provided');
 
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      featureRef.dismiss();
-      await featureRef.down;
+      featureRef.supply.off();
       expect(receiver).toHaveBeenCalledWith('default');
 
       await loadFeature(TestFeature);
@@ -242,8 +241,7 @@ describe('boot', () => {
       expect(receiver).toHaveBeenCalledWith('provided');
 
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      featureRef.dismiss();
-      await featureRef.down;
+      featureRef.supply.off();
       expect(receiver).toHaveBeenCalledWith('default');
 
       await loadFeature(TestFeature);
@@ -280,7 +278,7 @@ describe('boot', () => {
 
       expect(receiver).toHaveBeenCalledWith('provided');
 
-      await featureRef.dismiss();
+      featureRef.supply.off();
       expect(receiver).toHaveBeenCalledWith('default');
 
       await loadFeature(TestFeature);
@@ -315,7 +313,7 @@ describe('boot', () => {
 
       expect(receiver).toHaveBeenCalledWith('provided');
 
-      await featureRef.dismiss();
+      featureRef.supply.off();
       expect(receiver).toHaveBeenCalledWith('default');
 
       await loadFeature(TestFeature);
@@ -368,7 +366,7 @@ describe('boot', () => {
 
         const featureRef = await loadFeature(TestFeature);
 
-        await featureRef.dismiss();
+        featureRef.supply.off();
         await loadFeature(TestComponent);
         await bsContext.whenDefined(TestComponent);
 
@@ -547,11 +545,7 @@ describe('boot', () => {
       class Replacement {}
       FeatureDef.define(Replacement, { init: initSpy, has: testFeature });
       await new Promise<void>(resolve => {
-        bsContext.load(Replacement).read(({ ready }) => {
-          if (ready) {
-            resolve();
-          }
-        });
+        bsContext.load(Replacement).read(({ ready }) => ready && resolve());
       });
 
       expect(initSpy).toHaveBeenCalledTimes(1);
@@ -602,7 +596,7 @@ describe('boot', () => {
           bsContext.get(key, { or: afterThe<[string?]>() })(v => value = v);
           expect(value).toBe('provided');
 
-          await featureRef.dismiss('reason');
+          featureRef.supply.off();
           expect(value).toBeUndefined();
         });
       });
@@ -613,11 +607,7 @@ describe('boot', () => {
 
         const featureRef = bsContext.load(testFeature);
 
-        featureRef.read(receive.mockImplementation(({ ready }) => {
-          if (ready) {
-            resolve(featureRef);
-          }
-        }));
+        featureRef.read(receive.mockImplementation(({ ready }) => ready && resolve(featureRef)));
       });
     }
   });

@@ -1,3 +1,2 @@
-export * from './feature-request.impl';
-export * from './feature-requester.impl';
-export * from './feature-loader.impl';
+export * from './bootstrap-workbench.impl';
+export * from './feature-module.impl';
