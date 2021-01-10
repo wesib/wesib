@@ -116,6 +116,7 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="definitioncontext.html#componenttype" class="tsd-kind-icon">component<wbr>Type</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="definitioncontext.html#elementtype" class="tsd-kind-icon">element<wbr>Type</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="definitioncontext.html#supply" class="tsd-kind-icon">supply</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="definitioncontext.html#whencomponent" class="tsd-kind-icon">when<wbr>Component</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="definitioncontext.html#whenready" class="tsd-kind-icon">when<wbr>Ready</a></li>
 							</ul>
@@ -123,7 +124,7 @@
 						<section class="tsd-index-section ">
 							<h3>Accessors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="definitioncontext.html#___contextkey__symbol_22484" class="tsd-kind-icon">__@<wbr>Context<wbr>Key__symbol@22484</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="definitioncontext.html#___contextkey__symbol_22487" class="tsd-kind-icon">__@<wbr>Context<wbr>Key__symbol@22487</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="definitioncontext.html#elementdef" class="tsd-kind-icon">element<wbr>Def</a></li>
 							</ul>
 						</section>
@@ -170,7 +171,7 @@
 					<div class="tsd-signature tsd-kind-icon">component<wbr>Type<span class="tsd-signature-symbol">:</span> <a href="../interfaces/componentclass.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentClass</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/327fac7/src/component/definition/definition-context.ts#L36">wesib/wesib/src/component/definition/definition-context.ts:36</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/6458f75/src/component/definition/definition-context.ts#L36">wesib/wesib/src/component/definition/definition-context.ts:36</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -182,10 +183,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="elementtype" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> <span class="tsd-flag ts-flagAbstract">Abstract</span> element<wbr>Type</h3>
-					<div class="tsd-signature tsd-kind-icon">element<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Class</span></div>
+					<div class="tsd-signature tsd-kind-icon">element<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Class</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/327fac7/src/component/definition/definition-context.ts#L44">wesib/wesib/src/component/definition/definition-context.ts:44</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/6458f75/src/component/definition/definition-context.ts#L44">wesib/wesib/src/component/definition/definition-context.ts:44</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -197,12 +198,28 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="supply" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> supply</h3>
+					<div class="tsd-signature tsd-kind-icon">supply<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Supply</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in proc7ts/context-values/index.d.ts:182</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Context values supply.</p>
+						</div>
+						<p>When provided, this value is available under {@link ContextSupply} key, unless overridden.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="whencomponent" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> <span class="tsd-flag ts-flagAbstract">Abstract</span> when<wbr>Component</h3>
 					<div class="tsd-signature tsd-kind-icon">when<wbr>Component<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">OnEvent</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><a href="componentcontext.html" class="tsd-signature-type" data-tsd-kind="Class">ComponentContext</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/327fac7/src/component/definition/definition-context.ts#L73">wesib/wesib/src/component/definition/definition-context.ts:73</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/6458f75/src/component/definition/definition-context.ts#L73">wesib/wesib/src/component/definition/definition-context.ts:73</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -219,10 +236,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="whenready" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> <span class="tsd-flag ts-flagAbstract">Abstract</span> when<wbr>Ready</h3>
-					<div class="tsd-signature tsd-kind-icon">when<wbr>Ready<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">OnEvent</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">this</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<div class="tsd-signature tsd-kind-icon">when<wbr>Ready<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">OnEvent</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><a href="definitioncontext.html" class="tsd-signature-type" data-tsd-kind="Class">DefinitionContext</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/327fac7/src/component/definition/definition-context.ts#L61">wesib/wesib/src/component/definition/definition-context.ts:61</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/6458f75/src/component/definition/definition-context.ts#L61">wesib/wesib/src/component/definition/definition-context.ts:61</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -238,16 +255,16 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Accessors</h2>
 				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
-					<a name="___contextkey__symbol_22484" class="tsd-anchor"></a>
-					<h3>__@<wbr>Context<wbr>Key__symbol@22484</h3>
+					<a name="___contextkey__symbol_22487" class="tsd-anchor"></a>
+					<h3>__@<wbr>Context<wbr>Key__symbol@22487</h3>
 					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> __@ContextKey__symbol@22484<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ContextKey</span><span class="tsd-signature-symbol">&lt;</span><a href="definitioncontext.html" class="tsd-signature-type" data-tsd-kind="Class">DefinitionContext</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><a href="definitioncontext.html" class="tsd-signature-type" data-tsd-kind="Class">DefinitionContext</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> __@ContextKey__symbol@22487<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ContextKey</span><span class="tsd-signature-symbol">&lt;</span><a href="definitioncontext.html" class="tsd-signature-type" data-tsd-kind="Class">DefinitionContext</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><a href="definitioncontext.html" class="tsd-signature-type" data-tsd-kind="Class">DefinitionContext</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/327fac7/src/component/definition/definition-context.ts#L29">wesib/wesib/src/component/definition/definition-context.ts:29</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/6458f75/src/component/definition/definition-context.ts#L29">wesib/wesib/src/component/definition/definition-context.ts:29</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -269,7 +286,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/327fac7/src/component/definition/definition-context.ts#L49">wesib/wesib/src/component/definition/definition-context.ts:49</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/6458f75/src/component/definition/definition-context.ts#L49">wesib/wesib/src/component/definition/definition-context.ts:49</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -294,7 +311,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/327fac7/src/component/definition/definition-context.ts#L106">wesib/wesib/src/component/definition/definition-context.ts:106</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/6458f75/src/component/definition/definition-context.ts#L106">wesib/wesib/src/component/definition/definition-context.ts:106</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -334,7 +351,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in proc7ts/context-values/index.d.ts:90</li>
+									<li>Defined in proc7ts/context-values/index.d.ts:150</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -372,7 +389,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in proc7ts/context-values/index.d.ts:100</li>
+									<li>Defined in proc7ts/context-values/index.d.ts:160</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -410,7 +427,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in proc7ts/context-values/index.d.ts:114</li>
+									<li>Defined in proc7ts/context-values/index.d.ts:174</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -464,7 +481,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/327fac7/src/component/definition/definition-context.ts#L93">wesib/wesib/src/component/definition/definition-context.ts:93</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/6458f75/src/component/definition/definition-context.ts#L93">wesib/wesib/src/component/definition/definition-context.ts:93</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -507,7 +524,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/327fac7/src/component/definition/definition-context.ts#L125">wesib/wesib/src/component/definition/definition-context.ts:125</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/6458f75/src/component/definition/definition-context.ts#L125">wesib/wesib/src/component/definition/definition-context.ts:125</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -577,13 +594,16 @@
 								<a href="definitioncontext.html#elementtype" class="tsd-kind-icon">element<wbr>Type</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="definitioncontext.html#supply" class="tsd-kind-icon">supply</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="definitioncontext.html#whencomponent" class="tsd-kind-icon">when<wbr>Component</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="definitioncontext.html#whenready" class="tsd-kind-icon">when<wbr>Ready</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
-								<a href="definitioncontext.html#___contextkey__symbol_22484" class="tsd-kind-icon">__@<wbr>Context<wbr>Key__symbol@22484</a>
+								<a href="definitioncontext.html#___contextkey__symbol_22487" class="tsd-kind-icon">__@<wbr>Context<wbr>Key__symbol@22487</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="definitioncontext.html#elementdef" class="tsd-kind-icon">element<wbr>Def</a>
