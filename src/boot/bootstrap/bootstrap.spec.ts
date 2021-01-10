@@ -1,9 +1,9 @@
 import { SingleContextUpKey } from '@proc7ts/context-values/updatable';
 import { afterSupplied, afterThe } from '@proc7ts/fun-events';
-import { Class, noop } from '@proc7ts/primitives';
+import { Class, noop, Supply } from '@proc7ts/primitives';
 import { Component, ComponentContext, ComponentMount } from '../../component';
 import { CustomElements, DefinitionContext } from '../../component/definition';
-import { Feature, FeatureDef, FeatureRef, FeatureStatus } from '../../feature';
+import { Feature, FeatureContext, FeatureDef, FeatureRef, FeatureStatus } from '../../feature';
 import { MockElement } from '../../spec/test-element';
 import { BootstrapContext } from '../bootstrap-context';
 import { BootstrapSetup } from '../bootstrap-setup';
@@ -55,7 +55,7 @@ describe('boot', () => {
 
       expect(receiver).toHaveBeenLastCalledWith('provided');
 
-      await featureRef.dismiss();
+      featureRef.supply.off();
       expect(receiver).toHaveBeenLastCalledWith('default');
     });
     it('provides bootstrap context values', async () => {
@@ -72,7 +72,7 @@ describe('boot', () => {
 
       expect(receiver).toHaveBeenLastCalledWith('provided');
 
-      await featureRef.dismiss();
+      featureRef.supply.off();
       expect(receiver).toHaveBeenLastCalledWith('default');
     });
     it('does not set up bootstrap context values when feature unloaded already', async () => {
@@ -89,7 +89,7 @@ describe('boot', () => {
 
       const featureRef = await loadFeature(TestFeature);
 
-      await featureRef.dismiss();
+      featureRef.supply.off();
       bsSetup.provide({ a: key, is: 'provided' });
       expect(receiver).toHaveBeenLastCalledWith('default');
     });
@@ -208,8 +208,7 @@ describe('boot', () => {
       expect(receiver).toHaveBeenCalledWith('provided');
 
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      featureRef.dismiss();
-      await featureRef.down;
+      featureRef.supply.off();
       expect(receiver).toHaveBeenCalledWith('default');
 
       await loadFeature(TestFeature);
@@ -242,8 +241,7 @@ describe('boot', () => {
       expect(receiver).toHaveBeenCalledWith('provided');
 
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      featureRef.dismiss();
-      await featureRef.down;
+      featureRef.supply.off();
       expect(receiver).toHaveBeenCalledWith('default');
 
       await loadFeature(TestFeature);
@@ -280,7 +278,7 @@ describe('boot', () => {
 
       expect(receiver).toHaveBeenCalledWith('provided');
 
-      await featureRef.dismiss();
+      featureRef.supply.off();
       expect(receiver).toHaveBeenCalledWith('default');
 
       await loadFeature(TestFeature);
@@ -315,7 +313,7 @@ describe('boot', () => {
 
       expect(receiver).toHaveBeenCalledWith('provided');
 
-      await featureRef.dismiss();
+      featureRef.supply.off();
       expect(receiver).toHaveBeenCalledWith('default');
 
       await loadFeature(TestFeature);
@@ -368,7 +366,7 @@ describe('boot', () => {
 
         const featureRef = await loadFeature(TestFeature);
 
-        await featureRef.dismiss();
+        featureRef.supply.off();
         await loadFeature(TestComponent);
         await bsContext.whenDefined(TestComponent);
 
@@ -473,6 +471,119 @@ describe('boot', () => {
     });
   });
 
+  describe('FeatureContext', () => {
+
+    let featureRef: FeatureRef;
+    let context: FeatureContext;
+
+    beforeEach(async () => {
+      @Feature({
+        init(ctx) {
+          context = ctx;
+        },
+      })
+      class TestFeature {
+      }
+
+      featureRef = bsContext.load(TestFeature);
+
+      await featureRef.whenReady;
+    });
+
+    describe('load', () => {
+
+      let key: SingleContextUpKey<string>;
+
+      beforeEach(() => {
+        key = new SingleContextUpKey('test', { byDefault: () => 'default' });
+      });
+
+      it('loads another feature', async () => {
+
+        @Feature({
+          setup(setup) {
+            setup.provide({ a: key, is: 'loaded' });
+          },
+        })
+        class OtherFeature {
+        }
+
+        await context.load(OtherFeature).whenReady;
+
+        expect(await bsContext.get(key)).toBe('loaded');
+      });
+      it('unloads another feature when unloaded', async () => {
+
+        @Feature({
+          setup(setup) {
+            setup.provide({ a: key, is: 'loaded' });
+          },
+        })
+        class OtherFeature {
+        }
+
+        const otherRef = context.load(OtherFeature);
+
+        await otherRef.whenReady;
+        featureRef.supply.off();
+
+        expect(otherRef.supply.isOff).toBe(true);
+        expect(await bsContext.get(key)).toBe('default');
+      });
+      it('unloads another feature when user supply cut off', async () => {
+
+        @Feature({
+          setup(setup) {
+            setup.provide({ a: key, is: 'loaded' });
+          },
+        })
+        class OtherFeature {
+        }
+
+        const user = new Supply();
+        const otherRef = context.load(OtherFeature, user);
+
+        await otherRef.whenReady;
+        user.supply.off();
+
+        expect(otherRef.supply.isOff).toBe(true);
+        expect(await bsContext.get(key)).toBe('default');
+      });
+    });
+
+    describe('define', () => {
+      it('defines components', async () => {
+
+        @Component('test-component-1')
+        class TestComponent1 {
+        }
+        @Component('test-component-2')
+        class TestComponent2 {
+        }
+        @Feature({
+          init(context) {
+            context.define(TestComponent1);
+            context.define(TestComponent2);
+          },
+        })
+        class TestComponentsFeature {
+        }
+
+        await bsContext.load(TestComponentsFeature).whenReady;
+        expect(mockCustomElements.define).toHaveBeenCalledWith(TestComponent1, expect.any(Function));
+        expect(mockCustomElements.define).toHaveBeenCalledWith(TestComponent2, expect.any(Function));
+      });
+      it('does not allow to define components after initialization', () => {
+
+        @Component('test-component')
+        class TestComponent {
+        }
+
+        expect(() => context.define(TestComponent)).toThrow(TypeError);
+      });
+    });
+  });
+
   describe('feature load', () => {
 
     let testFeature: Class;
@@ -547,11 +658,7 @@ describe('boot', () => {
       class Replacement {}
       FeatureDef.define(Replacement, { init: initSpy, has: testFeature });
       await new Promise<void>(resolve => {
-        bsContext.load(Replacement).read(({ ready }) => {
-          if (ready) {
-            resolve();
-          }
-        });
+        bsContext.load(Replacement).read(({ ready }) => ready && resolve());
       });
 
       expect(initSpy).toHaveBeenCalledTimes(1);
@@ -585,7 +692,7 @@ describe('boot', () => {
           expect(afterSupplied(featureRef)).toBe(featureRef.read);
         });
       });
-      describe('off', () => {
+      describe('supply.off', () => {
         it('unloads the feature', async () => {
           FeatureDef.define(
               testFeature,
@@ -602,7 +709,7 @@ describe('boot', () => {
           bsContext.get(key, { or: afterThe<[string?]>() })(v => value = v);
           expect(value).toBe('provided');
 
-          await featureRef.dismiss('reason');
+          featureRef.supply.off();
           expect(value).toBeUndefined();
         });
       });
@@ -613,11 +720,7 @@ describe('boot', () => {
 
         const featureRef = bsContext.load(testFeature);
 
-        featureRef.read(receive.mockImplementation(({ ready }) => {
-          if (ready) {
-            resolve(featureRef);
-          }
-        }));
+        featureRef.read(receive.mockImplementation(({ ready }) => ready && resolve(featureRef)));
       });
     }
   });

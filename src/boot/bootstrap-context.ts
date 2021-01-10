@@ -4,7 +4,7 @@
  */
 import { ContextKey, ContextKey__symbol, ContextValues } from '@proc7ts/context-values';
 import { OnEvent } from '@proc7ts/fun-events';
-import { Class } from '@proc7ts/primitives';
+import { Class, SupplyPeer } from '@proc7ts/primitives';
 import { ComponentClass, DefinitionContext } from '../component/definition';
 import { FeatureRef } from '../feature';
 import { BootstrapContext__key } from './bootstrap-context.key.impl';
@@ -54,9 +54,10 @@ export abstract class BootstrapContext extends ContextValues {
    * Allows to loads the given `feature`.
    *
    * @param feature - The feature to load.
+   * @param user - The user of the feature. The feature reference will be dismissed once the user's supply is cut off.
    *
    * @returns  Loaded feature reference.
    */
-  abstract load(feature: Class): FeatureRef;
+  abstract load(feature: Class, user?: SupplyPeer): FeatureRef;
 
 }

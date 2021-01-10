@@ -3,21 +3,12 @@
  * @module @wesib/wesib
  */
 import { newNamespaceAliaser } from '@frontmeans/namespace-aliaser';
-import {
-  AfterEvent,
-  afterEventBy,
-  mapAfter,
-  onceOn,
-  OnEvent,
-  shareAfter,
-  supplyAfter,
-  trackValue,
-  valueOn,
-} from '@proc7ts/fun-events';
-import { Class } from '@proc7ts/primitives';
+import { ContextModule } from '@proc7ts/context-values/updatable';
+import { AfterEvent, AfterEvent__symbol, onceOn, OnEvent, trackValue, valueOn, valueOn_ } from '@proc7ts/fun-events';
+import { Class, SupplyPeer, valueProvider } from '@proc7ts/primitives';
 import { ComponentClass, DefinitionContext } from '../../component/definition';
 import { FeatureDef, FeatureRef, FeatureStatus } from '../../feature';
-import { FeatureKey, FeatureLoader, FeatureRequester } from '../../feature/loader';
+import { FeatureModule } from '../../feature/loader';
 import { BootstrapContext } from '../bootstrap-context';
 import { DefaultNamespaceAliaser } from '../globals';
 import { BootstrapContextRegistry } from '../impl';
@@ -39,10 +30,14 @@ export function bootstrapComponents(...features: Class[]): BootstrapContext {
   const { bootstrapContext, complete } = initBootstrap(bootstrapContextRegistry);
   const feature = features.length === 1 ? features[0] : bootstrapFeature(features);
 
-  bootstrapContext.get(FeatureRequester).request(feature);
-  bootstrapContext.get(FeatureKey.of(feature))(loader => {
-    loader!.init().then(complete).catch(console.error);
-  });
+  bootstrapContext.load(feature)
+      .read
+      .do(
+          valueOn_(({ ready }) => ready),
+          onceOn,
+      )
+      .then(complete)
+      .catch(console.error);
 
   return bootstrapContext;
 }
@@ -94,83 +89,29 @@ function initBootstrap(
       return whenDefined(this, componentType);
     }
 
-    load(feature: Class<any>): FeatureRef {
+    load(feature: Class, user?: SupplyPeer): FeatureRef {
 
-      interface FeatureInfo {
-        status: FeatureStatus;
-        down?: Promise<void>;
+      const module = FeatureModule.of(feature);
+      const supply = bootstrapContextRegistry.provide(module);
+
+      if (user) {
+        supply.needs(user);
+      } else {
+        user = supply;
       }
 
-      const status = afterEventBy<[FeatureInfo]>(receiver => {
+      const use = this.get(module).use(user);
+      const read = FeatureRef$read(feature, use);
 
-        // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        const request = bootstrapContext.get(FeatureRequester).request(feature);
-        const info = trackValue<FeatureInfo>({
-          status: {
-            feature,
-            ready: false,
-          },
-        });
-
-        this.get(FeatureKey.of(feature))({
-          supply: receiver.supply,
-          receive(_ctx, ldr) {
-
-            // Present until `request` revoked
-            // But that happens only when supply is cut off.
-            const loader = ldr as FeatureLoader;
-
-            info.it = {
-              status: {
-                feature: loader.request.feature,
-                ready: loader.ready,
-              },
-              down: loader.down,
-            };
-            if (!loader.ready) {
-              loader.init().then(() => {
-                info.it = {
-                  status: {
-                    feature: loader.request.feature,
-                    ready: true,
-                  },
-                  down: loader.down,
-                };
-              }).catch(console.error);
-            }
-          },
-        }).whenOff(() => {
-          request.unuse(); // Apply this callback _after_ registration complete,
-                           // to prevent receiver call.
-        });
-
-        info.read(receiver);
-      }).do(shareAfter);
-
-      let whenDown: Promise<void>;
-      const supply = status(({ down }) => {
-        whenDown = down!;
-      });
-
-      class Ref extends FeatureRef {
-
-        readonly read: AfterEvent<[FeatureStatus]> = status.do(
-            supplyAfter(supply),
-            mapAfter(({ status }) => status),
-        );
-
-        get down(): Promise<void> {
-          return whenDown;
-        }
-
-        dismiss(reason?: any): Promise<void> {
-          supply.off(reason);
-          return whenDown;
-        }
-
-      }
-
-      return new Ref();
+      return {
+        read,
+        whenReady: read.do(
+            valueOn_(status => status.ready && status),
+            onceOn,
+        ),
+        [AfterEvent__symbol]: valueProvider(read),
+        supply,
+      };
     }
 
   }
@@ -183,4 +124,28 @@ function initBootstrap(
       stage.it = BootstrapStage.Ready;
     },
   };
+}
+
+function FeatureRef$read(
+    feature: Class,
+    use: ContextModule.Use,
+): AfterEvent<[FeatureStatus]> {
+
+  const status = trackValue<FeatureStatus>({ feature, ready: false });
+
+  use.read(({ module, ready }) => {
+
+    const feature = (module as FeatureModule).feature;
+    const lastStatus = status.it;
+
+    if (!lastStatus || lastStatus.feature !== feature || lastStatus.ready !== ready) {
+      status.it = {
+        feature,
+        ready,
+      };
+    }
+  }).needs(use);
+  status.supply.needs(use);
+
+  return status.read;
 }

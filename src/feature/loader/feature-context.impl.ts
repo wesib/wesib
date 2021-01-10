@@ -1,5 +1,6 @@
 import { ContextRegistry, ContextValueSpec } from '@proc7ts/context-values';
-import { afterAll, onceOn, OnEvent, supplyOn, trackValue, valueOn } from '@proc7ts/fun-events';
+import { ContextModule } from '@proc7ts/context-values/updatable';
+import { onceOn, OnEvent, supplyOn, valueOn_ } from '@proc7ts/fun-events';
 import { Class, Supply } from '@proc7ts/primitives';
 import { BootstrapContext } from '../../boot';
 import {
@@ -13,7 +14,6 @@ import { ComponentContext } from '../../component';
 import { ComponentClass, DefinitionContext, DefinitionSetup } from '../../component/definition';
 import { FeatureContext } from '../feature-context';
 import { ComponentRegistry } from './component-registry.impl';
-import { FeatureLoader } from './feature-loader.impl';
 
 /**
  * @internal
@@ -21,38 +21,43 @@ import { FeatureLoader } from './feature-loader.impl';
 export class FeatureContext$ extends FeatureContext {
 
   readonly whenReady: OnEvent<[FeatureContext]>;
-  readonly onDefinition: OnEvent<[DefinitionContext]>;
-  readonly onComponent: OnEvent<[ComponentContext]>;
-  readonly supply = new Supply();
+  private _onDefinition?: OnEvent<[DefinitionContext]>;
+  private _onComponent?: OnEvent<[ComponentContext]>;
   readonly get: FeatureContext['get'];
+  private readonly _bsContext: BootstrapContext;
   private readonly _componentRegistry: ComponentRegistry;
 
-  constructor(
-      private readonly _bsContext: BootstrapContext,
-      private readonly _loader: FeatureLoader,
-  ) {
+  constructor(readonly feature: Class, private readonly _setup: ContextModule.Setup) {
     super();
 
-    const registry = new ContextRegistry<FeatureContext>(_bsContext);
+    this._bsContext = _setup.get(BootstrapContext);
+
+    const handle = _setup.get(_setup.module);
+    const registry = new ContextRegistry<FeatureContext>(this._bsContext);
 
     registry.provide({ a: FeatureContext, is: this });
     this.get = registry.newValues().get;
 
-    this.whenReady = afterAll({
-      st: this._loader.state,
-      bs: trackValue<BootstrapContext>().by(_bsContext.whenReady),
-    }).do(
-        valueOn(({ st: [ready], bs: [bs] }) => bs && ready && this),
+    this.whenReady = handle.read.do(
+        valueOn_(({ ready }) => ready && this),
         onceOn,
     );
-    this.onDefinition = _bsContext.get(ElementBuilder).definitions.on.do(supplyOn(this));
-    this.onComponent = this._bsContext.get(ElementBuilder).components.on.do(supplyOn(this));
 
-    this._componentRegistry = new ComponentRegistry(this);
+    this._componentRegistry = new ComponentRegistry(this._setup);
   }
 
-  get feature(): Class {
-    return this._loader.request.feature;
+  get supply(): Supply {
+    return this._setup.supply;
+  }
+
+  get onDefinition(): OnEvent<[DefinitionContext]> {
+    return this._onDefinition
+        || (this._onDefinition = this._setup.get(ElementBuilder).definitions.on.do(supplyOn(this)));
+  }
+
+  get onComponent(): OnEvent<[ComponentContext]> {
+    return this._onComponent
+        || (this._onComponent = this._setup.get(ElementBuilder).components.on.do(supplyOn(this)));
   }
 
   provide<TDeps extends any[], TSrc, TSeed>(

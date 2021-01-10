@@ -1,33 +1,46 @@
+import { ContextModule } from '@proc7ts/context-values/updatable';
+import { valueProvider } from '@proc7ts/primitives';
 import { ElementBuilder } from '../../boot/impl';
 import { ComponentClass, CustomElements } from '../../component/definition';
-import { FeatureContext } from '../feature-context';
+import { BootstrapWorkbench, componentDefStage } from './bootstrap-workbench.impl';
 
 /**
  * @internal
  */
 export class ComponentRegistry {
 
-  private _definitionQueue?: (() => void)[] = [];
+  private _components?: ComponentClass[] = undefined;
 
-  constructor(private readonly _context: FeatureContext) {
-    _context.whenReady(() => {
-      this._definitionQueue!.forEach(definition => definition());
-      delete this._definitionQueue;
-    });
-  }
-
-  get customElements(): CustomElements {
-    return this._context.get(CustomElements);
+  constructor(private readonly _setup: ContextModule.Setup) {
   }
 
   define<T extends object>(componentType: ComponentClass<T>): void {
-    this._definitionQueue!.push(() => {
+    if (this._components) {
+      this._components.push(componentType);
+    } else {
+      this._components = [componentType];
+      this._defineAll(this._components);
+    }
+  }
 
-      const elementBuilder = this._context.get(ElementBuilder);
-      const defContext = elementBuilder.buildElement(componentType);
+  private _defineAll(components: ComponentClass[]): void {
 
-      this.customElements.define(componentType, defContext.elementType);
+    const workbench = this._setup.get(BootstrapWorkbench);
+    const whenDefined = workbench.work(componentDefStage).run(() => {
+
+      const customElements = this._setup.get(CustomElements);
+      const elementBuilder = this._setup.get(ElementBuilder);
+
+      components.forEach(componentType => {
+
+        const defContext = elementBuilder.buildElement(componentType);
+
+        customElements.define(componentType, defContext.elementType);
+      });
+      this._components = undefined;
     });
+
+    this._setup.initBy(valueProvider(whenDefined));
   }
 
 }

@@ -5,8 +5,6 @@ import {
   RenderScheduler,
   setRenderScheduler,
 } from '@frontmeans/render-scheduler';
-import { ContextSupply } from '@proc7ts/context-values';
-import { Supply } from '@proc7ts/primitives';
 import { Feature, FeatureDef } from '../../feature';
 import { bootstrapComponents } from '../bootstrap';
 import { BootstrapContext } from '../bootstrap-context';
@@ -85,20 +83,6 @@ describe('boot', () => {
 
       scheduler({ window, node, error });
       expect(mockScheduler).toHaveBeenCalledWith({ window, node, error });
-    });
-    it('throws when context is destroyed', async () => {
-
-      const contextSupply = new Supply();
-      const scheduler = await bootstrap(undefined, {
-        setup(setup) {
-          setup.provide({ a: ContextSupply, is: contextSupply });
-        },
-      });
-
-      const reason = new Error('test');
-
-      contextSupply.off(reason);
-      expect(() => scheduler()).toThrow(reason);
     });
 
     async function bootstrapContext(
