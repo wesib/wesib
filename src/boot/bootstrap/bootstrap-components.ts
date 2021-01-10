@@ -5,7 +5,7 @@
 import { newNamespaceAliaser } from '@frontmeans/namespace-aliaser';
 import { ContextModule } from '@proc7ts/context-values/updatable';
 import { AfterEvent, AfterEvent__symbol, onceOn, OnEvent, trackValue, valueOn, valueOn_ } from '@proc7ts/fun-events';
-import { Class, valueProvider } from '@proc7ts/primitives';
+import { Class, SupplyPeer, valueProvider } from '@proc7ts/primitives';
 import { ComponentClass, DefinitionContext } from '../../component/definition';
 import { FeatureDef, FeatureRef, FeatureStatus } from '../../feature';
 import { FeatureModule } from '../../feature/loader';
@@ -89,11 +89,18 @@ function initBootstrap(
       return whenDefined(this, componentType);
     }
 
-    load(feature: Class): FeatureRef {
+    load(feature: Class, user?: SupplyPeer): FeatureRef {
 
       const module = FeatureModule.of(feature);
       const supply = bootstrapContextRegistry.provide(module);
-      const use = this.get(module).use(supply);
+
+      if (user) {
+        supply.needs(user);
+      } else {
+        user = supply;
+      }
+
+      const use = this.get(module).use(user);
       const read = FeatureRef$read(feature, use);
 
       return {

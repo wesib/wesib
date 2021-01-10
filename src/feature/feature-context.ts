@@ -114,8 +114,11 @@ export abstract class FeatureContext
     return this.get(BootstrapContext).whenDefined(componentType);
   }
 
-  load(feature: Class): FeatureRef {
-    return this.get(BootstrapContext).load(feature);
+  load(feature: Class, user?: SupplyPeer): FeatureRef {
+    return this.get(BootstrapContext).load(
+        feature,
+        user ? new Supply().needs(this).needs(user) : this,
+    );
   }
 
 }

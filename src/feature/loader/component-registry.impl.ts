@@ -37,7 +37,7 @@ export class ComponentRegistry {
 
         customElements.define(componentType, defContext.elementType);
       });
-      components.length = 0;
+      this._components = undefined;
     });
 
     this._setup.initBy(valueProvider(whenDefined));
