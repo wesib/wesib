@@ -14,7 +14,7 @@ import { ComponentClass } from './definition';
 import { StateUpdater } from './state-updater';
 
 /**
- * A key of a custom element and component properties containing a reference to component context.
+ * A key of a custom element or component method returning corresponding component context.
  *
  * @category Core
  */
@@ -43,21 +43,35 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   /**
    * Extracts component context from its custom element or from component itself.
    *
-   * @param element - Custom element instance created for the component or the component itself.
+   * @param holder - Custom element instance created for the component or the component itself.
    *
-   * @return Component context reference stored under {@link ComponentContext__symbol} key.
+   * @return Component context reference returned by {@link ComponentContext__symbol} method.
    *
-   * @throws TypeError  When the given `element` does not contain component context reference.
+   * @throws TypeError  When the given `holder` does not contain component context reference.
    */
-  static of<T extends object>(element: any): ComponentContext<T> {
+  static of<T extends object>(holder: ComponentContextHolder<T>): ComponentContext<T> {
 
-    const context = (element as ComponentContextHolder<T>)[ComponentContext__symbol];
+    const context = ComponentContext.findIn(holder);
 
     if (!context) {
-      throw TypeError(`No component context found in ${String(element)}`);
+      throw new TypeError(`No component context found in ${String(holder)}`);
     }
 
     return context;
+  }
+
+  /**
+   * Finds component context in target holder.
+   *
+   * @param holder - Custom element instance created for the component or the component itself.
+   *
+   * @return Component context reference returned by {@link ComponentContext__symbol} method, or `undefined` if no such
+   * method defined.
+   */
+  static findIn<T extends object>(holder: ComponentContextHolder<T>): ComponentContext<T> | undefined {
+    return typeof holder[ComponentContext__symbol] === 'function'
+        ? holder[ComponentContext__symbol]!()
+        : undefined;
   }
 
   /**
@@ -231,12 +245,17 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
 }
 
 /**
- * An object potentially containing component context.
+ * An object potentially referring to component context.
  *
- * Either element or component instance.
+ * I.e. either an element, or a component instance.
  *
  * @category Core
  */
 export interface ComponentContextHolder<T extends object = any> {
-  [ComponentContext__symbol]?: ComponentContext<T>;
+
+  /**
+   * @returns Component context.
+   */
+  [ComponentContext__symbol]?(): ComponentContext<T>;
+
 }

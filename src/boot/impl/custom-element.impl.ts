@@ -25,7 +25,7 @@ export function customElementType<T extends object>(
   class CustomElement$ extends (elementDef.extend.type as CustomElementClass) {
 
     // Component context reference
-    [ComponentContext__symbol]: CustomComponentContext$<T>;
+    [ComponentContext__symbol]: () => CustomComponentContext$<T>;
 
     constructor() {
       super();
@@ -38,11 +38,11 @@ export function customElementType<T extends object>(
 
     connectedCallback(): void {
       super.connectedCallback?.();
-      this[ComponentContext__symbol]._connect();
+      this[ComponentContext__symbol]()._connect();
     }
 
     disconnectedCallback(): void {
-      this[ComponentContext__symbol].destroy();
+      this[ComponentContext__symbol]().destroy();
       super.disconnectedCallback?.();
     }
 

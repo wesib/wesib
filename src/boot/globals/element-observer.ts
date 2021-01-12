@@ -5,7 +5,7 @@
 import { FnContextKey } from '@proc7ts/context-values/updatable';
 import { filterArray, itsEach, overArray } from '@proc7ts/push-iterator';
 import { isElement } from '../../common';
-import { ComponentContext__symbol, ComponentContextHolder, ComponentMount } from '../../component';
+import { ComponentContext, ComponentContextHolder, ComponentMount } from '../../component';
 import { bootstrapDefault } from '../bootstrap-default';
 import { ElementAdapter } from './element-adapter';
 
@@ -97,5 +97,5 @@ export interface ElementObserverInit extends MutationObserverInit {
  * @internal
  */
 function mountOf(node: ComponentContextHolder): ComponentMount | undefined {
-  return node[ComponentContext__symbol]?.mount;
+  return ComponentContext.findIn(node)?.mount;
 }

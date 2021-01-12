@@ -49,7 +49,7 @@ describe('feature/attributes', () => {
 
       const elementType = await bootstrap(TestComponent);
       const callback: any = elementType.prototype.attributeChangedCallback;
-      const element = { [ComponentContext__symbol]: { component: { name: 'component' } } };
+      const element = { [ComponentContext__symbol]: () => ({ component: { name: 'component' } } as ComponentContext) };
 
       callback.call(element, 'test-attr', 'old', 'new');
       expect(attrChanged).toHaveBeenCalledWith(
@@ -86,7 +86,7 @@ describe('feature/attributes', () => {
 
       const elementType = await bootstrap(TestComponent);
       const callback: any = elementType.prototype.attributeChangedCallback;
-      const element = { [ComponentContext__symbol]: { component: { name: 'component' } } };
+      const element = { [ComponentContext__symbol]: () => ({ component: { name: 'component' } } as ComponentContext) };
 
       callback.call(element, 'test-attr', 'old', 'new');
       expect(attrChanged).toHaveBeenCalledWith(

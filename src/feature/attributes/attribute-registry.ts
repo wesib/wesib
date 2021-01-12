@@ -6,7 +6,7 @@ import { ContextRef, SingleContextKey } from '@proc7ts/context-values';
 import { mergeFunctions } from '@proc7ts/primitives';
 import { BootstrapWindow } from '../../boot/globals';
 import { CustomElementClass } from '../../common';
-import { ComponentContext, ComponentMount } from '../../component';
+import { ComponentContext, ComponentContextHolder, ComponentMount } from '../../component';
 import { DefinitionContext } from '../../component/definition';
 import { AttributeChangedCallback, AttributeDescriptor } from './attribute-descriptor';
 
@@ -85,7 +85,7 @@ class AttributeRegistry$ implements AttributeRegistry {
 
   private mount(mount: ComponentMount): void {
 
-    const { element } = mount as { element: Element };
+    const { element } = mount as { element: Element & ComponentContextHolder };
     const { attrs } = this;
     const attributeFilter = [...attrs.keys()];
 
