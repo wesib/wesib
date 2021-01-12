@@ -1,5 +1,5 @@
 import { ContextRegistry } from '@proc7ts/context-values';
-import { Supply } from '@proc7ts/primitives';
+import { Supply, valueProvider } from '@proc7ts/primitives';
 import { MockElement } from '../spec/test-element';
 import { ComponentContext, ComponentContext__symbol } from './component-context';
 import { ComponentEvent, ComponentEventDispatcher } from './component-event';
@@ -12,7 +12,7 @@ describe('component', () => {
 
     beforeEach(() => {
       componentContext = { name: 'component context' } as any;
-      element = { [ComponentContext__symbol]: componentContext };
+      element = { [ComponentContext__symbol]: valueProvider(componentContext) };
     });
 
     let event: ComponentEvent;

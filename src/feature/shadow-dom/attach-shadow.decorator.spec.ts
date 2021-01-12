@@ -1,6 +1,12 @@
 import { DomEventDispatcher } from '@frontmeans/dom-events';
 import { BootstrapContext } from '../../boot';
-import { Component, ComponentContext, ComponentEventDispatcher, ContentRoot } from '../../component';
+import {
+  Component,
+  ComponentContext,
+  ComponentContextHolder,
+  ComponentEventDispatcher,
+  ContentRoot,
+} from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { MockElement, testElement } from '../../spec/test-element';
 import { AttachShadow, ShadowContentDef } from './attach-shadow.decorator';
@@ -61,7 +67,7 @@ describe('feature/shadow-dom', () => {
       expect(context.get(ShadowContentRoot)).toBe(shadowRoot);
     });
     it('assigns component context to shadow root', () => {
-      expect(ComponentContext.of(context.get(ShadowContentRoot))).toBe(context);
+      expect(ComponentContext.of(context.get(ShadowContentRoot) as ComponentContextHolder)).toBe(context);
     });
     it('provides shadow root as content root', () => {
       expect(context.contentRoot).toBe(shadowRoot);

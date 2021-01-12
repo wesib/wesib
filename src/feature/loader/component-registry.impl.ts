@@ -23,7 +23,7 @@ export class ComponentRegistry {
     }
   }
 
-  private _defineAll(components: ComponentClass[]): void {
+  private _defineAll(components: readonly ComponentClass[]): void {
 
     const workbench = this._setup.get(BootstrapWorkbench);
     const whenDefined = workbench.work(componentDefStage).run(() => {
@@ -37,6 +37,7 @@ export class ComponentRegistry {
 
         customElements.define(componentType, defContext.elementType);
       });
+
       this._components = undefined;
     });
 

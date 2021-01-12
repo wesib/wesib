@@ -2,6 +2,7 @@ import { onceOn, OnEvent, trackValue, valueOn_ } from '@proc7ts/fun-events';
 import { Supply, valueProvider } from '@proc7ts/primitives';
 import { ComponentContext, ComponentContext__symbol, ComponentContextHolder, ComponentEvent } from '../../component';
 import { ComponentClass } from '../../component/definition';
+import { newComponent } from '../../component/definition/component.impl';
 import { DefinitionContext$ } from './definition-context.impl';
 
 const enum ComponentStatus {
@@ -96,7 +97,7 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
 
     let lastRev = 0;
 
-    (this.element as ComponentContextHolder)[ComponentContext__symbol] = this;
+    (this.element as ComponentContextHolder)[ComponentContext__symbol] = valueProvider(this);
     whenComponent.readNotifier.do(onceOn)(notifier => lastRev = notifier(this, lastRev));
     this.whenConnected(() => {
       whenComponent.readNotifier({
@@ -129,29 +130,6 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
     );
   }
 
-}
-
-function newComponent<T extends object>(context: ComponentContext<T>): T {
-
-  type ComponentProto = T & {
-    [ComponentContext__symbol]?: ComponentContext<T>;
-  };
-
-  const type = context.componentType;
-  const proto = type.prototype as ComponentProto;
-  const prevContext = proto[ComponentContext__symbol];
-
-  proto[ComponentContext__symbol] = context;
-  try {
-
-    const component = new type(context);
-
-    (component as ComponentContextHolder)[ComponentContext__symbol] = context;
-
-    return component;
-  } finally {
-    proto[ComponentContext__symbol] = prevContext;
-  }
 }
 
 function removeElement(element: Element): void {

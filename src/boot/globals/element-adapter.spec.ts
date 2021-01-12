@@ -1,5 +1,5 @@
 import { ContextRegistry, ContextSupply, ContextValues } from '@proc7ts/context-values';
-import { Supply } from '@proc7ts/primitives';
+import { Supply, valueProvider } from '@proc7ts/primitives';
 import { ComponentContext, ComponentContext__symbol } from '../../component';
 import { ElementAdapter } from './element-adapter';
 import Mock = jest.Mock;
@@ -60,7 +60,7 @@ describe('boot', () => {
 
         const componentContext: ComponentContext = { name: 'component context' } as any;
 
-        element[ComponentContext__symbol] = componentContext;
+        element[ComponentContext__symbol] = valueProvider(componentContext);
 
         expect(adapter(element)).toBe(componentContext);
       });
@@ -94,7 +94,7 @@ describe('boot', () => {
 
         const componentContext: ComponentContext = { name: 'component context' } as any;
 
-        element[ComponentContext__symbol] = componentContext;
+        element[ComponentContext__symbol] = valueProvider(componentContext);
 
         expect(adapter(element)).toBe(componentContext);
         expect(adapter1).not.toHaveBeenCalled();
