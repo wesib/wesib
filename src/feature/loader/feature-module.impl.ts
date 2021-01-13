@@ -54,21 +54,21 @@ function FeatureModule$options(feature: Class): ContextModule.Options {
   return {
     needs,
     has,
-    setup(setup) {
+    async setup(setup) {
 
       const workbench = setup.get(BootstrapWorkbench);
       const featureContext = new FeatureContext$(feature, setup);
 
       if (def.init) {
 
-        const whenInit = workbench.work(featureInitStage).run(() => {
-          def.init!(featureContext);
+        const whenInit = workbench.work(featureInitStage).run(async () => {
+          await def.init!(featureContext);
         });
 
         setup.initBy(valueProvider(whenInit));
       }
 
-      def.setup?.(featureContext);
+      await def.setup?.(featureContext);
     },
   };
 }

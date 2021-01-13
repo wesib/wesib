@@ -1,4 +1,4 @@
-import { Class, noop } from '@proc7ts/primitives';
+import { Class } from '@proc7ts/primitives';
 import { FeatureContext } from './feature-context';
 import { FeatureDef, FeatureDef__symbol } from './feature-def';
 
@@ -100,43 +100,37 @@ describe('feature', () => {
 
         expect(FeatureDef.merge(first, second)).toEqual({ has: [Feature1, Feature2] });
       });
-      it('merges `setup`', () => {
+      it('merges `setup`', async () => {
 
         const mockSetup1 = jest.fn();
+        const def1: FeatureDef = { setup: mockSetup1 };
         const mockSetup2 = jest.fn();
-        const merged = FeatureDef.merge(
-            { setup: mockSetup1 },
-            { setup: mockSetup2 },
-        ).setup || noop;
+        const def2: FeatureDef = { setup: mockSetup2 };
+        const merged = FeatureDef.merge(def1, def2);
         const context: FeatureContext = { name: 'feature context' } as any;
 
-        class Feature {}
-
-        merged.call(Feature, context);
+        await merged.setup?.(context);
 
         expect(mockSetup1).toHaveBeenCalledWith(context);
-        expect(mockSetup1.mock.instances[0]).toBe(Feature);
+        expect(mockSetup1.mock.instances[0]).toBe(def1);
         expect(mockSetup2).toHaveBeenCalledWith(context);
-        expect(mockSetup2.mock.instances[0]).toBe(Feature);
+        expect(mockSetup2.mock.instances[0]).toBe(def2);
       });
-      it('merges `init`', () => {
+      it('merges `init`', async () => {
 
         const mockInit1 = jest.fn();
+        const def1: FeatureDef = { init: mockInit1 };
         const mockInit2 = jest.fn();
-        const merged = FeatureDef.merge(
-            { init: mockInit1 },
-            { init: mockInit2 },
-        ).init || noop;
+        const def2: FeatureDef = { init: mockInit2 };
+        const merged = FeatureDef.merge(def1, def2);
         const context: FeatureContext = { name: 'feature context' } as any;
 
-        class Feature {}
-
-        merged.call(Feature, context);
+        await merged.init?.(context);
 
         expect(mockInit1).toHaveBeenCalledWith(context);
-        expect(mockInit1.mock.instances[0]).toBe(Feature);
+        expect(mockInit1.mock.instances[0]).toBe(def1);
         expect(mockInit2).toHaveBeenCalledWith(context);
-        expect(mockInit2.mock.instances[0]).toBe(Feature);
+        expect(mockInit2.mock.instances[0]).toBe(def2);
       });
       it('does not merge empty definitions', () => {
         expect(FeatureDef.merge({}, {})).toEqual({});
