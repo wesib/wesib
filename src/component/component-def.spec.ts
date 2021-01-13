@@ -129,7 +129,7 @@ describe('component', () => {
         expect(define2).toHaveBeenCalledWith(context);
         expect(define2.mock.instances[0]).toBe(Component);
       });
-      it('merges `feature`', () => {
+      it('merges `feature`', async () => {
 
         const setup1 = jest.fn();
         const setup2 = jest.fn();
@@ -141,7 +141,7 @@ describe('component', () => {
         class TestFeature {}
         const setup = { name: 'setup' } as any;
 
-        mergedFeature?.setup?.call(TestFeature, setup);
+        await mergedFeature?.setup?.call(TestFeature, setup);
 
         expect(setup1).toHaveBeenCalledWith(setup);
         expect(setup2).toHaveBeenCalledWith(setup);

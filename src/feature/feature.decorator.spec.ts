@@ -1,19 +1,23 @@
-import { noop } from '@proc7ts/primitives';
+import { FeatureContext } from './feature-context';
 import { FeatureDef } from './feature-def';
 import { Feature } from './feature.decorator';
 
 describe('feature', () => {
   describe('@Feature', () => {
-    it('assigns feature definition', () => {
+    it('assigns feature definition', async () => {
 
-      const def: FeatureDef = {
-        init: noop,
-      };
+      const init = jest.fn();
+      const def: FeatureDef = { init };
 
       @Feature(def)
       class TestFeature {}
 
-      expect(FeatureDef.of(TestFeature)).toEqual(def);
+      const context: FeatureContext = { name: 'feature context' } as unknown as FeatureContext;
+
+      await FeatureDef.of(TestFeature).init?.(context);
+
+      expect(init).toHaveBeenCalledWith(context);
+      expect(init.mock.instances[0]).toBe(def);
     });
   });
 });

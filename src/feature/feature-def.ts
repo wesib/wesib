@@ -2,10 +2,11 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { Class, elementOrArray, extendSetOfElements, mergeFunctions, setOfElements } from '@proc7ts/primitives';
+import { Class, elementOrArray, extendSetOfElements, setOfElements } from '@proc7ts/primitives';
 import { BootstrapSetup } from '../boot';
 import { MetaAccessor } from '../common';
 import { FeatureContext } from './feature-context';
+import { mergeInitMethods } from './init-method.impl';
 
 /**
  * A key of a property holding a feature definition within its class constructor.
@@ -59,15 +60,21 @@ export namespace FeatureDef {
      * This method is called before bootstrap context created.
      *
      * @param setup - Bootstrap setup.
+     *
+     * @returns Either nothing when setup completed synchronously, or a promise-like instance resolved when setup
+     * completed asynchronously.
      */
-    setup?(setup: BootstrapSetup): void;
+    setup?(setup: BootstrapSetup): void | PromiseLike<unknown>;
 
     /**
-     * Bootstraps this feature by calling the given bootstrap context constructed.
+     * Initializes this feature by calling the given bootstrap context constructed.
      *
      * @param context - Feature initialization context.
+     *
+     * @returns Either nothing when initialization completed synchronously, or a promise-like instance resolved when
+     * initialization completed asynchronously.
      */
-    init?(context: FeatureContext): void;
+    init?(context: FeatureContext): void | PromiseLike<unknown>;
 
   }
 
@@ -115,8 +122,8 @@ class FeatureMeta extends MetaAccessor<FeatureDef.Options, FeatureDef> {
         (prev, def) => ({
           needs: elementOrArray(extendSetOfElements(setOfElements(prev.needs), def.needs)),
           has: elementOrArray(extendSetOfElements(setOfElements(prev.has), def.has)),
-          setup: mergeFunctions<[BootstrapSetup], void, Class>(prev.setup, def.setup),
-          init: mergeFunctions<[FeatureContext], void, Class>(prev.init, def.init),
+          setup: mergeInitMethods(prev, prev.setup, def, def.setup),
+          init: mergeInitMethods(prev, prev.init, def, def.init),
         }),
         {},
     );
