@@ -5,7 +5,7 @@
 import { FnContextKey } from '@proc7ts/context-values/updatable';
 import { filterArray, itsEach, overArray } from '@proc7ts/push-iterator';
 import { isElement } from '../../common';
-import { ComponentContext, ComponentContextHolder, ComponentMount } from '../../component';
+import { ComponentElement, ComponentMount, ComponentSlot__symbol } from '../../component';
 import { bootstrapDefault } from '../bootstrap-default';
 import { ElementAdapter } from './element-adapter';
 
@@ -55,7 +55,7 @@ export const ElementObserver: FnContextKey<[MutationCallback], ElementObserver> 
               mutations.forEach(mutation => {
                 itsEach(
                     overArray(mutation.removedNodes),
-                    node => mountOf(node as ComponentContextHolder)?.checkConnected(),
+                    node => mountOf(node as ComponentElement)?.checkConnected(),
                 );
                 itsEach(
                     filterArray(mutation.addedNodes, isElement),
@@ -96,6 +96,6 @@ export interface ElementObserverInit extends MutationObserverInit {
 /**
  * @internal
  */
-function mountOf(node: ComponentContextHolder): ComponentMount | undefined {
-  return ComponentContext.findIn(node)?.mount;
+function mountOf(node: ComponentElement): ComponentMount | undefined {
+  return node[ComponentSlot__symbol]?.context?.mount;
 }

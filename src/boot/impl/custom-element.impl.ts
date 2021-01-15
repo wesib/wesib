@@ -1,6 +1,6 @@
 import { Class } from '@proc7ts/primitives';
 import { CustomElementClass } from '../../common';
-import { ComponentContext__symbol } from '../../component';
+import { ComponentElement, ComponentSlot } from '../../component';
 import { ElementDef } from '../../component/definition';
 import { ComponentContext$ } from './component-context.impl';
 import { DefinitionContext$ } from './definition-context.impl';
@@ -22,10 +22,7 @@ export function customElementType<T extends object>(
 
   const elementDef = definitionContext.get(ElementDef);
 
-  class CustomElement$ extends (elementDef.extend.type as CustomElementClass) {
-
-    // Component context reference
-    [ComponentContext__symbol]: () => CustomComponentContext$<T>;
+  class CustomElement$ extends (elementDef.extend.type as CustomElementClass) implements ComponentElement {
 
     constructor() {
       super();
@@ -38,11 +35,11 @@ export function customElementType<T extends object>(
 
     connectedCallback(): void {
       super.connectedCallback?.();
-      this[ComponentContext__symbol]()._connect();
+      (ComponentSlot.of<T>(this).context as ComponentContext$<T>)._connect();
     }
 
     disconnectedCallback(): void {
-      this[ComponentContext__symbol]().destroy();
+      (ComponentSlot.of<T>(this).context as ComponentContext$<T>).destroy();
       super.disconnectedCallback?.();
     }
 

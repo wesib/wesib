@@ -58,6 +58,22 @@ describe('boot', () => {
       it('returns `undefined` for raw elements', () => {
         expect(adapter(element)).toBeUndefined();
       });
+      it('returns `undefined` if no binders match', () => {
+
+        const componentContext: ComponentContext = { name: 'component context' } as any;
+
+        registry.provide({
+          a: ElementAdapter,
+          is: {
+            to: 'wrong-element',
+            bind(element) {
+              ComponentSlot.of(element).bind(componentContext);
+            },
+          },
+        });
+
+        expect(adapter(element)).toBeUndefined();
+      });
       it('does not adapt an element with bound component', () => {
 
         const componentContext: ComponentContext = { name: 'component context' } as any;

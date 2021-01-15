@@ -7,7 +7,7 @@ import {
   RenderScheduler,
 } from '@frontmeans/render-scheduler';
 import { DefaultRenderScheduler } from '../../boot/globals';
-import { Component, ComponentContext } from '../../component';
+import { Component, ComponentContext, ComponentSlot } from '../../component';
 import { MockElement, testElement } from '../../spec/test-element';
 import { DomProperty, domPropertyPathTo } from '../dom-properties';
 import { ComponentState } from '../state';
@@ -329,7 +329,7 @@ describe('feature/render', () => {
 
       const element = new (await testElement(TestComponent))();
 
-      return ComponentContext.of(element);
+      return ComponentSlot.of(element).whenReady;
     }
   });
 });

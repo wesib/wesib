@@ -1,5 +1,5 @@
 import { noop } from '@proc7ts/primitives';
-import { Component, ComponentContext } from '../../component';
+import { Component, ComponentSlot } from '../../component';
 import { MockElement, testElement } from '../../spec/test-element';
 import { AttributeChanged } from './attribute-changed.decorator';
 import { attributePathTo } from './attribute-path';
@@ -24,7 +24,8 @@ describe('feature/attributes', () => {
       }
 
       const element = new (await testElement(TestComponent));
-      const component = ComponentContext.of(element).component;
+      const context = await ComponentSlot.of(element).whenReady;
+      const component = context.component;
 
       element.attributeChangedCallback('test-attr', 'old', 'new');
 
@@ -47,7 +48,8 @@ describe('feature/attributes', () => {
       }
 
       const element = new (await testElement(TestComponent));
-      const updateStateSpy = jest.spyOn(ComponentContext.of(element), 'updateState');
+      const context = await ComponentSlot.of(element).whenReady;
+      const updateStateSpy = jest.spyOn(context, 'updateState');
 
       element.attributeChangedCallback('test-attr', 'old', 'new');
 
@@ -71,13 +73,13 @@ describe('feature/attributes', () => {
       }
 
       const element = new (await testElement(TestComponent));
-      const component = ComponentContext.of(element).component;
-      const updateStateSpy = jest.spyOn(ComponentContext.of(element), 'updateState');
+      const context = await ComponentSlot.of(element).whenReady;
+      const updateStateSpy = jest.spyOn(context, 'updateState');
 
       element.attributeChangedCallback('test-attr', 'old', 'new');
 
       expect(updateStateSpy).not.toHaveBeenCalled();
-      expect(updateSpy).toHaveBeenCalledWith(component, attributePathTo('test-attr'), 'new', 'old');
+      expect(updateSpy).toHaveBeenCalledWith(context.component, attributePathTo('test-attr'), 'new', 'old');
     });
     it('updates the state with custom key', async () => {
 
@@ -97,7 +99,8 @@ describe('feature/attributes', () => {
       }
 
       const element = new (await testElement(TestComponent));
-      const updateStateSpy = jest.spyOn(ComponentContext.of(element), 'updateState');
+      const context = await ComponentSlot.of(element).whenReady;
+      const updateStateSpy = jest.spyOn(context, 'updateState');
 
       element.attributeChangedCallback('my-attr', 'old', 'new');
 
@@ -121,7 +124,8 @@ describe('feature/attributes', () => {
       }
 
       const element = new (await testElement(TestComponent));
-      const updateStateSpy = jest.spyOn(ComponentContext.of(element), 'updateState');
+      const context = await ComponentSlot.of(element).whenReady;
+      const updateStateSpy = jest.spyOn(context, 'updateState');
 
       element.attributeChangedCallback('test-attr', 'old', 'new');
 

@@ -1,18 +1,20 @@
 import { ContextRegistry } from '@proc7ts/context-values';
-import { Supply, valueProvider } from '@proc7ts/primitives';
+import { Supply } from '@proc7ts/primitives';
 import { MockElement } from '../spec/test-element';
-import { ComponentContext, ComponentContext__symbol } from './component-context';
+import { ComponentContext } from './component-context';
 import { ComponentEvent, ComponentEventDispatcher } from './component-event';
+import { ComponentElement, ComponentSlot } from './component-slot';
 
 describe('component', () => {
   describe('ComponentEvent', () => {
 
-    let element: any;
+    let element: ComponentElement;
     let componentContext: ComponentContext;
 
     beforeEach(() => {
       componentContext = { name: 'component context' } as any;
-      element = { [ComponentContext__symbol]: valueProvider(componentContext) };
+      element = document.createElement('test-element');
+      ComponentSlot.of(element).bind(componentContext);
     });
 
     let event: ComponentEvent;

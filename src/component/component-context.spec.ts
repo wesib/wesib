@@ -1,26 +1,26 @@
 import { valueProvider } from '@proc7ts/primitives';
-import { ComponentContext, ComponentContext__symbol, ComponentContextHolder } from './component-context';
+import { ComponentContext, ComponentContext__symbol, ComponentInstance } from './component-context';
 
 describe('component', () => {
   describe('ComponentContext', () => {
     describe('of', () => {
 
-      let element: HTMLDivElement & ComponentContextHolder;
+      let component: ComponentInstance;
       let context: ComponentContext;
 
       beforeEach(() => {
-        element = { name: 'HTML element' } as any;
+        component = {};
         context = { name: 'component context' } as any;
-        element[ComponentContext__symbol] = valueProvider(context);
+        component[ComponentContext__symbol] = valueProvider(context);
       });
 
       it('extracts component context from custom element', () => {
-        expect(ComponentContext.of(element)).toBe(context);
+        expect(ComponentContext.of(component)).toBe(context);
       });
       it('fails when there is no context defined', () => {
-        delete element[ComponentContext__symbol];
+        delete component[ComponentContext__symbol];
 
-        expect(() => ComponentContext.of(element)).toThrow(TypeError);
+        expect(() => ComponentContext.of(component)).toThrow(TypeError);
       });
     });
   });
