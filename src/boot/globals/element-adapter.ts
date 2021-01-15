@@ -26,7 +26,6 @@ export type ElementAdapter =
  */
     (this: void, element: ComponentElement) => ComponentContext | undefined;
 
-
 /**
  * A binder of component to element.
  *
