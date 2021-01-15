@@ -1,20 +1,22 @@
+import { newNamespaceAliaser } from '@frontmeans/namespace-aliaser';
 import { ContextRegistry, ContextSupply, ContextValues } from '@proc7ts/context-values';
-import { Supply, valueProvider } from '@proc7ts/primitives';
-import { ComponentContext, ComponentContext__symbol } from '../../component';
-import { ElementAdapter } from './element-adapter';
-import Mock = jest.Mock;
+import { Supply } from '@proc7ts/primitives';
+import { ComponentContext, ComponentSlot } from '../../component';
+import { DefaultNamespaceAliaser } from './default-namespace-aliaser';
+import { ComponentBinder, ElementAdapter } from './element-adapter';
 
 describe('boot', () => {
   describe('ElementAdapter', () => {
 
     let registry: ContextRegistry;
     let context: ContextValues;
-    let element: any;
+    let element: Element;
 
     beforeEach(() => {
       registry = new ContextRegistry();
+      registry.provide({ a: DefaultNamespaceAliaser, by: newNamespaceAliaser });
       context = registry.newValues();
-      element = { name: 'element' };
+      element = document.createElement('test-element');
     });
 
     it('always returns a value', () => {
@@ -56,26 +58,25 @@ describe('boot', () => {
       it('returns `undefined` for raw elements', () => {
         expect(adapter(element)).toBeUndefined();
       });
-      it('does not adapt component element', () => {
+      it('does not adapt an element with bound component', () => {
 
         const componentContext: ComponentContext = { name: 'component context' } as any;
 
-        element[ComponentContext__symbol] = valueProvider(componentContext);
-
+        ComponentSlot.of(element).bind(componentContext);
         expect(adapter(element)).toBe(componentContext);
       });
     });
 
     describe('constructed adapter', () => {
 
-      let adapter1: Mock;
-      let adapter2: Mock;
+      let binder1: jest.Mocked<ComponentBinder>;
+      let binder2: jest.Mocked<ComponentBinder>;
 
       beforeEach(() => {
-        adapter1 = jest.fn();
-        adapter2 = jest.fn();
-        registry.provide({ a: ElementAdapter, is: adapter1 });
-        registry.provide({ a: ElementAdapter, is: adapter2 });
+        binder1 = { to: 'test-element', bind: jest.fn() };
+        binder2 = { to: 'test-element', bind: jest.fn() };
+        registry.provide({ a: ElementAdapter, is: binder1 });
+        registry.provide({ a: ElementAdapter, is: binder2 });
       });
 
       let adapter: ElementAdapter;
@@ -84,31 +85,44 @@ describe('boot', () => {
         adapter = context.get(ElementAdapter);
       });
 
-      it('combines adapters', () => {
+      it('combines binders', () => {
         adapter(element);
 
-        expect(adapter1).toHaveBeenCalledWith(element);
-        expect(adapter2).toHaveBeenCalledWith(element);
+        expect(binder1.bind).toHaveBeenCalledWith(element);
+        expect(binder2.bind).toHaveBeenCalledWith(element);
       });
-      it('does not adapt component element', () => {
+      it('does not adapt an element with bound component', () => {
 
         const componentContext: ComponentContext = { name: 'component context' } as any;
 
-        element[ComponentContext__symbol] = valueProvider(componentContext);
+        ComponentSlot.of(element).bind(componentContext);
 
         expect(adapter(element)).toBe(componentContext);
-        expect(adapter1).not.toHaveBeenCalled();
-        expect(adapter2).not.toHaveBeenCalled();
+        expect(binder1.bind).not.toHaveBeenCalled();
+        expect(binder2.bind).not.toHaveBeenCalled();
       });
-      it('returns the first adapted context', () => {
+      it('returns the first context bound', () => {
 
         const componentContext: ComponentContext = { name: 'component context' } as any;
 
-        adapter1.mockImplementation(() => componentContext);
+        binder1.bind.mockImplementation(element => ComponentSlot.of(element).bind(componentContext));
 
         expect(adapter(element)).toBe(componentContext);
-        expect(adapter1).toHaveBeenCalledWith(element);
-        expect(adapter2).not.toHaveBeenCalled();
+        expect(binder1.bind).toHaveBeenCalledWith(element);
+        expect(binder2.bind).not.toHaveBeenCalled();
+      });
+      it('applies binder to matching element only', () => {
+
+        const binder3: jest.Mocked<ComponentBinder> = {
+          to: 'other-element',
+          bind: jest.fn(),
+        };
+
+        registry.provide({ a: ElementAdapter, is: binder3 });
+        expect(adapter(element)).toBeUndefined();
+        expect(binder1.bind).toHaveBeenCalledWith(element);
+        expect(binder2.bind).toHaveBeenCalledWith(element);
+        expect(binder3.bind).not.toHaveBeenCalled();
       });
     });
   });
