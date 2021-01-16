@@ -1,5 +1,5 @@
 import { BootstrapWindow } from '../../boot/globals';
-import { Component, ComponentContext } from '../../component';
+import { Component, ComponentContext, ComponentElement } from '../../component';
 import { ComponentClass, DefinitionContext } from '../../component/definition';
 import { MockElement, testDefinition, testElement } from '../../spec/test-element';
 import { Feature } from '../feature.decorator';
@@ -206,7 +206,7 @@ describe('feature/attributes', () => {
         class NoAttrComponent {
         }
 
-        const noAttrElement = new MockElement();
+        const noAttrElement = new MockElement() as unknown as ComponentElement<NoAttrComponent>;
         const noAttrDefContext = await testDefinition(NoAttrComponent);
 
         noAttrDefContext.mountTo(noAttrElement);

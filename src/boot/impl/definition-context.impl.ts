@@ -69,7 +69,7 @@ export class DefinitionContext$<T extends object> extends DefinitionContext<T> {
     return this._whenComponent.onCreated;
   }
 
-  mountTo(element: ComponentElement): ComponentMount<T> {
+  mountTo(element: ComponentElement<T>): ComponentMount<T> {
 
     const slot = ComponentSlot.of(element);
 
