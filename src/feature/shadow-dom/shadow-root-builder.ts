@@ -3,8 +3,7 @@
  * @module @wesib/wesib
  */
 import { FnContextKey, FnContextRef } from '@proc7ts/context-values/updatable';
-import { valueProvider } from '@proc7ts/primitives';
-import { ComponentContext, ComponentContext__symbol, ComponentContextHolder } from '../../component';
+import { ComponentContext } from '../../component';
 import { ShadowContentDef } from './attach-shadow.decorator';
 import { ShadowDomEvent } from './shadow-dom-event';
 
@@ -54,7 +53,6 @@ function attachShadow(context: ComponentContext, init: ShadowRootInit): ShadowRo
   const shadowRoot = shadowRootOf(element, init);
 
   if (shadowRoot) {
-    (shadowRoot as ComponentContextHolder)[ComponentContext__symbol] = valueProvider(context);
     context.whenConnected(() => context.dispatchEvent(new ShadowDomEvent(
         'wesib:shadowAttached',
         { bubbles: true },

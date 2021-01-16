@@ -4,8 +4,9 @@
  */
 import { OnDomEvent } from '@frontmeans/dom-events';
 import { SingleContextRef } from '@proc7ts/context-values';
-import { ComponentContext, ComponentContextHolder } from './component-context';
+import { ComponentContext } from './component-context';
 import { ComponentEventDispatcher__key } from './component-event.key.impl';
+import { ComponentElement, ComponentSlot } from './component-slot';
 
 /**
  * Component event.
@@ -30,7 +31,7 @@ export class ComponentEvent extends Event {
    * Target component context.
    */
   get context(): ComponentContext {
-    return ComponentContext.of(this.target as ComponentContextHolder);
+    return ComponentSlot.of(this.target as ComponentElement).context!;
   }
 
 }

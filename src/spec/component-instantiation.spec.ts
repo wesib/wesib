@@ -1,4 +1,6 @@
-import { Component, ComponentContext } from '../component';
+import { onSupplied } from '@proc7ts/fun-events';
+import { CustomElement } from '../common';
+import { Component, ComponentContext, ComponentSlot } from '../component';
 import { ComponentClass } from '../component/definition';
 import { Feature } from '../feature';
 import { MockElement, testElement } from './test-element';
@@ -46,8 +48,8 @@ describe('component instantiation', () => {
     it('instantiates custom element', () => {
       expect(element).toBeDefined();
     });
-    it('assigns component context reference to custom element', () => {
-      expect(ComponentContext.of(element)).toBe(context);
+    it('binds component to custom element', () => {
+      expect(ComponentSlot.of(element).context).toBe(context);
     });
     it('assigns component context reference to component', () => {
       expect(ComponentContext.of(context.component)).toBe(context);
@@ -162,13 +164,32 @@ describe('component instantiation', () => {
 
         }
 
-        const element: any = new (await testElement(TestComponent))();
+        const element: CustomElement = new (await testElement(TestComponent))();
 
         expect(whenDestroyed).not.toHaveBeenCalled();
 
-        element.disconnectedCallback();
+        const receive1 = jest.fn();
+        const slot = ComponentSlot.of(element);
+        const supply1 = slot.read(receive1);
+        const receive2 = jest.fn();
+        const supply2 = onSupplied(slot)(receive2);
+
+        element.disconnectedCallback!();
 
         expect(whenDestroyed).toHaveBeenCalled();
+        expect(receive1).toHaveBeenLastCalledWith(undefined);
+        expect(receive1).toHaveBeenCalledTimes(2);
+        expect(supply1.isOff).toBe(false);
+
+        expect(receive2).toHaveBeenLastCalledWith(undefined);
+        expect(receive2).toHaveBeenCalledTimes(2);
+        expect(supply2.isOff).toBe(false);
+
+        const receive3 = jest.fn();
+        const supply3 = slot.whenReady(receive3);
+
+        expect(receive3).not.toHaveBeenCalled();
+        expect(supply3.isOff).toBe(false);
       });
     });
   });

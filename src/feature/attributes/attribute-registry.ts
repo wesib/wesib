@@ -6,7 +6,7 @@ import { ContextRef, SingleContextKey } from '@proc7ts/context-values';
 import { mergeFunctions } from '@proc7ts/primitives';
 import { BootstrapWindow } from '../../boot/globals';
 import { CustomElementClass } from '../../common';
-import { ComponentContext, ComponentContextHolder, ComponentMount } from '../../component';
+import { ComponentElement, ComponentMount, ComponentSlot } from '../../component';
 import { DefinitionContext } from '../../component/definition';
 import { AttributeChangedCallback, AttributeDescriptor } from './attribute-descriptor';
 
@@ -85,7 +85,7 @@ class AttributeRegistry$ implements AttributeRegistry {
 
   private mount(mount: ComponentMount): void {
 
-    const { element } = mount as { element: Element & ComponentContextHolder };
+    const { element } = mount as { element: ComponentElement };
     const { attrs } = this;
     const attributeFilter = [...attrs.keys()];
 
@@ -101,7 +101,7 @@ class AttributeRegistry$ implements AttributeRegistry {
               const attributeName = record.attributeName as string;
 
               return attrs.get(attributeName)!(
-                  ComponentContext.of(element).component,
+                  mount.context.component,
                   element.getAttribute(attributeName),
                   record.oldValue,
               );
@@ -161,17 +161,19 @@ function attributeChangedCallback<T extends object>(
   const prevCallback = elementType.prototype.attributeChangedCallback;
 
   if (!prevCallback) {
-    return function (this: any, name, oldValue, newValue) {
-      attrs.get(name)!(ComponentContext.of<T>(this).component, newValue, oldValue);
+    return function (this: ComponentElement<T>, name, oldValue, newValue) {
+      ComponentSlot.of(this).whenReady(({ component }) => {
+        attrs.get(name)!(component, newValue, oldValue);
+      });
     };
   }
 
-  return function (this: any, name, oldValue, newValue) {
+  return function (this: ComponentElement<T>, name, oldValue, newValue) {
 
     const attrChanged = attrs.get(name);
 
     if (attrChanged) {
-      attrChanged(ComponentContext.of<T>(this).component, newValue, oldValue);
+      ComponentSlot.of(this).whenReady(({ component }) => attrChanged(component, newValue, oldValue));
     } else {
       prevCallback.call(this, name, oldValue, newValue);
     }

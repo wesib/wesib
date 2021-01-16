@@ -2,7 +2,7 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
-import { ComponentContext } from '../component-context';
+import { ComponentContext, ComponentInstance } from '../component-context';
 
 /**
  * Component class constructor.
@@ -13,6 +13,6 @@ import { ComponentContext } from '../component-context';
  * @typeParam T - A type of component.
  */
 export interface ComponentClass<T extends object = any> extends Function {
-  new (context: ComponentContext<T>): T;
-  prototype: T;
+  new (context: ComponentContext<T>): ComponentInstance<T>;
+  prototype: ComponentInstance<T>;
 }

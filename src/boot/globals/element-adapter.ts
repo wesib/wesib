@@ -2,62 +2,116 @@
  * @packageDocumentation
  * @module @wesib/wesib
  */
+import { html__naming, QualifiedName } from '@frontmeans/namespace-aliaser';
 import { ContextValueSlot } from '@proc7ts/context-values';
 import { contextDestroyed, ContextUpKey, ContextUpRef } from '@proc7ts/context-values/updatable';
 import { AfterEvent, afterThe, digAfter, EventKeeper } from '@proc7ts/fun-events';
-import { ComponentContext, ComponentContextHolder } from '../../component';
+import { ComponentContext, ComponentElement, ComponentSlot__symbol } from '../../component';
+import { DefaultNamespaceAliaser } from './default-namespace-aliaser';
 
 /**
- * Element adapter is a function able to convert a raw element to component. E.g. mount a component to it.
+ * Element adapter is a function able to bind a component to element. E.g. to mount a component to it.
  *
  * Features may use it internally. E.g. an `AutoConnectSupport` applies it to each added DOM element.
  *
- * Multiple element adapters can be registered in bootstrap context.
+ * An element adapter is formed out of {@link ComponentBinder component binders} registered in bootstrap context.
  *
  * @category Core
  */
 export type ElementAdapter =
 /**
- * @param element - Target raw element to adapt.
+ * @param element - Target element to adapt.
  *
- * @returns An adapted component's context, or `undefined` if element can not be adapted.
+ * @returns Either a bound component's context, or `undefined` if element is not adapted.
  */
-    (this: void, element: any) => ComponentContext | undefined;
+    (this: void, element: ComponentElement) => ComponentContext | undefined;
+
+/**
+ * A binder of component to element.
+ *
+ * Component binders form an {@link ElementAdapter element adapter} available in bootstrap context.
+ *
+ * @category Core
+ */
+export interface ComponentBinder {
+
+  /**
+   * Matching element name.
+   *
+   * The binder is applied only to elements with matching names.
+   */
+  readonly to: QualifiedName;
+
+  /**
+   * Binds component to element if applicable.
+   *
+   * @param element - Target element to adapt.
+   */
+  bind(element: ComponentElement): void;
+
+}
 
 /**
  * @internal
  */
-class ElementAdapterKey extends ContextUpKey<ElementAdapter, ElementAdapter> {
+class ElementAdapterKey extends ContextUpKey<ElementAdapter, ComponentBinder> {
 
-  readonly upKey: ContextUpKey.UpKey<ElementAdapter, ElementAdapter>;
+  readonly upKey: ContextUpKey.UpKey<ElementAdapter, ComponentBinder>;
 
   constructor() {
     super('element-adapter');
     this.upKey = this.createUpKey(
-        slot => slot.insert(slot.seed.do(digAfter((...adapters) => {
+        slot => slot.insert(slot.seed.do(
+            digAfter((...binders: ComponentBinder[]): AfterEvent<[ElementAdapter]> => {
+              if (binders.length === 0) {
+                return slot.hasFallback && slot.or
+                    ? slot.or
+                    : afterThe(defaultElementAdapter);
+              }
 
-          const combined: ElementAdapter = adapters.reduce(
-              (prev, adapter) => element => prev(element) || adapter(element),
-              defaultElementAdapter,
-          );
+              const nsAlias = slot.context.get(DefaultNamespaceAliaser);
+              const adapterByName = new Map<string, ElementAdapter>();
 
-          if (combined !== defaultElementAdapter) {
-            return afterThe(combined);
-          }
-          if (slot.hasFallback && slot.or) {
-            return slot.or;
-          }
+              for (const spec of binders) {
 
-          return afterThe(defaultElementAdapter);
-        }))),
+                const name = html__naming.name(spec.to, nsAlias).toLowerCase();
+                const prev = adapterByName.get(name) || defaultElementAdapter;
+
+                adapterByName.set(
+                    name,
+                    element => {
+
+                      const context = prev(element);
+
+                      if (context) {
+                        return context;
+                      }
+
+                      spec.bind(element);
+
+                      return defaultElementAdapter(element);
+                    },
+                );
+              }
+
+              const combined = (element: ComponentElement): ComponentContext | undefined => {
+
+                const adapter = adapterByName.get(element.tagName.toLowerCase()) || defaultElementAdapter;
+
+                return adapter(element);
+              };
+
+              return afterThe(combined);
+            }),
+        )),
     );
   }
 
   grow(
       slot: ContextValueSlot<
           ElementAdapter,
-          EventKeeper<ElementAdapter[]> | ElementAdapter,
-          AfterEvent<ElementAdapter[]>>,
+          EventKeeper<ComponentBinder[]> | ComponentBinder,
+          AfterEvent<ComponentBinder[]>>,
   ): void {
 
     let delegated: ElementAdapter;
@@ -79,8 +133,11 @@ class ElementAdapterKey extends ContextUpKey<ElementAdapter, ElementAdapter> {
 /**
  * @internal
  */
-function defaultElementAdapter(element: ComponentContextHolder): ComponentContext | undefined {
-  return ComponentContext.findIn(element);
+function defaultElementAdapter(element: ComponentElement): ComponentContext | undefined {
+
+  const slot = element[ComponentSlot__symbol];
+
+  return slot && slot.context;
 }
 
 /**
@@ -88,4 +145,6 @@ function defaultElementAdapter(element: ComponentContextHolder): ComponentContex
  *
  * @category Core
  */
-export const ElementAdapter: ContextUpRef<ElementAdapter, ElementAdapter> = (/*#__PURE__*/ new ElementAdapterKey());
+export const ElementAdapter: ContextUpRef<ElementAdapter, ComponentBinder> = (
+    /*#__PURE__*/ new ElementAdapterKey()
+);

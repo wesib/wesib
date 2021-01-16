@@ -1,13 +1,7 @@
 import { ContextValues, ContextValueSpec } from '@proc7ts/context-values';
 import { mapOn_, onceOn, OnEvent, trackValue, translateOn, ValueTracker } from '@proc7ts/fun-events';
 import { Class, Supply, valueProvider } from '@proc7ts/primitives';
-import {
-  ComponentContext,
-  ComponentContext__symbol,
-  ComponentContextHolder,
-  ComponentDef,
-  ComponentMount,
-} from '../../component';
+import { ComponentContext, ComponentDef, ComponentElement, ComponentMount, ComponentSlot } from '../../component';
 import { DefinitionContext, DefinitionSetup } from '../../component/definition';
 import { BootstrapContext } from '../bootstrap-context';
 import { ComponentContextRegistry, PerComponentRegistry } from './component-context-registry.impl';
@@ -75,8 +69,11 @@ export class DefinitionContext$<T extends object> extends DefinitionContext<T> {
     return this._whenComponent.onCreated;
   }
 
-  mountTo(element: ComponentContextHolder): ComponentMount<T> {
-    if (element[ComponentContext__symbol]) {
+  mountTo(element: ComponentElement<T>): ComponentMount<T> {
+
+    const slot = ComponentSlot.of(element);
+
+    if (slot.context) {
       throw new Error(`Element ${String(element)} already bound to component`);
     }
 

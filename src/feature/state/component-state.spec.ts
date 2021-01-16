@@ -1,4 +1,4 @@
-import { Component, ComponentContext } from '../../component';
+import { Component, ComponentContext, ComponentSlot } from '../../component';
 import { MockElement, testElement } from '../../spec/test-element';
 import { ComponentState } from './component-state';
 
@@ -60,6 +60,6 @@ describe('feature/state', () => {
 
     const element = new (await testElement(TestComponent))();
 
-    return ComponentContext.of(element);
+    return await ComponentSlot.of(element).whenReady;
   }
 });

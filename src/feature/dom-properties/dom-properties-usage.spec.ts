@@ -192,6 +192,11 @@ describe('feature/dom-properties', () => {
 
         expect(updateStateSpy).not.toHaveBeenCalled();
       });
+      it('returns `undefined` after component destruction', () => {
+        context.destroy();
+        element.field = 'other';
+        expect(element.field).toBeUndefined();
+      });
     }
 
   });

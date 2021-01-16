@@ -1,4 +1,4 @@
-import { Component, ComponentContext } from '../../component';
+import { Component, ComponentSlot } from '../../component';
 import { MockElement, testElement } from '../../spec/test-element';
 import { DomProperty } from './dom-property.decorator';
 
@@ -20,7 +20,7 @@ describe('feature/dom-properties', () => {
       }
 
       const element = new (await testElement(TestComponent));
-      const component = ComponentContext.of(element).component as TestComponent;
+      const component = ComponentSlot.of<TestComponent>(element).context!.component;
 
       expect(element.customProperty).toBe('value');
 
@@ -44,7 +44,7 @@ describe('feature/dom-properties', () => {
       }
 
       const element = new (await testElement(TestComponent));
-      const component = ComponentContext.of(element).component as TestComponent;
+      const component = ComponentSlot.of<TestComponent>(element).context!.component;
 
       expect(element.otherProperty).toBe('value');
 
@@ -160,6 +160,7 @@ describe('feature/dom-properties', () => {
         });
       });
     });
+
     describe('for property accessor', () => {
       it('applies read-only property defaults', async () => {
 

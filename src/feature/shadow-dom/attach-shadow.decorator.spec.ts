@@ -1,12 +1,6 @@
 import { DomEventDispatcher } from '@frontmeans/dom-events';
 import { BootstrapContext } from '../../boot';
-import {
-  Component,
-  ComponentContext,
-  ComponentContextHolder,
-  ComponentEventDispatcher,
-  ContentRoot,
-} from '../../component';
+import { Component, ComponentContext, ComponentEventDispatcher, ComponentSlot, ContentRoot } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { MockElement, testElement } from '../../spec/test-element';
 import { AttachShadow, ShadowContentDef } from './attach-shadow.decorator';
@@ -57,7 +51,7 @@ describe('feature/shadow-dom', () => {
     });
     beforeEach(async () => {
       element = new (await testElement(testComponent))();
-      context = ComponentContext.of(element);
+      context = await ComponentSlot.of(element).whenReady;
     });
 
     it('makes shadow root builder available in bootstrap context', () => {
@@ -65,9 +59,6 @@ describe('feature/shadow-dom', () => {
     });
     it('provides shadow root', () => {
       expect(context.get(ShadowContentRoot)).toBe(shadowRoot);
-    });
-    it('assigns component context to shadow root', () => {
-      expect(ComponentContext.of(context.get(ShadowContentRoot) as ComponentContextHolder)).toBe(context);
     });
     it('provides shadow root as content root', () => {
       expect(context.contentRoot).toBe(shadowRoot);
@@ -108,8 +99,10 @@ describe('feature/shadow-dom', () => {
       }
 
       element = new (await testElement(OtherComponent))();
-      ComponentContext.of(element).get(ShadowContentRoot);
 
+      const context = await ComponentSlot.of(element).whenReady;
+
+      context.get(ShadowContentRoot);
       expect(attachShadowSpy).toHaveBeenCalledWith(shadowDef);
     });
     it('uses existing shadow root', async () => {
@@ -138,7 +131,9 @@ describe('feature/shadow-dom', () => {
 
       element = new (await testElement(OtherComponent))();
 
-      expect(ComponentContext.of(element).get(ShadowContentRoot)).toBe(mockShadowRoot);
+      const context = await ComponentSlot.of(element).whenReady;
+
+      expect(context.get(ShadowContentRoot)).toBe(mockShadowRoot);
       expect(attachShadowSpy).not.toHaveBeenCalled();
     });
     it('uses element as content root if shadow DOM is not supported', async () => {
@@ -159,7 +154,7 @@ describe('feature/shadow-dom', () => {
       }
 
       element = new (await testElement(OtherComponent))();
-      context = ComponentContext.of(element);
+      context = await ComponentSlot.of(element).whenReady;
 
       expect(context.get(ShadowContentRoot, { or: null })).toBeNull();
       expect(context.get(ContentRoot)).toBe(element);

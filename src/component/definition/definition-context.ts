@@ -7,6 +7,7 @@ import { OnEvent } from '@proc7ts/fun-events';
 import { Class, Supply } from '@proc7ts/primitives';
 import { ComponentContext } from '../component-context';
 import { ComponentMount } from '../component-mount';
+import { ComponentElement } from '../component-slot';
 import { ComponentClass } from './component-class';
 import { DefinitionContext__key } from './definition.context.key.impl';
 import { ElementDef } from './element-def';
@@ -90,7 +91,7 @@ export abstract class DefinitionContext<T extends object = any> extends ContextV
    *
    * @throws Error If target element is already bound to some component.
    */
-  abstract mountTo(element: any): ComponentMount<T>;
+  abstract mountTo(element: ComponentElement<T>): ComponentMount<T>;
 
   /**
    * Connects a component to arbitrary element.

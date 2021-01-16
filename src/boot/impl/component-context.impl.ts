@@ -1,6 +1,12 @@
 import { onceOn, OnEvent, trackValue, valueOn_ } from '@proc7ts/fun-events';
 import { Supply, valueProvider } from '@proc7ts/primitives';
-import { ComponentContext, ComponentContext__symbol, ComponentContextHolder, ComponentEvent } from '../../component';
+import {
+  ComponentContext,
+  ComponentContext__symbol,
+  ComponentEvent,
+  ComponentInstance,
+  ComponentSlot,
+} from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { newComponent } from '../../component/definition/component.impl';
 import { DefinitionContext$ } from './definition-context.impl';
@@ -53,7 +59,7 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
     return this._definitionContext.componentType;
   }
 
-  get component(): T {
+  get component(): ComponentInstance<T> {
     return this._component();
   }
 
@@ -84,9 +90,9 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
     try {
       this._status.supply.off(reason);
     } finally {
-      delete (this.component as ComponentContextHolder)[ComponentContext__symbol];
-      delete (this.element as ComponentContextHolder)[ComponentContext__symbol];
+      delete this.component[ComponentContext__symbol];
       this._component = componentDestroyed;
+      ComponentSlot.of(this.element).unbind();
       removeElement(this.element);
     }
   }
@@ -97,7 +103,7 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
 
     let lastRev = 0;
 
-    (this.element as ComponentContextHolder)[ComponentContext__symbol] = valueProvider(this);
+    ComponentSlot.of<T>(this.element).bind(this);
     whenComponent.readNotifier.do(onceOn)(notifier => lastRev = notifier(this, lastRev));
     this.whenConnected(() => {
       whenComponent.readNotifier({

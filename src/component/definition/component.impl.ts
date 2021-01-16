@@ -1,11 +1,11 @@
-import { ComponentContext, ComponentContext__symbol, ComponentContextHolder } from '../component-context';
+import { ComponentContext, ComponentContext__symbol } from '../component-context';
 import { ComponentClass } from './component-class';
 
 const ComponentConstructor__symbol = (/*#__PURE__*/ Symbol('newComponent'));
 
 type ComponentConstructor<T extends object> = (this: ComponentType<T>, context: ComponentContext<T>) => T;
 
-interface ComponentType<T extends object> extends ComponentClass<T & ComponentContextHolder<T>> {
+interface ComponentType<T extends object> extends ComponentClass<T> {
 
   [ComponentConstructor__symbol]?: ComponentConstructor<T>;
 

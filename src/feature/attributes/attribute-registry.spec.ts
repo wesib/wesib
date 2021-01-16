@@ -1,6 +1,7 @@
 import { Class } from '@proc7ts/primitives';
 import { bootstrapComponents } from '../../boot/bootstrap';
-import { Component, ComponentContext, ComponentContext__symbol } from '../../component';
+import { CustomElement } from '../../common';
+import { Component, ComponentSlot } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { attributePathTo } from './attribute-path';
 import { Attributes } from './attributes.decorator';
@@ -44,16 +45,17 @@ describe('feature/attributes', () => {
 
       const attrChanged = jest.fn();
 
+      @Component({ extend: { type: Object } })
       @Attributes({ testAttr: attrChanged })
       class TestComponent {}
 
       const elementType = await bootstrap(TestComponent);
-      const callback: any = elementType.prototype.attributeChangedCallback;
-      const element = { [ComponentContext__symbol]: () => ({ component: { name: 'component' } } as ComponentContext) };
+      const element: CustomElement = new elementType();
+      const context = await ComponentSlot.of(element).whenReady;
 
-      callback.call(element, 'test-attr', 'old', 'new');
+      element.attributeChangedCallback!('test-attr', 'old', 'new');
       expect(attrChanged).toHaveBeenCalledWith(
-          ComponentContext.of(element).component,
+          context.component,
           attributePathTo('test-attr'),
           'new',
           'old',
@@ -85,18 +87,18 @@ describe('feature/attributes', () => {
       class TestComponent {}
 
       const elementType = await bootstrap(TestComponent);
-      const callback: any = elementType.prototype.attributeChangedCallback;
-      const element = { [ComponentContext__symbol]: () => ({ component: { name: 'component' } } as ComponentContext) };
+      const element = new elementType();
+      const context = await ComponentSlot.of(element).whenReady;
 
-      callback.call(element, 'test-attr', 'old', 'new');
+      element.attributeChangedCallback!('test-attr', 'old', 'new');
       expect(attrChanged).toHaveBeenCalledWith(
-          ComponentContext.of(element).component,
+          context.component,
           attributePathTo('test-attr'),
           'new',
           'old',
       );
 
-      callback.call(element, 'inherited-attr', 'old', 'new');
+      element.attributeChangedCallback!('inherited-attr', 'old', 'new');
       expect(inheritedAttrChanged).toHaveBeenCalledWith('inherited-attr', 'old', 'new');
       expect(inheritedAttrChanged.mock.instances[0]).toBe(element);
     });

@@ -1,6 +1,13 @@
 import { ContextKey, SingleContextKey } from '@proc7ts/context-values';
 import { Class } from '@proc7ts/primitives';
-import { ComponentContext, ComponentDef, ComponentDef__symbol, ComponentEvent, ComponentMount } from '../../component';
+import {
+  ComponentContext,
+  ComponentDef,
+  ComponentDef__symbol,
+  ComponentEvent,
+  ComponentMount,
+  ComponentSlot,
+} from '../../component';
 import { ComponentClass, DefinitionContext } from '../../component/definition';
 import { MockElement } from '../../spec/test-element';
 import { BootstrapContext } from '../bootstrap-context';
@@ -92,8 +99,8 @@ describe('boot', () => {
         const { elementType } = builder.buildElement(TestComponent);
         const element1 = new elementType();
         const element2 = new elementType();
-        const ctx1 = ComponentContext.of(element1);
-        const ctx2 = ComponentContext.of(element2);
+        const ctx1 = ComponentSlot.of(element1).context!;
+        const ctx2 = ComponentSlot.of(element2).context!;
 
         expect(ctx1).not.toBe(ctx2);
         expect(ctx1.element).toBe(element1);
@@ -277,11 +284,11 @@ describe('boot', () => {
         );
       });
 
-      beforeEach(() => {
+      beforeEach(async () => {
 
         const element = new (builder.buildElement(TestComponent).elementType);
 
-        componentContext = ComponentContext.of(element);
+        componentContext = await ComponentSlot.of(element).whenReady;
       });
 
       it('has access to definition context value', () => {
@@ -387,7 +394,7 @@ describe('boot', () => {
         });
       });
 
-      it('can not access values of another component type', () => {
+      it('can not access values of another component type', async () => {
 
         class AnotherComponent {
 
@@ -401,7 +408,7 @@ describe('boot', () => {
         }
 
         const otherElement = new (builder.buildElement(AnotherComponent).elementType);
-        const otherContext = ComponentContext.of(otherElement);
+        const otherContext = await ComponentSlot.of(otherElement).whenReady;
 
         expect(otherContext.get(key1, { or: null })).toBeNull();
         expect(otherContext.get(key2, { or: null })).toBeNull();
@@ -499,9 +506,9 @@ describe('boot', () => {
         context = mount.context;
       }
 
-      it('has context reference', () => {
+      it('has context reference', async () => {
         doMount();
-        expect(ComponentContext.of(element)).toBe(context);
+        expect(await ComponentSlot.of(element).whenReady).toBe(context);
       });
       it('is mounted', () => {
         doMount();

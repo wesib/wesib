@@ -1,5 +1,5 @@
 import { BootstrapWindow } from '../../boot/globals';
-import { Component, ComponentContext } from '../../component';
+import { Component, ComponentContext, ComponentElement } from '../../component';
 import { ComponentClass, DefinitionContext } from '../../component/definition';
 import { MockElement, testDefinition, testElement } from '../../spec/test-element';
 import { Feature } from '../feature.decorator';
@@ -121,13 +121,13 @@ describe('feature/attributes', () => {
 
         element.setAttribute('attr3', value);
 
-        expect((ComponentContext.of(element).component as any).attr3).toBe(value);
+        expect(context.component.attr3).toBe(value);
       });
       it('updates attribute value', () => {
 
         const value = 'new value';
 
-        (ComponentContext.of(element).component as any).attr3 = value;
+        context.component.attr3 = value;
 
         expect(element.getAttribute('attr3')).toBe(value);
       });
@@ -136,7 +136,7 @@ describe('feature/attributes', () => {
         const updateStateSpy = jest.spyOn(context, 'updateState');
         const value = 'new value';
 
-        (ComponentContext.of(element).component as any).attr3 = value;
+        context.component.attr3 = value;
 
         expect(updateStateSpy).toHaveBeenCalledWith([AttributePath__root, 'attr3'], value, null);
       });
@@ -206,7 +206,7 @@ describe('feature/attributes', () => {
         class NoAttrComponent {
         }
 
-        const noAttrElement = new MockElement();
+        const noAttrElement = new MockElement() as unknown as ComponentElement<NoAttrComponent>;
         const noAttrDefContext = await testDefinition(NoAttrComponent);
 
         noAttrDefContext.mountTo(noAttrElement);
