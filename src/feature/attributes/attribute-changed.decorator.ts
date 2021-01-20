@@ -30,14 +30,14 @@ import { AttributeRegistry } from './attribute-registry';
  * ```
  *
  * @category Feature
- * @typeParam T - A type of decorated component class.
+ * @typeParam TClass - A type of decorated component class.
  * @param def - Attribute definition or just an attribute name.
  *
  * @return Component method decorator.
  */
-export function AttributeChanged<T extends ComponentClass>(
-    def?: AttributeDef<InstanceType<T>> | string,
-): ComponentPropertyDecorator<(newValue: string | null, oldValue: string | null) => void, T> {
+export function AttributeChanged<TClass extends ComponentClass>(
+    def?: AttributeDef<InstanceType<TClass>> | string,
+): ComponentPropertyDecorator<(newValue: string | null, oldValue: string | null) => void, TClass> {
   return ComponentProperty(({ type, get, key }) => {
 
     const { name, change } = parseAttributeDescriptor(type.prototype, key, def);
@@ -48,7 +48,7 @@ export function AttributeChanged<T extends ComponentClass>(
           defContext.get(AttributeRegistry).declareAttribute({
             name,
             change(
-                component: InstanceType<T>,
+                component: InstanceType<TClass>,
                 newValue: string | null,
                 oldValue: string | null,
             ) {

@@ -15,14 +15,14 @@ import { AttributeRegistry } from './attribute-registry';
  * to absent attribute. Setting to `null` removes corresponding attribute.
  *
  * @category Feature
- * @typeParam T - A type of decorated component class.
+ * @typeParam TClass - A type of decorated component class.
  * @param def - Attribute definition or just an attribute name (either _camelCase_ or _dash-style_).
  *
  * @return Component property decorator.
  */
-export function Attribute<T extends ComponentClass>(
-    def?: AttributeDef<InstanceType<T>> | string,
-): ComponentPropertyDecorator<string | null, T> {
+export function Attribute<TClass extends ComponentClass>(
+    def?: AttributeDef<InstanceType<TClass>> | string,
+): ComponentPropertyDecorator<string | null, TClass> {
   return ComponentProperty(({ type, key }) => {
 
     const descriptor = parseAttributeDescriptor(type.prototype, key, def);
@@ -34,10 +34,10 @@ export function Attribute<T extends ComponentClass>(
           defContext.get(AttributeRegistry).declareAttribute(descriptor);
         },
       },
-      get(component: InstanceType<T>): string | null {
+      get(component: InstanceType<TClass>): string | null {
         return (ComponentContext.of(component).element as Element).getAttribute(name);
       },
-      set(component: InstanceType<T>, newValue: string | null) {
+      set(component: InstanceType<TClass>, newValue: string | null) {
 
         const { element } = ComponentContext.of(component) as { element: Element };
 

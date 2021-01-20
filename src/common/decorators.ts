@@ -13,19 +13,19 @@ import {
  * Typed class decorator.
  *
  * @category Utility
- * @typeParam T - A type of class to decorate.
+ * @typeParam TClass - A type of class to decorate.
  */
-export type TypedClassDecorator<T extends Class> = (type: T) => T | void;
+export type TypedClassDecorator<TClass extends Class> = (type: TClass) => TClass | void;
 
 /**
  * Typed property decorator.
  *
  * @category Utility
- * @typeParam T - A type of class the decorated property belongs to.
+ * @typeParam TClass - A type of class the decorated property belongs to.
  */
-export type TypedPropertyDecorator<T extends Class> =
+export type TypedPropertyDecorator<TClass extends Class> =
     <TValue>(
-        target: InstanceType<T>,
+        target: InstanceType<TClass>,
         propertyKey: string | symbol,
         descriptor?: TypedPropertyDescriptor<TValue>,
     ) => any | void;

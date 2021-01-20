@@ -223,13 +223,13 @@ export const FeatureDef = {
    *
    * Either creates new or extends an existing feature definition and stores it under `[FeatureDef__symbol]` key.
    *
-   * @typeParam T - Feature type.
+   * @typeParam TClass - Feature type.
    * @param featureType - Feature class constructor.
    * @param defs - Feature definitions.
    *
    * @returns The `type` instance.
    */
-  define<T extends Class>(this: void, featureType: T, ...defs: readonly FeatureDef[]): T {
+  define<TClass extends Class>(this: void, featureType: TClass, ...defs: readonly FeatureDef[]): TClass {
     return featureMeta.define(featureType, defs);
   },
 

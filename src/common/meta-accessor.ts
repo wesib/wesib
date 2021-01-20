@@ -29,7 +29,7 @@ export abstract class MetaAccessor<TMeta, TSrc = TMeta> {
     return ownDef ? (superDef ? this.merge([superDef, ownDef]) : ownDef) : superDef;
   }
 
-  define<T extends Class>(type: T, sources: readonly TSrc[]): T {
+  define<TClass extends Class>(type: TClass, sources: readonly TSrc[]): TClass {
 
     const prevMeta = this.own(type);
     const updates = sources.map(source => this.meta(source, type));

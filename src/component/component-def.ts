@@ -280,17 +280,17 @@ export const ComponentDef = {
    * Each component can be passed directly to {@link bootstrapComponents} function or added as a requirement
    * of another feature.
    *
-   * @typeParam T - A type of component.
+   * @typeParam TClass - A type of component class.
    * @param componentType - Component class constructor.
    * @param defs - Component definitions.
    *
    * @returns The `type` instance.
    */
-  define<T extends ComponentClass>(
+  define<TClass extends ComponentClass>(
       this: void,
-      componentType: T,
-      ...defs: ComponentDef<InstanceType<T>>[]
-  ): T {
+      componentType: TClass,
+      ...defs: ComponentDef<InstanceType<TClass>>[]
+  ): TClass {
     return componentMeta.define(componentType, defs);
   },
 

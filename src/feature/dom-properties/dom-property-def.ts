@@ -11,6 +11,7 @@ import { DomPropertyPath } from './dom-property-path';
  * This is a parameter to {@link DomProperty @DomProperty} decorator applied to component property.
  *
  * @category Feature
+ * @typeParam T - A type of component.
  */
 export interface DomPropertyDef<T extends object = any> {
 

@@ -21,14 +21,14 @@ import { RenderDef } from './render-def';
  * Enables rendering with {@link ElementRenderCtl.renderBy element render control}.
  *
  * @category Feature
- * @typeParam T - A type of decorated component class.
+ * @typeParam TClass - A type of decorated component class.
  * @param def - Non-mandatory render definition.
  *
  * @returns Component method decorator.
  */
-export function Render<T extends ComponentClass>(
+export function Render<TClass extends ComponentClass>(
     def?: RenderDef,
-): ComponentPropertyDecorator<(execution: RenderExecution) => ElementRenderer | void, T> {
+): ComponentPropertyDecorator<(execution: RenderExecution) => ElementRenderer | void, TClass> {
   return ComponentProperty(({ get }) => ({
     componentDef: {
       define(defContext) {

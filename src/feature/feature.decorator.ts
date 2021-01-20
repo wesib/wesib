@@ -22,11 +22,11 @@ import { FeatureDef } from './feature-def';
  * This is an alternative to direct call to {@link FeatureDef.define} method.
  *
  * @category Core
- * @typeParam T - A type of decorated feature class.
+ * @typeParam TClass - A type of decorated feature class.
  * @param defs - Feature definitions.
  *
  * @returns A feature class decorator.
  */
-export function Feature<T extends Class = any>(...defs: FeatureDef[]): TypedClassDecorator<T> {
-  return (type: T) => FeatureDef.define(type, ...defs);
+export function Feature<TClass extends Class = any>(...defs: FeatureDef[]): TypedClassDecorator<TClass> {
+  return (type: TClass) => FeatureDef.define(type, ...defs);
 }

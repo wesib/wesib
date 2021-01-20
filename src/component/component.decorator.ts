@@ -15,11 +15,11 @@ import { ComponentClass } from './definition';
  * Constructed by {@link Component} function.
  *
  * @category Core
- * @typeParam T - A type of decorated component class.
+ * @typeParam TClass - A type of decorated component class.
  */
-export type ComponentDecorator<T extends ComponentClass = Class> =
-    & ((this: void, type: T) => T | void)
-    & ComponentDef<InstanceType<T>>;
+export type ComponentDecorator<TClass extends ComponentClass = Class> =
+    & ((this: void, type: TClass) => TClass | void)
+    & ComponentDef<InstanceType<TClass>>;
 
 /**
  * Decorator of component class.
@@ -38,17 +38,17 @@ export type ComponentDecorator<T extends ComponentClass = Class> =
  * This is an alternative to direct call to {@link ComponentDef.Options.define} method.
  *
  * @category Core
- * @typeParam T - A type of decorated component class.
+ * @typeParam TClass - A type of decorated component class.
  * @param defs - Component definitions.
  *
  * @returns A component class decorator.
  */
-export function Component<T extends ComponentClass = Class>(
-    ...defs: ComponentDef<InstanceType<T>>[]
-): ComponentDecorator<T> {
+export function Component<TClass extends ComponentClass = Class>(
+    ...defs: ComponentDef<InstanceType<TClass>>[]
+): ComponentDecorator<TClass> {
 
-  const decorator = ((type: T) => ComponentDef.define(type, ...defs)) as ComponentDecorator<T>;
-  const def = decorator as ComponentDef.Factory<InstanceType<T>>;
+  const decorator = ((type: TClass) => ComponentDef.define(type, ...defs)) as ComponentDecorator<TClass>;
+  const def = decorator as ComponentDef.Factory<InstanceType<TClass>>;
 
   def[ComponentDef__symbol] = () => ComponentDef.all(...defs);
 

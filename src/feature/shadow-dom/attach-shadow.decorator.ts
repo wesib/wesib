@@ -26,27 +26,27 @@ export type ShadowContentDef = Readonly<ShadowRootInit>;
  * Creates a component decorator that attaches shadow root to decorated component instance.
  *
  * @category Feature
- * @typeParam T - A type of decorated component class.
+ * @typeParam TClass - A type of decorated component class.
  * @param def - Shadow content root definition. Uses `mode: 'open'` by default.
  *
  * @returns New component decorator.
  */
-export function AttachShadow<T extends ComponentClass = Class>(
+export function AttachShadow<TClass extends ComponentClass = Class>(
     def: ShadowContentDef = defaultShadowContentDef,
-): ComponentDecorator<T> {
+): ComponentDecorator<TClass> {
   return Component({
     setup(setup) {
       setup.perComponent(
           {
             a: ShadowContentRoot,
-            by(ctx: ComponentContext<InstanceType<T>>) {
+            by(ctx: ComponentContext<InstanceType<TClass>>) {
               return ctx.get(ShadowRootBuilder)(ctx, def);
             },
           },
       );
       setup.perComponent({ // Content root is an alias of shadow root when present.
         a: ContentRoot,
-        by(context: ComponentContext<InstanceType<T>>) {
+        by(context: ComponentContext<InstanceType<TClass>>) {
           return context.get(ShadowContentRoot, { or: null });
         },
       });

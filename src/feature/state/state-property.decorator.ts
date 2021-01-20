@@ -15,19 +15,19 @@ import { statePropertyUpdate } from './state-property-update.impl';
  * Once such property updated, the component state is {@link ComponentContext.updateState also updated}.
  *
  * @category Feature
- * @typeParam T - A type of decorated component class.
+ * @typeParam TClass - A type of decorated component class.
  * @param def - Custom element property definition.
  *
  * @returns Component property decorator.
  */
-export function StateProperty<TValue = any, T extends ComponentClass = Class>(
-    { updateState }: StatePropertyDef = {},
-): ComponentPropertyDecorator<TValue, T> {
+export function StateProperty<TValue = any, TClass extends ComponentClass = Class>(
+    { updateState }: StatePropertyDef<InstanceType<TClass>> = {},
+): ComponentPropertyDecorator<TValue, TClass> {
   return ComponentProperty(({ get, set, key }) => {
     if (updateState !== false) {
 
       const setValue = set;
-      const update = statePropertyUpdate<InstanceType<T>>(key, updateState);
+      const update = statePropertyUpdate(key, updateState);
 
       set = (component, newValue) => {
 

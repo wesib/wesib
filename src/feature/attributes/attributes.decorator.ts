@@ -15,14 +15,14 @@ import { property2attributeName } from './property2attribute-name';
  * Creates a component decorator declaring supported custom element's attributes.
  *
  * @category Feature
- * @typeParam T - A type of decorated component class.
+ * @typeParam TClass - A type of decorated component class.
  * @param items - Attributes definition options.
  *
  * @return New component decorator.
  */
-export function Attributes<T extends ComponentClass = Class>(
-    ...items: readonly Attributes.Item<InstanceType<T>>[]
-): ComponentDecorator<T> {
+export function Attributes<TClass extends ComponentClass = Class>(
+    ...items: readonly Attributes.Item<InstanceType<TClass>>[]
+): ComponentDecorator<TClass> {
   return Component({
     define(defContext) {
 

@@ -18,14 +18,14 @@ import { domPropertyUpdate } from './dom-property-update.impl';
  * By default does not update component state if property value didn't change.
  *
  * @category Feature
- * @typeParam T - A type of decorated component class.
+ * @typeParam TClass - A type of decorated component class.
  * @param def - Custom element property definition.
  *
  * @returns Component property decorator.
  */
-export function DomProperty<TValue = any, T extends ComponentClass = Class>(
-    def: DomPropertyDef<T> = {},
-): ComponentPropertyDecorator<TValue, T> {
+export function DomProperty<TValue = any, TClass extends ComponentClass = Class>(
+    def: DomPropertyDef<InstanceType<TClass>> = {},
+): ComponentPropertyDecorator<TValue, TClass> {
   return ComponentProperty(descriptor => {
 
     const { key, get } = descriptor;
@@ -34,7 +34,7 @@ export function DomProperty<TValue = any, T extends ComponentClass = Class>(
 
     if (def.updateState !== false) {
 
-      const updateState = domPropertyUpdate<InstanceType<T>>(key, def.updateState);
+      const updateState = domPropertyUpdate<InstanceType<TClass>>(key, def.updateState);
       const setValue = set;
 
       set = (component, newValue) => {
