@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import { SingleContextKey } from '@proc7ts/context-values';
 import { FnContextKey } from '@proc7ts/context-values/updatable';
 import { noop } from '@proc7ts/primitives';
