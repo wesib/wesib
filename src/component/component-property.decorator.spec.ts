@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
 import { SingleContextKey } from '@proc7ts/context-values';
 import { FnContextKey } from '@proc7ts/context-values/updatable';
 import { noop } from '@proc7ts/primitives';
@@ -165,7 +164,6 @@ describe('component', () => {
       it('provides property accessor', async () => {
 
         @Component(
-            // eslint-disable-next-line @typescript-eslint/no-use-before-define
             ComponentProperty<string, typeof TestComponent>(({ get }) => ({
               componentDef: {
                 setup(setup) {
@@ -193,7 +191,6 @@ describe('component', () => {
       it('handles empty definition', async () => {
 
         @Component(
-            // eslint-disable-next-line @typescript-eslint/no-use-before-define
             ComponentProperty<string, typeof TestComponent>(noop).With({
               get: component => component.property,
               set: (component, value) => component.property = value,
@@ -214,7 +211,6 @@ describe('component', () => {
       it('provides constant value', async () => {
 
         @Component(
-            // eslint-disable-next-line @typescript-eslint/no-use-before-define
             ComponentProperty<string, typeof TestComponent>(({ get }) => ({
               componentDef: {
                 setup(setup) {
@@ -236,7 +232,6 @@ describe('component', () => {
       it('throws on attempt to set property value', async () => {
 
         @Component(
-            // eslint-disable-next-line @typescript-eslint/no-use-before-define
             ComponentProperty<string, typeof TestComponent>(({ set }) => ({
               componentDef: {
                 setup(setup) {
@@ -270,7 +265,6 @@ describe('component', () => {
         };
 
         @Component(
-            // eslint-disable-next-line @typescript-eslint/no-use-before-define
             ComponentProperty<string, typeof TestComponent>(({ get, set }) => ({
               componentDef: {
                 define(defContext) {
@@ -325,7 +319,6 @@ describe('component', () => {
         };
 
         @Component(
-            // eslint-disable-next-line @typescript-eslint/no-use-before-define
             ComponentProperty<string, typeof TestComponent>(({ get, set }) => ({
               componentDef: {
                 define(defContext) {
@@ -369,7 +362,6 @@ describe('component', () => {
         };
 
         @Component(
-            // eslint-disable-next-line @typescript-eslint/no-use-before-define
             ComponentProperty<string, typeof TestComponent>(({ set }) => ({
               componentDef: {
                 define(defContext) {
@@ -407,7 +399,6 @@ describe('component', () => {
       };
 
       @Component(
-          // eslint-disable-next-line @typescript-eslint/no-use-before-define
           ComponentProperty<string, typeof TestComponent>(({ get }) => ({
             componentDef: {
               define(defContext) {
