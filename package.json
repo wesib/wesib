@@ -27,7 +27,7 @@
   },
   "peerDependencies": {
     "@frontmeans/namespace-aliaser": "^2.3.0",
-    "@proc7ts/context-values": "^5.1.0",
+    "@proc7ts/context-values": "^5.2.0",
     "@proc7ts/fun-events": "^10.1.0"
   },
   "dependencies": {
@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "@frontmeans/namespace-aliaser": "^2.3.0",
-    "@proc7ts/context-values": "^5.1.0",
+    "@proc7ts/context-values": "^5.2.0",
     "@proc7ts/fun-events": "^10.1.0",
     "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-node-resolve": "^11.1.0",
