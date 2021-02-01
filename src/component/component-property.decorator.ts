@@ -204,8 +204,8 @@ export namespace ComponentProperty {
   /**
    * Component property descriptor.
    *
-   * Passed to {@link Definer property definer} by {@link ComponentProperty} function to construct a {@link Definition
-   * property definition}.
+   * Passed to {@link Definer property definer} by {@link ComponentProperty @ComponentProperty} decorator to build
+   * a {@link Definition property definition}.
    *
    * @typeParam TValue - Property value type.
    * @typeParam TClass - A type of component class.
@@ -274,9 +274,9 @@ export namespace ComponentProperty {
   }
 
   /**
-   * Component property definition builder signature.
+   * A signature of component property definition builder.
    *
-   * This is a function called by {@link ComponentProperty} to define the property.
+   * This is a function called by {@link ComponentProperty @ComponentProperty} decorator to define the property.
    *
    * @typeParam TValue - Property value type.
    * @typeParam TClass - A type of component class.
@@ -285,7 +285,7 @@ export namespace ComponentProperty {
   /**
    * @param descriptor - Component property descriptor.
    *
-   * @returns Component property definition. Or nothing if the property definition is not to be changed.
+   * @returns Component property definition, or nothing if the property definition is not to be changed.
    */
       (
           this: void,
