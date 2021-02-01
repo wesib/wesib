@@ -17,9 +17,12 @@ import { ComponentClass } from './definition';
  * @category Core
  * @typeParam TClass - A type of decorated component class.
  */
-export type ComponentDecorator<TClass extends ComponentClass = Class> =
-    & ((this: void, type: TClass) => TClass | void)
-    & ComponentDef<InstanceType<TClass>>;
+export interface ComponentDecorator<TClass extends ComponentClass = Class>
+    extends ComponentDef.Factory<InstanceType<TClass>> {
+
+  (this: void, type: TClass): TClass | void;
+
+}
 
 /**
  * Decorator of component class.
