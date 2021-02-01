@@ -32,7 +32,7 @@ export interface ComponentPropertyDecorator<TValue, TClass extends ComponentClas
    *
    * @returns  Either updated property descriptor, or nothing.
    */
-  <TPropValue extends TValue>(
+      <TPropValue extends TValue>(
       this: void,
       proto: InstanceType<TClass>,
       propertyKey: string | symbol,
@@ -376,80 +376,39 @@ export const AnonymousComponentProperty__symbol = (/*#__PURE__*/ Symbol('anonymo
  * @category Core
  * @typeParam TValue - Decorated property value type.
  * @typeParam TClass - A type of decorated component class.
- * @param define - Component property definition builder.
+ * @param define - Component property definition builders.
  *
  * @returns Component property decorator.
  */
 export function ComponentProperty<TValue, TClass extends ComponentClass = Class>(
-    define: ComponentProperty.Definer<TValue, TClass>,
+    ...define: ComponentProperty.Definer<TValue, TClass>[]
 ): ComponentPropertyDecorator<TValue, TClass> {
 
   const decorator = (
       proto: InstanceType<TClass>,
       propertyKey: string | symbol,
       descriptor?: TypedPropertyDescriptor<TValue>,
-  ): any | void => decoratePropertyAccessor(
-      proto,
-      propertyKey,
-      descriptor,
-      desc => {
+  ): any | void => {
 
-        const { get: getValue, set: setValue } = desc;
-        const type = proto.constructor as TClass;
-        const { get, set, configurable, enumerable, componentDef = {} } = define({
-          type,
-          key: propertyKey,
-          readable: !!desc.get,
-          writable: !!desc.set,
-          enumerable: !!desc.enumerable,
-          configurable: !!desc.configurable,
-          get: getValue
-              ? ((component: InstanceType<TClass>) => getValue.call(component))
-              : notReadableAccessor(propertyKey),
-          set: setValue
-              ? ((component, value) => setValue.call(component, value))
-              : notWritableAccessor(propertyKey),
-        }) || {};
+    const updateDescriptor = ComponentProperty$updateDescriptor<TValue, TClass>(proto, propertyKey);
 
-        ComponentDef.define(type, componentDef);
-
-        const updated: PropertyAccessorDescriptor<TValue> = {
-          ...desc,
-          configurable: configurable ?? desc.configurable,
-          enumerable: enumerable ?? desc.enumerable,
-        };
-
-        if (get || set) {
-          updated.get = get && function (this: InstanceType<TClass>) {
-            return get(this, propertyKey);
-          };
-          updated.set = set && function (this: InstanceType<TClass>, value: TValue) {
-            set(this, value, propertyKey);
-          };
-        }
-
-        return updated;
-      },
-  );
+    return decoratePropertyAccessor(
+        proto,
+        propertyKey,
+        descriptor,
+        desc => define.reduce(updateDescriptor, desc),
+    );
+  };
   const decorateWith = (
-      { get, set }: ComponentProperty.Accessor<TValue, InstanceType<TClass>>,
+      accessor: ComponentProperty.Accessor<TValue, InstanceType<TClass>>,
       key: string | symbol = AnonymousComponentProperty__symbol,
       writable: boolean,
   ): ComponentDecorator<TClass> => Component({
     [ComponentDef__symbol](type: InstanceType<TClass>) {
 
-      const def = define({
-        type,
-        key,
-        readable: true,
-        writable,
-        enumerable: false,
-        configurable: false,
-        get: component => get(component, key),
-        set: (component, value) => set(component, value, key),
-      });
+      const defineBy = ComponentProperty$defineBy(type, accessor, key, writable);
 
-      return (def && def.componentDef) || {};
+      return ComponentDef.all(...define.map(defineBy));
     },
   });
   const By = (
@@ -495,8 +454,8 @@ export function ComponentProperty<TValue, TClass extends ComponentClass = Class>
       const accessor = binder(component as InstanceType<TClass>, key);
 
       return component[accessor__symbol] = {
-        get: accessor.get ? accessor.get.bind(accessor) : notReadableAccessor(key),
-        set: accessor.set ? accessor.set.bind(accessor) : notWritableAccessor(key),
+        get: accessor.get ? accessor.get.bind(accessor) : ComponentProperty$notReadable(key),
+        set: accessor.set ? accessor.set.bind(accessor) : ComponentProperty$notWritable(key),
       };
     };
 
@@ -517,16 +476,85 @@ export function ComponentProperty<TValue, TClass extends ComponentClass = Class>
   return result;
 }
 
-/**
- * @internal
- */
-function notReadableAccessor(propertyKey: string | symbol): () => never {
+function ComponentProperty$updateDescriptor<TValue, TClass extends ComponentClass>(
+    proto: InstanceType<TClass>,
+    propertyKey: string | symbol,
+): (
+    desc: PropertyAccessorDescriptor<TValue>,
+    definer: ComponentProperty.Definer<TValue, TClass>,
+) => PropertyAccessorDescriptor<TValue> {
+  return (
+      desc: PropertyAccessorDescriptor<TValue>,
+      definer: ComponentProperty.Definer<TValue, TClass>,
+  ): PropertyAccessorDescriptor<TValue> => {
+
+    const { get: getValue, set: setValue } = desc;
+    const type = proto.constructor as TClass;
+    const { get, set, configurable, enumerable, componentDef = {} } = definer({
+      type,
+      key: propertyKey,
+      readable: !!desc.get,
+      writable: !!desc.set,
+      enumerable: !!desc.enumerable,
+      configurable: !!desc.configurable,
+      get: getValue
+          ? ((component: InstanceType<TClass>) => getValue.call(component))
+          : ComponentProperty$notReadable(propertyKey),
+      set: setValue
+          ? ((component, value) => setValue.call(component, value))
+          : ComponentProperty$notWritable(propertyKey),
+    }) || {};
+
+    ComponentDef.define(type, componentDef);
+
+    const updated: PropertyAccessorDescriptor<TValue> = {
+      ...desc,
+      configurable: configurable ?? desc.configurable,
+      enumerable: enumerable ?? desc.enumerable,
+    };
+
+    if (get || set) {
+      updated.get = get && function (this: InstanceType<TClass>) {
+        return get(this, propertyKey);
+      };
+      updated.set = set && function (this: InstanceType<TClass>, value: TValue) {
+        set(this, value, propertyKey);
+      };
+    }
+
+    return updated;
+  };
+}
+
+function ComponentProperty$notReadable(propertyKey: string | symbol): () => never {
   return () => { throw new TypeError(`"${String(propertyKey)}" is not readable`); };
 }
 
-/**
- * @internal
- */
-function notWritableAccessor(propertyKey: string | symbol): () => never {
+function ComponentProperty$notWritable(propertyKey: string | symbol): () => never {
   return () => { throw new TypeError(`"${String(propertyKey)}" is not writable`); };
+}
+
+function ComponentProperty$defineBy<TValue, TClass extends ComponentClass>(
+    type: InstanceType<TClass>,
+    { get, set }: ComponentProperty.Accessor<TValue, InstanceType<TClass>>,
+    key: string | symbol = AnonymousComponentProperty__symbol,
+    writable: boolean,
+): (
+    definer: ComponentProperty.Definer<TValue, TClass>,
+) => ComponentDef<InstanceType<TClass>> {
+  return definer => {
+
+    const def = definer({
+      type,
+      key,
+      readable: true,
+      writable,
+      enumerable: false,
+      configurable: false,
+      get: component => get(component, key),
+      set: (component, value) => set(component, value, key),
+    });
+
+    return (def && def.componentDef) || {};
+  };
 }
