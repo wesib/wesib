@@ -1,4 +1,4 @@
-import { onceOn, OnEvent, trackValue, valueOn_ } from '@proc7ts/fun-events';
+import { AfterEvent, filterOn_, mapAfter_, onceOn, OnEvent, trackValue } from '@proc7ts/fun-events';
 import { Supply, valueProvider } from '@proc7ts/primitives';
 import {
   ComponentContext,
@@ -14,7 +14,6 @@ import { DefinitionContext$ } from './definition-context.impl';
 const enum ComponentStatus {
   Building,
   Ready,
-  Built,
   Settled,
   Connected,
 }
@@ -24,11 +23,13 @@ const enum ComponentStatus {
  */
 export abstract class ComponentContext$<T extends object> extends ComponentContext<T> {
 
+  readonly readStatus: AfterEvent<[this]>;
   readonly whenReady: OnEvent<[this]>;
   readonly whenSettled: OnEvent<[this]>;
   readonly whenConnected: OnEvent<[this]>;
   readonly get: ComponentContext<T>['get'];
   private _status = trackValue<ComponentStatus>(ComponentStatus.Building);
+  private _canSettle: 0 | 1 = 0;
 
   constructor(
       readonly _definitionContext: DefinitionContext$<T>,
@@ -36,16 +37,19 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
   ) {
     super();
 
-    this.whenReady = this._status.read.do(
-        valueOn_(status => !!status && this),
+    this.readStatus = this._status.read.do(
+        mapAfter_(valueProvider(this)),
+    );
+    this.whenReady = this.readStatus.do(
+        filterOn_(({ ready }) => ready),
         onceOn,
     );
-    this.whenSettled = this._status.read.do(
-        valueOn_(status => status >= ComponentStatus.Settled && this),
+    this.whenSettled = this.readStatus.do(
+        filterOn_(({ settled }) => settled),
         onceOn,
     );
-    this.whenConnected = this._status.read.do(
-        valueOn_(status => status >= ComponentStatus.Connected && this),
+    this.whenConnected = this.readStatus.do(
+        filterOn_(({ connected }) => connected),
         onceOn,
     );
 
@@ -61,6 +65,10 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
 
   get component(): ComponentInstance<T> {
     return this._component();
+  }
+
+  get ready(): boolean {
+    return !!this._status.it && !this.supply.isOff;
   }
 
   get settled(): boolean {
@@ -80,7 +88,7 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
   }
 
   settle(): void {
-    if (this._status.it === ComponentStatus.Built) {
+    if (this._canSettle && this._status.it < ComponentStatus.Settled) {
       // Prevent settling until exiting custom element constructor
       this._status.it = ComponentStatus.Settled;
     }
@@ -128,9 +136,7 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
   }
 
   _created(): void {
-    if (this._status.it < ComponentStatus.Built) { // Mounted component can be connected already
-      this._status.it = ComponentStatus.Built; // Can settle now
-    }
+    this._canSettle = 1; // Can settle now
     this.whenConnected(
         () => this.dispatchEvent(new ComponentEvent('wesib:component', { bubbles: true })),
     );

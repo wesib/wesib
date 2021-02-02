@@ -537,7 +537,7 @@ function ComponentProperty$notWritable(propertyKey: string | symbol): () => neve
 function ComponentProperty$defineBy<TValue, TClass extends ComponentClass>(
     type: InstanceType<TClass>,
     { get, set }: ComponentProperty.Accessor<TValue, InstanceType<TClass>>,
-    key: string | symbol = AnonymousComponentProperty__symbol,
+    key: string | symbol,
     writable: boolean,
 ): (
     definer: ComponentProperty.Definer<TValue, TClass>,

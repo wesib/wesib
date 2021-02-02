@@ -4,7 +4,7 @@
  */
 import { OnDomEvent } from '@frontmeans/dom-events';
 import { ContextKey, ContextKey__symbol, ContextValues } from '@proc7ts/context-values';
-import { OnEvent, StatePath } from '@proc7ts/fun-events';
+import { AfterEvent, OnEvent, StatePath } from '@proc7ts/fun-events';
 import { Supply, SupplyPeer } from '@proc7ts/primitives';
 import { ComponentContext__key } from './component-context.key.impl';
 import { ComponentEventDispatcher__key } from './component-event.key.impl';
@@ -86,6 +86,13 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   abstract readonly mount: ComponentMount<T> | undefined;
 
   /**
+   * Whether the component is ready.
+   *
+   * Set to `true` when {@link component} is available.
+   */
+  abstract readonly ready: boolean;
+
+  /**
    * Whether the component is settled.
    *
    * Component settlement happens:
@@ -106,6 +113,13 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    * This becomes `true` right before {@link whenConnected} event is sent.
    */
   abstract readonly connected: boolean;
+
+  /**
+   * An `AfterEvent` keeper of component status.
+   *
+   * Sends this context instance each time the component status changes.
+   */
+  abstract readonly readStatus: AfterEvent<[this]>;
 
   /**
    * An `OnEvent` sender of component readiness event.
