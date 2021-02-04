@@ -136,7 +136,7 @@ describe('boot', () => {
         it('is reported when ready', async () => {
 
           const promise = new Promise<DefinitionContext>(resolve => {
-            onDefinition.mockImplementation((context: DefinitionContext) => context.whenReady(resolve));
+            onDefinition.mockImplementation((defContext: DefinitionContext) => defContext.whenReady(resolve));
           });
 
           builder.buildElement(TestComponent);
@@ -148,20 +148,20 @@ describe('boot', () => {
         it('is present when element built', () => {
           builder.buildElement(TestComponent);
 
-          const context: DefinitionContext = onDefinition.mock.calls[0][0];
+          const defContext: DefinitionContext = onDefinition.mock.calls[0][0];
 
-          expect(typeof context.elementType).toBe('function');
+          expect(typeof defContext.elementType).toBe('function');
         });
         it('is reported immediately by callback when element built', () => {
           builder.buildElement(TestComponent);
 
-          const context: DefinitionContext = onDefinition.mock.calls[0][0];
+          const defContext: DefinitionContext = onDefinition.mock.calls[0][0];
 
           let elementType: Class | undefined;
 
-          context.whenReady(ctx => elementType = ctx.elementType);
+          defContext.whenReady(ctx => elementType = ctx.elementType);
 
-          expect(elementType).toBe(context.elementType);
+          expect(elementType).toBe(defContext.elementType);
         });
         it('is reported for setup when element built', () => {
 
@@ -233,7 +233,7 @@ describe('boot', () => {
       let value1: string;
       const key2 = new SingleContextKey<string>('test-key-2');
       let value2: string;
-      let componentContext: ComponentContext;
+      let context: ComponentContext;
 
       beforeEach(() => {
         value1 = 'some value';
@@ -288,43 +288,78 @@ describe('boot', () => {
 
         const element = new (builder.buildElement(TestComponent).elementType);
 
-        componentContext = await ComponentSlot.of(element).whenReady;
+        context = await ComponentSlot.of(element).whenReady;
       });
 
       it('has access to definition context value', () => {
-        expect(componentContext.get(key1)).toBe(value1);
+        expect(context.get(key1)).toBe(value1);
       });
       it('has access to component context value', () => {
-        expect(componentContext.get(key2)).toBe(value2);
+        expect(context.get(key2)).toBe(value2);
       });
       it('is not mounted', () => {
-        expect(componentContext.mount).toBeUndefined();
+        expect(context.mount).toBeUndefined();
       });
 
       describe('settled', () => {
         it('is `false` by default', () => {
-          expect(componentContext.settled).toBe(false);
+          expect(context.settled).toBe(false);
+        });
+      });
+
+      describe('readiness', () => {
+        it('is reported', () => {
+
+          const onceReady = jest.fn();
+          const whenReady = jest.fn();
+          const statusReceiver = jest.fn();
+          const onceSupply = context.onceReady(onceReady);
+          const whenSupply = context.whenReady(whenReady);
+
+          context.readStatus(statusReceiver);
+
+          expect(context.ready).toBe(true);
+          expect(onceReady).toHaveBeenCalledWith(context);
+          expect(onceSupply.isOff).toBe(false);
+          expect(whenReady).toHaveBeenCalledWith(context);
+          expect(whenSupply.isOff).toBe(true);
+          expect(statusReceiver).toHaveBeenLastCalledWith(expect.objectContaining({ ready: true, settled: false }));
+          expect(statusReceiver).toHaveBeenCalledTimes(1);
         });
       });
 
       describe('settle', () => {
         it('settles component', () => {
 
+          const onceSettled = jest.fn();
           const whenSettled = jest.fn();
-          const supply = componentContext.whenSettled(whenSettled);
+          const statusReceiver = jest.fn();
+          const onceSupply = context.onceSettled(onceSettled);
+          const whenSupply = context.whenSettled(whenSettled);
 
+          context.readStatus(statusReceiver);
+
+          expect(context.settled).toBe(false);
+          expect(onceSettled).not.toHaveBeenCalled();
           expect(whenSettled).not.toHaveBeenCalled();
+          expect(statusReceiver).toHaveBeenLastCalledWith(expect.objectContaining({ ready: true, settled: false }));
+          expect(statusReceiver).toHaveBeenCalledTimes(1);
 
-          componentContext.settle();
-          expect(componentContext.settled).toBe(true);
-          expect(whenSettled).toHaveBeenCalledWith(componentContext);
-          expect(supply.isOff).toBe(true);
+          context.settle();
+
+          expect(context.settled).toBe(true);
+          expect(onceSettled).toHaveBeenCalledWith(context);
+          expect(onceSupply.isOff).toBe(false);
+          expect(whenSettled).toHaveBeenCalledWith(context);
+          expect(whenSupply.isOff).toBe(true);
+          expect(statusReceiver).toHaveBeenLastCalledWith(expect.objectContaining({ ready: true, settled: true }));
+          expect(statusReceiver).toHaveBeenCalledTimes(2);
         });
         it('does nothing when connected already', () => {
-          componentContext.element.connectedCallback();
-          componentContext.settle();
-          expect(componentContext.settled).toBe(true);
-          expect(componentContext.connected).toBe(true);
+          context.element.connectedCallback();
+          context.settle();
+          expect(context.settled).toBe(true);
+          expect(context.connected).toBe(true);
         });
       });
 
@@ -332,35 +367,54 @@ describe('boot', () => {
         it('makes component settled', () => {
 
           const whenSettled = jest.fn();
-          const supply = componentContext.whenSettled(whenSettled);
+          const supply = context.whenSettled(whenSettled);
 
           expect(whenSettled).not.toHaveBeenCalled();
 
-          componentContext.element.connectedCallback();
-          expect(componentContext.settled).toBe(true);
-          expect(whenSettled).toHaveBeenCalledWith(componentContext);
+          context.element.connectedCallback();
+          expect(context.settled).toBe(true);
+          expect(whenSettled).toHaveBeenCalledWith(context);
           expect(supply.isOff).toBe(true);
         });
         it('makes component connected', () => {
 
+          const onceConnected = jest.fn();
           const whenConnected = jest.fn();
-          const supply = componentContext.whenConnected(whenConnected);
+          const statusReceiver = jest.fn();
+          const onceSupply = context.onceConnected(onceConnected);
+          const whenSupply = context.whenConnected(whenConnected);
+
+          context.readStatus(statusReceiver);
 
           expect(whenConnected).not.toHaveBeenCalled();
+          expect(statusReceiver).toHaveBeenLastCalledWith(expect.objectContaining({
+            ready: true,
+            settled: false,
+            connected: false,
+          }));
+          expect(statusReceiver).toHaveBeenCalledTimes(1);
 
-          componentContext.element.connectedCallback();
-          expect(componentContext.connected).toBe(true);
-          expect(whenConnected).toHaveBeenCalledWith(componentContext);
-          expect(supply.isOff).toBe(true);
+          context.element.connectedCallback();
+          expect(context.connected).toBe(true);
+          expect(onceConnected).toHaveBeenCalledWith(context);
+          expect(onceSupply.isOff).toBe(false);
+          expect(whenConnected).toHaveBeenCalledWith(context);
+          expect(whenSupply.isOff).toBe(true);
+          expect(statusReceiver).toHaveBeenLastCalledWith(expect.objectContaining({
+            ready: true,
+            settled: true,
+            connected: true,
+          }));
+          expect(statusReceiver).toHaveBeenCalledTimes(2);
         });
         it('calls `connectedCallback()` of original element', () => {
-          componentContext.element.connectedCallback();
+          context.element.connectedCallback();
           expect(connectedCallbackSpy).toHaveBeenCalledWith();
         });
         it('dispatches component event', () => {
           expect(dispatchEventSpy).not.toHaveBeenCalled();
 
-          componentContext.element.connectedCallback();
+          context.element.connectedCallback();
 
           expect(dispatchEventSpy).toHaveBeenCalledWith(expect.any(ComponentEvent));
           expect(dispatchEventSpy).toHaveBeenCalledWith(expect.objectContaining({
@@ -373,7 +427,7 @@ describe('boot', () => {
 
       describe('disconnectedCallback', () => {
         it('calls `disconnectedCallback()` of original element when disconnected', () => {
-          componentContext.element.disconnectedCallback();
+          context.element.disconnectedCallback();
           expect(disconnectedCallbackSpy).toHaveBeenCalledWith();
         });
       });
@@ -382,7 +436,7 @@ describe('boot', () => {
         it('listens for component events', () => {
 
           const listener = jest.fn().mockName('event listener');
-          const supply = componentContext.on('test-event')(listener);
+          const supply = context.on('test-event')(listener);
 
           expect(addEventListenerSpy).toHaveBeenCalledWith('test-event', expect.any(Function), undefined);
 
@@ -419,8 +473,8 @@ describe('boot', () => {
 
           const destroyed = jest.fn();
 
-          componentContext.supply.whenOff(destroyed);
-          componentContext.element.disconnectedCallback();
+          context.supply.whenOff(destroyed);
+          context.element.disconnectedCallback();
 
           expect(destroyed).toHaveBeenCalledWith(undefined);
         });
@@ -429,21 +483,21 @@ describe('boot', () => {
           const destroyed = jest.fn();
           const reason = 'Destruction reason';
 
-          componentContext.supply.whenOff(destroyed);
-          componentContext.destroy(reason);
+          context.supply.whenOff(destroyed);
+          context.destroy(reason);
 
           expect(destroyed).toHaveBeenCalledWith(reason);
         });
         it('removes element', () => {
 
-          const element = componentContext.element;
+          const element = context.element;
           const mockRemove = jest.fn();
 
           element.parentNode = {
             removeChild: mockRemove,
           };
 
-          componentContext.destroy();
+          context.destroy();
 
           expect(mockRemove).toHaveBeenCalledWith(element);
         });
@@ -453,26 +507,26 @@ describe('boot', () => {
           const whenConnected = jest.fn();
           const reason = 'Destruction reason';
 
-          componentContext.destroy(reason);
-          componentContext.whenConnected(whenConnected).whenOff(whenOff);
+          context.destroy(reason);
+          context.whenConnected(whenConnected).whenOff(whenOff);
 
           expect(whenConnected).not.toHaveBeenCalled();
           expect(whenOff).toHaveBeenCalledWith(reason);
         });
         it('makes component unavailable', () => {
 
-          const { element, component } = componentContext;
+          const { element, component } = context;
 
-          componentContext.destroy();
-          expect(() => componentContext.component).toThrow(TypeError);
+          context.destroy();
+          expect(() => context.component).toThrow(TypeError);
           expect(element[ComponentDef__symbol]).toBeUndefined();
           expect(component[ComponentDef__symbol]).toBeUndefined();
         });
         it('makes component disconnected', () => {
-          componentContext.element.connectedCallback();
-          componentContext.destroy();
-          expect(componentContext.connected).toBe(false);
-          expect(componentContext.settled).toBe(false);
+          context.element.connectedCallback();
+          context.destroy();
+          expect(context.connected).toBe(false);
+          expect(context.settled).toBe(false);
         });
       });
     });
@@ -576,12 +630,12 @@ describe('boot', () => {
         it('connects element', () => {
           doMount();
 
-          const connected = jest.fn();
+          const whenConnected = jest.fn();
 
-          context.whenConnected(connected);
+          context.whenConnected(whenConnected);
           mount.connect();
 
-          expect(connected).toHaveBeenCalledWith(context);
+          expect(whenConnected).toHaveBeenCalledWith(context);
         });
         it('reports already connected element', () => {
           doMount();
