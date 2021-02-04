@@ -93,6 +93,30 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   abstract readonly ready: boolean;
 
   /**
+   * An `OnEvent` sender of component readiness event.
+   *
+   * The component is constructed shortly after custom element. So the component may not exist when requested
+   * e.g. inside component constructor or {@link DefinitionContext.whenComponent component instantiation event}
+   * receiver. The registered receiver will be notified when the component is constructed.
+   *
+   * If the component is constructed already, the receiver will be notified immediately.
+   */
+  abstract readonly onceReady: OnEvent<[this]>;
+
+  /**
+   * An `OnEvent` sender of single component readiness event.
+   *
+   * The component is constructed shortly after custom element. So the component may not exist when requested
+   * e.g. inside component constructor or {@link DefinitionContext.whenComponent component instantiation event}
+   * receiver. The registered receiver will be notified when the component is constructed.
+   *
+   * If the component is constructed already, the receiver will be notified immediately.
+   *
+   * In contrast to {@link onceReady}, cuts off the event supply after sending the first event.
+   */
+  abstract readonly whenReady: OnEvent<[this]>;
+
+  /**
    * Whether the component is settled.
    *
    * Component settlement happens:
@@ -108,37 +132,29 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   abstract readonly settled: boolean;
 
   /**
-   * Whether the component's element is connected.
-   *
-   * This becomes `true` right before {@link whenConnected} event is sent.
-   */
-  abstract readonly connected: boolean;
-
-  /**
-   * An `AfterEvent` keeper of component status.
-   *
-   * Sends this context instance each time the component status changes.
-   */
-  abstract readonly readStatus: AfterEvent<[this]>;
-
-  /**
-   * An `OnEvent` sender of component readiness event.
-   *
-   * The component is constructed shortly after custom element. So the component may not exist when requested
-   * e.g. inside component constructor or {@link DefinitionContext.whenComponent component instantiation event}
-   * receiver. The registered receiver will be notified when the component is constructed.
-   *
-   * If the component is constructed already, the receiver will be notified immediately.
-   */
-  abstract readonly whenReady: OnEvent<[this]>;
-
-  /**
    * An `OnEvent` sender of component settlement event.
    *
    * The registered receiver is called when component is {@link settled}. If settled already the receiver is called
    * immediately.
    */
+  abstract readonly onceSettled: OnEvent<[this]>;
+
+  /**
+   * An `OnEvent` sender of single component settlement event.
+   *
+   * The registered receiver is called when component is {@link settled}. If settled already the receiver is called
+   * immediately.
+   *
+   * In contrast to {@link onceSettled}, cuts off the event supply after sending the first event.
+   */
   abstract readonly whenSettled: OnEvent<[this]>;
+
+  /**
+   * Whether the component's element is connected.
+   *
+   * This becomes `true` right before {@link whenConnected} event is sent.
+   */
+  abstract readonly connected: boolean;
 
   /**
    * An `OnEvent` sender of component's element connection event.
@@ -149,7 +165,27 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    *
    * If connected already the receiver is called immediately.
    */
+  abstract readonly onceConnected: OnEvent<[this]>;
+
+  /**
+   * An `OnEvent` sender of single component's element connection event.
+   *
+   * The registered receiver is called when component's element is connected. I.e. when custom element's
+   * `connectedCallback()` method is called, or when the element this component is {@link mount mounted to} is
+   * {@link ComponentMount.connect connected}.
+   *
+   * If connected already the receiver is called immediately.
+   *
+   * In contrast to {@link onceConnected}, cuts off the event supply after sending the first event.
+   */
   abstract readonly whenConnected: OnEvent<[this]>;
+
+  /**
+   * An `AfterEvent` keeper of component status.
+   *
+   * Sends this context instance each time the component status changes.
+   */
+  abstract readonly readStatus: AfterEvent<[this]>;
 
   /**
    * An event supply that {@link destroy destroys} component when cut off.
