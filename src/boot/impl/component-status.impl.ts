@@ -1,4 +1,4 @@
-import { AfterEvent, filterOn_, mapAfter_, onceOn, OnEvent, trackValue } from '@proc7ts/fun-events';
+import { AfterEvent, filterOn_, mapAfter_, onceOn, OnEvent, onEventBy, trackValue } from '@proc7ts/fun-events';
 import { Supply, valueProvider } from '@proc7ts/primitives';
 import { ComponentContext } from '../../component';
 
@@ -36,7 +36,7 @@ export class ComponentStatus<TCtx extends ComponentContext> {
 
   onceReady(): OnEvent<[TCtx]> {
     return (this.onceReady = valueProvider(this.read().do(
-        filterOn_(({ ready }) => ready),
+        ComponentStatus$once(({ ready }) => ready),
     )))();
   }
 
@@ -52,7 +52,7 @@ export class ComponentStatus<TCtx extends ComponentContext> {
 
   onceSettled(): OnEvent<[TCtx]> {
     return (this.onceSettled = valueProvider(this.read().do(
-        filterOn_(({ settled }) => settled),
+        ComponentStatus$once(({ settled }) => settled),
     )))();
   }
 
@@ -68,6 +68,7 @@ export class ComponentStatus<TCtx extends ComponentContext> {
 
   onceConnected(): OnEvent<[TCtx]> {
     return (this.onceConnected = valueProvider(this.read().do(
+        // Filtering is enough, as there is no status after "connected"
         filterOn_(({ connected }) => connected),
     )))();
   }
@@ -97,4 +98,26 @@ export class ComponentStatus<TCtx extends ComponentContext> {
     this._canSettle = 1; // Can settle now
   }
 
+}
+
+function ComponentStatus$once<TCtx extends ComponentContext>(
+    test: (context: TCtx) => boolean,
+): (input: OnEvent<[TCtx]>) => OnEvent<[TCtx]> {
+  return input => onEventBy(receiver => {
+
+      let value = false;
+
+      input({
+        supply: receiver.supply,
+        receive(eventCtx, componentCtx) {
+
+          const newValue = test(componentCtx);
+
+          if (newValue && !value) {
+            value = newValue;
+            receiver.receive(eventCtx, componentCtx);
+          }
+        },
+      });
+    });
 }

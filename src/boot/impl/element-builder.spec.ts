@@ -361,6 +361,24 @@ describe('boot', () => {
           expect(context.settled).toBe(true);
           expect(context.connected).toBe(true);
         });
+        it('reports readiness only once', () => {
+
+          const onceReady = jest.fn();
+          const whenReady = jest.fn();
+          const onceSupply = context.onceReady(onceReady);
+          const whenSupply = context.whenReady(whenReady);
+
+          expect(context.ready).toBe(true);
+          expect(onceReady).toHaveBeenCalledTimes(1);
+          expect(onceSupply.isOff).toBe(false);
+          expect(whenReady).toHaveBeenCalledTimes(1);
+          expect(whenSupply.isOff).toBe(true);
+
+          context.settle();
+          expect(onceReady).toHaveBeenCalledTimes(1);
+          expect(whenReady).toHaveBeenCalledTimes(1);
+          expect(onceSupply.isOff).toBe(false);
+        });
       });
 
       describe('connectedCallback', () => {
@@ -422,6 +440,28 @@ describe('boot', () => {
             cancelable: false,
             bubbles: true,
           }));
+        });
+
+        describe('after settlement', () => {
+          it('reports settlement only once', () => {
+
+            const onceSettled = jest.fn();
+            const whenSettled = jest.fn();
+            const onceSupply = context.onceSettled(onceSettled);
+            const whenSupply = context.whenSettled(whenSettled);
+
+            context.settle();
+            expect(context.settled).toBe(true);
+            expect(onceSettled).toHaveBeenCalledTimes(1);
+            expect(onceSupply.isOff).toBe(false);
+            expect(whenSettled).toHaveBeenCalledTimes(1);
+            expect(whenSupply.isOff).toBe(true);
+
+            context.element.connectedCallback();
+            expect(onceSettled).toHaveBeenCalledTimes(1);
+            expect(whenSettled).toHaveBeenCalledTimes(1);
+            expect(onceSupply.isOff).toBe(false);
+          });
         });
       });
 
