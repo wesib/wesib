@@ -97,7 +97,7 @@
 					<div class="tsd-signature tsd-kind-icon">Binder&lt;TValue, T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, component<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">symbol</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="../interfaces/componentproperty.boundaccessor.html" class="tsd-signature-type" data-tsd-kind="Interface">BoundAccessor</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/component/component-property.decorator.ts#L170">wesib/wesib/src/component/component-property.decorator.ts:170</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/component/component-property.decorator.ts#L165">wesib/wesib/src/component/component-property.decorator.ts:165</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -163,17 +163,17 @@
 				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-namespace tsd-has-type-parameter">
 					<a name="definer" class="tsd-anchor"></a>
 					<h3>Definer</h3>
-					<div class="tsd-signature tsd-kind-icon">Definer&lt;TValue, T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, descriptor<span class="tsd-signature-symbol">: </span><a href="../interfaces/componentproperty.descriptor.html" class="tsd-signature-type" data-tsd-kind="Interface">Descriptor</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="../interfaces/componentproperty.definition.html" class="tsd-signature-type" data-tsd-kind="Interface">Definition</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span></div>
+					<div class="tsd-signature tsd-kind-icon">Definer&lt;TValue, TClass&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, descriptor<span class="tsd-signature-symbol">: </span><a href="../interfaces/componentproperty.descriptor.html" class="tsd-signature-type" data-tsd-kind="Interface">Descriptor</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="../interfaces/componentproperty.definition.html" class="tsd-signature-type" data-tsd-kind="Interface">Definition</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/component/component-property.decorator.ts#L285">wesib/wesib/src/component/component-property.decorator.ts:285</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/component/component-property.decorator.ts#L280">wesib/wesib/src/component/component-property.decorator.ts:280</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Component property definition builder signature.</p>
+							<p>A signature of component property definition builder.</p>
 						</div>
-						<p>This is a function called by <a href="../modules.html#componentproperty">ComponentProperty</a> to define the property.</p>
+						<p>This is a function called by <a href="../modules.html#componentproperty">@ComponentProperty</a> decorator to define the property.</p>
 					</div>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
 					<ul class="tsd-type-parameters">
@@ -186,7 +186,7 @@
 							</div>
 						</li>
 						<li>
-							<h4>T<span class="tsd-signature-symbol">: </span><a href="../interfaces/componentclass.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentClass</a> = <span class="tsd-signature-type">Class</span></h4>
+							<h4>TClass<span class="tsd-signature-symbol">: </span><a href="../interfaces/componentclass.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentClass</a> = <span class="tsd-signature-type">Class</span></h4>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>A type of component class.</p>
@@ -199,7 +199,7 @@
 						<ul class="tsd-parameters">
 							<li class="tsd-parameter-signature">
 								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias">
-									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, descriptor<span class="tsd-signature-symbol">: </span><a href="../interfaces/componentproperty.descriptor.html" class="tsd-signature-type" data-tsd-kind="Interface">Descriptor</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/componentproperty.definition.html" class="tsd-signature-type" data-tsd-kind="Interface">Definition</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span></li>
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, descriptor<span class="tsd-signature-symbol">: </span><a href="../interfaces/componentproperty.descriptor.html" class="tsd-signature-type" data-tsd-kind="Interface">Descriptor</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/componentproperty.definition.html" class="tsd-signature-type" data-tsd-kind="Interface">Definition</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span></li>
 								</ul>
 								<ul class="tsd-descriptions">
 									<li class="tsd-description">
@@ -209,14 +209,14 @@
 												<h5>this: <span class="tsd-signature-type">void</span></h5>
 											</li>
 											<li>
-												<h5>descriptor: <a href="../interfaces/componentproperty.descriptor.html" class="tsd-signature-type" data-tsd-kind="Interface">Descriptor</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+												<h5>descriptor: <a href="../interfaces/componentproperty.descriptor.html" class="tsd-signature-type" data-tsd-kind="Interface">Descriptor</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span></h5>
 												<div class="tsd-comment tsd-typography">
 													<p>Component property descriptor.</p>
 												</div>
 											</li>
 										</ul>
-										<h4 class="tsd-returns-title">Returns <a href="../interfaces/componentproperty.definition.html" class="tsd-signature-type" data-tsd-kind="Interface">Definition</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span></h4>
-										<p>Component property definition. Or nothing if the property definition is not to be changed.</p>
+										<h4 class="tsd-returns-title">Returns <a href="../interfaces/componentproperty.definition.html" class="tsd-signature-type" data-tsd-kind="Interface">Definition</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span></h4>
+										<p>Component property definition, or nothing if the property definition is not to be changed.</p>
 									</li>
 								</ul>
 							</li>
@@ -229,7 +229,7 @@
 					<div class="tsd-signature tsd-kind-icon">Provider&lt;TValue, T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, component<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">symbol</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">TValue</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/component/component-property.decorator.ts#L114">wesib/wesib/src/component/component-property.decorator.ts:114</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/component/component-property.decorator.ts#L109">wesib/wesib/src/component/component-property.decorator.ts:109</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">

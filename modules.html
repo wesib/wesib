@@ -50,13 +50,22 @@
 	</div>
 	<div class="tsd-page-title">
 		<div class="container">
-			<h1>Project Wesib: Web Components Building Blocks</h1>
+			<h1>Wesib: Web Components Building Blocks</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<dl class="tsd-comment-tags">
+						<dt>module</dt>
+						<dd><p>Module @wesib/wesib</p>
+						</dd>
+					</dl>
+				</div>
+			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
@@ -78,6 +87,7 @@
 								<li class="tsd-kind-interface"><a href="interfaces/bootstrapsetup.html" class="tsd-kind-icon">Bootstrap<wbr>Setup</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/componentbinder.html" class="tsd-kind-icon">Component<wbr>Binder</a></li>
 								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/componentclass.html" class="tsd-kind-icon">Component<wbr>Class</a></li>
+								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/componentdecorator.html" class="tsd-kind-icon">Component<wbr>Decorator</a></li>
 								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/componentelement.html" class="tsd-kind-icon">Component<wbr>Element</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/componenteventdispatcher.html" class="tsd-kind-icon">Component<wbr>Event<wbr>Dispatcher</a></li>
 								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/componentpropertydecorator.html" class="tsd-kind-icon">Component<wbr>Property<wbr>Decorator</a></li>
@@ -90,7 +100,6 @@
 								<li class="tsd-kind-interface"><a href="interfaces/featurestatus.html" class="tsd-kind-icon">Feature<wbr>Status</a></li>
 								<li class="tsd-kind-type-alias"><a href="modules.html#bootstraproot" class="tsd-kind-icon">Bootstrap<wbr>Root</a></li>
 								<li class="tsd-kind-type-alias"><a href="modules.html#bootstrapwindow" class="tsd-kind-icon">Bootstrap<wbr>Window</a></li>
-								<li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#componentdecorator" class="tsd-kind-icon">Component<wbr>Decorator</a></li>
 								<li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#componentdef" class="tsd-kind-icon">Component<wbr>Def</a></li>
 								<li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#componentinstance" class="tsd-kind-icon">Component<wbr>Instance</a></li>
 								<li class="tsd-kind-type-alias"><a href="modules.html#contentroot" class="tsd-kind-icon">Content<wbr>Root</a></li>
@@ -215,7 +224,7 @@
 					<div class="tsd-signature tsd-kind-icon">Bootstrap<wbr>Root<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Element</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/boot/globals/bootstrap-root.ts#L13">wesib/wesib/src/boot/globals/bootstrap-root.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/boot/globals/bootstrap-root.ts#L9">wesib/wesib/src/boot/globals/bootstrap-root.ts:9</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -230,7 +239,7 @@
 					<div class="tsd-signature tsd-kind-icon">Bootstrap<wbr>Window<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Window</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">typeof </span><span class="tsd-signature-type">globalThis</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/boot/globals/bootstrap-window.ts#L12">wesib/wesib/src/boot/globals/bootstrap-window.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/boot/globals/bootstrap-window.ts#L8">wesib/wesib/src/boot/globals/bootstrap-window.ts:8</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -240,41 +249,12 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-has-type-parameter">
-					<a name="componentdecorator" class="tsd-anchor"></a>
-					<h3>Component<wbr>Decorator</h3>
-					<div class="tsd-signature tsd-kind-icon">Component<wbr>Decorator&lt;T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> &amp; </span><a href="modules.html#componentdef" class="tsd-signature-type" data-tsd-kind="Variable">ComponentDef</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/component/component.decorator.ts#L20">wesib/wesib/src/component/component.decorator.ts:20</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Component decorator interface.</p>
-						</div>
-						<p>In addition to being a decorator for component class, it may also serve as <a href="modules.html#componentdef">component definition</a>.
-						Thus it can be added as parameter to <a href="modules.html#component">@Component</a> decorator, or used as class decorator by itself.</p>
-						<p>Constructed by <a href="modules.html#component">Component</a> function.</p>
-					</div>
-					<h4 class="tsd-type-parameters-title">Type parameters</h4>
-					<ul class="tsd-type-parameters">
-						<li>
-							<h4>T<span class="tsd-signature-symbol">: </span><a href="interfaces/componentclass.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentClass</a> = <span class="tsd-signature-type">Class</span></h4>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>A type of decorated component class.</p>
-								</div>
-							</div>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-has-type-parameter">
 					<a name="componentdef" class="tsd-anchor"></a>
 					<h3>Component<wbr>Def</h3>
 					<div class="tsd-signature tsd-kind-icon">Component<wbr>Def&lt;T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">QualifiedName</span><span class="tsd-signature-symbol"> | </span><a href="interfaces/componentdef.options.html" class="tsd-signature-type" data-tsd-kind="Interface">Options</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="interfaces/componentdef.holder.html" class="tsd-signature-type" data-tsd-kind="Interface">Holder</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="interfaces/componentdef.factory.html" class="tsd-signature-type" data-tsd-kind="Interface">Factory</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="interfaces/featuredef.holder.html" class="tsd-signature-type" data-tsd-kind="Interface">Holder</a><span class="tsd-signature-symbol"> | </span><a href="interfaces/featuredef.factory.html" class="tsd-signature-type" data-tsd-kind="Interface">Factory</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/component/component-def.ts#L34">wesib/wesib/src/component/component-def.ts:34</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/component/component-def.ts#L30">wesib/wesib/src/component/component-def.ts:30</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -307,10 +287,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-has-type-parameter">
 					<a name="componentinstance" class="tsd-anchor"></a>
 					<h3>Component<wbr>Instance</h3>
-					<div class="tsd-signature tsd-kind-icon">Component<wbr>Instance&lt;T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>__@ComponentContext__symbol@23936<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> }</span></div>
+					<div class="tsd-signature tsd-kind-icon">Component<wbr>Instance&lt;T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>__@ComponentContext__symbol@24076<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/component/component-context.ts#L234">wesib/wesib/src/component/component-context.ts:234</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/component/component-context.ts#L280">wesib/wesib/src/component/component-context.ts:280</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -331,7 +311,7 @@
 					<div class="tsd-signature tsd-kind-icon">Content<wbr>Root<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Element</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">ShadowRoot</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/component/content-root.ts#L15">wesib/wesib/src/component/content-root.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/component/content-root.ts#L11">wesib/wesib/src/component/content-root.ts:11</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -347,7 +327,7 @@
 					<div class="tsd-signature tsd-kind-icon">Default<wbr>Namespace<wbr>Aliaser<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">NamespaceAliaser</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/boot/globals/default-namespace-aliaser.ts#L15">wesib/wesib/src/boot/globals/default-namespace-aliaser.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/boot/globals/default-namespace-aliaser.ts#L11">wesib/wesib/src/boot/globals/default-namespace-aliaser.ts:11</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -363,7 +343,7 @@
 					<div class="tsd-signature tsd-kind-icon">Default<wbr>Render<wbr>Scheduler<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">RenderScheduler</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/boot/globals/default-render-scheduler.ts#L16">wesib/wesib/src/boot/globals/default-render-scheduler.ts:16</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/boot/globals/default-render-scheduler.ts#L12">wesib/wesib/src/boot/globals/default-render-scheduler.ts:12</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -378,7 +358,7 @@
 					<div class="tsd-signature tsd-kind-icon">Element<wbr>Adapter<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, element<span class="tsd-signature-symbol">: </span><a href="interfaces/componentelement.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentElement</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="classes/componentcontext.html" class="tsd-signature-type" data-tsd-kind="Class">ComponentContext</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/boot/globals/element-adapter.ts#L21">wesib/wesib/src/boot/globals/element-adapter.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/boot/globals/element-adapter.ts#L17">wesib/wesib/src/boot/globals/element-adapter.ts:17</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -423,7 +403,7 @@
 					<div class="tsd-signature tsd-kind-icon">Feature<wbr>Def<span class="tsd-signature-symbol">:</span> <a href="interfaces/featuredef.options.html" class="tsd-signature-type" data-tsd-kind="Interface">Options</a><span class="tsd-signature-symbol"> | </span><a href="interfaces/featuredef.holder.html" class="tsd-signature-type" data-tsd-kind="Interface">Holder</a><span class="tsd-signature-symbol"> | </span><a href="interfaces/featuredef.factory.html" class="tsd-signature-type" data-tsd-kind="Interface">Factory</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/feature-def.ts#L28">wesib/wesib/src/feature/feature-def.ts:28</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/feature-def.ts#L24">wesib/wesib/src/feature/feature-def.ts:24</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -444,7 +424,7 @@
 					<div class="tsd-signature tsd-kind-icon">State<wbr>Updater<span class="tsd-signature-symbol">:</span> &lt;TValue&gt;<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, path<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">StatePath</span>, newValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TValue</span>, oldValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/component/state-updater.ts#L15">wesib/wesib/src/component/state-updater.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/component/state-updater.ts#L11">wesib/wesib/src/component/state-updater.ts:11</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -507,7 +487,7 @@
 					<div class="tsd-signature tsd-kind-icon">Component<wbr>Event<span class="tsd-signature-symbol">:</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/component/component-event.ts#L28">wesib/wesib/src/component/component-event.ts:28</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/component/component-event.ts#L24">wesib/wesib/src/component/component-event.ts:24</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -557,32 +537,12 @@
 						<div class="tsd-signature tsd-kind-icon">AT_<wbr>TARGET<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in node_modules/typescript/lib/lib.dom.d.ts:5337</li>
-							</ul>
-						</aside>
-					</section>
-					<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-event tsd-is-external">
-						<a name="componentevent.at_target-1" class="tsd-anchor"></a>
-						<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> AT_<wbr>TARGET</h3>
-						<div class="tsd-signature tsd-kind-icon">AT_<wbr>TARGET<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-						<aside class="tsd-sources">
-							<ul>
 								<li>Defined in node_modules/typescript/lib/lib.dom.d.ts:5328</li>
 							</ul>
 						</aside>
 					</section>
 					<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-event tsd-is-external">
 						<a name="componentevent.bubbling_phase" class="tsd-anchor"></a>
-						<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> BUBBLING_<wbr>PHASE</h3>
-						<div class="tsd-signature tsd-kind-icon">BUBBLING_<wbr>PHASE<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-						<aside class="tsd-sources">
-							<ul>
-								<li>Defined in node_modules/typescript/lib/lib.dom.d.ts:5338</li>
-							</ul>
-						</aside>
-					</section>
-					<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-event tsd-is-external">
-						<a name="componentevent.bubbling_phase-1" class="tsd-anchor"></a>
 						<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> BUBBLING_<wbr>PHASE</h3>
 						<div class="tsd-signature tsd-kind-icon">BUBBLING_<wbr>PHASE<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 						<aside class="tsd-sources">
@@ -597,32 +557,12 @@
 						<div class="tsd-signature tsd-kind-icon">CAPTURING_<wbr>PHASE<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in node_modules/typescript/lib/lib.dom.d.ts:5339</li>
-							</ul>
-						</aside>
-					</section>
-					<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-event tsd-is-external">
-						<a name="componentevent.capturing_phase-1" class="tsd-anchor"></a>
-						<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> CAPTURING_<wbr>PHASE</h3>
-						<div class="tsd-signature tsd-kind-icon">CAPTURING_<wbr>PHASE<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-						<aside class="tsd-sources">
-							<ul>
 								<li>Defined in node_modules/typescript/lib/lib.dom.d.ts:5330</li>
 							</ul>
 						</aside>
 					</section>
 					<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-event tsd-is-external">
 						<a name="componentevent.none" class="tsd-anchor"></a>
-						<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> NONE</h3>
-						<div class="tsd-signature tsd-kind-icon">NONE<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-						<aside class="tsd-sources">
-							<ul>
-								<li>Defined in node_modules/typescript/lib/lib.dom.d.ts:5340</li>
-							</ul>
-						</aside>
-					</section>
-					<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-event tsd-is-external">
-						<a name="componentevent.none-1" class="tsd-anchor"></a>
 						<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> NONE</h3>
 						<div class="tsd-signature tsd-kind-icon">NONE<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 						<aside class="tsd-sources">
@@ -817,32 +757,50 @@
 							</div>
 						</div>
 					</section>
-					<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-event">
-						<a name="componentevent.context" class="tsd-anchor"></a>
-						<h3>context</h3>
-						<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-event">
-							<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> context<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="classes/componentcontext.html" class="tsd-signature-type" data-tsd-kind="Class">ComponentContext</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></li>
-						</ul>
-						<ul class="tsd-descriptions">
-							<li class="tsd-description">
-								<aside class="tsd-sources">
-									<ul>
-										<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/component/component-event.ts#L33">wesib/wesib/src/component/component-event.ts:33</a></li>
-									</ul>
-								</aside>
-								<div class="tsd-comment tsd-typography">
-									<div class="lead">
-										<p>Target component context.</p>
-									</div>
-								</div>
-								<h4 class="tsd-returns-title">Returns <a href="classes/componentcontext.html" class="tsd-signature-type" data-tsd-kind="Class">ComponentContext</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
-							</li>
-						</ul>
+					<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-event tsd-is-static tsd-is-external">
+						<a name="componentevent.at_target-1" class="tsd-anchor"></a>
+						<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> <span class="tsd-flag ts-flagStatic">Static</span> AT_<wbr>TARGET</h3>
+						<div class="tsd-signature tsd-kind-icon">AT_<wbr>TARGET<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in node_modules/typescript/lib/lib.dom.d.ts:5337</li>
+							</ul>
+						</aside>
 					</section>
-					<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-event tsd-is-external">
+					<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-event tsd-is-static tsd-is-external">
+						<a name="componentevent.bubbling_phase-1" class="tsd-anchor"></a>
+						<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> <span class="tsd-flag ts-flagStatic">Static</span> BUBBLING_<wbr>PHASE</h3>
+						<div class="tsd-signature tsd-kind-icon">BUBBLING_<wbr>PHASE<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in node_modules/typescript/lib/lib.dom.d.ts:5338</li>
+							</ul>
+						</aside>
+					</section>
+					<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-event tsd-is-static tsd-is-external">
+						<a name="componentevent.capturing_phase-1" class="tsd-anchor"></a>
+						<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> <span class="tsd-flag ts-flagStatic">Static</span> CAPTURING_<wbr>PHASE</h3>
+						<div class="tsd-signature tsd-kind-icon">CAPTURING_<wbr>PHASE<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in node_modules/typescript/lib/lib.dom.d.ts:5339</li>
+							</ul>
+						</aside>
+					</section>
+					<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-event tsd-is-static tsd-is-external">
+						<a name="componentevent.none-1" class="tsd-anchor"></a>
+						<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> <span class="tsd-flag ts-flagStatic">Static</span> NONE</h3>
+						<div class="tsd-signature tsd-kind-icon">NONE<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in node_modules/typescript/lib/lib.dom.d.ts:5340</li>
+							</ul>
+						</aside>
+					</section>
+					<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-event tsd-is-external">
 						<a name="componentevent.composedpath" class="tsd-anchor"></a>
 						<h3>composed<wbr>Path</h3>
-						<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-event tsd-is-external">
+						<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-event tsd-is-external">
 							<li class="tsd-signature tsd-kind-icon">composed<wbr>Path<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EventTarget</span><span class="tsd-signature-symbol">[]</span></li>
 						</ul>
 						<ul class="tsd-descriptions">
@@ -861,10 +819,10 @@
 							</li>
 						</ul>
 					</section>
-					<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-event tsd-is-external">
+					<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-event tsd-is-external">
 						<a name="componentevent.initevent" class="tsd-anchor"></a>
 						<h3>init<wbr>Event</h3>
-						<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-event tsd-is-external">
+						<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-event tsd-is-external">
 							<li class="tsd-signature tsd-kind-icon">init<wbr>Event<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, bubbles<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, cancelable<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 						</ul>
 						<ul class="tsd-descriptions">
@@ -890,10 +848,10 @@
 							</li>
 						</ul>
 					</section>
-					<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-event tsd-is-external">
+					<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-event tsd-is-external">
 						<a name="componentevent.preventdefault" class="tsd-anchor"></a>
 						<h3>prevent<wbr>Default</h3>
-						<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-event tsd-is-external">
+						<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-event tsd-is-external">
 							<li class="tsd-signature tsd-kind-icon">prevent<wbr>Default<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 						</ul>
 						<ul class="tsd-descriptions">
@@ -912,10 +870,10 @@
 							</li>
 						</ul>
 					</section>
-					<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-event tsd-is-external">
+					<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-event tsd-is-external">
 						<a name="componentevent.stopimmediatepropagation" class="tsd-anchor"></a>
 						<h3>stop<wbr>Immediate<wbr>Propagation</h3>
-						<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-event tsd-is-external">
+						<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-event tsd-is-external">
 							<li class="tsd-signature tsd-kind-icon">stop<wbr>Immediate<wbr>Propagation<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 						</ul>
 						<ul class="tsd-descriptions">
@@ -934,10 +892,10 @@
 							</li>
 						</ul>
 					</section>
-					<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-event tsd-is-external">
+					<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-event tsd-is-external">
 						<a name="componentevent.stoppropagation" class="tsd-anchor"></a>
 						<h3>stop<wbr>Propagation</h3>
-						<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-event tsd-is-external">
+						<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-event tsd-is-external">
 							<li class="tsd-signature tsd-kind-icon">stop<wbr>Propagation<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 						</ul>
 						<ul class="tsd-descriptions">
@@ -956,6 +914,28 @@
 							</li>
 						</ul>
 					</section>
+					<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-event">
+						<a name="componentevent.context" class="tsd-anchor"></a>
+						<h3>context</h3>
+						<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-event">
+							<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> context<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="classes/componentcontext.html" class="tsd-signature-type" data-tsd-kind="Class">ComponentContext</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></li>
+						</ul>
+						<ul class="tsd-descriptions">
+							<li class="tsd-description">
+								<aside class="tsd-sources">
+									<ul>
+										<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/component/component-event.ts#L29">wesib/wesib/src/component/component-event.ts:29</a></li>
+									</ul>
+								</aside>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p>Target component context.</p>
+									</div>
+								</div>
+								<h4 class="tsd-returns-title">Returns <a href="classes/componentcontext.html" class="tsd-signature-type" data-tsd-kind="Class">ComponentContext</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							</li>
+						</ul>
+					</section>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-variable">
 					<a name="anonymouscomponentproperty__symbol" class="tsd-anchor"></a>
@@ -963,7 +943,7 @@
 					<div class="tsd-signature tsd-kind-icon">Anonymous<wbr>Component<wbr>Property__symbol<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">typeof </span><a href="modules.html#anonymouscomponentproperty__symbol" class="tsd-signature-type" data-tsd-kind="Variable">AnonymousComponentProperty__symbol</a><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/component/component-property.decorator.ts#L369">wesib/wesib/src/component/component-property.decorator.ts:369</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/component/component-property.decorator.ts#L364">wesib/wesib/src/component/component-property.decorator.ts:364</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -979,7 +959,7 @@
 					<div class="tsd-signature tsd-kind-icon">Bootstrap<wbr>Root<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">SingleContextRef</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Element</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/boot/globals/bootstrap-root.ts#L22">wesib/wesib/src/boot/globals/bootstrap-root.ts:22</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/boot/globals/bootstrap-root.ts#L18">wesib/wesib/src/boot/globals/bootstrap-root.ts:18</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -995,7 +975,7 @@
 					<div class="tsd-signature tsd-kind-icon">Bootstrap<wbr>Window<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">SingleContextRef</span><span class="tsd-signature-symbol">&lt;</span><a href="modules.html#bootstrapwindow" class="tsd-signature-type" data-tsd-kind="Variable">BootstrapWindow</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/boot/globals/bootstrap-window.ts#L21">wesib/wesib/src/boot/globals/bootstrap-window.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/boot/globals/bootstrap-window.ts#L17">wesib/wesib/src/boot/globals/bootstrap-window.ts:17</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -1011,7 +991,7 @@
 					<div class="tsd-signature tsd-kind-icon">Component<wbr>Context__symbol<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">typeof </span><a href="modules.html#componentcontext__symbol" class="tsd-signature-type" data-tsd-kind="Variable">ComponentContext__symbol</a><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/component/component-context.ts#L21">wesib/wesib/src/component/component-context.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/component/component-context.ts#L17">wesib/wesib/src/component/component-context.ts:17</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -1026,7 +1006,7 @@
 					<div class="tsd-signature tsd-kind-icon">Component<wbr>Def<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>all<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>define<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>for<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>merge<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>of<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/component/component-def.ts#L211">wesib/wesib/src/component/component-def.ts:211</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/component/component-def.ts#L207">wesib/wesib/src/component/component-def.ts:207</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -1041,7 +1021,7 @@
 									<li class="tsd-description">
 										<aside class="tsd-sources">
 											<ul>
-												<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/component/component-def.ts#L261">wesib/wesib/src/component/component-def.ts:261</a></li>
+												<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/component/component-def.ts#L257">wesib/wesib/src/component/component-def.ts:257</a></li>
 											</ul>
 										</aside>
 										<div class="tsd-comment tsd-typography">
@@ -1075,13 +1055,13 @@
 							<li class="tsd-parameter">
 								<h5>define<span class="tsd-signature-symbol">: </span>function</h5>
 								<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-type-literal tsd-has-type-parameter">
-									<li class="tsd-signature tsd-kind-icon">define&lt;T&gt;<span class="tsd-signature-symbol">(</span>componentType<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, <span class="tsd-signature-symbol">...</span>defs<span class="tsd-signature-symbol">: </span><a href="modules.html#componentdef" class="tsd-signature-type" data-tsd-kind="Variable">ComponentDef</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
+									<li class="tsd-signature tsd-kind-icon">define&lt;TClass&gt;<span class="tsd-signature-symbol">(</span>componentType<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TClass</span>, <span class="tsd-signature-symbol">...</span>defs<span class="tsd-signature-symbol">: </span><a href="modules.html#componentdef" class="tsd-signature-type" data-tsd-kind="Variable">ComponentDef</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TClass</span></li>
 								</ul>
 								<ul class="tsd-descriptions">
 									<li class="tsd-description">
 										<aside class="tsd-sources">
 											<ul>
-												<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/component/component-def.ts#L289">wesib/wesib/src/component/component-def.ts:289</a></li>
+												<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/component/component-def.ts#L285">wesib/wesib/src/component/component-def.ts:285</a></li>
 											</ul>
 										</aside>
 										<div class="tsd-comment tsd-typography">
@@ -1095,28 +1075,28 @@
 										<h4 class="tsd-type-parameters-title">Type parameters</h4>
 										<ul class="tsd-type-parameters">
 											<li>
-												<h4>T<span class="tsd-signature-symbol">: </span><a href="interfaces/componentclass.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentClass</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+												<h4>TClass<span class="tsd-signature-symbol">: </span><a href="interfaces/componentclass.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentClass</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span></h4>
 												<div class="tsd-comment tsd-typography">
-													<p>A type of component.</p>
+													<p>A type of component class.</p>
 												</div>
 											</li>
 										</ul>
 										<h4 class="tsd-parameters-title">Parameters</h4>
 										<ul class="tsd-parameters">
 											<li>
-												<h5>componentType: <span class="tsd-signature-type">T</span></h5>
+												<h5>componentType: <span class="tsd-signature-type">TClass</span></h5>
 												<div class="tsd-comment tsd-typography">
 													<p>Component class constructor.</p>
 												</div>
 											</li>
 											<li>
-												<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>defs: <a href="modules.html#componentdef" class="tsd-signature-type" data-tsd-kind="Variable">ComponentDef</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></h5>
+												<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>defs: <a href="modules.html#componentdef" class="tsd-signature-type" data-tsd-kind="Variable">ComponentDef</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></h5>
 												<div class="tsd-comment tsd-typography">
 													<p>Component definitions.</p>
 												</div>
 											</li>
 										</ul>
-										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">TClass</span></h4>
 										<p>The <code>type</code> instance.</p>
 									</li>
 								</ul>
@@ -1130,7 +1110,7 @@
 									<li class="tsd-description">
 										<aside class="tsd-sources">
 											<ul>
-												<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/component/component-def.ts#L233">wesib/wesib/src/component/component-def.ts:233</a></li>
+												<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/component/component-def.ts#L229">wesib/wesib/src/component/component-def.ts:229</a></li>
 											</ul>
 										</aside>
 										<div class="tsd-comment tsd-typography">
@@ -1173,7 +1153,7 @@
 									<li class="tsd-description">
 										<aside class="tsd-sources">
 											<ul>
-												<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/component/component-def.ts#L249">wesib/wesib/src/component/component-def.ts:249</a></li>
+												<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/component/component-def.ts#L245">wesib/wesib/src/component/component-def.ts:245</a></li>
 											</ul>
 										</aside>
 										<div class="tsd-comment tsd-typography">
@@ -1213,7 +1193,7 @@
 									<li class="tsd-description">
 										<aside class="tsd-sources">
 											<ul>
-												<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/component/component-def.ts#L221">wesib/wesib/src/component/component-def.ts:221</a></li>
+												<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/component/component-def.ts#L217">wesib/wesib/src/component/component-def.ts:217</a></li>
 											</ul>
 										</aside>
 										<div class="tsd-comment tsd-typography">
@@ -1253,7 +1233,7 @@
 					<div class="tsd-signature tsd-kind-icon">Component<wbr>Def__symbol<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">typeof </span><a href="modules.html#componentdef__symbol" class="tsd-signature-type" data-tsd-kind="Variable">ComponentDef__symbol</a><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/component/component-def.ts#L16">wesib/wesib/src/component/component-def.ts:16</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/component/component-def.ts#L12">wesib/wesib/src/component/component-def.ts:12</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -1268,7 +1248,7 @@
 					<div class="tsd-signature tsd-kind-icon">Component<wbr>Event<wbr>Dispatcher<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">SingleContextRef</span><span class="tsd-signature-symbol">&lt;</span><a href="modules.html#componenteventdispatcher" class="tsd-signature-type" data-tsd-kind="Variable">ComponentEventDispatcher</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/component/component-event.ts#L77">wesib/wesib/src/component/component-event.ts:77</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/component/component-event.ts#L73">wesib/wesib/src/component/component-event.ts:73</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -1283,7 +1263,7 @@
 					<div class="tsd-signature tsd-kind-icon">Component<wbr>Slot<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>of<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/component/component-slot.ts#L77">wesib/wesib/src/component/component-slot.ts:77</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/component/component-slot.ts#L77">wesib/wesib/src/component/component-slot.ts:77</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -1298,7 +1278,7 @@
 									<li class="tsd-description">
 										<aside class="tsd-sources">
 											<ul>
-												<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/component/component-slot.ts#L86">wesib/wesib/src/component/component-slot.ts:86</a></li>
+												<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/component/component-slot.ts#L86">wesib/wesib/src/component/component-slot.ts:86</a></li>
 											</ul>
 										</aside>
 										<div class="tsd-comment tsd-typography">
@@ -1335,7 +1315,7 @@
 					<div class="tsd-signature tsd-kind-icon">Component<wbr>Slot__symbol<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">typeof </span><a href="modules.html#componentslot__symbol" class="tsd-signature-type" data-tsd-kind="Variable">ComponentSlot__symbol</a><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/component/component-slot.ts#L53">wesib/wesib/src/component/component-slot.ts:53</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/component/component-slot.ts#L53">wesib/wesib/src/component/component-slot.ts:53</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -1350,7 +1330,7 @@
 					<div class="tsd-signature tsd-kind-icon">Content<wbr>Root<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">SingleContextRef</span><span class="tsd-signature-symbol">&lt;</span><a href="modules.html#contentroot" class="tsd-signature-type" data-tsd-kind="Variable">ContentRoot</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/component/content-root.ts#L24">wesib/wesib/src/component/content-root.ts:24</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/component/content-root.ts#L20">wesib/wesib/src/component/content-root.ts:20</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -1366,7 +1346,7 @@
 					<div class="tsd-signature tsd-kind-icon">Default<wbr>Namespace<wbr>Aliaser<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">SingleContextRef</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">NamespaceAliaser</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/boot/globals/default-namespace-aliaser.ts#L22">wesib/wesib/src/boot/globals/default-namespace-aliaser.ts:22</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/boot/globals/default-namespace-aliaser.ts#L18">wesib/wesib/src/boot/globals/default-namespace-aliaser.ts:18</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -1381,7 +1361,7 @@
 					<div class="tsd-signature tsd-kind-icon">Default<wbr>Render<wbr>Scheduler<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ContextUpRef</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RenderScheduler</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">RenderScheduler</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/boot/globals/default-render-scheduler.ts#L85">wesib/wesib/src/boot/globals/default-render-scheduler.ts:85</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/boot/globals/default-render-scheduler.ts#L81">wesib/wesib/src/boot/globals/default-render-scheduler.ts:81</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -1397,7 +1377,7 @@
 					<div class="tsd-signature tsd-kind-icon">Element<wbr>Adapter<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ContextUpRef</span><span class="tsd-signature-symbol">&lt;</span><a href="modules.html#elementadapter" class="tsd-signature-type" data-tsd-kind="Variable">ElementAdapter</a><span class="tsd-signature-symbol">, </span><a href="interfaces/componentbinder.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentBinder</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/boot/globals/element-adapter.ts#L148">wesib/wesib/src/boot/globals/element-adapter.ts:148</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/boot/globals/element-adapter.ts#L144">wesib/wesib/src/boot/globals/element-adapter.ts:144</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -1412,7 +1392,7 @@
 					<div class="tsd-signature tsd-kind-icon">Element<wbr>Def<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">SingleContextRef</span><span class="tsd-signature-symbol">&lt;</span><a href="modules.html#elementdef" class="tsd-signature-type" data-tsd-kind="Variable">ElementDef</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/component/definition/element-def.ts#L45">wesib/wesib/src/component/definition/element-def.ts:45</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/component/definition/element-def.ts#L41">wesib/wesib/src/component/definition/element-def.ts:41</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -1429,7 +1409,7 @@
 					<div class="tsd-signature tsd-kind-icon">Element<wbr>Observer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">FnContextKey</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">MutationCallback</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">, </span><a href="modules.html#elementobserver" class="tsd-signature-type" data-tsd-kind="Variable">ElementObserver</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/boot/globals/element-observer.ts#L45">wesib/wesib/src/boot/globals/element-observer.ts:45</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/boot/globals/element-observer.ts#L41">wesib/wesib/src/boot/globals/element-observer.ts:41</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -1444,7 +1424,7 @@
 					<div class="tsd-signature tsd-kind-icon">Feature<wbr>Def<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>all<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>define<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>for<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>merge<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>of<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/feature-def.ts#L163">wesib/wesib/src/feature/feature-def.ts:163</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/feature-def.ts#L159">wesib/wesib/src/feature/feature-def.ts:159</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -1459,7 +1439,7 @@
 									<li class="tsd-description">
 										<aside class="tsd-sources">
 											<ul>
-												<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/feature-def.ts#L207">wesib/wesib/src/feature/feature-def.ts:207</a></li>
+												<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/feature-def.ts#L203">wesib/wesib/src/feature/feature-def.ts:203</a></li>
 											</ul>
 										</aside>
 										<div class="tsd-comment tsd-typography">
@@ -1484,13 +1464,13 @@
 							<li class="tsd-parameter">
 								<h5>define<span class="tsd-signature-symbol">: </span>function</h5>
 								<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-type-literal tsd-has-type-parameter">
-									<li class="tsd-signature tsd-kind-icon">define&lt;T&gt;<span class="tsd-signature-symbol">(</span>featureType<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, <span class="tsd-signature-symbol">...</span>defs<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">readonly </span><a href="modules.html#featuredef" class="tsd-signature-type" data-tsd-kind="Variable">FeatureDef</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
+									<li class="tsd-signature tsd-kind-icon">define&lt;TClass&gt;<span class="tsd-signature-symbol">(</span>featureType<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TClass</span>, <span class="tsd-signature-symbol">...</span>defs<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">readonly </span><a href="modules.html#featuredef" class="tsd-signature-type" data-tsd-kind="Variable">FeatureDef</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TClass</span></li>
 								</ul>
 								<ul class="tsd-descriptions">
 									<li class="tsd-description">
 										<aside class="tsd-sources">
 											<ul>
-												<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/feature-def.ts#L232">wesib/wesib/src/feature/feature-def.ts:232</a></li>
+												<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/feature-def.ts#L228">wesib/wesib/src/feature/feature-def.ts:228</a></li>
 											</ul>
 										</aside>
 										<div class="tsd-comment tsd-typography">
@@ -1502,7 +1482,7 @@
 										<h4 class="tsd-type-parameters-title">Type parameters</h4>
 										<ul class="tsd-type-parameters">
 											<li>
-												<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Class</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+												<h4>TClass<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Class</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span></h4>
 												<div class="tsd-comment tsd-typography">
 													<p>Feature type.</p>
 												</div>
@@ -1511,7 +1491,7 @@
 										<h4 class="tsd-parameters-title">Parameters</h4>
 										<ul class="tsd-parameters">
 											<li>
-												<h5>featureType: <span class="tsd-signature-type">T</span></h5>
+												<h5>featureType: <span class="tsd-signature-type">TClass</span></h5>
 												<div class="tsd-comment tsd-typography">
 													<p>Feature class constructor.</p>
 												</div>
@@ -1523,7 +1503,7 @@
 												</div>
 											</li>
 										</ul>
-										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">TClass</span></h4>
 										<p>The <code>type</code> instance.</p>
 									</li>
 								</ul>
@@ -1537,7 +1517,7 @@
 									<li class="tsd-description">
 										<aside class="tsd-sources">
 											<ul>
-												<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/feature-def.ts#L185">wesib/wesib/src/feature/feature-def.ts:185</a></li>
+												<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/feature-def.ts#L181">wesib/wesib/src/feature/feature-def.ts:181</a></li>
 											</ul>
 										</aside>
 										<div class="tsd-comment tsd-typography">
@@ -1574,7 +1554,7 @@
 									<li class="tsd-description">
 										<aside class="tsd-sources">
 											<ul>
-												<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/feature-def.ts#L196">wesib/wesib/src/feature/feature-def.ts:196</a></li>
+												<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/feature-def.ts#L192">wesib/wesib/src/feature/feature-def.ts:192</a></li>
 											</ul>
 										</aside>
 										<div class="tsd-comment tsd-typography">
@@ -1605,7 +1585,7 @@
 									<li class="tsd-description">
 										<aside class="tsd-sources">
 											<ul>
-												<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/feature-def.ts#L173">wesib/wesib/src/feature/feature-def.ts:173</a></li>
+												<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/feature-def.ts#L169">wesib/wesib/src/feature/feature-def.ts:169</a></li>
 											</ul>
 										</aside>
 										<div class="tsd-comment tsd-typography">
@@ -1637,7 +1617,7 @@
 					<div class="tsd-signature tsd-kind-icon">Feature<wbr>Def__symbol<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">typeof </span><a href="modules.html#featuredef__symbol" class="tsd-signature-type" data-tsd-kind="Variable">FeatureDef__symbol</a><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/feature-def.ts#L16">wesib/wesib/src/feature/feature-def.ts:16</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/feature-def.ts#L12">wesib/wesib/src/feature/feature-def.ts:12</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -1652,7 +1632,7 @@
 					<div class="tsd-signature tsd-kind-icon">State<wbr>Updater<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ContextUpRef</span><span class="tsd-signature-symbol">&lt;</span><a href="modules.html#stateupdater" class="tsd-signature-type" data-tsd-kind="Variable">StateUpdater</a><span class="tsd-signature-symbol">, </span><a href="modules/stateupdater.html#normalized" class="tsd-signature-type" data-tsd-kind="Type alias">Normalized</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/component/state-updater.ts#L112">wesib/wesib/src/component/state-updater.ts:112</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/component/state-updater.ts#L108">wesib/wesib/src/component/state-updater.ts:108</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -1671,7 +1651,7 @@
 					<div class="tsd-signature tsd-kind-icon">Wesib__NS<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">NamespaceDef</span><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/wesib.ns.ts#L12">wesib/wesib/src/wesib.ns.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/wesib.ns.ts#L8">wesib/wesib/src/wesib.ns.ts:8</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -1684,13 +1664,13 @@
 					<a name="component" class="tsd-anchor"></a>
 					<h3>Component</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">Component&lt;T&gt;<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>defs<span class="tsd-signature-symbol">: </span><a href="modules.html#componentdef" class="tsd-signature-type" data-tsd-kind="Variable">ComponentDef</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="modules.html#componentdecorator" class="tsd-signature-type" data-tsd-kind="Type alias">ComponentDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">Component&lt;TClass&gt;<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>defs<span class="tsd-signature-symbol">: </span><a href="modules.html#componentdef" class="tsd-signature-type" data-tsd-kind="Variable">ComponentDef</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/componentdecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/component/component.decorator.ts#L46">wesib/wesib/src/component/component.decorator.ts:46</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/component/component.decorator.ts#L45">wesib/wesib/src/component/component.decorator.ts:45</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1710,7 +1690,7 @@
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
-									<h4>T<span class="tsd-signature-symbol">: </span><a href="interfaces/componentclass.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentClass</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span> = <span class="tsd-signature-type">Class</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
+									<h4>TClass<span class="tsd-signature-symbol">: </span><a href="interfaces/componentclass.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentClass</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span> = <span class="tsd-signature-type">Class</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
 									<div class="tsd-comment tsd-typography">
 										<p>A type of decorated component class.</p>
 									</div>
@@ -1719,13 +1699,13 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>defs: <a href="modules.html#componentdef" class="tsd-signature-type" data-tsd-kind="Variable">ComponentDef</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></h5>
+									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>defs: <a href="modules.html#componentdef" class="tsd-signature-type" data-tsd-kind="Variable">ComponentDef</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Component definitions.</p>
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="modules.html#componentdecorator" class="tsd-signature-type" data-tsd-kind="Type alias">ComponentDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="interfaces/componentdecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>A component class decorator.</p>
 						</li>
 					</ul>
@@ -1734,20 +1714,20 @@
 					<a name="componentproperty" class="tsd-anchor"></a>
 					<h3>Component<wbr>Property</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">Component<wbr>Property&lt;TValue, T&gt;<span class="tsd-signature-symbol">(</span>define<span class="tsd-signature-symbol">: </span><a href="modules/componentproperty.html#definer" class="tsd-signature-type" data-tsd-kind="Type alias">Definer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/componentpropertydecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentPropertyDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">Component<wbr>Property&lt;TValue, TClass&gt;<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>define<span class="tsd-signature-symbol">: </span><a href="modules/componentproperty.html#definer" class="tsd-signature-type" data-tsd-kind="Type alias">Definer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/componentpropertydecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentPropertyDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/component/component-property.decorator.ts#L384">wesib/wesib/src/component/component-property.decorator.ts:384</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/component/component-property.decorator.ts#L379">wesib/wesib/src/component/component-property.decorator.ts:379</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Decorator of component property.</p>
 								</div>
-								<p>Updates decorated property and component definition. Can be converted to <a href="modules.html#componentdecorator">component decorator</a> by calling appropriate method of returned decorator instance.</p>
+								<p>Updates decorated property and component definition. Can be converted to <a href="interfaces/componentdecorator.html">component decorator</a> by calling appropriate method of returned decorator instance.</p>
 							</div>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
@@ -1758,7 +1738,7 @@
 									</div>
 								</li>
 								<li>
-									<h4>T<span class="tsd-signature-symbol">: </span><a href="interfaces/componentclass.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentClass</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span> = <span class="tsd-signature-type">Class</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
+									<h4>TClass<span class="tsd-signature-symbol">: </span><a href="interfaces/componentclass.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentClass</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span> = <span class="tsd-signature-type">Class</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
 									<div class="tsd-comment tsd-typography">
 										<p>A type of decorated component class.</p>
 									</div>
@@ -1767,13 +1747,13 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>define: <a href="modules/componentproperty.html#definer" class="tsd-signature-type" data-tsd-kind="Type alias">Definer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>define: <a href="modules/componentproperty.html#definer" class="tsd-signature-type" data-tsd-kind="Type alias">Definer</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>Component property definition builder.</p>
+										<p>Component property definition builders.</p>
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="interfaces/componentpropertydecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentPropertyDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="interfaces/componentpropertydecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentPropertyDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>Component property decorator.</p>
 						</li>
 					</ul>
@@ -1782,13 +1762,13 @@
 					<a name="feature" class="tsd-anchor"></a>
 					<h3>Feature</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">Feature&lt;T&gt;<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>defs<span class="tsd-signature-symbol">: </span><a href="modules.html#featuredef" class="tsd-signature-type" data-tsd-kind="Variable">FeatureDef</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="modules.html#typedclassdecorator" class="tsd-signature-type" data-tsd-kind="Type alias">TypedClassDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">Feature&lt;TClass&gt;<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>defs<span class="tsd-signature-symbol">: </span><a href="modules.html#featuredef" class="tsd-signature-type" data-tsd-kind="Variable">FeatureDef</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="modules.html#typedclassdecorator" class="tsd-signature-type" data-tsd-kind="Type alias">TypedClassDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/feature.decorator.ts#L30">wesib/wesib/src/feature/feature.decorator.ts:30</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/feature.decorator.ts#L26">wesib/wesib/src/feature/feature.decorator.ts:26</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1807,7 +1787,7 @@
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
-									<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Class</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span> = <span class="tsd-signature-type">any</span></h4>
+									<h4>TClass<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Class</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span> = <span class="tsd-signature-type">any</span></h4>
 									<div class="tsd-comment tsd-typography">
 										<p>A type of decorated feature class.</p>
 									</div>
@@ -1822,7 +1802,7 @@
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="modules.html#typedclassdecorator" class="tsd-signature-type" data-tsd-kind="Type alias">TypedClassDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="modules.html#typedclassdecorator" class="tsd-signature-type" data-tsd-kind="Type alias">TypedClassDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>A feature class decorator.</p>
 						</li>
 					</ul>
@@ -1837,7 +1817,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/boot/bootstrap/bootstrap-components.ts#L27">wesib/wesib/src/boot/bootstrap/bootstrap-components.ts:27</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/boot/bootstrap/bootstrap-components.ts#L23">wesib/wesib/src/boot/bootstrap/bootstrap-components.ts:23</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1870,7 +1850,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/boot/bootstrap-default.ts#L19">wesib/wesib/src/boot/bootstrap-default.ts:19</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/boot/bootstrap-default.ts#L15">wesib/wesib/src/boot/bootstrap-default.ts:15</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1941,7 +1921,7 @@
 					<div class="tsd-signature tsd-kind-icon">Attribute<wbr>Changed<wbr>Callback&lt;T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, component<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, newValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>, oldValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/attributes/attribute-descriptor.ts#L14">wesib/wesib/src/feature/attributes/attribute-descriptor.ts:14</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/attributes/attribute-descriptor.ts#L9">wesib/wesib/src/feature/attributes/attribute-descriptor.ts:9</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -2007,7 +1987,7 @@
 					<div class="tsd-signature tsd-kind-icon">Attribute<wbr>Path<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">readonly </span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-symbol">keyof </span><a href="interfaces/attributepath.rootkeys.html" class="tsd-signature-type" data-tsd-kind="Interface">RootKeys</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/attributes/attribute-path.ts#L19">wesib/wesib/src/feature/attributes/attribute-path.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/attributes/attribute-path.ts#L15">wesib/wesib/src/feature/attributes/attribute-path.ts:15</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -2022,7 +2002,7 @@
 					<div class="tsd-signature tsd-kind-icon">Attribute<wbr>Update<wbr>Receiver&lt;T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, component<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, path<span class="tsd-signature-symbol">: </span><a href="modules/attributepath.html" class="tsd-signature-type" data-tsd-kind="Namespace">AttributePath</a>, newValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>, oldValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/attributes/attribute-def.ts#L45">wesib/wesib/src/feature/attributes/attribute-def.ts:45</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/attributes/attribute-def.ts#L41">wesib/wesib/src/feature/attributes/attribute-def.ts:41</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -2093,7 +2073,7 @@
 					<div class="tsd-signature tsd-kind-icon">Dom<wbr>Property<wbr>Path&lt;TKey&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">readonly </span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-symbol">keyof </span><a href="interfaces/dompropertypath.rootkeys.html" class="tsd-signature-type" data-tsd-kind="Interface">RootKeys</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/dom-properties/dom-property-path.ts#L20">wesib/wesib/src/feature/dom-properties/dom-property-path.ts:20</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/dom-properties/dom-property-path.ts#L16">wesib/wesib/src/feature/dom-properties/dom-property-path.ts:16</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -2119,7 +2099,7 @@
 					<div class="tsd-signature tsd-kind-icon">Dom<wbr>Property<wbr>Update<wbr>Receiver&lt;T&gt;<span class="tsd-signature-symbol">:</span> &lt;TKey&gt;<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, component<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, path<span class="tsd-signature-symbol">: </span><a href="modules/dompropertypath.html" class="tsd-signature-type" data-tsd-kind="Namespace">DomPropertyPath</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">&gt;</span>, newValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">]</span>, oldValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/dom-properties/dom-property-def.ts#L66">wesib/wesib/src/feature/dom-properties/dom-property-def.ts:66</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/dom-properties/dom-property-def.ts#L63">wesib/wesib/src/feature/dom-properties/dom-property-def.ts:63</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -2199,7 +2179,7 @@
 					<div class="tsd-signature tsd-kind-icon">Element<wbr>Render<wbr>Scheduler<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, options<span class="tsd-signature-symbol">?: </span><a href="interfaces/elementrenderscheduleoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ElementRenderScheduleOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">RenderSchedule</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/render/element-render-scheduler.ts#L22">wesib/wesib/src/feature/render/element-render-scheduler.ts:22</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/render/element-render-scheduler.ts#L18">wesib/wesib/src/feature/render/element-render-scheduler.ts:18</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -2244,7 +2224,7 @@
 					<div class="tsd-signature tsd-kind-icon">Element<wbr>Renderer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, execution<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RenderExecution</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><a href="modules.html#elementrenderer" class="tsd-signature-type" data-tsd-kind="Type alias">ElementRenderer</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/render/element-renderer.ts#L17">wesib/wesib/src/feature/render/element-renderer.ts:17</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/render/element-renderer.ts#L13">wesib/wesib/src/feature/render/element-renderer.ts:13</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -2290,7 +2270,7 @@
 					<div class="tsd-signature tsd-kind-icon">Render<wbr>Def<span class="tsd-signature-symbol">:</span> <a href="interfaces/renderdef.spec.html" class="tsd-signature-type" data-tsd-kind="Interface">Spec</a><span class="tsd-signature-symbol"> | </span><a href="modules/renderdef.html#provider" class="tsd-signature-type" data-tsd-kind="Type alias">Provider</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/render/render-def.ts#L25">wesib/wesib/src/feature/render/render-def.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/render/render-def.ts#L21">wesib/wesib/src/feature/render/render-def.ts:21</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -2306,7 +2286,7 @@
 					<div class="tsd-signature tsd-kind-icon">Shadow<wbr>Content<wbr>Def<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ShadowRootInit</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/shadow-dom/attach-shadow.decorator.ts#L23">wesib/wesib/src/feature/shadow-dom/attach-shadow.decorator.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/shadow-dom/attach-shadow.decorator.ts#L19">wesib/wesib/src/feature/shadow-dom/attach-shadow.decorator.ts:19</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -2322,7 +2302,7 @@
 					<div class="tsd-signature tsd-kind-icon">Shadow<wbr>Content<wbr>Root<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ShadowRoot</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/shadow-dom/shadow-content-root.ts#L12">wesib/wesib/src/feature/shadow-dom/shadow-content-root.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/shadow-dom/shadow-content-root.ts#L8">wesib/wesib/src/feature/shadow-dom/shadow-content-root.ts:8</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -2337,7 +2317,7 @@
 					<div class="tsd-signature tsd-kind-icon">Shadow<wbr>Root<wbr>Builder<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="classes/componentcontext.html" class="tsd-signature-type" data-tsd-kind="Class">ComponentContext</a>, init<span class="tsd-signature-symbol">: </span><a href="modules.html#shadowcontentdef" class="tsd-signature-type" data-tsd-kind="Type alias">ShadowContentDef</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">ShadowRoot</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/shadow-dom/shadow-root-builder.ts#L22">wesib/wesib/src/feature/shadow-dom/shadow-root-builder.ts:22</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/shadow-dom/shadow-root-builder.ts#L18">wesib/wesib/src/feature/shadow-dom/shadow-root-builder.ts:18</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -2387,7 +2367,7 @@
 					<div class="tsd-signature tsd-kind-icon">State<wbr>Property<wbr>Path&lt;TKey&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">readonly </span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-symbol">keyof </span><a href="interfaces/statepropertypath.rootkeys.html" class="tsd-signature-type" data-tsd-kind="Interface">RootKeys</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/state/state-property-path.ts#L20">wesib/wesib/src/feature/state/state-property-path.ts:20</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/state/state-property-path.ts#L16">wesib/wesib/src/feature/state/state-property-path.ts:16</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -2413,7 +2393,7 @@
 					<div class="tsd-signature tsd-kind-icon">State<wbr>Property<wbr>Update<wbr>Receiver&lt;T&gt;<span class="tsd-signature-symbol">:</span> &lt;TKey&gt;<span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, component<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, path<span class="tsd-signature-symbol">: </span><a href="modules/statepropertypath.html" class="tsd-signature-type" data-tsd-kind="Namespace">StatePropertyPath</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">&gt;</span>, newValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">]</span>, oldValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/state/state-property.decorator.ts#L78">wesib/wesib/src/feature/state/state-property.decorator.ts:78</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/state/state-property.decorator.ts#L74">wesib/wesib/src/feature/state/state-property.decorator.ts:74</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -2493,7 +2473,7 @@
 					<div class="tsd-signature tsd-kind-icon">Attribute<wbr>Path__root<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">typeof </span><a href="modules.html#attributepath__root" class="tsd-signature-type" data-tsd-kind="Variable">AttributePath__root</a><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/attributes/attribute-path.ts#L12">wesib/wesib/src/feature/attributes/attribute-path.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/attributes/attribute-path.ts#L8">wesib/wesib/src/feature/attributes/attribute-path.ts:8</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -2509,7 +2489,7 @@
 					<div class="tsd-signature tsd-kind-icon">Attribute<wbr>Registry<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ContextRef</span><span class="tsd-signature-symbol">&lt;</span><a href="modules.html#attributeregistry" class="tsd-signature-type" data-tsd-kind="Variable">AttributeRegistry</a><span class="tsd-signature-symbol">, </span><a href="modules.html#attributeregistry" class="tsd-signature-type" data-tsd-kind="Variable">AttributeRegistry</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/attributes/attribute-registry.ts#L34">wesib/wesib/src/feature/attributes/attribute-registry.ts:34</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/attributes/attribute-registry.ts#L30">wesib/wesib/src/feature/attributes/attribute-registry.ts:30</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -2524,7 +2504,7 @@
 					<div class="tsd-signature tsd-kind-icon">Dom<wbr>Property<wbr>Path__root<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">typeof </span><a href="modules.html#dompropertypath__root" class="tsd-signature-type" data-tsd-kind="Variable">DomPropertyPath__root</a><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/dom-properties/dom-property-path.ts#L12">wesib/wesib/src/feature/dom-properties/dom-property-path.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/dom-properties/dom-property-path.ts#L8">wesib/wesib/src/feature/dom-properties/dom-property-path.ts:8</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -2540,7 +2520,7 @@
 					<div class="tsd-signature tsd-kind-icon">Dom<wbr>Property<wbr>Registry<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ContextRef</span><span class="tsd-signature-symbol">&lt;</span><a href="modules.html#dompropertyregistry" class="tsd-signature-type" data-tsd-kind="Variable">DomPropertyRegistry</a><span class="tsd-signature-symbol">, </span><a href="modules.html#dompropertyregistry" class="tsd-signature-type" data-tsd-kind="Variable">DomPropertyRegistry</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/dom-properties/dom-property-registry.ts#L32">wesib/wesib/src/feature/dom-properties/dom-property-registry.ts:32</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/dom-properties/dom-property-registry.ts#L28">wesib/wesib/src/feature/dom-properties/dom-property-registry.ts:28</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -2555,7 +2535,7 @@
 					<div class="tsd-signature tsd-kind-icon">Element<wbr>Render<wbr>Ctl<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ContextRef</span><span class="tsd-signature-symbol">&lt;</span><a href="modules.html#elementrenderctl" class="tsd-signature-type" data-tsd-kind="Variable">ElementRenderCtl</a><span class="tsd-signature-symbol">, </span><a href="modules.html#elementrenderctl" class="tsd-signature-type" data-tsd-kind="Variable">ElementRenderCtl</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/render/element-render-ctl.ts#L54">wesib/wesib/src/feature/render/element-render-ctl.ts:54</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/render/element-render-ctl.ts#L50">wesib/wesib/src/feature/render/element-render-ctl.ts:50</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -2570,7 +2550,7 @@
 					<div class="tsd-signature tsd-kind-icon">Element<wbr>Render<wbr>Scheduler<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ContextRef</span><span class="tsd-signature-symbol">&lt;</span><a href="modules.html#elementrenderscheduler" class="tsd-signature-type" data-tsd-kind="Variable">ElementRenderScheduler</a><span class="tsd-signature-symbol">, </span><a href="modules.html#elementrenderscheduler" class="tsd-signature-type" data-tsd-kind="Variable">ElementRenderScheduler</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/render/element-render-scheduler.ts#L87">wesib/wesib/src/feature/render/element-render-scheduler.ts:87</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/render/element-render-scheduler.ts#L83">wesib/wesib/src/feature/render/element-render-scheduler.ts:83</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -2585,7 +2565,7 @@
 					<div class="tsd-signature tsd-kind-icon">Render<wbr>Def<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>fulfill<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>spec<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>trigger<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/render/render-def.ts#L110">wesib/wesib/src/feature/render/render-def.ts:110</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/render/render-def.ts#L106">wesib/wesib/src/feature/render/render-def.ts:106</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -2600,7 +2580,7 @@
 									<li class="tsd-description">
 										<aside class="tsd-sources">
 											<ul>
-												<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/render/render-def.ts#L136">wesib/wesib/src/feature/render/render-def.ts:136</a></li>
+												<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/render/render-def.ts#L132">wesib/wesib/src/feature/render/render-def.ts:132</a></li>
 											</ul>
 										</aside>
 										<div class="tsd-comment tsd-typography">
@@ -2637,7 +2617,7 @@
 									<li class="tsd-description">
 										<aside class="tsd-sources">
 											<ul>
-												<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/render/render-def.ts#L120">wesib/wesib/src/feature/render/render-def.ts:120</a></li>
+												<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/render/render-def.ts#L116">wesib/wesib/src/feature/render/render-def.ts:116</a></li>
 											</ul>
 										</aside>
 										<div class="tsd-comment tsd-typography">
@@ -2674,7 +2654,7 @@
 									<li class="tsd-description">
 										<aside class="tsd-sources">
 											<ul>
-												<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/render/render-def.ts#L154">wesib/wesib/src/feature/render/render-def.ts:154</a></li>
+												<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/render/render-def.ts#L150">wesib/wesib/src/feature/render/render-def.ts:150</a></li>
 											</ul>
 										</aside>
 										<div class="tsd-comment tsd-typography">
@@ -2711,7 +2691,7 @@
 					<div class="tsd-signature tsd-kind-icon">Render<wbr>Path__root<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">typeof </span><a href="modules.html#renderpath__root" class="tsd-signature-type" data-tsd-kind="Variable">RenderPath__root</a><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/render/render-def.ts#L105">wesib/wesib/src/feature/render/render-def.ts:105</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/render/render-def.ts#L101">wesib/wesib/src/feature/render/render-def.ts:101</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -2727,7 +2707,7 @@
 					<div class="tsd-signature tsd-kind-icon">Shadow<wbr>Content<wbr>Root<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">SingleContextRef</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ShadowRoot</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/shadow-dom/shadow-content-root.ts#L21">wesib/wesib/src/feature/shadow-dom/shadow-content-root.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/shadow-dom/shadow-content-root.ts#L17">wesib/wesib/src/feature/shadow-dom/shadow-content-root.ts:17</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -2743,7 +2723,7 @@
 					<div class="tsd-signature tsd-kind-icon">Shadow<wbr>Root<wbr>Builder<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">FnContextRef</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span>context<span class="tsd-signature-symbol">: </span><a href="classes/componentcontext.html" class="tsd-signature-type" data-tsd-kind="Class">ComponentContext</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span>init<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ShadowRootInit</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">ShadowRoot</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/shadow-dom/shadow-root-builder.ts#L36">wesib/wesib/src/feature/shadow-dom/shadow-root-builder.ts:36</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/shadow-dom/shadow-root-builder.ts#L32">wesib/wesib/src/feature/shadow-dom/shadow-root-builder.ts:32</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -2758,7 +2738,7 @@
 					<div class="tsd-signature tsd-kind-icon">State<wbr>Property<wbr>Path__root<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">typeof </span><a href="modules.html#statepropertypath__root" class="tsd-signature-type" data-tsd-kind="Variable">StatePropertyPath__root</a><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/state/state-property-path.ts#L12">wesib/wesib/src/feature/state/state-property-path.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/state/state-property-path.ts#L8">wesib/wesib/src/feature/state/state-property-path.ts:8</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -2772,13 +2752,13 @@
 					<a name="attachshadow" class="tsd-anchor"></a>
 					<h3>Attach<wbr>Shadow</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">Attach<wbr>Shadow&lt;T&gt;<span class="tsd-signature-symbol">(</span>def<span class="tsd-signature-symbol">?: </span><a href="modules.html#shadowcontentdef" class="tsd-signature-type" data-tsd-kind="Type alias">ShadowContentDef</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="modules.html#componentdecorator" class="tsd-signature-type" data-tsd-kind="Type alias">ComponentDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">Attach<wbr>Shadow&lt;TClass&gt;<span class="tsd-signature-symbol">(</span>def<span class="tsd-signature-symbol">?: </span><a href="modules.html#shadowcontentdef" class="tsd-signature-type" data-tsd-kind="Type alias">ShadowContentDef</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/componentdecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/shadow-dom/attach-shadow.decorator.ts#L34">wesib/wesib/src/feature/shadow-dom/attach-shadow.decorator.ts:34</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/shadow-dom/attach-shadow.decorator.ts#L30">wesib/wesib/src/feature/shadow-dom/attach-shadow.decorator.ts:30</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2789,7 +2769,7 @@
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
-									<h4>T<span class="tsd-signature-symbol">: </span><a href="interfaces/componentclass.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentClass</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span> = <span class="tsd-signature-type">Class</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
+									<h4>TClass<span class="tsd-signature-symbol">: </span><a href="interfaces/componentclass.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentClass</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span> = <span class="tsd-signature-type">Class</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
 									<div class="tsd-comment tsd-typography">
 										<p>A type of decorated component class.</p>
 									</div>
@@ -2804,7 +2784,7 @@
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="modules.html#componentdecorator" class="tsd-signature-type" data-tsd-kind="Type alias">ComponentDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="interfaces/componentdecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>New component decorator.</p>
 						</li>
 					</ul>
@@ -2813,13 +2793,13 @@
 					<a name="attribute" class="tsd-anchor"></a>
 					<h3>Attribute</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">Attribute&lt;T&gt;<span class="tsd-signature-symbol">(</span>def<span class="tsd-signature-symbol">?: </span><a href="interfaces/attributedef.html" class="tsd-signature-type" data-tsd-kind="Interface">AttributeDef</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/componentpropertydecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentPropertyDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">Attribute&lt;TClass&gt;<span class="tsd-signature-symbol">(</span>def<span class="tsd-signature-symbol">?: </span><a href="interfaces/attributedef.html" class="tsd-signature-type" data-tsd-kind="Interface">AttributeDef</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/componentpropertydecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentPropertyDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/attributes/attribute.decorator.ts#L23">wesib/wesib/src/feature/attributes/attribute.decorator.ts:23</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/attributes/attribute.decorator.ts#L19">wesib/wesib/src/feature/attributes/attribute.decorator.ts:19</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2832,7 +2812,7 @@
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
-									<h4>T<span class="tsd-signature-symbol">: </span><a href="interfaces/componentclass.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentClass</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+									<h4>TClass<span class="tsd-signature-symbol">: </span><a href="interfaces/componentclass.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentClass</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span></h4>
 									<div class="tsd-comment tsd-typography">
 										<p>A type of decorated component class.</p>
 									</div>
@@ -2841,13 +2821,13 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> def: <a href="interfaces/attributedef.html" class="tsd-signature-type" data-tsd-kind="Interface">AttributeDef</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> def: <a href="interfaces/attributedef.html" class="tsd-signature-type" data-tsd-kind="Interface">AttributeDef</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Attribute definition or just an attribute name (either <em>camelCase</em> or <em>dash-style</em>).</p>
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="interfaces/componentpropertydecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentPropertyDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="interfaces/componentpropertydecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentPropertyDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>Component property decorator.</p>
 						</li>
 					</ul>
@@ -2856,13 +2836,13 @@
 					<a name="attributechanged" class="tsd-anchor"></a>
 					<h3>Attribute<wbr>Changed</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">Attribute<wbr>Changed&lt;T&gt;<span class="tsd-signature-symbol">(</span>def<span class="tsd-signature-symbol">?: </span><a href="interfaces/attributedef.html" class="tsd-signature-type" data-tsd-kind="Interface">AttributeDef</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/componentpropertydecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentPropertyDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">(</span>newValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>, oldValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">Attribute<wbr>Changed&lt;TClass&gt;<span class="tsd-signature-symbol">(</span>def<span class="tsd-signature-symbol">?: </span><a href="interfaces/attributedef.html" class="tsd-signature-type" data-tsd-kind="Interface">AttributeDef</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/componentpropertydecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentPropertyDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">(</span>newValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>, oldValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/attributes/attribute-changed.decorator.ts#L38">wesib/wesib/src/feature/attributes/attribute-changed.decorator.ts:38</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/attributes/attribute-changed.decorator.ts#L34">wesib/wesib/src/feature/attributes/attribute-changed.decorator.ts:34</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2889,7 +2869,7 @@
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
-									<h4>T<span class="tsd-signature-symbol">: </span><a href="interfaces/componentclass.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentClass</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+									<h4>TClass<span class="tsd-signature-symbol">: </span><a href="interfaces/componentclass.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentClass</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span></h4>
 									<div class="tsd-comment tsd-typography">
 										<p>A type of decorated component class.</p>
 									</div>
@@ -2898,13 +2878,13 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> def: <a href="interfaces/attributedef.html" class="tsd-signature-type" data-tsd-kind="Interface">AttributeDef</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> def: <a href="interfaces/attributedef.html" class="tsd-signature-type" data-tsd-kind="Interface">AttributeDef</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Attribute definition or just an attribute name.</p>
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="interfaces/componentpropertydecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentPropertyDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">(</span>newValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>, oldValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="interfaces/componentpropertydecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentPropertyDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">(</span>newValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>, oldValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>Component method decorator.</p>
 						</li>
 					</ul>
@@ -2913,13 +2893,13 @@
 					<a name="attributes" class="tsd-anchor"></a>
 					<h3>Attributes</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">Attributes&lt;T&gt;<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>items<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">readonly </span><a href="modules/attributes.html#item" class="tsd-signature-type" data-tsd-kind="Type alias">Item</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="modules.html#componentdecorator" class="tsd-signature-type" data-tsd-kind="Type alias">ComponentDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">Attributes&lt;TClass&gt;<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>items<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">readonly </span><a href="modules/attributes.html#item" class="tsd-signature-type" data-tsd-kind="Type alias">Item</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/componentdecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/attributes/attributes.decorator.ts#L23">wesib/wesib/src/feature/attributes/attributes.decorator.ts:23</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/attributes/attributes.decorator.ts#L19">wesib/wesib/src/feature/attributes/attributes.decorator.ts:19</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2930,7 +2910,7 @@
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
-									<h4>T<span class="tsd-signature-symbol">: </span><a href="interfaces/componentclass.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentClass</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span> = <span class="tsd-signature-type">Class</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
+									<h4>TClass<span class="tsd-signature-symbol">: </span><a href="interfaces/componentclass.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentClass</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span> = <span class="tsd-signature-type">Class</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
 									<div class="tsd-comment tsd-typography">
 										<p>A type of decorated component class.</p>
 									</div>
@@ -2939,13 +2919,13 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>items: <span class="tsd-signature-symbol">readonly </span><a href="modules/attributes.html#item" class="tsd-signature-type" data-tsd-kind="Type alias">Item</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></h5>
+									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>items: <span class="tsd-signature-symbol">readonly </span><a href="modules/attributes.html#item" class="tsd-signature-type" data-tsd-kind="Type alias">Item</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Attributes definition options.</p>
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="modules.html#componentdecorator" class="tsd-signature-type" data-tsd-kind="Type alias">ComponentDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="interfaces/componentdecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>New component decorator.</p>
 						</li>
 					</ul>
@@ -2954,13 +2934,13 @@
 					<a name="domproperty" class="tsd-anchor"></a>
 					<h3>Dom<wbr>Property</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">Dom<wbr>Property&lt;TValue, T&gt;<span class="tsd-signature-symbol">(</span>def<span class="tsd-signature-symbol">?: </span><a href="interfaces/dompropertydef.html" class="tsd-signature-type" data-tsd-kind="Interface">DomPropertyDef</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/componentpropertydecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentPropertyDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">Dom<wbr>Property&lt;TValue, TClass&gt;<span class="tsd-signature-symbol">(</span>def<span class="tsd-signature-symbol">?: </span><a href="interfaces/dompropertydef.html" class="tsd-signature-type" data-tsd-kind="Interface">DomPropertyDef</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/componentpropertydecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentPropertyDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/dom-properties/dom-property.decorator.ts#L26">wesib/wesib/src/feature/dom-properties/dom-property.decorator.ts:26</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/dom-properties/dom-property.decorator.ts#L22">wesib/wesib/src/feature/dom-properties/dom-property.decorator.ts:22</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2976,7 +2956,7 @@
 									<h4>TValue = <span class="tsd-signature-type">any</span></h4>
 								</li>
 								<li>
-									<h4>T<span class="tsd-signature-symbol">: </span><a href="interfaces/componentclass.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentClass</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span> = <span class="tsd-signature-type">Class</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
+									<h4>TClass<span class="tsd-signature-symbol">: </span><a href="interfaces/componentclass.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentClass</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span> = <span class="tsd-signature-type">Class</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
 									<div class="tsd-comment tsd-typography">
 										<p>A type of decorated component class.</p>
 									</div>
@@ -2985,13 +2965,13 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>def: <a href="interfaces/dompropertydef.html" class="tsd-signature-type" data-tsd-kind="Interface">DomPropertyDef</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = ...</span></h5>
+									<h5>def: <a href="interfaces/dompropertydef.html" class="tsd-signature-type" data-tsd-kind="Interface">DomPropertyDef</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = ...</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Custom element property definition.</p>
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="interfaces/componentpropertydecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentPropertyDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="interfaces/componentpropertydecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentPropertyDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>Component property decorator.</p>
 						</li>
 					</ul>
@@ -3000,13 +2980,13 @@
 					<a name="render" class="tsd-anchor"></a>
 					<h3>Render</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">Render&lt;T&gt;<span class="tsd-signature-symbol">(</span>def<span class="tsd-signature-symbol">?: </span><a href="modules.html#renderdef" class="tsd-signature-type" data-tsd-kind="Variable">RenderDef</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/componentpropertydecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentPropertyDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">(</span>execution<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RenderExecution</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="modules.html#elementrenderer" class="tsd-signature-type" data-tsd-kind="Type alias">ElementRenderer</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">Render&lt;TClass&gt;<span class="tsd-signature-symbol">(</span>def<span class="tsd-signature-symbol">?: </span><a href="modules.html#renderdef" class="tsd-signature-type" data-tsd-kind="Variable">RenderDef</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/componentpropertydecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentPropertyDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">(</span>execution<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RenderExecution</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="modules.html#elementrenderer" class="tsd-signature-type" data-tsd-kind="Type alias">ElementRenderer</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/render/render.decorator.ts#L29">wesib/wesib/src/feature/render/render.decorator.ts:29</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/render/render.decorator.ts#L25">wesib/wesib/src/feature/render/render.decorator.ts:25</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -3022,7 +3002,7 @@
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
-									<h4>T<span class="tsd-signature-symbol">: </span><a href="interfaces/componentclass.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentClass</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+									<h4>TClass<span class="tsd-signature-symbol">: </span><a href="interfaces/componentclass.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentClass</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span></h4>
 									<div class="tsd-comment tsd-typography">
 										<p>A type of decorated component class.</p>
 									</div>
@@ -3037,7 +3017,7 @@
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="interfaces/componentpropertydecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentPropertyDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">(</span>execution<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RenderExecution</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="modules.html#elementrenderer" class="tsd-signature-type" data-tsd-kind="Type alias">ElementRenderer</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="interfaces/componentpropertydecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentPropertyDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">(</span>execution<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RenderExecution</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="modules.html#elementrenderer" class="tsd-signature-type" data-tsd-kind="Type alias">ElementRenderer</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>Component method decorator.</p>
 						</li>
 					</ul>
@@ -3046,13 +3026,13 @@
 					<a name="stateproperty" class="tsd-anchor"></a>
 					<h3>State<wbr>Property</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">State<wbr>Property&lt;TValue, T&gt;<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">?: </span><a href="interfaces/statepropertydef.html" class="tsd-signature-type" data-tsd-kind="Interface">StatePropertyDef</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/componentpropertydecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentPropertyDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">State<wbr>Property&lt;TValue, TClass&gt;<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">?: </span><a href="interfaces/statepropertydef.html" class="tsd-signature-type" data-tsd-kind="Interface">StatePropertyDef</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/componentpropertydecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentPropertyDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/state/state-property.decorator.ts#L23">wesib/wesib/src/feature/state/state-property.decorator.ts:23</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/state/state-property.decorator.ts#L19">wesib/wesib/src/feature/state/state-property.decorator.ts:19</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -3067,7 +3047,7 @@
 									<h4>TValue = <span class="tsd-signature-type">any</span></h4>
 								</li>
 								<li>
-									<h4>T<span class="tsd-signature-symbol">: </span><a href="interfaces/componentclass.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentClass</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span> = <span class="tsd-signature-type">Class</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
+									<h4>TClass<span class="tsd-signature-symbol">: </span><a href="interfaces/componentclass.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentClass</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span> = <span class="tsd-signature-type">Class</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
 									<div class="tsd-comment tsd-typography">
 										<p>A type of decorated component class.</p>
 									</div>
@@ -3076,10 +3056,10 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>__namedParameters: <a href="interfaces/statepropertydef.html" class="tsd-signature-type" data-tsd-kind="Interface">StatePropertyDef</a><span class="tsd-signature-symbol"> = ...</span></h5>
+									<h5>__namedParameters: <a href="interfaces/statepropertydef.html" class="tsd-signature-type" data-tsd-kind="Interface">StatePropertyDef</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = ...</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="interfaces/componentpropertydecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentPropertyDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="interfaces/componentpropertydecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentPropertyDecorator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>Component property decorator.</p>
 						</li>
 					</ul>
@@ -3094,7 +3074,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/attributes/attribute-path.ts#L29">wesib/wesib/src/feature/attributes/attribute-path.ts:29</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/attributes/attribute-path.ts#L25">wesib/wesib/src/feature/attributes/attribute-path.ts:25</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -3126,7 +3106,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/dom-properties/dom-property-path.ts#L31">wesib/wesib/src/feature/dom-properties/dom-property-path.ts:31</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/dom-properties/dom-property-path.ts#L27">wesib/wesib/src/feature/dom-properties/dom-property-path.ts:27</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -3167,7 +3147,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/attributes/property2attribute-name.ts#L16">wesib/wesib/src/feature/attributes/property2attribute-name.ts:16</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/attributes/property2attribute-name.ts#L12">wesib/wesib/src/feature/attributes/property2attribute-name.ts:12</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -3203,7 +3183,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/state/state-property-path.ts#L34">wesib/wesib/src/feature/state/state-property-path.ts:34</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/state/state-property-path.ts#L30">wesib/wesib/src/feature/state/state-property-path.ts:30</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -3244,7 +3224,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/attributes/track-attribute.ts#L57">wesib/wesib/src/feature/attributes/track-attribute.ts:57</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/attributes/track-attribute.ts#L53">wesib/wesib/src/feature/attributes/track-attribute.ts:53</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -3290,7 +3270,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/dom-properties/track-dom-property.ts#L65">wesib/wesib/src/feature/dom-properties/track-dom-property.ts:65</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/dom-properties/track-dom-property.ts#L61">wesib/wesib/src/feature/dom-properties/track-dom-property.ts:61</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -3344,7 +3324,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/feature/state/track-state-property.ts#L60">wesib/wesib/src/feature/state/track-state-property.ts:60</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/feature/state/track-state-property.ts#L56">wesib/wesib/src/feature/state/track-state-property.ts:56</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -3393,10 +3373,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-has-type-parameter">
 					<a name="typedclassdecorator" class="tsd-anchor"></a>
 					<h3>Typed<wbr>Class<wbr>Decorator</h3>
-					<div class="tsd-signature tsd-kind-icon">Typed<wbr>Class<wbr>Decorator&lt;T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span></div>
+					<div class="tsd-signature tsd-kind-icon">Typed<wbr>Class<wbr>Decorator&lt;TClass&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/common/decorators.ts#L18">wesib/wesib/src/common/decorators.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/common/decorators.ts#L14">wesib/wesib/src/common/decorators.ts:14</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -3407,7 +3387,7 @@
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
 					<ul class="tsd-type-parameters">
 						<li>
-							<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Class</span></h4>
+							<h4>TClass<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Class</span></h4>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>A type of class to decorate.</p>
@@ -3420,17 +3400,17 @@
 						<ul class="tsd-parameters">
 							<li class="tsd-parameter-signature">
 								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias">
-									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span></li>
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span></li>
 								</ul>
 								<ul class="tsd-descriptions">
 									<li class="tsd-description">
 										<h4 class="tsd-parameters-title">Parameters</h4>
 										<ul class="tsd-parameters">
 											<li>
-												<h5>type: <span class="tsd-signature-type">T</span></h5>
+												<h5>type: <span class="tsd-signature-type">TClass</span></h5>
 											</li>
 										</ul>
-										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span></h4>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span></h4>
 									</li>
 								</ul>
 							</li>
@@ -3440,10 +3420,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-has-type-parameter">
 					<a name="typedpropertydecorator" class="tsd-anchor"></a>
 					<h3>Typed<wbr>Property<wbr>Decorator</h3>
-					<div class="tsd-signature tsd-kind-icon">Typed<wbr>Property<wbr>Decorator&lt;T&gt;<span class="tsd-signature-symbol">:</span> &lt;TValue&gt;<span class="tsd-signature-symbol">(</span>target<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>, propertyKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">symbol</span>, descriptor<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">TypedPropertyDescriptor</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span></div>
+					<div class="tsd-signature tsd-kind-icon">Typed<wbr>Property<wbr>Decorator&lt;TClass&gt;<span class="tsd-signature-symbol">:</span> &lt;TValue&gt;<span class="tsd-signature-symbol">(</span>target<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span>, propertyKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">symbol</span>, descriptor<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">TypedPropertyDescriptor</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/common/decorators.ts#L26">wesib/wesib/src/common/decorators.ts:26</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/common/decorators.ts#L22">wesib/wesib/src/common/decorators.ts:22</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -3454,7 +3434,7 @@
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
 					<ul class="tsd-type-parameters">
 						<li>
-							<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Class</span></h4>
+							<h4>TClass<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Class</span></h4>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>A type of class the decorated property belongs to.</p>
@@ -3467,7 +3447,7 @@
 						<ul class="tsd-parameters">
 							<li class="tsd-parameter-signature">
 								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias tsd-has-type-parameter">
-									<li class="tsd-signature tsd-kind-icon">&lt;TValue&gt;<span class="tsd-signature-symbol">(</span>target<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>, propertyKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">symbol</span>, descriptor<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">TypedPropertyDescriptor</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span></li>
+									<li class="tsd-signature tsd-kind-icon">&lt;TValue&gt;<span class="tsd-signature-symbol">(</span>target<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span>, propertyKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">symbol</span>, descriptor<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">TypedPropertyDescriptor</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span></li>
 								</ul>
 								<ul class="tsd-descriptions">
 									<li class="tsd-description">
@@ -3480,7 +3460,7 @@
 										<h4 class="tsd-parameters-title">Parameters</h4>
 										<ul class="tsd-parameters">
 											<li>
-												<h5>target: <span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+												<h5>target: <span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span></h5>
 											</li>
 											<li>
 												<h5>propertyKey: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">symbol</span></h5>
@@ -3506,7 +3486,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/common/decorators.ts#L48">wesib/wesib/src/common/decorators.ts:48</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/common/decorators.ts#L44">wesib/wesib/src/common/decorators.ts:44</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -3591,7 +3571,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/0d53bb4/src/common/is-element.ts#L13">wesib/wesib/src/common/is-element.ts:13</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/common/is-element.ts#L9">wesib/wesib/src/common/is-element.ts:9</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -3715,6 +3695,9 @@
 						<a href="interfaces/componentclass.html" class="tsd-kind-icon">Component<wbr>Class</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/componentdecorator.html" class="tsd-kind-icon">Component<wbr>Decorator</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
 						<a href="interfaces/componentelement.html" class="tsd-kind-icon">Component<wbr>Element</a>
 					</li>
 					<li class=" tsd-kind-interface">
@@ -3782,9 +3765,6 @@
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="modules.html#bootstrapwindow" class="tsd-kind-icon">Bootstrap<wbr>Window</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
-						<a href="modules.html#componentdecorator" class="tsd-kind-icon">Component<wbr>Decorator</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
 						<a href="modules.html#componentdef" class="tsd-kind-icon">Component<wbr>Def</a>

@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Factory | Wesib: Web Components Building Blocks</title>
+	<title>ComponentDecorator | Wesib: Web Components Building Blocks</title>
 	<meta name="description" content="Documentation for Wesib: Web Components Building Blocks">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,13 +55,10 @@
 					<a href="../modules.html">Wesib: Web Components Building Blocks</a>
 				</li>
 				<li>
-					<a href="../modules/componentdef.html">ComponentDef</a>
-				</li>
-				<li>
-					<a href="componentdef.factory.html">Factory</a>
+					<a href="componentdecorator.html">ComponentDecorator</a>
 				</li>
 			</ul>
-			<h1>Interface Factory&lt;T&gt;</h1>
+			<h1>Interface ComponentDecorator&lt;TClass&gt;</h1>
 		</div>
 	</div>
 </header>
@@ -71,18 +68,21 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Component definition factory.</p>
+						<p>Component decorator interface.</p>
 					</div>
+					<p>In addition to being a decorator for component class, it may also serve as <a href="../modules.html#componentdef">component definition</a>.
+					Thus it can be added as parameter to <a href="../modules.html#component">@Component</a> decorator, or used as class decorator by itself.</p>
+					<p>Constructed by <a href="../modules.html#component">Component</a> function.</p>
 				</div>
 			</section>
 			<section class="tsd-panel tsd-type-parameters">
 				<h3>Type parameters</h3>
 				<ul class="tsd-type-parameters">
 					<li>
-						<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span> = <span class="tsd-signature-type">any</span></h4>
+						<h4>TClass<span class="tsd-signature-symbol">: </span><a href="componentclass.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentClass</a> = <span class="tsd-signature-type">Class</span></h4>
 						<div class="tsd-comment tsd-typography">
 							<div class="lead">
-								<p>A type of component.</p>
+								<p>A type of decorated component class.</p>
 							</div>
 						</div>
 					</li>
@@ -92,12 +92,42 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">Factory</span>
+						<a href="componentdef.factory.html" class="tsd-signature-type" data-tsd-kind="Interface">Factory</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span>
 						<ul class="tsd-hierarchy">
 							<li>
-								<a href="componentdecorator.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentDecorator</a>
+								<span class="target">ComponentDecorator</span>
 							</li>
 						</ul>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel">
+				<h3 class="tsd-before-signature">Callable</h3>
+				<ul class="tsd-signatures tsd-kind-interface tsd-has-type-parameter">
+					<li class="tsd-signature tsd-kind-icon">Component<wbr>Decorator<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">TClass</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/component/component.decorator.ts#L17">wesib/wesib/src/component/component.decorator.ts:17</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Component decorator interface.</p>
+							</div>
+							<p>In addition to being a decorator for component class, it may also serve as <a href="../modules.html#componentdef">component definition</a>.
+							Thus it can be added as parameter to <a href="../modules.html#component">@Component</a> decorator, or used as class decorator by itself.</p>
+							<p>Constructed by <a href="../modules.html#component">Component</a> function.</p>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>type: <span class="tsd-signature-type">TClass</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">TClass</span></h4>
 					</li>
 				</ul>
 			</section>
@@ -108,7 +138,7 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="componentdef.factory.html#___componentdef__symbol_25087" class="tsd-kind-icon">__@<wbr>Component<wbr>Def__symbol@25087</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="componentdecorator.html#___componentdef__symbol_25087" class="tsd-kind-icon">__@<wbr>Component<wbr>Def__symbol@25087</a></li>
 							</ul>
 						</section>
 					</div>
@@ -116,15 +146,16 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
 					<a name="___componentdef__symbol_25087" class="tsd-anchor"></a>
 					<h3>__@<wbr>Component<wbr>Def__symbol@25087</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">__@<wbr>Component<wbr>Def__symbol@25087<span class="tsd-signature-symbol">(</span>componentType<span class="tsd-signature-symbol">: </span><a href="componentclass.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentClass</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules.html#componentdef" class="tsd-signature-type" data-tsd-kind="Variable">ComponentDef</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">__@<wbr>Component<wbr>Def__symbol@25087<span class="tsd-signature-symbol">(</span>componentType<span class="tsd-signature-symbol">: </span><a href="componentclass.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentClass</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules.html#componentdef" class="tsd-signature-type" data-tsd-kind="Variable">ComponentDef</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Inherited from <a href="componentdef.factory.html">Factory</a>.<a href="componentdef.factory.html#___componentdef__symbol_25087">__@ComponentDef__symbol@25087</a></p>
 								<ul>
 									<li>Defined in <a href="https://github.com/wesib/wesib/blob/545b3b4/src/component/component-def.ts#L119">wesib/wesib/src/component/component-def.ts:119</a></li>
 								</ul>
@@ -137,13 +168,13 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>componentType: <a href="componentclass.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentClass</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5>componentType: <a href="componentclass.html" class="tsd-signature-type" data-tsd-kind="Interface">ComponentClass</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>A component class constructor to build definition for.</p>
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="../modules.html#componentdef" class="tsd-signature-type" data-tsd-kind="Variable">ComponentDef</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="../modules.html#componentdef" class="tsd-signature-type" data-tsd-kind="Variable">ComponentDef</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TClass</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>Built component definition.</p>
 						</li>
 					</ul>
@@ -156,58 +187,22 @@
 					<li class=" ">
 						<a href="../modules.html">Exports</a>
 					</li>
-					<li class=" tsd-kind-namespace">
-						<a href="../modules/attributepath.html">Attribute<wbr>Path</a>
-					</li>
-					<li class=" tsd-kind-namespace">
-						<a href="../modules/attributes.html">Attributes</a>
-					</li>
-					<li class="current tsd-kind-namespace">
-						<a href="../modules/componentdef.html">Component<wbr>Def</a>
-					</li>
-					<li class=" tsd-kind-namespace">
-						<a href="../modules/componentproperty.html">Component<wbr>Property</a>
-					</li>
-					<li class=" tsd-kind-namespace">
-						<a href="../modules/dompropertypath.html">Dom<wbr>Property<wbr>Path</a>
-					</li>
-					<li class=" tsd-kind-namespace">
-						<a href="../modules/elementdef.html">Element<wbr>Def</a>
-					</li>
-					<li class=" tsd-kind-namespace">
-						<a href="../modules/featuredef.html">Feature<wbr>Def</a>
-					</li>
-					<li class=" tsd-kind-namespace">
-						<a href="../modules/renderdef.html">Render<wbr>Def</a>
-					</li>
-					<li class=" tsd-kind-namespace">
-						<a href="../modules/statepropertypath.html">State<wbr>Property<wbr>Path</a>
-					</li>
-					<li class=" tsd-kind-namespace">
-						<a href="../modules/stateupdater.html">State<wbr>Updater</a>
-					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-namespace tsd-has-type-parameter">
-						<a href="componentdef.factory.html" class="tsd-kind-icon">Factory</a>
+					<li class="current tsd-kind-interface tsd-has-type-parameter">
+						<a href="componentdecorator.html" class="tsd-kind-icon">Component<wbr>Decorator</a>
 						<ul>
-							<li class=" tsd-kind-method tsd-parent-kind-interface">
-								<a href="componentdef.factory.html#___componentdef__symbol_25087" class="tsd-kind-icon">__@<wbr>Component<wbr>Def__symbol@25087</a>
+							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+								<a href="componentdecorator.html#___componentdef__symbol_25087" class="tsd-kind-icon">__@<wbr>Component<wbr>Def__symbol@25087</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-interface tsd-parent-kind-namespace tsd-has-type-parameter">
-						<a href="componentdef.holder.html" class="tsd-kind-icon">Holder</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-namespace tsd-has-type-parameter">
-						<a href="componentdef.options.html" class="tsd-kind-icon">Options</a>
-					</li>
 				</ul>
 			</nav>
 		</div>
