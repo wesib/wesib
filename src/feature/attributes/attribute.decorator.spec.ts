@@ -29,18 +29,18 @@ describe('feature/attributes', () => {
         [ComponentContext__symbol] = valueProvider(mockContext);
 
         @Attribute()
-        testAttr!: string;
+        testURL!: string;
 
       }
 
       const component = new TestComponent();
 
-      mockElement.getAttribute.mockReturnValue('value1');
+      mockElement.getAttribute.mockReturnValue('/url1');
 
-      expect(component.testAttr).toBe('value1');
+      expect(component.testURL).toBe('/url1');
 
-      component.testAttr = 'value2';
-      expect(mockElement.setAttribute).toHaveBeenCalledWith('test-attr', 'value2');
+      component.testURL = '/url2';
+      expect(mockElement.setAttribute).toHaveBeenCalledWith('test-url', '/url2');
     });
     it('declares attribute property', () => {
 

@@ -1,3 +1,4 @@
+import { hyphenateDecapName } from '@frontmeans/httongue';
 import { StatePath } from '@proc7ts/fun-events';
 import { Class } from '@proc7ts/primitives';
 import { Component, ComponentDecorator } from '../../component';
@@ -5,7 +6,6 @@ import { ComponentClass } from '../../component/definition';
 import { AttributeUpdateReceiver } from './attribute-def';
 import { AttributeRegistry } from './attribute-registry';
 import { attributeStateUpdate } from './attribute-state-update.impl';
-import { property2attributeName } from './property2attribute-name';
 
 /**
  * Creates a component decorator declaring supported custom element's attributes.
@@ -27,7 +27,7 @@ export function Attributes<TClass extends ComponentClass = Class>(
       for (const item of items) {
         if (typeof item === 'string') {
 
-          const name = property2attributeName(item);
+          const name = hyphenateDecapName(item);
 
           registry.declareAttribute({
             name,
@@ -36,7 +36,7 @@ export function Attributes<TClass extends ComponentClass = Class>(
         } else {
           for (const [key, updateState] of Object.entries(item)) {
 
-            const name = property2attributeName(key);
+            const name = hyphenateDecapName(key);
 
             registry.declareAttribute({
               name,
