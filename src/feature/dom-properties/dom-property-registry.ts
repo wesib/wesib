@@ -1,7 +1,3 @@
-/**
- * @packageDocumentation
- * @module @wesib/wesib
- */
 import { ContextRef, SingleContextKey } from '@proc7ts/context-values';
 import { Class } from '@proc7ts/primitives';
 import { ComponentMount } from '../../component';

@@ -1,7 +1,3 @@
-/**
- * @packageDocumentation
- * @module @wesib/wesib
- */
 import { ContextKey, ContextKeyDefault } from '@proc7ts/context-values';
 import { BootstrapContext } from './bootstrap-context';
 

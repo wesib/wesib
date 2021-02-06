@@ -1,9 +1,4 @@
 /**
- * @packageDocumentation
- * @module @wesib/wesib
- */
-
-/**
  * Custom element attribute change callback signature.
  *
  * This function is called whenever a new attribute value assigned.

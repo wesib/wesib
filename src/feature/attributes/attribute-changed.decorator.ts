@@ -1,7 +1,3 @@
-/**
- * @packageDocumentation
- * @module @wesib/wesib
- */
 import { ComponentProperty, ComponentPropertyDecorator } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { AttributeDef } from './attribute-def';

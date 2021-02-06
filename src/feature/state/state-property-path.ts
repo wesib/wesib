@@ -1,8 +1,4 @@
 /**
- * @packageDocumentation
- * @module @wesib/wesib
- */
-/**
  * A path to sub-state containing component state properties.
  *
  * Thus a property state path is always something like `[StatePropertyPath__root, 'property-name']`.

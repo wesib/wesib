@@ -1,8 +1,4 @@
 /**
- * @packageDocumentation
- * @module @wesib/wesib
- */
-/**
  * A path to sub-state containing element an attributes.
  *
  * Thus, an attribute state path is always something like `[AttributePath__root, 'attribute-name']`.

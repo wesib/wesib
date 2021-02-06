@@ -1,7 +1,3 @@
-/**
- * @packageDocumentation
- * @module @wesib/wesib
- */
 import { Class, PropertyAccessorDescriptor, valueProvider } from '@proc7ts/primitives';
 import { decoratePropertyAccessor } from '../common';
 import { ComponentDef, ComponentDef__symbol } from './component-def';

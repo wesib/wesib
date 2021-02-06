@@ -1,7 +1,3 @@
-/**
- * @packageDocumentation
- * @module @wesib/wesib
- */
 import { ContextRef, SingleContextKey } from '@proc7ts/context-values';
 import { mergeFunctions } from '@proc7ts/primitives';
 import { BootstrapWindow } from '../../boot/globals';

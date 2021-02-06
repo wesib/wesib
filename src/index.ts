@@ -1,6 +1,6 @@
 /**
  * @packageDocumentation
- * @module @wesib/wesib
+ * @module Module @wesib/wesib
  */
 export * from './boot';
 export * from './boot/bootstrap';

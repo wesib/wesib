@@ -1,7 +1,3 @@
-/**
- * @packageDocumentation
- * @module @wesib/wesib
- */
 import { StatePath } from '@proc7ts/fun-events';
 import { DomPropertyPath } from './dom-property-path';
 

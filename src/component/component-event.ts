@@ -1,7 +1,3 @@
-/**
- * @packageDocumentation
- * @module @wesib/wesib
- */
 import { OnDomEvent } from '@frontmeans/dom-events';
 import { SingleContextRef } from '@proc7ts/context-values';
 import { ComponentContext } from './component-context';

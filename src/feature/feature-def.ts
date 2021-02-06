@@ -1,7 +1,3 @@
-/**
- * @packageDocumentation
- * @module @wesib/wesib
- */
 import { Class, elementOrArray, extendSetOfElements, setOfElements } from '@proc7ts/primitives';
 import { BootstrapSetup } from '../boot';
 import { MetaAccessor } from '../common';

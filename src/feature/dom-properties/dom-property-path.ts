@@ -1,8 +1,4 @@
 /**
- * @packageDocumentation
- * @module @wesib/wesib
- */
-/**
  * A path to sub-state containing DOM properties.
  *
  * Thus a property state path is always something like `[DomPropertyPath__root, 'property-name']`.

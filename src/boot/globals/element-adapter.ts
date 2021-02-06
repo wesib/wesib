@@ -1,7 +1,3 @@
-/**
- * @packageDocumentation
- * @module @wesib/wesib
- */
 import { html__naming, QualifiedName } from '@frontmeans/namespace-aliaser';
 import { ContextValueSlot } from '@proc7ts/context-values';
 import { contextDestroyed, ContextUpKey, ContextUpRef } from '@proc7ts/context-values/updatable';

@@ -1,7 +1,3 @@
-/**
- * @packageDocumentation
- * @module @wesib/wesib
- */
 import { FnContextKey } from '@proc7ts/context-values/updatable';
 import { filterArray, itsEach, overArray } from '@proc7ts/push-iterator';
 import { isElement } from '../../common';

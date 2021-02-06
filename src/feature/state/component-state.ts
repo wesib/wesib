@@ -1,7 +1,3 @@
-/**
- * @packageDocumentation
- * @module @wesib/wesib
- */
 import { ContextKey, ContextKey__symbol, ContextValueSlot, SimpleContextKey } from '@proc7ts/context-values';
 import { StateTracker } from '@proc7ts/fun-events';
 import { ComponentContext, StateUpdater } from '../../component';

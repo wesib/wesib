@@ -1,8 +1,4 @@
 /**
- * @packageDocumentation
- * @module @wesib/wesib
- */
-/**
  * An event related to element's shadow DOM.
  *
  * The following event types supported:

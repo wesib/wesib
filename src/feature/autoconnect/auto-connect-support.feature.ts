@@ -1,7 +1,3 @@
-/**
- * @packageDocumentation
- * @module @wesib/wesib
- */
 import { FeatureDef, FeatureDef__symbol } from '../feature-def';
 import { ConnectTracker } from './connect-tracker.impl';
 

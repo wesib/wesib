@@ -1,7 +1,3 @@
-/**
- * @packageDocumentation
- * @module @wesib/wesib
- */
 import { StatePath } from '@proc7ts/fun-events';
 import { AttributePath } from './attribute-path';
 

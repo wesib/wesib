@@ -1,8 +1,4 @@
 /**
- * @packageDocumentation
- * @module @wesib/wesib
- */
-/**
  * Component's element property descriptor.
  *
  * Descriptors used to {@link DomPropertyRegistry.declareDomProperty declare} element properties.

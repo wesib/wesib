@@ -1,7 +1,3 @@
-/**
- * @packageDocumentation
- * @module @wesib/wesib
- */
 import { StatePath } from '@proc7ts/fun-events';
 import { Class } from '@proc7ts/primitives';
 import { ComponentProperty, ComponentPropertyDecorator } from '../../component';

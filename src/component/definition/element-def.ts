@@ -1,7 +1,3 @@
-/**
- * @packageDocumentation
- * @module @wesib/wesib
- */
 import { QualifiedName } from '@frontmeans/namespace-aliaser';
 import { SingleContextKey, SingleContextRef } from '@proc7ts/context-values';
 import { Class } from '@proc7ts/primitives';

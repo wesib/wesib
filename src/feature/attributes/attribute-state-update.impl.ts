@@ -1,7 +1,3 @@
-/**
- * @packageDocumentation
- * @module @wesib/wesib
- */
 import { StatePath } from '@proc7ts/fun-events';
 import { noop } from '@proc7ts/primitives';
 import { ComponentContext } from '../../component';

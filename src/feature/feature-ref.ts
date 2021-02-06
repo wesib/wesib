@@ -1,7 +1,3 @@
-/**
- * @packageDocumentation
- * @module @wesib/wesib
- */
 import { AfterEvent, EventKeeper, OnEvent } from '@proc7ts/fun-events';
 import { Supply, SupplyPeer } from '@proc7ts/primitives';
 import { FeatureStatus } from './feature-status';

@@ -1,7 +1,3 @@
-/**
- * @packageDocumentation
- * @module @wesib/wesib
- */
 import { SingleContextKey, SingleContextRef } from '@proc7ts/context-values';
 import { ComponentContext__key } from './component-context.key.impl';
 

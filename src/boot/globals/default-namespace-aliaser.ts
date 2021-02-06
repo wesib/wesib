@@ -1,7 +1,3 @@
-/**
- * @packageDocumentation
- * @module @wesib/wesib
- */
 import { NamespaceAliaser } from '@frontmeans/namespace-aliaser';
 import { SingleContextKey, SingleContextRef } from '@proc7ts/context-values';
 

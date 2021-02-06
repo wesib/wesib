@@ -1,7 +1,3 @@
-/**
- * @packageDocumentation
- * @module @wesib/wesib
- */
 import { ContextKey, ContextKey__symbol, ContextValueSpec, SingleContextKey } from '@proc7ts/context-values';
 import { OnEvent } from '@proc7ts/fun-events';
 import { Class, Supply, SupplyPeer } from '@proc7ts/primitives';

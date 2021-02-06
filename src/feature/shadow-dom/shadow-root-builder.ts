@@ -1,7 +1,3 @@
-/**
- * @packageDocumentation
- * @module @wesib/wesib
- */
 import { FnContextKey, FnContextRef } from '@proc7ts/context-values/updatable';
 import { ComponentContext } from '../../component';
 import { ShadowContentDef } from './attach-shadow.decorator';

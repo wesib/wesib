@@ -1,8 +1,4 @@
 /**
- * @packageDocumentation
- * @module @wesib/wesib
- */
-/**
  * Converts property name to _dash-style_ attribute name.
  *
  * - Any ASCII uppercase letter A to Z is transformed into a dash followed by its lowercase counterpart;

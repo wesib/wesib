@@ -1,7 +1,3 @@
-/**
- * @packageDocumentation
- * @module @wesib/wesib
- */
 import { Class } from '@proc7ts/primitives';
 
 /**

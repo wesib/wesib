@@ -1,7 +1,3 @@
-/**
- * @packageDocumentation
- * @module @wesib/wesib
- */
 import { html__naming, isQualifiedName, QualifiedName } from '@frontmeans/namespace-aliaser';
 import { ContextKey, ContextKey__symbol, SingleContextKey } from '@proc7ts/context-values';
 import { Class, newPromiseResolver, PromiseResolver } from '@proc7ts/primitives';
