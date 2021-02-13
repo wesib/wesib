@@ -185,7 +185,7 @@
 <span style="color: #000000">  </span><span style="color: #795E26">setup</span><span style="color: #000000">(</span><span style="color: #001080">setup</span><span style="color: #000000">: </span><span style="color: #267F99">FeatureSetup</span><span style="color: #000000">) { </span>
 <span style="color: #000000">    </span><span style="color: #001080">setup</span><span style="color: #000000">.</span><span style="color: #795E26">provide</span><span style="color: #000000">({ </span>
 <span style="color: #000000">      </span><span style="color: #001080">a:</span><span style="color: #000000"> </span><span style="color: #001080">GlobalService</span><span style="color: #000000">,              </span><span style="color: #008000">// Provide a `GlobalService` available globally</span>
-<span style="color: #000000">      </span><span style="color: #795E26">as</span><span style="color: #001080">:</span><span style="color: #000000"> () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">GlobalService</span><span style="color: #000000">(), </span><span style="color: #008000">// in all IoC contexts</span>
+<span style="color: #000000">      </span><span style="color: #795E26">as</span><span style="color: #001080">:</span><span style="color: #000000"> () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">GlobalService</span><span style="color: #000000">(), </span><span style="color: #008000">// in all IoC contexts</span>
 <span style="color: #000000">    }); </span>
 <span style="color: #000000">    </span><span style="color: #001080">setup</span><span style="color: #000000">.</span><span style="color: #795E26">perDefinition</span><span style="color: #000000">({</span>
 <span style="color: #000000">      </span><span style="color: #001080">a:</span><span style="color: #000000"> </span><span style="color: #001080">DefinitionService</span><span style="color: #000000">,</span>
@@ -194,7 +194,7 @@
 <span style="color: #000000">        </span><span style="color: #008000">// Such service will be provided per component class</span>
 <span style="color: #000000">        </span><span style="color: #008000">// and will be available during custom element construction,</span>
 <span style="color: #000000">        </span><span style="color: #008000">// e.g. to `onDefinition()` listeners.</span>
-<span style="color: #000000">        </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">DefinitionService</span><span style="color: #000000">(</span><span style="color: #001080">definitionContext</span><span style="color: #000000">);</span>
+<span style="color: #000000">        </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">DefinitionService</span><span style="color: #000000">(</span><span style="color: #001080">definitionContext</span><span style="color: #000000">);</span>
 <span style="color: #000000">      },</span>
 <span style="color: #000000">    });</span>
 <span style="color: #000000">    </span><span style="color: #001080">setup</span><span style="color: #000000">.</span><span style="color: #795E26">perComponent</span><span style="color: #000000">({</span>
@@ -203,7 +203,7 @@
 <span style="color: #000000">        </span><span style="color: #008000">// Provide a `MyService` available to components.</span>
 <span style="color: #000000">        </span><span style="color: #008000">// Such service will be provided per component instance</span>
 <span style="color: #000000">        </span><span style="color: #008000">// and will be available to component instance and `onComponent()` listeners.</span>
-<span style="color: #000000">        </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">MyService</span><span style="color: #000000">(</span><span style="color: #001080">componentContext</span><span style="color: #000000">.</span><span style="color: #001080">component</span><span style="color: #000000">);</span>
+<span style="color: #000000">        </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">MyService</span><span style="color: #000000">(</span><span style="color: #001080">componentContext</span><span style="color: #000000">.</span><span style="color: #001080">component</span><span style="color: #000000">);</span>
 <span style="color: #000000">      },</span>
 <span style="color: #000000">    });</span>
 <span style="color: #000000">  },</span>
