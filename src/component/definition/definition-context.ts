@@ -112,15 +112,14 @@ export abstract class DefinitionContext<T extends object = any> extends ContextV
   /**
    * Provides a value available in the context of each component of the defined component type.
    *
-   * @typeParam TDeps - A type of dependencies.
    * @typeParam TSrc - The type of context value sources.
-   * @typeParam TSeed - Value seed type.
+   * @typeParam TDeps - A type of dependencies.
    * @param spec - Component context value specifier.
    *
    * @returns A value supply that removes the given context value specifier once cut off.
    */
-  abstract perComponent<TDeps extends any[], TSrc, TSeed>(
-      spec: ContextValueSpec<ComponentContext<T>, any, TDeps, TSrc, TSeed>,
+  abstract perComponent<TSrc, TDeps extends any[]>(
+      spec: ContextValueSpec<ComponentContext<T>, unknown, TSrc, TDeps>,
   ): Supply;
 
 }

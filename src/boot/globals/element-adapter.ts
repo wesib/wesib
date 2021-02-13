@@ -1,7 +1,7 @@
 import { html__naming, QualifiedName } from '@frontmeans/namespace-aliaser';
 import { ContextValueSlot } from '@proc7ts/context-values';
 import { contextDestroyed, ContextUpKey, ContextUpRef } from '@proc7ts/context-values/updatable';
-import { AfterEvent, afterThe, digAfter, EventKeeper } from '@proc7ts/fun-events';
+import { AfterEvent, afterThe, digAfter } from '@proc7ts/fun-events';
 import { ComponentContext, ComponentElement, ComponentSlot__symbol } from '../../component';
 import { DefaultNamespaceAliaser } from './default-namespace-aliaser';
 
@@ -106,7 +106,7 @@ class ElementAdapterKey extends ContextUpKey<ElementAdapter, ComponentBinder> {
   grow(
       slot: ContextValueSlot<
           ElementAdapter,
-          EventKeeper<ComponentBinder[]> | ComponentBinder,
+          ContextUpKey.Source<ComponentBinder>,
           AfterEvent<ComponentBinder[]>>,
   ): void {
 

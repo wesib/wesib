@@ -1,7 +1,7 @@
 import { newRenderSchedule, RenderScheduler } from '@frontmeans/render-scheduler';
 import { ContextValues, ContextValueSlot } from '@proc7ts/context-values';
 import { contextDestroyed, ContextUpKey, ContextUpRef } from '@proc7ts/context-values/updatable';
-import { AfterEvent, afterThe, digAfter, EventKeeper } from '@proc7ts/fun-events';
+import { AfterEvent, afterThe, digAfter } from '@proc7ts/fun-events';
 import { BootstrapWindow } from './bootstrap-window';
 
 /**
@@ -38,7 +38,7 @@ class DefaultRenderSchedulerKey extends ContextUpKey<DefaultRenderScheduler, Ren
   grow(
       slot: ContextValueSlot<
           DefaultRenderScheduler,
-          EventKeeper<RenderScheduler[]> | RenderScheduler,
+          ContextUpKey.Source<RenderScheduler>,
           AfterEvent<RenderScheduler[]>>,
   ): void {
 
