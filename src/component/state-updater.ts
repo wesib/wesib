@@ -1,6 +1,6 @@
 import { ContextValueSlot } from '@proc7ts/context-values';
 import { ContextUpKey, ContextUpRef } from '@proc7ts/context-values/updatable';
-import { AfterEvent, afterThe, digAfter, EventKeeper, statePath, StatePath } from '@proc7ts/fun-events';
+import { AfterEvent, afterThe, digAfter, statePath, StatePath } from '@proc7ts/fun-events';
 import { mergeFunctions, noop } from '@proc7ts/primitives';
 
 /**
@@ -73,7 +73,7 @@ class StateUpdaterKey extends ContextUpKey<StateUpdater, StateUpdater.Normalized
   grow(
       slot: ContextValueSlot<
           StateUpdater,
-          EventKeeper<StateUpdater.Normalized[]> | StateUpdater.Normalized,
+          ContextUpKey.Source<StateUpdater.Normalized>,
           AfterEvent<StateUpdater.Normalized[]>>,
   ): void {
 

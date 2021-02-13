@@ -90,8 +90,8 @@ export class DefinitionContext$<T extends object> extends DefinitionContext<T> {
     return mount;
   }
 
-  perComponent<TDeps extends any[], TSrc, TSeed>(
-      spec: ContextValueSpec<ComponentContext<T>, any, TDeps, TSrc, TSeed>,
+  perComponent<TSrc, TDeps extends any[]>(
+      spec: ContextValueSpec<ComponentContext<T>, unknown, TSrc, TDeps>,
   ): Supply {
     return this._perComponentRegistry.provide(spec);
   }

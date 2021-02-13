@@ -69,23 +69,22 @@ export abstract class FeatureContext
    * Note that this happens when bootstrap context already exists. To provide a value before bootstrap context created
    * a {@link BootstrapSetup.provide} method can be used.
    *
-   * @typeParam TDeps - Dependencies tuple type.
    * @typeParam TSrc - Source value type.
-   * @typeParam TSeed - Value seed type.
+   * @typeParam TDeps - Dependencies tuple type.
    * @param spec - Context value specifier.
    *
    * @returns A value supply that removes the given context value specifier once cut off.
    */
-  abstract provide<TDeps extends any[], TSrc, TSeed>(
-      spec: ContextValueSpec<BootstrapContext, any, TDeps, TSrc, TSeed>,
+  abstract provide<TSrc, TDeps extends any[]>(
+      spec: ContextValueSpec<BootstrapContext, unknown, TSrc, TDeps>,
   ): Supply;
 
-  abstract perDefinition<TDeps extends any[], TSrc, TSeed>(
-      spec: ContextValueSpec<DefinitionContext, any, TDeps, TSrc, TSeed>,
+  abstract perDefinition<TSrc, TDeps extends any[]>(
+      spec: ContextValueSpec<DefinitionContext, unknown, TSrc, TDeps>,
   ): Supply;
 
-  abstract perComponent<TDeps extends any[], TSrc, TSeed>(
-      spec: ContextValueSpec<ComponentContext, any, TDeps, TSrc, TSeed>,
+  abstract perComponent<TSrc, TDeps extends any[]>(
+      spec: ContextValueSpec<ComponentContext, unknown, TSrc, TDeps>,
   ): Supply;
 
   abstract setupDefinition<T extends object>(componentType: ComponentClass<T>): OnEvent<[DefinitionSetup]>;

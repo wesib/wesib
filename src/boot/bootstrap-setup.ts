@@ -48,43 +48,40 @@ export interface BootstrapSetup {
   /**
    * Provides bootstrap context value before context creation.
    *
-   * @typeParam TDeps - Dependencies tuple type.
    * @typeParam TSrc - Source value type.
-   * @typeParam TSeed - Value seed type.
+   * @typeParam TDeps - Dependencies tuple type.
    * @param spec - Context value specifier.
    *
    * @returns A value supply that removes the given context value specifier once cut off.
    */
-  provide<TDeps extends any[], TSrc, TSeed>(
-      spec: ContextValueSpec<BootstrapContext, any, TDeps, TSrc, TSeed>,
+  provide<TSrc, TDeps extends any[]>(
+      spec: ContextValueSpec<BootstrapContext, unknown, TSrc, TDeps>,
   ): Supply;
 
   /**
    * Provides a value available in each component definition context.
    *
-   * @typeParam TDeps - A type of dependencies.
    * @typeParam TSrc - The type of context value sources.
-   * @typeParam TSeed - Value seed type.
+   * @typeParam TDeps - A type of dependencies.
    * @param spec - Component definition context value specifier.
    *
    * @returns A value supply that removes the given context value specifier once cut off.
    */
-  perDefinition<TDeps extends any[], TSrc, TSeed>(
-      spec: ContextValueSpec<DefinitionContext, any, TDeps, TSrc, TSeed>,
+  perDefinition<TSrc, TDeps extends any[]>(
+      spec: ContextValueSpec<DefinitionContext, unknown, TSrc, TDeps>,
   ): Supply;
 
   /**
    * Provides a value available in each component context.
    *
-   * @typeParam TDeps - A type of dependencies.
    * @typeParam TSrc - The type of context value sources.
-   * @typeParam TSeed - Value seed type.
+   * @typeParam TDeps - A type of dependencies.
    * @param spec - Component context value specifier.
    *
    * @returns A value supply that removes the given context value specifier once cut off.
    */
-  perComponent<TDeps extends any[], TSrc, TSeed>(
-      spec: ContextValueSpec<ComponentContext, any, TDeps, TSrc, TSeed>,
+  perComponent<TSrc, TDeps extends any[]>(
+      spec: ContextValueSpec<ComponentContext, unknown, TSrc, TDeps>,
   ): Supply;
 
   /**

@@ -60,20 +60,20 @@ export class FeatureContext$ extends FeatureContext {
         || (this._onComponent = this._setup.get(ElementBuilder).components.on.do(supplyOn(this)));
   }
 
-  provide<TDeps extends any[], TSrc, TSeed>(
-      spec: ContextValueSpec<BootstrapContext, any, TDeps, TSrc, TSeed>,
+  provide<TSrc, TDeps extends any[]>(
+      spec: ContextValueSpec<BootstrapContext, unknown, TSrc, TDeps>,
   ): Supply {
     return this._bsContext.get(BootstrapContextRegistry).provide(spec).needs(this);
   }
 
-  perDefinition<TDeps extends any[], TSrc, TSeed>(
-      spec: ContextValueSpec<DefinitionContext, any, TDeps, TSrc, TSeed>,
+  perDefinition<TSrc, TDeps extends any[]>(
+      spec: ContextValueSpec<DefinitionContext, unknown, TSrc, TDeps>,
   ): Supply {
     return this._bsContext.get(PerDefinitionRegistry).provide(spec).needs(this);
   }
 
-  perComponent<TDeps extends any[], TSrc, TSeed>(
-      spec: ContextValueSpec<ComponentContext, any, TDeps, TSrc, TSeed>,
+  perComponent<TSrc, TDeps extends any[]>(
+      spec: ContextValueSpec<ComponentContext, unknown, TSrc, TDeps>,
   ): Supply {
     return this._bsContext.get(PerComponentRegistry).provide(spec).needs(this);
   }
