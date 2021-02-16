@@ -11,16 +11,18 @@ export abstract class MetaAccessor<TMeta, TSrc = TMeta> {
     this.symbol = symbol;
   }
 
-  own(type: Class): TMeta | undefined {
-    // eslint-disable-next-line no-prototype-builtins,@typescript-eslint/no-unsafe-member-access
-    return type.hasOwnProperty(this.symbol) ? (type as any)[this.symbol] as TMeta : undefined;
+  own(type: Class, receiver?: Class): TMeta | undefined {
+    // eslint-disable-next-line no-prototype-builtins
+    return type.hasOwnProperty(this.symbol)
+        ? Reflect.get(type, this.symbol, receiver)
+        : undefined;
   }
 
-  of(type: Class): TMeta | undefined {
+  of(type: Class, receiver: Class = type): TMeta | undefined {
 
-    const ownDef: TMeta | undefined = this.own(type);
+    const ownDef: TMeta | undefined = this.own(type, receiver);
     const superType = superClassOf(type);
-    const superDef = superType && this.of(superType);
+    const superDef = superType && this.of(superType, receiver);
 
     return ownDef ? (superDef ? this.merge([superDef, ownDef]) : ownDef) : superDef;
   }
