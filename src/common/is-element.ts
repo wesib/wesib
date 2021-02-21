@@ -1,3 +1,5 @@
+import { ComponentElement } from '../component';
+
 /**
  * Checks whether the given DOM node is element.
  *
@@ -6,6 +8,6 @@
  *
  * @returns `true` is `node` is element, or `false` otherwise.
  */
-export function isElement(node: Node): node is Element {
+export function isElement(node: Node): node is ComponentElement {
   return node.nodeType === Node.ELEMENT_NODE;
 }
