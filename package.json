@@ -31,7 +31,7 @@
     "@proc7ts/fun-events": "^10.2.0"
   },
   "dependencies": {
-    "@frontmeans/dom-events": "^1.0.0",
+    "@frontmeans/dom-events": "^1.0.1",
     "@frontmeans/httongue": "^2.2.0",
     "@frontmeans/render-scheduler": "^1.5.0",
     "@proc7ts/primitives": "^1.8.0",
