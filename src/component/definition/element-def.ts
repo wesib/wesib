@@ -1,7 +1,7 @@
-import { QualifiedName } from '@frontmeans/namespace-aliaser';
+import { html__naming, QualifiedName } from '@frontmeans/namespace-aliaser';
 import { SingleContextKey, SingleContextRef } from '@proc7ts/context-values';
 import { Class } from '@proc7ts/primitives';
-import { BootstrapWindow } from '../../boot/globals';
+import { BootstrapWindow, DefaultNamespaceAliaser } from '../../boot/globals';
 import { ComponentDef } from '../component-def';
 import { DefinitionContext__key } from './definition.context.key.impl';
 
@@ -21,7 +21,14 @@ export interface ElementDef {
    * When omitted an anonymous component will be registered. Such component is not bound to custom element, but it
    * still can be mounted.
    */
-  readonly name?: QualifiedName;
+  readonly name: QualifiedName | undefined;
+
+  /**
+   * Resolved custom HTML element's tag name, if any.
+   *
+   * In contrast to {@link name} this one is always a string.
+   */
+  readonly tagName: string | undefined;
 
   /**
    * Existing element to extend by custom one.
@@ -45,6 +52,7 @@ export const ElementDef: SingleContextRef<ElementDef> = (/*#__PURE__*/ new Singl
 
         const componentType = values.get(DefinitionContext__key).componentType;
         const { name, extend } = ComponentDef.of(componentType);
+        let tagName: string | undefined;
 
         const elementExtend: ElementDef.Extend = {
           get type() {
@@ -58,6 +66,9 @@ export const ElementDef: SingleContextRef<ElementDef> = (/*#__PURE__*/ new Singl
         return {
           get name() {
             return name;
+          },
+          get tagName() {
+            return tagName || (name && (tagName = html__naming.name(name, values.get(DefaultNamespaceAliaser))));
           },
           get extend() {
             return elementExtend;

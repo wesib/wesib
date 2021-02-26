@@ -49,6 +49,7 @@ describe('component', () => {
         static [DefinitionContext__symbol]: Partial<DefinitionContext> = {
           elementDef: {
             name: 'test-component',
+            tagName: 'test-component',
             extend: {
               get type() {
                 return elementType;
@@ -76,6 +77,7 @@ describe('component', () => {
           static [DefinitionContext__symbol]: Partial<DefinitionContext> = {
             elementDef: {
               name: ['other', ns],
+              tagName: 'test-other',
               extend: {
                 get type() {
                   return elementType;
@@ -101,6 +103,8 @@ describe('component', () => {
 
           static [DefinitionContext__symbol]: Partial<DefinitionContext> = {
             elementDef: {
+              name: undefined,
+              tagName: undefined,
               extend: {
                 get type() {
                   return elementType;
@@ -121,6 +125,8 @@ describe('component', () => {
 
           static [DefinitionContext__symbol]: Partial<DefinitionContext> = {
             elementDef: {
+              name: undefined,
+              tagName: undefined,
               extend: {
                 type: BaseElement,
               },
@@ -132,6 +138,7 @@ describe('component', () => {
         (TestComponent as any)[DefinitionContext__symbol] = {
           elementDef: {
             name: 'test-component',
+            tagName: 'test-component',
             extend: {
               type: BaseElement,
             },
@@ -150,6 +157,7 @@ describe('component', () => {
         (TestComponent as any)[DefinitionContext__symbol] = {
           elementDef: {
             name: 'test-component',
+            tagName: 'test-component',
             extend: {
               name: 'input',
               type: BaseElement,
@@ -187,6 +195,7 @@ describe('component', () => {
           static [DefinitionContext__symbol]: Partial<DefinitionContext> = {
             elementDef: {
               name: ['other', ns],
+              tagName: 'test-other',
               extend: {
                 get type() {
                   return elementType;
@@ -231,6 +240,8 @@ describe('component', () => {
 
           static [DefinitionContext__symbol]: Partial<DefinitionContext> = {
             elementDef: {
+              name: undefined,
+              tagName: undefined,
               extend: {
                 get type() {
                   return elementType;

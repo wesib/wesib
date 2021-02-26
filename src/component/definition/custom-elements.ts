@@ -72,29 +72,29 @@ function createCustomElements(bsContext: BootstrapContext): CustomElements {
 
   class CustomElements$ extends CustomElements {
 
-    define(componentTypeOrName: ComponentClass | string, elementType: Class): void {
+    define(componentTypeOrName: ComponentClass | QualifiedName, elementType: Class): void {
       if (isQualifiedName(componentTypeOrName)) {
         customElements.define(html__naming.name(componentTypeOrName, nsAlias), elementType);
         return;
       }
 
       const defContext = definitionContextOf(componentTypeOrName);
-      const { name, extend } = defContext.elementDef;
+      const { tagName, extend } = defContext.elementDef;
 
-      if (!name) {
+      if (!tagName) {
         componentResolver(componentTypeOrName).resolve(undefined);
         return; // Anonymous component.
       }
       if (extend && extend.name) {
         customElements.define(
-            html__naming.name(name, nsAlias),
+            tagName,
             elementType,
             {
               extends: extend.name,
             },
         );
       } else {
-        customElements.define(html__naming.name(name, nsAlias), elementType);
+        customElements.define(tagName, elementType);
       }
     }
 

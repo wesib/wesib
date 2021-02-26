@@ -1,3 +1,4 @@
+import { newNamespaceAliaser } from '@frontmeans/namespace-aliaser';
 import { ContextKey, SingleContextKey } from '@proc7ts/context-values';
 import { Class } from '@proc7ts/primitives';
 import {
@@ -11,6 +12,7 @@ import {
 import { ComponentClass, DefinitionContext } from '../../component/definition';
 import { MockElement } from '../../spec/test-element';
 import { BootstrapContext } from '../bootstrap-context';
+import { DefaultNamespaceAliaser } from '../globals';
 import { BootstrapContextRegistry } from './bootstrap-context-registry.impl';
 import { ElementBuilder } from './element-builder.impl';
 import Mock = jest.Mock;
@@ -28,6 +30,7 @@ describe('boot', () => {
         get: bsContextRegistry.values.get,
       } as any;
       bsContextRegistry.provide({ a: BootstrapContext, is: mockBootstrapContext });
+      bsContextRegistry.provide({ a: DefaultNamespaceAliaser, by: newNamespaceAliaser });
     });
 
     let builder: ElementBuilder;
@@ -64,6 +67,7 @@ describe('boot', () => {
         expect(defContext.elementType.prototype).toBeInstanceOf(HTMLElement);
         expect(defContext.elementDef).toEqual({
           name: 'test-component',
+          tagName: 'test-component',
           extend: {
             type: HTMLElement,
           },
@@ -82,6 +86,7 @@ describe('boot', () => {
         expect(defContext.elementType.prototype).toBeInstanceOf(HTMLInputElement);
         expect(defContext.elementDef).toEqual({
           name: 'test-component',
+          tagName: 'test-component',
           extend: {
             name: 'input',
             type: HTMLInputElement,
