@@ -49,13 +49,15 @@ describe('feature/attributes', () => {
 
         [ComponentContext__symbol] = valueProvider(mockContext);
 
+        _testAttr?: string | null;
+
         @Attribute()
-        get testAttr(): string | null {
-          return '';
+        get testAttr(): string | null | undefined {
+          return this._testAttr;
         }
 
-        set testAttr(_value: string | null) {
-          /* do not set */
+        set testAttr(value: string | null | undefined) {
+          this._testAttr = value;
         }
 
       }
@@ -68,9 +70,11 @@ describe('feature/attributes', () => {
 
       component.testAttr = 'value2';
       expect(mockElement.setAttribute).toHaveBeenCalledWith('test-attr', 'value2');
+      expect(component._testAttr).toBe('value2');
 
       component.testAttr = null;
       expect(mockElement.removeAttribute).toHaveBeenCalledWith('test-attr');
+      expect(component._testAttr).toBeNull();
     });
   });
 });

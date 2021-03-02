@@ -54,6 +54,8 @@ describe('feature/attributes', () => {
       })
       class TestComponent {
 
+        _attr3!: string;
+
         constructor(ctx: ComponentContext) {
           context = ctx;
           component = this;
@@ -66,7 +68,13 @@ describe('feature/attributes', () => {
         attr2 = attr2ChangedSpy;
 
         @Attribute()
-        attr3!: string;
+        get attr3(): string {
+          return this._attr3;
+        }
+
+        set attr3(value: string) {
+          this._attr3 = value;
+        }
 
       }
 
@@ -121,6 +129,7 @@ describe('feature/attributes', () => {
 
         element.setAttribute('attr3', value);
 
+        expect(context.component._attr3).toBe(value);
         expect(context.component.attr3).toBe(value);
       });
       it('updates attribute value', () => {

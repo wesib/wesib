@@ -8,7 +8,7 @@ import { AttributeRegistry } from './attribute-registry';
  * Creates a decorator for component's property that accesses custom element's attribute.
  *
  * The decorated property accesses corresponding attribute on read, and updates it on setting. `null` value corresponds
- * to absent attribute. Setting to `null` removes corresponding attribute.
+ * to absent attribute. Setting to `null` or `undefined` removes corresponding attribute.
  *
  * @category Feature
  * @typeParam TClass - A type of decorated component class.
@@ -18,16 +18,21 @@ import { AttributeRegistry } from './attribute-registry';
  */
 export function Attribute<TClass extends ComponentClass>(
     def?: AttributeDef<InstanceType<TClass>> | string,
-): ComponentPropertyDecorator<string | null, TClass> {
-  return ComponentProperty(({ type, key }) => {
+): ComponentPropertyDecorator<string | null | undefined, TClass> {
+  return ComponentProperty(({ type, key, set: setValue }) => {
 
-    const descriptor = parseAttributeDescriptor(type.prototype, key, def);
-    const { name } = descriptor;
+    const { name, change } = parseAttributeDescriptor(type.prototype, key, def);
 
     return {
       componentDef: {
         define(defContext) {
-          defContext.get(AttributeRegistry).declareAttribute(descriptor);
+          defContext.get(AttributeRegistry).declareAttribute({
+            name,
+            change(component, newValue, oldValue) {
+              setValue(component, newValue);
+              change(component, newValue, oldValue);
+            },
+          });
         },
       },
       get(component: InstanceType<TClass>): string | null {
@@ -42,6 +47,8 @@ export function Attribute<TClass extends ComponentClass>(
         } else {
           element.removeAttribute(name);
         }
+
+        setValue(component, newValue);
       },
     };
   });
