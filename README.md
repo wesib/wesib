@@ -3,7 +3,6 @@ Wesib: Web Components Building Blocks
 
 [![NPM][npm-image]][npm-url]
 [![Build Status][build-status-img]][build-status-link]
-[![codecov][codecov-image]][codecov-url]
 [![GitHub Project][github-image]][github-url]
 [![API Documentation][api-docs-image]][api-docs-url]
 
@@ -29,8 +28,6 @@ The examples can be found in [@wesib/examples].
 [npm-url]: https://www.npmjs.com/package/@wesib/wesib
 [build-status-img]: https://github.com/wesib/wesib/workflows/Build/badge.svg
 [build-status-link]: https://github.com/wesib/wesib/actions?query=workflow%3ABuild
-[codecov-image]: https://codecov.io/gh/wesib/wesib/branch/master/graph/badge.svg
-[codecov-url]: https://codecov.io/gh/wesib/wesib
 [github-image]: https://img.shields.io/static/v1?logo=github&label=GitHub&message=project&color=informational
 [github-url]: https://github.com/wesib/wesib
 [api-docs-image]: https://img.shields.io/static/v1?logo=typescript&label=API&message=docs&color=informational
