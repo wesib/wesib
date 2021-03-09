@@ -39,7 +39,7 @@ function newComponentConstructor<T extends object>(componentType: ComponentType<
   componentType.prototype[ComponentContext__symbol] = function (
       this: ComponentInstance,
   ): ComponentContext<T> {
-    return this[context__symbol] || (this[context__symbol] = defaultContext!);
+    return this[context__symbol] || (this[context__symbol] = defaultContext)!;
   };
 
   return function (this: ComponentType<T>, context: ComponentContext<T>): T {
