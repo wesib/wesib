@@ -1,7 +1,8 @@
 import { ContextRegistry, ContextValueSpec } from '@proc7ts/context-values';
 import { ContextModule } from '@proc7ts/context-values/updatable';
 import { onceOn, OnEvent, supplyOn, valueOn_ } from '@proc7ts/fun-events';
-import { Class, Supply } from '@proc7ts/primitives';
+import { Class } from '@proc7ts/primitives';
+import { Supply } from '@proc7ts/supply';
 import { BootstrapContext } from '../../boot';
 import {
   BootstrapContextRegistry,

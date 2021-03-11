@@ -1,7 +1,7 @@
 import { OnDomEvent } from '@frontmeans/dom-events';
 import { ContextKey, ContextKey__symbol, ContextValues } from '@proc7ts/context-values';
 import { AfterEvent, OnEvent, StatePath } from '@proc7ts/fun-events';
-import { Supply, SupplyPeer } from '@proc7ts/primitives';
+import { Supply, SupplyPeer } from '@proc7ts/supply';
 import { ComponentContext__key } from './component-context.key.impl';
 import { ComponentEventDispatcher__key } from './component-event.key.impl';
 import { ComponentMount } from './component-mount';

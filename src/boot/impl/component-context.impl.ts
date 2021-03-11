@@ -1,5 +1,6 @@
 import { AfterEvent, onceOn, OnEvent } from '@proc7ts/fun-events';
-import { Supply, valueProvider } from '@proc7ts/primitives';
+import { valueProvider } from '@proc7ts/primitives';
+import { Supply } from '@proc7ts/supply';
 import {
   ComponentContext,
   ComponentContext__symbol,

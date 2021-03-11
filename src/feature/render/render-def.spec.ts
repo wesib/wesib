@@ -1,5 +1,5 @@
 import { ContextRegistry } from '@proc7ts/context-values';
-import { Supply } from '@proc7ts/primitives';
+import { Supply } from '@proc7ts/supply';
 import { ComponentContext } from '../../component';
 import { ComponentState } from '../state';
 import { RenderDef, RenderPath__root } from './render-def';

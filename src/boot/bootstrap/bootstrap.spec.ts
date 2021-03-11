@@ -1,6 +1,7 @@
 import { SingleContextUpKey } from '@proc7ts/context-values/updatable';
 import { afterSupplied, afterThe } from '@proc7ts/fun-events';
-import { Class, noop, Supply } from '@proc7ts/primitives';
+import { Class, noop } from '@proc7ts/primitives';
+import { Supply } from '@proc7ts/supply';
 import { Component, ComponentContext, ComponentMount } from '../../component';
 import { CustomElements, DefinitionContext } from '../../component/definition';
 import { Feature, FeatureContext, FeatureDef, FeatureRef, FeatureStatus } from '../../feature';
