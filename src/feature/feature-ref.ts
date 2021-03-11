@@ -1,5 +1,5 @@
 import { AfterEvent, EventKeeper, OnEvent } from '@proc7ts/fun-events';
-import { Supply, SupplyPeer } from '@proc7ts/primitives';
+import { Supply, SupplyPeer } from '@proc7ts/supply';
 import { FeatureStatus } from './feature-status';
 
 /**

@@ -1,7 +1,7 @@
 import { DomEventDispatcher } from '@frontmeans/dom-events';
 import { ContextKey, ContextKey__symbol, SingleContextKey } from '@proc7ts/context-values';
-import { neverSupply } from '@proc7ts/primitives';
 import { filterArray, itsEach } from '@proc7ts/push-iterator';
+import { neverSupply } from '@proc7ts/supply';
 import { BootstrapContext } from '../../boot';
 import { BootstrapRoot, ElementObserver } from '../../boot/globals';
 import { isElement } from '../../common';

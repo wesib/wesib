@@ -1,6 +1,7 @@
 import { ContextKey, ContextKey__symbol, ContextValues } from '@proc7ts/context-values';
 import { OnEvent } from '@proc7ts/fun-events';
-import { Class, SupplyPeer } from '@proc7ts/primitives';
+import { Class } from '@proc7ts/primitives';
+import { SupplyPeer } from '@proc7ts/supply';
 import { ComponentClass, DefinitionContext } from '../component/definition';
 import { FeatureRef } from '../feature';
 import { BootstrapContext__key } from './bootstrap-context.key.impl';

@@ -1,6 +1,7 @@
 import { ContextRegistry } from '@proc7ts/context-values';
 import { StatePath, StateTracker, ValueTracker } from '@proc7ts/fun-events';
 import { noop } from '@proc7ts/primitives';
+import { Supply } from '@proc7ts/supply';
 import { ComponentContext } from '../../component';
 import { ComponentState } from '../state';
 import { domPropertyPathTo } from './dom-property-path';
@@ -33,6 +34,10 @@ describe('feature/dom-properties', () => {
 
     beforeEach(() => {
       tracker = trackDomProperty(context, 'test');
+    });
+
+    afterEach(() => {
+      Supply.onUnexpectedAbort();
     });
 
     describe('it', () => {
@@ -94,6 +99,7 @@ describe('feature/dom-properties', () => {
         expect(readOff).toHaveBeenCalledWith(reason);
       });
       it('rejects new property updates receivers', () => {
+        Supply.onUnexpectedAbort(noop);
 
         const reason = 'test reason';
 

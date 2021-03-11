@@ -1,6 +1,7 @@
 import { newNamespaceAliaser } from '@frontmeans/namespace-aliaser';
 import { ContextKey, SingleContextKey } from '@proc7ts/context-values';
-import { Class } from '@proc7ts/primitives';
+import { Class, noop } from '@proc7ts/primitives';
+import { Supply } from '@proc7ts/supply';
 import {
   ComponentContext,
   ComponentDef,
@@ -54,6 +55,10 @@ describe('boot', () => {
         }
 
       };
+    });
+
+    afterEach(() => {
+      Supply.onUnexpectedAbort();
     });
 
     describe('buildElement', () => {
@@ -702,6 +707,7 @@ describe('boot', () => {
           expect(connected).not.toHaveBeenCalled();
         });
         it('cuts off component supply when destroyed', () => {
+          Supply.onUnexpectedAbort(noop);
           doMount();
 
           const disconnected = jest.fn();
@@ -750,6 +756,7 @@ describe('boot', () => {
         expect(mount.connected).toBe(true);
       });
       it('disconnects element', () => {
+        Supply.onUnexpectedAbort(noop);
 
         const disconnected = jest.fn();
 

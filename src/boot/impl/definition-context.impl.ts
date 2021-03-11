@@ -1,6 +1,7 @@
 import { ContextValues, ContextValueSpec } from '@proc7ts/context-values';
 import { mapOn_, onceOn, OnEvent, trackValue, translateOn, ValueTracker } from '@proc7ts/fun-events';
-import { Class, Supply, valueProvider } from '@proc7ts/primitives';
+import { Class, valueProvider } from '@proc7ts/primitives';
+import { Supply } from '@proc7ts/supply';
 import { ComponentContext, ComponentDef, ComponentElement, ComponentMount, ComponentSlot } from '../../component';
 import { DefinitionContext, DefinitionSetup } from '../../component/definition';
 import { BootstrapContext } from '../bootstrap-context';

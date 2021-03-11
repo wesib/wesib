@@ -1,6 +1,6 @@
 import { ContextValueSpec } from '@proc7ts/context-values';
 import { OnEvent } from '@proc7ts/fun-events';
-import { Supply } from '@proc7ts/primitives';
+import { Supply } from '@proc7ts/supply';
 import { ComponentContext } from '../component-context';
 import { ComponentClass } from './component-class';
 import { DefinitionContext } from './definition-context';

@@ -1,5 +1,6 @@
 import { immediateRenderScheduler, RenderExecution } from '@frontmeans/render-scheduler';
-import { noop, Supply } from '@proc7ts/primitives';
+import { noop } from '@proc7ts/primitives';
+import { Supply } from '@proc7ts/supply';
 import { DefaultRenderScheduler } from '../../boot/globals';
 import { ComponentContext } from '../../component';
 import { ElementRenderCtl } from './element-render-ctl';

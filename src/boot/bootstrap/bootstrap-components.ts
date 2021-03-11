@@ -1,7 +1,8 @@
 import { newNamespaceAliaser } from '@frontmeans/namespace-aliaser';
 import { ContextModule } from '@proc7ts/context-values/updatable';
 import { AfterEvent, AfterEvent__symbol, onceOn, OnEvent, trackValue, valueOn, valueOn_ } from '@proc7ts/fun-events';
-import { Class, SupplyPeer, valueProvider } from '@proc7ts/primitives';
+import { Class, valueProvider } from '@proc7ts/primitives';
+import { SupplyPeer } from '@proc7ts/supply';
 import { ComponentClass, DefinitionContext } from '../../component/definition';
 import { FeatureDef, FeatureRef, FeatureStatus } from '../../feature';
 import { FeatureModule } from '../../feature/loader';

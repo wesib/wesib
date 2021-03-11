@@ -1,5 +1,5 @@
 import { ContextRegistry } from '@proc7ts/context-values';
-import { Supply } from '@proc7ts/primitives';
+import { Supply } from '@proc7ts/supply';
 import { MockElement } from '../spec/test-element';
 import { ComponentContext } from './component-context';
 import { ComponentEvent, ComponentEventDispatcher } from './component-event';

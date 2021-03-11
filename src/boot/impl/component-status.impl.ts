@@ -1,5 +1,6 @@
 import { AfterEvent, filterOn_, mapAfter_, onceOn, OnEvent, onEventBy, trackValue } from '@proc7ts/fun-events';
-import { Supply, valueProvider } from '@proc7ts/primitives';
+import { valueProvider } from '@proc7ts/primitives';
+import { Supply } from '@proc7ts/supply';
 import { ComponentContext } from '../../component';
 
 const enum ComponentStatusValue {

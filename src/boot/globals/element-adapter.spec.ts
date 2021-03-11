@@ -1,6 +1,6 @@
 import { newNamespaceAliaser } from '@frontmeans/namespace-aliaser';
 import { ContextRegistry, ContextSupply, ContextValues } from '@proc7ts/context-values';
-import { Supply } from '@proc7ts/primitives';
+import { Supply } from '@proc7ts/supply';
 import { ComponentContext, ComponentSlot } from '../../component';
 import { DefaultNamespaceAliaser } from './default-namespace-aliaser';
 import { ComponentBinder, ElementAdapter } from './element-adapter';
