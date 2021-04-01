@@ -2,14 +2,7 @@ import { newNamespaceAliaser } from '@frontmeans/namespace-aliaser';
 import { ContextKey, SingleContextKey } from '@proc7ts/context-values';
 import { Class, noop } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
-import {
-  ComponentContext,
-  ComponentDef,
-  ComponentDef__symbol,
-  ComponentEvent,
-  ComponentMount,
-  ComponentSlot,
-} from '../../component';
+import { ComponentContext, ComponentDef, ComponentDef__symbol, ComponentMount, ComponentSlot } from '../../component';
 import { ComponentClass, DefinitionContext } from '../../component/definition';
 import { MockElement } from '../../spec/test-element';
 import { BootstrapContext } from '../bootstrap-context';
@@ -102,7 +95,7 @@ describe('boot', () => {
         ComponentDef.define(TestComponent, {
           extend: {
             name: 'input',
-            type: Object,
+            type: MockElement,
           },
         });
 
@@ -257,25 +250,15 @@ describe('boot', () => {
 
       let connectedCallbackSpy: Mock;
       let disconnectedCallbackSpy: Mock;
-      let addEventListenerSpy: Mock;
-      let removeEventListenerSpy: Mock;
-      let dispatchEventSpy: Mock<boolean, [Event]>;
 
       beforeEach(() => {
         connectedCallbackSpy = jest.fn();
         disconnectedCallbackSpy = jest.fn();
-        addEventListenerSpy = jest.fn();
-        removeEventListenerSpy = jest.fn();
-        dispatchEventSpy = jest.fn();
         ComponentDef.define(
             TestComponent,
             {
               extend: {
-                type: class {
-
-                  addEventListener = addEventListenerSpy;
-                  removeEventListener = removeEventListenerSpy;
-                  dispatchEvent = dispatchEventSpy;
+                type: class extends MockElement {
 
                   connectedCallback(): void {
                     connectedCallbackSpy();
@@ -439,18 +422,6 @@ describe('boot', () => {
           context.element.connectedCallback();
           expect(connectedCallbackSpy).toHaveBeenCalledWith();
         });
-        it('dispatches component event', () => {
-          expect(dispatchEventSpy).not.toHaveBeenCalled();
-
-          context.element.connectedCallback();
-
-          expect(dispatchEventSpy).toHaveBeenCalledWith(expect.any(ComponentEvent));
-          expect(dispatchEventSpy).toHaveBeenCalledWith(expect.objectContaining({
-            type: 'wesib:component',
-            cancelable: false,
-            bubbles: true,
-          }));
-        });
 
         describe('after settlement', () => {
           it('reports settlement only once', () => {
@@ -479,22 +450,6 @@ describe('boot', () => {
         it('calls `disconnectedCallback()` of original element when disconnected', () => {
           context.element.disconnectedCallback();
           expect(disconnectedCallbackSpy).toHaveBeenCalledWith();
-        });
-      });
-
-      describe('on', () => {
-        it('listens for component events', () => {
-
-          const listener = jest.fn().mockName('event listener');
-          const supply = context.on('test-event')(listener);
-
-          expect(addEventListenerSpy).toHaveBeenCalledWith('test-event', expect.any(Function), undefined);
-
-          const actualListener = addEventListenerSpy.mock.calls[0][1];
-
-          supply.off();
-
-          expect(removeEventListenerSpy).toHaveBeenCalledWith('test-event', actualListener);
         });
       });
 
@@ -583,26 +538,20 @@ describe('boot', () => {
 
     describe('mounted element', () => {
 
+      let doc: Document;
+
+      beforeEach(() => {
+        doc = document.implementation.createHTMLDocument('test');
+      });
+
       let defContext: DefinitionContext;
       let element: any;
       let mount: ComponentMount;
       let context: ComponentContext;
-      let dispatchEventSpy: Mock<void, [Event]>;
 
       beforeEach(() => {
         defContext = builder.buildElement(TestComponent);
-        dispatchEventSpy = jest.fn();
-        class Element {
-
-          readonly dispatchEvent = dispatchEventSpy;
-
-          get property(): string {
-            return 'overridden';
-          }
-
-        }
-
-        element = new Element();
+        element = doc.createElement('test-element');
       });
 
       function doMount(): void {
@@ -618,20 +567,9 @@ describe('boot', () => {
         doMount();
         expect(context.mount).toBe(mount);
       });
-      it('fails is already bound', () => {
+      it('fails if already bound', () => {
         doMount();
         expect(() => defContext.mountTo(element)).toThrow('already bound');
-      });
-      it('dispatches component event when connected', () => {
-        doMount();
-        expect(dispatchEventSpy).not.toHaveBeenCalled();
-        mount.connect();
-        expect(dispatchEventSpy).toHaveBeenCalledWith(expect.any(ComponentEvent));
-        expect(dispatchEventSpy).toHaveBeenCalledWith(expect.objectContaining({
-          type: 'wesib:component',
-          cancelable: false,
-          bubbles: true,
-        }));
       });
 
       describe('component mount', () => {
@@ -645,52 +583,28 @@ describe('boot', () => {
         });
         it('is not connected by default', () => {
           doMount();
-          expect(mount.connected).toBe(false);
+          expect(mount.context.connected).toBe(false);
         });
         it('is connected initially when element is in document', () => {
-
-          element.ownerDocument = {
-            contains: jest.fn(() => true),
-          };
+          doc.body.appendChild(element);
 
           doMount();
 
-          expect(mount.connected).toBe(true);
+          expect(mount.context.connected).toBe(true);
         });
-        it('is settled initially when element is not in document', () => {
-
-          element.ownerDocument = {
-            contains: jest.fn(() => false),
-          };
-
+        it('is not settled initially when element is not in document', () => {
           doMount();
 
-          expect(context.settled).toBe(true);
+          expect(context.settled).toBe(false);
         });
         it('is not connected initially when element is not in document', () => {
-
-          element.ownerDocument = {
-            contains: jest.fn(() => false),
-          };
-
           doMount();
 
-          expect(mount.connected).toBe(false);
-        });
-        it('connects element', () => {
-          doMount();
-
-          const whenConnected = jest.fn();
-
-          context.whenConnected(whenConnected);
-          mount.connect();
-
-          expect(whenConnected).toHaveBeenCalledWith(context);
+          expect(context.connected).toBe(false);
         });
         it('reports already connected element', () => {
+          doc.body.appendChild(element);
           doMount();
-
-          mount.connect();
 
           const connected = jest.fn();
 
@@ -708,6 +622,7 @@ describe('boot', () => {
         });
         it('cuts off component supply when destroyed', () => {
           Supply.onUnexpectedAbort(noop);
+          doc.body.appendChild(element);
           doMount();
 
           const disconnected = jest.fn();
@@ -715,13 +630,12 @@ describe('boot', () => {
           context.supply.whenOff(disconnected);
           expect(disconnected).not.toHaveBeenCalled();
 
-          mount.connect();
           expect(disconnected).not.toHaveBeenCalled();
 
           const reason = 'test';
 
           mount.context.destroy(reason);
-          expect(mount.connected).toBe(false);
+          expect(context.connected).toBe(false);
           expect(disconnected).toHaveBeenCalledWith(reason);
         });
         it('does not destroy not connected element', () => {
@@ -730,7 +644,6 @@ describe('boot', () => {
           const disconnected = jest.fn();
 
           context.supply.whenOff(disconnected);
-          mount.checkConnected();
 
           expect(disconnected).not.toHaveBeenCalled();
         });
@@ -748,12 +661,12 @@ describe('boot', () => {
         defContext = builder.buildElement(TestComponent);
 
         element = new MockElement();
-        mount = defContext.connectTo(element);
+        mount = defContext.mountTo(element);
         context = mount.context;
       });
 
       it('is connected by default', () => {
-        expect(mount.connected).toBe(true);
+        expect(mount.context.connected).toBe(true);
       });
       it('disconnects element', () => {
         Supply.onUnexpectedAbort(noop);
@@ -765,7 +678,7 @@ describe('boot', () => {
         const reason = 'test';
 
         mount.context.destroy(reason);
-        expect(mount.connected).toBe(false);
+        expect(mount.context.connected).toBe(false);
         expect(disconnected).toHaveBeenCalledWith(reason);
       });
     });

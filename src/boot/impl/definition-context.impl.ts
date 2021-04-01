@@ -1,3 +1,4 @@
+import { drekContextOf } from '@frontmeans/drek';
 import { ContextValues, ContextValueSpec } from '@proc7ts/context-values';
 import { mapOn_, onceOn, OnEvent, trackValue, translateOn, ValueTracker } from '@proc7ts/fun-events';
 import { Class, valueProvider } from '@proc7ts/primitives';
@@ -84,9 +85,8 @@ export class DefinitionContext$<T extends object> extends DefinitionContext<T> {
 
     const { mount } = context;
 
-    mount.checkConnected();
+    drekContextOf(element).whenConnected(() => context._connect());
     context._created();
-    context.settle();
 
     return mount;
   }

@@ -1,7 +1,6 @@
 import { FnContextKey, FnContextRef } from '@proc7ts/context-values/updatable';
 import { ComponentContext } from '../../component';
 import { ShadowContentDef } from './attach-shadow.decorator';
-import { ShadowDomEvent } from './shadow-dom-event';
 
 /**
  * Shadow root builder function type.
@@ -40,27 +39,10 @@ export const ShadowRootBuilder: FnContextRef<Parameters<ShadowRootBuilder>, Retu
     )
 );
 
-/**
- * @internal
- */
 function attachShadow(context: ComponentContext, init: ShadowRootInit): ShadowRoot | undefined {
-
-  const element = context.element as Element;
-  const shadowRoot = shadowRootOf(element, init);
-
-  if (shadowRoot) {
-    context.whenConnected(() => context.dispatchEvent(new ShadowDomEvent(
-        'wesib:shadowAttached',
-        { bubbles: true },
-    )));
-  }
-
-  return shadowRoot;
+  return shadowRootOf(context.element as Element, init);
 }
 
-/**
- * @internal
- */
 function shadowRootOf(element: Element, init: ShadowRootInit): ShadowRoot | undefined {
 
   const existing = element.shadowRoot;

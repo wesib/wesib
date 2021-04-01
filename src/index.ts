@@ -10,7 +10,6 @@ export * from './component';
 export * from './component/definition';
 export * from './feature';
 export * from './feature/attributes';
-export * from './feature/autoconnect';
 export * from './feature/dom-properties';
 export * from './feature/render';
 export * from './feature/shadow-dom';

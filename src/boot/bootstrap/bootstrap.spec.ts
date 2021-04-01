@@ -444,14 +444,6 @@ describe('boot', () => {
         expect(whenComponent12).toHaveBeenCalledTimes(1);
         expect(whenComponent21).toHaveBeenCalledTimes(1);
       });
-      it('does not notify again when component is connected again', () => {
-        mount1.connect();
-        mount1.connect();
-        mount2.connect();
-        mount2.connect();
-        expect(whenComponent11).toHaveBeenCalledTimes(1);
-        expect(whenComponent12).toHaveBeenCalledTimes(1);
-      });
       it('notifies new receiver immediately on already instantiated component', () => {
 
         const whenComponent13 = jest.fn();

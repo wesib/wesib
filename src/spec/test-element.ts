@@ -59,14 +59,20 @@ export async function testElement(componentType: ComponentClass): Promise<Class>
 
 export class MockElement {
 
+  readonly ownerDocument: Document;
   readonly dispatchEvent = jest.fn();
   readonly addEventListener = jest.fn();
   readonly removeEventListener = jest.fn();
   private readonly _target: CustomElementClass;
   private readonly _attributes: { [name: string]: string | null } = {};
 
-  constructor() {
+  constructor({ ownerDocument = document }: { ownerDocument?: Document } = {}) {
+    this.ownerDocument = ownerDocument;
     this._target = new.target as unknown as CustomElementClass;
+  }
+
+  getRootNode(): Node {
+    return this.ownerDocument;
   }
 
   getAttribute(name: string): string | null {

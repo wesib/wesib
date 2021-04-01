@@ -91,26 +91,6 @@ export abstract class DefinitionContext<T extends object = any> extends ContextV
   abstract mountTo(element: ComponentElement<T>): ComponentMount<T>;
 
   /**
-   * Connects a component to arbitrary element.
-   *
-   * This method does the same as `mountTo()`, but also marks the mounted component as connected.
-   *
-   * @param element - Target element to mount new component to.
-   *
-   * @returns New component mount.
-   *
-   * @throws Error If target element is already bound to some component.
-   */
-  connectTo(element: any): ComponentMount<T> {
-
-    const mount = this.mountTo(element);
-
-    mount.connect();
-
-    return mount;
-  }
-
-  /**
    * Provides a value available in the context of each component of the defined component type.
    *
    * @typeParam TSrc - The type of context value sources.
