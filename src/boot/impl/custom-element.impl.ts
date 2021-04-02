@@ -5,10 +5,10 @@ import { ElementDef } from '../../component/definition';
 import { ComponentContext$ } from './component-context.impl';
 import { DefinitionContext$ } from './definition-context.impl';
 
-class CustomComponentContext$<T extends object> extends ComponentContext$<T> {
+class ComponentContext$Custom<T extends object> extends ComponentContext$<T> {
 
-  get mount(): undefined {
-    return;
+  get mounted(): false {
+    return false;
   }
 
 }
@@ -27,7 +27,7 @@ export function customElementType<T extends object>(
     constructor() {
       super();
 
-      const context = new CustomComponentContext$(definitionContext, this);
+      const context = new ComponentContext$Custom(definitionContext, this);
 
       context._createComponent();
       context._created();

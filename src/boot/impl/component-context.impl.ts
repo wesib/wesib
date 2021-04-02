@@ -144,6 +144,17 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
 
 }
 
+/**
+ * @internal
+ */
+export class ComponentContext$Mounted<T extends object> extends ComponentContext$<T> {
+
+  get mounted(): true {
+    return true;
+  }
+
+}
+
 function removeElement(element: Element): void {
 
   const { parentNode } = element;

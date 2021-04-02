@@ -3,7 +3,7 @@ import { newNamespaceAliaser } from '@frontmeans/namespace-aliaser';
 import { ContextKey, SingleContextKey } from '@proc7ts/context-values';
 import { Class, noop } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
-import { ComponentContext, ComponentDef, ComponentDef__symbol, ComponentMount, ComponentSlot } from '../../component';
+import { ComponentContext, ComponentDef, ComponentDef__symbol, ComponentSlot } from '../../component';
 import { ComponentClass, DefinitionContext } from '../../component/definition';
 import { MockElement } from '../../spec/test-element';
 import { BootstrapContext } from '../bootstrap-context';
@@ -292,7 +292,7 @@ describe('boot', () => {
         expect(context.get(key2)).toBe(value2);
       });
       it('is not mounted', () => {
-        expect(context.mount).toBeUndefined();
+        expect(context.mounted).toBe(false);
       });
 
       describe('window', () => {
@@ -559,7 +559,6 @@ describe('boot', () => {
 
       let defContext: DefinitionContext;
       let element: any;
-      let mount: ComponentMount;
       let context: ComponentContext;
 
       beforeEach(() => {
@@ -568,8 +567,7 @@ describe('boot', () => {
       });
 
       function doMount(): void {
-        mount = defContext.mountTo(element);
-        context = mount.context;
+        context = defContext.mountTo(element);
       }
 
       describe('window', () => {
@@ -592,7 +590,7 @@ describe('boot', () => {
       });
       it('is mounted', () => {
         doMount();
-        expect(context.mount).toBe(mount);
+        expect(context.mounted).toBe(true);
       });
       it('fails if already bound', () => {
         doMount();
@@ -602,22 +600,22 @@ describe('boot', () => {
       describe('component mount', () => {
         it('refers to element', () => {
           doMount();
-          expect(mount.element).toBe(element);
+          expect(context.element).toBe(element);
         });
         it('refers to component', () => {
           doMount();
-          expect(mount.component).toBe(context.component);
+          expect(context.component).toBe(context.component);
         });
         it('is not connected when element is not in document', () => {
           doMount();
-          expect(mount.context.connected).toBe(false);
+          expect(context.connected).toBe(false);
         });
         it('is connected initially when element is in document', () => {
           doc.body.appendChild(element);
 
           doMount();
 
-          expect(mount.context.connected).toBe(true);
+          expect(context.connected).toBe(true);
         });
         it('is not settled initially when element is not in document', () => {
           doMount();
@@ -682,7 +680,7 @@ describe('boot', () => {
 
           const reason = 'test';
 
-          mount.context.destroy(reason);
+          context.destroy(reason);
           expect(context.connected).toBe(false);
           expect(disconnected).toHaveBeenCalledWith(reason);
         });
@@ -702,19 +700,17 @@ describe('boot', () => {
 
       let defContext: DefinitionContext;
       let element: any;
-      let mount: ComponentMount;
       let context: ComponentContext;
 
       beforeEach(() => {
         defContext = builder.buildElement(TestComponent);
 
         element = new MockElement();
-        mount = defContext.mountTo(element);
-        context = mount.context;
+        context = defContext.mountTo(element);
       });
 
       it('is connected by default', () => {
-        expect(mount.context.connected).toBe(true);
+        expect(context.connected).toBe(true);
       });
       it('disconnects element', () => {
         Supply.onUnexpectedAbort(noop);
@@ -725,8 +721,8 @@ describe('boot', () => {
 
         const reason = 'test';
 
-        mount.context.destroy(reason);
-        expect(mount.context.connected).toBe(false);
+        context.destroy(reason);
+        expect(context.connected).toBe(false);
         expect(disconnected).toHaveBeenCalledWith(reason);
       });
     });

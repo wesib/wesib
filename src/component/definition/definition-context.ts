@@ -3,7 +3,6 @@ import { OnEvent } from '@proc7ts/fun-events';
 import { Class } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
 import { ComponentContext } from '../component-context';
-import { ComponentMount } from '../component-mount';
 import { ComponentElement } from '../component-slot';
 import { ComponentClass } from './component-class';
 import { DefinitionContext__key } from './definition.context.key.impl';
@@ -76,19 +75,20 @@ export abstract class DefinitionContext<T extends object = any> extends ContextV
    * This method creates a component, but instead of creating a custom element for, it mounts it to the target
    * `element`.
    *
-   * It is up to the features to update the target element. They can use a `ComponentContext.mount` property to check
-   * whether the component is mounted or is constructed in standard way.
+   * It is up to the features to update the target element. They can use a {@link ComponentContext.mounted} flag
+   * to check whether the component is mounted or constructed in a standard way.
    *
-   * The constructed component will be in disconnected state. To update its connection state either update a
-   * `ComponentMount.connected` property, or use a `connectTo()` method.
+   * The constructed component connection state is maintained by [Document Render Kit].
+   *
+   * [Document Render Kit]: https://www.npmjs.com/package/@frontmeans/drek
    *
    * @param element - Target element to mount new component to.
    *
-   * @returns New component mount.
+   * @returns Mounted component context.
    *
    * @throws Error If target element is already bound to some component.
    */
-  abstract mountTo(element: ComponentElement<T>): ComponentMount<T>;
+  abstract mountTo(element: ComponentElement<T>): ComponentContext<T>;
 
   /**
    * Provides a value available in the context of each component of the defined component type.

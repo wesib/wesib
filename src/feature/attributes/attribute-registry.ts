@@ -2,7 +2,7 @@ import { ContextRef, SingleContextKey } from '@proc7ts/context-values';
 import { mergeFunctions } from '@proc7ts/primitives';
 import { BootstrapWindow } from '../../boot/globals';
 import { CustomElementClass } from '../../common';
-import { ComponentElement, ComponentMount, ComponentSlot } from '../../component';
+import { ComponentContext, ComponentElement, ComponentSlot } from '../../component';
 import { DefinitionContext } from '../../component/definition';
 import { AttributeChangedCallback, AttributeDescriptor } from './attribute-descriptor';
 
@@ -47,10 +47,10 @@ class AttributeRegistry$ implements AttributeRegistry {
 
   constructor(private readonly _context: DefinitionContext) {
     _context.whenReady(({ elementType }) => this.define(elementType as CustomElementClass));
-    _context.whenComponent(({ mount }) => {
-      if (mount) {
+    _context.whenComponent(context => {
+      if (context.mounted) {
         // Mount element attributes
-        this.mount(mount);
+        this.mount(context);
       }
     });
   }
@@ -79,9 +79,9 @@ class AttributeRegistry$ implements AttributeRegistry {
     });
   }
 
-  private mount(mount: ComponentMount): void {
+  private mount(context: ComponentContext): void {
 
-    const { element } = mount as { element: ComponentElement };
+    const { element } = context as { element: ComponentElement };
     const { attrs } = this;
     const attributeFilter = [...attrs.keys()];
 
@@ -97,7 +97,7 @@ class AttributeRegistry$ implements AttributeRegistry {
               const attributeName = record.attributeName as string;
 
               return attrs.get(attributeName)!(
-                  mount.context.component,
+                  context.component,
                   element.getAttribute(attributeName),
                   record.oldValue,
               );
