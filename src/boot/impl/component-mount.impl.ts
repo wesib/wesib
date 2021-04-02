@@ -8,10 +8,6 @@ class ComponentMount$<T extends object> extends ComponentMount<T> {
     super();
   }
 
-  get connected(): boolean {
-    return this.context.connected;
-  }
-
 }
 
 /**

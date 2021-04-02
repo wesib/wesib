@@ -1,3 +1,4 @@
+import { drekAppender, drekContextOf, DrekFragment } from '@frontmeans/drek';
 import { newNamespaceAliaser } from '@frontmeans/namespace-aliaser';
 import { ContextKey, SingleContextKey } from '@proc7ts/context-values';
 import { Class, noop } from '@proc7ts/primitives';
@@ -294,6 +295,18 @@ describe('boot', () => {
         expect(context.mount).toBeUndefined();
       });
 
+      describe('window', () => {
+        it('reflects document view', () => {
+          expect(context.window).toBe(window);
+        });
+      });
+
+      describe('document', () => {
+        it('reflects owner document', () => {
+          expect(context.document).toBe(document);
+        });
+      });
+
       describe('settled', () => {
         it('is `false` by default', () => {
           expect(context.settled).toBe(false);
@@ -559,6 +572,20 @@ describe('boot', () => {
         context = mount.context;
       }
 
+      describe('window', () => {
+        it('reflects current window', () => {
+          doMount();
+          expect(context.window).toBe(window);
+        });
+      });
+
+      describe('document', () => {
+        it('reflects owner document', () => {
+          doMount();
+          expect(context.document).toBe(doc);
+        });
+      });
+
       it('has context reference', async () => {
         doMount();
         expect(await ComponentSlot.of(element).whenReady).toBe(context);
@@ -581,7 +608,7 @@ describe('boot', () => {
           doMount();
           expect(mount.component).toBe(context.component);
         });
-        it('is not connected by default', () => {
+        it('is not connected when element is not in document', () => {
           doMount();
           expect(mount.context.connected).toBe(false);
         });
@@ -596,6 +623,27 @@ describe('boot', () => {
           doMount();
 
           expect(context.settled).toBe(false);
+        });
+        it('is settled once requested', () => {
+          doMount();
+
+          const whenSettled = jest.fn();
+
+          context.whenSettled(whenSettled);
+
+          const fragment = new DrekFragment(drekAppender(doc.body));
+
+          fragment.scheduler()(({ content }) => {
+
+            const drekCtx = drekContextOf(element);
+
+            content.appendChild(element);
+            drekCtx.lift();
+          });
+          fragment.settle();
+
+          expect(context.settled).toBe(true);
+          expect(whenSettled).toHaveBeenCalledWith(context);
         });
         it('is not connected initially when element is not in document', () => {
           doMount();
