@@ -1,5 +1,5 @@
+import { CustomElementClass } from '@frontmeans/drek';
 import { Class } from '@proc7ts/primitives';
-import { CustomElementClass } from '../../common';
 import { ComponentElement, ComponentSlot } from '../../component';
 import { ElementDef } from '../../component/definition';
 import { ComponentContext$ } from './component-context.impl';

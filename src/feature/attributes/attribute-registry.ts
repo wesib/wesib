@@ -1,7 +1,7 @@
+import { CustomElementClass } from '@frontmeans/drek';
 import { ContextRef, SingleContextKey } from '@proc7ts/context-values';
 import { mergeFunctions } from '@proc7ts/primitives';
 import { BootstrapWindow } from '../../boot/globals';
-import { CustomElementClass } from '../../common';
 import { ComponentContext, ComponentElement, ComponentSlot } from '../../component';
 import { DefinitionContext } from '../../component/definition';
 import { AttributeChangedCallback, AttributeDescriptor } from './attribute-descriptor';

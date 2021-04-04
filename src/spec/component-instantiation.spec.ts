@@ -1,5 +1,5 @@
+import { CustomElement } from '@frontmeans/drek';
 import { onSupplied } from '@proc7ts/fun-events';
-import { CustomElement } from '../common';
 import { Component, ComponentContext, ComponentSlot } from '../component';
 import { ComponentClass } from '../component/definition';
 import { Feature } from '../feature';

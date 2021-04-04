@@ -1,6 +1,6 @@
+import { CustomElement } from '@frontmeans/drek';
 import { Class } from '@proc7ts/primitives';
 import { bootstrapComponents } from '../../boot/bootstrap';
-import { CustomElement } from '../../common';
 import { Component, ComponentSlot } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { MockElement } from '../../spec/test-element';
