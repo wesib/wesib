@@ -55,20 +55,6 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   abstract readonly componentType: ComponentClass<T>;
 
   /**
-   * The owning document of element.
-   */
-  get document(): Document {
-    return (this.element as Element).ownerDocument;
-  }
-
-  /**
-   * The owning window of element.
-   */
-  get window(): Window {
-    return this.document.defaultView || window;
-  }
-
-  /**
    * Custom element constructed for the component according to its type.
    *
    * E.g. `HTMLElement` instance.

@@ -295,18 +295,6 @@ describe('boot', () => {
         expect(context.mounted).toBe(false);
       });
 
-      describe('window', () => {
-        it('reflects document view', () => {
-          expect(context.window).toBe(window);
-        });
-      });
-
-      describe('document', () => {
-        it('reflects owner document', () => {
-          expect(context.document).toBe(document);
-        });
-      });
-
       describe('settled', () => {
         it('is `false` by default', () => {
           expect(context.settled).toBe(false);
@@ -569,20 +557,6 @@ describe('boot', () => {
       function doMount(): void {
         context = defContext.mountTo(element);
       }
-
-      describe('window', () => {
-        it('reflects current window', () => {
-          doMount();
-          expect(context.window).toBe(window);
-        });
-      });
-
-      describe('document', () => {
-        it('reflects owner document', () => {
-          doMount();
-          expect(context.document).toBe(doc);
-        });
-      });
 
       it('has context reference', async () => {
         doMount();
