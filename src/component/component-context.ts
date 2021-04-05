@@ -1,7 +1,9 @@
+import { OnDomEvent } from '@frontmeans/dom-events';
 import { ContextKey, ContextKey__symbol, ContextValues } from '@proc7ts/context-values';
 import { AfterEvent, OnEvent, StatePath } from '@proc7ts/fun-events';
 import { Supply, SupplyPeer } from '@proc7ts/supply';
 import { ComponentContext__key } from './component-context.key.impl';
+import { ComponentEventDispatcher__key } from './component-event-dispatcher.key.impl';
 import { ContentRoot } from './content-root';
 import { ComponentClass } from './definition';
 import { StateUpdater } from './state-updater';
@@ -220,6 +222,32 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    * This method is called automatically when {@link DefinitionContext.mountTo mounting} component to element.
    */
   abstract settle(): void;
+
+  /**
+   * Returns a DOM event producer for the given event type.
+   *
+   * This is a shorthand for invoking a component event producer function available under
+   * `[ComponentEventProducer.key]` key.
+   *
+   * @typeParam TEvent - DOM event type.
+   * @param type - An event type to listen for.
+   *
+   * @returns A producer of DOM event events of the given type.
+   */
+  on<TEvent extends Event>(type: string): OnDomEvent<TEvent> {
+    return this.get(ComponentEventDispatcher__key).on(type);
+  }
+
+  /**
+   * Dispatches an event to component element.
+   *
+   * This is a shorthand for invoking a component {@link ComponentEventDispatcher event dispatcher}.
+   *
+   * @param event - An event to dispatch.
+   */
+  dispatchEvent(event: Event): void {
+    this.get(ComponentEventDispatcher__key).dispatch(event);
+  }
 
   /**
    * Destroys the component.

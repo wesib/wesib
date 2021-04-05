@@ -60,9 +60,6 @@ export async function testElement(componentType: ComponentClass): Promise<Class>
 export class MockElement {
 
   readonly ownerDocument: Document;
-  readonly dispatchEvent = jest.fn();
-  readonly addEventListener = jest.fn();
-  readonly removeEventListener = jest.fn();
   private readonly _target: CustomHTMLElementClass;
   private readonly _attributes: { [name: string]: string | null } = {};
 
@@ -97,6 +94,18 @@ export class MockElement {
 
   attributeChangedCallback(_name: string, _oldValue: string | null, _newValue: string): void {
     /* no callback */
+  }
+
+  dispatchEvent(_event: Event): boolean {
+    return true;
+  }
+
+  addEventListener(_type: string, _listener: EventListener): void {
+    // noop
+  }
+
+  removeEventListener(_type: string, _listener: EventListener): void {
+    // noop
   }
 
 }
