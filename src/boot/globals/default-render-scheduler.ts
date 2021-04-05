@@ -1,7 +1,8 @@
 import { newRenderSchedule, RenderScheduler } from '@frontmeans/render-scheduler';
 import { ContextValues, ContextValueSlot } from '@proc7ts/context-values';
-import { contextDestroyed, ContextUpKey, ContextUpRef } from '@proc7ts/context-values/updatable';
+import { ContextUpKey, ContextUpRef } from '@proc7ts/context-values/updatable';
 import { AfterEvent, afterThe, digAfter } from '@proc7ts/fun-events';
+import { BootstrapContext } from '../bootstrap-context';
 import { BootstrapWindow } from './bootstrap-window';
 
 /**
@@ -42,15 +43,20 @@ class DefaultRenderSchedulerKey extends ContextUpKey<DefaultRenderScheduler, Ren
           AfterEvent<RenderScheduler[]>>,
   ): void {
 
+    const { context } = slot;
+    const bsContext = context.get(BootstrapContext);
+
+    if (context !== bsContext) {
+      return slot.insert(bsContext.get(this, slot.hasFallback ? slot : undefined));
+    }
+
     let delegated: DefaultRenderScheduler;
 
-    slot.context.get(
+    context.get(
         this.upKey,
         slot.hasFallback ? { or: slot.or != null ? afterThe(slot.or) : slot.or } : undefined,
     )!(
-        scheduler => delegated = toDefaultRenderScheduler(slot.context, scheduler),
-    ).whenOff(
-        reason => delegated = contextDestroyed(reason),
+        scheduler => delegated = toDefaultRenderScheduler(context, scheduler),
     );
 
     slot.insert((...args) => delegated(...args));
@@ -72,7 +78,7 @@ function toDefaultRenderScheduler(
 }
 
 /**
- * A key of bootstrap, definition, or component context value containing {@link DefaultRenderScheduler} instance.
+ * A key of bootstrap context value containing {@link DefaultRenderScheduler} instance.
  *
  * Uses the default `RenderScheduler` (`newRenderSchedule()`) for {@link BootstrapWindow bootstrap window}.
  *

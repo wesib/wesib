@@ -77,7 +77,7 @@ describe('feature/state', () => {
 
       const bsContext = await bootstrapComponents(TestComponent).whenReady;
       const defContext = await bsContext.whenDefined(TestComponent);
-      const { context } = defContext.mountTo(element);
+      const context = defContext.mountTo(element);
 
       context.get(ComponentState).onUpdate(onUpdate);
 

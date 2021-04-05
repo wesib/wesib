@@ -3,8 +3,7 @@ import { ContextKey, ContextKey__symbol, ContextValues } from '@proc7ts/context-
 import { AfterEvent, OnEvent, StatePath } from '@proc7ts/fun-events';
 import { Supply, SupplyPeer } from '@proc7ts/supply';
 import { ComponentContext__key } from './component-context.key.impl';
-import { ComponentEventDispatcher__key } from './component-event.key.impl';
-import { ComponentMount } from './component-mount';
+import { ComponentEventDispatcher__key } from './component-event-dispatcher.key.impl';
 import { ContentRoot } from './content-root';
 import { ComponentClass } from './definition';
 import { StateUpdater } from './state-updater';
@@ -74,12 +73,9 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   abstract readonly component: ComponentInstance<T>;
 
   /**
-   * Component mount.
-   *
-   * This is set when component is mounted to arbitrary element by {@link DefinitionContext.mountTo}. It is `undefined`
-   * for components created in standard way.
+   * Whether the component is {@link DefinitionContext.mountTo mounted} to element.
    */
-  abstract readonly mount: ComponentMount<T> | undefined;
+  abstract readonly mounted: boolean;
 
   /**
    * Whether the component is ready.
@@ -155,9 +151,8 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   /**
    * An `OnEvent` sender of component's element connection event.
    *
-   * The registered receiver is called when component's element is connected. I.e. when custom element's
-   * `connectedCallback()` method is called, or when the element this component is {@link mount mounted to} is
-   * {@link ComponentMount.connect connected}.
+   * The registered receiver is called when component's element is connected. E.g. when custom element's
+   * `connectedCallback()` method is called.
    *
    * If connected already the receiver is called immediately.
    */
@@ -166,9 +161,8 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   /**
    * An `OnEvent` sender of single component's element connection event.
    *
-   * The registered receiver is called when component's element is connected. I.e. when custom element's
-   * `connectedCallback()` method is called, or when the element this component is {@link mount mounted to} is
-   * {@link ComponentMount.connect connected}.
+   * The registered receiver is called when component's element is connected. E.g. when custom element's
+   * `connectedCallback()` method is called.
    *
    * If connected already the receiver is called immediately.
    *

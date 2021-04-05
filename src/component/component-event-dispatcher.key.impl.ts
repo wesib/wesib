@@ -1,7 +1,7 @@
 import { DomEventDispatcher, OnDomEvent } from '@frontmeans/dom-events';
 import { SingleContextKey } from '@proc7ts/context-values';
 import { ComponentContext__key } from './component-context.key.impl';
-import { ComponentEventDispatcher } from './component-event';
+import { ComponentEventDispatcher } from './component-event-dispatcher';
 
 /**
  * @internal

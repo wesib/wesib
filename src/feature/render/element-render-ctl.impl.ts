@@ -1,7 +1,7 @@
-import { immediateRenderScheduler, RenderExecution } from '@frontmeans/render-scheduler';
+import { queuedRenderScheduler, RenderExecution } from '@frontmeans/render-scheduler';
 import { noop } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
-import { DefaultRenderScheduler } from '../../boot/globals';
+import { DefaultRenderKit } from '../../boot/globals';
 import { ComponentContext } from '../../component';
 import { ElementRenderCtl } from './element-render-ctl';
 import { ElementRenderer } from './element-renderer';
@@ -34,7 +34,8 @@ export class ElementRenderCtl$ implements ElementRenderCtl {
 
     const spec = RenderDef.spec(this._context, def);
     const trigger = RenderDef.trigger(this._context, spec);
-    const schedule = this._context.get(DefaultRenderScheduler)({
+    const renderKit = this._context.get(DefaultRenderKit);
+    const schedule = renderKit.contextOf(this._context.element).scheduler({
       ...RenderDef.fulfill(spec),
       node: this._context.element as Element,
     });
@@ -50,7 +51,7 @@ export class ElementRenderCtl$ implements ElementRenderCtl {
 
     (whenConnected ? this._context.whenConnected : this._context.whenSettled)(startRendering);
 
-    const immediateSchedule = immediateRenderScheduler();
+    const immediateSchedule = queuedRenderScheduler();
 
     this._renders.add(renderNow);
 

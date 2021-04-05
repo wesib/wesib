@@ -2,11 +2,12 @@ import { ContextValues, ContextValueSpec } from '@proc7ts/context-values';
 import { mapOn_, onceOn, OnEvent, trackValue, translateOn, ValueTracker } from '@proc7ts/fun-events';
 import { Class, valueProvider } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
-import { ComponentContext, ComponentDef, ComponentElement, ComponentMount, ComponentSlot } from '../../component';
+import { ComponentContext, ComponentDef, ComponentElement, ComponentSlot } from '../../component';
 import { DefinitionContext, DefinitionSetup } from '../../component/definition';
 import { BootstrapContext } from '../bootstrap-context';
+import { DefaultRenderKit } from '../globals';
 import { ComponentContextRegistry, PerComponentRegistry } from './component-context-registry.impl';
-import { MountComponentContext$ } from './component-mount.impl';
+import { ComponentContext$Mounted } from './component-context.impl';
 import { customElementType } from './custom-element.impl';
 import { DefinitionContextRegistry, PerDefinitionRegistry } from './definition-context-registry.impl';
 import { ComponentDefinitionClass, DefinitionContext__symbol } from './definition-context.symbol.impl';
@@ -70,7 +71,7 @@ export class DefinitionContext$<T extends object> extends DefinitionContext<T> {
     return this._whenComponent.onCreated;
   }
 
-  mountTo(element: ComponentElement<T>): ComponentMount<T> {
+  mountTo(element: ComponentElement<T>): ComponentContext<T> {
 
     const slot = ComponentSlot.of(element);
 
@@ -78,17 +79,16 @@ export class DefinitionContext$<T extends object> extends DefinitionContext<T> {
       throw new Error(`Element ${String(element)} already bound to component`);
     }
 
-    const context = new MountComponentContext$(this, element);
+    const context = new ComponentContext$Mounted(this, element);
 
     context._createComponent();
-
-    const { mount } = context;
-
-    mount.checkConnected();
+    context.get(DefaultRenderKit)
+        .contextOf(element)
+        .whenConnected(() => context._connect())
+        .needs(context);
     context._created();
-    context.settle();
 
-    return mount;
+    return context;
   }
 
   perComponent<TSrc, TDeps extends any[]>(

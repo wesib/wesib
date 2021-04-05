@@ -286,8 +286,8 @@ describe('component', () => {
         }
 
         const defContext = await bootstrapDefinition(TestComponent);
-        const component1 = defContext.mountTo(element).context.component;
-        const component2 = defContext.mountTo(document.createElement('other-component')).context.component;
+        const component1 = defContext.mountTo(element).component;
+        const component2 = defContext.mountTo(document.createElement('other-component')).component;
 
         expect(component1.property).toBe('init');
         expect(component2.property).toBe('init');
@@ -436,6 +436,6 @@ describe('component', () => {
 
     const defContext = await bootstrapDefinition(type);
 
-    return defContext.mountTo(element).context;
+    return defContext.mountTo(element);
   }
 });

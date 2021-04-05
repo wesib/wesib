@@ -87,9 +87,7 @@ describe('feature/dom-properties', () => {
 
       beforeEach(async () => {
         defContext = await testDefinition(testComponent);
-        element = {
-          dispatchEvent: jest.fn(),
-        };
+        element = document.createElement('test-element');
         defContext.mountTo(element);
       });
 

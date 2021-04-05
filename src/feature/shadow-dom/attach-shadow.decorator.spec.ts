@@ -1,14 +1,11 @@
-import { DomEventDispatcher } from '@frontmeans/dom-events';
 import { BootstrapContext } from '../../boot';
-import { Component, ComponentContext, ComponentEventDispatcher, ComponentSlot, ContentRoot } from '../../component';
+import { Component, ComponentContext, ComponentSlot, ContentRoot } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { MockElement, testElement } from '../../spec/test-element';
 import { AttachShadow, ShadowContentDef } from './attach-shadow.decorator';
 import { ShadowContentRoot } from './shadow-content-root';
-import { ShadowDomEvent } from './shadow-dom-event';
 import { ShadowRootBuilder } from './shadow-root-builder';
 import Mock = jest.Mock;
-import Mocked = jest.Mocked;
 
 describe('feature/shadow-dom', () => {
   describe('@AttachShadow', () => {
@@ -16,19 +13,12 @@ describe('feature/shadow-dom', () => {
     let testComponent: ComponentClass;
     let attachShadowSpy: Mock;
     let shadowRoot: ShadowContentRoot;
-    let mockDispatcher: Mocked<ComponentEventDispatcher>;
     let element: any;
     let context: ComponentContext;
 
     beforeEach(() => {
       shadowRoot = { name: 'shadowRoot' } as any;
       attachShadowSpy = jest.fn(() => shadowRoot);
-      mockDispatcher = {
-        dispatch: jest.fn(),
-        on: jest.fn(
-            (type: string) => new DomEventDispatcher(element).on<any>(type),
-        ),
-      };
 
       @AttachShadow()
       @Component({
@@ -39,9 +29,6 @@ describe('feature/shadow-dom', () => {
             attachShadow = attachShadowSpy;
 
           },
-        },
-        setup(setup) {
-          setup.perComponent({ a: ComponentEventDispatcher, is: mockDispatcher });
         },
       })
       class TestComponent {
@@ -69,14 +56,6 @@ describe('feature/shadow-dom', () => {
     it('attaches open shadow root by default', () => {
       context.get(ShadowContentRoot);
       expect(attachShadowSpy).toHaveBeenCalledWith({ mode: 'open' });
-    });
-    it('dispatches shadow DOM event on first connection', () => {
-      context.get(ShadowContentRoot);
-      expect(mockDispatcher.dispatch).not.toHaveBeenCalled();
-
-      element.connectedCallback();
-      expect(mockDispatcher.dispatch).toHaveBeenCalledWith(expect.any(ShadowDomEvent));
-      expect(mockDispatcher.dispatch).toHaveBeenCalledWith(expect.objectContaining({ type: 'wesib:shadowAttached' }));
     });
     it('attaches shadow root', async () => {
 

@@ -2,7 +2,7 @@ import { SingleContextUpKey } from '@proc7ts/context-values/updatable';
 import { afterSupplied, afterThe } from '@proc7ts/fun-events';
 import { Class, noop } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
-import { Component, ComponentContext, ComponentMount } from '../../component';
+import { Component, ComponentContext } from '../../component';
 import { CustomElements, DefinitionContext } from '../../component/definition';
 import { Feature, FeatureContext, FeatureDef, FeatureRef, FeatureStatus } from '../../feature';
 import { MockElement } from '../../spec/test-element';
@@ -398,8 +398,8 @@ describe('boot', () => {
       let whenComponent21: Mock<void, [ComponentContext]>;
       let defContext1: DefinitionContext;
       let defContext2: DefinitionContext;
-      let mount1: ComponentMount;
-      let mount2: ComponentMount;
+      let context1: ComponentContext;
+      let context2: ComponentContext;
 
       beforeEach(async () => {
         whenComponent11 = jest.fn();
@@ -432,36 +432,28 @@ describe('boot', () => {
           bsContext.whenDefined(TestComponent1),
           bsContext.whenDefined(TestComponent2),
         ]);
-        mount1 = defContext1.mountTo(element1);
-        mount2 = defContext2.mountTo(element2);
+        context1 = defContext1.mountTo(element1);
+        context2 = defContext2.mountTo(element2);
       });
 
       it('notifies on component instantiation', () => {
-        expect(whenComponent11).toHaveBeenCalledWith(mount1.context);
-        expect(whenComponent12).toHaveBeenCalledWith(mount1.context);
-        expect(whenComponent21).toHaveBeenCalledWith(mount2.context);
+        expect(whenComponent11).toHaveBeenCalledWith(context1);
+        expect(whenComponent12).toHaveBeenCalledWith(context1);
+        expect(whenComponent21).toHaveBeenCalledWith(context2);
         expect(whenComponent11).toHaveBeenCalledTimes(1);
         expect(whenComponent12).toHaveBeenCalledTimes(1);
         expect(whenComponent21).toHaveBeenCalledTimes(1);
-      });
-      it('does not notify again when component is connected again', () => {
-        mount1.connect();
-        mount1.connect();
-        mount2.connect();
-        mount2.connect();
-        expect(whenComponent11).toHaveBeenCalledTimes(1);
-        expect(whenComponent12).toHaveBeenCalledTimes(1);
       });
       it('notifies new receiver immediately on already instantiated component', () => {
 
         const whenComponent13 = jest.fn();
 
-        mount1.context.get(DefinitionContext).whenComponent(whenComponent13);
-        expect(whenComponent13).toHaveBeenCalledWith(mount1.context);
+        context1.get(DefinitionContext).whenComponent(whenComponent13);
+        expect(whenComponent13).toHaveBeenCalledWith(context1);
         expect(whenComponent13).toHaveBeenCalledTimes(1);
       });
       it('notifies on recurrent component mount', () => {
-        mount2.context.get(DefinitionContext).whenComponent({
+        context2.get(DefinitionContext).whenComponent({
           receive(eventContext) {
             eventContext.onRecurrent(noop);
             defContext2.mountTo(element3);

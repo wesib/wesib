@@ -1,6 +1,6 @@
 import { ContextRef, SingleContextKey } from '@proc7ts/context-values';
 import { Class } from '@proc7ts/primitives';
-import { ComponentMount } from '../../component';
+import { ComponentContext } from '../../component';
 import { DefinitionContext } from '../../component/definition';
 import { DomPropertyDescriptor } from './dom-property-descriptor';
 
@@ -47,10 +47,10 @@ class DomPropertyRegistry$ implements DomPropertyRegistry {
     defContext.whenReady(
         ({ elementType }) => this.define(elementType),
     );
-    defContext.whenComponent(({ mount }) => {
-      if (mount) {
+    defContext.whenComponent(context => {
+      if (context.mounted) {
         // Mount element properties
-        this.mount(mount);
+        this.mount(context);
       }
     });
   }
@@ -68,7 +68,7 @@ class DomPropertyRegistry$ implements DomPropertyRegistry {
     });
   }
 
-  private mount<T extends object>({ element }: ComponentMount<T>): void {
+  private mount<T extends object>({ element }: ComponentContext<T>): void {
     this.props.forEach((desc, key) => {
       Object.defineProperty(element, key, desc);
     });

@@ -1,7 +1,7 @@
+import { CustomHTMLElementClass } from '@frontmeans/dom-primitives';
 import { OnEvent } from '@proc7ts/fun-events';
 import { Class } from '@proc7ts/primitives';
 import { bootstrapComponents } from '../boot/bootstrap';
-import { CustomElementClass } from '../common';
 import { ComponentClass, CustomElements, DefinitionContext } from '../component/definition';
 import { Feature } from '../feature';
 
@@ -59,14 +59,17 @@ export async function testElement(componentType: ComponentClass): Promise<Class>
 
 export class MockElement {
 
-  readonly dispatchEvent = jest.fn();
-  readonly addEventListener = jest.fn();
-  readonly removeEventListener = jest.fn();
-  private readonly _target: CustomElementClass;
+  readonly ownerDocument: Document;
+  private readonly _target: CustomHTMLElementClass;
   private readonly _attributes: { [name: string]: string | null } = {};
 
-  constructor() {
-    this._target = new.target as unknown as CustomElementClass;
+  constructor({ ownerDocument = document }: { ownerDocument?: Document } = {}) {
+    this.ownerDocument = ownerDocument;
+    this._target = new.target as unknown as CustomHTMLElementClass;
+  }
+
+  getRootNode(): Node {
+    return this.ownerDocument;
   }
 
   getAttribute(name: string): string | null {
@@ -91,6 +94,18 @@ export class MockElement {
 
   attributeChangedCallback(_name: string, _oldValue: string | null, _newValue: string): void {
     /* no callback */
+  }
+
+  dispatchEvent(_event: Event): boolean {
+    return true;
+  }
+
+  addEventListener(_type: string, _listener: EventListener): void {
+    // noop
+  }
+
+  removeEventListener(_type: string, _listener: EventListener): void {
+    // noop
   }
 
 }

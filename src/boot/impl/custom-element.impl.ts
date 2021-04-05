@@ -1,14 +1,14 @@
+import { CustomHTMLElementClass } from '@frontmeans/dom-primitives';
 import { Class } from '@proc7ts/primitives';
-import { CustomElementClass } from '../../common';
 import { ComponentElement, ComponentSlot } from '../../component';
 import { ElementDef } from '../../component/definition';
 import { ComponentContext$ } from './component-context.impl';
 import { DefinitionContext$ } from './definition-context.impl';
 
-class CustomComponentContext$<T extends object> extends ComponentContext$<T> {
+class ComponentContext$Custom<T extends object> extends ComponentContext$<T> {
 
-  get mount(): undefined {
-    return;
+  get mounted(): false {
+    return false;
   }
 
 }
@@ -22,12 +22,12 @@ export function customElementType<T extends object>(
 
   const elementDef = definitionContext.get(ElementDef);
 
-  class CustomElement$ extends (elementDef.extend.type as CustomElementClass) implements ComponentElement {
+  class CustomElement$ extends (elementDef.extend.type as CustomHTMLElementClass) implements ComponentElement {
 
     constructor() {
       super();
 
-      const context = new CustomComponentContext$(definitionContext, this);
+      const context = new ComponentContext$Custom(definitionContext, this);
 
       context._createComponent();
       context._created();

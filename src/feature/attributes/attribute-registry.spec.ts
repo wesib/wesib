@@ -1,8 +1,9 @@
+import { CustomHTMLElement } from '@frontmeans/dom-primitives';
 import { Class } from '@proc7ts/primitives';
 import { bootstrapComponents } from '../../boot/bootstrap';
-import { CustomElement } from '../../common';
 import { Component, ComponentSlot } from '../../component';
 import { ComponentClass } from '../../component/definition';
+import { MockElement } from '../../spec/test-element';
 import { attributePathTo } from './attribute-path';
 import { Attributes } from './attributes.decorator';
 
@@ -43,14 +44,22 @@ describe('feature/attributes', () => {
     });
     it('declares `attributeChangedCallback` method', async () => {
 
+      class BaseElement {
+
+        getRootNode(): Node {
+          return document;
+        }
+
+      }
+
       const attrChanged = jest.fn();
 
-      @Component({ extend: { type: Object } })
+      @Component({ extend: { type: BaseElement } })
       @Attributes({ testAttr: attrChanged })
       class TestComponent {}
 
       const elementType = await bootstrap(TestComponent);
-      const element: CustomElement = new elementType();
+      const element: CustomHTMLElement = new elementType();
       const context = await ComponentSlot.of(element).whenReady;
 
       element.attributeChangedCallback!('test-attr', 'old', 'new');
@@ -63,7 +72,7 @@ describe('feature/attributes', () => {
     });
     it('inherits attribute change callback', async () => {
 
-      class BaseElement {
+      class BaseElement extends MockElement {
 
         static observedAttributes = ['inherited-attr'];
 

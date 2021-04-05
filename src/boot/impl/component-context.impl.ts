@@ -1,15 +1,10 @@
 import { AfterEvent, onceOn, OnEvent } from '@proc7ts/fun-events';
-import { valueProvider } from '@proc7ts/primitives';
+import { noop, valueProvider } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
-import {
-  ComponentContext,
-  ComponentContext__symbol,
-  ComponentEvent,
-  ComponentInstance,
-  ComponentSlot,
-} from '../../component';
+import { ComponentContext, ComponentContext__symbol, ComponentInstance, ComponentSlot } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { newComponent } from '../../component/definition/component.impl';
+import { DefaultRenderKit } from '../globals';
 import { ComponentStatus } from './component-status.impl';
 import { DefinitionContext$ } from './definition-context.impl';
 
@@ -32,6 +27,17 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
     registry.provide({ a: ComponentContext, is: this });
     this.get = registry.newValues().get;
     this._status = new ComponentStatus(this);
+
+    // Ignore immediate settlement, as is typically leads to DOM manipulations prohibited inside constructor.
+    let whenSettled: () => void = noop;
+
+    this.get(DefaultRenderKit)
+        .contextOf(element)
+        .whenSettled(_drekCtx => whenSettled())
+        .needs(this);
+
+    // Assume the settlement would happen outside the constructor.
+    whenSettled = () => this.settle();
   }
 
   get componentType(): ComponentClass<T> {
@@ -137,9 +143,17 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
 
   _created(): void {
     this._status.create();
-    this.whenConnected(
-        () => this.dispatchEvent(new ComponentEvent('wesib:component', { bubbles: true })),
-    );
+  }
+
+}
+
+/**
+ * @internal
+ */
+export class ComponentContext$Mounted<T extends object> extends ComponentContext$<T> {
+
+  get mounted(): true {
+    return true;
   }
 
 }
