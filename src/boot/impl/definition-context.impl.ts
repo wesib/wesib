@@ -1,4 +1,3 @@
-import { drekContextOf } from '@frontmeans/drek';
 import { ContextValues, ContextValueSpec } from '@proc7ts/context-values';
 import { mapOn_, onceOn, OnEvent, trackValue, translateOn, ValueTracker } from '@proc7ts/fun-events';
 import { Class, valueProvider } from '@proc7ts/primitives';
@@ -6,6 +5,7 @@ import { Supply } from '@proc7ts/supply';
 import { ComponentContext, ComponentDef, ComponentElement, ComponentSlot } from '../../component';
 import { DefinitionContext, DefinitionSetup } from '../../component/definition';
 import { BootstrapContext } from '../bootstrap-context';
+import { DefaultRenderKit } from '../globals';
 import { ComponentContextRegistry, PerComponentRegistry } from './component-context-registry.impl';
 import { ComponentContext$Mounted } from './component-context.impl';
 import { customElementType } from './custom-element.impl';
@@ -82,7 +82,10 @@ export class DefinitionContext$<T extends object> extends DefinitionContext<T> {
     const context = new ComponentContext$Mounted(this, element);
 
     context._createComponent();
-    drekContextOf(element).whenConnected(() => context._connect());
+    context.get(DefaultRenderKit)
+        .contextOf(element)
+        .whenConnected(() => context._connect())
+        .needs(context);
     context._created();
 
     return context;

@@ -1,10 +1,10 @@
-import { drekContextOf } from '@frontmeans/drek';
 import { AfterEvent, onceOn, OnEvent } from '@proc7ts/fun-events';
 import { noop, valueProvider } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
 import { ComponentContext, ComponentContext__symbol, ComponentInstance, ComponentSlot } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { newComponent } from '../../component/definition/component.impl';
+import { DefaultRenderKit } from '../globals';
 import { ComponentStatus } from './component-status.impl';
 import { DefinitionContext$ } from './definition-context.impl';
 
@@ -31,7 +31,10 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
     // Ignore immediate settlement, as is typically leads to DOM manipulations prohibited inside constructor.
     let whenSettled: () => void = noop;
 
-    drekContextOf(element).whenSettled(_drekCtx => whenSettled()).needs(this);
+    this.get(DefaultRenderKit)
+        .contextOf(element)
+        .whenSettled(_drekCtx => whenSettled())
+        .needs(this);
 
     // Assume the settlement would happen outside the constructor.
     whenSettled = () => this.settle();
