@@ -1,4 +1,4 @@
-import { immediateRenderScheduler, RenderExecution } from '@frontmeans/render-scheduler';
+import { queuedRenderScheduler, RenderExecution } from '@frontmeans/render-scheduler';
 import { noop } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
 import { DefaultRenderScheduler } from '../../boot/globals';
@@ -50,7 +50,7 @@ export class ElementRenderCtl$ implements ElementRenderCtl {
 
     (whenConnected ? this._context.whenConnected : this._context.whenSettled)(startRendering);
 
-    const immediateSchedule = immediateRenderScheduler();
+    const immediateSchedule = queuedRenderScheduler();
 
     this._renders.add(renderNow);
 
