@@ -1,4 +1,4 @@
-import { CustomElement } from '@frontmeans/drek';
+import { CustomHTMLElement } from '@frontmeans/dom-primitives';
 import { onSupplied } from '@proc7ts/fun-events';
 import { Component, ComponentContext, ComponentSlot } from '../component';
 import { ComponentClass } from '../component/definition';
@@ -164,7 +164,7 @@ describe('component instantiation', () => {
 
         }
 
-        const element: CustomElement = new (await testElement(TestComponent))();
+        const element: CustomHTMLElement = new (await testElement(TestComponent))();
 
         expect(whenDestroyed).not.toHaveBeenCalled();
 

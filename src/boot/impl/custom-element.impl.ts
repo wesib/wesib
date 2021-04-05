@@ -1,4 +1,4 @@
-import { CustomElementClass } from '@frontmeans/drek';
+import { CustomHTMLElementClass } from '@frontmeans/dom-primitives';
 import { Class } from '@proc7ts/primitives';
 import { ComponentElement, ComponentSlot } from '../../component';
 import { ElementDef } from '../../component/definition';
@@ -22,7 +22,7 @@ export function customElementType<T extends object>(
 
   const elementDef = definitionContext.get(ElementDef);
 
-  class CustomElement$ extends (elementDef.extend.type as CustomElementClass) implements ComponentElement {
+  class CustomElement$ extends (elementDef.extend.type as CustomHTMLElementClass) implements ComponentElement {
 
     constructor() {
       super();

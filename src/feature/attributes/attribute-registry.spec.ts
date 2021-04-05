@@ -1,4 +1,4 @@
-import { CustomElement } from '@frontmeans/drek';
+import { CustomHTMLElement } from '@frontmeans/dom-primitives';
 import { Class } from '@proc7ts/primitives';
 import { bootstrapComponents } from '../../boot/bootstrap';
 import { Component, ComponentSlot } from '../../component';
@@ -59,7 +59,7 @@ describe('feature/attributes', () => {
       class TestComponent {}
 
       const elementType = await bootstrap(TestComponent);
-      const element: CustomElement = new elementType();
+      const element: CustomHTMLElement = new elementType();
       const context = await ComponentSlot.of(element).whenReady;
 
       element.attributeChangedCallback!('test-attr', 'old', 'new');

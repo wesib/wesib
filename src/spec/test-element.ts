@@ -1,4 +1,4 @@
-import { CustomElementClass } from '@frontmeans/drek';
+import { CustomHTMLElementClass } from '@frontmeans/dom-primitives';
 import { OnEvent } from '@proc7ts/fun-events';
 import { Class } from '@proc7ts/primitives';
 import { bootstrapComponents } from '../boot/bootstrap';
@@ -63,12 +63,12 @@ export class MockElement {
   readonly dispatchEvent = jest.fn();
   readonly addEventListener = jest.fn();
   readonly removeEventListener = jest.fn();
-  private readonly _target: CustomElementClass;
+  private readonly _target: CustomHTMLElementClass;
   private readonly _attributes: { [name: string]: string | null } = {};
 
   constructor({ ownerDocument = document }: { ownerDocument?: Document } = {}) {
     this.ownerDocument = ownerDocument;
-    this._target = new.target as unknown as CustomElementClass;
+    this._target = new.target as unknown as CustomHTMLElementClass;
   }
 
   getRootNode(): Node {

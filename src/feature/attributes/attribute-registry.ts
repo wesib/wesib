@@ -1,4 +1,4 @@
-import { CustomElementClass } from '@frontmeans/drek';
+import { CustomHTMLElementClass } from '@frontmeans/dom-primitives';
 import { ContextRef, SingleContextKey } from '@proc7ts/context-values';
 import { mergeFunctions } from '@proc7ts/primitives';
 import { BootstrapWindow } from '../../boot/globals';
@@ -46,7 +46,7 @@ class AttributeRegistry$ implements AttributeRegistry {
   private readonly attrs = new Map<string, AttributeChangedCallback<any>>();
 
   constructor(private readonly _context: DefinitionContext) {
-    _context.whenReady(({ elementType }) => this.define(elementType as CustomElementClass));
+    _context.whenReady(({ elementType }) => this.define(elementType as CustomHTMLElementClass));
     _context.whenComponent(context => {
       if (context.mounted) {
         // Mount element attributes
@@ -59,7 +59,7 @@ class AttributeRegistry$ implements AttributeRegistry {
     this.attrs.set(name, mergeFunctions(this.attrs.get(name), change));
   }
 
-  private define(elementType: CustomElementClass): void {
+  private define(elementType: CustomHTMLElementClass): void {
 
     const { attrs } = this;
 
@@ -128,7 +128,7 @@ type ElementAttributeChanged = (
  * @internal
  */
 function observedAttributes(
-    elementType: CustomElementClass,
+    elementType: CustomHTMLElementClass,
     attrs: readonly string[],
 ): readonly string[] {
 
@@ -150,7 +150,7 @@ function observedAttributes(
  * @internal
  */
 function attributeChangedCallback<T extends object>(
-    elementType: CustomElementClass,
+    elementType: CustomHTMLElementClass,
     attrs: Map<string, AttributeChangedCallback<T>>,
 ): ElementAttributeChanged {
 
