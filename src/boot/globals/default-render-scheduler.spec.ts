@@ -5,7 +5,9 @@ import {
   RenderScheduler,
   setRenderScheduler,
 } from '@frontmeans/render-scheduler';
+import { Component } from '../../component';
 import { Feature, FeatureDef } from '../../feature';
+import { MockElement } from '../../spec/test-element';
 import { bootstrapComponents } from '../bootstrap';
 import { BootstrapContext } from '../bootstrap-context';
 import { BootstrapWindow } from './bootstrap-window';
@@ -83,6 +85,39 @@ describe('boot', () => {
 
       scheduler({ window, node, error });
       expect(mockScheduler).toHaveBeenCalledWith({ window, node, error });
+    });
+    it('is singleton', async () => {
+
+      const bsContext = await bootstrapContext();
+
+      @Component({ extend: { type: MockElement } })
+      class TestComponent {
+      }
+
+      await bsContext.load(TestComponent).whenReady;
+
+      const defContext = await bsContext.whenDefined(TestComponent);
+
+      expect(defContext.get(DefaultRenderScheduler)).toBe(bsContext.get(DefaultRenderScheduler));
+    });
+    it('respects fallback render scheduler when requested indirectly', async () => {
+
+      const bsContext = await bootstrapContext();
+
+      @Component({ extend: { type: MockElement } })
+      class TestComponent {
+      }
+
+      await bsContext.load(TestComponent).whenReady;
+
+      const defContext = await bsContext.whenDefined(TestComponent);
+
+      const fallback = jest.fn();
+      const scheduler = defContext.get(DefaultRenderScheduler, { or: fallback })!;
+
+      scheduler();
+      expect(fallback).toHaveBeenCalled();
+      expect(mockScheduler).not.toHaveBeenCalled();
     });
 
     async function bootstrapContext(
