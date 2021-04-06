@@ -1,4 +1,4 @@
-import { queuedRenderScheduler, RenderExecution } from '@frontmeans/render-scheduler';
+import { RenderExecution } from '@frontmeans/render-scheduler';
 import { noop } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
 import { DefaultRenderKit } from '../../boot/globals';
@@ -21,8 +21,6 @@ const enum RenderStatus {
  * @internal
  */
 export class ElementRenderCtl$ implements ElementRenderCtl {
-
-  private readonly _renders = new Set<() => void>();
 
   constructor(private readonly _context: ComponentContext) {
   }
@@ -51,19 +49,11 @@ export class ElementRenderCtl$ implements ElementRenderCtl {
 
     (whenConnected ? this._context.whenConnected : this._context.whenSettled)(startRendering);
 
-    const immediateSchedule = queuedRenderScheduler();
-
-    this._renders.add(renderNow);
-
-    return supply.whenOff(() => this._renders.delete(renderNow));
+    return supply;
 
     function scheduleRenderer(): void {
       status = RenderStatus.Scheduled;
       schedule(renderElement);
-    }
-
-    function renderNow(): void {
-      immediateSchedule(renderElement);
     }
 
     function cancelRenderer(): void {
@@ -74,24 +64,18 @@ export class ElementRenderCtl$ implements ElementRenderCtl {
     }
 
     function renderElement(execution: RenderExecution): void {
-      if (status > RenderStatus.Complete) { // Prevent excessive rendering
-        status = RenderStatus.Complete;
-        for (; ;) {
+      status = RenderStatus.Complete;
+      for (; ;) {
 
-          const newRenderer = renderer(execution);
+        const newRenderer = renderer(execution);
 
-          if (newRenderer === renderer || typeof newRenderer !== 'function') {
-            break;
-          }
-
-          renderer = newRenderer;
+        if (newRenderer === renderer || typeof newRenderer !== 'function') {
+          break;
         }
+
+        renderer = newRenderer;
       }
     }
-  }
-
-  renderNow(): void {
-    this._renders.forEach(render => render());
   }
 
 }

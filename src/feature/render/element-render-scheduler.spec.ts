@@ -1,7 +1,6 @@
 import {
   immediateRenderScheduler,
   newManualRenderScheduler,
-  noopRenderScheduler,
   RenderSchedule,
   RenderScheduleOptions,
   RenderScheduler,
@@ -9,7 +8,6 @@ import {
 import { DefaultRenderScheduler } from '../../boot/globals';
 import { Component, ComponentContext, ComponentSlot } from '../../component';
 import { MockElement, testElement } from '../../spec/test-element';
-import { ElementRenderCtl } from './element-render-ctl';
 import { ElementRenderScheduler } from './element-render-scheduler';
 
 describe('feature/render', () => {
@@ -72,23 +70,6 @@ describe('feature/render', () => {
       manual.render();
       expect(shot1).not.toHaveBeenCalled();
       expect(shot2).toHaveBeenCalledTimes(1);
-    });
-    it('renders immediately on request', async () => {
-      mockRenderScheduler.mockImplementation(noopRenderScheduler);
-
-      const context = await bootstrap();
-
-      context.element.connectedCallback();
-
-      const scheduler = context.get(ElementRenderScheduler);
-      const schedule = scheduler();
-      const shot = jest.fn();
-
-      schedule(shot);
-      expect(shot).not.toHaveBeenCalled();
-
-      context.get(ElementRenderCtl).renderNow();
-      expect(shot).toHaveBeenCalledTimes(1);
     });
     it('reports errors by calling the given method', async () => {
       mockRenderScheduler = jest.fn(immediateRenderScheduler);

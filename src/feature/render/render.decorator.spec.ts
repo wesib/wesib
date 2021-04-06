@@ -1,7 +1,6 @@
 import {
   immediateRenderScheduler,
   newManualRenderScheduler,
-  noopRenderScheduler,
   RenderSchedule,
   RenderScheduleOptions,
   RenderScheduler,
@@ -11,7 +10,6 @@ import { Component, ComponentContext, ComponentSlot } from '../../component';
 import { MockElement, testElement } from '../../spec/test-element';
 import { DomProperty, domPropertyPathTo } from '../dom-properties';
 import { ComponentState } from '../state';
-import { ElementRenderCtl } from './element-render-ctl';
 import { ElementRenderer } from './element-renderer';
 import { RenderDef, RenderPath__root } from './render-def';
 import { Render } from './render.decorator';
@@ -247,57 +245,6 @@ describe('feature/render', () => {
         component.property = 'third';
         expect(mockRenderer).toHaveBeenCalledTimes(2);
         expect(replacement).toHaveBeenCalledTimes(2);
-      });
-    });
-
-    describe('ElementRenderCtl', () => {
-      beforeEach(() => {
-        mockRenderSchedule.mockImplementation(noopRenderScheduler());
-      });
-
-      describe('renderNow', () => {
-        beforeEach(() => {
-          mockRenderScheduler.mockImplementation(noopRenderScheduler);
-        });
-
-        it('renders component immediately', async () => {
-
-          const context = await bootstrap();
-          const renderCtl = context.get(ElementRenderCtl);
-
-          context.element.connectedCallback();
-          expect(mockRenderer).not.toHaveBeenCalled();
-
-          renderCtl.renderNow();
-          expect(mockRenderer).toHaveBeenCalledTimes(1);
-        });
-        it('does not render component without state update', async () => {
-
-          const context = await bootstrap();
-          const renderCtl = context.get(ElementRenderCtl);
-
-          context.element.connectedCallback();
-          expect(mockRenderer).not.toHaveBeenCalled();
-
-          renderCtl.renderNow();
-          renderCtl.renderNow();
-          renderCtl.renderNow();
-          expect(mockRenderer).toHaveBeenCalledTimes(1);
-        });
-        it('renders component after state update', async () => {
-
-          const context = await bootstrap();
-          const renderCtl = context.get(ElementRenderCtl);
-
-          context.element.connectedCallback();
-          expect(mockRenderer).not.toHaveBeenCalled();
-
-          renderCtl.renderNow();
-          context.element.property = 'other';
-
-          renderCtl.renderNow();
-          expect(mockRenderer).toHaveBeenCalledTimes(2);
-        });
       });
     });
 

@@ -26,19 +26,7 @@ export interface ElementRenderCtl {
    *
    * @returns Render shots supply. Element `renderer` will stop rendering once this supply is cut off.
    */
-  renderBy(
-      renderer: ElementRenderer,
-      def?: RenderDef,
-  ): Supply;
-
-  /**
-   * Executes scheduled element render shots immediately.
-   *
-   * Uses `immediateRenderScheduler` for that.
-   *
-   * Does not execute element renderers that are not scheduled. I.e. if no corresponding state updates happened.
-   */
-  renderNow(): void;
+  renderBy(renderer: ElementRenderer, def?: RenderDef): Supply;
 
 }
 
