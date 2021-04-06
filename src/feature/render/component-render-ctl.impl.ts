@@ -3,13 +3,10 @@ import { noop } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
 import { DefaultRenderKit } from '../../boot/globals';
 import { ComponentContext } from '../../component';
-import { ElementRenderCtl } from './element-render-ctl';
-import { ElementRenderer } from './element-renderer';
+import { ComponentRenderCtl } from './component-render-ctl';
+import { ComponentRenderer } from './component-renderer';
 import { RenderDef } from './render-def';
 
-/**
- * @internal
- */
 const enum RenderStatus {
   Cancelled = -1,
   Complete = 0,
@@ -20,13 +17,13 @@ const enum RenderStatus {
 /**
  * @internal
  */
-export class ElementRenderCtl$ implements ElementRenderCtl {
+export class ComponentRenderCtl$ implements ComponentRenderCtl {
 
   constructor(private readonly _context: ComponentContext) {
   }
 
   renderBy(
-      renderer: ElementRenderer,
+      renderer: ComponentRenderer,
       def: RenderDef = {},
   ): Supply {
 

@@ -10,7 +10,7 @@ import { Component, ComponentContext, ComponentSlot } from '../../component';
 import { MockElement, testElement } from '../../spec/test-element';
 import { DomProperty, domPropertyPathTo } from '../dom-properties';
 import { ComponentState } from '../state';
-import { ElementRenderer } from './element-renderer';
+import { ComponentRenderer } from './component-renderer';
 import { RenderDef, RenderPath__root } from './render-def';
 import { Render } from './render.decorator';
 import Mock = jest.Mock;
@@ -248,7 +248,7 @@ describe('feature/render', () => {
       });
     });
 
-    async function bootstrap(def?: RenderDef, renderer: ElementRenderer = mockRenderer): Promise<ComponentContext> {
+    async function bootstrap(def?: RenderDef, renderer: ComponentRenderer = mockRenderer): Promise<ComponentContext> {
 
       @Component({
         name: 'test-component',

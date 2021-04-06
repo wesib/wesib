@@ -8,10 +8,10 @@ import {
 import { DefaultRenderScheduler } from '../../boot/globals';
 import { Component, ComponentContext, ComponentSlot } from '../../component';
 import { MockElement, testElement } from '../../spec/test-element';
-import { ElementRenderScheduler } from './element-render-scheduler';
+import { ComponentRenderScheduler } from './component-render-scheduler';
 
 describe('feature/render', () => {
-  describe('ElementRenderScheduler', () => {
+  describe('ComponentRenderScheduler', () => {
 
     let mockRenderScheduler: jest.Mock<RenderSchedule, Parameters<RenderScheduler>>;
     let mockRenderSchedule: jest.Mock<void, Parameters<RenderSchedule>>;
@@ -27,7 +27,7 @@ describe('feature/render', () => {
 
       context.element.connectedCallback();
 
-      const scheduler: RenderScheduler = context.get(ElementRenderScheduler);
+      const scheduler: RenderScheduler = context.get(ComponentRenderScheduler);
       const schedule = scheduler();
       const shot = jest.fn();
 
@@ -37,7 +37,7 @@ describe('feature/render', () => {
     it('schedules render shot only when component connected', async () => {
 
       const context = await bootstrap();
-      const scheduler = context.get(ElementRenderScheduler);
+      const scheduler = context.get(ComponentRenderScheduler);
       const schedule = scheduler();
       const shot = jest.fn();
 
@@ -57,7 +57,7 @@ describe('feature/render', () => {
 
       context.element.connectedCallback();
 
-      const scheduler = context.get(ElementRenderScheduler);
+      const scheduler = context.get(ComponentRenderScheduler);
       const schedule = scheduler();
       const shot1 = jest.fn();
       const shot2 = jest.fn();
@@ -80,7 +80,7 @@ describe('feature/render', () => {
 
       context.element.connectedCallback();
 
-      const scheduler = context.get(ElementRenderScheduler);
+      const scheduler = context.get(ComponentRenderScheduler);
       const options = { error: logError };
       const schedule = scheduler(options);
       const shot = (): never => {

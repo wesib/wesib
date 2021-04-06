@@ -12,7 +12,7 @@ import { ComponentContext } from '../../component';
 import { ComponentState } from '../state';
 
 /**
- * Element rendering definition.
+ * Component rendering definition.
  *
  * This is either a {@link RenderDef.Spec rendering specifier}, or its {@link RenderDef.Provider provider function}.
  *
