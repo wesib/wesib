@@ -19,7 +19,7 @@ export interface ComponentRenderCtl {
   /**
    * Enables component rendering by the given `renderer`.
    *
-   * A `renderer` call will be scheduled by {@link DefaultRenderKit.contextOf render kit} once component state updated.
+   * A `renderer` call will be scheduled by {@link DocumentRenderKit document render kit} once component state updated.
    *
    * @param renderer - Component renderer function.
    * @param def - Optional component rendering definition.

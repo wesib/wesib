@@ -1,7 +1,7 @@
 import { RenderExecution } from '@frontmeans/render-scheduler';
 import { noop } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
-import { DefaultRenderKit } from '../../boot/globals';
+import { DocumentRenderKit } from '../../boot/globals';
 import { ComponentContext } from '../../component';
 import { ComponentRenderCtl } from './component-render-ctl';
 import { ComponentRenderer } from './component-renderer';
@@ -29,7 +29,7 @@ export class ComponentRenderCtl$ implements ComponentRenderCtl {
 
     const spec = RenderDef.spec(this._context, def);
     const trigger = RenderDef.trigger(this._context, spec);
-    const renderKit = this._context.get(DefaultRenderKit);
+    const renderKit = this._context.get(DocumentRenderKit);
     const schedule = renderKit.contextOf(this._context.element).scheduler({
       ...RenderDef.fulfill(spec),
       node: this._context.element as Element,

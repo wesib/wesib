@@ -4,11 +4,11 @@ import { immediateRenderScheduler } from '@frontmeans/render-scheduler';
 import { Feature } from '../../feature';
 import { bootstrapComponents } from '../bootstrap';
 import { DefaultNamespaceAliaser } from './default-namespace-aliaser';
-import { DefaultRenderKit } from './default-render-kit';
 import { DefaultRenderScheduler } from './default-render-scheduler';
+import { DocumentRenderKit } from './document-render-kit';
 
 describe('boot', () => {
-  describe('DefaultRenderKit', () => {
+  describe('DocumentRenderKit', () => {
 
     let doc: Document;
 
@@ -18,7 +18,7 @@ describe('boot', () => {
 
     let nsAlias: NamespaceAliaser;
     let scheduler: DefaultRenderScheduler;
-    let renderKit: DefaultRenderKit;
+    let renderKit: DocumentRenderKit;
 
     beforeEach(async () => {
       nsAlias = jest.fn(newNamespaceAliaser());
@@ -34,7 +34,7 @@ describe('boot', () => {
 
       const bsContext = await bootstrapComponents(TestFeature).whenReady;
 
-      renderKit = bsContext.get(DefaultRenderKit);
+      renderKit = bsContext.get(DocumentRenderKit);
     });
 
     it('initializes document rendering context with `DefaultNamespaceAliaser`', () => {

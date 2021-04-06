@@ -4,7 +4,7 @@ import { Supply } from '@proc7ts/supply';
 import { ComponentContext, ComponentContext__symbol, ComponentInstance, ComponentSlot } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { newComponent } from '../../component/definition/component.impl';
-import { DefaultRenderKit } from '../globals';
+import { DocumentRenderKit } from '../globals';
 import { ComponentStatus } from './component-status.impl';
 import { DefinitionContext$ } from './definition-context.impl';
 
@@ -31,7 +31,7 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
     // Ignore immediate settlement, as is typically leads to DOM manipulations prohibited inside constructor.
     let whenSettled: () => void = noop;
 
-    this.get(DefaultRenderKit)
+    this.get(DocumentRenderKit)
         .contextOf(element)
         .whenSettled(_drekCtx => whenSettled())
         .needs(this);
