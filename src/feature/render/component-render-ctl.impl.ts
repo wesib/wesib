@@ -1,4 +1,4 @@
-import { RenderExecution } from '@frontmeans/render-scheduler';
+import { RenderExecution, RenderSchedule } from '@frontmeans/render-scheduler';
 import { noop } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
 import { DocumentRenderKit } from '../../boot/globals';
@@ -22,18 +22,14 @@ export class ComponentRenderCtl$ implements ComponentRenderCtl {
   constructor(private readonly _context: ComponentContext) {
   }
 
-  renderBy(
-      renderer: ComponentRenderer,
-      def: RenderDef = {},
+  renderBy<TExecution extends RenderExecution>(
+      renderer: ComponentRenderer<TExecution>,
+      def: RenderDef<TExecution> = {},
   ): Supply {
 
-    const spec = RenderDef.spec(this._context, def);
+    const spec = RenderDef.spec<TExecution>(this._context, def);
     const trigger = RenderDef.trigger(this._context, spec);
-    const renderKit = this._context.get(DocumentRenderKit);
-    const schedule = renderKit.contextOf(this._context.element).scheduler({
-      ...RenderDef.fulfill(spec),
-      node: this._context.element as Element,
-    });
+    const schedule = ComponentRenderCtl$createSchedule(this._context, spec);
     const whenConnected = spec.when === 'connected';
     let status = RenderStatus.Pending;
     const startRendering = (): 0 | void => status /* there is an update to render */ && scheduleRenderer();
@@ -60,7 +56,7 @@ export class ComponentRenderCtl$ implements ComponentRenderCtl {
       status = RenderStatus.Cancelled;
     }
 
-    function renderElement(execution: RenderExecution): void {
+    function renderElement(execution: TExecution): void {
       status = RenderStatus.Complete;
       for (; ;) {
 
@@ -75,4 +71,26 @@ export class ComponentRenderCtl$ implements ComponentRenderCtl {
     }
   }
 
+}
+
+function ComponentRenderCtl$createSchedule<TExecution extends RenderExecution>(
+    context: ComponentContext,
+    spec: RenderDef.Spec<TExecution>,
+): RenderSchedule<TExecution> {
+
+  const { schedule } = spec;
+
+  if (schedule) {
+    return schedule;
+  }
+
+  const element = context.element as Element;
+
+  return context
+      .get(DocumentRenderKit)
+      .contextOf(element)
+      .scheduler({
+        ...RenderDef.fulfill(spec),
+        node: element,
+      }) as RenderSchedule<TExecution>;
 }

@@ -1,3 +1,4 @@
+import { RenderExecution } from '@frontmeans/render-scheduler';
 import { ContextRef, SingleContextKey } from '@proc7ts/context-values';
 import { Supply } from '@proc7ts/supply';
 import { ComponentContext } from '../../component';
@@ -17,6 +18,20 @@ import { RenderDef } from './render-def';
 export interface ComponentRenderCtl {
 
   /**
+   * Enables component rendering by the given `renderer` scheduled by particular schedule.
+   *
+   * @typeParam TExecution - A type of supported renderer execution context.
+   * @param renderer - Component renderer function.
+   * @param def - Component rendering definition.
+   *
+   * @returns Render shots supply. Component's `renderer` would stop rendering once this supply is cut off.
+   */
+  renderBy<TExecution extends RenderExecution>(
+      renderer: ComponentRenderer<TExecution>,
+      def: RenderDef.Scheduled<TExecution>,
+  ): Supply;
+
+  /**
    * Enables component rendering by the given `renderer`.
    *
    * A `renderer` call will be scheduled by {@link DocumentRenderKit document render kit} once component state updated.
@@ -24,7 +39,7 @@ export interface ComponentRenderCtl {
    * @param renderer - Component renderer function.
    * @param def - Optional component rendering definition.
    *
-   * @returns Render shots supply. Component's `renderer` will stop rendering once this supply is cut off.
+   * @returns Render shots supply. Component's `renderer` would stop rendering once this supply is cut off.
    */
   renderBy(renderer: ComponentRenderer, def?: RenderDef): Supply;
 

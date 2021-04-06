@@ -9,8 +9,9 @@ import { RenderExecution } from '@frontmeans/render-scheduler';
  * Renderer execution is controlled by {@link ComponentRenderCtl component render control}.
  *
  * @category Feature
+ * @typeParam TExecution - A type of supported execution context.
  */
-export type ComponentRenderer =
+export type ComponentRenderer<TExecution extends RenderExecution = RenderExecution> =
 /**
  * @param execution - Render shot execution context.
  *
@@ -18,5 +19,5 @@ export type ComponentRenderer =
  */
     (
         this: void,
-        execution: RenderExecution,
-    ) => void | ComponentRenderer;
+        execution: TExecution,
+    ) => void | ComponentRenderer<TExecution>;
