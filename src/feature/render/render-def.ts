@@ -105,7 +105,7 @@ export namespace RenderDef {
    *
    * @typeParam TExecution - A type of supported renderer execution context.
    */
-  export type Scheduled<TExecution extends RenderExecution> =
+  export type Scheduled<TExecution extends RenderExecution = RenderExecution> =
       | ScheduledSpec<TExecution>
       | Provider<ScheduledSpec<TExecution>>;
 
@@ -114,7 +114,7 @@ export namespace RenderDef {
    *
    * @typeParam TExecution - A type of supported renderer execution context.
    */
-  export interface ScheduledSpec<TExecution extends RenderExecution> extends Spec<TExecution> {
+  export interface ScheduledSpec<TExecution extends RenderExecution = RenderExecution> extends Spec<TExecution> {
 
     /**
      * Renderer execution schedule.
@@ -170,9 +170,10 @@ export const RenderDef = {
       defaults: RenderDef.Spec<TExecution> = {},
   ): RenderDef.Spec<TExecution> {
 
-    const { on = defaults.on, error } = base;
+    const { when = defaults.when, on = defaults.on, error } = base;
 
     return {
+      when,
       on,
       error: error ? error.bind(base) : defaults.error && defaults.error.bind(defaults),
     };
