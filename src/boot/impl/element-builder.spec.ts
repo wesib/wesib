@@ -605,7 +605,7 @@ describe('boot', () => {
 
           const fragment = new DrekFragment(drekAppender(doc.body));
 
-          fragment.scheduler()(({ content }) => {
+          fragment.innerContext.scheduler()(({ content }) => {
 
             const drekCtx = drekContextOf(element);
 

@@ -52,7 +52,7 @@ export function PreRender<TClass extends ComponentClass>(
                   ): ComponentRenderer => (
                       _execution: RenderExecution,
                   ): ComponentRenderer | undefined => {
-                    fragment.scheduler()(preExecution => {
+                    fragment.innerContext.scheduler()(preExecution => {
 
                       const next = preRenderer(preExecution);
 
