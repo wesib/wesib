@@ -67,7 +67,7 @@ function ComponentRenderScheduler$create(context: ContextValues): ComponentRende
       recentShot.it(execution);
     };
 
-    renderCtl.renderBy(renderer, RenderDef.fulfill({ on: recentShot.on }, opts));
+    renderCtl.renderBy(renderer, { ...opts, on: recentShot.on });
 
     return (shot: RenderShot): void => {
       recentShot.it = execution => shot(execution); // Ensure render shot always updated

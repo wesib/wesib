@@ -89,7 +89,7 @@ describe('feature/render', () => {
       component.property2 = 'third';
       expect(mockRenderer).toHaveBeenCalledTimes(2);
     });
-    it('reports errors by calling the given method', async () => {
+    it('reports errors by calling custom function', async () => {
       mockRenderScheduler = jest.fn(immediateRenderScheduler);
 
       const error = new Error('test');
@@ -104,7 +104,6 @@ describe('feature/render', () => {
 
       element.connectedCallback();
       expect(logError).toHaveBeenCalledWith(error);
-      expect(logError.mock.instances[0]).toBe(renderDef);
     });
     it('is not scheduled on state update when not settled', async () => {
 

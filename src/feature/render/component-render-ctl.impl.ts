@@ -90,7 +90,7 @@ function ComponentRenderCtl$createSchedule<TExecution extends RenderExecution>(
       .get(DocumentRenderKit)
       .contextOf(element)
       .scheduler({
-        ...RenderDef.fulfill(spec),
+        ...spec,
         node: element,
       }) as RenderSchedule<TExecution>;
 }

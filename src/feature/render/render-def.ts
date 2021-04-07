@@ -49,7 +49,7 @@ export namespace RenderDef {
      *
      * @param messages - Error messages to report.
      */
-    error?(...messages: any[]): void;
+    error?(this: void, ...messages: any[]): void;
 
   }
 
@@ -154,29 +154,6 @@ export const RenderDef = {
       def: RenderDef<TExecution>,
   ): RenderDef.Spec<TExecution> {
     return valueByRecipe(def, context);
-  },
-
-  /**
-   * Fulfills rendering specifier with the given defaults.
-   *
-   * @param base - Base rendering specifier to fulfill.
-   * @param defaults - Defaults that will be applied unless defined in `base` specifier.
-   *
-   * @return `base` rendering specifier fulfilled by `defaults`.
-   */
-  fulfill<TExecution extends RenderExecution>(
-      this: void,
-      base: RenderDef.Spec<TExecution>,
-      defaults: RenderDef.Spec<TExecution> = {},
-  ): RenderDef.Spec<TExecution> {
-
-    const { when = defaults.when, on = defaults.on, error } = base;
-
-    return {
-      when,
-      on,
-      error: error ? error.bind(base) : defaults.error && defaults.error.bind(defaults),
-    };
   },
 
   /**

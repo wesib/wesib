@@ -71,7 +71,7 @@ describe('feature/render', () => {
       expect(shot1).not.toHaveBeenCalled();
       expect(shot2).toHaveBeenCalledTimes(1);
     });
-    it('reports errors by calling the given method', async () => {
+    it('reports errors by calling custom function', async () => {
       mockRenderScheduler = jest.fn(immediateRenderScheduler);
 
       const error = new Error('test');
@@ -89,7 +89,6 @@ describe('feature/render', () => {
 
       schedule(shot);
       expect(logError).toHaveBeenCalledWith(error);
-      expect(logError.mock.instances[0]).toBe(options);
     });
 
     async function bootstrap(): Promise<ComponentContext> {

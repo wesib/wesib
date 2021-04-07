@@ -74,10 +74,10 @@ export function PreRender<TClass extends ComponentClass>(
 
                   return renderer(execution);
                 },
-                RenderDef.fulfill(
-                    { schedule: asyncRenderScheduler() },
-                    spec.render,
-                ),
+                {
+                  schedule: asyncRenderScheduler(),
+                  ...spec.render,
+                },
             );
           });
         });
