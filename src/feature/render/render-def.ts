@@ -1,4 +1,3 @@
-import { RenderExecution, RenderSchedule } from '@frontmeans/render-scheduler';
 import {
   EventSender,
   isEventSender,
@@ -8,7 +7,6 @@ import {
   supplyOn,
   translateOn_,
 } from '@proc7ts/fun-events';
-import { valueByRecipe } from '@proc7ts/primitives';
 import { ComponentContext } from '../../component';
 import { ComponentState } from '../state';
 
@@ -18,11 +16,10 @@ import { ComponentState } from '../state';
  * This is either a {@link RenderDef.Spec rendering specifier}, or its {@link RenderDef.Provider provider function}.
  *
  * @category Feature
- * @typeParam TExecution - A type of supported renderer execution context.
  */
-export type RenderDef<TExecution extends RenderExecution = RenderExecution> =
-    | RenderDef.Spec<TExecution>
-    | RenderDef.Provider<RenderDef.Spec<TExecution>>;
+export type RenderDef =
+    | RenderDef.Spec
+    | RenderDef.Provider;
 
 /**
  * @category Feature
@@ -58,7 +55,7 @@ export namespace RenderDef {
    *
    * @typeParam TExecution - A type of supported renderer execution context.
    */
-  export interface Spec<TExecution extends RenderExecution = RenderExecution> extends Options {
+  export interface Spec extends Options {
 
     /**
      * A trigger that issues rendering.
@@ -76,11 +73,6 @@ export namespace RenderDef {
      * Except for updates of sub-states inside {@link RenderPath__root}.
      */
     readonly on?: StatePath | EventSender<[]>;
-
-    /**
-     * Renderer execution schedule.
-     */
-    readonly schedule?: RenderSchedule<TExecution>;
 
   }
 
@@ -100,29 +92,6 @@ export namespace RenderDef {
           context: ComponentContext,
       ) => TSpec;
 
-  /**
-   * Component rendering definition scheduled by particular schedule.
-   *
-   * @typeParam TExecution - A type of supported renderer execution context.
-   */
-  export type Scheduled<TExecution extends RenderExecution = RenderExecution> =
-      | ScheduledSpec<TExecution>
-      | Provider<ScheduledSpec<TExecution>>;
-
-  /**
-   * Component rendering specifier scheduled by particular schedule.
-   *
-   * @typeParam TExecution - A type of supported renderer execution context.
-   */
-  export interface ScheduledSpec<TExecution extends RenderExecution = RenderExecution> extends Spec<TExecution> {
-
-    /**
-     * Renderer execution schedule.
-     */
-    readonly schedule: RenderSchedule<TExecution>;
-
-  }
-
 }
 
 /**
@@ -138,23 +107,6 @@ export const RenderPath__root = (/*#__PURE__*/ Symbol('render'));
  * @category Feature
  */
 export const RenderDef = {
-
-  /**
-   * Builds a rendering specifier for component by its definition.
-   *
-   * @typeParam TExecution - A type of supported renderer execution context.
-   * @param context - A context of component to render.
-   * @param def - Arbitrary rendering definition.
-   *
-   * @returns Rendering specifier.
-   */
-  spec<TExecution extends RenderExecution>(
-      this: void,
-      context: ComponentContext,
-      def: RenderDef<TExecution>,
-  ): RenderDef.Spec<TExecution> {
-    return valueByRecipe(def, context);
-  },
 
   /**
    * Builds a trigger issuing rendering updates.

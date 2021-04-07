@@ -40,7 +40,7 @@ export function PreRender<TClass extends ComponentClass>(
             const { component } = context;
             const preRenderer = get(component).bind(component);
 
-            context.get(ComponentRenderCtl).renderBy(
+            context.get(ComponentRenderCtl).withScheduler(asyncRenderScheduler).renderBy(
                 execution => {
 
                   const charger = drekCharger(drekAppender(context.contentRoot), spec.charge);
@@ -74,10 +74,7 @@ export function PreRender<TClass extends ComponentClass>(
 
                   return renderer(execution);
                 },
-                {
-                  schedule: asyncRenderScheduler(),
-                  ...spec.render,
-                },
+                spec.render,
             );
           });
         });
