@@ -43,6 +43,7 @@ const enum RenderStatus {
 
 abstract class ComponentRenderer$BaseState<TExecution extends RenderExecution> {
 
+  protected _supply!: Supply;
   private _status: RenderStatus = RenderStatus.Pending;
   protected _spec: RenderDef.Spec;
 
@@ -64,13 +65,13 @@ abstract class ComponentRenderer$BaseState<TExecution extends RenderExecution> {
     const onUpdate = whenConnected
         ? () => context.connected && this._schedule(schedule)
         : () => context.settled && this._schedule(schedule);
-    const supply = trigger(onUpdate)
+    this._supply = trigger(onUpdate)
         .needs(context)
         .whenOff(() => this._cancel(schedule));
 
     (whenConnected ? context.whenConnected : context.whenSettled)(startRendering);
 
-    return supply;
+    return this._supply;
   }
 
   protected _createSchedule(): RenderSchedule {
@@ -86,7 +87,7 @@ abstract class ComponentRenderer$BaseState<TExecution extends RenderExecution> {
   }
 
   protected _render(execution: RenderExecution): void {
-    this._status = RenderStatus.Scheduled;
+    this._status = RenderStatus.Complete;
     do {
 
       const currentRenderer = this._renderer;
@@ -118,6 +119,7 @@ class ComponentRenderer$State extends ComponentRenderer$BaseState<ComponentRende
       postpone(postponed) {
         execution.postpone(() => postponed(rendererExecution));
       },
+      supply: this._supply,
       renderBy: (renderer: ComponentRenderer) => {
         this._renderer = renderer;
       },
@@ -175,6 +177,7 @@ class ComponentPreRenderer$State extends ComponentRenderer$BaseState<ComponentPr
       postpone(postponed) {
         execution.postpone(() => postponed(preRendererExecution));
       },
+      supply: this._supply,
       renderBy: (renderer: ComponentRenderer) => {
         this._nextRenderer = renderer;
       },

@@ -52,6 +52,15 @@ describe('feature/render', () => {
       component.property = 'other';
       expect(mockPreRenderer).toHaveBeenCalledTimes(2);
     });
+    it('is not re-scheduled when stopped', async () => {
+      mockPreRenderer.mockImplementation(({ supply }) => supply.off());
+
+      const { component, element } = await bootstrap();
+
+      element.connectedCallback();
+      component.property = 'other';
+      expect(mockPreRenderer).toHaveBeenCalledTimes(1);
+    });
 
     describe('Postponed', () => {
       it('is executed', async () => {

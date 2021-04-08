@@ -159,6 +159,15 @@ describe('feature/render', () => {
       component.property = 'other';
       expect(mockRenderer).toHaveBeenCalledTimes(2);
     });
+    it('is not re-scheduled when stopped', async () => {
+      mockRenderer.mockImplementation(({ supply }) => supply.off());
+
+      const { component, element } = await bootstrap();
+
+      element.connectedCallback();
+      component.property = 'other';
+      expect(mockRenderer).toHaveBeenCalledTimes(1);
+    });
     it('is not re-scheduled after component destruction', async () => {
 
       const context = await bootstrap();

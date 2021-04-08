@@ -1,4 +1,5 @@
 import { RenderExecution } from '@frontmeans/render-scheduler';
+import { Supply } from '@proc7ts/supply';
 import { ComponentRenderer } from './component-renderer';
 
 /**
@@ -9,6 +10,13 @@ import { ComponentRenderer } from './component-renderer';
  * @category Feature
  */
 export interface ComponentRendererExecution extends RenderExecution {
+
+  /**
+   * Renderer supply. The rendering would stop once this supply is cut off.
+   *
+   * This is the same supply as the one returned from {@link ComponentRenderCtl.renderBy}.
+   */
+  readonly supply: Supply;
 
   /**
    * Delegates component rendering to another renderer.

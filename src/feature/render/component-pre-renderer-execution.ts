@@ -1,4 +1,5 @@
 import { RenderExecution } from '@frontmeans/render-scheduler';
+import { Supply } from '@proc7ts/supply';
 import { ComponentPreRenderer } from './component-pre-renderer';
 import { ComponentRenderer } from './component-renderer';
 
@@ -10,6 +11,13 @@ import { ComponentRenderer } from './component-renderer';
  * @category Feature
  */
 export interface ComponentPreRendererExecution extends RenderExecution {
+
+  /**
+   * Pre-renderer supply. Pre-rendering would stop once this supply is cut off.
+   *
+   * This is the same supply as the one returned from {@link ComponentRenderCtl.preRenderBy}.
+   */
+  readonly supply: Supply;
 
   /**
    * Enables component rendering by the given `renderer` when pre-rendering completes.

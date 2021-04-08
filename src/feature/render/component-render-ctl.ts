@@ -25,7 +25,7 @@ export interface ComponentRenderCtl {
    * @param renderer - Component renderer function.
    * @param def - Optional component rendering definition.
    *
-   * @returns Render shots supply. Component's `renderer` would stop rendering once this supply is cut off.
+   * @returns Renderer supply. The rendering would stop once this supply is cut off.
    */
   renderBy(renderer: ComponentRenderer, def?: RenderDef): Supply;
 
@@ -38,7 +38,7 @@ export interface ComponentRenderCtl {
    * @param preRenderer - Component pre-renderer function.
    * @param def - Optional component pre-rendering definition.
    *
-   * @returns Render shots supply. Component's pre-renderer would stop rendering once this supply is cut off.
+   * @returns Pre-renderer supply. Pre-rendering would stop once this supply is cut off.
    */
   preRenderBy(preRenderer: ComponentPreRenderer, def?: RenderDef): Supply;
 
