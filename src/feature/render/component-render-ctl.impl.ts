@@ -1,13 +1,7 @@
-import {
-  asyncRenderScheduler,
-  RenderExecution,
-  RenderSchedule,
-  RenderScheduler,
-  RenderShot,
-} from '@frontmeans/render-scheduler';
+import { RenderExecution, RenderSchedule, RenderScheduler, RenderShot } from '@frontmeans/render-scheduler';
 import { noop, valueByRecipe } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
-import { DocumentRenderKit } from '../../boot/globals';
+import { DefaultPreRenderScheduler, DocumentRenderKit } from '../../boot/globals';
 import { ComponentContext } from '../../component';
 import { ComponentPreRenderer } from './component-pre-renderer';
 import { ComponentPreRendererExecution } from './component-pre-renderer-execution';
@@ -159,7 +153,11 @@ class ComponentPreRenderer$State extends ComponentRenderer$BaseState<ComponentPr
   }
 
   protected _createSchedule(): RenderSchedule {
-    return asyncRenderScheduler();
+
+    const context = this._ctl._context;
+    const element: Element = context.element;
+
+    return context.get(DefaultPreRenderScheduler)({ ...this._spec, node: element });
   }
 
   protected _render(execution: RenderExecution): void {

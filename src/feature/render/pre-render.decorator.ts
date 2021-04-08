@@ -1,28 +1,25 @@
-import { DrekCharger } from '@frontmeans/drek';
 import { ComponentProperty, ComponentPropertyDecorator } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { ComponentPreRendererExecution } from './component-pre-renderer-execution';
 import { ComponentRenderCtl } from './component-render-ctl';
 import { RenderDef } from './render-def';
 
-export type PreRenderDef =
-    | PreRenderDef.Spec
-    | PreRenderDef.Provider;
-
-export namespace PreRenderDef {
-
-  export interface Spec extends RenderDef.Spec {
-
-    readonly charge?: DrekCharger.Spec;
-
-  }
-
-  export type Provider = RenderDef.Provider<Spec>;
-
-}
-
+/**
+ * Creates a {@link ComponentPreRenderer component pre-renderer} method decorator.
+ *
+ * Enables pre-rendering with {@link ComponentRenderCtl.preRenderBy component render control}.
+ *
+ * The decorated method accepts a {@link ComponentPreRendererExecution component rendering context} as its only
+ * parameter.
+ *
+ * @category Feature
+ * @typeParam TClass - A type of decorated component class.
+ * @param def - Non-mandatory render definition.
+ *
+ * @returns Component method decorator.
+ */
 export function PreRender<TClass extends ComponentClass>(
-    def: PreRenderDef = {},
+    def: RenderDef = {},
 ): ComponentPropertyDecorator<(execution: ComponentPreRendererExecution) => void, TClass> {
   return ComponentProperty(({ get }) => ({
     componentDef: {

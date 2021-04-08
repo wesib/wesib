@@ -4,13 +4,13 @@ import { ComponentPreRendererExecution } from './component-pre-renderer-executio
 /**
  * Component pre-renderer signature.
  *
- * Pre-renderers used to build a `DocumentFragment` that will be placed to the the document. This is faster than
- * direct document manipulations.
- *
- * After placing the rendered content to the document, it is possible to {@link ComponentPreRendererExecution.renderBy
- * delegate} component rendering to another component renderer.
+ * Pre-renders component's content offline (e.g. using a [DocumentFragment]). The pre-rendered content can be applied
+ * to the document by {@link ComponentPreRendererExecution.renderBy delegate component renderer}. The latter will be
+ * used to render the component after pre-rendering completion.
  *
  * Pre-renderer execution is controlled by {@link ComponentRenderCtl.preRenderBy component render control}.
+ *
+ * [DocumentFragment]: https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment
  *
  * @category Feature
  * @typeParam TExecution - A type of supported component pre-renderer execution context.

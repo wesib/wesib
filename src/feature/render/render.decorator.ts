@@ -5,15 +5,11 @@ import { ComponentRendererExecution } from './component-renderer-execution';
 import { RenderDef } from './render-def';
 
 /**
- * Component property decorator that declares a rendering method for the component.
- *
- * The decorated method call will be scheduled by {@link DefaultRenderScheduler} once component state updated.
- *
- * The decorated method should have no arguments. It may return either nothing, or a function. In the latter case the
- * returned function will be called immediately to render the component. It may, in turn, return a renderer function,
- * and so on.
+ * Creates a {@link ComponentRenderer component renderer} method decorator.
  *
  * Enables rendering with {@link ComponentRenderCtl.renderBy component render control}.
+ *
+ * The decorated method accepts a {@link ComponentRendererExecution component rendering context} as its only parameter.
  *
  * @category Feature
  * @typeParam TClass - A type of decorated component class.

@@ -29,6 +29,17 @@ export interface ComponentRenderCtl {
    */
   renderBy(renderer: ComponentRenderer, def?: RenderDef): Supply;
 
+  /**
+   * Enables component pre-rendering by the given pre-renderer.
+   *
+   * A `pre-renderer` call will be scheduled by {@link DefaultPreRenderScheduler default pre-render scheduler} once
+   * component state updated.
+   *
+   * @param preRenderer - Component pre-renderer function.
+   * @param def - Optional component pre-rendering definition.
+   *
+   * @returns Render shots supply. Component's pre-renderer would stop rendering once this supply is cut off.
+   */
   preRenderBy(preRenderer: ComponentPreRenderer, def?: RenderDef): Supply;
 
 }
