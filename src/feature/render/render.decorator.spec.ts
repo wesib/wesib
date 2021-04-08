@@ -11,6 +11,7 @@ import { MockElement, testElement } from '../../spec/test-element';
 import { DomProperty, domPropertyPathTo } from '../dom-properties';
 import { ComponentState } from '../state';
 import { ComponentRenderer } from './component-renderer';
+import { ComponentRendererExecution } from './component-renderer-execution';
 import { RenderDef, RenderPath__root } from './render-def';
 import { Render } from './render.decorator';
 import Mock = jest.Mock;
@@ -26,7 +27,7 @@ describe('feature/render', () => {
       mockRenderScheduler = jest.fn((_options?: RenderScheduleOptions) => mockRenderSchedule);
     });
 
-    let mockRenderer: Mock;
+    let mockRenderer: jest.Mock<void, [ComponentRendererExecution]>;
 
     beforeEach(() => {
       mockRenderer = jest.fn();
@@ -204,14 +205,14 @@ describe('feature/render', () => {
     describe('Delegated', () => {
       it('is scheduled', async () => {
 
-        const { element } = await bootstrap({}, () => mockRenderer);
+        const { element } = await bootstrap({}, execution => execution.renderBy(mockRenderer));
 
         element.connectedCallback();
         expect(mockRenderer).toHaveBeenCalledTimes(1);
       });
       it('is re-scheduled on state update', async () => {
 
-        const { element, component } = await bootstrap({}, () => mockRenderer);
+        const { element, component } = await bootstrap({}, execution => execution.renderBy(mockRenderer));
 
         element.connectedCallback();
         component.property = 'other';
@@ -219,7 +220,7 @@ describe('feature/render', () => {
       });
       it('does not re-create schedule on state update', async () => {
 
-        const { component, element } = await bootstrap({}, () => mockRenderer);
+        const { component, element } = await bootstrap({}, execution => execution.renderBy(mockRenderer));
 
         element.connectedCallback();
         mockRenderScheduler.mockClear();
@@ -229,13 +230,13 @@ describe('feature/render', () => {
       });
       it('is scheduled with a replacement function', async () => {
 
-        const { component, element } = await bootstrap({}, () => mockRenderer);
+        const { component, element } = await bootstrap({}, execution => execution.renderBy(mockRenderer));
 
         element.connectedCallback();
 
         const replacement = jest.fn();
 
-        mockRenderer.mockImplementation(() => replacement);
+        mockRenderer.mockImplementation(execution => execution.renderBy(replacement));
 
         component.property = 'other';
         expect(mockRenderer).toHaveBeenCalledTimes(2);

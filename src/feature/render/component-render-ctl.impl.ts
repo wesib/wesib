@@ -1,10 +1,44 @@
-import { RenderExecution, RenderScheduler } from '@frontmeans/render-scheduler';
+import {
+  asyncRenderScheduler,
+  RenderExecution,
+  RenderSchedule,
+  RenderScheduler,
+  RenderShot,
+} from '@frontmeans/render-scheduler';
 import { noop, valueByRecipe } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
+import { DocumentRenderKit } from '../../boot/globals';
 import { ComponentContext } from '../../component';
+import { ComponentPreRenderer } from './component-pre-renderer';
+import { ComponentPreRendererExecution } from './component-pre-renderer-execution';
 import { ComponentRenderCtl } from './component-render-ctl';
 import { ComponentRenderer } from './component-renderer';
+import { ComponentRendererExecution } from './component-renderer-execution';
 import { RenderDef } from './render-def';
+
+/**
+ * @internal
+ */
+export class ComponentRenderCtl$ implements ComponentRenderCtl {
+
+  readonly _scheduler: RenderScheduler;
+
+  constructor(readonly _context: ComponentContext) {
+
+    const { element }: { element: Element } = _context;
+
+    this._scheduler = _context.get(DocumentRenderKit).contextOf(element).scheduler;
+  }
+
+  renderBy(renderer: ComponentRenderer, def?: RenderDef): Supply {
+    return new ComponentRenderer$State(this, renderer, def).render();
+  }
+
+  preRenderBy(preRenderer: ComponentPreRenderer, def?: RenderDef): Supply {
+    return new ComponentPreRenderer$State(this, preRenderer, def).render();
+  }
+
+}
 
 const enum RenderStatus {
   Cancelled = -1,
@@ -13,72 +47,145 @@ const enum RenderStatus {
   Scheduled = 2,
 }
 
-/**
- * @internal
- */
-export class ComponentRenderCtl$<TExecution extends RenderExecution = RenderExecution>
-    implements ComponentRenderCtl<TExecution> {
+abstract class ComponentRenderer$BaseState<TExecution extends RenderExecution> {
+
+  private _status: RenderStatus = RenderStatus.Pending;
+  protected _spec: RenderDef.Spec;
 
   constructor(
-      private readonly _context: ComponentContext,
-      private readonly _scheduler: RenderScheduler<TExecution>,
+      protected readonly _ctl: ComponentRenderCtl$,
+      protected _renderer: RenderShot<TExecution>,
+      def: RenderDef = {},
   ) {
+    this._spec = valueByRecipe(def, _ctl._context);
   }
 
-  renderBy(
-      renderer: ComponentRenderer<TExecution>,
-      def: RenderDef = {},
-  ): Supply {
+  render(): Supply {
 
-    const spec = valueByRecipe(def, this._context);
-    const trigger = RenderDef.trigger(this._context, spec);
-    const element = this._context.element as Element;
-    const schedule = this._scheduler({ ...spec, node: element });
-    const whenConnected = spec.when === 'connected';
-    let status = RenderStatus.Pending;
-    const startRendering = (): 0 | void => status /* there is an update to render */ && scheduleRenderer();
+    const context = this._ctl._context;
+    const trigger = RenderDef.trigger(context, this._spec);
+    const schedule = this._createSchedule();
+    const whenConnected = this._spec.when === 'connected';
+    const startRendering = (): 0 | void => this._status /* there is an update to render */ && this._schedule(schedule);
     const onUpdate = whenConnected
-        ? () => this._context.connected && scheduleRenderer()
-        : () => this._context.settled && scheduleRenderer();
+        ? () => context.connected && this._schedule(schedule)
+        : () => context.settled && this._schedule(schedule);
     const supply = trigger(onUpdate)
-        .needs(this._context)
-        .whenOff(cancelRenderer);
+        .needs(context)
+        .whenOff(() => this._cancel(schedule));
 
-    (whenConnected ? this._context.whenConnected : this._context.whenSettled)(startRendering);
+    (whenConnected ? context.whenConnected : context.whenSettled)(startRendering);
 
     return supply;
+  }
 
-    function scheduleRenderer(): void {
-      status = RenderStatus.Scheduled;
-      schedule(renderElement);
-    }
+  protected _createSchedule(): RenderSchedule {
 
-    function cancelRenderer(): void {
-      if (status === RenderStatus.Scheduled) { // Scheduled, but not rendered yet
-        schedule(noop);
+    const element: Element = this._ctl._context.element;
+
+    return this._ctl._scheduler({ ...this._spec, node: element });
+  }
+
+  private _schedule(schedule: RenderSchedule): void {
+    this._status = RenderStatus.Scheduled;
+    schedule(execution => this._render(execution));
+  }
+
+  protected _render(execution: RenderExecution): void {
+    this._status = RenderStatus.Scheduled;
+    do {
+
+      const currentRenderer = this._renderer;
+
+      currentRenderer(this._createExecution(execution));
+      if (this._renderer === currentRenderer) {
+        break; // The renderer is not updated. Current renderer execution is over.
       }
-      status = RenderStatus.Cancelled;
+    } while (this._status >= 0); // The rendering could be cancelled by the renderer itself.
+  }
+
+  private _cancel(schedule: RenderSchedule): void {
+    if (this._status === RenderStatus.Scheduled) { // Scheduled, but not rendered yet.
+      schedule(noop);
     }
+    this._status = RenderStatus.Cancelled;
+  }
 
-    function renderElement(execution: TExecution): void {
-      status = RenderStatus.Complete;
-      for (; ;) {
+  protected abstract _createExecution(execution: RenderExecution): TExecution;
 
-        const newRenderer = renderer(execution);
+}
 
-        if (newRenderer === renderer || typeof newRenderer !== 'function') {
-          break;
-        }
+class ComponentRenderer$State extends ComponentRenderer$BaseState<ComponentRendererExecution> {
 
-        renderer = newRenderer;
+  protected _createExecution(execution: RenderExecution): ComponentRendererExecution {
+
+    const rendererExecution: ComponentRendererExecution = {
+      ...execution,
+      postpone(postponed) {
+        execution.postpone(() => postponed(rendererExecution));
+      },
+      renderBy: (renderer: ComponentRenderer) => {
+        this._renderer = renderer;
+      },
+    };
+
+    return rendererExecution;
+  }
+
+}
+
+class ComponentPreRenderer$State extends ComponentRenderer$BaseState<ComponentPreRendererExecution> {
+
+  private _nextRenderer: ComponentRenderer | null = null;
+  private _preSupply!: Supply;
+
+  render(): Supply {
+
+    const supply = new Supply();
+
+    this._preSupply = super.render();
+    this._preSupply.whenOff(reason => {
+      if (reason === this) {
+        // Pre-rendering is over.
+        // Delegate to component renderer.
+        supply.needs(this._ctl.renderBy(this._nextRenderer!));
+      } else {
+        // Pre-rendering aborted.
+        supply.off(reason);
       }
+    });
+
+    return supply;
+  }
+
+  protected _createSchedule(): RenderSchedule {
+    return asyncRenderScheduler();
+  }
+
+  protected _render(execution: RenderExecution): void {
+    super._render(execution);
+    if (this._nextRenderer) {
+      // Signal the pre-rendering is over.
+      this._preSupply.off(this);
     }
   }
 
-  withScheduler<TNewExecution extends RenderExecution>(
-      scheduler: RenderScheduler<TNewExecution>,
-  ): ComponentRenderCtl<TNewExecution> {
-    return new ComponentRenderCtl$(this._context, scheduler);
+  protected _createExecution(execution: RenderExecution): ComponentPreRendererExecution {
+
+    const preRendererExecution: ComponentPreRendererExecution = {
+      ...execution,
+      postpone(postponed) {
+        execution.postpone(() => postponed(preRendererExecution));
+      },
+      renderBy: (renderer: ComponentRenderer) => {
+        this._nextRenderer = renderer;
+      },
+      preRenderBy: (preRenderer: ComponentPreRenderer) => {
+        this._renderer = preRenderer;
+      },
+    };
+
+    return preRendererExecution;
   }
 
 }

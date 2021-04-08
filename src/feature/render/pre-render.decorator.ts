@@ -1,13 +1,9 @@
-import { drekAppender, DrekCharger, drekCharger, DrekFragment, DrekFragmentRenderExecution } from '@frontmeans/drek';
-import { asyncRenderScheduler, RenderExecution } from '@frontmeans/render-scheduler';
-import { valueByRecipe } from '@proc7ts/primitives';
-import { ComponentContext, ComponentProperty, ComponentPropertyDecorator } from '../../component';
+import { DrekCharger } from '@frontmeans/drek';
+import { ComponentProperty, ComponentPropertyDecorator } from '../../component';
 import { ComponentClass } from '../../component/definition';
+import { ComponentPreRendererExecution } from './component-pre-renderer-execution';
 import { ComponentRenderCtl } from './component-render-ctl';
-import { ComponentRenderer } from './component-renderer';
 import { RenderDef } from './render-def';
-
-export type PreRenderExecution = DrekFragmentRenderExecution;
 
 export type PreRenderDef =
     | PreRenderDef.Spec
@@ -15,67 +11,29 @@ export type PreRenderDef =
 
 export namespace PreRenderDef {
 
-  export interface Spec {
+  export interface Spec extends RenderDef.Spec {
 
     readonly charge?: DrekCharger.Spec;
 
-    readonly render?: RenderDef.Spec;
-
   }
 
-  export type Provider = (this: void, context: ComponentContext) => Spec;
+  export type Provider = RenderDef.Provider<Spec>;
 
 }
 
 export function PreRender<TClass extends ComponentClass>(
     def: PreRenderDef = {},
-): ComponentPropertyDecorator<(execution: PreRenderExecution) => ComponentRenderer<PreRenderExecution> | void, TClass> {
+): ComponentPropertyDecorator<(execution: ComponentPreRendererExecution) => void, TClass> {
   return ComponentProperty(({ get }) => ({
     componentDef: {
       define(defContext) {
         defContext.whenComponent(context => {
           context.whenReady(() => {
 
-            const spec = valueByRecipe(def, context);
             const { component } = context;
             const preRenderer = get(component).bind(component);
 
-            context.get(ComponentRenderCtl).withScheduler(asyncRenderScheduler).renderBy(
-                execution => {
-
-                  const charger = drekCharger(drekAppender(context.contentRoot), spec.charge);
-                  let fragment = new DrekFragment(charger);
-                  let renderer: ComponentRenderer;
-
-                  const toRenderer = (
-                      preRenderer: ComponentRenderer<PreRenderExecution>,
-                  ): ComponentRenderer => (
-                      _execution: RenderExecution,
-                  ): ComponentRenderer | undefined => {
-                    fragment.innerContext.scheduler()(preExecution => {
-
-                      const next = preRenderer(preExecution);
-
-                      if (typeof next !== 'function' || next === preRenderer) {
-
-                        const renderedFragment = fragment;
-
-                        fragment = new DrekFragment(charger);
-                        renderedFragment.render();
-                      } else {
-                        renderer = toRenderer(next);
-                      }
-                    });
-
-                    return renderer;
-                  };
-
-                  renderer = toRenderer(preRenderer);
-
-                  return renderer(execution);
-                },
-                spec.render,
-            );
+            context.get(ComponentRenderCtl).preRenderBy(preRenderer, def);
           });
         });
       },

@@ -1,8 +1,7 @@
-import { RenderExecution } from '@frontmeans/render-scheduler';
 import { ComponentProperty, ComponentPropertyDecorator } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { ComponentRenderCtl } from './component-render-ctl';
-import { ComponentRenderer } from './component-renderer';
+import { ComponentRendererExecution } from './component-renderer-execution';
 import { RenderDef } from './render-def';
 
 /**
@@ -24,7 +23,7 @@ import { RenderDef } from './render-def';
  */
 export function Render<TClass extends ComponentClass>(
     def?: RenderDef,
-): ComponentPropertyDecorator<(execution: RenderExecution) => ComponentRenderer | void, TClass> {
+): ComponentPropertyDecorator<(execution: ComponentRendererExecution) => void, TClass> {
   return ComponentProperty(({ get }) => ({
     componentDef: {
       define(defContext) {
