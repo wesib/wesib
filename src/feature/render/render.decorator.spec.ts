@@ -222,6 +222,28 @@ describe('feature/render', () => {
         expect(mockRenderer).toHaveBeenCalledTimes(1);
         expect(postponed).toHaveBeenCalledTimes(1);
       });
+      it('able to delegate to another renderer', async () => {
+
+        const delegate = jest.fn();
+        const postponed = jest.fn(({ renderBy }: ComponentRendererExecution): void => {
+          renderBy(delegate);
+        });
+
+        mockRenderer.mockImplementation(({ postpone }) => postpone(postponed));
+
+        const { element, component } = await bootstrap();
+
+        element.connectedCallback();
+        component.property = 'other';
+        expect(mockRenderer).toHaveBeenCalledTimes(1);
+        expect(postponed).toHaveBeenCalledTimes(1);
+        expect(delegate).toHaveBeenCalledTimes(1);
+
+        component.property = 'third';
+        expect(mockRenderer).toHaveBeenCalledTimes(1);
+        expect(postponed).toHaveBeenCalledTimes(1);
+        expect(delegate).toHaveBeenCalledTimes(2);
+      });
     });
 
     describe('Delegate', () => {

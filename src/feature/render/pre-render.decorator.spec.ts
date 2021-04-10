@@ -75,6 +75,45 @@ describe('feature/render', () => {
         expect(mockPreRenderer).toHaveBeenCalledTimes(1);
         expect(postponed).toHaveBeenCalledTimes(1);
       });
+      it('able to delegate to another pre-renderer', async () => {
+
+        const delegate = jest.fn();
+        const postponed = jest.fn(({ preRenderBy }: ComponentPreRendererExecution): void => {
+          preRenderBy(delegate);
+        });
+
+        mockPreRenderer.mockImplementation(({ postpone }) => postpone(postponed));
+
+        const { element, component } = await bootstrap();
+
+        element.connectedCallback();
+        component.property = 'other';
+        expect(mockPreRenderer).toHaveBeenCalledTimes(1);
+        expect(postponed).toHaveBeenCalledTimes(1);
+        expect(delegate).toHaveBeenCalledTimes(1);
+
+        component.property = 'third';
+        expect(mockPreRenderer).toHaveBeenCalledTimes(1);
+        expect(postponed).toHaveBeenCalledTimes(1);
+        expect(delegate).toHaveBeenCalledTimes(2);
+      });
+      it('able to delegate to another renderer', async () => {
+
+        const delegate = jest.fn();
+        const postponed = jest.fn(({ renderBy }: ComponentPreRendererExecution): void => {
+          renderBy(delegate);
+        });
+
+        mockPreRenderer.mockImplementation(({ postpone }) => postpone(postponed));
+
+        const { element, component } = await bootstrap();
+
+        element.connectedCallback();
+        component.property = 'other';
+        expect(mockPreRenderer).toHaveBeenCalledTimes(1);
+        expect(postponed).toHaveBeenCalledTimes(1);
+        expect(delegate).toHaveBeenCalledTimes(2);
+      });
     });
 
     describe('Delegate pre-renderer', () => {

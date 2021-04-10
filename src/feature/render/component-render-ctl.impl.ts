@@ -87,12 +87,15 @@ abstract class ComponentRenderer$BaseState<TExecution extends RenderExecution> {
   }
 
   protected _render(execution: RenderExecution): void {
+
+    const rendererExecution = this._createExecution(execution);
+
     this._status = RenderStatus.Complete;
     do {
 
       const currentRenderer = this._renderer;
 
-      currentRenderer(this._createExecution(execution));
+      currentRenderer(rendererExecution);
       if (this._renderer === currentRenderer) {
         break; // The renderer is not updated. Current renderer execution is over.
       }
@@ -164,18 +167,18 @@ class ComponentPreRenderer$State extends ComponentRenderer$BaseState<ComponentPr
 
   protected _render(execution: RenderExecution): void {
     super._render(execution);
-    if (this._nextRenderer) {
-      // Signal the pre-rendering is over.
-      this._preSupply.off(this);
-    }
+    this._applyNextRenderer();
   }
 
   protected _createExecution(execution: RenderExecution): ComponentPreRendererExecution {
 
     const preRendererExecution: ComponentPreRendererExecution = {
       ...execution,
-      postpone(postponed) {
-        execution.postpone(() => postponed(preRendererExecution));
+      postpone: postponed => {
+        execution.postpone(() => {
+          postponed(preRendererExecution);
+          this._applyNextRenderer();
+        });
       },
       supply: this._supply,
       renderBy: (renderer: ComponentRenderer) => {
@@ -187,6 +190,13 @@ class ComponentPreRenderer$State extends ComponentRenderer$BaseState<ComponentPr
     };
 
     return preRendererExecution;
+  }
+
+  private _applyNextRenderer(): void {
+    if (this._nextRenderer) {
+      // Signal the pre-rendering is over.
+      this._preSupply.off(this);
+    }
   }
 
 }
