@@ -52,8 +52,6 @@ export namespace RenderDef {
 
   /**
    * Component rendering specifier.
-   *
-   * @typeParam TExecution - A type of supported renderer execution context.
    */
   export interface Spec extends Options {
 
