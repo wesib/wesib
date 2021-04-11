@@ -133,28 +133,28 @@ class ComponentRenderer$State extends ComponentRenderer$BaseState<ComponentRende
 
 }
 
+const ComponentPreRenderer$done = {};
+
 class ComponentPreRenderer$State extends ComponentRenderer$BaseState<ComponentPreRendererExecution> {
 
   private _nextRenderer: ComponentRenderer | null = null;
   private _preSupply!: Supply;
 
   render(): Supply {
+    this._preSupply = new Supply();
 
-    const supply = new Supply();
-
-    this._preSupply = super.render();
-    this._preSupply.whenOff(reason => {
-      if (reason === this) {
+    super.render().needs(this._preSupply).whenOff(reason => {
+      if (reason === ComponentPreRenderer$done) {
         // Pre-rendering is over.
         // Delegate to component renderer.
-        supply.needs(this._ctl.renderBy(this._nextRenderer!));
+        this._preSupply.as(this._ctl.renderBy(this._nextRenderer!));
       } else {
         // Pre-rendering aborted.
-        supply.off(reason);
+        this._preSupply.off(reason);
       }
     });
 
-    return supply;
+    return this._preSupply;
   }
 
   protected _createSchedule(): RenderSchedule {
@@ -180,7 +180,7 @@ class ComponentPreRenderer$State extends ComponentRenderer$BaseState<ComponentPr
           this._applyNextRenderer();
         });
       },
-      supply: this._supply,
+      supply: this._preSupply,
       renderBy: (renderer: ComponentRenderer) => {
         this._nextRenderer = renderer;
       },
@@ -195,7 +195,7 @@ class ComponentPreRenderer$State extends ComponentRenderer$BaseState<ComponentPr
   private _applyNextRenderer(): void {
     if (this._nextRenderer) {
       // Signal the pre-rendering is over.
-      this._preSupply.off(this);
+      this._supply.off(ComponentPreRenderer$done);
     }
   }
 
