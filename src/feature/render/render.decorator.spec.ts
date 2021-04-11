@@ -168,7 +168,7 @@ describe('feature/render', () => {
       component.property = 'other';
       expect(mockRenderer).toHaveBeenCalledTimes(1);
     });
-    it('is not re-scheduled after component destruction', async () => {
+    it('is not re-scheduled after component disposal', async () => {
 
       const context = await bootstrap();
       const { element } = context;
@@ -176,7 +176,7 @@ describe('feature/render', () => {
       element.connectedCallback();
       expect(mockRenderer).toHaveBeenCalledTimes(1);
 
-      context.destroy();
+      context.supply.off();
       context.updateState(domPropertyPathTo('property'), 'other', 'init');
       expect(mockRenderer).toHaveBeenCalledTimes(1);
     });
@@ -191,7 +191,7 @@ describe('feature/render', () => {
 
       element.connectedCallback();
       component.property = 'other';
-      context.destroy();
+      context.supply.off();
       scheduler.render();
       expect(mockRenderer).not.toHaveBeenCalled();
     });

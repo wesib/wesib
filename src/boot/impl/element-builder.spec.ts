@@ -474,8 +474,8 @@ describe('boot', () => {
         expect(otherContext.get(key2, { or: null })).toBeNull();
       });
 
-      describe('destroy', () => {
-        it('is called by `disconnectedCallback()`', () => {
+      describe('supply', () => {
+        it('is cut off by `disconnectedCallback()`', () => {
 
           const destroyed = jest.fn();
 
@@ -484,36 +484,13 @@ describe('boot', () => {
 
           expect(destroyed).toHaveBeenCalledWith(undefined);
         });
-        it('notifies destruction callbacks', () => {
-
-          const destroyed = jest.fn();
-          const reason = 'Destruction reason';
-
-          context.supply.whenOff(destroyed);
-          context.destroy(reason);
-
-          expect(destroyed).toHaveBeenCalledWith(reason);
-        });
-        it('removes element', () => {
-
-          const element = context.element;
-          const mockRemove = jest.fn();
-
-          element.parentNode = {
-            removeChild: mockRemove,
-          };
-
-          context.destroy();
-
-          expect(mockRemove).toHaveBeenCalledWith(element);
-        });
         it('cuts off connection events supply', () => {
 
           const whenOff = jest.fn();
           const whenConnected = jest.fn();
           const reason = 'Destruction reason';
 
-          context.destroy(reason);
+          context.supply.off(reason);
           context.whenConnected(whenConnected).whenOff(whenOff);
 
           expect(whenConnected).not.toHaveBeenCalled();
@@ -523,14 +500,14 @@ describe('boot', () => {
 
           const { element, component } = context;
 
-          context.destroy();
+          context.supply.off();
           expect(() => context.component).toThrow(TypeError);
           expect(element[ComponentDef__symbol]).toBeUndefined();
           expect(component[ComponentDef__symbol]).toBeUndefined();
         });
         it('makes component disconnected', () => {
           context.element.connectedCallback();
-          context.destroy();
+          context.supply.off();
           expect(context.connected).toBe(false);
           expect(context.settled).toBe(false);
         });
@@ -640,7 +617,7 @@ describe('boot', () => {
 
           expect(connected).not.toHaveBeenCalled();
         });
-        it('cuts off component supply when destroyed', () => {
+        it('cuts off component supply when disposed', () => {
           Supply.onUnexpectedAbort(noop);
           doc.body.appendChild(element);
           doMount();
@@ -654,7 +631,7 @@ describe('boot', () => {
 
           const reason = 'test';
 
-          context.destroy(reason);
+          context.supply.off(reason);
           expect(context.connected).toBe(false);
           expect(disconnected).toHaveBeenCalledWith(reason);
         });
@@ -695,7 +672,7 @@ describe('boot', () => {
 
         const reason = 'test';
 
-        context.destroy(reason);
+        context.supply.off(reason);
         expect(context.connected).toBe(false);
         expect(disconnected).toHaveBeenCalledWith(reason);
       });

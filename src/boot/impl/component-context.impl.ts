@@ -27,6 +27,11 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
     registry.provide({ a: ComponentContext, is: this });
     this.get = registry.newValues().get;
     this._status = new ComponentStatus(this);
+    this.supply.whenOff(() => {
+      delete this.component[ComponentContext__symbol];
+      this._component = componentDestroyed;
+      ComponentSlot.of(this.element).unbind();
+    });
 
     // Ignore immediate settlement, as is typically leads to DOM manipulations prohibited inside constructor.
     let whenSettled: () => void = noop;
@@ -100,17 +105,6 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
     this._status.settle();
   }
 
-  destroy(reason?: any): void {
-    try {
-      this._status.supply.off(reason);
-    } finally {
-      delete this.component[ComponentContext__symbol];
-      this._component = componentDestroyed;
-      ComponentSlot.of(this.element).unbind();
-      removeElement(this.element);
-    }
-  }
-
   _createComponent(): this {
 
     const whenComponent = this._definitionContext._whenComponent;
@@ -156,15 +150,6 @@ export class ComponentContext$Mounted<T extends object> extends ComponentContext
     return true;
   }
 
-}
-
-function removeElement(element: Element): void {
-
-  const { parentNode } = element;
-
-  if (parentNode) {
-    parentNode.removeChild(element);
-  }
 }
 
 function componentDestroyed(): never {

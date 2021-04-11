@@ -249,21 +249,6 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
     this.get(ComponentEventDispatcher__key).dispatch(event);
   }
 
-  /**
-   * Destroys the component.
-   *
-   * Removes element from the DOM tree. I.e. disconnects custom element first.
-   *
-   * After this method call the component should no longer be used.
-   *
-   * Note that component destruction is virtual. It is up to developer to decide when component is no longer needed.
-   * However the component is destroyed automatically once disconnected, i.e. when custom element's
-   * `disconnectedCallback()` method is called.
-   *
-   * @param reason - Optional reason of destruction.
-   */
-  abstract destroy(reason?: any): void;
-
 }
 
 /**
