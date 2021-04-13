@@ -42,24 +42,73 @@ describe('feature/render', () => {
       await bootstrap();
       expect(mockPreRenderer).not.toHaveBeenCalled();
     });
-    it('is scheduled on state update', async () => {
 
-      const { component, element } = await bootstrap();
+    describe('connected', () => {
+      it('is scheduled on state update', async () => {
 
-      element.connectedCallback();
-      expect(mockPreRenderer).toHaveBeenCalledTimes(1);
+        const { component, element } = await bootstrap();
 
-      component.property = 'other';
-      expect(mockPreRenderer).toHaveBeenCalledTimes(2);
+        element.connectedCallback();
+        expect(mockPreRenderer).toHaveBeenCalledTimes(1);
+        expect(mockPreRenderScheduler).toHaveBeenCalledTimes(1);
+        expect(mockPreRenderSchedule).toHaveBeenCalledTimes(1);
+        expect(mockRenderScheduler).not.toHaveBeenCalled();
+        expect(mockRenderSchedule).not.toHaveBeenCalled();
+
+        component.property = 'other';
+        expect(mockPreRenderer).toHaveBeenCalledTimes(2);
+        expect(mockPreRenderScheduler).toHaveBeenCalledTimes(1);
+        expect(mockPreRenderSchedule).toHaveBeenCalledTimes(2);
+        expect(mockRenderScheduler).not.toHaveBeenCalled();
+      });
+      it('is not re-scheduled when stopped', async () => {
+        mockPreRenderer.mockImplementation(({ supply }) => supply.off());
+
+        const { component, element } = await bootstrap();
+
+        element.connectedCallback();
+        component.property = 'other';
+        expect(mockPreRenderer).toHaveBeenCalledTimes(1);
+      });
     });
-    it('is not re-scheduled when stopped', async () => {
-      mockPreRenderer.mockImplementation(({ supply }) => supply.off());
 
-      const { component, element } = await bootstrap();
+    describe('disconnected', () => {
+      it('is scheduled on state update', async () => {
 
-      element.connectedCallback();
-      component.property = 'other';
-      expect(mockPreRenderer).toHaveBeenCalledTimes(1);
+        const context = await bootstrap();
+        const { component } = context;
+
+        context.settle();
+        expect(mockPreRenderer).toHaveBeenCalledTimes(1);
+        expect(mockPreRenderScheduler).not.toHaveBeenCalled();
+        expect(mockRenderScheduler).toHaveBeenCalledTimes(1);
+        expect(mockRenderSchedule).toHaveBeenCalledTimes(1);
+
+        component.property = 'other';
+        expect(mockPreRenderer).toHaveBeenCalledTimes(2);
+        expect(mockPreRenderScheduler).not.toHaveBeenCalled();
+        expect(mockRenderScheduler).toHaveBeenCalledTimes(1);
+        expect(mockRenderSchedule).toHaveBeenCalledTimes(2);
+      });
+      it('is re-scheduled in pre-render scheduler when connected', async () => {
+
+        const context = await bootstrap();
+        const { component, element } = context;
+
+        context.settle();
+        expect(mockPreRenderer).toHaveBeenCalledTimes(1);
+        expect(mockPreRenderScheduler).not.toHaveBeenCalled();
+        expect(mockRenderScheduler).toHaveBeenCalledTimes(1);
+        expect(mockRenderSchedule).toHaveBeenCalledTimes(1);
+
+        element.connectedCallback();
+        component.property = 'other';
+        expect(mockPreRenderer).toHaveBeenCalledTimes(2);
+        expect(mockPreRenderScheduler).toHaveBeenCalledTimes(1);
+        expect(mockPreRenderSchedule).toHaveBeenCalledTimes(1);
+        expect(mockRenderScheduler).toHaveBeenCalledTimes(1);
+        expect(mockRenderSchedule).toHaveBeenCalledTimes(1);
+      });
     });
 
     describe('Postponed', () => {

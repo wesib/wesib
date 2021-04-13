@@ -59,9 +59,13 @@ abstract class ComponentRenderer$BaseState<TExecution extends RenderExecution> {
 
     const context = this._ctl._context;
     const trigger = RenderDef.trigger(context, this._spec);
-    const schedule = this._createSchedule();
+    let schedule: RenderSchedule = shot => {
+      schedule = this._createSchedule();
+      schedule(shot);
+    };
     const whenConnected = this._spec.when === 'connected';
-    const startRendering = (): 0 | void => this._status /* there is an update to render */ && this._schedule(schedule);
+    const startRendering = (): 0 | void => this._status /* there is an update to render */
+        && this._schedule(schedule);
     const onUpdate = whenConnected
         ? () => context.connected && this._schedule(schedule)
         : () => context.settled && this._schedule(schedule);
@@ -76,9 +80,9 @@ abstract class ComponentRenderer$BaseState<TExecution extends RenderExecution> {
 
   protected _createSchedule(): RenderSchedule {
 
-    const element: Element = this._ctl._context.element;
+    const node: Element = this._ctl._context.element;
 
-    return this._ctl._scheduler({ ...this._spec, node: element });
+    return this._ctl._scheduler({ ...this._spec, node });
   }
 
   private _schedule(schedule: RenderSchedule): void {
@@ -160,9 +164,26 @@ class ComponentPreRenderer$State extends ComponentRenderer$BaseState<ComponentPr
   protected _createSchedule(): RenderSchedule {
 
     const context = this._ctl._context;
-    const element: Element = context.element;
+    const preScheduler = context.get(DefaultPreRenderScheduler);
+    const node: Element = context.element;
 
-    return context.get(DefaultPreRenderScheduler)({ ...this._spec, node: element });
+    if (context.connected) {
+      return preScheduler({ ...this._spec, node });
+    }
+
+    const scheduler = this._ctl._scheduler;
+    const schedule = scheduler({ ...this._spec, node });
+
+    let result: RenderSchedule = shot => {
+      if (context.connected) {
+        result = preScheduler({ ...this._spec, node });
+        result(shot);
+      } else {
+        schedule(shot);
+      }
+    };
+
+    return shot => result(shot);
   }
 
   protected _render(execution: RenderExecution): void {
