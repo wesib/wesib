@@ -1,3 +1,4 @@
+import { drekContextOf } from '@frontmeans/drek';
 import {
   immediateRenderScheduler,
   RenderSchedule,
@@ -41,6 +42,28 @@ describe('feature/render', () => {
     it('is not scheduled initially', async () => {
       await bootstrap();
       expect(mockPreRenderer).not.toHaveBeenCalled();
+    });
+    it('lifts unrooted rendering contexts', async () => {
+
+      const doc = document.implementation.createHTMLDocument('test');
+      const whenConnected1 = jest.fn();
+      const whenConnected2 = jest.fn();
+
+      mockPreRenderer.mockImplementation(() => {
+
+        const element1 = doc.createElement('test-element-1');
+        const element2 = doc.createElement('test-element-2');
+
+        drekContextOf(element1).whenConnected(whenConnected1);
+        drekContextOf(element2).whenConnected(whenConnected1);
+
+        doc.body.append(element1);
+      });
+
+      await bootstrap();
+
+      expect(whenConnected1).toHaveBeenCalledWith({ connected: true });
+      expect(whenConnected2).not.toHaveBeenCalled();
     });
 
     describe('connected', () => {

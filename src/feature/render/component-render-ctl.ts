@@ -22,6 +22,8 @@ export interface ComponentRenderCtl {
    *
    * A `renderer` call will be scheduled by {@link DocumentRenderKit document render kit} once component state updated.
    *
+   * The unrooted rendering contexts created during the renderer execution are lifted when execution completes.
+   *
    * @param renderer - Component renderer function.
    * @param def - Optional component rendering definition.
    *
@@ -32,8 +34,10 @@ export interface ComponentRenderCtl {
   /**
    * Enables component pre-rendering by the given pre-renderer.
    *
-   * A `pre-renderer` call will be scheduled by {@link DefaultPreRenderScheduler default pre-render scheduler} once
+   * A pre-renderer call will be scheduled by {@link DefaultPreRenderScheduler default pre-render scheduler} once
    * component state updated.
+   *
+   * The unrooted rendering contexts created during the pre-renderer execution are lifted when execution completes.
    *
    * @param preRenderer - Component pre-renderer function.
    * @param def - Optional component pre-rendering definition.

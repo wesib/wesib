@@ -1,3 +1,4 @@
+import { drekBuild } from '@frontmeans/drek';
 import { RenderExecution, RenderSchedule, RenderScheduler, RenderShot } from '@frontmeans/render-scheduler';
 import { noop, valueByRecipe } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
@@ -65,10 +66,10 @@ abstract class ComponentRenderer$BaseState<TExecution extends RenderExecution> {
     };
     const whenConnected = this._spec.when === 'connected';
     const startRendering = (): 0 | void => this._status /* there is an update to render */
-        && this._schedule(schedule);
+        && this._scheduleRenderer(schedule);
     const onUpdate = whenConnected
-        ? () => context.connected && this._schedule(schedule)
-        : () => context.settled && this._schedule(schedule);
+        ? () => context.connected && this._scheduleRenderer(schedule)
+        : () => context.settled && this._scheduleRenderer(schedule);
     this._supply = trigger(onUpdate)
         .needs(context)
         .whenOff(() => this._cancel(schedule));
@@ -78,16 +79,21 @@ abstract class ComponentRenderer$BaseState<TExecution extends RenderExecution> {
     return this._supply;
   }
 
-  protected _createSchedule(): RenderSchedule {
-
-    const node: Element = this._ctl._context.element;
-
-    return this._ctl._scheduler({ ...this._spec, node });
-  }
-
-  private _schedule(schedule: RenderSchedule): void {
+  private _scheduleRenderer(schedule: RenderSchedule): void {
     this._status = RenderStatus.Scheduled;
     schedule(execution => this._render(execution));
+  }
+
+  protected _createSchedule(): RenderSchedule {
+    return this._scheduleBy(this._ctl._scheduler);
+  }
+
+  protected _scheduleBy(scheduler: RenderScheduler): RenderSchedule {
+
+    const node: Element = this._ctl._context.element;
+    const schedule = scheduler({ ...this._spec, node });
+
+    return shot => schedule(execution => drekBuild(() => shot(execution)));
   }
 
   protected _render(execution: RenderExecution): void {
@@ -165,18 +171,16 @@ class ComponentPreRenderer$State extends ComponentRenderer$BaseState<ComponentPr
 
     const context = this._ctl._context;
     const preScheduler = context.get(DefaultPreRenderScheduler);
-    const node: Element = context.element;
 
     if (context.connected) {
-      return preScheduler({ ...this._spec, node });
+      return this._scheduleBy(preScheduler);
     }
 
-    const scheduler = this._ctl._scheduler;
-    const schedule = scheduler({ ...this._spec, node });
+    const schedule = this._scheduleBy(this._ctl._scheduler);
 
     let result: RenderSchedule = shot => {
       if (context.connected) {
-        result = preScheduler({ ...this._spec, node });
+        result = this._scheduleBy(preScheduler);
         result(shot);
       } else {
         schedule(shot);
