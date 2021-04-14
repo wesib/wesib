@@ -226,7 +226,9 @@ describe('feature/render', () => {
         doc.body.append(element1);
       });
 
-      await bootstrap();
+      const { element } = await bootstrap();
+
+      element.connectedCallback();
 
       expect(whenConnected1).toHaveBeenCalledWith({ connected: true });
       expect(whenConnected2).not.toHaveBeenCalled();
