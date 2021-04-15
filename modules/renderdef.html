@@ -79,7 +79,7 @@
 						<section class="tsd-index-section ">
 							<h3>Type aliases</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-type-alias tsd-parent-kind-namespace"><a href="renderdef.html#provider" class="tsd-kind-icon">Provider</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-namespace tsd-has-type-parameter"><a href="renderdef.html#provider" class="tsd-kind-icon">Provider</a></li>
 							</ul>
 						</section>
 					</div>
@@ -87,26 +87,35 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Type aliases</h2>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-namespace">
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-namespace tsd-has-type-parameter">
 					<a name="provider" class="tsd-anchor"></a>
 					<h3>Provider</h3>
-					<div class="tsd-signature tsd-kind-icon">Provider<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, context<span class="tsd-signature-symbol">: </span><a href="../classes/componentcontext.html" class="tsd-signature-type" data-tsd-kind="Class">ComponentContext</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="../interfaces/renderdef.spec.html" class="tsd-signature-type" data-tsd-kind="Interface">Spec</a></div>
+					<div class="tsd-signature tsd-kind-icon">Provider&lt;TSpec&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, context<span class="tsd-signature-symbol">: </span><a href="../classes/componentcontext.html" class="tsd-signature-type" data-tsd-kind="Class">ComponentContext</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">TSpec</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/1309861/src/feature/render/render-def.ts#L81">wesib/wesib/src/feature/render/render-def.ts:81</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/d4b196e/src/feature/render/render-def.ts#L82">wesib/wesib/src/feature/render/render-def.ts:82</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Rendering specifier provider signature.</p>
+							<p>Component rendering provider signature.</p>
 						</div>
 					</div>
+					<h4 class="tsd-type-parameters-title">Type parameters</h4>
+					<ul class="tsd-type-parameters">
+						<li>
+							<h4>TSpec<span class="tsd-signature-symbol">: </span><a href="../interfaces/renderdef.spec.html" class="tsd-signature-type" data-tsd-kind="Interface">Spec</a> = <a href="../interfaces/renderdef.spec.html" class="tsd-signature-type" data-tsd-kind="Interface">Spec</a></h4>
+							<div class="tsd-comment tsd-typography">
+								<p>Provided rendering specifier type.</p>
+							</div>
+						</li>
+					</ul>
 					<div class="tsd-type-declaration">
 						<h4>Type declaration</h4>
 						<ul class="tsd-parameters">
 							<li class="tsd-parameter-signature">
 								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias">
-									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, context<span class="tsd-signature-symbol">: </span><a href="../classes/componentcontext.html" class="tsd-signature-type" data-tsd-kind="Class">ComponentContext</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/renderdef.spec.html" class="tsd-signature-type" data-tsd-kind="Interface">Spec</a></li>
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>this<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span>, context<span class="tsd-signature-symbol">: </span><a href="../classes/componentcontext.html" class="tsd-signature-type" data-tsd-kind="Class">ComponentContext</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TSpec</span></li>
 								</ul>
 								<ul class="tsd-descriptions">
 									<li class="tsd-description">
@@ -122,7 +131,7 @@
 												</div>
 											</li>
 										</ul>
-										<h4 class="tsd-returns-title">Returns <a href="../interfaces/renderdef.spec.html" class="tsd-signature-type" data-tsd-kind="Interface">Spec</a></h4>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">TSpec</span></h4>
 										<p>Rendering specifier.</p>
 									</li>
 								</ul>
@@ -178,7 +187,7 @@
 					<li class=" tsd-kind-interface tsd-parent-kind-namespace">
 						<a href="../interfaces/renderdef.spec.html" class="tsd-kind-icon">Spec</a>
 					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-namespace">
+					<li class=" tsd-kind-type-alias tsd-parent-kind-namespace tsd-has-type-parameter">
 						<a href="renderdef.html#provider" class="tsd-kind-icon">Provider</a>
 					</li>
 				</ul>
