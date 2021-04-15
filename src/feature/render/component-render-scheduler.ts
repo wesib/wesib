@@ -2,37 +2,37 @@ import { RenderSchedule, RenderScheduleOptions, RenderShot } from '@frontmeans/r
 import { ContextRef, ContextValues, SingleContextKey } from '@proc7ts/context-values';
 import { trackValue } from '@proc7ts/fun-events';
 import { noop } from '@proc7ts/primitives';
-import { ElementRenderCtl } from './element-render-ctl';
-import { ElementRenderer } from './element-renderer';
+import { ComponentRenderCtl } from './component-render-ctl';
+import { ComponentRenderer } from './component-renderer';
 import { RenderDef } from './render-def';
 
 /**
- * A signature of element render scheduler.
+ * A signature of component render scheduler.
  *
- * Schedules render shots to be executed by {@link ElementRenderCtl element render control}.
+ * Schedules render shots to be executed by {@link ComponentRenderCtl component render control}.
  *
  * Available in component context.
  *
  * @category Feature
  */
-export type ElementRenderScheduler =
+export type ComponentRenderScheduler =
 /**
- * @param options - Options of constructed element render schedule.
+ * @param options - Options of constructed component render schedule.
  *
  * @returns New render schedule.
  */
-    (this: void, options?: ElementRenderScheduleOptions) => RenderSchedule;
+    (this: void, options?: ComponentRenderScheduleOptions) => RenderSchedule;
 
 /**
  * Options for render schedule.
  *
- * This is passed to {@link ElementRenderScheduler element render scheduler} when constructing new render schedule.
+ * This is passed to {@link ComponentRenderScheduler component render scheduler} when constructing new render schedule.
  *
  * Generic `RenderSchedule` options are ignored.
  *
  * @category Feature
  */
-export interface ElementRenderScheduleOptions extends RenderScheduleOptions, RenderDef.Options {
+export interface ComponentRenderScheduleOptions extends RenderScheduleOptions, RenderDef.Options {
 
   /**
    * When to start the rendering.
@@ -56,18 +56,18 @@ export interface ElementRenderScheduleOptions extends RenderScheduleOptions, Ren
 /**
  * @internal
  */
-function newElementRenderScheduler(context: ContextValues): ElementRenderScheduler {
+function ComponentRenderScheduler$create(context: ContextValues): ComponentRenderScheduler {
 
-  const renderCtl = context.get(ElementRenderCtl);
+  const renderCtl = context.get(ComponentRenderCtl);
 
   return (opts = {}): RenderSchedule => {
 
     const recentShot = trackValue<RenderShot>(noop);
-    const renderer: ElementRenderer = execution => {
+    const renderer: ComponentRenderer = execution => {
       recentShot.it(execution);
     };
 
-    renderCtl.renderBy(renderer, RenderDef.fulfill({ on: recentShot.on }, opts));
+    renderCtl.renderBy(renderer, { ...opts, on: recentShot.on });
 
     return (shot: RenderShot): void => {
       recentShot.it = execution => shot(execution); // Ensure render shot always updated
@@ -76,15 +76,15 @@ function newElementRenderScheduler(context: ContextValues): ElementRenderSchedul
 }
 
 /**
- * A key of component context value containing {@link ElementRenderScheduler element render scheduler}.
+ * A key of component context value containing {@link ComponentRenderScheduler component render scheduler}.
  *
  * @category Feature
  */
-export const ElementRenderScheduler: ContextRef<ElementRenderScheduler> = (
-    /*#__PURE__*/ new SingleContextKey<ElementRenderScheduler>(
-        'element-render-scheduler',
+export const ComponentRenderScheduler: ContextRef<ComponentRenderScheduler> = (
+    /*#__PURE__*/ new SingleContextKey<ComponentRenderScheduler>(
+        'component-render-scheduler',
         {
-          byDefault: newElementRenderScheduler,
+          byDefault: ComponentRenderScheduler$create,
         },
     )
 );

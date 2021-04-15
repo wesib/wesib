@@ -39,7 +39,7 @@ export function customElementType<T extends object>(
     }
 
     disconnectedCallback(): void {
-      (ComponentSlot.of<T>(this).context as ComponentContext$<T>).destroy();
+      (ComponentSlot.of<T>(this).context as ComponentContext$<T>).supply.off();
       super.disconnectedCallback?.();
     }
 

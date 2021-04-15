@@ -78,9 +78,7 @@ export abstract class DefinitionContext<T extends object = any> extends ContextV
    * It is up to the features to update the target element. They can use a {@link ComponentContext.mounted} flag
    * to check whether the component is mounted or constructed in a standard way.
    *
-   * The constructed component connection state is maintained by [Document Render Kit].
-   *
-   * [Document Render Kit]: https://www.npmjs.com/package/@frontmeans/drek
+   * The constructed component connection state is maintained by {@link DocumentRenderKit document render kit}.
    *
    * @param element - Target element to mount new component to.
    *

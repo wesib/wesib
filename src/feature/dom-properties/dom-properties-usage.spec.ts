@@ -190,8 +190,8 @@ describe('feature/dom-properties', () => {
 
         expect(updateStateSpy).not.toHaveBeenCalled();
       });
-      it('returns `undefined` after component destruction', () => {
-        context.destroy();
+      it('returns `undefined` after component disposal', () => {
+        context.supply.off();
         element.field = 'other';
         expect(element.field).toBeUndefined();
       });

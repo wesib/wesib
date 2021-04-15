@@ -1,15 +1,16 @@
 import { ComponentProperty, ComponentPropertyDecorator } from '../../component';
 import { ComponentClass } from '../../component/definition';
+import { ComponentPreRendererExecution } from './component-pre-renderer-execution';
 import { ComponentRenderCtl } from './component-render-ctl';
-import { ComponentRendererExecution } from './component-renderer-execution';
 import { RenderDef } from './render-def';
 
 /**
- * Creates a {@link ComponentRenderer component renderer} method decorator.
+ * Creates a {@link ComponentPreRenderer component pre-renderer} method decorator.
  *
- * Enables rendering with {@link ComponentRenderCtl.renderBy component render control}.
+ * Enables pre-rendering with {@link ComponentRenderCtl.preRenderBy component render control}.
  *
- * The decorated method accepts a {@link ComponentRendererExecution component rendering context} as its only parameter.
+ * The decorated method accepts a {@link ComponentPreRendererExecution component rendering context} as its only
+ * parameter.
  *
  * @category Feature
  * @typeParam TClass - A type of decorated component class.
@@ -17,9 +18,9 @@ import { RenderDef } from './render-def';
  *
  * @returns Component method decorator.
  */
-export function Render<TClass extends ComponentClass>(
-    def?: RenderDef,
-): ComponentPropertyDecorator<(execution: ComponentRendererExecution) => void, TClass> {
+export function PreRender<TClass extends ComponentClass>(
+    def: RenderDef = {},
+): ComponentPropertyDecorator<(execution: ComponentPreRendererExecution) => void, TClass> {
   return ComponentProperty(({ get }) => ({
     componentDef: {
       define(defContext) {
@@ -27,12 +28,13 @@ export function Render<TClass extends ComponentClass>(
           context.whenReady(() => {
 
             const { component } = context;
-            const renderer = get(component).bind(component);
+            const preRenderer = get(component).bind(component);
 
-            context.get(ComponentRenderCtl).renderBy(renderer, def);
+            context.get(ComponentRenderCtl).preRenderBy(preRenderer, def);
           });
         });
       },
     },
   }));
+
 }

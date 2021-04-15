@@ -5,7 +5,7 @@ import { Supply } from '@proc7ts/supply';
 import { ComponentContext, ComponentDef, ComponentElement, ComponentSlot } from '../../component';
 import { DefinitionContext, DefinitionSetup } from '../../component/definition';
 import { BootstrapContext } from '../bootstrap-context';
-import { DefaultRenderKit } from '../globals';
+import { DocumentRenderKit } from '../globals';
 import { ComponentContextRegistry, PerComponentRegistry } from './component-context-registry.impl';
 import { ComponentContext$Mounted } from './component-context.impl';
 import { customElementType } from './custom-element.impl';
@@ -82,7 +82,7 @@ export class DefinitionContext$<T extends object> extends DefinitionContext<T> {
     const context = new ComponentContext$Mounted(this, element);
 
     context._createComponent();
-    context.get(DefaultRenderKit)
+    context.get(DocumentRenderKit)
         .contextOf(element)
         .whenConnected(() => context._connect())
         .needs(context);

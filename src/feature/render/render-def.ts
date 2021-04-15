@@ -7,12 +7,11 @@ import {
   supplyOn,
   translateOn_,
 } from '@proc7ts/fun-events';
-import { valueByRecipe } from '@proc7ts/primitives';
 import { ComponentContext } from '../../component';
 import { ComponentState } from '../state';
 
 /**
- * Element rendering definition.
+ * Component rendering definition.
  *
  * This is either a {@link RenderDef.Spec rendering specifier}, or its {@link RenderDef.Provider provider function}.
  *
@@ -47,12 +46,12 @@ export namespace RenderDef {
      *
      * @param messages - Error messages to report.
      */
-    error?(...messages: any[]): void;
+    error?(this: void, ...messages: any[]): void;
 
   }
 
   /**
-   * Rendering specifier.
+   * Component rendering specifier.
    */
   export interface Spec extends Options {
 
@@ -76,9 +75,11 @@ export namespace RenderDef {
   }
 
   /**
-   * Rendering specifier provider signature.
+   * Component rendering provider signature.
+   *
+   * @typeParam TSpec - Provided rendering specifier type.
    */
-  export type Provider =
+  export type Provider<TSpec extends Spec = Spec> =
   /**
    * @param context - A context of component to render.
    *
@@ -87,7 +88,7 @@ export namespace RenderDef {
       (
           this: void,
           context: ComponentContext,
-      ) => RenderDef.Spec;
+      ) => TSpec;
 
 }
 
@@ -104,40 +105,6 @@ export const RenderPath__root = (/*#__PURE__*/ Symbol('render'));
  * @category Feature
  */
 export const RenderDef = {
-
-  /**
-   * Builds a rendering specifier for component by its definition.
-   *
-   * @param context - A context of component to render.
-   * @param def - Arbitrary rendering definition.
-   *
-   * @returns Rendering specifier.
-   */
-  spec(
-      this: void,
-      context: ComponentContext,
-      def: RenderDef,
-  ): RenderDef.Spec {
-    return valueByRecipe(def, context);
-  },
-
-  /**
-   * Fulfills rendering specifier with the given defaults.
-   *
-   * @param base - Base rendering specifier to fulfill.
-   * @param defaults - Defaults that will be applied unless defined in `base` specifier.
-   *
-   * @return `base` rendering specifier fulfilled by `defaults`.
-   */
-  fulfill(this: void, base: RenderDef.Spec, defaults: RenderDef.Spec = {}): RenderDef.Spec {
-
-    const { on = defaults.on, error } = base;
-
-    return {
-      on,
-      error: error ? error.bind(base) : defaults.error && defaults.error.bind(defaults),
-    };
-  },
 
   /**
    * Builds a trigger issuing rendering updates.

@@ -7,19 +7,23 @@ import { DefaultNamespaceAliaser } from './default-namespace-aliaser';
 import { DefaultRenderScheduler } from './default-render-scheduler';
 
 /**
- * A render kit used by default.
+ * A document render kit instance.
+ *
+ * A [Drek] API accessor used by Wesib internally.
+ *
+ * [Drek]: https://www.npmjs.com/package/@frontmeans/drek
  *
  * @category Core
  */
-export interface DefaultRenderKit {
+export interface DocumentRenderKit {
 
   /**
-   * Obtains a rendering context of the given node.
+   * Obtains a rendering context of the given DOM node.
    *
    * Does the same as `drekContextOf()` function, and also makes sure that the rendering context for the document
    * is initialized with {@link DefaultRenderScheduler} and {@link DefaultNamespaceAliaser}.
    *
-   * @param node - Target node.
+   * @param node - Target DOM node.
    *
    * @returns Target node rendering context.
    */
@@ -28,20 +32,20 @@ export interface DefaultRenderKit {
 }
 
 /**
- * A key of bootstrap context value containing {@link DefaultRenderKit} instance.
+ * A key of bootstrap context value containing {@link DocumentRenderKit} instance.
  *
  * @category Core
  */
-export const DefaultRenderKit: ContextRef<DefaultRenderKit> = (
-    /*#__PURE__*/ new SingleContextKey<DefaultRenderKit>(
-        'default-render-kit',
+export const DocumentRenderKit: ContextRef<DocumentRenderKit> = (
+    /*#__PURE__*/ new SingleContextKey<DocumentRenderKit>(
+        'document-render-kit',
         {
-          byDefault: bootstrapDefault(DefaultRenderKit$new),
+          byDefault: bootstrapDefault(DocumentRenderKit$create),
         },
     )
 );
 
-function DefaultRenderKit$new(bsContext: BootstrapContext): DefaultRenderKit {
+function DocumentRenderKit$create(bsContext: BootstrapContext): DocumentRenderKit {
 
   const docs = new WeakMap<Document, 1>();
   const initDoc = (doc: Document): void => {

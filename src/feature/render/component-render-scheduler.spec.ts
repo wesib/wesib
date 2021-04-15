@@ -1,7 +1,6 @@
 import {
   immediateRenderScheduler,
   newManualRenderScheduler,
-  noopRenderScheduler,
   RenderSchedule,
   RenderScheduleOptions,
   RenderScheduler,
@@ -9,11 +8,10 @@ import {
 import { DefaultRenderScheduler } from '../../boot/globals';
 import { Component, ComponentContext, ComponentSlot } from '../../component';
 import { MockElement, testElement } from '../../spec/test-element';
-import { ElementRenderCtl } from './element-render-ctl';
-import { ElementRenderScheduler } from './element-render-scheduler';
+import { ComponentRenderScheduler } from './component-render-scheduler';
 
 describe('feature/render', () => {
-  describe('ElementRenderScheduler', () => {
+  describe('ComponentRenderScheduler', () => {
 
     let mockRenderScheduler: jest.Mock<RenderSchedule, Parameters<RenderScheduler>>;
     let mockRenderSchedule: jest.Mock<void, Parameters<RenderSchedule>>;
@@ -29,7 +27,7 @@ describe('feature/render', () => {
 
       context.element.connectedCallback();
 
-      const scheduler: RenderScheduler = context.get(ElementRenderScheduler);
+      const scheduler: RenderScheduler = context.get(ComponentRenderScheduler);
       const schedule = scheduler();
       const shot = jest.fn();
 
@@ -39,7 +37,7 @@ describe('feature/render', () => {
     it('schedules render shot only when component connected', async () => {
 
       const context = await bootstrap();
-      const scheduler = context.get(ElementRenderScheduler);
+      const scheduler = context.get(ComponentRenderScheduler);
       const schedule = scheduler();
       const shot = jest.fn();
 
@@ -59,7 +57,7 @@ describe('feature/render', () => {
 
       context.element.connectedCallback();
 
-      const scheduler = context.get(ElementRenderScheduler);
+      const scheduler = context.get(ComponentRenderScheduler);
       const schedule = scheduler();
       const shot1 = jest.fn();
       const shot2 = jest.fn();
@@ -73,24 +71,7 @@ describe('feature/render', () => {
       expect(shot1).not.toHaveBeenCalled();
       expect(shot2).toHaveBeenCalledTimes(1);
     });
-    it('renders immediately on request', async () => {
-      mockRenderScheduler.mockImplementation(noopRenderScheduler);
-
-      const context = await bootstrap();
-
-      context.element.connectedCallback();
-
-      const scheduler = context.get(ElementRenderScheduler);
-      const schedule = scheduler();
-      const shot = jest.fn();
-
-      schedule(shot);
-      expect(shot).not.toHaveBeenCalled();
-
-      context.get(ElementRenderCtl).renderNow();
-      expect(shot).toHaveBeenCalledTimes(1);
-    });
-    it('reports errors by calling the given method', async () => {
+    it('reports errors by calling custom function', async () => {
       mockRenderScheduler = jest.fn(immediateRenderScheduler);
 
       const error = new Error('test');
@@ -99,7 +80,7 @@ describe('feature/render', () => {
 
       context.element.connectedCallback();
 
-      const scheduler = context.get(ElementRenderScheduler);
+      const scheduler = context.get(ComponentRenderScheduler);
       const options = { error: logError };
       const schedule = scheduler(options);
       const shot = (): never => {
@@ -108,7 +89,6 @@ describe('feature/render', () => {
 
       schedule(shot);
       expect(logError).toHaveBeenCalledWith(error);
-      expect(logError.mock.instances[0]).toBe(options);
     });
 
     async function bootstrap(): Promise<ComponentContext> {
