@@ -174,25 +174,9 @@ class ComponentPreRenderer$State extends ComponentRenderer$BaseState<ComponentPr
 
   protected _createSchedule(): RenderSchedule {
 
-    const context = this._ctl._context;
-    const preScheduler = context.get(DefaultPreRenderScheduler);
+    const preScheduler = this._ctl._context.get(DefaultPreRenderScheduler);
 
-    if (context.connected) {
-      return this._scheduleBy(preScheduler);
-    }
-
-    const schedule = this._scheduleBy(this._ctl._scheduler);
-
-    let result: RenderSchedule = shot => {
-      if (context.connected) {
-        result = this._scheduleBy(preScheduler);
-        result(shot);
-      } else {
-        schedule(shot);
-      }
-    };
-
-    return shot => result(shot);
+    return this._scheduleBy(preScheduler);
   }
 
   protected _over(): void {

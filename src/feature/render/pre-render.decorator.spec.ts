@@ -105,15 +105,15 @@ describe('feature/render', () => {
 
         context.settle();
         expect(mockPreRenderer).toHaveBeenCalledTimes(1);
-        expect(mockPreRenderScheduler).not.toHaveBeenCalled();
-        expect(mockRenderScheduler).toHaveBeenCalledTimes(1);
-        expect(mockRenderSchedule).toHaveBeenCalledTimes(1);
+        expect(mockPreRenderScheduler).toHaveBeenCalledTimes(1);
+        expect(mockPreRenderSchedule).toHaveBeenCalledTimes(1);
+        expect(mockRenderScheduler).not.toHaveBeenCalled();
 
         component.property = 'other';
         expect(mockPreRenderer).toHaveBeenCalledTimes(2);
-        expect(mockPreRenderScheduler).not.toHaveBeenCalled();
-        expect(mockRenderScheduler).toHaveBeenCalledTimes(1);
-        expect(mockRenderSchedule).toHaveBeenCalledTimes(2);
+        expect(mockPreRenderScheduler).toHaveBeenCalledTimes(1);
+        expect(mockPreRenderSchedule).toHaveBeenCalledTimes(2);
+        expect(mockRenderScheduler).not.toHaveBeenCalled();
       });
       it('is re-scheduled in pre-render scheduler when connected', async () => {
 
@@ -122,17 +122,15 @@ describe('feature/render', () => {
 
         context.settle();
         expect(mockPreRenderer).toHaveBeenCalledTimes(1);
-        expect(mockPreRenderScheduler).not.toHaveBeenCalled();
-        expect(mockRenderScheduler).toHaveBeenCalledTimes(1);
-        expect(mockRenderSchedule).toHaveBeenCalledTimes(1);
+        expect(mockPreRenderScheduler).toHaveBeenCalledTimes(1);
+        expect(mockRenderScheduler).not.toHaveBeenCalled();
 
         element.connectedCallback();
         component.property = 'other';
         expect(mockPreRenderer).toHaveBeenCalledTimes(2);
         expect(mockPreRenderScheduler).toHaveBeenCalledTimes(1);
-        expect(mockPreRenderSchedule).toHaveBeenCalledTimes(1);
-        expect(mockRenderScheduler).toHaveBeenCalledTimes(1);
-        expect(mockRenderSchedule).toHaveBeenCalledTimes(1);
+        expect(mockPreRenderSchedule).toHaveBeenCalledTimes(2);
+        expect(mockRenderScheduler).not.toHaveBeenCalled();
       });
     });
 
