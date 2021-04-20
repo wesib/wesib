@@ -242,7 +242,7 @@ describe('feature/render', () => {
 
         element.connectedCallback();
         expect(mockPreRenderer).toHaveBeenCalledTimes(1);
-        expect(delegate).toHaveBeenCalledTimes(1);
+        expect(delegate).toHaveBeenCalledTimes(2);
       });
       it('is re-scheduled on state update', async () => {
 
@@ -251,7 +251,7 @@ describe('feature/render', () => {
         element.connectedCallback();
         component.property = 'other';
         expect(mockPreRenderer).toHaveBeenCalledTimes(1);
-        expect(delegate).toHaveBeenCalledTimes(2);
+        expect(delegate).toHaveBeenCalledTimes(3);
       });
     });
 

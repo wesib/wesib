@@ -96,7 +96,7 @@ abstract class ComponentRenderer$BaseState<TExecution extends RenderExecution> {
     return shot => schedule(execution => drekBuild(() => shot(execution)));
   }
 
-  protected _render(execution: RenderExecution): void {
+  private _render(execution: RenderExecution): void {
 
     const rendererExecution = this._createExecution(execution);
 
@@ -107,9 +107,14 @@ abstract class ComponentRenderer$BaseState<TExecution extends RenderExecution> {
 
       currentRenderer(rendererExecution);
       if (this._renderer === currentRenderer) {
+        this._over();
         break; // The renderer is not updated. Current renderer execution is over.
       }
     } while (this._status >= 0); // The rendering could be cancelled by the renderer itself.
+  }
+
+  protected _over(): void {
+    // Renderer execution is over.
   }
 
   private _cancel(schedule: RenderSchedule): void {
@@ -190,9 +195,11 @@ class ComponentPreRenderer$State extends ComponentRenderer$BaseState<ComponentPr
     return shot => result(shot);
   }
 
-  protected _render(execution: RenderExecution): void {
-    super._render(execution);
-    this._applyNextRenderer();
+  protected _over(): void {
+    if (this._nextRenderer) {
+      // Signal the pre-rendering is over.
+      this._supply.off(ComponentPreRenderer$done);
+    }
   }
 
   protected _createExecution(execution: RenderExecution): ComponentPreRendererExecution {
@@ -202,11 +209,12 @@ class ComponentPreRenderer$State extends ComponentRenderer$BaseState<ComponentPr
       postpone: postponed => {
         execution.postpone(() => {
           postponed(preRendererExecution);
-          this._applyNextRenderer();
+          this._over();
         });
       },
       supply: this._preSupply,
       renderBy: (renderer: ComponentRenderer) => {
+        this._renderer = renderer;
         this._nextRenderer = renderer;
       },
       preRenderBy: (preRenderer: ComponentPreRenderer) => {
@@ -215,13 +223,6 @@ class ComponentPreRenderer$State extends ComponentRenderer$BaseState<ComponentPr
     };
 
     return preRendererExecution;
-  }
-
-  private _applyNextRenderer(): void {
-    if (this._nextRenderer) {
-      // Signal the pre-rendering is over.
-      this._supply.off(ComponentPreRenderer$done);
-    }
   }
 
 }
