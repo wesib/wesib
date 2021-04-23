@@ -27,7 +27,9 @@ export function domPropertyDescriptor<TValue>(
     },
     set: writable
         ? function (this: ComponentElement<ComponentType>, value: TValue) {
-          ComponentSlot.of(this).whenReady(({ component }) => component[componentPropertyKey] = value);
+          ComponentSlot.of(this).whenReady(({
+            component,
+          }) => component[componentPropertyKey] = value);
         }
         : undefined,
   };

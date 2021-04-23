@@ -1,4 +1,14 @@
-import { AfterEvent, AfterEvent__symbol, digOn_, EventKeeper, onceOn, OnEvent, trackValue } from '@proc7ts/fun-events';
+import {
+  AfterEvent,
+  AfterEvent__symbol,
+  digOn_,
+  EventKeeper,
+  mapAfter,
+  onceOn,
+  OnEvent,
+  trackValue,
+} from '@proc7ts/fun-events';
+import { noop, valueProvider } from '@proc7ts/primitives';
 import { ComponentContext } from './component-context';
 
 /**
@@ -35,6 +45,15 @@ export interface ComponentSlot<T extends object = any> extends EventKeeper<[Comp
    * @param context - The bound component context.
    */
   bind(context: ComponentContext<T>): void;
+
+  /**
+   * Binds a component provided by the given function to element.
+   *
+   * The component is created when its {@link context} requested for the first time.
+   *
+   * @param provider - Created component context constructor.
+   */
+  bindBy(provider: (this: void) => (ComponentContext<T> | undefined)): void;
 
   /**
    * Unbinds component from element.
@@ -98,34 +117,38 @@ export const ComponentSlot = {
 
 class ComponentSlot$<T extends object> implements ComponentSlot<T> {
 
-  private readonly _ctx = trackValue<ComponentContext<T>>();
+  private readonly _ctx = trackValue<() => ComponentContext<T> | undefined>(noop);
+  readonly read: AfterEvent<[ComponentContext<T>?]>;
   readonly whenReady: OnEvent<[ComponentContext<T>]>;
 
   constructor() {
-    this.whenReady = this._ctx.read.do(
+    this.read = this._ctx.read.do(
+        mapAfter(provider => provider()),
+    );
+    this.whenReady = this.read.do(
         digOn_(ctx => ctx && ctx.whenReady),
         onceOn,
     );
   }
 
   get context(): ComponentContext<T> | undefined {
-    return this._ctx.it;
-  }
-
-  get read(): AfterEvent<[ComponentContext<T>?]> {
-    return this._ctx.read;
+    return this._ctx.it();
   }
 
   [AfterEvent__symbol](): AfterEvent<[ComponentContext<T>?]> {
-    return this._ctx.read;
+    return this.read;
   }
 
   bind(context: ComponentContext<T>): void {
-    this._ctx.it = context;
+    this.bindBy(valueProvider(context));
+  }
+
+  bindBy(provider: (this: void) => (ComponentContext<T> | undefined)): void {
+    this._ctx.it = provider;
   }
 
   unbind(): void {
-    this._ctx.it = undefined;
+    this.bindBy(noop);
   }
 
 }
