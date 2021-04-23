@@ -81,6 +81,7 @@ export class DefinitionContext$<T extends object> extends DefinitionContext<T> {
 
     const context = new ComponentContext$Mounted(this, element);
 
+    ComponentSlot.of<T>(element).bind(context);
     context._createComponent();
     context.get(DocumentRenderKit)
         .contextOf(element)

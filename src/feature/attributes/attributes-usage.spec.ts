@@ -1,5 +1,5 @@
 import { BootstrapWindow } from '../../boot/globals';
-import { Component, ComponentContext, ComponentElement } from '../../component';
+import { Component, ComponentContext, ComponentElement, ComponentSlot } from '../../component';
 import { ComponentClass, DefinitionContext } from '../../component/definition';
 import { MockElement, testDefinition, testElement } from '../../spec/test-element';
 import { Feature } from '../feature.decorator';
@@ -17,9 +17,7 @@ describe('feature/attributes', () => {
     let observer: Mocked<MutationObserver>;
     let observe: (records: MutationRecord[]) => void;
     let testComponent: ComponentClass;
-    let context: ComponentContext;
     let element: any;
-    let component: any;
     let attrChangedSpy: Mock;
     let attr2ChangedSpy: Mock;
 
@@ -32,7 +30,6 @@ describe('feature/attributes', () => {
         return observer;
       });
 
-      context = undefined!;
       attrChangedSpy = jest.fn();
       attr2ChangedSpy = jest.fn();
 
@@ -56,11 +53,6 @@ describe('feature/attributes', () => {
 
         _attr3!: string;
 
-        constructor(ctx: ComponentContext) {
-          context = ctx;
-          component = this;
-        }
-
         @AttributeChanged('custom-attribute')
         attr1 = attrChangedSpy;
 
@@ -82,14 +74,18 @@ describe('feature/attributes', () => {
     });
 
     describe('defined attribute', () => {
+
+      let context: ComponentContext;
+
       beforeEach(async () => {
         element = new (await testElement(testComponent))();
+        context = await ComponentSlot.of(element).whenReady;
       });
 
       it('notifies on attribute change', () => {
         element.setAttribute('custom-attribute', 'value1');
         expect(attrChangedSpy).toHaveBeenCalledWith('value1', null);
-        expect(attrChangedSpy.mock.instances[0]).toBe(component);
+        expect(attrChangedSpy.mock.instances[0]).toBe(context.component);
 
         attrChangedSpy.mockClear();
         element.setAttribute('custom-attribute', 'value2');

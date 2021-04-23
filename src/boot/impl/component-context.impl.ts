@@ -111,7 +111,6 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
 
     let lastRev = 0;
 
-    ComponentSlot.of<T>(this.element).bind(this);
     whenComponent.readNotifier.do(onceOn)(notifier => lastRev = notifier(this, lastRev));
     this.whenConnected(() => {
       whenComponent.readNotifier({

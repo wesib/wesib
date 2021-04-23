@@ -2,7 +2,7 @@ import { SingleContextUpKey } from '@proc7ts/context-values/updatable';
 import { afterSupplied, afterThe } from '@proc7ts/fun-events';
 import { Class, noop } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
-import { Component, ComponentContext } from '../../component';
+import { Component, ComponentContext, ComponentSlot } from '../../component';
 import { CustomElements, DefinitionContext } from '../../component/definition';
 import { Feature, FeatureContext, FeatureDef, FeatureRef, FeatureStatus } from '../../feature';
 import { MockElement } from '../../spec/test-element';
@@ -275,8 +275,10 @@ describe('boot', () => {
 
       const featureRef = await loadFeature(TestFeature);
       await loadFeature(TestComponent);
-      await bsContext.whenDefined(TestComponent).then(({ elementType }) => new elementType());
 
+      const element = await bsContext.whenDefined(TestComponent).then(({ elementType }) => new elementType());
+
+      await ComponentSlot.of(element).whenReady;
       expect(receiver).toHaveBeenCalledWith('provided');
 
       featureRef.supply.off();

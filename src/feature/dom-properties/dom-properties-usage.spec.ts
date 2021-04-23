@@ -1,5 +1,5 @@
 import { StatePath } from '@proc7ts/fun-events';
-import { Component, ComponentContext } from '../../component';
+import { Component, ComponentContext, ComponentSlot } from '../../component';
 import { ComponentClass, DefinitionContext } from '../../component/definition';
 import { MockElement, testDefinition, testElement } from '../../spec/test-element';
 import { DomPropertyPath__root } from './dom-property-path';
@@ -11,7 +11,6 @@ describe('feature/dom-properties', () => {
 
     let testComponent: ComponentClass;
     let context: ComponentContext;
-    let component: any;
     let element: any;
     let propertyValue: number;
     let customUpdateStateSpy: Mock;
@@ -43,9 +42,7 @@ describe('feature/dom-properties', () => {
         @DomProperty({ updateState: customUpdateStatePath })
         customStatePathField = 911;
 
-        constructor(ctx: ComponentContext) {
-          context = ctx;
-          component = this;
+        constructor() {
           this.writableProperty = 11;
         }
 
@@ -77,9 +74,16 @@ describe('feature/dom-properties', () => {
 
       beforeEach(async () => {
         element = new (await testElement(testComponent))();
+        context = await ComponentSlot.of(element).whenReady;
       });
 
       tests();
+      it('returns `undefined` after element disconnection', () => {
+        jest.spyOn(element, 'getRootNode').mockImplementation(() => element);
+        element.disconnectedCallback();
+        element.field = 'other';
+        expect(element.field).toBeUndefined();
+      });
     });
     describe('mounted element', () => {
 
@@ -88,10 +92,15 @@ describe('feature/dom-properties', () => {
       beforeEach(async () => {
         defContext = await testDefinition(testComponent);
         element = document.createElement('test-element');
-        defContext.mountTo(element);
+        context = defContext.mountTo(element);
       });
 
       tests();
+      it('returns `undefined` after component disposal', () => {
+        context.supply.off();
+        element.field = 'other';
+        expect(element.field).toBeUndefined();
+      });
     });
 
     function tests(): void {
@@ -155,7 +164,7 @@ describe('feature/dom-properties', () => {
         expect(element.customStateUpdatingField).toEqual(19);
         expect(updateStateSpy).not.toHaveBeenCalled();
         expect(customUpdateStateSpy).toHaveBeenCalledWith(
-            component,
+            context.component,
             [DomPropertyPath__root, 'customStateUpdatingField'],
             19,
             91,
@@ -189,11 +198,6 @@ describe('feature/dom-properties', () => {
         element.elementMethod('1', '2', '3');
 
         expect(updateStateSpy).not.toHaveBeenCalled();
-      });
-      it('returns `undefined` after component disposal', () => {
-        context.supply.off();
-        element.field = 'other';
-        expect(element.field).toBeUndefined();
       });
     }
 

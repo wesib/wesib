@@ -1,4 +1,5 @@
 import { CustomHTMLElement } from '@frontmeans/dom-primitives';
+import { drekAppender, DrekFragment, drekLift } from '@frontmeans/drek';
 import { onSupplied } from '@proc7ts/fun-events';
 import { Component, ComponentContext, ComponentSlot } from '../component';
 import { ComponentClass } from '../component/definition';
@@ -43,6 +44,7 @@ describe('component instantiation', () => {
     });
     beforeEach(async () => {
       element = new (await testElement(testComponent))();
+      await ComponentSlot.of(element).whenReady;
     });
 
     it('instantiates custom element', () => {
@@ -101,7 +103,11 @@ describe('component instantiation', () => {
           class TestComponent {
           }
 
-          testElement(TestComponent).then(cls => new cls()).catch(reject);
+          testElement(TestComponent)
+              .then(cls => new cls())
+              .then(element => ComponentSlot.of(element).whenReady)
+              .then(context => context.component)
+              .catch(reject);
         });
 
         expect(component).toBeDefined();
@@ -143,8 +149,8 @@ describe('component instantiation', () => {
       });
     });
 
-    describe('destruction callback', () => {
-      it('is notified when custom element disconnected', async () => {
+    describe('disconnection', () => {
+      it('destroys component', async () => {
 
         const whenDestroyed = jest.fn();
 
@@ -174,6 +180,7 @@ describe('component instantiation', () => {
         const receive2 = jest.fn();
         const supply2 = onSupplied(slot)(receive2);
 
+        jest.spyOn(element, 'getRootNode').mockImplementation(() => element);
         element.disconnectedCallback!();
 
         expect(whenDestroyed).toHaveBeenCalled();
@@ -190,6 +197,102 @@ describe('component instantiation', () => {
 
         expect(receive3).not.toHaveBeenCalled();
         expect(supply3.isOff).toBe(false);
+      });
+      it('allows to recreate component on settlement', async () => {
+
+        const whenDestroyed = jest.fn();
+
+        @Component({
+          name: 'test-component',
+          extend: {
+            type: MockElement,
+          },
+        })
+        class TestComponent {
+
+          constructor(ctx: ComponentContext) {
+            ctx.supply
+                .whenOff(whenDestroyed)
+                .whenOff(() => expect(ctx.connected).toBe(false));
+          }
+
+        }
+
+        const element: CustomHTMLElement = new (await testElement(TestComponent))();
+
+        expect(whenDestroyed).not.toHaveBeenCalled();
+
+        const slot = ComponentSlot.of(element);
+
+        const context1 = slot.context!;
+
+        expect(context1.supply.isOff).toBe(false);
+
+        const getRootNodeSpy = jest.spyOn(element, 'getRootNode');
+
+        getRootNodeSpy.mockImplementation(() => element);
+        element.disconnectedCallback!();
+        expect(context1.supply.isOff).toBe(true);
+        expect(slot.context).toBeUndefined();
+
+        const fragment = new DrekFragment(drekAppender(document.body));
+
+        getRootNodeSpy.mockImplementation(() => fragment.content);
+        drekLift(element);
+
+        fragment.settle();
+
+        const context2 = slot.context!;
+
+        expect(context2).not.toBe(context1);
+        expect(context2.supply.isOff).toBe(false);
+        expect(context2.settled).toBe(true);
+      });
+      it('allows to recreate component on reconnection', async () => {
+
+        const whenDestroyed = jest.fn();
+
+        @Component({
+          name: 'test-component',
+          extend: {
+            type: MockElement,
+          },
+        })
+        class TestComponent {
+
+          constructor(ctx: ComponentContext) {
+            ctx.supply
+                .whenOff(whenDestroyed)
+                .whenOff(() => expect(ctx.connected).toBe(false));
+          }
+
+        }
+
+        const element: CustomHTMLElement = new (await testElement(TestComponent))();
+
+        expect(whenDestroyed).not.toHaveBeenCalled();
+
+        const slot = ComponentSlot.of(element);
+
+        const context1 = slot.context!;
+
+        expect(context1.supply.isOff).toBe(false);
+
+        const getRootNodeSpy = jest.spyOn(element, 'getRootNode');
+
+        getRootNodeSpy.mockImplementation(() => element);
+        element.disconnectedCallback!();
+        expect(context1.supply.isOff).toBe(true);
+        expect(slot.context).toBeUndefined();
+
+        getRootNodeSpy.mockImplementation(() => document.body);
+        element.connectedCallback!();
+
+        const context2 = slot.context!;
+
+        expect(context2).not.toBe(context1);
+        expect(context2.supply.isOff).toBe(false);
+        expect(context2.connected).toBe(true);
       });
     });
   });

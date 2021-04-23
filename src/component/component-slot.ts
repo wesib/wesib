@@ -9,6 +9,7 @@ import {
   trackValue,
 } from '@proc7ts/fun-events';
 import { noop, valueProvider } from '@proc7ts/primitives';
+import { neverSupply, Supply } from '@proc7ts/supply';
 import { ComponentContext } from './component-context';
 
 /**
@@ -19,6 +20,7 @@ import { ComponentContext } from './component-context';
  * Notifies on component binding.
  *
  * @category Core
+ * @typeParam T - A type of component.
  */
 export interface ComponentSlot<T extends object = any> extends EventKeeper<[ComponentContext<T>?]> {
 
@@ -47,18 +49,18 @@ export interface ComponentSlot<T extends object = any> extends EventKeeper<[Comp
   bind(context: ComponentContext<T>): void;
 
   /**
-   * Binds a component provided by the given function to element.
+   * Binds a component to element by the give `binder`.
    *
-   * The component is created when its {@link context} requested for the first time.
-   *
-   * @param provider - Created component context constructor.
+   * @param binder - Component slot binder.
    */
-  bindBy(provider: (this: void) => (ComponentContext<T> | undefined)): void;
+  bindBy(binder: ComponentSlot.Binder<T>): void;
 
   /**
    * Unbinds component from element.
    *
    * This method is not typically used by client code.
+   *
+   * After this method call the component may be reconstructed again by its {@link bindBy provider}.
    */
   unbind(): void;
 
@@ -93,6 +95,46 @@ export interface ComponentElement<T extends object = any> extends Element {
 /**
  * @category Core
  */
+export namespace ComponentSlot {
+
+  /**
+   * A binding of component to element.
+   *
+   * This is passed to {@link Binder component binder}. The latter can use it to assign the bound component.
+   *
+   * @typeParam T - A type of component.
+   */
+  export interface Binding<T extends object> {
+
+    /**
+     * Assigns a context of the component bound to target element.
+     *
+     * @param context - Bound component context.
+     *
+     * @returns Binding supply. Cut off once the component {@link ComponentSlot.unbind unbound}.
+     */
+    bind(this: void, context: ComponentContext<T>): Supply;
+
+  }
+
+  /**
+   * A binder of component to element.
+   *
+   * Controls component construction and binding to element.
+   *
+   * @typeParam T - A type of component.
+   */
+  export type Binder<T extends object> =
+  /**
+   * @param binding - Component binding to element.
+   */
+      (this: void, binding: Binding<T>) => void;
+
+}
+
+/**
+ * @category Core
+ */
 export const ComponentSlot = {
 
   /**
@@ -115,15 +157,21 @@ export const ComponentSlot = {
 
 };
 
+const ComponentSlot$empty: ComponentSlot$Provider<any> = {
+  get: noop,
+  unbind: noop,
+  drop: noop,
+};
+
 class ComponentSlot$<T extends object> implements ComponentSlot<T> {
 
-  private readonly _ctx = trackValue<() => ComponentContext<T> | undefined>(noop);
+  readonly _provider = trackValue<ComponentSlot$Provider<T>>(ComponentSlot$empty);
   readonly read: AfterEvent<[ComponentContext<T>?]>;
   readonly whenReady: OnEvent<[ComponentContext<T>]>;
 
   constructor() {
-    this.read = this._ctx.read.do(
-        mapAfter(provider => provider()),
+    this.read = this._provider.read.do(
+        mapAfter(provider => provider.get()),
     );
     this.whenReady = this.read.do(
         digOn_(ctx => ctx && ctx.whenReady),
@@ -132,7 +180,7 @@ class ComponentSlot$<T extends object> implements ComponentSlot<T> {
   }
 
   get context(): ComponentContext<T> | undefined {
-    return this._ctx.it();
+    return this._provider.it.get();
   }
 
   [AfterEvent__symbol](): AfterEvent<[ComponentContext<T>?]> {
@@ -140,17 +188,96 @@ class ComponentSlot$<T extends object> implements ComponentSlot<T> {
   }
 
   bind(context: ComponentContext<T>): void {
-    this.bindBy(valueProvider(context));
+    this._provider.it.drop();
+    this._provider.it = ComponentSlot$known(context);
   }
 
-  bindBy(provider: (this: void) => (ComponentContext<T> | undefined)): void {
-    this._ctx.it = provider;
+  bindBy(binder: ComponentSlot.Binder<T>): void {
+    this._provider.it.drop();
+
+    const updateProvider = (provider: ComponentSlot$Provider<T>): void => {
+      this._provider.it = provider;
+    };
+
+    this._provider.it = ComponentSlot$bound(
+        updateProvider,
+        binder,
+    );
   }
 
   unbind(): void {
-    this.bindBy(noop);
+    this._provider.it.unbind();
   }
 
 }
 
+interface ComponentSlot$Provider<T extends object> {
+  get(): ComponentContext<T> | undefined;
+  unbind(): void;
+  drop(): void;
+}
 
+function ComponentSlot$known<T extends object>(context: ComponentContext<T> | undefined): ComponentSlot$Provider<T> {
+  return {
+    get: () => context,
+    unbind() {
+      context = undefined;
+    },
+    drop: noop,
+  };
+}
+
+function ComponentSlot$bound<T extends object>(
+    updateProvider: (provider: ComponentSlot$Provider<T>) => void,
+    binder: ComponentSlot.Binder<T>,
+): ComponentSlot$Provider<T> {
+
+  let supply = neverSupply();
+  let getContext: () => ComponentContext<T> | undefined = noop;
+  const get = (): ComponentContext<T> | undefined => getContext();
+  const newSupply = (): Supply => supply = new Supply(() => {
+    getContext = noop;
+  });
+  let bind = (context: ComponentContext<T>): Supply => {
+    getContext = valueProvider(context);
+    return newSupply();
+  };
+  const drop = (): void => {
+    bind = _ => neverSupply();
+    supply.off();
+  };
+  const unbind = (): void => {
+    supply.off();
+    updateProvider({
+      get,
+      unbind,
+      drop,
+    });
+  };
+
+  getContext = () => {
+    binder({
+      bind: context => bind(context),
+    });
+
+    // Subsequent bind calls update the component provider
+    bind = context => {
+      supply.off();
+      getContext = valueProvider(context);
+      updateProvider({
+        get,
+        unbind,
+        drop,
+      });
+      return newSupply();
+    };
+
+    return getContext();
+  };
+
+  return {
+    get,
+    unbind,
+    drop,
+  };
+}
