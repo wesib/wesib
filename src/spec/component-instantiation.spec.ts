@@ -240,15 +240,15 @@ describe('component instantiation', () => {
 
         expect(context1.supply.isOff).toBe(false);
 
-        const getRootNodeSpy = jest.spyOn(element, 'getRootNode');
-
-        getRootNodeSpy.mockImplementation(() => element);
+        jest.spyOn(element, 'getRootNode').mockImplementation(() => element);
         element.disconnectedCallback!();
         expect(context1.supply.isOff).toBe(true);
         expect(slot.context).toBeUndefined();
 
         const context2 = slot.rebind()!;
 
+        expect(context2).toBeDefined();
+        expect(ComponentSlot.of(element).context).toBe(context2);
         expect(context2).not.toBe(context1);
         expect(context2.supply.isOff).toBe(false);
         expect(context2.settled).toBe(false);

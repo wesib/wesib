@@ -78,11 +78,19 @@ describe('feature/dom-properties', () => {
       });
 
       tests();
-      it('returns `undefined` after element disconnection', () => {
+      it('re-binds component on property access after disconnection', () => {
         jest.spyOn(element, 'getRootNode').mockImplementation(() => element);
         element.disconnectedCallback();
+
         element.field = 'other';
-        expect(element.field).toBeUndefined();
+        expect(ComponentSlot.of(element).context).toBeUndefined();
+
+        expect(element.field).toBe('other');
+
+        const context2 = ComponentSlot.of(element).context;
+
+        expect(context2).toBeDefined();
+        expect(context2).not.toBe(context);
       });
     });
     describe('mounted element', () => {
