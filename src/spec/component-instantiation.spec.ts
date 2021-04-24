@@ -2,7 +2,7 @@ import { CustomHTMLElement } from '@frontmeans/dom-primitives';
 import { drekAppender, DrekFragment, drekLift } from '@frontmeans/drek';
 import { onSupplied } from '@proc7ts/fun-events';
 import { Component, ComponentContext, ComponentSlot } from '../component';
-import { ComponentClass } from '../component/definition';
+import { ComponentClass, DefinitionContext } from '../component/definition';
 import { Feature } from '../feature';
 import { MockElement, testElement } from './test-element';
 import Mock = jest.Mock;
@@ -149,6 +149,31 @@ describe('component instantiation', () => {
       });
     });
 
+    describe('replacement', () => {
+      it('can be replaced by mounted component', async () => {
+
+        @Component({
+          name: 'test-component',
+          extend: {
+            type: MockElement,
+          },
+        })
+        class TestComponent {
+        }
+
+        const element: CustomHTMLElement = new (await testElement(TestComponent))();
+        const slot = ComponentSlot.of(element);
+        const context1 = slot.context!;
+        const context2 = context1.get(DefinitionContext).mountTo(element);
+
+        expect(context2).not.toBe(context1);
+
+        context1.supply.off();
+        expect(context2.supply.isOff).toBe(false);
+        expect(slot.context).toBe(context2);
+      });
+    });
+
     describe('disconnection', () => {
       it('destroys component', async () => {
 
@@ -198,9 +223,7 @@ describe('component instantiation', () => {
         expect(receive3).not.toHaveBeenCalled();
         expect(supply3.isOff).toBe(false);
       });
-      it('allows to recreate component on settlement', async () => {
-
-        const whenDestroyed = jest.fn();
+      it('allows to re-bind component', async () => {
 
         @Component({
           name: 'test-component',
@@ -209,21 +232,40 @@ describe('component instantiation', () => {
           },
         })
         class TestComponent {
-
-          constructor(ctx: ComponentContext) {
-            ctx.supply
-                .whenOff(whenDestroyed)
-                .whenOff(() => expect(ctx.connected).toBe(false));
-          }
-
         }
 
         const element: CustomHTMLElement = new (await testElement(TestComponent))();
-
-        expect(whenDestroyed).not.toHaveBeenCalled();
-
         const slot = ComponentSlot.of(element);
+        const context1 = slot.context!;
 
+        expect(context1.supply.isOff).toBe(false);
+
+        const getRootNodeSpy = jest.spyOn(element, 'getRootNode');
+
+        getRootNodeSpy.mockImplementation(() => element);
+        element.disconnectedCallback!();
+        expect(context1.supply.isOff).toBe(true);
+        expect(slot.context).toBeUndefined();
+
+        const context2 = slot.rebind()!;
+
+        expect(context2).not.toBe(context1);
+        expect(context2.supply.isOff).toBe(false);
+        expect(context2.settled).toBe(false);
+      });
+      it('allows to recreate component on settlement', async () => {
+
+        @Component({
+          name: 'test-component',
+          extend: {
+            type: MockElement,
+          },
+        })
+        class TestComponent {
+        }
+
+        const element: CustomHTMLElement = new (await testElement(TestComponent))();
+        const slot = ComponentSlot.of(element);
         const context1 = slot.context!;
 
         expect(context1.supply.isOff).toBe(false);
@@ -249,9 +291,6 @@ describe('component instantiation', () => {
         expect(context2.settled).toBe(true);
       });
       it('allows to recreate component on reconnection', async () => {
-
-        const whenDestroyed = jest.fn();
-
         @Component({
           name: 'test-component',
           extend: {
@@ -259,21 +298,10 @@ describe('component instantiation', () => {
           },
         })
         class TestComponent {
-
-          constructor(ctx: ComponentContext) {
-            ctx.supply
-                .whenOff(whenDestroyed)
-                .whenOff(() => expect(ctx.connected).toBe(false));
-          }
-
         }
 
         const element: CustomHTMLElement = new (await testElement(TestComponent))();
-
-        expect(whenDestroyed).not.toHaveBeenCalled();
-
         const slot = ComponentSlot.of(element);
-
         const context1 = slot.context!;
 
         expect(context1.supply.isOff).toBe(false);

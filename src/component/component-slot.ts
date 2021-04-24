@@ -1,16 +1,7 @@
-import {
-  AfterEvent,
-  AfterEvent__symbol,
-  digOn_,
-  EventKeeper,
-  mapAfter,
-  onceOn,
-  OnEvent,
-  trackValue,
-} from '@proc7ts/fun-events';
-import { noop, valueProvider } from '@proc7ts/primitives';
-import { neverSupply, Supply } from '@proc7ts/supply';
+import { AfterEvent, EventKeeper, OnEvent } from '@proc7ts/fun-events';
+import { Supply } from '@proc7ts/supply';
 import { ComponentContext } from './component-context';
+import { ComponentSlot$ } from './component-slot.impl';
 
 /**
  * A component slot.
@@ -60,9 +51,18 @@ export interface ComponentSlot<T extends object = any> extends EventKeeper<[Comp
    *
    * This method is not typically used by client code.
    *
-   * After this method call the component may be reconstructed again by its {@link bindBy provider}.
+   * After this method call the component may be reconstructed again by its {@link bindBy binder}.
    */
   unbind(): void;
+
+  /**
+   * Tries to re-bind component context by its {@link bindBy binder}.
+   *
+   * Does nothing if component is bound already.
+   *
+   * @returns Either a bound component context, or `undefined` if component can not be bound.
+   */
+  rebind(): ComponentContext<T> | undefined;
 
 }
 
@@ -156,135 +156,3 @@ export const ComponentSlot = {
   },
 
 };
-
-const ComponentSlot$empty: ComponentSlot$Provider<any> = {
-  get: noop,
-  unbind: noop,
-  drop: noop,
-};
-
-class ComponentSlot$<T extends object> implements ComponentSlot<T> {
-
-  readonly _provider = trackValue<ComponentSlot$Provider<T>>(ComponentSlot$empty);
-  readonly read: AfterEvent<[ComponentContext<T>?]>;
-  readonly whenReady: OnEvent<[ComponentContext<T>]>;
-
-  constructor() {
-    this.read = this._provider.read.do(
-        mapAfter(provider => provider.get()),
-    );
-    this.whenReady = this.read.do(
-        digOn_(ctx => ctx && ctx.whenReady),
-        onceOn,
-    );
-  }
-
-  get context(): ComponentContext<T> | undefined {
-    return this._provider.it.get();
-  }
-
-  [AfterEvent__symbol](): AfterEvent<[ComponentContext<T>?]> {
-    return this.read;
-  }
-
-  bind(context: ComponentContext<T>): void {
-    this._provider.it.drop();
-    this._provider.it = ComponentSlot$known(this, context);
-  }
-
-  bindBy(binder: ComponentSlot.Binder<T>): void {
-    this._provider.it.drop();
-    this._provider.it = ComponentSlot$bound(this, binder);
-  }
-
-  unbind(): void {
-    this._provider.it.unbind();
-  }
-
-}
-
-interface ComponentSlot$Provider<T extends object> {
-  get(): ComponentContext<T> | undefined;
-  unbind(): void;
-  drop(): void;
-}
-
-function ComponentSlot$known<T extends object>(
-    slot: ComponentSlot$<T>,
-    context: ComponentContext<T> | undefined,
-): ComponentSlot$Provider<T> {
-  context?.supply.whenOff(() => {
-    if (slot.context === context) {
-      slot.unbind();
-    }
-  });
-
-  return {
-    get: () => context,
-    unbind() {
-      context = undefined;
-      slot._provider.it = ComponentSlot$empty;
-    },
-    drop: noop,
-  };
-}
-
-function ComponentSlot$bound<T extends object>(
-    slot: ComponentSlot$<T>,
-    binder: ComponentSlot.Binder<T>,
-): ComponentSlot$Provider<T> {
-
-  let supply = neverSupply();
-  let getContext: () => ComponentContext<T> | undefined = noop;
-  const get = (): ComponentContext<T> | undefined => getContext();
-  const newSupply = (): Supply => supply = new Supply(() => {
-    getContext = noop;
-  });
-  let bind = (context: ComponentContext<T>): Supply => {
-    getContext = valueProvider(context);
-    context.supply.whenOff(() => {
-      if (slot.context === context) {
-        slot.unbind();
-      }
-    });
-    return newSupply();
-  };
-  const drop = (): void => {
-    bind = _ => neverSupply();
-    supply.off();
-  };
-  const unbind = (): void => {
-    supply.off();
-    slot._provider.it = {
-      get,
-      unbind,
-      drop,
-    };
-  };
-
-  getContext = () => {
-    binder({
-      bind: context => bind(context),
-    });
-
-    // Subsequent bind calls update the component provider
-    bind = context => {
-      supply.off();
-      getContext = valueProvider(context);
-      slot._provider.it = {
-        get,
-        unbind,
-        drop,
-      };
-      return newSupply();
-    };
-
-    return getContext();
-  };
-
-  return {
-    get,
-    unbind,
-    drop,
-  };
-}

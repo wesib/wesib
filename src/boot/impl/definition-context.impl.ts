@@ -73,12 +73,6 @@ export class DefinitionContext$<T extends object> extends DefinitionContext<T> {
 
   mountTo(element: ComponentElement<T>): ComponentContext<T> {
 
-    const slot = ComponentSlot.of(element);
-
-    if (slot.context) {
-      throw new Error(`Element ${String(element)} already bound to component`);
-    }
-
     const context = new ComponentContext$Mounted(this, element);
 
     ComponentSlot.of<T>(element).bind(context);
