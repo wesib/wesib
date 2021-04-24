@@ -1,6 +1,7 @@
 import { CustomHTMLElement } from '@frontmeans/dom-primitives';
-import { drekAppender, DrekFragment, drekLift } from '@frontmeans/drek';
+import { drekAppender, drekBuild, DrekFragment, drekLift } from '@frontmeans/drek';
 import { onSupplied } from '@proc7ts/fun-events';
+import { Class } from '@proc7ts/primitives';
 import { Component, ComponentContext, ComponentSlot } from '../component';
 import { ComponentClass, DefinitionContext } from '../component/definition';
 import { Feature } from '../feature';
@@ -118,6 +119,50 @@ describe('component instantiation', () => {
         context.whenReady(ready);
 
         expect(ready).toHaveBeenCalledWith(context);
+      });
+    });
+
+    describe('whenSettled receiver', () => {
+      it('is notified when render context is settled', async () => {
+
+        const whenSettled = jest.fn();
+        let root: Element;
+
+        class BaseElement extends MockElement {
+
+          getRootNode(): Node {
+            return root;
+          }
+
+        }
+
+        @Component({
+          name: 'test-component',
+          extend: {
+            type: BaseElement,
+          },
+        })
+        class TestComponent {
+
+          constructor(ctx: ComponentContext) {
+            ctx.whenSettled(whenSettled);
+            ctx.whenSettled(() => expect(ctx.settled).toBe(true));
+          }
+
+        }
+
+        const elementType: Class<Element> = await testElement(TestComponent);
+        const fragment = new DrekFragment(drekAppender(document.body));
+
+        drekBuild(() => {
+          root = document.createElement('root-element');
+          fragment.content.appendChild(root);
+
+          return new elementType();
+        });
+
+        fragment.settle();
+        expect(whenSettled).toHaveBeenCalled();
       });
     });
 

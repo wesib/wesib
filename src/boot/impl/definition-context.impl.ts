@@ -77,10 +77,11 @@ export class DefinitionContext$<T extends object> extends DefinitionContext<T> {
 
     ComponentSlot.of<T>(element).bind(context);
     context._createComponent();
-    context.get(DocumentRenderKit)
-        .contextOf(element)
-        .whenConnected(() => context._connect())
-        .needs(context);
+
+    const drekContext = context.get(DocumentRenderKit).contextOf(element);
+
+    drekContext.whenSettled(_ => context.settle()).needs(context);
+    drekContext.whenConnected(_ => context._connect()).needs(context);
     context._created();
 
     return context;

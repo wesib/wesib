@@ -1,10 +1,9 @@
 import { AfterEvent, onceOn, OnEvent } from '@proc7ts/fun-events';
-import { noop, valueProvider } from '@proc7ts/primitives';
+import { valueProvider } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
 import { ComponentContext, ComponentContext__symbol, ComponentInstance } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { newComponent } from '../../component/definition/component.impl';
-import { DocumentRenderKit } from '../globals';
 import { ComponentStatus } from './component-status.impl';
 import { DefinitionContext$ } from './definition-context.impl';
 
@@ -31,17 +30,6 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
       delete this.component[ComponentContext__symbol];
       this._component = componentDestroyed;
     });
-
-    // Ignore immediate settlement, as is typically leads to DOM manipulations prohibited inside constructor.
-    let whenSettled: () => void = noop;
-
-    this.get(DocumentRenderKit)
-        .contextOf(element)
-        .whenSettled(_drekCtx => whenSettled())
-        .needs(this);
-
-    // Assume the settlement would happen outside the constructor.
-    whenSettled = () => this.settle();
   }
 
   get componentType(): ComponentClass<T> {
