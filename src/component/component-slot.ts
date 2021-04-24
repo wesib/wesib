@@ -189,20 +189,12 @@ class ComponentSlot$<T extends object> implements ComponentSlot<T> {
 
   bind(context: ComponentContext<T>): void {
     this._provider.it.drop();
-    this._provider.it = ComponentSlot$known(context);
+    this._provider.it = ComponentSlot$known(this, context);
   }
 
   bindBy(binder: ComponentSlot.Binder<T>): void {
     this._provider.it.drop();
-
-    const updateProvider = (provider: ComponentSlot$Provider<T>): void => {
-      this._provider.it = provider;
-    };
-
-    this._provider.it = ComponentSlot$bound(
-        updateProvider,
-        binder,
-    );
+    this._provider.it = ComponentSlot$bound(this, binder);
   }
 
   unbind(): void {
@@ -217,18 +209,28 @@ interface ComponentSlot$Provider<T extends object> {
   drop(): void;
 }
 
-function ComponentSlot$known<T extends object>(context: ComponentContext<T> | undefined): ComponentSlot$Provider<T> {
+function ComponentSlot$known<T extends object>(
+    slot: ComponentSlot$<T>,
+    context: ComponentContext<T> | undefined,
+): ComponentSlot$Provider<T> {
+  context?.supply.whenOff(() => {
+    if (slot.context === context) {
+      slot.unbind();
+    }
+  });
+
   return {
     get: () => context,
     unbind() {
       context = undefined;
+      slot._provider.it = ComponentSlot$empty;
     },
     drop: noop,
   };
 }
 
 function ComponentSlot$bound<T extends object>(
-    updateProvider: (provider: ComponentSlot$Provider<T>) => void,
+    slot: ComponentSlot$<T>,
     binder: ComponentSlot.Binder<T>,
 ): ComponentSlot$Provider<T> {
 
@@ -240,6 +242,11 @@ function ComponentSlot$bound<T extends object>(
   });
   let bind = (context: ComponentContext<T>): Supply => {
     getContext = valueProvider(context);
+    context.supply.whenOff(() => {
+      if (slot.context === context) {
+        slot.unbind();
+      }
+    });
     return newSupply();
   };
   const drop = (): void => {
@@ -248,11 +255,11 @@ function ComponentSlot$bound<T extends object>(
   };
   const unbind = (): void => {
     supply.off();
-    updateProvider({
+    slot._provider.it = {
       get,
       unbind,
       drop,
-    });
+    };
   };
 
   getContext = () => {
@@ -264,11 +271,11 @@ function ComponentSlot$bound<T extends object>(
     bind = context => {
       supply.off();
       getContext = valueProvider(context);
-      updateProvider({
+      slot._provider.it = {
         get,
         unbind,
         drop,
-      });
+      };
       return newSupply();
     };
 

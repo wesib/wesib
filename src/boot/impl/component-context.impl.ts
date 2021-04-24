@@ -1,7 +1,7 @@
 import { AfterEvent, onceOn, OnEvent } from '@proc7ts/fun-events';
 import { noop, valueProvider } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
-import { ComponentContext, ComponentContext__symbol, ComponentInstance, ComponentSlot } from '../../component';
+import { ComponentContext, ComponentContext__symbol, ComponentInstance } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { newComponent } from '../../component/definition/component.impl';
 import { DocumentRenderKit } from '../globals';
@@ -30,7 +30,6 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
     this.supply.whenOff(() => {
       delete this.component[ComponentContext__symbol];
       this._component = componentDestroyed;
-      ComponentSlot.of(this.element).unbind();
     });
 
     // Ignore immediate settlement, as is typically leads to DOM manipulations prohibited inside constructor.
