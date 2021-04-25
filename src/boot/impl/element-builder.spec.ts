@@ -5,7 +5,7 @@ import { Class, noop } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
 import { ComponentContext, ComponentDef, ComponentDef__symbol, ComponentSlot } from '../../component';
 import { ComponentClass, DefinitionContext } from '../../component/definition';
-import { MockElement } from '../../spec/test-element';
+import { MockElement } from '../../testing';
 import { BootstrapContext } from '../bootstrap-context';
 import { DefaultNamespaceAliaser } from '../globals';
 import { BootstrapContextRegistry } from './bootstrap-context-registry.impl';

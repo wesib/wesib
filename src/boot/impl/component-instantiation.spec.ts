@@ -2,10 +2,10 @@ import { CustomHTMLElement } from '@frontmeans/dom-primitives';
 import { drekAppender, drekBuild, DrekFragment, drekLift } from '@frontmeans/drek';
 import { onSupplied } from '@proc7ts/fun-events';
 import { Class } from '@proc7ts/primitives';
-import { Component, ComponentContext, ComponentSlot } from '../component';
-import { ComponentClass, DefinitionContext } from '../component/definition';
-import { Feature } from '../feature';
-import { MockElement, testElement } from './test-element';
+import { Component, ComponentContext, ComponentSlot } from '../../component';
+import { ComponentClass, DefinitionContext } from '../../component/definition';
+import { Feature } from '../../feature';
+import { MockElement, testElement } from '../../testing';
 import Mock = jest.Mock;
 
 describe('component instantiation', () => {

@@ -7,7 +7,7 @@ import {
 } from '@frontmeans/render-scheduler';
 import { Component } from '../../component';
 import { Feature, FeatureDef } from '../../feature';
-import { MockElement } from '../../spec/test-element';
+import { MockElement } from '../../testing';
 import { bootstrapComponents } from '../bootstrap';
 import { BootstrapContext } from '../bootstrap-context';
 import { BootstrapWindow } from './bootstrap-window';

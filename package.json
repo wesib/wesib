@@ -22,8 +22,14 @@
   "module": "./dist/wesib.js",
   "types": "./index.d.ts",
   "exports": {
-    "import": "./dist/wesib.js",
-    "require": "./dist/wesib.cjs"
+    ".": {
+      "import": "./dist/wesib.js",
+      "require": "./dist/wesib.cjs"
+    },
+    "./testing": {
+      "import": "./dist/wesib.testing.js",
+      "require": "./dist/wesib.testing.cjs"
+    }
   },
   "peerDependencies": {
     "@frontmeans/namespace-aliaser": "^2.3.0",

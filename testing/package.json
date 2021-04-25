@@ -1,0 +1,5 @@
+{
+  "main": "../dist/wesib.testing.cjs",
+  "module": "../dist/wesib.testing.js",
+  "types": "./index.d.ts"
+}

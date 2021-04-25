@@ -1,7 +1,7 @@
 import { StatePath } from '@proc7ts/fun-events';
 import { Component, ComponentContext, ComponentSlot } from '../../component';
 import { ComponentClass, DefinitionContext } from '../../component/definition';
-import { MockElement, testDefinition, testElement } from '../../spec/test-element';
+import { MockElement, testDefinition, testElement } from '../../testing';
 import { DomPropertyPath__root } from './dom-property-path';
 import { DomMethod, DomProperty } from './dom-property.decorator';
 import Mock = jest.Mock;

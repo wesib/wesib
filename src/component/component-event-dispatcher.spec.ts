@@ -1,5 +1,5 @@
 import { ContextRegistry } from '@proc7ts/context-values';
-import { MockElement, testElement } from '../spec/test-element';
+import { MockElement, testElement } from '../testing';
 import { ComponentContext } from './component-context';
 import { ComponentEventDispatcher } from './component-event-dispatcher';
 import { ComponentSlot } from './component-slot';

@@ -7,7 +7,7 @@ import {
 } from '@frontmeans/render-scheduler';
 import { DefaultPreRenderScheduler, DefaultRenderScheduler } from '../../boot/globals';
 import { Component, ComponentContext, ComponentSlot } from '../../component';
-import { MockElement, testElement } from '../../spec/test-element';
+import { MockElement, testElement } from '../../testing';
 import { DomProperty } from '../dom-properties';
 import { ComponentPreRendererExecution } from './component-pre-renderer-execution';
 import { ComponentRendererExecution } from './component-renderer-execution';
