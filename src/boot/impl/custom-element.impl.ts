@@ -1,5 +1,4 @@
 import { CustomHTMLElementClass } from '@frontmeans/dom-primitives';
-import { drekContextOf } from '@frontmeans/drek';
 import { Class, noop } from '@proc7ts/primitives';
 import { ComponentElement, ComponentSlot } from '../../component';
 import { DocumentRenderKit } from '../globals';
@@ -22,17 +21,12 @@ export function customElementType<T extends object>(
 ): Class {
 
   const { elementDef } = defContext;
-  let ensureComponentBound: () => ComponentContext$<T>;
+  const renderKit = defContext.get(DocumentRenderKit);
 
   class CustomElement$ extends (elementDef.extend.type as CustomHTMLElementClass) implements ComponentElement {
 
     constructor() {
       super();
-
-      const renderKit = defContext.get(DocumentRenderKit);
-      const getComponentContext = (): ComponentContext$<T> => ComponentSlot.of<T>(this).context as ComponentContext$<T>;
-
-      ensureComponentBound = getComponentContext;
 
       const slot = ComponentSlot.of<T>(this);
 
@@ -41,55 +35,30 @@ export function customElementType<T extends object>(
 
       slot.bindBy(({ bind }) => {
 
-        const bindComponent = (): ComponentContext$<T> => {
-          ensureComponentBound = getComponentContext; // Bind once.
+        const context = new ComponentContext$Custom(defContext, this);
+        const supply = bind(context);
 
-          const context = new ComponentContext$Custom(defContext, this);
+        context._createComponent();
+        context._created();
 
-          settle = () => context.settle();
-
-          context.supply.whenOff(() => {
-            drekContextOf(this).whenSettled(() => {
-              settle = noop;
-
-              const newContext = ensureComponentBound();
-
-              renderKit.contextOf(this).whenSettled(_ => newContext.settle());
-            });
-          });
-
-          const supply = bind(context);
-
-          context._createComponent();
-          context._created();
-
-          supply.whenOff(() => {
-            ensureComponentBound = bindComponent; // Bind next time element connected
-          });
-
-          return context;
-        };
-
-        bindComponent();
+        context.supply.needs(supply).whenOff(() => {
+          renderKit.contextOf(this).whenSettled(_ => settle());
+        });
       });
 
       renderKit.contextOf(this).whenSettled(_ => settle());
 
       // Assume settlement happens after constructor completion.
-      settle = (): void => {
-        settle = noop;
-        slot.rebind();
-        settle();
-      };
+      settle = () => slot.rebind()!.settle();
     }
 
     connectedCallback(): void {
       super.connectedCallback?.();
-      ensureComponentBound()._connect();
+      (ComponentSlot.of<T>(this).rebind() as ComponentContext$Custom<T>)._connect();
     }
 
     disconnectedCallback(): void {
-      (ComponentSlot.of<T>(this).context as ComponentContext$<T>).supply.off();
+      (ComponentSlot.of<T>(this).context as ComponentContext$Custom<T>).supply.off();
       super.disconnectedCallback?.();
     }
 
