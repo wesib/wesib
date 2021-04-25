@@ -1,5 +1,5 @@
 import { Component, ComponentContext, ComponentSlot } from '../../component';
-import { MockElement, testElement } from '../../spec/test-element';
+import { MockElement, testElement } from '../../testing';
 import { ComponentState } from './component-state';
 
 describe('feature/state', () => {

@@ -3,7 +3,7 @@ import { Class } from '@proc7ts/primitives';
 import { bootstrapComponents } from '../../boot/bootstrap';
 import { Component, ComponentSlot } from '../../component';
 import { ComponentClass } from '../../component/definition';
-import { MockElement } from '../../spec/test-element';
+import { MockElement } from '../../testing';
 import { attributePathTo } from './attribute-path';
 import { Attributes } from './attributes.decorator';
 

@@ -5,7 +5,7 @@ import { Supply } from '@proc7ts/supply';
 import { Component, ComponentContext, ComponentSlot } from '../../component';
 import { CustomElements, DefinitionContext } from '../../component/definition';
 import { Feature, FeatureContext, FeatureDef, FeatureRef, FeatureStatus } from '../../feature';
-import { MockElement } from '../../spec/test-element';
+import { MockElement } from '../../testing';
 import { BootstrapContext } from '../bootstrap-context';
 import { BootstrapSetup } from '../bootstrap-setup';
 import { bootstrapComponents } from './bootstrap-components';

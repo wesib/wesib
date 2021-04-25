@@ -7,7 +7,7 @@ import {
 } from '@frontmeans/render-scheduler';
 import { DefaultRenderScheduler } from '../../boot/globals';
 import { Component, ComponentContext, ComponentSlot } from '../../component';
-import { MockElement, testElement } from '../../spec/test-element';
+import { MockElement, testElement } from '../../testing';
 import { ComponentRenderScheduler } from './component-render-scheduler';
 
 describe('feature/render', () => {

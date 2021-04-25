@@ -1,6 +1,6 @@
 import { noop } from '@proc7ts/primitives';
 import { Component, ComponentSlot } from '../../component';
-import { MockElement, testElement } from '../../spec/test-element';
+import { MockElement, testElement } from '../../testing';
 import { AttributeChanged } from './attribute-changed.decorator';
 import { attributePathTo } from './attribute-path';
 
