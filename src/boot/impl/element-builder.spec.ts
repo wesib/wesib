@@ -543,10 +543,6 @@ describe('boot', () => {
         doMount();
         expect(context.mounted).toBe(true);
       });
-      it('fails if already bound', () => {
-        doMount();
-        expect(() => defContext.mountTo(element)).toThrow('already bound');
-      });
 
       describe('component mount', () => {
         it('refers to element', () => {
@@ -627,22 +623,33 @@ describe('boot', () => {
           context.supply.whenOff(disconnected);
           expect(disconnected).not.toHaveBeenCalled();
 
-          expect(disconnected).not.toHaveBeenCalled();
-
           const reason = 'test';
 
           context.supply.off(reason);
           expect(context.connected).toBe(false);
           expect(disconnected).toHaveBeenCalledWith(reason);
         });
-        it('does not destroy not connected element', () => {
+        it('can not be re-bound', () => {
+          Supply.onUnexpectedAbort(noop);
+          doc.body.appendChild(element);
           doMount();
 
-          const disconnected = jest.fn();
+          context.supply.off();
+          expect(ComponentSlot.of(element).rebind()).toBeUndefined();
+        });
+        it('can be re-mounted', () => {
+          Supply.onUnexpectedAbort(noop);
+          doc.body.appendChild(element);
+          doMount();
 
-          context.supply.whenOff(disconnected);
+          const context2 = defContext.mountTo(element);
 
-          expect(disconnected).not.toHaveBeenCalled();
+          expect(context2).not.toBe(context);
+          expect(ComponentSlot.of(element).context).toBe(context2);
+
+          context.supply.off();
+          expect(context2.supply.isOff).toBe(false);
+          expect(ComponentSlot.of(element).context).toBe(context2);
         });
       });
     });

@@ -21,7 +21,7 @@ export const ComponentContext__symbol = (/*#__PURE__*/ Symbol('component-context
  * Passed to component constructor as its only parameter.
  *
  * Extends `ContextValues` interface. The values are provided by corresponding providers registered with
- * {@link BootstrapSetup.perComponent}} and {@link DefinitionSetup.perComponent} methods.
+ * {@link BootstrapSetup.perComponent} and {@link DefinitionSetup.perComponent} methods.
  *
  * @category Core
  * @typeParam T - A type of component.
@@ -68,7 +68,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    *
    * It is an error accessing this property before the component is created, e.g. from inside of component constructor
    * or {@link DefinitionContext.whenComponent component instantiation event} receiver. A {@link whenReady} callback
-   * could be utilized to work this around.
+   * can be used to work this around.
    */
   abstract readonly component: ComponentInstance<T>;
 
@@ -87,9 +87,9 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   /**
    * An `OnEvent` sender of component readiness event.
    *
-   * The component is constructed shortly after custom element. So the component may not exist when requested
-   * e.g. inside component constructor or {@link DefinitionContext.whenComponent component instantiation event}
-   * receiver. The registered receiver will be notified when the component is constructed.
+   * The component is constructed shortly after context. So the component may not exist when requested inside component
+   * constructor or {@link DefinitionContext.whenComponent component instantiation event} receiver. The registered
+   * receiver will be notified when the component is constructed.
    *
    * If the component is constructed already, the receiver will be notified immediately.
    */
@@ -98,9 +98,9 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   /**
    * An `OnEvent` sender of single component readiness event.
    *
-   * The component is constructed shortly after custom element. So the component may not exist when requested
-   * e.g. inside component constructor or {@link DefinitionContext.whenComponent component instantiation event}
-   * receiver. The registered receiver will be notified when the component is constructed.
+   * The component is constructed shortly after context. So the component may not exist when requested inside component
+   * constructor or {@link DefinitionContext.whenComponent component instantiation event} receiver. The registered
+   * receiver will be notified when the component is constructed.
    *
    * If the component is constructed already, the receiver will be notified immediately.
    *
@@ -117,7 +117,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    * - when component's element is {@link connected}.
    *
    * It is guaranteed that component settlement won't happen inside custom element's constructor. So the settlement
-   * event may be used e.g. to start DOM manipulations, as the latter is prohibited inside custom element constructor.
+   * event may be used e.g. to start DOM manipulations, as it is prohibited inside custom element constructor.
    *
    * This becomes `true` right before {@link whenSettled} event is sent.
    */
@@ -178,7 +178,11 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   abstract readonly readStatus: AfterEvent<[this]>;
 
   /**
-   * An event supply that {@link destroy destroys} component when cut off.
+   * An event supply that disposes component and its context when cut off.
+   *
+   * Unmounts the {@link mounted} component.
+   *
+   * For custom element the component may be reconstructed when element is connected to document or settled again.
    */
   abstract readonly supply: Supply;
 
@@ -224,10 +228,10 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   abstract settle(): void;
 
   /**
-   * Returns a DOM event producer for the given event type.
+   * Returns DOM event producer for the given event type.
    *
-   * This is a shorthand for invoking a component event producer function available under
-   * `[ComponentEventProducer.key]` key.
+   * Retrieves an event producer from {@link ComponentEventDispatcher component event dispatcher} available in this
+   * context.
    *
    * @typeParam TEvent - DOM event type.
    * @param type - An event type to listen for.
@@ -241,7 +245,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
   /**
    * Dispatches an event to component element.
    *
-   * This is a shorthand for invoking a component {@link ComponentEventDispatcher event dispatcher}.
+   * Dispatches using a {@link ComponentEventDispatcher component event dispatcher} available in this context.
    *
    * @param event - An event to dispatch.
    */

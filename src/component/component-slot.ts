@@ -1,5 +1,7 @@
-import { AfterEvent, AfterEvent__symbol, digOn_, EventKeeper, onceOn, OnEvent, trackValue } from '@proc7ts/fun-events';
+import { AfterEvent, EventKeeper, OnEvent } from '@proc7ts/fun-events';
+import { Supply } from '@proc7ts/supply';
 import { ComponentContext } from './component-context';
+import { ComponentSlot$ } from './component-slot.impl';
 
 /**
  * A component slot.
@@ -9,6 +11,7 @@ import { ComponentContext } from './component-context';
  * Notifies on component binding.
  *
  * @category Core
+ * @typeParam T - A type of component.
  */
 export interface ComponentSlot<T extends object = any> extends EventKeeper<[ComponentContext<T>?]> {
 
@@ -37,11 +40,29 @@ export interface ComponentSlot<T extends object = any> extends EventKeeper<[Comp
   bind(context: ComponentContext<T>): void;
 
   /**
+   * Binds a component to element by the give `binder`.
+   *
+   * @param binder - Component slot binder.
+   */
+  bindBy(binder: ComponentSlot.Binder<T>): void;
+
+  /**
    * Unbinds component from element.
    *
    * This method is not typically used by client code.
+   *
+   * After this method call the component may be reconstructed again by its {@link bindBy binder}.
    */
   unbind(): void;
+
+  /**
+   * Tries to re-bind component context by its {@link bindBy binder}.
+   *
+   * Does nothing if component is bound already.
+   *
+   * @returns Either a bound component context, or `undefined` if component can not be bound.
+   */
+  rebind(): ComponentContext<T> | undefined;
 
 }
 
@@ -74,6 +95,46 @@ export interface ComponentElement<T extends object = any> extends Element {
 /**
  * @category Core
  */
+export namespace ComponentSlot {
+
+  /**
+   * A binding of component to element.
+   *
+   * This is passed to {@link Binder component binder}. The latter can use it to assign the bound component.
+   *
+   * @typeParam T - A type of component.
+   */
+  export interface Binding<T extends object> {
+
+    /**
+     * Assigns a context of the component bound to target element.
+     *
+     * @param context - Bound component context.
+     *
+     * @returns Binding supply. Cut off once the component {@link ComponentSlot.unbind unbound}.
+     */
+    bind(this: void, context: ComponentContext<T>): Supply;
+
+  }
+
+  /**
+   * A binder of component to element.
+   *
+   * Controls component construction and binding to element.
+   *
+   * @typeParam T - A type of component.
+   */
+  export type Binder<T extends object> =
+  /**
+   * @param binding - Component binding to element.
+   */
+      (this: void, binding: Binding<T>) => void;
+
+}
+
+/**
+ * @category Core
+ */
 export const ComponentSlot = {
 
   /**
@@ -95,39 +156,3 @@ export const ComponentSlot = {
   },
 
 };
-
-class ComponentSlot$<T extends object> implements ComponentSlot<T> {
-
-  private readonly _ctx = trackValue<ComponentContext<T>>();
-  readonly whenReady: OnEvent<[ComponentContext<T>]>;
-
-  constructor() {
-    this.whenReady = this._ctx.read.do(
-        digOn_(ctx => ctx && ctx.whenReady),
-        onceOn,
-    );
-  }
-
-  get context(): ComponentContext<T> | undefined {
-    return this._ctx.it;
-  }
-
-  get read(): AfterEvent<[ComponentContext<T>?]> {
-    return this._ctx.read;
-  }
-
-  [AfterEvent__symbol](): AfterEvent<[ComponentContext<T>?]> {
-    return this._ctx.read;
-  }
-
-  bind(context: ComponentContext<T>): void {
-    this._ctx.it = context;
-  }
-
-  unbind(): void {
-    this._ctx.it = undefined;
-  }
-
-}
-
-

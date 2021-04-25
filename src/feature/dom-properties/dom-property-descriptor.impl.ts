@@ -23,11 +23,13 @@ export function domPropertyDescriptor<TValue>(
     configurable,
     enumerable,
     get: function (this: ComponentElement<ComponentType>): TValue {
-      return ComponentSlot.of(this).context?.component[componentPropertyKey] as TValue;
+      return ComponentSlot.of(this).rebind()?.component[componentPropertyKey] as TValue;
     },
     set: writable
         ? function (this: ComponentElement<ComponentType>, value: TValue) {
-          ComponentSlot.of(this).whenReady(({ component }) => component[componentPropertyKey] = value);
+          ComponentSlot.of(this).whenReady(({
+            component,
+          }) => component[componentPropertyKey] = value);
         }
         : undefined,
   };

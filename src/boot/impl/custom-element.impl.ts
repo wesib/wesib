@@ -1,7 +1,7 @@
 import { CustomHTMLElementClass } from '@frontmeans/dom-primitives';
-import { Class } from '@proc7ts/primitives';
+import { Class, noop } from '@proc7ts/primitives';
 import { ComponentElement, ComponentSlot } from '../../component';
-import { ElementDef } from '../../component/definition';
+import { DocumentRenderKit } from '../globals';
 import { ComponentContext$ } from './component-context.impl';
 import { DefinitionContext$ } from './definition-context.impl';
 
@@ -17,29 +17,48 @@ class ComponentContext$Custom<T extends object> extends ComponentContext$<T> {
  * @internal
  */
 export function customElementType<T extends object>(
-    definitionContext: DefinitionContext$<T>,
+    defContext: DefinitionContext$<T>,
 ): Class {
 
-  const elementDef = definitionContext.get(ElementDef);
+  const { elementDef } = defContext;
+  const renderKit = defContext.get(DocumentRenderKit);
 
   class CustomElement$ extends (elementDef.extend.type as CustomHTMLElementClass) implements ComponentElement {
 
     constructor() {
       super();
 
-      const context = new ComponentContext$Custom(definitionContext, this);
+      const slot = ComponentSlot.of<T>(this);
 
-      context._createComponent();
-      context._created();
+      // Ignore immediate settlement, as is typically leads to DOM manipulations prohibited inside constructor.
+      let settle: () => unknown = noop;
+
+      slot.bindBy(({ bind }) => {
+
+        const context = new ComponentContext$Custom(defContext, this);
+        const supply = bind(context);
+
+        context._createComponent();
+        context._created();
+
+        context.supply.needs(supply).whenOff(() => {
+          renderKit.contextOf(this).whenSettled(_ => settle());
+        });
+      });
+
+      renderKit.contextOf(this).whenSettled(_ => settle());
+
+      // Assume settlement happens after constructor completion.
+      settle = () => slot.rebind()!.settle();
     }
 
     connectedCallback(): void {
       super.connectedCallback?.();
-      (ComponentSlot.of<T>(this).context as ComponentContext$<T>)._connect();
+      (ComponentSlot.of<T>(this).rebind() as ComponentContext$Custom<T>)._connect();
     }
 
     disconnectedCallback(): void {
-      (ComponentSlot.of<T>(this).context as ComponentContext$<T>).supply.off();
+      (ComponentSlot.of<T>(this).context as ComponentContext$Custom<T>).supply.off();
       super.disconnectedCallback?.();
     }
 

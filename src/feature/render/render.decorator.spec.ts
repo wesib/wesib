@@ -169,7 +169,7 @@ describe('feature/render', () => {
       component.property = 'other';
       expect(mockRenderer).toHaveBeenCalledTimes(1);
     });
-    it('is not re-scheduled after component disposal', async () => {
+    it('is not re-scheduled after component disconnection', async () => {
 
       const context = await bootstrap();
       const { element } = context;
@@ -177,11 +177,13 @@ describe('feature/render', () => {
       element.connectedCallback();
       expect(mockRenderer).toHaveBeenCalledTimes(1);
 
-      context.supply.off();
+      jest.spyOn(element, 'getRootNode').mockImplementation(() => element);
+      element.disconnectedCallback();
+
       context.updateState(domPropertyPathTo('property'), 'other', 'init');
       expect(mockRenderer).toHaveBeenCalledTimes(1);
     });
-    it('is not rendered after component destruction', async () => {
+    it('is not rendered after component disconnection', async () => {
 
       const scheduler = newManualRenderScheduler();
 
@@ -192,7 +194,10 @@ describe('feature/render', () => {
 
       element.connectedCallback();
       component.property = 'other';
-      context.supply.off();
+
+      jest.spyOn(element, 'getRootNode').mockImplementation(() => element);
+      element.disconnectedCallback();
+
       scheduler.render();
       expect(mockRenderer).not.toHaveBeenCalled();
     });
