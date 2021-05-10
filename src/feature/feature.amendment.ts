@@ -84,27 +84,26 @@ export function Feature<TClass extends Class = Class, TAmended extends AeFeature
 
     const { amendedClass } = baseTarget;
     let result: FeatureDef.Options = FeatureDef.of(amendedClass);
-    const amendNext = <TBase extends TAmended, TExt>(
-        _base: TBase,
-        request = {} as AmendRequest<TBase, TExt>,
-    ): () => AmendTarget.Draft<TBase & TExt> => {
-
-      const { featureDef: defRequest = {}, ...baseRequest } = request;
-      const createBaseTarget = baseTarget.amend(baseRequest as AmendRequest<any>);
-      const featureDef = result = FeatureDef.merge(result, defRequest);
-
-      return () => ({
-        ...createBaseTarget(),
-        featureDef,
-      } as AmendTarget.Draft<TBase & TExt>);
-    };
 
     amender(newAmendTarget({
       base: {
         ...baseTarget as unknown as TAmended,
         featureDef: {},
       },
-      amend: amendNext,
+      amend<TBase extends TAmended, TExt>(
+          _base: TBase,
+          request = {} as AmendRequest<TBase, TExt>,
+      ): () => AmendTarget.Draft<TBase & TExt> {
+
+        const { featureDef: defRequest = {}, ...baseRequest } = request;
+        const createBaseTarget = baseTarget.amend(baseRequest as AmendRequest<TBase>);
+        const featureDef = result = FeatureDef.merge(result, defRequest);
+
+        return () => ({
+          ...createBaseTarget(),
+          featureDef,
+        } as AmendTarget.Draft<TBase & TExt>);
+      },
     }));
 
     FeatureDef.define(baseTarget.amendedClass, result);
