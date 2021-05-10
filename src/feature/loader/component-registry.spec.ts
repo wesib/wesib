@@ -4,7 +4,7 @@ import { bootstrapComponents } from '../../boot/bootstrap';
 import { ElementBuilder } from '../../boot/impl';
 import { ComponentDef, ComponentDef__symbol } from '../../component';
 import { ComponentClass, CustomElements } from '../../component/definition';
-import { Feature } from '../feature.decorator';
+import { Feature } from '../feature.amendment';
 import Mocked = jest.Mocked;
 
 describe('feature load', () => {
