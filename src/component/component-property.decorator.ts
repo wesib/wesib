@@ -1,13 +1,13 @@
 import { Class, PropertyAccessorDescriptor, valueProvider } from '@proc7ts/primitives';
 import { decoratePropertyAccessor } from '../common';
 import { ComponentDef, ComponentDef__symbol } from './component-def';
-import { Component, ComponentDecorator } from './component.decorator';
+import { Component, ComponentAmendment } from './component.amendment';
 import { ComponentClass } from './definition';
 
 /**
  * Component property decorator interface.
  *
- * Allows to construct a {@link ComponentDecorator component decorator} by declaring a virtual property to use instead
+ * Allows to construct a {@link ComponentAmendment component decorator} by declaring a virtual property to use instead
  * of decorated one.
  *
  * Constructed by {@link ComponentProperty} function.
@@ -47,7 +47,7 @@ export interface ComponentPropertyDecorator<TValue, TClass extends ComponentClas
       this: void,
       value: TValue,
       key?: string | symbol,
-  ): ComponentDecorator<TClass>;
+  ): ComponentAmendment<TClass>;
 
   /**
    * Builds component decorator assuming the virtual property value is provided by the given `provider`.
@@ -61,7 +61,7 @@ export interface ComponentPropertyDecorator<TValue, TClass extends ComponentClas
       this: void,
       provider: ComponentProperty.Provider<TValue, InstanceType<TClass>>,
       key?: string | symbol,
-  ): ComponentDecorator<TClass>;
+  ): ComponentAmendment<TClass>;
 
   /**
    * Builds component decorator assuming the decorated property is available via the given `accessor`.
@@ -75,7 +75,7 @@ export interface ComponentPropertyDecorator<TValue, TClass extends ComponentClas
       this: void,
       accessor: ComponentProperty.Accessor<TValue, InstanceType<TClass>>,
       key?: string | symbol,
-  ): ComponentDecorator<TClass>;
+  ): ComponentAmendment<TClass>;
 
   /**
    * Builds component decorator assuming the decorated property is bound to component with by the given `binder`.
@@ -89,7 +89,7 @@ export interface ComponentPropertyDecorator<TValue, TClass extends ComponentClas
       this: void,
       binder: ComponentProperty.Binder<TValue, InstanceType<TClass>>,
       key?: string | symbol,
-  ): ComponentDecorator<TClass>;
+  ): ComponentAmendment<TClass>;
 
 }
 
@@ -366,7 +366,7 @@ export const AnonymousComponentProperty__symbol = (/*#__PURE__*/ Symbol('anonymo
 /**
  * Decorator of component property.
  *
- * Updates decorated property and component definition. Can be converted to {@link ComponentDecorator component
+ * Updates decorated property and component definition. Can be converted to {@link ComponentAmendment component
  * decorator} by calling appropriate method of returned decorator instance.
  *
  * @category Core
@@ -399,7 +399,7 @@ export function ComponentProperty<TValue, TClass extends ComponentClass = Class>
       accessor: ComponentProperty.Accessor<TValue, InstanceType<TClass>>,
       key: string | symbol = AnonymousComponentProperty__symbol,
       writable: boolean,
-  ): ComponentDecorator<TClass> => Component({
+  ): ComponentAmendment<TClass> => Component({
     [ComponentDef__symbol](type: InstanceType<TClass>) {
 
       const defineBy = ComponentProperty$defineBy(type, accessor, key, writable);
@@ -410,7 +410,7 @@ export function ComponentProperty<TValue, TClass extends ComponentClass = Class>
   const By = (
       provider: ComponentProperty.Provider<TValue, InstanceType<TClass>>,
       key?: string | symbol,
-  ): ComponentDecorator<TClass> => decorateWith(
+  ): ComponentAmendment<TClass> => decorateWith(
       {
         get(component, key) {
           return provider(component, key);

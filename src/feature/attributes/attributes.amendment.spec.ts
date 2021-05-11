@@ -1,7 +1,7 @@
 import { Component, ComponentSlot } from '../../component';
 import { MockElement, testElement } from '../../testing';
 import { AttributePath__root } from './attribute-path';
-import { Attributes } from './attributes.decorator';
+import { Attributes } from './attributes.amendment';
 
 describe('feature/attributes', () => {
   describe('@Attributes', () => {

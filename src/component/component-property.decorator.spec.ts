@@ -4,7 +4,7 @@ import { noop } from '@proc7ts/primitives';
 import { bootstrapComponents } from '../boot/bootstrap';
 import { ComponentContext } from './component-context';
 import { AnonymousComponentProperty__symbol, ComponentProperty } from './component-property.decorator';
-import { Component } from './component.decorator';
+import { Component } from './component.amendment';
 import { ComponentClass, DefinitionContext } from './definition';
 
 describe('component', () => {

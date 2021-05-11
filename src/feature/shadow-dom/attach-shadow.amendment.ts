@@ -1,5 +1,5 @@
 import { Class } from '@proc7ts/primitives';
-import { Component, ComponentContext, ComponentDecorator, ContentRoot } from '../../component';
+import { AeComponent, Component, ComponentAmendment, ComponentContext, ContentRoot } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { ShadowContentRoot } from './shadow-content-root';
 import { ShadowRootBuilder } from './shadow-root-builder';
@@ -19,17 +19,20 @@ const defaultShadowContentDef: ShadowContentDef = { mode: 'open' };
 export type ShadowContentDef = Readonly<ShadowRootInit>;
 
 /**
- * Creates a component decorator that attaches shadow root to decorated component instance.
+ * Creates a component amendment (and decorator) that attaches shadow root to decorated component instance.
  *
  * @category Feature
- * @typeParam TClass - A type of decorated component class.
+ * @typeParam TClass - Amended component class type.
+ * @typeParam TAmended - Amended component entity type.
  * @param def - Shadow content root definition. Uses `mode: 'open'` by default.
  *
- * @returns New component decorator.
+ * @returns New component amendment and decorator.
  */
-export function AttachShadow<TClass extends ComponentClass = Class>(
+export function AttachShadow<
+    TClass extends ComponentClass = Class,
+    TAmended extends AeComponent<TClass> = AeComponent<TClass>>(
     def: ShadowContentDef = defaultShadowContentDef,
-): ComponentDecorator<TClass> {
+): ComponentAmendment<TClass, TAmended> {
   return Component({
     setup(setup) {
       setup.perComponent(
