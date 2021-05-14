@@ -1,6 +1,5 @@
 import {
   AeClass,
-  AeNone,
   Amender,
   Amendment,
   AmendRequest,
@@ -130,7 +129,7 @@ function FeatureDef$toAmender<TClass extends Class, TAmended extends AeFeature<T
     defs: FeatureDef[],
 ): Amender<TAmended> {
   return ({ amendedClass, amend }: AmendTarget<AeFeature<TClass>>) => {
-    amend<AeNone>({
+    amend({
       featureDef: FeatureDef.for(
           amendedClass,
           FeatureDef.all(...defs),

@@ -1,5 +1,4 @@
 import {
-  AeNone,
   Amender,
   Amendment,
   AmendRequest,
@@ -136,7 +135,7 @@ function ComponentDef$toAmender<TClass extends ComponentClass, TAmended extends 
     defs: ComponentDef[],
 ): Amender<TAmended> {
   return ({ amendedClass, amend }: AmendTarget<AeComponent<TClass>>) => {
-    amend<AeNone>({
+    amend({
       componentDef: ComponentDef.for(
           amendedClass,
           ComponentDef.all(...defs),
