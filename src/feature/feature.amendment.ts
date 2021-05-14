@@ -1,5 +1,6 @@
 import {
   AeClass,
+  AeNone,
   Amender,
   Amendment,
   AmendRequest,
@@ -8,7 +9,6 @@ import {
   combineAmendments,
   isAmendatory,
   newAmendTarget,
-  NoneAmended,
 } from '@proc7ts/amend';
 import { Class } from '@proc7ts/primitives';
 import { FeatureDef, FeatureDef__symbol } from './feature-def';
@@ -130,7 +130,7 @@ function FeatureDef$toAmender<TClass extends Class, TAmended extends AeFeature<T
     defs: FeatureDef[],
 ): Amender<TAmended> {
   return ({ amendedClass, amend }: AmendTarget<AeFeature<TClass>>) => {
-    amend<NoneAmended>({
+    amend<AeNone>({
       featureDef: FeatureDef.for(
           amendedClass,
           FeatureDef.all(...defs),
