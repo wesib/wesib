@@ -1,6 +1,6 @@
-import { ComponentProperty, ComponentPropertyDecorator } from '../../component';
+import { AmendTarget } from '@proc7ts/amend';
+import { AeComponentMember, ComponentMember, ComponentMemberAmendment } from '../../component';
 import { ComponentClass } from '../../component/definition';
-import { ComponentPreRendererExecution } from './component-pre-renderer-execution';
 import { ComponentRenderCtl } from './component-render-ctl';
 import { RenderDef } from './render-def';
 
@@ -13,15 +13,25 @@ import { RenderDef } from './render-def';
  * parameter.
  *
  * @category Feature
- * @typeParam TClass - A type of decorated component class.
+ * @typeParam TClass - Amended component class type.
+ * @typeParam TAmended - Amended component member entity type.
  * @param def - Non-mandatory render definition.
  *
  * @returns Component method decorator.
  */
-export function PreRender<TClass extends ComponentClass>(
-    def: RenderDef = {},
-): ComponentPropertyDecorator<(execution: ComponentPreRendererExecution) => void, TClass> {
-  return ComponentProperty(({ get }) => ({
+export function PreRender<
+    TClass extends ComponentClass,
+    TAmended extends AeComponentMember<RenderDef.PreMethod, TClass> = AeComponentMember<RenderDef.PreMethod, TClass>
+    >(
+    def?: RenderDef,
+): ComponentMemberAmendment<RenderDef.PreMethod, TClass, RenderDef.PreMethod, TAmended> {
+  return ComponentMember<
+      RenderDef.PreMethod,
+      TClass,
+      RenderDef.PreMethod,
+      TAmended>((
+      { get, amend }: AmendTarget<AeComponentMember<RenderDef.PreMethod, TClass>>,
+  ) => amend({
     componentDef: {
       define(defContext) {
         defContext.whenComponent(context => {

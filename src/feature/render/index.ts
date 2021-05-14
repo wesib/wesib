@@ -4,6 +4,6 @@ export * from './component-render-ctl';
 export * from './component-render-scheduler';
 export * from './component-renderer';
 export * from './component-renderer-execution';
-export * from './pre-render.decorator';
+export * from './pre-render.amendment';
 export * from './render.amendment';
 export * from './render-def';

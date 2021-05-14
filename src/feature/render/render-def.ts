@@ -9,6 +9,7 @@ import {
 } from '@proc7ts/fun-events';
 import { ComponentContext } from '../../component';
 import { ComponentState } from '../state';
+import { ComponentPreRendererExecution } from './component-pre-renderer-execution';
 import { ComponentRendererExecution } from './component-renderer-execution';
 
 /**
@@ -29,14 +30,21 @@ export namespace RenderDef {
 
   /**
    * Component render method signature.
-   *
-   * @typeParam TExecution - A type of supported component render execution context.
    */
   export type Method =
   /**
-   * @param execution - Render shot execution context instance.
+   * @param execution - Component renderer execution context.
    */
       (execution: ComponentRendererExecution) => void;
+
+  /**
+   * Component pre-render method signature.
+   */
+  export type PreMethod =
+  /**
+   * @param execution - Component pre-renderer execution context.
+   */
+      (execution: ComponentPreRendererExecution) => void;
 
   /**
    * Rendering options.

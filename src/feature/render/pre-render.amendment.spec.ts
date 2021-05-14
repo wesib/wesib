@@ -11,7 +11,7 @@ import { MockElement, testElement } from '../../testing';
 import { DomProperty } from '../dom-properties';
 import { ComponentPreRendererExecution } from './component-pre-renderer-execution';
 import { ComponentRendererExecution } from './component-renderer-execution';
-import { PreRender } from './pre-render.decorator';
+import { PreRender } from './pre-render.amendment';
 import { RenderDef } from './render-def';
 
 describe('feature/render', () => {
