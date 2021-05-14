@@ -30,14 +30,14 @@ export function Attribute<
       string | null | undefined,
       TAmended>((
       {
-        amendedClass: type,
+        amendedClass,
         key,
         set: setValue,
         amend,
       }: AmendTarget<AeComponentMember<string | null | undefined, TClass>>,
   ) => {
 
-    const { name, change } = parseAttributeDescriptor(type.prototype, key, def);
+    const { name, change } = parseAttributeDescriptor(amendedClass.prototype, key, def);
 
     amend({
       componentDef: {

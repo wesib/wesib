@@ -1,5 +1,5 @@
 export * from './attribute.amendment';
-export * from './attribute-changed.decorator';
+export * from './attribute-changed.amendment';
 export * from './attribute-def';
 export * from './attribute-descriptor';
 export * from './attribute-path';

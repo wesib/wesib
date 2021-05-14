@@ -32,6 +32,20 @@ export interface AttributeDef<T extends object> {
 
 }
 
+export namespace AttributeDef {
+
+  /**
+   * Signature of attribute updates receiver method.
+   */
+  export type ChangeMethod =
+  /**
+   * @param newValue - New attribute value, or `null` when attribute removed.
+   * @param oldValue - Previous attribute value, or `null` if attribute did not exist.
+   */
+      (newValue: string | null, oldValue: string | null) => void;
+
+}
+
 /**
  * Signature of attribute updates receiver invoked after custom element attribute change.
  *

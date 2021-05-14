@@ -3,7 +3,7 @@ import { Component, ComponentContext, ComponentElement, ComponentSlot } from '..
 import { ComponentClass, DefinitionContext } from '../../component/definition';
 import { MockElement, testDefinition, testElement } from '../../testing';
 import { Feature } from '../feature.amendment';
-import { AttributeChanged } from './attribute-changed.decorator';
+import { AttributeChanged } from './attribute-changed.amendment';
 import { AttributePath__root } from './attribute-path';
 import { AttributeRegistry } from './attribute-registry';
 import { Attribute } from './attribute.amendment';
