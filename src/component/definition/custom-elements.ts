@@ -1,6 +1,6 @@
 import { html__naming, isQualifiedName, QualifiedName } from '@frontmeans/namespace-aliaser';
 import { ContextKey, ContextKey__symbol, SingleContextKey } from '@proc7ts/context-values';
-import { Class, newPromiseResolver, PromiseResolver } from '@proc7ts/primitives';
+import { Class, hasOwnProperty, newPromiseResolver, PromiseResolver } from '@proc7ts/primitives';
 import { BootstrapContext, bootstrapDefault } from '../../boot';
 import { BootstrapWindow, DefaultNamespaceAliaser } from '../../boot/globals';
 import { definitionContextOf } from '../../boot/impl/definition-context.symbol.impl';
@@ -134,8 +134,7 @@ interface CustomComponentClass<T extends object = any> extends ComponentClass<T>
  * @internal
  */
 function componentResolver(componentType: CustomComponentClass): PromiseResolver {
-  // eslint-disable-next-line no-prototype-builtins
-  if (componentType.hasOwnProperty(ComponentResolver__symbol)) {
+  if (hasOwnProperty(componentType, ComponentResolver__symbol)) {
     return componentType[ComponentResolver__symbol] as PromiseResolver;
   }
   return componentType[ComponentResolver__symbol] = newPromiseResolver();

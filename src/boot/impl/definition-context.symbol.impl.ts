@@ -1,3 +1,4 @@
+import { hasOwnProperty } from '@proc7ts/primitives';
 import { ComponentClass, DefinitionContext } from '../../component/definition';
 
 /**
@@ -18,8 +19,7 @@ export interface ComponentDefinitionClass<T extends object> extends ComponentCla
 export function definitionContextOf<T extends object>(
     componentType: ComponentDefinitionClass<T>,
 ): DefinitionContext<T> {
-  // eslint-disable-next-line no-prototype-builtins
-  if (!componentType.hasOwnProperty(DefinitionContext__symbol)) {
+  if (!hasOwnProperty(componentType, DefinitionContext__symbol)) {
     throw new TypeError(`Component is not defined: ${componentType}`);
   }
   return componentType[DefinitionContext__symbol] as DefinitionContext<T>;

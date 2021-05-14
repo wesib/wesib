@@ -1,4 +1,4 @@
-import { Class, superClassOf } from '@proc7ts/primitives';
+import { Class, hasOwnProperty, superClassOf } from '@proc7ts/primitives';
 
 /**
  * @category Utility
@@ -12,8 +12,7 @@ export abstract class MetaAccessor<TMeta, TSrc = TMeta> {
   }
 
   own(type: Class, receiver?: Class): TMeta | undefined {
-    // eslint-disable-next-line no-prototype-builtins
-    return type.hasOwnProperty(this.symbol)
+    return hasOwnProperty(type, this.symbol)
         ? Reflect.get(type, this.symbol, receiver)
         : undefined;
   }
