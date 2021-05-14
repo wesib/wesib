@@ -5,7 +5,7 @@ import { ComponentRenderCtl } from './component-render-ctl';
 import { RenderDef } from './render-def';
 
 /**
- * Creates a {@link ComponentPreRenderer component pre-renderer} method decorator.
+ * Creates a {@link ComponentPreRenderer component pre-renderer} method amendment (and decorator).
  *
  * Enables pre-rendering with {@link ComponentRenderCtl.preRenderBy component render control}.
  *
@@ -17,7 +17,7 @@ import { RenderDef } from './render-def';
  * @typeParam TAmended - Amended component member entity type.
  * @param def - Non-mandatory render definition.
  *
- * @returns Component method decorator.
+ * @returns New component method amendment.
  */
 export function PreRender<
     TClass extends ComponentClass,

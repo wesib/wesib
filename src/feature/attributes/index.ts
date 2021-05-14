@@ -1,4 +1,4 @@
-export * from './attribute.decorator';
+export * from './attribute.amendment';
 export * from './attribute-changed.decorator';
 export * from './attribute-def';
 export * from './attribute-descriptor';

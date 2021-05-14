@@ -6,7 +6,7 @@ import { Feature } from '../feature.amendment';
 import { AttributeChanged } from './attribute-changed.decorator';
 import { AttributePath__root } from './attribute-path';
 import { AttributeRegistry } from './attribute-registry';
-import { Attribute } from './attribute.decorator';
+import { Attribute } from './attribute.amendment';
 import Mock = jest.Mock;
 import Mocked = jest.Mocked;
 

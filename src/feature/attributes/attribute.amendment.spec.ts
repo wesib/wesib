@@ -1,6 +1,6 @@
 import { valueProvider } from '@proc7ts/primitives';
 import { Component, ComponentContext, ComponentContext__symbol } from '../../component';
-import { Attribute } from './attribute.decorator';
+import { Attribute } from './attribute.amendment';
 import Mocked = jest.Mocked;
 
 describe('feature/attributes', () => {
