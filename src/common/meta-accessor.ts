@@ -32,7 +32,7 @@ export abstract class MetaAccessor<TMeta, TSrc = TMeta> {
     const updates = sources.map(source => this.meta(source, type));
     const newMeta: TMeta = this.merge(prevMeta ? [prevMeta, ...updates] : updates);
 
-    Object.defineProperty(
+    Reflect.defineProperty(
         type,
         this.symbol,
         {

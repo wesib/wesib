@@ -67,12 +67,12 @@ class AttributeRegistry$ implements AttributeRegistry {
       return; // No attributes defined
     }
 
-    Object.defineProperty(elementType, 'observedAttributes', {
+    Reflect.defineProperty(elementType, 'observedAttributes', {
       configurable: true,
       enumerable: true,
       value: observedAttributes(elementType, [...attrs.keys()]),
     });
-    Object.defineProperty(elementType.prototype, 'attributeChangedCallback', {
+    Reflect.defineProperty(elementType.prototype, 'attributeChangedCallback', {
       configurable: true,
       enumerable: true,
       value: attributeChangedCallback(elementType, attrs),

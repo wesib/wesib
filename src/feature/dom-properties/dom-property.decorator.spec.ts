@@ -71,7 +71,7 @@ describe('feature/dom-properties', () => {
 
         const elementType = await testElement(TestComponent);
 
-        expect(Object.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
+        expect(Reflect.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: true,
           enumerable: true,
           get: expect.any(Function),
@@ -95,7 +95,7 @@ describe('feature/dom-properties', () => {
 
         const elementType = await testElement(TestComponent);
 
-        expect(Object.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
+        expect(Reflect.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: true,
           enumerable: true,
           get: expect.any(Function),
@@ -123,7 +123,7 @@ describe('feature/dom-properties', () => {
 
         const elementType = await testElement(TestComponent);
 
-        expect(Object.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
+        expect(Reflect.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: false,
           enumerable: false,
           get: expect.any(Function),
@@ -152,7 +152,7 @@ describe('feature/dom-properties', () => {
 
         const elementType = await testElement(TestComponent);
 
-        expect(Object.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
+        expect(Reflect.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: false,
           enumerable: false,
           get: expect.any(Function),
@@ -181,7 +181,7 @@ describe('feature/dom-properties', () => {
 
         const elementType = await testElement(TestComponent);
 
-        expect(Object.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
+        expect(Reflect.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: true,
           enumerable: false,
           get: expect.any(Function),
@@ -211,7 +211,7 @@ describe('feature/dom-properties', () => {
 
         const elementType = await testElement(TestComponent);
 
-        expect(Object.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
+        expect(Reflect.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: false,
           enumerable: true,
           get: expect.any(Function),
@@ -243,7 +243,7 @@ describe('feature/dom-properties', () => {
 
         const elementType = await testElement(TestComponent);
 
-        expect(Object.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
+        expect(Reflect.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: true,
           enumerable: false,
           get: expect.any(Function),
@@ -279,7 +279,7 @@ describe('feature/dom-properties', () => {
 
         const elementType = await testElement(TestComponent);
 
-        expect(Object.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
+        expect(Reflect.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: false,
           enumerable: true,
           get: expect.any(Function),

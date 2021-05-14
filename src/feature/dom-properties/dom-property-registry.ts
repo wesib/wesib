@@ -64,13 +64,13 @@ class DomPropertyRegistry$ implements DomPropertyRegistry {
     const prototype = elementType.prototype;
 
     this.props.forEach((desc, key) => {
-      Object.defineProperty(prototype, key, desc);
+      Reflect.defineProperty(prototype, key, desc);
     });
   }
 
   private mount<T extends object>({ element }: ComponentContext<T>): void {
     this.props.forEach((desc, key) => {
-      Object.defineProperty(element, key, desc);
+      Reflect.defineProperty(element, key, desc);
     });
   }
 

@@ -73,7 +73,7 @@ describe('component', () => {
 
       }
 
-      const desc = Object.getOwnPropertyDescriptor(TestComponent.prototype, 'property');
+      const desc = Reflect.getOwnPropertyDescriptor(TestComponent.prototype, 'property');
 
       expect(desc?.configurable).toBe(false);
       expect(desc?.enumerable).toBe(false);
@@ -90,7 +90,7 @@ describe('component', () => {
 
       }
 
-      const desc = Object.getOwnPropertyDescriptor(TestComponent.prototype, 'property');
+      const desc = Reflect.getOwnPropertyDescriptor(TestComponent.prototype, 'property');
 
       expect(desc?.configurable).toBe(true);
       expect(desc?.enumerable).toBe(true);

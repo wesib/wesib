@@ -41,7 +41,7 @@ export type TypedPropertyDecorator<TClass extends Class> =
  * @returns Updated property descriptor to return from decorator to apply to the property, or `undefined` if there is
  * nothing to update.
  */
-export function decoratePropertyAccessor<T, TValue>(
+export function decoratePropertyAccessor<T extends object, TValue>(
     target: T,
     propertyKey: string | symbol,
     desc: TypedPropertyDescriptor<TValue> | undefined,
@@ -55,7 +55,7 @@ export function decoratePropertyAccessor<T, TValue>(
   const updatedDesc = updateDescriptor(accessorDesc);
 
   if (isField && updatedDesc) {
-    Object.defineProperty(target, propertyKey, updatedDesc);
+    Reflect.defineProperty(target, propertyKey, updatedDesc);
     return;
   }
 

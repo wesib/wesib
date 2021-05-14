@@ -90,7 +90,7 @@ export function postDefSetup<T extends object>(componentType: PostDefComponentCl
     },
   };
 
-  Object.defineProperty(componentType, PostDefSetup__symbol, { value: result });
+  Reflect.defineProperty(componentType, PostDefSetup__symbol, { value: result });
 
   return result;
 }
