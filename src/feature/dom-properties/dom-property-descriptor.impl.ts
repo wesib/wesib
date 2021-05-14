@@ -1,35 +1,35 @@
-import { PropertyAccessorDescriptor } from '@proc7ts/primitives';
-import { ComponentElement, ComponentProperty, ComponentSlot } from '../../component';
+import { AeComponentMember, ComponentElement, ComponentSlot } from '../../component';
+import { ComponentClass } from '../../component/definition';
 import { DomPropertyDef } from './dom-property-def';
 import { DomPropertyDescriptor } from './dom-property-descriptor';
 
 /**
  * @internal
  */
-export function domPropertyDescriptor<TValue>(
-    propertyDesc: ComponentProperty.Descriptor<TValue>,
+export function domPropertyDescriptor<TValue extends TUpdate, TClass extends ComponentClass, TUpdate>(
+    amended: AeComponentMember<TValue, TClass, TUpdate>,
     {
-      propertyKey: key = propertyDesc.key,
-      configurable = propertyDesc.configurable,
-      enumerable = propertyDesc.enumerable,
-      writable = propertyDesc.writable,
+      propertyKey: key = amended.key,
+      configurable = amended.configurable,
+      enumerable = amended.enumerable,
+      writable = amended.writable,
     }: DomPropertyDef,
 ): DomPropertyDescriptor {
 
-  type ComponentType = { [TKey in ComponentProperty.Descriptor<TValue>['key']]: TValue };
+  type ComponentType = { [K in AeComponentMember<TValue, TClass, TUpdate>['key']]: TValue };
 
-  const componentPropertyKey = propertyDesc.key as string;
-  const descriptor: PropertyAccessorDescriptor<TValue> = {
+  const componentMemberKey = amended.key as string;
+  const descriptor: PropertyDescriptor = {
     configurable,
     enumerable,
     get: function (this: ComponentElement<ComponentType>): TValue {
-      return ComponentSlot.of(this).rebind()?.component[componentPropertyKey] as TValue;
+      return ComponentSlot.of(this).rebind()?.component[componentMemberKey] as TValue;
     },
     set: writable
         ? function (this: ComponentElement<ComponentType>, value: TValue) {
           ComponentSlot.of(this).whenReady(({
             component,
-          }) => component[componentPropertyKey] = value);
+          }) => component[componentMemberKey] = value);
         }
         : undefined,
   };

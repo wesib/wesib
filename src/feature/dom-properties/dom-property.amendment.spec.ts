@@ -1,6 +1,6 @@
 import { Component, ComponentSlot } from '../../component';
 import { MockElement, testElement } from '../../testing';
-import { DomProperty } from './dom-property.decorator';
+import { DomProperty } from './dom-property.amendment';
 
 describe('feature/dom-properties', () => {
   describe('@DomProperty', () => {
