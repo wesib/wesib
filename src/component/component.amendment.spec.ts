@@ -1,5 +1,5 @@
 import { FeatureContext, FeatureDef } from '../feature';
-import { ComponentDef, ComponentDef__symbol } from './component-def';
+import { ComponentDef } from './component-def';
 import { Component } from './component.amendment';
 
 describe('component', () => {
@@ -75,7 +75,7 @@ describe('component', () => {
       };
 
       @Component<typeof TestComponent>(
-          Component({ [ComponentDef__symbol]: () => def }),
+          Component(def),
       )
       class TestComponent {}
 

@@ -137,24 +137,6 @@ describe('feature', () => {
       });
     });
 
-    describe('all', () => {
-
-      class TestFeature {}
-
-      it('merges feature definition options', () => {
-
-        const first: FeatureDef = { needs: Feature1 };
-        const second: FeatureDef = { needs: Feature2 };
-
-        expect(
-            FeatureDef.for(
-                TestFeature,
-                FeatureDef.all(first, second),
-            ),
-        ).toEqual(FeatureDef.merge(first, second));
-      });
-    });
-
     describe('define', () => {
 
       let TestFeature: Class;

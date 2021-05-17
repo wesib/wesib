@@ -26,11 +26,10 @@ export abstract class MetaAccessor<TMeta, TSrc = TMeta> {
     return ownDef ? (superDef ? this.merge([superDef, ownDef]) : ownDef) : superDef;
   }
 
-  define<TClass extends Class>(type: TClass, sources: readonly TSrc[]): TClass {
+  define<TClass extends Class>(type: TClass, metas: readonly (TMeta | TSrc)[]): TClass {
 
     const prevMeta = this.own(type);
-    const updates = sources.map(source => this.meta(source, type));
-    const newMeta: TMeta = this.merge(prevMeta ? [prevMeta, ...updates] : updates);
+    const newMeta: TMeta = this.merge(prevMeta ? [prevMeta, ...metas] : metas);
 
     Reflect.defineProperty(
         type,
@@ -44,8 +43,6 @@ export abstract class MetaAccessor<TMeta, TSrc = TMeta> {
     return type;
   }
 
-  abstract merge(metas: readonly TMeta[]): TMeta;
-
-  protected abstract meta(source: TSrc, type: Class): TMeta;
+  abstract merge(metas: readonly (TMeta | TSrc)[]): TMeta;
 
 }

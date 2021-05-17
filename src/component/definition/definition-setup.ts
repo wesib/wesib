@@ -8,7 +8,7 @@ import { DefinitionContext } from './definition-context';
 /**
  * Component definition setup.
  *
- * It is passed to {@link ComponentDef.Options.setup} method to set up the bootstrap. E.g. by providing definition
+ * It is passed to {@link ComponentDef.setup} method to set up the bootstrap. E.g. by providing definition
  * or component context values.
  *
  * @category Core

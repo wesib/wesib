@@ -1,3 +1,4 @@
+import { QualifiedName } from '@frontmeans/namespace-aliaser';
 import {
   Amender,
   Amendment,
@@ -10,7 +11,7 @@ import {
 } from '@proc7ts/amend';
 import { Class } from '@proc7ts/primitives';
 import { AeFeature, Feature } from '../feature';
-import { ComponentDef, ComponentDef__symbol } from './component-def';
+import { ComponentDef } from './component-def';
 import { ComponentClass } from './definition';
 
 /**
@@ -23,7 +24,7 @@ export interface AeComponent<TClass extends ComponentClass = Class> extends AeFe
   /**
    * Amended component definition.
    */
-  readonly componentDef: ComponentDef.Options;
+  readonly componentDef: ComponentDef;
 
 }
 
@@ -55,26 +56,26 @@ export type ComponentAmendment<
  * Such component can be registered with {@link FeatureContext.define} method or used as a feature, e.g. passed to
  * {@link bootstrapComponents} function, or added to {@link FeatureDef.needs} property of another feature.
  *
- * This is an alternative to direct call to {@link ComponentDef.Options.define} method.
+ * This is an alternative to direct call to {@link ComponentDef.define} method.
  *
  * @category Core
  * @typeParam TClass - Amended component class type.
  * @typeParam TAmended - Amended component entity type.
- * @param amendments - Component definitions.
+ * @param amendments - Component definitions, qualified name od component's element, or amendments to apply.
  *
  * @returns Component class amendment and decorator.
  */
 export function Component<
     TClass extends ComponentClass = Class,
     TAmended extends AeComponent<TClass> = AeComponent<TClass>>(
-    ...amendments: (ComponentDef<InstanceType<TClass>> | Amendment<TAmended>)[]
+    ...amendments: (ComponentDef<InstanceType<TClass>> | QualifiedName | Amendment<TAmended>)[]
 ): ComponentAmendment<TClass, TAmended> {
 
   const amender = Component$toAmender(amendments);
 
   return Feature<TClass, TAmended>(baseTarget => {
 
-    let result: ComponentDef.Options = {};
+    let result: ComponentDef = {};
 
     amender(newAmendTarget({
       base: {
@@ -102,10 +103,10 @@ export function Component<
 }
 
 function Component$toAmender<TClass extends ComponentClass, TAmended extends AeComponent<TClass>>(
-    amendments: (ComponentDef<InstanceType<TClass>> | Amendment<TAmended>)[],
+    amendments: (ComponentDef<InstanceType<TClass>> | QualifiedName | Amendment<TAmended>)[],
 ): Amender<TAmended> {
 
-  const componentDefs: ComponentDef[] = [];
+  const componentDefs: (ComponentDef | QualifiedName)[] = [];
   const componentAmendments: Amendment<TAmended>[] = [];
 
   for (const amendment of amendments) {
@@ -124,21 +125,17 @@ function Component$toAmender<TClass extends ComponentClass, TAmended extends AeC
 }
 
 function isComponentAmendment<TClass extends ComponentClass, TAmended extends AeComponent<TClass>>(
-    amendment: ComponentDef | Amendment<TAmended>,
+    amendment: ComponentDef | QualifiedName | Amendment<TAmended>,
 ): amendment is Amendment<TAmended> {
-  return (amendment as Partial<ComponentDef.Holder>)[ComponentDef__symbol] == null
-      && (typeof amendment === 'function' || isAmendatory(amendment));
+  return typeof amendment === 'function' || isAmendatory(amendment);
 }
 
 function ComponentDef$toAmender<TClass extends ComponentClass, TAmended extends AeComponent<TClass>>(
-    defs: ComponentDef[],
+    defs: (ComponentDef | QualifiedName)[],
 ): Amender<TAmended> {
-  return ({ amendedClass, amend }: AmendTarget<AeComponent<TClass>>) => {
+  return ({ amend }: AmendTarget<AeComponent<TClass>>) => {
     amend({
-      componentDef: ComponentDef.for(
-          amendedClass,
-          ComponentDef.all(...defs),
-      ),
-    } as AmendRequest<TAmended>);
+      componentDef: ComponentDef.merge(...defs),
+    });
   };
 }

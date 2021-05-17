@@ -57,7 +57,7 @@ export type FeatureAmendment<TClass extends Class, TAmended extends AeFeature<TC
  * @category Core
  * @typeParam TClass - Amended feature class type.
  * @typeParam TAmended - Amended feature entity type.
- * @param amendments - Feature amendments and definitions.
+ * @param amendments - Feature definitions or amendments to apply.
  *
  * @returns Feature class amendment and decorator.
  */
@@ -127,12 +127,9 @@ function isFeatureAmendment<TClass extends Class, TAmended extends AeFeature<TCl
 function FeatureDef$toAmender<TClass extends Class, TAmended extends AeFeature<TClass>>(
     defs: FeatureDef[],
 ): Amender<TAmended> {
-  return ({ amendedClass, amend }: AmendTarget<AeFeature<TClass>>) => {
+  return ({ amend }: AmendTarget<AeFeature<TClass>>) => {
     amend({
-      featureDef: FeatureDef.for(
-          amendedClass,
-          FeatureDef.all(...defs),
-      ),
-    } as AmendRequest<TAmended>);
+      featureDef: FeatureDef.merge(...defs),
+    });
   };
 }

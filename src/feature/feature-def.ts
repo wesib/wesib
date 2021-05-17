@@ -9,7 +9,7 @@ import { mergeInitMethods } from './init-method.impl';
  *
  * @category Core
  */
-export const FeatureDef__symbol = (/*#__PURE__*/ Symbol('feature-def'));
+export const FeatureDef__symbol = (/*#__PURE__*/ Symbol('FeatureDef'));
 
 /**
  * Feature definition.
@@ -75,10 +75,6 @@ class FeatureMeta extends MetaAccessor<FeatureDef, FeatureDef> {
     );
   }
 
-  meta(source: FeatureDef, _type: Class): FeatureDef {
-    return source;
-  }
-
 }
 
 /**
@@ -104,18 +100,6 @@ export const FeatureDef = {
   },
 
   /**
-   * Builds feature definition options for the given feature class.
-   *
-   * @param featureType - Target feature class constructor.
-   * @param def - A feature definition.
-   *
-   * @returns Feature definition options.
-   */
-  for(this: void, featureType: Class, def: FeatureDef): FeatureDef {
-    return featureMeta.meta(def, featureType);
-  },
-
-  /**
    * Merges multiple feature definition options.
    *
    * @param defs - Feature definition options to merge.
@@ -123,17 +107,6 @@ export const FeatureDef = {
    * @returns Merged feature definition options.
    */
   merge(this: void, ...defs: readonly FeatureDef[]): FeatureDef {
-    return featureMeta.merge(defs);
-  },
-
-  /**
-   * Merges multiple feature definitions.
-   *
-   * @param defs - Feature definitions to merge.
-   *
-   * @returns Merged feature definition.
-   */
-  all(this: void, ...defs: readonly FeatureDef[]): FeatureDef {
     return featureMeta.merge(defs);
   },
 
