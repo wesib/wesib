@@ -73,7 +73,7 @@ function FeatureModule$options(feature: Class): ContextModule.Options {
   };
 }
 
-function featureDef(featureType: Class): FeatureDef.Options {
+function featureDef(featureType: Class): FeatureDef {
 
   let def = FeatureDef.of(featureType);
 

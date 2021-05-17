@@ -1,5 +1,5 @@
 import { NamespaceDef, QualifiedName } from '@frontmeans/namespace-aliaser';
-import { FeatureDef, FeatureDef__symbol } from '../feature';
+import { FeatureDef } from '../feature';
 import { ComponentDef, ComponentDef__symbol } from './component-def';
 import { ComponentClass, DefinitionContext, DefinitionSetup } from './definition';
 
@@ -285,26 +285,6 @@ describe('component', () => {
 
         expect(mockBuildDef).toHaveBeenCalledWith(TestComponent);
         expect(ComponentDef.of(componentType)).toEqual(def);
-      });
-      it('accepts provided feature definition', () => {
-
-        class Dep {}
-
-        const def: FeatureDef = { needs: Dep };
-        const componentType = ComponentDef.define(TestComponent, { [FeatureDef__symbol]: def });
-
-        expect(ComponentDef.of(componentType)).toEqual({ feature: def });
-      });
-      it('accepts built feature definition', () => {
-
-        class Dep {}
-
-        const def: FeatureDef = { needs: Dep };
-        const mockBuildDef = jest.fn((_type: ComponentClass) => def);
-        const componentType = ComponentDef.define(TestComponent, { [FeatureDef__symbol]: mockBuildDef });
-
-        expect(mockBuildDef).toHaveBeenCalledWith(TestComponent);
-        expect(ComponentDef.of(componentType)).toEqual({ feature: def });
       });
     });
   });

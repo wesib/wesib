@@ -9,7 +9,7 @@ import {
   newAmendTarget,
 } from '@proc7ts/amend';
 import { Class } from '@proc7ts/primitives';
-import { AeFeature, Feature, FeatureDef, FeatureDef__symbol } from '../feature';
+import { AeFeature, Feature } from '../feature';
 import { ComponentDef, ComponentDef__symbol } from './component-def';
 import { ComponentClass } from './definition';
 
@@ -53,7 +53,7 @@ export type ComponentAmendment<
  * ```
  *
  * Such component can be registered with {@link FeatureContext.define} method or used as a feature, e.g. passed to
- * {@link bootstrapComponents} function, or added to {@link FeatureDef.Options.needs} property of another feature.
+ * {@link bootstrapComponents} function, or added to {@link FeatureDef.needs} property of another feature.
  *
  * This is an alternative to direct call to {@link ComponentDef.Options.define} method.
  *
@@ -126,8 +126,7 @@ function Component$toAmender<TClass extends ComponentClass, TAmended extends AeC
 function isComponentAmendment<TClass extends ComponentClass, TAmended extends AeComponent<TClass>>(
     amendment: ComponentDef | Amendment<TAmended>,
 ): amendment is Amendment<TAmended> {
-  return (amendment as Partial<FeatureDef.Holder>)[FeatureDef__symbol] == null
-      && (amendment as Partial<ComponentDef.Holder>)[ComponentDef__symbol] == null
+  return (amendment as Partial<ComponentDef.Holder>)[ComponentDef__symbol] == null
       && (typeof amendment === 'function' || isAmendatory(amendment));
 }
 

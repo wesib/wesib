@@ -1,7 +1,7 @@
 import { isQualifiedName, QualifiedName } from '@frontmeans/namespace-aliaser';
 import { mergeFunctions } from '@proc7ts/primitives';
 import { MetaAccessor } from '../common';
-import { FeatureDef, FeatureDef__symbol } from '../feature';
+import { FeatureDef } from '../feature';
 import { ComponentClass, DefinitionContext, DefinitionSetup, ElementDef } from './definition';
 
 /**
@@ -31,9 +31,7 @@ export type ComponentDef<T extends object = any> =
     | QualifiedName
     | ComponentDef.Options<T>
     | ComponentDef.Holder<T>
-    | ComponentDef.Factory<T>
-    | FeatureDef.Holder
-    | FeatureDef.Factory;
+    | ComponentDef.Factory<T>;
 
 /**
  * @category Core
@@ -66,7 +64,7 @@ export namespace ComponentDef {
     /**
      * Additional feature definition options.
      */
-    readonly feature?: FeatureDef.Options;
+    readonly feature?: FeatureDef;
 
     /**
      * Sets up component definition.
@@ -134,14 +132,6 @@ type ComponentDefHolder<T extends object> =
 /**
  * @internal
  */
-type FeatureDefHolder =
-    | FeatureDef.Holder
-    | FeatureDef.Factory
-    | { [FeatureDef__symbol]?: undefined };
-
-/**
- * @internal
- */
 class ComponentMeta extends MetaAccessor<ComponentDef.Options, ComponentDef> {
 
   constructor() {
@@ -172,11 +162,6 @@ class ComponentMeta extends MetaAccessor<ComponentDef.Options, ComponentDef> {
           typeof def === 'function' ? (source as ComponentDef.Factory<T>)[ComponentDef__symbol](componentType) : def,
           componentType,
       );
-    }
-    if ((source as FeatureDefHolder)[FeatureDef__symbol] != null) {
-      return {
-        feature: FeatureDef.for(componentType, source as FeatureDef),
-      };
     }
     if (isQualifiedName(source)) {
       return { name: source };

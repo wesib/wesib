@@ -10,7 +10,7 @@ import {
   newAmendTarget,
 } from '@proc7ts/amend';
 import { Class } from '@proc7ts/primitives';
-import { FeatureDef, FeatureDef__symbol } from './feature-def';
+import { FeatureDef } from './feature-def';
 
 /**
  * An amended entity representing a feature class to amend.
@@ -21,9 +21,9 @@ import { FeatureDef, FeatureDef__symbol } from './feature-def';
 export interface AeFeature<TClass extends Class = Class> extends AeClass<TClass> {
 
   /**
-   * Amended feature definition.
+   * Amended feature definition options.
    */
-  readonly featureDef: FeatureDef.Options;
+  readonly featureDef: FeatureDef;
 
 }
 
@@ -69,7 +69,7 @@ export function Feature<TClass extends Class = Class, TAmended extends AeFeature
 
   return AeClass<TClass, TAmended>(baseTarget => {
 
-    let result: FeatureDef.Options = {};
+    let result: FeatureDef = {};
 
     amender(newAmendTarget({
       base: {
@@ -121,8 +121,7 @@ function Feature$toAmender<TClass extends Class, TAmended extends AeFeature<TCla
 function isFeatureAmendment<TClass extends Class, TAmended extends AeFeature<TClass>>(
     amendment: FeatureDef | Amendment<TAmended>,
 ): amendment is Amendment<TAmended> {
-  return (amendment as Partial<FeatureDef.Holder>)[FeatureDef__symbol] == null
-      && (typeof amendment === 'function' || isAmendatory(amendment));
+  return typeof amendment === 'function' || isAmendatory(amendment);
 }
 
 function FeatureDef$toAmender<TClass extends Class, TAmended extends AeFeature<TClass>>(

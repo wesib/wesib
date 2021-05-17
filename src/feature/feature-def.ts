@@ -14,107 +14,57 @@ export const FeatureDef__symbol = (/*#__PURE__*/ Symbol('feature-def'));
 /**
  * Feature definition.
  *
- * This can be one of:
- * - feature definition options object,
- * - feature definition holder, or
- * - feature definition factory.
- *
  * @category Core
  */
-export type FeatureDef =
-    | FeatureDef.Options
-    | FeatureDef.Holder
-    | FeatureDef.Factory;
-
-/**
- * @category Core
- */
-export namespace FeatureDef {
+export interface FeatureDef {
 
   /**
-   * Feature definition options.
+   * Features this one requires.
    */
-  export interface Options {
-
-    readonly [FeatureDef__symbol]?: undefined;
-
-    /**
-     * Features this one requires.
-     */
-    readonly needs?: Class | readonly Class[];
-
-    /**
-     * Features this one provides.
-     *
-     * The feature always provides itself.
-     */
-    readonly has?: Class | readonly Class[];
-
-    /**
-     * Sets up bootstrap.
-     *
-     * This method is called before bootstrap context created.
-     *
-     * @param setup - Bootstrap setup.
-     *
-     * @returns Either nothing when setup completed synchronously, or a promise-like instance resolved when setup
-     * completed asynchronously.
-     */
-    setup?(setup: BootstrapSetup): void | PromiseLike<unknown>;
-
-    /**
-     * Initializes this feature by calling the given bootstrap context constructed.
-     *
-     * @param context - Feature initialization context.
-     *
-     * @returns Either nothing when initialization completed synchronously, or a promise-like instance resolved when
-     * initialization completed asynchronously.
-     */
-    init?(context: FeatureContext): void | PromiseLike<unknown>;
-
-  }
+  readonly needs?: Class | readonly Class[];
 
   /**
-   * Feature definition holder.
+   * Features this one provides.
+   *
+   * The feature always provides itself.
    */
-  export interface Holder {
-
-    /**
-     * The feature definition this holder contains.
-     */
-    readonly [FeatureDef__symbol]: FeatureDef;
-
-  }
+  readonly has?: Class | readonly Class[];
 
   /**
-   * Feature definition factory.
+   * Sets up bootstrap.
+   *
+   * This method is called before bootstrap context created.
+   *
+   * @param setup - Bootstrap setup.
+   *
+   * @returns Either nothing when setup completed synchronously, or a promise-like instance resolved when setup
+   * completed asynchronously.
    */
-  export interface Factory {
+  setup?(setup: BootstrapSetup): void | PromiseLike<unknown>;
 
-    /**
-     * Builds feature definition.
-     *
-     * @param featureType - A feature class constructor to build definition for.
-     *
-     * @returns Built feature definition.
-     */
-    [FeatureDef__symbol](featureType: Class): FeatureDef;
-
-  }
+  /**
+   * Initializes this feature by calling the given bootstrap context constructed.
+   *
+   * @param context - Feature initialization context.
+   *
+   * @returns Either nothing when initialization completed synchronously, or a promise-like instance resolved when
+   * initialization completed asynchronously.
+   */
+  init?(context: FeatureContext): void | PromiseLike<unknown>;
 
 }
 
 /**
  * @internal
  */
-class FeatureMeta extends MetaAccessor<FeatureDef.Options, FeatureDef> {
+class FeatureMeta extends MetaAccessor<FeatureDef, FeatureDef> {
 
   constructor() {
     super(FeatureDef__symbol);
   }
 
-  merge(defs: readonly FeatureDef.Options[]): FeatureDef.Options {
-    return defs.reduce<FeatureDef.Options>(
+  merge(defs: readonly FeatureDef[]): FeatureDef {
+    return defs.reduce<FeatureDef>(
         (prev, def) => ({
           needs: elementOrArray(extendSetOfElements(setOfElements(prev.needs), def.needs)),
           has: elementOrArray(extendSetOfElements(setOfElements(prev.has), def.has)),
@@ -125,16 +75,8 @@ class FeatureMeta extends MetaAccessor<FeatureDef.Options, FeatureDef> {
     );
   }
 
-  meta(source: FeatureDef, type: Class): FeatureDef.Options {
-
-    const def = source[FeatureDef__symbol];
-
-    return def == null
-        ? source as FeatureDef.Options
-        : this.meta(
-            typeof def === 'function' ? (source as FeatureDef.Factory)[FeatureDef__symbol](type) : def,
-            type,
-        );
+  meta(source: FeatureDef, _type: Class): FeatureDef {
+    return source;
   }
 
 }
@@ -143,15 +85,6 @@ class FeatureMeta extends MetaAccessor<FeatureDef.Options, FeatureDef> {
  * @internal
  */
 const featureMeta = (/*#__PURE__*/ new FeatureMeta());
-
-/**
- * @internal
- */
-const noFeatureDef: FeatureDef.Factory = {
-  [FeatureDef__symbol]() {
-    return {};
-  },
-};
 
 /**
  * @category Core
@@ -166,7 +99,7 @@ export const FeatureDef = {
    * @returns Feature definition options. May be empty when there is no feature definition found in the given
    * `featureType`.
    */
-  of(this: void, featureType: Class): FeatureDef.Options {
+  of(this: void, featureType: Class): FeatureDef {
     return featureMeta.of(featureType) || {};
   },
 
@@ -178,7 +111,7 @@ export const FeatureDef = {
    *
    * @returns Feature definition options.
    */
-  for(this: void, featureType: Class, def: FeatureDef): FeatureDef.Options {
+  for(this: void, featureType: Class, def: FeatureDef): FeatureDef {
     return featureMeta.meta(def, featureType);
   },
 
@@ -189,7 +122,7 @@ export const FeatureDef = {
    *
    * @returns Merged feature definition options.
    */
-  merge(this: void, ...defs: readonly FeatureDef.Options[]): FeatureDef.Options {
+  merge(this: void, ...defs: readonly FeatureDef[]): FeatureDef {
     return featureMeta.merge(defs);
   },
 
@@ -201,17 +134,7 @@ export const FeatureDef = {
    * @returns Merged feature definition.
    */
   all(this: void, ...defs: readonly FeatureDef[]): FeatureDef {
-    return defs.reduce(
-        (prev, def) => ({
-          [FeatureDef__symbol](featureType: Class) {
-            return FeatureDef.merge(
-                FeatureDef.for(featureType, prev),
-                FeatureDef.for(featureType, def),
-            );
-          },
-        }),
-        noFeatureDef,
-    );
+    return featureMeta.merge(defs);
   },
 
   /**
