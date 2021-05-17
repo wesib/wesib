@@ -13,7 +13,7 @@ import { StateUpdater } from './state-updater';
  *
  * @category Core
  */
-export const ComponentContext__symbol = (/*#__PURE__*/ Symbol('component-context'));
+export const ComponentContext__symbol = (/*#__PURE__*/ Symbol('ComponentContext'));
 
 /**
  * Component context.

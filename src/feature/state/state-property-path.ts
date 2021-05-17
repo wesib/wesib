@@ -5,7 +5,7 @@
  *
  * @category Feature
  */
-export const StatePropertyPath__root = (/*#__PURE__*/ Symbol('state-property'));
+export const StatePropertyPath__root = (/*#__PURE__*/ Symbol('StateProperty'));
 
 /**
  * A path to the named component property state.

@@ -121,7 +121,7 @@ function createCustomElements(bsContext: BootstrapContext): CustomElements {
 /**
  * @internal
  */
-const ComponentResolver__symbol = (/*#__PURE__*/ Symbol('component-resolver'));
+const ComponentResolver__symbol = (/*#__PURE__*/ Symbol('ComponentResolver'));
 
 /**
  * @internal

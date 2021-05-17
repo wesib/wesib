@@ -53,7 +53,7 @@ export interface PostDefSetup<T extends object = any> {
   setup(setup: DefinitionSetup<T>): void;
 }
 
-const PostDefSetup__symbol = (/*#__PURE__*/ Symbol('post-def-setup'));
+const PostDefSetup__symbol = (/*#__PURE__*/ Symbol('PostDefSetup'));
 
 interface PostDefComponentClass<T extends object> extends ComponentClass<T> {
   [PostDefSetup__symbol]?: PostDefSetup<T>;

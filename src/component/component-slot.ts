@@ -71,7 +71,7 @@ export interface ComponentSlot<T extends object = any> extends EventKeeper<[Comp
  *
  * @category Core
  */
-export const ComponentSlot__symbol = (/*#__PURE__*/ Symbol('component-slot'));
+export const ComponentSlot__symbol = (/*#__PURE__*/ Symbol('ComponentSlot'));
 
 /**
  * An element the component can be bound to.

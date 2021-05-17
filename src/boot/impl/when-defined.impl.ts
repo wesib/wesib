@@ -7,7 +7,7 @@ import { definitionContextOf } from './definition-context.symbol.impl';
 /**
  * @internal
  */
-export const WhenDefined__symbol = (/*#__PURE__*/ Symbol('when-defined'));
+export const WhenDefined__symbol = (/*#__PURE__*/ Symbol('WhenDefined'));
 
 interface WhenDefinedComponentClass<T extends object> extends ComponentClass<T> {
   [WhenDefined__symbol]?: OnEvent<[DefinitionContext<T>]>;

@@ -28,7 +28,7 @@ export function newComponent<T extends object>(context: ComponentContext<T>): T 
 function newComponentConstructor<T extends object>(componentType: ComponentType<T>): ComponentConstructor<T> {
 
   // Component context reference specific to component class.
-  const context__symbol = Symbol('component-context');
+  const context__symbol = Symbol('ComponentContext');
 
   type ComponentInstance = T & {
     [context__symbol]?: ComponentContext<T>;

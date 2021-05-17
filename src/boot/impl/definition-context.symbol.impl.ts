@@ -4,7 +4,7 @@ import { ComponentClass, DefinitionContext } from '../../component/definition';
 /**
  * @internal
  */
-export const DefinitionContext__symbol = (/*#__PURE__*/ Symbol('definition-context'));
+export const DefinitionContext__symbol = (/*#__PURE__*/ Symbol('DefinitionContext'));
 
 /**
  * @internal

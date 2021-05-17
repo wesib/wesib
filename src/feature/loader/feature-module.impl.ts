@@ -5,7 +5,7 @@ import { FeatureDef } from '../feature-def';
 import { BootstrapWorkbench, featureInitStage, featureSetupStage } from './bootstrap-workbench.impl';
 import { FeatureContext$ } from './feature-context.impl';
 
-const FeatureModule__symbol = (/*#__PURE__*/ Symbol('feature-module'));
+const FeatureModule__symbol = (/*#__PURE__*/ Symbol('FeatureModule'));
 
 interface FeatureClass extends Class {
 
