@@ -98,7 +98,7 @@ export function Component<
     }));
 
     ComponentDef.define(baseTarget.amendedClass, result);
-  });
+  }) as ComponentAmendment<TClass, TAmended>;
 }
 
 function Component$toAmender<TClass extends ComponentClass, TAmended extends AeComponent<TClass>>(

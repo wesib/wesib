@@ -93,7 +93,7 @@ export function Feature<TClass extends Class = Class, TAmended extends AeFeature
     }));
 
     FeatureDef.define(baseTarget.amendedClass, result);
-  });
+  }) as FeatureAmendment<TClass, TAmended>;
 }
 
 function Feature$toAmender<TClass extends Class, TAmended extends AeFeature<TClass>>(
