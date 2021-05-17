@@ -22,7 +22,7 @@ export class DefinitionContext$<T extends object> extends DefinitionContext<T> {
 
   readonly whenReady: OnEvent<[this]>;
   readonly get: ContextValues['get'];
-  private readonly _def: ComponentDef.Options<T>;
+  private readonly _def: ComponentDef<T>;
   readonly _whenComponent = new WhenComponent<T>();
   private readonly _ready: ValueTracker<boolean>;
   private readonly _whenReady: OnEvent<[]>;

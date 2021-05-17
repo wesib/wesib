@@ -5,7 +5,7 @@ import { Component, ComponentSlot } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { MockElement } from '../../testing';
 import { attributePathTo } from './attribute-path';
-import { Attributes } from './attributes.decorator';
+import { Attributes } from './attributes.amendment';
 
 describe('feature/attributes', () => {
   describe('AttributeRegistry', () => {

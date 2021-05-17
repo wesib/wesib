@@ -1,16 +1,13 @@
-import { ComponentProperty, ComponentPropertyDecorator } from '../../component';
+import { AmendTarget } from '@proc7ts/amend';
+import { AeComponentMember, ComponentMember, ComponentMemberAmendment } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { AttributeDef } from './attribute-def';
 import { parseAttributeDescriptor } from './attribute-descriptor.impl';
 import { AttributeRegistry } from './attribute-registry';
 
 /**
- * Creates a component method decorator for custom element attribute change callback.
- *
- * The decorated method should have up to two parameters:
- *
- * - the first one accepts new attribute value.
- * - the second one accepts old attribute value (or `null`),
+ * Creates a component method amendment (and decorator) for custom element attribute {@link AttributeDef.ChangeMethod
+ * change callback}.
  *
  * Example:
  * ```TypeScript
@@ -26,19 +23,24 @@ import { AttributeRegistry } from './attribute-registry';
  * ```
  *
  * @category Feature
- * @typeParam TClass - A type of decorated component class.
+ * @typeParam TClass - Amended component class type.
+ * @typeParam TAmended - Amended component member entity type.
  * @param def - Attribute definition or just an attribute name.
  *
- * @return Component method decorator.
+ * @return New component method amendment.
  */
-export function AttributeChanged<TClass extends ComponentClass>(
+export function AttributeChanged<
+    TClass extends ComponentClass,
+    TAmended extends AeComponentMember<AttributeDef.ChangeMethod, TClass>>(
     def?: AttributeDef<InstanceType<TClass>> | string,
-): ComponentPropertyDecorator<(newValue: string | null, oldValue: string | null) => void, TClass> {
-  return ComponentProperty(({ type, get, key }) => {
+): ComponentMemberAmendment<AttributeDef.ChangeMethod, TClass, AttributeDef.ChangeMethod, TAmended> {
+  return ComponentMember<AttributeDef.ChangeMethod, TClass, AttributeDef.ChangeMethod, TAmended>((
+      { amendedClass, get, key, amend }: AmendTarget<AeComponentMember<AttributeDef.ChangeMethod, TClass>>,
+  ) => {
 
-    const { name, change } = parseAttributeDescriptor(type.prototype, key, def);
+    const { name, change } = parseAttributeDescriptor(amendedClass.prototype, key, def);
 
-    return {
+    amend({
       componentDef: {
         define(defContext) {
           defContext.get(AttributeRegistry).declareAttribute({
@@ -57,6 +59,6 @@ export function AttributeChanged<TClass extends ComponentClass>(
           });
         },
       },
-    };
+    });
   });
 }

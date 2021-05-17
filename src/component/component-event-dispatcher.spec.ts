@@ -3,7 +3,7 @@ import { MockElement, testElement } from '../testing';
 import { ComponentContext } from './component-context';
 import { ComponentEventDispatcher } from './component-event-dispatcher';
 import { ComponentSlot } from './component-slot';
-import { Component } from './component.decorator';
+import { Component } from './component.amendment';
 
 describe('component', () => {
   describe('ComponentEventDispatcher', () => {

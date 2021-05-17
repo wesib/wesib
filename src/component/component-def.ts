@@ -1,7 +1,7 @@
 import { isQualifiedName, QualifiedName } from '@frontmeans/namespace-aliaser';
 import { mergeFunctions } from '@proc7ts/primitives';
 import { MetaAccessor } from '../common';
-import { FeatureDef, FeatureDef__symbol } from '../feature';
+import { FeatureDef } from '../feature';
 import { ComponentClass, DefinitionContext, DefinitionSetup, ElementDef } from './definition';
 
 /**
@@ -9,180 +9,93 @@ import { ComponentClass, DefinitionContext, DefinitionSetup, ElementDef } from '
  *
  * @category Core
  */
-export const ComponentDef__symbol = (/*#__PURE__*/ Symbol('component-def'));
+export const ComponentDef__symbol = (/*#__PURE__*/ Symbol('ComponentDef'));
 
 /**
  * Component definition.
  *
  * A custom element class will be created for each registered component in accordance to this definition.
  *
- * This can be one of:
- * - custom element name (possibly qualified),
- * - component definition options,
- * - component definition holder,
- * - component definition factory,
- * - feature definition holder, or
- * - feature definition factory.
- *
  * @category Core
  * @typeParam T - A type of component.
  */
-export type ComponentDef<T extends object = any> =
-    | QualifiedName
-    | ComponentDef.Options<T>
-    | ComponentDef.Holder<T>
-    | ComponentDef.Factory<T>
-    | FeatureDef.Holder
-    | FeatureDef.Factory;
-
-/**
- * @category Core
- */
-export namespace ComponentDef {
+export interface ComponentDef<T extends object = any> {
 
   /**
-   * Component definition options.
-   */
-  export interface Options<T extends object = any> {
-
-    readonly [ComponentDef__symbol]?: undefined;
-
-    /**
-     * Custom element name.
-     *
-     * The name may belong to some namespace to avoid naming conflicts. I.e. it can be either a string, or
-     * name/namespace tuple.
-     *
-     * When omitted an anonymous component will be registered. Such component is not bound to custom element, but it
-     * still can be mounted.
-     */
-    readonly name?: QualifiedName;
-
-    /**
-     * Existing element to extend by custom one.
-     */
-    readonly extend?: ElementDef.Extend;
-
-    /**
-     * Additional feature definition options.
-     */
-    readonly feature?: FeatureDef.Options;
-
-    /**
-     * Sets up component definition.
-     *
-     * This method is called before component definition context constructed.
-     *
-     * @param setup - Component definition setup.
-     */
-    setup?(setup: DefinitionSetup<T>): void;
-
-    /**
-     * Defines this component by calling the given component definition context methods.
-     *
-     * This function is called before the custom element is defined.
-     *
-     * @param defContext - Component definition context.
-     */
-    define?(defContext: DefinitionContext<T>): void;
-
-  }
-
-  /**
-   * Component definition holder.
+   * Custom element name.
    *
-   * @typeParam T - A type of component.
+   * The name may belong to some namespace to avoid naming conflicts. I.e. it can be either a string, or
+   * name/namespace tuple.
+   *
+   * When omitted an anonymous component will be registered. Such component is not bound to custom element, but it
+   * still can be mounted.
    */
-  export interface Holder<T extends object = any> {
-
-    /**
-     * The component definition this holder contains.
-     */
-    readonly [ComponentDef__symbol]: ComponentDef<T>;
-
-  }
+  readonly name?: QualifiedName;
 
   /**
-   * Component definition factory.
-   *
-   * @typeParam T - A type of component.
+   * Existing element to extend by custom one.
    */
-  export interface Factory<T extends object = any> {
+  readonly extend?: ElementDef.Extend;
 
-    /**
-     * Builds component definition.
-     *
-     * @param componentType - A component class constructor to build definition for.
-     *
-     * @returns Built component definition.
-     */
-    [ComponentDef__symbol](componentType: ComponentClass<T>): ComponentDef<T>;
+  /**
+   * Additional feature definition options.
+   */
+  readonly feature?: FeatureDef;
 
-  }
+  /**
+   * Sets up component definition.
+   *
+   * This method is called before component definition context constructed.
+   *
+   * @param setup - Component definition setup.
+   */
+  setup?(setup: DefinitionSetup<T>): void;
+
+  /**
+   * Defines this component by calling the given component definition context methods.
+   *
+   * This function is called before the custom element is defined.
+   *
+   * @param defContext - Component definition context.
+   */
+  define?(defContext: DefinitionContext<T>): void;
 
 }
 
 /**
  * @internal
  */
-type ComponentDefHolder<T extends object> =
-    | ComponentDef.Options<T>
-    | ComponentDef.Holder<T>
-    | ComponentDef.Factory<T>
-    | { [ComponentDef__symbol]?: undefined };
-
-/**
- * @internal
- */
-type FeatureDefHolder =
-    | FeatureDef.Holder
-    | FeatureDef.Factory
-    | { [FeatureDef__symbol]?: undefined };
-
-/**
- * @internal
- */
-class ComponentMeta extends MetaAccessor<ComponentDef.Options, ComponentDef> {
+class ComponentMeta extends MetaAccessor<ComponentDef | QualifiedName, ComponentDef> {
 
   constructor() {
     super(ComponentDef__symbol);
   }
 
-  merge<T extends object>(defs: readonly ComponentDef.Options<T>[]): ComponentDef.Options<T> {
-    return defs.reduce(
-        (prev, def) => ({
-          ...prev,
-          ...def,
-          setup: mergeFunctions(prev.setup, def.setup),
-          define: mergeFunctions(prev.define, def.define),
-          feature: prev.feature
-              ? def.feature ? FeatureDef.merge(prev.feature, def.feature) : prev.feature
-              : def.feature,
-        }),
+  merge<T extends object>(defs: readonly (ComponentDef<T> | QualifiedName)[]): ComponentDef<T> {
+    return defs.reduce<ComponentDef>(
+        (prev, meta) => {
+
+          const def = this.meta(meta);
+
+          return ({
+            ...prev,
+            ...def,
+            setup: mergeFunctions(prev.setup, def.setup),
+            define: mergeFunctions(prev.define, def.define),
+            feature: prev.feature
+                ? def.feature ? FeatureDef.merge(prev.feature, def.feature) : prev.feature
+                : def.feature,
+          });
+        },
         {},
     );
   }
 
-  meta<T extends object>(source: ComponentDef<T>, componentType: ComponentClass<T>): ComponentDef.Options<T> {
-
-    const def = (source as ComponentDefHolder<T>)[ComponentDef__symbol];
-
-    if (def != null) {
-      return this.meta(
-          typeof def === 'function' ? (source as ComponentDef.Factory<T>)[ComponentDef__symbol](componentType) : def,
-          componentType,
-      );
-    }
-    if ((source as FeatureDefHolder)[FeatureDef__symbol] != null) {
-      return {
-        feature: FeatureDef.for(componentType, source as FeatureDef),
-      };
-    }
+  meta<T extends object>(source: ComponentDef<T> | QualifiedName): ComponentDef<T> {
     if (isQualifiedName(source)) {
       return { name: source };
     }
-
-    return source as ComponentDef.Options<T>;
+    return source;
   }
 
 }
@@ -191,15 +104,6 @@ class ComponentMeta extends MetaAccessor<ComponentDef.Options, ComponentDef> {
  * @internal
  */
 const componentMeta = (/*#__PURE__*/ new ComponentMeta());
-
-/**
- * @internal
- */
-const noComponentDef: ComponentDef.Factory = {
-  [ComponentDef__symbol]() {
-    return {};
-  },
-};
 
 /**
  * @category Core
@@ -214,24 +118,8 @@ export const ComponentDef = {
    *
    * @returns Component definition options. May be empty if there is not definition attached to component type.
    */
-  of<T extends object>(this: void, componentType: ComponentClass<T>): ComponentDef.Options<T> {
-    return componentMeta.of(componentType) as ComponentDef.Options<T> || {};
-  },
-
-  /**
-   * Builds component definition options for the given component class.
-   *
-   * @param componentType - Target component class constructor.
-   * @param source - A source of component definition.
-   *
-   * @returns Component definition.
-   */
-  for<T extends object>(
-      this: void,
-      componentType: ComponentClass<T>,
-      source: ComponentDef<T>,
-  ): ComponentDef.Options<T> {
-    return componentMeta.meta(source, componentType);
+  of<T extends object>(this: void, componentType: ComponentClass<T>): ComponentDef<T> {
+    return componentMeta.of(componentType) as ComponentDef<T> || {};
   },
 
   /**
@@ -242,30 +130,8 @@ export const ComponentDef = {
    *
    * @returns Merged component definition options.
    */
-  merge<T extends object>(this: void, ...defs: ComponentDef.Options<T>[]): ComponentDef.Options<T> {
+  merge<T extends object>(this: void, ...defs: (ComponentDef<T> | QualifiedName)[]): ComponentDef<T> {
     return componentMeta.merge(defs);
-  },
-
-  /**
-   * Merges multiple component definitions.
-   *
-   * @typeParam T - A type of component.
-   * @param defs - Component definitions to merge.
-   *
-   * @returns Merged component definition.
-   */
-  all<T extends object>(this: void, ...defs: ComponentDef<T>[]): ComponentDef<T> {
-    return defs.reduce<ComponentDef.Factory<T>>(
-        (prev, def) => ({
-          [ComponentDef__symbol](componentType: ComponentClass<T>) {
-            return ComponentDef.merge(
-                ComponentDef.for(componentType, prev),
-                ComponentDef.for(componentType, def),
-            );
-          },
-        }),
-        noComponentDef,
-    );
   },
 
   /**
@@ -285,7 +151,7 @@ export const ComponentDef = {
   define<TClass extends ComponentClass>(
       this: void,
       componentType: TClass,
-      ...defs: ComponentDef<InstanceType<TClass>>[]
+      ...defs: (ComponentDef<InstanceType<TClass>> | QualifiedName)[]
   ): TClass {
     return componentMeta.define(componentType, defs);
   },

@@ -1,5 +1,5 @@
 import { NamespaceDef, QualifiedName } from '@frontmeans/namespace-aliaser';
-import { FeatureDef, FeatureDef__symbol } from '../feature';
+import { FeatureDef } from '../feature';
 import { ComponentDef, ComponentDef__symbol } from './component-def';
 import { ComponentClass, DefinitionContext, DefinitionSetup } from './definition';
 
@@ -44,7 +44,7 @@ describe('component', () => {
         class BaseB {}
         class A {
 
-          static [ComponentDef__symbol]: ComponentDef.Options = {
+          static [ComponentDef__symbol]: ComponentDef = {
             name: 'component-a',
             extend: {
               name: 'div',
@@ -55,7 +55,7 @@ describe('component', () => {
         }
         class B extends A {
 
-          static [ComponentDef__symbol]: ComponentDef.Options = {
+          static [ComponentDef__symbol]: ComponentDef = {
             name: 'component-b',
             extend: {
               name: 'span',
@@ -159,68 +159,6 @@ describe('component', () => {
       });
     });
 
-    describe('all', () => {
-
-      class TestComponent {}
-      let def1: ComponentDef.Options;
-      let def2: ComponentDef.Options;
-
-      beforeEach(() => {
-        class Dep1 {}
-        class Dep2 {}
-        class Base {}
-
-        def1 = { name: 'test-component', feature: { needs: Dep1 } };
-        def2 = { extend: { name: 'input', type: Base }, feature: { needs: Dep2 } };
-      });
-
-      it('merges definition options', () => {
-        expect(
-            ComponentDef.for(
-                TestComponent,
-                ComponentDef.all(def1, def2),
-            ),
-        ).toEqual(ComponentDef.merge(def1, def2));
-      });
-      it('merges definition holders', () => {
-        expect(
-            ComponentDef.for(
-                TestComponent,
-                ComponentDef.all(
-                    { [ComponentDef__symbol]: def1 },
-                    def2,
-                ),
-            ),
-        ).toEqual(ComponentDef.merge(def1, def2));
-      });
-      it('merges definition factories', () => {
-        expect(
-            ComponentDef.for(
-                TestComponent,
-                ComponentDef.all(
-                    { [ComponentDef__symbol]: () => def1 },
-                    def2,
-                ),
-            ),
-        ).toEqual(ComponentDef.merge(def1, def2));
-      });
-      it('merges deep definitions', () => {
-        expect(
-            ComponentDef.for(
-                TestComponent,
-                ComponentDef.all(
-                    {
-                      [ComponentDef__symbol]: () => ({
-                        [ComponentDef__symbol]: def1,
-                      }),
-                    },
-                    def2,
-                ),
-            ),
-        ).toEqual(ComponentDef.merge(def1, def2));
-      });
-    });
-
     describe('define', () => {
 
       let TestComponent: ComponentClass;
@@ -269,42 +207,6 @@ describe('component', () => {
         const componentType = ComponentDef.define(TestComponent, def);
 
         expect<ComponentDef>(ComponentDef.of(componentType)).toEqual(ComponentDef.merge(initialDef, def));
-      });
-      it('accepts provided component definition', () => {
-
-        const def: ComponentDef = { name: 'test-component' };
-        const componentType = ComponentDef.define(TestComponent, { [ComponentDef__symbol]: def });
-
-        expect(ComponentDef.of(componentType)).toEqual(def);
-      });
-      it('accepts built component definition', () => {
-
-        const def: ComponentDef = { name: 'test-component' };
-        const mockBuildDef = jest.fn((_type: ComponentClass) => def);
-        const componentType = ComponentDef.define(TestComponent, { [ComponentDef__symbol]: mockBuildDef });
-
-        expect(mockBuildDef).toHaveBeenCalledWith(TestComponent);
-        expect(ComponentDef.of(componentType)).toEqual(def);
-      });
-      it('accepts provided feature definition', () => {
-
-        class Dep {}
-
-        const def: FeatureDef = { needs: Dep };
-        const componentType = ComponentDef.define(TestComponent, { [FeatureDef__symbol]: def });
-
-        expect(ComponentDef.of(componentType)).toEqual({ feature: def });
-      });
-      it('accepts built feature definition', () => {
-
-        class Dep {}
-
-        const def: FeatureDef = { needs: Dep };
-        const mockBuildDef = jest.fn((_type: ComponentClass) => def);
-        const componentType = ComponentDef.define(TestComponent, { [FeatureDef__symbol]: mockBuildDef });
-
-        expect(mockBuildDef).toHaveBeenCalledWith(TestComponent);
-        expect(ComponentDef.of(componentType)).toEqual({ feature: def });
       });
     });
   });

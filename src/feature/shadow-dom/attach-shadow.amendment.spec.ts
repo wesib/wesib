@@ -2,7 +2,7 @@ import { BootstrapContext } from '../../boot';
 import { Component, ComponentContext, ComponentSlot, ContentRoot } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { MockElement, testElement } from '../../testing';
-import { AttachShadow, ShadowContentDef } from './attach-shadow.decorator';
+import { AttachShadow, ShadowContentDef } from './attach-shadow.amendment';
 import { ShadowContentRoot } from './shadow-content-root';
 import { ShadowRootBuilder } from './shadow-root-builder';
 import Mock = jest.Mock;

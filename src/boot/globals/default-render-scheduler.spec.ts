@@ -122,7 +122,7 @@ describe('boot', () => {
 
     async function bootstrapContext(
         scheduler?: RenderScheduler,
-        feature: FeatureDef.Options = {},
+        feature: FeatureDef = {},
     ): Promise<BootstrapContext> {
       @Feature(
           {
@@ -142,7 +142,7 @@ describe('boot', () => {
 
     async function bootstrap(
         scheduler?: RenderScheduler,
-        feature?: FeatureDef.Options,
+        feature?: FeatureDef,
     ): Promise<DefaultRenderScheduler> {
 
       const bsContext = await bootstrapContext(scheduler, feature);

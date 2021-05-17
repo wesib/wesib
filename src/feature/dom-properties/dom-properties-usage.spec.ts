@@ -3,7 +3,7 @@ import { Component, ComponentContext, ComponentSlot } from '../../component';
 import { ComponentClass, DefinitionContext } from '../../component/definition';
 import { MockElement, testDefinition, testElement } from '../../testing';
 import { DomPropertyPath__root } from './dom-property-path';
-import { DomMethod, DomProperty } from './dom-property.decorator';
+import { DomMethod, DomProperty } from './dom-property.amendment';
 import Mock = jest.Mock;
 
 describe('feature/dom-properties', () => {

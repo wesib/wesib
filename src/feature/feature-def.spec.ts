@@ -43,7 +43,7 @@ describe('feature', () => {
 
         class A {
 
-          static [FeatureDef__symbol]: FeatureDef.Options = {
+          static [FeatureDef__symbol]: FeatureDef = {
             needs: Feature1,
           };
 
@@ -51,7 +51,7 @@ describe('feature', () => {
 
         class B extends A {
 
-          static [FeatureDef__symbol]: FeatureDef.Options = {
+          static [FeatureDef__symbol]: FeatureDef = {
             needs: Feature2,
           };
 
@@ -64,7 +64,7 @@ describe('feature', () => {
 
         class A {
 
-          static [FeatureDef__symbol]: FeatureDef.Options = {
+          static [FeatureDef__symbol]: FeatureDef = {
             needs: Feature1,
           };
 
@@ -74,7 +74,7 @@ describe('feature', () => {
 
         class C extends B {
 
-          static [FeatureDef__symbol]: FeatureDef.Options = {
+          static [FeatureDef__symbol]: FeatureDef = {
             needs: Feature2,
           };
 
@@ -137,77 +137,6 @@ describe('feature', () => {
       });
     });
 
-    describe('all', () => {
-
-      class TestFeature {}
-
-      it('merges feature definition options', () => {
-
-        const first: FeatureDef = { needs: Feature1 };
-        const second: FeatureDef = { needs: Feature2 };
-
-        expect(
-            FeatureDef.for(
-                TestFeature,
-                FeatureDef.all(first, second),
-            ),
-        ).toEqual(FeatureDef.merge(first, second));
-      });
-      it('merges feature definition holders', () => {
-
-        const first: FeatureDef = { needs: Feature1 };
-        const second: FeatureDef = { needs: Feature2 };
-
-        expect(
-            FeatureDef.for(
-                TestFeature,
-                FeatureDef.all(
-                    {
-                      [FeatureDef__symbol]: first,
-                    },
-                    second,
-                ),
-            ),
-        ).toEqual(FeatureDef.merge(first, second));
-      });
-      it('merges feature definition factories', () => {
-
-        const first: FeatureDef = { needs: Feature1 };
-        const second: FeatureDef = { needs: Feature2 };
-
-        expect(
-            FeatureDef.for(
-                TestFeature,
-                FeatureDef.all(
-                    {
-                      [FeatureDef__symbol]: () => first,
-                    },
-                    second,
-                ),
-            ),
-        ).toEqual(FeatureDef.merge(first, second));
-      });
-      it('merges recursive feature definition', () => {
-
-        const first: FeatureDef = { needs: Feature1 };
-        const second: FeatureDef = { needs: Feature2 };
-
-        expect(
-            FeatureDef.for(
-                TestFeature,
-                FeatureDef.all(
-                    {
-                      [FeatureDef__symbol]: () => ({
-                        [FeatureDef__symbol]: first,
-                      }),
-                    },
-                    second,
-                ),
-            ),
-        ).toEqual(FeatureDef.merge(first, second));
-      });
-    });
-
     describe('define', () => {
 
       let TestFeature: Class;
@@ -238,22 +167,6 @@ describe('feature', () => {
         const featureType = FeatureDef.define(TestFeature, def);
 
         expect(FeatureDef.of(featureType)).toEqual(FeatureDef.merge(initialDef, def));
-      });
-      it('accepts provided feature definition', () => {
-
-        const def: FeatureDef = { needs: Feature1 };
-        const featureType = FeatureDef.define(TestFeature, { [FeatureDef__symbol]: def });
-
-        expect(FeatureDef.of(featureType)).toEqual(def);
-      });
-      it('accepts built feature definition', () => {
-
-        const def: FeatureDef = { needs: Feature1 };
-        const mockBuildDef = jest.fn((_type: Class) => def);
-        const featureType = FeatureDef.define(TestFeature, { [FeatureDef__symbol]: mockBuildDef });
-
-        expect(mockBuildDef).toHaveBeenCalledWith(TestFeature);
-        expect(FeatureDef.of(featureType)).toEqual(def);
       });
     });
   });

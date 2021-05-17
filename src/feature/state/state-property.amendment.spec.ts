@@ -3,7 +3,7 @@ import { bootstrapComponents } from '../../boot/bootstrap';
 import { ComponentContext } from '../../component';
 import { ComponentState } from './component-state';
 import { statePropertyPathTo } from './state-property-path';
-import { StateProperty, StatePropertyDef } from './state-property.decorator';
+import { StateProperty, StatePropertyDef } from './state-property.amendment';
 import Mock = jest.Mock;
 
 describe('feature/state', () => {

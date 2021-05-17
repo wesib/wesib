@@ -1,43 +1,50 @@
+import { AmendTarget } from '@proc7ts/amend';
 import { StatePath } from '@proc7ts/fun-events';
 import { Class } from '@proc7ts/primitives';
-import { ComponentProperty, ComponentPropertyDecorator } from '../../component';
+import { AeComponentMember, ComponentMember, ComponentMemberAmendment } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { StatePropertyPath } from './state-property-path';
 import { statePropertyUpdate } from './state-property-update.impl';
 
 /**
- * Creates a decorator of component property containing part of component state.
+ * Creates an amendment (and decorator) of component member representing a property of component state.
  *
  * Once such property updated, the component state is {@link ComponentContext.updateState also updated}.
  *
  * @category Feature
- * @typeParam TClass - A type of decorated component class.
+ * @typeParam TValue - Amended member value type
+ * @typeParam TClass - Amended component class type.
+ * @typeParam TUpdate - Amended member update type accepted by its setter.
+ * @typeParam TAmended - Amended component member entity type.
  * @param def - Custom element property definition.
  *
- * @returns Component property decorator.
+ * @returns New component member decorator.
  */
-export function StateProperty<TValue = any, TClass extends ComponentClass = Class>(
+export function StateProperty<
+    TValue extends TUpdate,
+    TClass extends ComponentClass = Class,
+    TUpdate = TValue,
+    TAmended extends AeComponentMember<TValue, TClass, TUpdate> = AeComponentMember<TValue, TClass, TUpdate>>(
     { updateState }: StatePropertyDef<InstanceType<TClass>> = {},
-): ComponentPropertyDecorator<TValue, TClass> {
-  return ComponentProperty(({ get, set, key }) => {
+): ComponentMemberAmendment<TValue, TClass, TUpdate, TAmended> {
+  return ComponentMember<TValue, TClass, TUpdate, TAmended>((
+      { key, get, set, amend }: AmendTarget<AeComponentMember<TValue, TClass, TUpdate>>,
+  ) => {
     if (updateState !== false) {
 
-      const setValue = set;
       const update = statePropertyUpdate(key, updateState);
 
-      set = (component, newValue) => {
+      amend({
+        get,
+        set(component, newValue) {
 
-        const oldValue = get(component);
+          const oldValue = get(component);
 
-        setValue(component, newValue);
-        update(component, newValue, oldValue);
-      };
+          set(component, newValue);
+          update(component, newValue, oldValue);
+        },
+      });
     }
-
-    return {
-      get,
-      set,
-    };
   });
 }
 

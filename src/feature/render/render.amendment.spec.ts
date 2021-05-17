@@ -13,7 +13,7 @@ import { DomProperty, domPropertyPathTo } from '../dom-properties';
 import { ComponentState } from '../state';
 import { ComponentRendererExecution } from './component-renderer-execution';
 import { RenderDef, RenderPath__root } from './render-def';
-import { Render } from './render.decorator';
+import { Render } from './render.amendment';
 
 describe('feature/render', () => {
   describe('@Render', () => {

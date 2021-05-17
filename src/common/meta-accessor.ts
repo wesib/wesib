@@ -1,4 +1,4 @@
-import { Class, superClassOf } from '@proc7ts/primitives';
+import { Class, hasOwnProperty, superClassOf } from '@proc7ts/primitives';
 
 /**
  * @category Utility
@@ -12,8 +12,7 @@ export abstract class MetaAccessor<TMeta, TSrc = TMeta> {
   }
 
   own(type: Class, receiver?: Class): TMeta | undefined {
-    // eslint-disable-next-line no-prototype-builtins
-    return type.hasOwnProperty(this.symbol)
+    return hasOwnProperty(type, this.symbol)
         ? Reflect.get(type, this.symbol, receiver)
         : undefined;
   }
@@ -27,13 +26,12 @@ export abstract class MetaAccessor<TMeta, TSrc = TMeta> {
     return ownDef ? (superDef ? this.merge([superDef, ownDef]) : ownDef) : superDef;
   }
 
-  define<TClass extends Class>(type: TClass, sources: readonly TSrc[]): TClass {
+  define<TClass extends Class>(type: TClass, metas: readonly (TMeta | TSrc)[]): TClass {
 
     const prevMeta = this.own(type);
-    const updates = sources.map(source => this.meta(source, type));
-    const newMeta: TMeta = this.merge(prevMeta ? [prevMeta, ...updates] : updates);
+    const newMeta: TMeta = this.merge(prevMeta ? [prevMeta, ...metas] : metas);
 
-    Object.defineProperty(
+    Reflect.defineProperty(
         type,
         this.symbol,
         {
@@ -45,8 +43,6 @@ export abstract class MetaAccessor<TMeta, TSrc = TMeta> {
     return type;
   }
 
-  abstract merge(metas: readonly TMeta[]): TMeta;
-
-  protected abstract meta(source: TSrc, type: Class): TMeta;
+  abstract merge(metas: readonly (TMeta | TSrc)[]): TMeta;
 
 }

@@ -1,6 +1,6 @@
 import { FnContextKey, FnContextRef } from '@proc7ts/context-values/updatable';
 import { ComponentContext } from '../../component';
-import { ShadowContentDef } from './attach-shadow.decorator';
+import { ShadowContentDef } from './attach-shadow.amendment';
 
 /**
  * Shadow root builder function type.

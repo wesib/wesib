@@ -1,5 +1,5 @@
 import { ContextModule } from '@proc7ts/context-values/updatable';
-import { Class, setOfElements, valueProvider } from '@proc7ts/primitives';
+import { Class, hasOwnProperty, setOfElements, valueProvider } from '@proc7ts/primitives';
 import { ComponentDef, ComponentDef__symbol } from '../../component';
 import { FeatureDef } from '../feature-def';
 import { BootstrapWorkbench, featureInitStage, featureSetupStage } from './bootstrap-workbench.impl';
@@ -19,7 +19,7 @@ interface FeatureClass extends Class {
 export class FeatureModule extends ContextModule {
 
   static of(feature: FeatureClass): FeatureModule {
-    if (Object.prototype.hasOwnProperty.call(feature, FeatureModule__symbol)) {
+    if (hasOwnProperty(feature, FeatureModule__symbol)) {
       return feature[FeatureModule__symbol]!;
     }
     return feature[FeatureModule__symbol] = new FeatureModule(feature);
@@ -73,7 +73,7 @@ function FeatureModule$options(feature: Class): ContextModule.Options {
   };
 }
 
-function featureDef(featureType: Class): FeatureDef.Options {
+function featureDef(featureType: Class): FeatureDef {
 
   let def = FeatureDef.of(featureType);
 

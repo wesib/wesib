@@ -2,11 +2,11 @@ import { BootstrapWindow } from '../../boot/globals';
 import { Component, ComponentContext, ComponentElement, ComponentSlot } from '../../component';
 import { ComponentClass, DefinitionContext } from '../../component/definition';
 import { MockElement, testDefinition, testElement } from '../../testing';
-import { Feature } from '../feature.decorator';
-import { AttributeChanged } from './attribute-changed.decorator';
+import { Feature } from '../feature.amendment';
+import { AttributeChanged } from './attribute-changed.amendment';
 import { AttributePath__root } from './attribute-path';
 import { AttributeRegistry } from './attribute-registry';
-import { Attribute } from './attribute.decorator';
+import { Attribute } from './attribute.amendment';
 import Mock = jest.Mock;
 import Mocked = jest.Mocked;
 

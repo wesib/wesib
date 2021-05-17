@@ -1,24 +1,27 @@
 import { hyphenateDecapName } from '@frontmeans/httongue';
 import { StatePath } from '@proc7ts/fun-events';
 import { Class } from '@proc7ts/primitives';
-import { Component, ComponentDecorator } from '../../component';
+import { AeComponent, Component, ComponentAmendment } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { AttributeUpdateReceiver } from './attribute-def';
 import { AttributeRegistry } from './attribute-registry';
 import { attributeStateUpdate } from './attribute-state-update.impl';
 
 /**
- * Creates a component decorator declaring supported custom element's attributes.
+ * Creates a component amendment (and decorator) that declares supported attributes of component's element.
  *
  * @category Feature
- * @typeParam TClass - A type of decorated component class.
+ * @typeParam TClass - Amended component class type.
+ * @typeParam TAmended - Amended component entity type.
  * @param items - Attributes definition options.
  *
- * @return New component decorator.
+ * @returns New component amendment and decorator.
  */
-export function Attributes<TClass extends ComponentClass = Class>(
+export function Attributes<
+    TClass extends ComponentClass = Class,
+    TAmended extends AeComponent<TClass> = AeComponent<TClass>>(
     ...items: readonly Attributes.Item<InstanceType<TClass>>[]
-): ComponentDecorator<TClass> {
+): ComponentAmendment<TClass, TAmended> {
   return Component({
     define(defContext) {
 

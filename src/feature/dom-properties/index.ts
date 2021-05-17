@@ -1,4 +1,4 @@
-export * from './dom-property.decorator';
+export * from './dom-property.amendment';
 export * from './dom-property-def';
 export * from './dom-property-descriptor';
 export * from './dom-property-path';
