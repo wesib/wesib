@@ -21,8 +21,6 @@ export const ComponentDef__symbol = (/*#__PURE__*/ Symbol('ComponentDef'));
  */
 export interface ComponentDef<T extends object = any> {
 
-  readonly [ComponentDef__symbol]?: undefined;
-
   /**
    * Custom element name.
    *
