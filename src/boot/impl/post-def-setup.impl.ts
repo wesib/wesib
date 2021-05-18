@@ -1,5 +1,5 @@
 import { EventEmitter, onAny, OnEvent, onEventBy, supplyOn, trackValue, valueOn } from '@proc7ts/fun-events';
-import { asis, hasOwnProperty, superClassOf } from '@proc7ts/primitives';
+import { AbstractClass, asis, hasOwnProperty, superClassOf } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
 import { ComponentDef__symbol } from '../../component';
 import { ComponentClass, DefinitionSetup } from '../../component/definition';
@@ -55,7 +55,7 @@ export interface PostDefSetup<T extends object = any> {
 
 const PostDefSetup__symbol = (/*#__PURE__*/ Symbol('PostDefSetup'));
 
-interface PostDefComponentClass<T extends object> extends ComponentClass<T> {
+interface PostDefComponentClass<T extends object> extends AbstractClass<T> {
   [PostDefSetup__symbol]?: PostDefSetup<T>;
 }
 
