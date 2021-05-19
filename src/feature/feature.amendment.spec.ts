@@ -1,6 +1,6 @@
 import { FeatureContext } from './feature-context';
 import { FeatureDef } from './feature-def';
-import { Feature } from './feature.amendment';
+import { AeFeatureTarget, Feature } from './feature.amendment';
 
 describe('feature', () => {
   describe('@Feature', () => {
@@ -28,6 +28,26 @@ describe('feature', () => {
         amend()().amend(amend({ featureDef: def }));
       })
       class TestFeature {}
+
+      const context: FeatureContext = { name: 'feature context' } as unknown as FeatureContext;
+
+      await FeatureDef.of(TestFeature).init?.(context);
+
+      expect(init).toHaveBeenCalledWith(context);
+      expect(init.mock.instances[0]).toBe(def);
+    });
+    it('auto-amends the feature', async () => {
+
+      const init = jest.fn();
+      const def: FeatureDef = { init };
+
+      class TestFeature {
+
+        static amendThisClass(target: AeFeatureTarget): void {
+          Feature(def).applyAmendment(target);
+        }
+
+      }
 
       const context: FeatureContext = { name: 'feature context' } as unknown as FeatureContext;
 

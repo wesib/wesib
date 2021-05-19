@@ -25,7 +25,7 @@ export class FeatureModule extends ContextModule {
     return feature[FeatureModule__symbol] = new FeatureModule(feature);
   }
 
-  constructor(readonly feature: Class) {
+  private constructor(readonly feature: Class) {
     super(feature.name, FeatureModule$options(feature));
   }
 

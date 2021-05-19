@@ -1,3 +1,4 @@
+import { amend } from '@proc7ts/amend';
 import { Class, elementOrArray, extendSetOfElements, setOfElements } from '@proc7ts/primitives';
 import { BootstrapSetup } from '../boot';
 import { MetaAccessor } from '../common';
@@ -96,7 +97,7 @@ export const FeatureDef = {
    * `featureType`.
    */
   of(this: void, featureType: Class): FeatureDef {
-    return featureMeta.of(featureType) || {};
+    return featureMeta.of(amend(featureType)) || {};
   },
 
   /**
