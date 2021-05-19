@@ -1,11 +1,11 @@
 import { QualifiedName } from '@frontmeans/namespace-aliaser';
 import {
+  allAmender,
   Amender,
   Amendment,
   AmendRequest,
   AmendTarget,
   ClassAmendment,
-  combineAmendments,
   isAmendatory,
   newAmendTarget,
 } from '@proc7ts/amend';
@@ -121,7 +121,7 @@ function Component$toAmender<TClass extends ComponentClass, TAmended extends AeC
     componentAmendments.push(ComponentDef$toAmender(componentDefs));
   }
 
-  return combineAmendments(componentAmendments);
+  return allAmender(componentAmendments);
 }
 
 function isComponentAmendment<TClass extends ComponentClass, TAmended extends AeComponent<TClass>>(

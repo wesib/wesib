@@ -1,4 +1,4 @@
-import { AeClass, AeMember, Amendment, combineAmendments, MemberAmendment } from '@proc7ts/amend';
+import { AeClass, AeMember, allAmender, Amendment, MemberAmendment } from '@proc7ts/amend';
 import { Class } from '@proc7ts/primitives';
 import { AeComponent, Component } from './component.amendment';
 import { ComponentClass } from './definition';
@@ -63,7 +63,7 @@ export function ComponentMember<
 ): ComponentMemberAmendment<TValue, TClass, TUpdate, TAmended> {
   return AeMember<TValue, TClass, TUpdate, TAmended>(
       Component<TClass, TAmended>(
-          combineAmendments(amendments),
+          allAmender(amendments),
       ),
   ) as ComponentMemberAmendment<TValue, TClass, TUpdate, TAmended>;
 }

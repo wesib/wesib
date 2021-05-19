@@ -1,11 +1,11 @@
 import {
   AeClass,
+  allAmender,
   Amender,
   Amendment,
   AmendRequest,
   AmendTarget,
   ClassAmendment,
-  combineAmendments,
   isAmendatory,
   newAmendTarget,
 } from '@proc7ts/amend';
@@ -115,7 +115,7 @@ function Feature$toAmender<TClass extends Class, TAmended extends AeFeature<TCla
     featureAmendments.push(FeatureDef$toAmender(featureDefs));
   }
 
-  return combineAmendments(featureAmendments);
+  return allAmender(featureAmendments);
 }
 
 function isFeatureAmendment<TClass extends Class, TAmended extends AeFeature<TClass>>(
