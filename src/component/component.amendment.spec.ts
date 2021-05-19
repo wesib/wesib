@@ -1,6 +1,6 @@
 import { FeatureContext, FeatureDef } from '../feature';
 import { ComponentDef } from './component-def';
-import { Component } from './component.amendment';
+import { AeComponentTarget, Component } from './component.amendment';
 
 describe('component', () => {
   describe('@Component', () => {
@@ -52,6 +52,51 @@ describe('component', () => {
       amend({ featureDef: def });
     })
     class TestFeature {}
+
+    const context: FeatureContext = { name: 'feature context' } as unknown as FeatureContext;
+
+    await FeatureDef.of(TestFeature).init?.(context);
+
+    expect(init).toHaveBeenCalledWith(context);
+    expect(init.mock.instances[0]).toBe(def);
+  });
+  it('can be used for auto-amendment', () => {
+
+    class BaseElement {
+    }
+
+    const def: ComponentDef = {
+      name: 'test-component',
+      extend: {
+        name: 'input',
+        type: BaseElement,
+      },
+    };
+
+    class TestComponent {
+
+      static autoAmend(target: AeComponentTarget): void {
+        Component(def).applyAmendment(target);
+      }
+
+    }
+
+    expect(ComponentDef.of(TestComponent)).toEqual(def);
+  });
+  it('can be used for feature auto-amendment', async () => {
+
+    const init = jest.fn();
+    const def: FeatureDef = { init };
+
+    class TestFeature {
+
+      static autoAmend(target: AeComponentTarget): void {
+        Component(({ amend }) => {
+          amend({ featureDef: def });
+        }).applyAmendment(target);
+      }
+
+    }
 
     const context: FeatureContext = { name: 'feature context' } as unknown as FeatureContext;
 

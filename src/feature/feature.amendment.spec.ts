@@ -36,14 +36,14 @@ describe('feature', () => {
       expect(init).toHaveBeenCalledWith(context);
       expect(init.mock.instances[0]).toBe(def);
     });
-    it('auto-amends the feature', async () => {
+    it('can be used for auto-amendment', async () => {
 
       const init = jest.fn();
       const def: FeatureDef = { init };
 
       class TestFeature {
 
-        static amendThisClass(target: AeFeatureTarget): void {
+        static autoAmend(target: AeFeatureTarget): void {
           Feature(def).applyAmendment(target);
         }
 

@@ -1,4 +1,5 @@
 import { isQualifiedName, QualifiedName } from '@frontmeans/namespace-aliaser';
+import { amend } from '@proc7ts/amend';
 import { mergeFunctions } from '@proc7ts/primitives';
 import { MetaAccessor } from '../common';
 import { FeatureDef } from '../feature';
@@ -65,7 +66,7 @@ export interface ComponentDef<T extends object = any> {
 /**
  * @internal
  */
-class ComponentMeta extends MetaAccessor<ComponentDef | QualifiedName, ComponentDef> {
+class ComponentMeta extends MetaAccessor<ComponentDef, ComponentDef | QualifiedName> {
 
   constructor() {
     super(ComponentDef__symbol);
@@ -119,7 +120,7 @@ export const ComponentDef = {
    * @returns Component definition options. May be empty if there is not definition attached to component type.
    */
   of<T extends object>(this: void, componentType: ComponentClass<T>): ComponentDef<T> {
-    return componentMeta.of(componentType) as ComponentDef<T> || {};
+    return componentMeta.of(amend(componentType)) || {};
   },
 
   /**
