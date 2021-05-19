@@ -17,7 +17,8 @@ import { ComponentClass } from './definition';
 /**
  * An amended entity representing a component class to amend.
  *
- * @typeParam TClass - A type of amended class.
+ * @category Core
+ * @typeParam TClass - Amended component class type.
  */
 export interface AeComponent<TClass extends ComponentClass = Class> extends AeFeature<TClass> {
 
@@ -27,6 +28,18 @@ export interface AeComponent<TClass extends ComponentClass = Class> extends AeFe
   readonly componentDef: ComponentDef;
 
 }
+
+/**
+ * An amendment target representing a component class to amend.
+ *
+ * @category Core
+ * @typeParam TClass - Amended component class type.
+ * @typeParam TAmended - Amended component entity type.
+ */
+export type AeComponentTarget<
+    TClass extends ComponentClass = Class,
+    TAmended extends AeComponent<TClass> = AeComponent<TClass>
+    > = AmendTarget<TAmended>;
 
 /**
  * Component amendment.
@@ -133,9 +146,7 @@ function isComponentAmendment<TClass extends ComponentClass, TAmended extends Ae
 function ComponentDef$toAmender<TClass extends ComponentClass, TAmended extends AeComponent<TClass>>(
     defs: (ComponentDef | QualifiedName)[],
 ): Amender<TAmended> {
-  return ({ amend }: AmendTarget<AeComponent<TClass>>) => {
-    amend({
-      componentDef: ComponentDef.merge(...defs),
-    });
-  };
+  return ({ amend }: AeComponentTarget<TClass>) => amend({
+    componentDef: ComponentDef.merge(...defs),
+  });
 }

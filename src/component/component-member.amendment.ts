@@ -1,4 +1,4 @@
-import { AeClass, AeMember, allAmender, Amendment, MemberAmendment } from '@proc7ts/amend';
+import { AeClass, AeMember, allAmender, Amendment, AmendTarget, MemberAmendment } from '@proc7ts/amend';
 import { Class } from '@proc7ts/primitives';
 import { AeComponent, Component } from './component.amendment';
 import { ComponentClass } from './definition';
@@ -17,6 +17,23 @@ export interface AeComponentMember<
     TUpdate = TValue,
     > extends AeComponent<TClass>, AeMember<TValue, TClass, TUpdate> {
 }
+
+/**
+ * An amendment target representing a component member to amend.
+ *
+ * @category Core
+ * @typeParam TValue - Amended member value type.
+ * @typeParam TClass - Amended component class type.
+ * @typeParam TUpdate - Amended member update type accepted by its setter.
+ * @typeParam TAmended - Amended component member entity type.
+ */
+export type AeComponentMemberTarget<
+    TValue extends TUpdate,
+    TClass extends ComponentClass = Class,
+    TUpdate = TValue,
+    TAmended extends AeComponentMember<TValue, TClass, TUpdate> =
+        AeComponentMember<TValue, TClass, TUpdate>
+    > = AmendTarget<TAmended>;
 
 /**
  * Component member amendment.

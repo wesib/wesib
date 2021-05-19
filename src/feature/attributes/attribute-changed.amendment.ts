@@ -1,5 +1,4 @@
-import { AmendTarget } from '@proc7ts/amend';
-import { AeComponentMember, ComponentMember, ComponentMemberAmendment } from '../../component';
+import { AeComponentMember, AeComponentMemberTarget, ComponentMember, ComponentMemberAmendment } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { AttributeDef } from './attribute-def';
 import { parseAttributeDescriptor } from './attribute-descriptor.impl';
@@ -35,7 +34,7 @@ export function AttributeChanged<
     def?: AttributeDef<InstanceType<TClass>> | string,
 ): ComponentMemberAmendment<AttributeDef.ChangeMethod, TClass, AttributeDef.ChangeMethod, TAmended> {
   return ComponentMember<AttributeDef.ChangeMethod, TClass, AttributeDef.ChangeMethod, TAmended>((
-      { amendedClass, get, key, amend }: AmendTarget<AeComponentMember<AttributeDef.ChangeMethod, TClass>>,
+      { amendedClass, get, key, amend }: AeComponentMemberTarget<AttributeDef.ChangeMethod, TClass>,
   ) => {
 
     const { name, change } = parseAttributeDescriptor(amendedClass.prototype, key, def);

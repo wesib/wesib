@@ -1,5 +1,4 @@
-import { AmendTarget } from '@proc7ts/amend';
-import { AeComponentMember, ComponentMember, ComponentMemberAmendment } from '../../component';
+import { AeComponentMember, AeComponentMemberTarget, ComponentMember, ComponentMemberAmendment } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { ComponentRenderCtl } from './component-render-ctl';
 import { RenderDef } from './render-def';
@@ -29,7 +28,7 @@ export function Render<
       TClass,
       RenderDef.Method,
       TAmended>((
-      { get, amend }: AmendTarget<AeComponentMember<RenderDef.Method, TClass>>,
+      { get, amend }: AeComponentMemberTarget<RenderDef.Method, TClass>,
   ) => amend({
     componentDef: {
       define(defContext) {

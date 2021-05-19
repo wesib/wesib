@@ -16,7 +16,7 @@ import { FeatureDef } from './feature-def';
  * An amended entity representing a feature class to amend.
  *
  * @category Core
- * @typeParam TClass - A type of amended class.
+ * @typeParam TClass - Amended feature class type.
  */
 export interface AeFeature<TClass extends Class = Class> extends AeClass<TClass> {
 
@@ -26,6 +26,18 @@ export interface AeFeature<TClass extends Class = Class> extends AeClass<TClass>
   readonly featureDef: FeatureDef;
 
 }
+
+/**
+ * An amendment target representing a feature class to amend.
+ *
+ * @category Core
+ * @typeParam TClass - Amended feature class type.
+ * @typeParam TAmended - Amended feature entity type.
+ */
+export type AeFeatureTarget<
+    TClass extends Class = Class,
+    TAmended extends AeFeature<TClass> = AeFeature<TClass>
+    > = AmendTarget<TAmended>;
 
 /**
  * Feature amendment.
@@ -127,9 +139,7 @@ function isFeatureAmendment<TClass extends Class, TAmended extends AeFeature<TCl
 function FeatureDef$toAmender<TClass extends Class, TAmended extends AeFeature<TClass>>(
     defs: FeatureDef[],
 ): Amender<TAmended> {
-  return ({ amend }: AmendTarget<AeFeature<TClass>>) => {
-    amend({
-      featureDef: FeatureDef.merge(...defs),
-    });
-  };
+  return ({ amend }: AeFeatureTarget<TClass>) => amend({
+    featureDef: FeatureDef.merge(...defs),
+  });
 }

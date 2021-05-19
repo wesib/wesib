@@ -1,6 +1,5 @@
-import { AmendTarget } from '@proc7ts/amend';
 import { Class } from '@proc7ts/primitives';
-import { AeComponentMember, ComponentMember, ComponentMemberAmendment } from '../../component';
+import { AeComponentMember, AeComponentMemberTarget, ComponentMember, ComponentMemberAmendment } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { DomPropertyDef } from './dom-property-def';
 import { domPropertyDescriptor } from './dom-property-descriptor.impl';
@@ -31,7 +30,7 @@ export function DomProperty<
     def: DomPropertyDef<InstanceType<TClass>> = {},
 ): ComponentMemberAmendment<TValue, TClass, TUpdate, TAmended> {
   return ComponentMember<TValue, TClass, TUpdate, TAmended>((
-      target: AmendTarget<AeComponentMember<TValue, TClass, TUpdate>>,
+      target: AeComponentMemberTarget<TValue, TClass, TUpdate>,
   ) => {
 
     const { key, get, amend } = target;

@@ -1,5 +1,10 @@
-import { AmendTarget } from '@proc7ts/amend';
-import { AeComponentMember, ComponentContext, ComponentMember, ComponentMemberAmendment } from '../../component';
+import {
+  AeComponentMember,
+  AeComponentMemberTarget,
+  ComponentContext,
+  ComponentMember,
+  ComponentMemberAmendment,
+} from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { AttributeDef } from './attribute-def';
 import { parseAttributeDescriptor } from './attribute-descriptor.impl';
@@ -34,7 +39,7 @@ export function Attribute<
         key,
         set: setValue,
         amend,
-      }: AmendTarget<AeComponentMember<string | null | undefined, TClass>>,
+      }: AeComponentMemberTarget<string | null | undefined, TClass>,
   ) => {
 
     const { name, change } = parseAttributeDescriptor(amendedClass.prototype, key, def);

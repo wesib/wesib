@@ -1,7 +1,6 @@
-import { AmendTarget } from '@proc7ts/amend';
 import { StatePath } from '@proc7ts/fun-events';
 import { Class } from '@proc7ts/primitives';
-import { AeComponentMember, ComponentMember, ComponentMemberAmendment } from '../../component';
+import { AeComponentMember, AeComponentMemberTarget, ComponentMember, ComponentMemberAmendment } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { StatePropertyPath } from './state-property-path';
 import { statePropertyUpdate } from './state-property-update.impl';
@@ -28,7 +27,7 @@ export function StateProperty<
     { updateState }: StatePropertyDef<InstanceType<TClass>> = {},
 ): ComponentMemberAmendment<TValue, TClass, TUpdate, TAmended> {
   return ComponentMember<TValue, TClass, TUpdate, TAmended>((
-      { key, get, set, amend }: AmendTarget<AeComponentMember<TValue, TClass, TUpdate>>,
+      { key, get, set, amend }: AeComponentMemberTarget<TValue, TClass, TUpdate>,
   ) => {
     if (updateState !== false) {
 
