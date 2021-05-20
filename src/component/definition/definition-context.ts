@@ -43,9 +43,7 @@ export abstract class DefinitionContext<T extends object = any> extends ContextV
   /**
    * Custom element definition.
    */
-  get elementDef(): ElementDef {
-    return this.get(ElementDef);
-  }
+  abstract readonly elementDef: ElementDef;
 
   /**
    * An `OnEvent` sender of component definition context upon its readiness.

@@ -1,9 +1,5 @@
-import { html__naming, QualifiedName } from '@frontmeans/namespace-aliaser';
-import { SingleContextKey, SingleContextRef } from '@proc7ts/context-values';
+import { QualifiedName } from '@frontmeans/namespace-aliaser';
 import { Class } from '@proc7ts/primitives';
-import { BootstrapWindow, DefaultNamespaceAliaser } from '../../boot/globals';
-import { ComponentDef } from '../component-def';
-import { DefinitionContext__key } from './definition.context.key.impl';
 
 /**
  * Custom element definition meta.
@@ -36,47 +32,6 @@ export interface ElementDef {
   readonly extend: ElementDef.Extend;
 
 }
-
-/**
- * A key of definition context value containing a custom element definition.
- *
- * Target value defaults to `HTMLElement` from the window provided under `[BootstrapWindow.key]`,
- * unless `ComponentDef.extend.type` is specified.
- *
- * @category Core
- */
-export const ElementDef: SingleContextRef<ElementDef> = (/*#__PURE__*/ new SingleContextKey<ElementDef>(
-    'element-def',
-    {
-      byDefault(values) {
-
-        const componentType = values.get(DefinitionContext__key).componentType;
-        const { name, extend } = ComponentDef.of(componentType);
-        let tagName: string | undefined;
-
-        const elementExtend: ElementDef.Extend = {
-          get type() {
-            return extend && extend.type || values.get(BootstrapWindow).HTMLElement;
-          },
-          get name() {
-            return extend && extend.name;
-          },
-        };
-
-        return {
-          get name() {
-            return name;
-          },
-          get tagName() {
-            return tagName || (name && (tagName = html__naming.name(name, values.get(DefaultNamespaceAliaser))));
-          },
-          get extend() {
-            return elementExtend;
-          },
-        };
-      },
-    },
-));
 
 /**
  * @category Core
