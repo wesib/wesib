@@ -3,7 +3,7 @@ import { mapOn_, onceOn, OnEvent, trackValue, translateOn, ValueTracker } from '
 import { Class, valueProvider } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
 import { ComponentContext, ComponentDef, ComponentElement, ComponentSlot } from '../../component';
-import { DefinitionContext, DefinitionSetup } from '../../component/definition';
+import { DefinitionContext, DefinitionSetup, ElementDef, ElementNaming } from '../../component/definition';
 import { BootstrapContext } from '../bootstrap-context';
 import { DocumentRenderKit } from '../globals';
 import { ComponentContextRegistry, PerComponentRegistry } from './component-context-registry.impl';
@@ -22,6 +22,7 @@ export class DefinitionContext$<T extends object> extends DefinitionContext<T> {
 
   readonly whenReady: OnEvent<[this]>;
   readonly get: ContextValues['get'];
+  readonly elementDef: ElementDef;
   private readonly _def: ComponentDef<T>;
   readonly _whenComponent = new WhenComponent<T>();
   private readonly _ready: ValueTracker<boolean>;
@@ -37,6 +38,7 @@ export class DefinitionContext$<T extends object> extends DefinitionContext<T> {
     this._ready = trackValue(false);
     this._whenReady = this._ready.read.do(translateOn((send, ready) => ready && send()));
     this._def = ComponentDef.of(componentType);
+    this.elementDef = _bsContext.get(ElementNaming).elementOf(componentType);
 
     const definitionContextRegistry = new DefinitionContextRegistry(_bsContext.get(PerDefinitionRegistry).seeds());
 

@@ -1,8 +1,5 @@
 import { QualifiedName } from '@frontmeans/namespace-aliaser';
-import { SingleContextKey, SingleContextRef } from '@proc7ts/context-values';
 import { Class } from '@proc7ts/primitives';
-import { DefinitionContext__key } from './definition.context.key.impl';
-import { ElementNaming } from './element-naming';
 
 /**
  * Custom element definition meta.
@@ -35,23 +32,6 @@ export interface ElementDef {
   readonly extend: ElementDef.Extend;
 
 }
-
-/**
- * A key of definition context value containing a custom element definition.
- *
- * Target value defaults to `HTMLElement` from the window provided under `[BootstrapWindow.key]`,
- * unless `ComponentDef.extend.type` is specified.
- *
- * @category Core
- */
-export const ElementDef: SingleContextRef<ElementDef> = (/*#__PURE__*/ new SingleContextKey<ElementDef>(
-    'element-def',
-    {
-      byDefault(values) {
-        return values.get(ElementNaming).elementOf(values.get(DefinitionContext__key).componentType);
-      },
-    },
-));
 
 /**
  * @category Core
