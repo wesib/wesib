@@ -3,9 +3,8 @@
   "version": "1.0.0-beta.42",
   "description": "Web components building blocks",
   "keywords": [
-    "web-components",
-    "library",
-    "typescript"
+    "framework",
+    "web-components"
   ],
   "homepage": "https://github.com/wesib/wesib",
   "repository": {
