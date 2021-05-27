@@ -1,3 +1,4 @@
+import { describe, expect, it, jest } from '@jest/globals';
 import { FeatureContext } from './feature-context';
 import { FeatureDef } from './feature-def';
 import { AeFeatureTarget, Feature } from './feature.amendment';
@@ -6,7 +7,7 @@ describe('feature', () => {
   describe('@Feature', () => {
     it('assigns feature definition', async () => {
 
-      const init = jest.fn();
+      const init = jest.fn<void, [FeatureContext]>();
       const def: FeatureDef = { init };
 
       @Feature(def)
@@ -21,7 +22,7 @@ describe('feature', () => {
     });
     it('accepts an amendment as parameter', async () => {
 
-      const init = jest.fn();
+      const init = jest.fn<void, [FeatureContext]>();
       const def: FeatureDef = { init };
 
       @Feature(({ amend }) => {
@@ -38,7 +39,7 @@ describe('feature', () => {
     });
     it('can be used for auto-amendment', async () => {
 
-      const init = jest.fn();
+      const init = jest.fn<void, [FeatureContext]>();
       const def: FeatureDef = { init };
 
       class TestFeature {

@@ -1,7 +1,10 @@
+import { QualifiedName } from '@frontmeans/namespace-aliaser';
+import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { SingleContextKey } from '@proc7ts/context-values';
 import { asis, Class, noop } from '@proc7ts/primitives';
+import { Mock, SpyInstance } from 'jest-mock';
 import { Component, ComponentDef, ComponentDef__symbol } from '../../component';
-import { CustomElements, DefinitionContext } from '../../component/definition';
+import { ComponentClass, CustomElements, DefinitionContext } from '../../component/definition';
 import { FeatureContext, FeatureDef } from '../../feature';
 import { BootstrapContext } from '../bootstrap-context';
 import { DefaultNamespaceAliaser } from '../globals';
@@ -15,8 +18,6 @@ import {
 } from '../impl';
 import { DefinitionContext__symbol } from '../impl/definition-context.symbol.impl';
 import { bootstrapComponents } from './bootstrap-components';
-import Mock = jest.Mock;
-import SpyInstance = jest.SpyInstance;
 
 describe('boot', () => {
 
@@ -43,7 +44,9 @@ describe('boot', () => {
     it('constructs default namespace aliaser', () => {
       bootstrapComponents();
 
-      const bootstrapValues = createBootstrapContextRegistrySpy.mock.results[0].value.values;
+      const bootstrapValues = (
+          createBootstrapContextRegistrySpy.mock.results[0].value as BootstrapContextRegistry
+      ).values;
 
       expect(bootstrapValues.get(DefaultNamespaceAliaser)).toBeInstanceOf(Function);
     });
@@ -77,7 +80,7 @@ describe('boot', () => {
       class Base {}
 
       let featureContext: FeatureContext;
-      let whenReady: Mock;
+      let whenReady: Mock<void, [FeatureContext]>;
       let bsContext: BootstrapContext;
 
       beforeEach(async () => {
@@ -111,7 +114,7 @@ describe('boot', () => {
       });
       it('proxies `define()`', async () => {
 
-        let defineSpy!: SpyInstance;
+        let defineSpy!: SpyInstance<void, [componentTypeOrName: ComponentClass | QualifiedName, elementType: Class]>;
 
         @Component({ name: 'test-component', extend: { name: 'div', type: Base } })
         class TestComponent {}
@@ -204,7 +207,7 @@ describe('boot', () => {
             };
           });
 
-          let whenDefinedSpy: SpyInstance;
+          let whenDefinedSpy: SpyInstance<Promise<void>, [componentTypeOrName: ComponentClass | QualifiedName]>;
 
           beforeEach(() => {
 
@@ -234,7 +237,7 @@ describe('boot', () => {
 
             const defined1 = await whenDefined;
 
-            expect(whenDefined).toBe(bsContext.whenDefined(TestComponent));
+            void expect(whenDefined).toBe(bsContext.whenDefined(TestComponent));
 
             let defined2!: DefinitionContext;
 

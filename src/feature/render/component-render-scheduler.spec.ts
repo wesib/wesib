@@ -5,6 +5,8 @@ import {
   RenderScheduleOptions,
   RenderScheduler,
 } from '@frontmeans/render-scheduler';
+import { beforeEach, describe, expect, it, jest } from '@jest/globals';
+import { Mock } from 'jest-mock';
 import { DefaultRenderScheduler } from '../../boot/globals';
 import { Component, ComponentContext, ComponentSlot } from '../../component';
 import { MockElement, testElement } from '../../testing';
@@ -13,8 +15,8 @@ import { ComponentRenderScheduler } from './component-render-scheduler';
 describe('feature/render', () => {
   describe('ComponentRenderScheduler', () => {
 
-    let mockRenderScheduler: jest.Mock<RenderSchedule, Parameters<RenderScheduler>>;
-    let mockRenderSchedule: jest.Mock<void, Parameters<RenderSchedule>>;
+    let mockRenderScheduler: Mock<RenderSchedule, Parameters<RenderScheduler>>;
+    let mockRenderSchedule: Mock<void, Parameters<RenderSchedule>>;
 
     beforeEach(() => {
       mockRenderSchedule = jest.fn(immediateRenderScheduler());

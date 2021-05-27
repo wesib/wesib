@@ -1,4 +1,5 @@
 import { CustomHTMLElement } from '@frontmeans/dom-primitives';
+import { describe, expect, it, jest } from '@jest/globals';
 import { Class } from '@proc7ts/primitives';
 import { bootstrapComponents } from '../../boot/bootstrap';
 import { Component, ComponentSlot } from '../../component';

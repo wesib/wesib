@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { drekContextOf } from '@frontmeans/drek';
 import {
   immediateRenderScheduler,
@@ -5,6 +6,7 @@ import {
   RenderScheduleOptions,
   RenderScheduler,
 } from '@frontmeans/render-scheduler';
+import { Mock } from 'jest-mock';
 import { DefaultPreRenderScheduler, DefaultRenderScheduler } from '../../boot/globals';
 import { Component, ComponentContext, ComponentSlot } from '../../component';
 import { MockElement, testElement } from '../../testing';
@@ -17,23 +19,23 @@ import { RenderDef } from './render-def';
 describe('feature/render', () => {
   describe('@PreRender', () => {
 
-    let mockRenderScheduler: jest.Mock<RenderSchedule, Parameters<RenderScheduler>>;
-    let mockRenderSchedule: jest.Mock<void, Parameters<RenderSchedule>>;
+    let mockRenderScheduler: Mock<RenderSchedule, Parameters<RenderScheduler>>;
+    let mockRenderSchedule: Mock<void, Parameters<RenderSchedule>>;
 
     beforeEach(() => {
       mockRenderSchedule = jest.fn(immediateRenderScheduler());
       mockRenderScheduler = jest.fn((_options?: RenderScheduleOptions) => mockRenderSchedule);
     });
 
-    let mockPreRenderScheduler: jest.Mock<RenderSchedule, Parameters<RenderScheduler>>;
-    let mockPreRenderSchedule: jest.Mock<void, Parameters<RenderSchedule>>;
+    let mockPreRenderScheduler: Mock<RenderSchedule, Parameters<RenderScheduler>>;
+    let mockPreRenderSchedule: Mock<void, Parameters<RenderSchedule>>;
 
     beforeEach(() => {
       mockPreRenderSchedule = jest.fn(immediateRenderScheduler());
       mockPreRenderScheduler = jest.fn((_options?: RenderScheduleOptions) => mockPreRenderSchedule);
     });
 
-    let mockPreRenderer: jest.Mock<void, [ComponentPreRendererExecution]>;
+    let mockPreRenderer: Mock<void, [ComponentPreRendererExecution]>;
 
     beforeEach(() => {
       mockPreRenderer = jest.fn();
@@ -190,7 +192,7 @@ describe('feature/render', () => {
 
     describe('Delegate pre-renderer', () => {
 
-      let delegate: jest.Mock<void, [ComponentPreRendererExecution]>;
+      let delegate: Mock<void, [ComponentPreRendererExecution]>;
 
       beforeEach(() => {
         delegate = jest.fn();
@@ -227,7 +229,7 @@ describe('feature/render', () => {
 
     describe('Delegate renderer', () => {
 
-      let delegate: jest.Mock<void, [ComponentRendererExecution]>;
+      let delegate: Mock<void, [ComponentRendererExecution]>;
 
       beforeEach(() => {
         delegate = jest.fn();

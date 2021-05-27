@@ -1,10 +1,11 @@
+import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { StatePath } from '@proc7ts/fun-events';
 import { Component, ComponentContext, ComponentSlot } from '../../component';
 import { ComponentClass, DefinitionContext } from '../../component/definition';
-import { MockElement, testDefinition, testElement } from '../../testing';
+import { MockElement, MockFn, testDefinition, testElement } from '../../testing';
+import { DomPropertyUpdateReceiver } from './dom-property-def';
 import { DomPropertyPath__root } from './dom-property-path';
 import { DomMethod, DomProperty } from './dom-property.amendment';
-import Mock = jest.Mock;
 
 describe('feature/dom-properties', () => {
   describe('DOM properties usage', () => {
@@ -13,7 +14,7 @@ describe('feature/dom-properties', () => {
     let context: ComponentContext;
     let element: any;
     let propertyValue: number;
-    let customUpdateStateSpy: Mock;
+    let customUpdateStateSpy: MockFn<DomPropertyUpdateReceiver<any>>;
     let customUpdateStatePath: StatePath;
 
     beforeEach(() => {

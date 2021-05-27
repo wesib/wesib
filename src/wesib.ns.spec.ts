@@ -1,3 +1,4 @@
+import { describe, expect, it } from '@jest/globals';
 import { Wesib__NS } from './wesib.ns';
 
 describe('Wesib__NS', () => {

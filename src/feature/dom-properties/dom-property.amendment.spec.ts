@@ -1,3 +1,4 @@
+import { describe, expect, it } from '@jest/globals';
 import { Component, ComponentSlot } from '../../component';
 import { MockElement, testElement } from '../../testing';
 import { DomProperty } from './dom-property.amendment';

@@ -1,26 +1,27 @@
+import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { CustomHTMLElement } from '@frontmeans/dom-primitives';
 import { drekAppender, drekBuild, DrekFragment, drekLift } from '@frontmeans/drek';
 import { onSupplied } from '@proc7ts/fun-events';
 import { Class } from '@proc7ts/primitives';
+import { Mock } from 'jest-mock';
 import { Component, ComponentContext, ComponentSlot } from '../../component';
 import { ComponentClass, DefinitionContext } from '../../component/definition';
 import { Feature } from '../../feature';
 import { MockElement, testElement } from '../../testing';
-import Mock = jest.Mock;
 
 describe('component instantiation', () => {
   describe('Life cycle', () => {
 
     let testComponent: ComponentClass;
-    let constructorSpy: Mock;
+    let mockConstructor: Mock<any, any[]>;
     let context: ComponentContext;
-    let componentListenerSpy: Mock;
+    let onComponent: Mock<void, [ComponentContext]>;
     let element: any;
 
     beforeEach(() => {
       context = undefined!;
-      constructorSpy = jest.fn((ctx: ComponentContext) => context = ctx);
-      componentListenerSpy = jest.fn();
+      mockConstructor = jest.fn((ctx: ComponentContext) => context = ctx);
+      onComponent = jest.fn();
 
       @Component({
         name: 'test-component',
@@ -30,13 +31,13 @@ describe('component instantiation', () => {
       })
       @Feature({
         init(bootCtx) {
-          bootCtx.onComponent(componentListenerSpy);
+          bootCtx.onComponent(onComponent);
         },
       })
       class TestComponent {
 
         constructor(...args: any[]) {
-          constructorSpy(...args);
+          mockConstructor(...args);
         }
 
       }
@@ -63,7 +64,7 @@ describe('component instantiation', () => {
         element,
       };
 
-      expect(constructorSpy).toHaveBeenCalledWith(expect.objectContaining(expectedContext));
+      expect(mockConstructor).toHaveBeenCalledWith(expect.objectContaining(expectedContext));
     });
     it('uses custom element as content root', () => {
       expect(context.contentRoot).toBe(element);
@@ -74,7 +75,7 @@ describe('component instantiation', () => {
 
     describe('onComponent listener', () => {
       it('is notified on new element instantiation', () => {
-        expect(componentListenerSpy).toHaveBeenCalledWith(context);
+        expect(onComponent).toHaveBeenCalledWith(context);
       });
     });
   });

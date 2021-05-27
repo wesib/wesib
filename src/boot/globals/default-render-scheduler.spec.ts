@@ -1,10 +1,12 @@
-import Mock = jest.Mock;
 import {
   immediateRenderScheduler,
   RenderSchedule,
+  RenderScheduleOptions,
   RenderScheduler,
   setRenderScheduler,
 } from '@frontmeans/render-scheduler';
+import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
+import { Mock } from 'jest-mock';
 import { Component } from '../../component';
 import { Feature, FeatureDef } from '../../feature';
 import { MockElement } from '../../testing';
@@ -50,7 +52,7 @@ describe('boot', () => {
     it('respects fallback render scheduler', async () => {
 
       const bsContext = await bootstrapContext();
-      const fallback = jest.fn();
+      const fallback = jest.fn<RenderSchedule, [RenderScheduleOptions?]>();
       const scheduler = bsContext.get(DefaultRenderScheduler, { or: fallback })!;
 
       scheduler();
@@ -68,7 +70,7 @@ describe('boot', () => {
     });
     it('substitutes bootstrap window to provided scheduler', async () => {
 
-      const customScheduler = jest.fn();
+      const customScheduler = jest.fn<RenderSchedule, [RenderScheduleOptions?]>();
       const scheduler = await bootstrap(customScheduler);
       const node = document.createElement('div');
       const error = (): void => { /* log error */ };
@@ -112,7 +114,7 @@ describe('boot', () => {
 
       const defContext = await bsContext.whenDefined(TestComponent);
 
-      const fallback = jest.fn();
+      const fallback = jest.fn<RenderSchedule, [RenderScheduleOptions?]>();
       const scheduler = defContext.get(DefaultRenderScheduler, { or: fallback })!;
 
       scheduler();

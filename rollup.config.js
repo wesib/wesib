@@ -30,35 +30,26 @@ export default {
     }
     return 'wesib';
   },
-  output: [
-    {
-      dir: 'dist',
-      format: 'cjs',
-      sourcemap: true,
-      entryFileNames: '[name].cjs',
-      chunkFileNames: '_[name].cjs',
-    },
-    {
-      dir: '.',
-      format: 'esm',
-      sourcemap: true,
-      entryFileNames: 'dist/[name].js',
-      chunkFileNames: 'dist/_[name].js',
-      plugins: [
-        flatDts({
-          tsconfig: 'tsconfig.main.json',
-          lib: true,
-          compilerOptions: {
-            declarationMap: true,
+  output: {
+    dir: '.',
+    format: 'esm',
+    sourcemap: true,
+    entryFileNames: 'dist/[name].js',
+    chunkFileNames: 'dist/_[name].js',
+    plugins: [
+      flatDts({
+        tsconfig: 'tsconfig.main.json',
+        lib: true,
+        compilerOptions: {
+          declarationMap: true,
+        },
+        entries: {
+          testing: {
+            file: 'testing/index.d.ts',
           },
-          entries: {
-            testing: {
-              file: 'testing/index.d.ts',
-            },
-          },
-          internal: ['**/impl/**', '**/*.impl'],
-        }),
-      ],
-    },
-  ],
+        },
+        internal: ['**/impl/**', '**/*.impl'],
+      }),
+    ],
+  },
 };

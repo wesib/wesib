@@ -1,21 +1,21 @@
+import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { SingleContextUpKey } from '@proc7ts/context-values/updatable';
 import { afterSupplied, afterThe } from '@proc7ts/fun-events';
 import { Class, noop } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
+import { Mock } from 'jest-mock';
 import { Component, ComponentContext, ComponentSlot } from '../../component';
 import { CustomElements, DefinitionContext } from '../../component/definition';
 import { Feature, FeatureContext, FeatureDef, FeatureRef, FeatureStatus } from '../../feature';
-import { MockElement } from '../../testing';
+import { MockElement, MockObject } from '../../testing';
 import { BootstrapContext } from '../bootstrap-context';
 import { BootstrapSetup } from '../bootstrap-setup';
 import { bootstrapComponents } from './bootstrap-components';
-import Mock = jest.Mock;
-import Mocked = jest.Mocked;
 
 describe('boot', () => {
 
   let bsContext: BootstrapContext;
-  let mockCustomElements: Mocked<CustomElements>;
+  let mockCustomElements: MockObject<CustomElements>;
 
   beforeEach(async () => {
     mockCustomElements = {
@@ -574,7 +574,9 @@ describe('boot', () => {
         class TestComponent {
         }
 
-        expect(() => context.define(TestComponent)).toThrow(TypeError);
+        expect(() => context.define(TestComponent)).toThrow(new TypeError(
+            'ContextModule(TestFeature) initialized already, and does not accept new initializers',
+        ));
       });
     });
   });
@@ -619,7 +621,7 @@ describe('boot', () => {
       await loadFeatureStatus();
       statusReceiver.mockClear();
 
-      const receiver2 = jest.fn();
+      const receiver2 = jest.fn<void, [FeatureStatus]>();
 
       await loadFeatureStatus(receiver2);
       expect(statusReceiver).not.toHaveBeenCalled();
@@ -645,7 +647,7 @@ describe('boot', () => {
     });
     it('replaces the loaded feature', async () => {
 
-      const initSpy = jest.fn();
+      const initSpy = jest.fn<void, [FeatureContext]>();
 
       await loadFeatureStatus();
       statusReceiver.mockClear();
@@ -684,7 +686,7 @@ describe('boot', () => {
 
           const featureRef = await loadFeatureStatus();
 
-          expect(afterSupplied(featureRef)).toBe(featureRef.read);
+          void expect(afterSupplied(featureRef)).toBe(featureRef.read);
         });
       });
       describe('supply.off', () => {

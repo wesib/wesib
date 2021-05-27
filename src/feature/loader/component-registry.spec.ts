@@ -1,18 +1,19 @@
+import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { Class } from '@proc7ts/primitives';
 import { BootstrapContext } from '../../boot';
 import { bootstrapComponents } from '../../boot/bootstrap';
 import { ElementBuilder } from '../../boot/impl';
 import { ComponentDef, ComponentDef__symbol } from '../../component';
 import { ComponentClass, CustomElements } from '../../component/definition';
+import { MockObject } from '../../testing';
 import { Feature } from '../feature.amendment';
-import Mocked = jest.Mocked;
 
 describe('feature load', () => {
   describe('ComponentRegistry', () => {
 
     let TestComponent: ComponentClass;
     let ElementSpy: Class;
-    let mockBuilder: Mocked<ElementBuilder>;
+    let mockBuilder: MockObject<ElementBuilder>;
 
     beforeEach(() => {
       mockBuilder = {
@@ -32,7 +33,7 @@ describe('feature load', () => {
     });
 
     let bsContext: BootstrapContext;
-    let mockCustomElements: Mocked<CustomElements>;
+    let mockCustomElements: MockObject<CustomElements>;
 
     beforeEach(async () => {
       mockCustomElements = {

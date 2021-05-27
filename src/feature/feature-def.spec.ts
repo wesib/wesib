@@ -1,4 +1,6 @@
+import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { Class } from '@proc7ts/primitives';
+import { BootstrapSetup } from '../boot';
 import { FeatureContext } from './feature-context';
 import { FeatureDef, FeatureDef__symbol } from './feature-def';
 
@@ -102,9 +104,9 @@ describe('feature', () => {
       });
       it('merges `setup`', async () => {
 
-        const mockSetup1 = jest.fn();
+        const mockSetup1 = jest.fn<void, [BootstrapSetup]>();
         const def1: FeatureDef = { setup: mockSetup1 };
-        const mockSetup2 = jest.fn();
+        const mockSetup2 = jest.fn<void, [BootstrapSetup]>();
         const def2: FeatureDef = { setup: mockSetup2 };
         const merged = FeatureDef.merge(def1, def2);
         const context: FeatureContext = { name: 'feature context' } as any;
@@ -118,9 +120,9 @@ describe('feature', () => {
       });
       it('merges `init`', async () => {
 
-        const mockInit1 = jest.fn();
+        const mockInit1 = jest.fn<void, [FeatureContext]>();
         const def1: FeatureDef = { init: mockInit1 };
-        const mockInit2 = jest.fn();
+        const mockInit2 = jest.fn<void, [FeatureContext]>();
         const def2: FeatureDef = { init: mockInit2 };
         const merged = FeatureDef.merge(def1, def2);
         const context: FeatureContext = { name: 'feature context' } as any;

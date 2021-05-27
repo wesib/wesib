@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from '@jest/globals';
 import { valueProvider } from '@proc7ts/primitives';
 import { ComponentContext, ComponentContext__symbol, ComponentInstance } from './component-context';
 
@@ -20,7 +21,8 @@ describe('component', () => {
       it('fails when there is no context defined', () => {
         delete component[ComponentContext__symbol];
 
-        expect(() => ComponentContext.of(component)).toThrow(TypeError);
+        expect(() => ComponentContext.of(component))
+            .toThrow(new TypeError('No component context found in [object Object]'));
       });
     });
   });

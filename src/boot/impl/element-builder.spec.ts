@@ -1,23 +1,23 @@
 import { drekAppender, drekContextOf, DrekFragment } from '@frontmeans/drek';
 import { newNamespaceAliaser } from '@frontmeans/namespace-aliaser';
+import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { ContextKey, SingleContextKey } from '@proc7ts/context-values';
 import { Class, noop } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
+import { Mock } from 'jest-mock';
 import { ComponentContext, ComponentDef, ComponentDef__symbol, ComponentSlot } from '../../component';
 import { ComponentClass, DefinitionContext } from '../../component/definition';
-import { MockElement } from '../../testing';
+import { MockElement, MockObject } from '../../testing';
 import { BootstrapContext } from '../bootstrap-context';
 import { DefaultNamespaceAliaser } from '../globals';
 import { BootstrapContextRegistry } from './bootstrap-context-registry.impl';
 import { ElementBuilder } from './element-builder.impl';
-import Mock = jest.Mock;
-import Mocked = jest.Mocked;
 
 describe('boot', () => {
   describe('ElementBuilder', () => {
 
     let bsContextRegistry: BootstrapContextRegistry;
-    let mockBootstrapContext: Mocked<BootstrapContext>;
+    let mockBootstrapContext: MockObject<BootstrapContext>;
 
     beforeEach(() => {
       bsContextRegistry = BootstrapContextRegistry.create();
@@ -116,7 +116,7 @@ describe('boot', () => {
 
     describe('component definition listener', () => {
 
-      let onDefinition: Mock;
+      let onDefinition: Mock<void, [DefinitionContext]>;
 
       beforeEach(() => {
         onDefinition = jest.fn();
@@ -249,12 +249,12 @@ describe('boot', () => {
         });
       });
 
-      let connectedCallbackSpy: Mock;
-      let disconnectedCallbackSpy: Mock;
+      let connectedCallback: Mock<void, []>;
+      let disconnectedCallback: Mock<void, []>;
 
       beforeEach(() => {
-        connectedCallbackSpy = jest.fn();
-        disconnectedCallbackSpy = jest.fn();
+        connectedCallback = jest.fn();
+        disconnectedCallback = jest.fn();
         ComponentDef.define(
             TestComponent,
             {
@@ -262,11 +262,11 @@ describe('boot', () => {
                 type: class extends MockElement {
 
                   connectedCallback(): void {
-                    connectedCallbackSpy();
+                    connectedCallback();
                   }
 
                   disconnectedCallback(): void {
-                    disconnectedCallbackSpy();
+                    disconnectedCallback();
                   }
 
                 },
@@ -421,7 +421,7 @@ describe('boot', () => {
         });
         it('calls `connectedCallback()` of original element', () => {
           context.element.connectedCallback();
-          expect(connectedCallbackSpy).toHaveBeenCalledWith();
+          expect(connectedCallback).toHaveBeenCalledWith();
         });
 
         describe('after settlement', () => {
@@ -450,7 +450,7 @@ describe('boot', () => {
       describe('disconnectedCallback', () => {
         it('calls `disconnectedCallback()` of original element when disconnected', () => {
           context.element.disconnectedCallback();
-          expect(disconnectedCallbackSpy).toHaveBeenCalledWith();
+          expect(disconnectedCallback).toHaveBeenCalledWith();
         });
       });
 
@@ -501,7 +501,7 @@ describe('boot', () => {
           const { element, component } = context;
 
           context.supply.off();
-          expect(() => context.component).toThrow(TypeError);
+          expect(() => context.component).toThrow(new TypeError('Component destroyed already'));
           expect(element[ComponentDef__symbol]).toBeUndefined();
           expect(component[ComponentDef__symbol]).toBeUndefined();
         });

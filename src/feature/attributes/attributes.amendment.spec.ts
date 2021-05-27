@@ -1,3 +1,4 @@
+import { describe, expect, it, jest } from '@jest/globals';
 import { Component, ComponentSlot } from '../../component';
 import { MockElement, testElement } from '../../testing';
 import { AttributePath__root } from './attribute-path';
