@@ -2,7 +2,7 @@ import { OnEvent } from '@proc7ts/fun-events';
 import { Class } from '@proc7ts/primitives';
 import { bootstrapComponents } from '../boot/bootstrap';
 import { CustomElements, DefinitionContext } from '../component/definition';
-import { Feature } from '../feature';
+import { FeatureDef, FeatureDef__symbol } from '../feature';
 
 /**
  * @category Testing
@@ -20,13 +20,19 @@ export function testDefinition<T extends object>(componentType: Class<T>): OnEve
 
   };
 
-  @Feature({
+  const featureDef: FeatureDef = {
     needs: componentType,
     setup(setup) {
       setup.provide({ a: CustomElements, is: customElements });
     },
-  })
+  };
+
   class TestFeature {
+
+    static get [FeatureDef__symbol](): FeatureDef {
+      return featureDef;
+    }
+
   }
 
   return bootstrapComponents(TestFeature).whenDefined(componentType);
