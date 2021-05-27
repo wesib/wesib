@@ -1,13 +1,14 @@
+import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { valueProvider } from '@proc7ts/primitives';
 import { Component, ComponentContext, ComponentContext__symbol } from '../../component';
+import { MockObject } from '../../testing';
 import { Attribute } from './attribute.amendment';
-import Mocked = jest.Mocked;
 
 describe('feature/attributes', () => {
   describe('@Attribute', () => {
 
-    let mockContext: Mocked<ComponentContext>;
-    let mockElement: Mocked<HTMLElement>;
+    let mockContext: ComponentContext;
+    let mockElement: MockObject<HTMLElement>;
 
     beforeEach(() => {
       mockElement = {

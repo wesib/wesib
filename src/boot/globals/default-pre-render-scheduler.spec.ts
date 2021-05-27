@@ -1,3 +1,4 @@
+import { describe, expect, it, jest } from '@jest/globals';
 import { bootstrapComponents } from '../bootstrap';
 import { DefaultPreRenderScheduler } from './default-pre-render-scheduler';
 

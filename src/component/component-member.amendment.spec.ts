@@ -1,3 +1,4 @@
+import { afterEach, beforeEach, describe, expect, it } from '@jest/globals';
 import { SingleContextKey } from '@proc7ts/context-values';
 import { noop } from '@proc7ts/primitives';
 import { bootstrapComponents } from '../boot/bootstrap';
@@ -114,7 +115,9 @@ describe('component', () => {
 
       expect(component.property).toBe('some!');
 
-      expect(() => (component as any).property = 'other').toThrow(TypeError);
+      expect(() => (component as any).property = 'other').toThrow(new TypeError(
+          'Property TestComponent.property is not writable',
+      ));
     });
     it('throws when reading non-readable property', async () => {
 
@@ -135,7 +138,9 @@ describe('component', () => {
       }
 
       const { component } = await bootstrap(TestComponent);
-      expect(() => (component as any).property).toThrow(TypeError);
+      expect(() => (component as any).property).toThrow(new TypeError(
+          'Property TestComponent.property is not readable',
+      ));
     });
     it('applies component definition', async () => {
 

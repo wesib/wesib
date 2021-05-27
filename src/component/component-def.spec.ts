@@ -1,5 +1,6 @@
+import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { NamespaceDef, QualifiedName } from '@frontmeans/namespace-aliaser';
-import { FeatureDef } from '../feature';
+import { FeatureContext, FeatureDef } from '../feature';
 import { ComponentDef, ComponentDef__symbol } from './component-def';
 import { ComponentClass, DefinitionContext, DefinitionSetup } from './definition';
 
@@ -131,8 +132,8 @@ describe('component', () => {
       });
       it('merges `feature`', async () => {
 
-        const setup1 = jest.fn();
-        const setup2 = jest.fn();
+        const setup1 = jest.fn<void, [FeatureContext]>();
+        const setup2 = jest.fn<void, [FeatureContext]>();
         const mergedFeature = ComponentDef.merge(
             { feature: { setup: setup1 } },
             { feature: { setup: setup2 } },
@@ -148,7 +149,7 @@ describe('component', () => {
       });
       it('retains `feature` when another one is absent', () => {
 
-        const setup1 = jest.fn();
+        const setup1 = jest.fn<void, [FeatureContext]>();
         const feature1: FeatureDef = { setup: setup1 };
 
         expect(ComponentDef.merge({ feature: feature1 }, {})).toEqual({ feature: feature1 });

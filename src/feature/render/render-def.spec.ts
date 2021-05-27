@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { ContextRegistry } from '@proc7ts/context-values';
 import { Supply } from '@proc7ts/supply';
 import { ComponentContext } from '../../component';

@@ -1,3 +1,4 @@
+import { describe, expect, it, jest } from '@jest/globals';
 import { noop } from '@proc7ts/primitives';
 import { Component, ComponentSlot } from '../../component';
 import { MockElement, testElement } from '../../testing';

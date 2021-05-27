@@ -1,3 +1,4 @@
+import { describe, expect, it } from '@jest/globals';
 import { ContextRegistry } from '@proc7ts/context-values';
 import { BootstrapWindow } from './bootstrap-window';
 

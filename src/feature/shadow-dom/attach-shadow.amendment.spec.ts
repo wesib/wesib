@@ -1,3 +1,5 @@
+import { beforeEach, describe, expect, it, jest } from '@jest/globals';
+import { Mock } from 'jest-mock';
 import { BootstrapContext } from '../../boot';
 import { Component, ComponentContext, ComponentSlot, ContentRoot } from '../../component';
 import { ComponentClass } from '../../component/definition';
@@ -5,13 +7,12 @@ import { MockElement, testElement } from '../../testing';
 import { AttachShadow, ShadowContentDef } from './attach-shadow.amendment';
 import { ShadowContentRoot } from './shadow-content-root';
 import { ShadowRootBuilder } from './shadow-root-builder';
-import Mock = jest.Mock;
 
 describe('feature/shadow-dom', () => {
   describe('@AttachShadow', () => {
 
     let testComponent: ComponentClass;
-    let attachShadowSpy: Mock;
+    let attachShadowSpy: Mock<ShadowContentRoot, []>;
     let shadowRoot: ShadowContentRoot;
     let element: any;
     let context: ComponentContext;

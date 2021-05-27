@@ -1,19 +1,20 @@
 import { NamespaceDef, newNamespaceAliaser } from '@frontmeans/namespace-aliaser';
+import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { ContextRegistry } from '@proc7ts/context-values';
 import { Class } from '@proc7ts/primitives';
 import { BootstrapContext } from '../../boot';
 import { BootstrapWindow, DefaultNamespaceAliaser } from '../../boot/globals';
 import { DefinitionContext__symbol } from '../../boot/impl/definition-context.symbol.impl';
+import { MockObject } from '../../testing';
 import { ComponentClass } from './component-class';
 import { CustomElements } from './custom-elements';
 import { DefinitionContext } from './definition-context';
-import Mocked = jest.Mocked;
 
 describe('component', () => {
   describe('CustomElements', () => {
 
     let context: BootstrapContext;
-    let mockCustomElements: Mocked<CustomElements>;
+    let mockCustomElements: MockObject<CustomElements>;
     let customElements: CustomElements;
     let TestComponent: ComponentClass;
     let elementType: Class;
@@ -26,7 +27,7 @@ describe('component', () => {
         define: jest.fn(),
         whenDefined: jest.fn(),
       };
-      const mockWindow: Mocked<BootstrapWindow> = {
+      const mockWindow: MockObject<BootstrapWindow> = {
         customElements: mockCustomElements,
       } as any;
 
@@ -167,7 +168,7 @@ describe('component', () => {
 
         customElements.define(TestComponent, elementType);
 
-        expect(mockCustomElements.define as jest.SpyInstance).toHaveBeenCalledWith(
+        expect(mockCustomElements.define).toHaveBeenCalledWith(
             'test-component',
             elementType,
             {

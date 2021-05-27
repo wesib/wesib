@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from '@jest/globals';
 import { ContextRegistry, ContextValues, SingleContextKey } from '@proc7ts/context-values';
 import { BootstrapContext } from './bootstrap-context';
 import { bootstrapDefault } from './bootstrap-default';

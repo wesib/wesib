@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { ContextKey__symbol, ContextRegistry, ContextSupply, ContextValues } from '@proc7ts/context-values';
 import { noop } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';

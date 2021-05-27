@@ -1,6 +1,7 @@
 import { drekContextOf } from '@frontmeans/drek';
 import { NamespaceAliaser, NamespaceDef, newNamespaceAliaser } from '@frontmeans/namespace-aliaser';
 import { immediateRenderScheduler } from '@frontmeans/render-scheduler';
+import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { Feature } from '../../feature';
 import { bootstrapComponents } from '../bootstrap';
 import { DefaultNamespaceAliaser } from './default-namespace-aliaser';

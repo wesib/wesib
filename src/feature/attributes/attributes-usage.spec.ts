@@ -1,25 +1,26 @@
+import { beforeEach, describe, expect, it, jest } from '@jest/globals';
+import { Mock } from 'jest-mock';
 import { BootstrapWindow } from '../../boot/globals';
 import { Component, ComponentContext, ComponentElement, ComponentSlot } from '../../component';
 import { ComponentClass, DefinitionContext } from '../../component/definition';
-import { MockElement, testDefinition, testElement } from '../../testing';
+import { MockElement, MockFn, MockObject, testDefinition, testElement } from '../../testing';
 import { Feature } from '../feature.amendment';
 import { AttributeChanged } from './attribute-changed.amendment';
+import { AttributeDef } from './attribute-def';
 import { AttributePath__root } from './attribute-path';
 import { AttributeRegistry } from './attribute-registry';
 import { Attribute } from './attribute.amendment';
-import Mock = jest.Mock;
-import Mocked = jest.Mocked;
 
 describe('feature/attributes', () => {
   describe('Attributes usage', () => {
 
-    let Observer: Mock<MutationObserver>;
-    let observer: Mocked<MutationObserver>;
+    let Observer: Mock<MutationObserver, [listener: (records: MutationRecord[]) => void]>;
+    let observer: MockObject<MutationObserver>;
     let observe: (records: MutationRecord[]) => void;
     let testComponent: ComponentClass;
     let element: any;
-    let attrChangedSpy: Mock;
-    let attr2ChangedSpy: Mock;
+    let attrChangedSpy: MockFn<AttributeDef.ChangeMethod>;
+    let attr2ChangedSpy: MockFn<AttributeDef.ChangeMethod>;
 
     beforeEach(() => {
       observer = {
