@@ -1,6 +1,6 @@
-import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { CustomHTMLElement } from '@frontmeans/dom-primitives';
 import { drekAppender, drekBuild, DrekFragment, drekLift } from '@frontmeans/drek';
+import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { onSupplied } from '@proc7ts/fun-events';
 import { Class } from '@proc7ts/primitives';
 import { Mock } from 'jest-mock';

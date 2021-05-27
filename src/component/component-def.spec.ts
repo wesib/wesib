@@ -1,5 +1,5 @@
-import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { NamespaceDef, QualifiedName } from '@frontmeans/namespace-aliaser';
+import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { FeatureContext, FeatureDef } from '../feature';
 import { ComponentDef, ComponentDef__symbol } from './component-def';
 import { ComponentClass, DefinitionContext, DefinitionSetup } from './definition';

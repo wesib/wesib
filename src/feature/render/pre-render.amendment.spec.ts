@@ -1,4 +1,3 @@
-import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { drekContextOf } from '@frontmeans/drek';
 import {
   immediateRenderScheduler,
@@ -6,6 +5,7 @@ import {
   RenderScheduleOptions,
   RenderScheduler,
 } from '@frontmeans/render-scheduler';
+import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { Mock } from 'jest-mock';
 import { DefaultPreRenderScheduler, DefaultRenderScheduler } from '../../boot/globals';
 import { Component, ComponentContext, ComponentSlot } from '../../component';
