@@ -7,11 +7,11 @@ import {
 } from '@frontmeans/render-scheduler';
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { Mock } from 'jest-mock';
-import { Component } from '../../component';
-import { Feature, FeatureDef } from '../../feature';
-import { MockElement } from '../../testing';
-import { bootstrapComponents } from '../bootstrap';
-import { BootstrapContext } from '../bootstrap-context';
+import { BootstrapContext } from '../boot';
+import { bootstrapComponents } from '../bootstrap-components';
+import { Component } from '../component';
+import { Feature, FeatureDef } from '../feature';
+import { MockElement } from '../testing';
 import { BootstrapWindow } from './bootstrap-window';
 import { DefaultRenderScheduler } from './default-render-scheduler';
 

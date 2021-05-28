@@ -1,9 +1,10 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { Mock } from 'jest-mock';
-import { BootstrapWindow } from '../../boot/globals';
 import { Component, ComponentContext, ComponentElement, ComponentSlot } from '../../component';
 import { ComponentClass, DefinitionContext } from '../../component/definition';
-import { MockElement, MockFn, MockObject, testDefinition, testElement } from '../../testing';
+import { BootstrapWindow } from '../../globals';
+import { MockFn, MockObject } from '../../spec';
+import { MockElement, testDefinition, testElement } from '../../testing';
 import { Feature } from '../feature.amendment';
 import { AttributeChanged } from './attribute-changed.amendment';
 import { AttributeDef } from './attribute-def';

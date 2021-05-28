@@ -8,8 +8,8 @@ import {
 } from '@frontmeans/render-scheduler';
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { Mock } from 'jest-mock';
-import { DefaultRenderScheduler } from '../../boot/globals';
 import { Component, ComponentContext, ComponentSlot } from '../../component';
+import { DefaultRenderScheduler } from '../../globals';
 import { MockElement, testElement } from '../../testing';
 import { DomProperty, domPropertyPathTo } from '../dom-properties';
 import { ComponentState } from '../state';

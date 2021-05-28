@@ -1,5 +1,5 @@
 import { describe, expect, it, jest } from '@jest/globals';
-import { bootstrapComponents } from '../bootstrap';
+import { bootstrapComponents } from '../bootstrap-components';
 import { DefaultPreRenderScheduler } from './default-pre-render-scheduler';
 
 describe('boot', () => {

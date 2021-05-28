@@ -1,5 +1,5 @@
 import { Class } from '@proc7ts/primitives';
-import { bootstrapComponents } from '../boot/bootstrap';
+import { bootstrapComponents } from '../bootstrap-components';
 import { ComponentClass, CustomElements } from '../component/definition';
 import { FeatureDef, FeatureDef__symbol } from '../feature';
 

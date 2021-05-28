@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from '@jest/globals';
 import { SingleContextKey } from '@proc7ts/context-values';
 import { noop } from '@proc7ts/primitives';
-import { bootstrapComponents } from '../boot/bootstrap';
+import { bootstrapComponents } from '../bootstrap-components';
 import { ComponentContext } from './component-context';
 import { ComponentMember } from './component-member.amendment';
 import { ComponentClass, DefinitionContext } from './definition';

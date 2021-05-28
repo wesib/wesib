@@ -3,11 +3,12 @@ import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { SingleContextKey } from '@proc7ts/context-values';
 import { asis, Class, noop } from '@proc7ts/primitives';
 import { Mock, SpyInstance } from 'jest-mock';
-import { Component, ComponentDef, ComponentDef__symbol } from '../../component';
-import { ComponentClass, CustomElements, DefinitionContext } from '../../component/definition';
-import { FeatureContext, FeatureDef } from '../../feature';
-import { BootstrapContext } from '../bootstrap-context';
-import { DefaultNamespaceAliaser } from '../globals';
+import { BootstrapContext } from './boot';
+import { bootstrapComponents } from './bootstrap-components';
+import { Component, ComponentDef, ComponentDef__symbol } from './component';
+import { ComponentClass, CustomElements, DefinitionContext } from './component/definition';
+import { FeatureContext, FeatureDef } from './feature';
+import { DefaultNamespaceAliaser } from './globals';
 import {
   BootstrapContextRegistry,
   ComponentContextRegistry,
@@ -15,9 +16,8 @@ import {
   ElementBuilder,
   PerComponentRegistry,
   PerDefinitionRegistry,
-} from '../impl';
-import { DefinitionContext__symbol } from '../impl/definition-context.symbol.impl';
-import { bootstrapComponents } from './bootstrap-components';
+} from './impl';
+import { DefinitionContext__symbol } from './impl/definition-context.symbol';
 
 describe('boot', () => {
 

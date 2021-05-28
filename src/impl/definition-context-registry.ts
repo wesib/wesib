@@ -1,6 +1,6 @@
 import { ContextRef, ContextRegistry, SingleContextKey } from '@proc7ts/context-values';
-import { DefinitionContext } from '../../component/definition';
-import { bootstrapDefault } from '../bootstrap-default';
+import { bootstrapDefault } from '../boot';
+import { DefinitionContext } from '../component/definition';
 
 /**
  * @internal

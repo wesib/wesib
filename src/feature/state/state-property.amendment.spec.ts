@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { StatePath } from '@proc7ts/fun-events';
 import { Mock } from 'jest-mock';
-import { bootstrapComponents } from '../../boot/bootstrap';
+import { bootstrapComponents } from '../../bootstrap-components';
 import { ComponentContext } from '../../component';
 import { ComponentState } from './component-state';
 import { statePropertyPathTo } from './state-property-path';

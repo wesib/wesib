@@ -1,8 +1,8 @@
 import { isQualifiedName, QualifiedName } from '@frontmeans/namespace-aliaser';
 import { amend } from '@proc7ts/amend';
 import { mergeFunctions } from '@proc7ts/primitives';
-import { MetaAccessor } from '../common';
 import { FeatureDef } from '../feature';
+import { MetaAccessor } from '../impl/util';
 import { ComponentClass, DefinitionContext, DefinitionSetup, ElementDef } from './definition';
 
 /**

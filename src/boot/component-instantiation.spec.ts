@@ -4,10 +4,10 @@ import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { onSupplied } from '@proc7ts/fun-events';
 import { Class } from '@proc7ts/primitives';
 import { Mock } from 'jest-mock';
-import { Component, ComponentContext, ComponentSlot } from '../../component';
-import { ComponentClass, DefinitionContext } from '../../component/definition';
-import { Feature } from '../../feature';
-import { MockElement, testElement } from '../../testing';
+import { Component, ComponentContext, ComponentSlot } from '../component';
+import { ComponentClass, DefinitionContext } from '../component/definition';
+import { Feature } from '../feature';
+import { MockElement, testElement } from '../testing';
 
 describe('component instantiation', () => {
   describe('Life cycle', () => {

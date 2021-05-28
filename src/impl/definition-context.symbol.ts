@@ -1,5 +1,5 @@
 import { hasOwnProperty } from '@proc7ts/primitives';
-import { ComponentClass, DefinitionContext } from '../../component/definition';
+import { ComponentClass, DefinitionContext } from '../component/definition';
 
 /**
  * @internal

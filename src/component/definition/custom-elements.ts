@@ -2,8 +2,8 @@ import { html__naming, isQualifiedName, QualifiedName } from '@frontmeans/namesp
 import { ContextKey, ContextKey__symbol, SingleContextKey } from '@proc7ts/context-values';
 import { Class, hasOwnProperty, newPromiseResolver, PromiseResolver } from '@proc7ts/primitives';
 import { BootstrapContext, bootstrapDefault } from '../../boot';
-import { BootstrapWindow, DefaultNamespaceAliaser } from '../../boot/globals';
-import { definitionContextOf } from '../../boot/impl/definition-context.symbol.impl';
+import { BootstrapWindow, DefaultNamespaceAliaser } from '../../globals';
+import { definitionContextOf } from '../../impl/definition-context.symbol';
 import { ComponentClass } from './component-class';
 
 /**

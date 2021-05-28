@@ -2,18 +2,18 @@ import { ContextValues, ContextValueSpec } from '@proc7ts/context-values';
 import { mapOn_, onceOn, OnEvent, trackValue, translateOn, ValueTracker } from '@proc7ts/fun-events';
 import { Class, valueProvider } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
-import { ComponentContext, ComponentDef, ComponentElement, ComponentSlot } from '../../component';
-import { DefinitionContext, DefinitionSetup, ElementDef, ElementNaming } from '../../component/definition';
-import { BootstrapContext } from '../bootstrap-context';
+import { BootstrapContext } from '../boot';
+import { ComponentContext, ComponentDef, ComponentElement, ComponentSlot } from '../component';
+import { DefinitionContext, DefinitionSetup, ElementDef, ElementNaming } from '../component/definition';
 import { DocumentRenderKit } from '../globals';
-import { ComponentContextRegistry, PerComponentRegistry } from './component-context-registry.impl';
-import { ComponentContext$Mounted } from './component-context.impl';
-import { customElementType } from './custom-element.impl';
-import { DefinitionContextRegistry, PerDefinitionRegistry } from './definition-context-registry.impl';
-import { ComponentDefinitionClass, DefinitionContext__symbol } from './definition-context.symbol.impl';
-import { ElementBuilder } from './element-builder.impl';
-import { postDefSetup } from './post-def-setup.impl';
-import { WhenComponent } from './when-component.impl';
+import { ComponentContext$Mounted } from './component-context';
+import { ComponentContextRegistry, PerComponentRegistry } from './component-context-registry';
+import { customElementType } from './custom-element';
+import { DefinitionContextRegistry, PerDefinitionRegistry } from './definition-context-registry';
+import { ComponentDefinitionClass, DefinitionContext__symbol } from './definition-context.symbol';
+import { ElementBuilder } from './element-builder';
+import { postDefSetup } from './post-def-setup';
+import { WhenComponent } from './when-component';
 
 /**
  * @internal

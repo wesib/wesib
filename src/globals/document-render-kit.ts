@@ -1,8 +1,7 @@
 import { nodeDocument } from '@frontmeans/dom-primitives';
 import { DrekContext, drekContextOf } from '@frontmeans/drek';
 import { ContextRef, SingleContextKey } from '@proc7ts/context-values';
-import { BootstrapContext } from '../bootstrap-context';
-import { bootstrapDefault } from '../bootstrap-default';
+import { BootstrapContext, bootstrapDefault } from '../boot';
 import { DefaultNamespaceAliaser } from './default-namespace-aliaser';
 import { DefaultRenderScheduler } from './default-render-scheduler';
 

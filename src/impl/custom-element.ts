@@ -1,9 +1,9 @@
 import { CustomHTMLElementClass } from '@frontmeans/dom-primitives';
 import { Class, noop } from '@proc7ts/primitives';
-import { ComponentElement, ComponentSlot } from '../../component';
+import { ComponentElement, ComponentSlot } from '../component';
 import { DocumentRenderKit } from '../globals';
-import { ComponentContext$ } from './component-context.impl';
-import { DefinitionContext$ } from './definition-context.impl';
+import { ComponentContext$ } from './component-context';
+import { DefinitionContext$ } from './definition-context';
 
 class ComponentContext$Custom<T extends object> extends ComponentContext$<T> {
 

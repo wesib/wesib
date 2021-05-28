@@ -1,8 +1,8 @@
 import { OnEvent, onPromise } from '@proc7ts/fun-events';
 import { hasOwnProperty } from '@proc7ts/primitives';
-import { ComponentClass, CustomElements, DefinitionContext } from '../../component/definition';
-import { BootstrapContext } from '../bootstrap-context';
-import { definitionContextOf } from './definition-context.symbol.impl';
+import { BootstrapContext } from '../boot';
+import { ComponentClass, CustomElements, DefinitionContext } from '../component/definition';
+import { definitionContextOf } from './definition-context.symbol';
 
 /**
  * @internal
