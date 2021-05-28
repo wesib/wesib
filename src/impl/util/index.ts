@@ -1,2 +1,2 @@
-export * from './init-method.impl';
+export * from './init-method';
 export * from './meta-accessor';
