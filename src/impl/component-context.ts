@@ -1,11 +1,11 @@
 import { AfterEvent, onceOn, OnEvent } from '@proc7ts/fun-events';
 import { valueProvider } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
-import { ComponentContext, ComponentContext__symbol, ComponentInstance } from '../../component';
-import { ComponentClass } from '../../component/definition';
-import { newComponent } from '../../component/definition/component.impl';
-import { ComponentStatus } from './component-status.impl';
-import { DefinitionContext$ } from './definition-context.impl';
+import { ComponentContext, ComponentContext__symbol, ComponentInstance } from '../component';
+import { ComponentClass } from '../component/definition';
+import { newComponent } from '../component/definition/component.impl';
+import { ComponentStatus } from './component-status';
+import { DefinitionContext$ } from './definition-context';
 
 /**
  * @internal

@@ -5,7 +5,7 @@ import { Supply } from '@proc7ts/supply';
 import { ComponentContext } from '../component';
 import { ComponentClass, DefinitionContext, DefinitionSetup } from '../component/definition';
 import { FeatureContext } from '../feature';
-import { BootstrapContext } from './index';
+import { BootstrapContext } from './bootstrap-context';
 
 /**
  * Bootstrap context setup.

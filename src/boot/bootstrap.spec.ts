@@ -4,13 +4,13 @@ import { afterSupplied, afterThe } from '@proc7ts/fun-events';
 import { Class, noop } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
 import { Mock } from 'jest-mock';
-import { Component, ComponentContext, ComponentSlot } from '../../component';
-import { CustomElements, DefinitionContext } from '../../component/definition';
-import { Feature, FeatureContext, FeatureDef, FeatureRef, FeatureStatus } from '../../feature';
-import { MockElement, MockObject } from '../../testing';
-import { BootstrapContext } from '../bootstrap-context';
-import { BootstrapSetup } from '../bootstrap-setup';
-import { bootstrapComponents } from './bootstrap-components';
+import { bootstrapComponents } from '../bootstrap-components';
+import { Component, ComponentContext, ComponentSlot } from '../component';
+import { CustomElements, DefinitionContext } from '../component/definition';
+import { Feature, FeatureContext, FeatureDef, FeatureRef, FeatureStatus } from '../feature';
+import { MockObject } from '../spec';
+import { MockElement } from '../testing';
+import { BootstrapContext, BootstrapSetup } from './index';
 
 describe('boot', () => {
 

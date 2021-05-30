@@ -1,7 +1,7 @@
 import { ContextModule } from '@proc7ts/context-values/updatable';
 import { valueProvider } from '@proc7ts/primitives';
-import { ElementBuilder } from '../../boot/impl';
 import { ComponentClass, CustomElements } from '../../component/definition';
+import { ElementBuilder } from '../../impl';
 import { BootstrapWorkbench, componentDefStage } from './bootstrap-workbench.impl';
 
 /**

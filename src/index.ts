@@ -3,9 +3,8 @@
  * @module Module @wesib/wesib
  */
 export * from './boot';
-export * from './boot/bootstrap';
-export * from './boot/globals';
-export * from './common';
+export * from './bootstrap-components';
+export * from './globals';
 export * from './component';
 export * from './component/definition';
 export * from './feature';
@@ -14,4 +13,3 @@ export * from './feature/dom-properties';
 export * from './feature/render';
 export * from './feature/shadow-dom';
 export * from './feature/state';
-export * from './wesib.ns';

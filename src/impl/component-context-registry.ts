@@ -1,6 +1,6 @@
 import { ContextRef, ContextRegistry, SingleContextKey } from '@proc7ts/context-values';
-import { ComponentContext } from '../../component';
-import { bootstrapDefault } from '../bootstrap-default';
+import { bootstrapDefault } from '../boot';
+import { ComponentContext } from '../component';
 
 export type PerComponentRegistry = ComponentContextRegistry;
 

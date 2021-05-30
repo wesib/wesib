@@ -5,7 +5,7 @@ import {
   ContextValues,
   SingleContextKey,
 } from '@proc7ts/context-values';
-import { BootstrapContext } from '../bootstrap-context';
+import { BootstrapContext } from '../boot';
 
 const BootstrapContextRegistry__key = (
     /*#__PURE__*/ new SingleContextKey<BootstrapContextRegistry>('bootstrap-context-registry')

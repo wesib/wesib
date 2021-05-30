@@ -1,9 +1,9 @@
 import { CustomHTMLElementClass } from '@frontmeans/dom-primitives';
 import { ContextRef, SingleContextKey } from '@proc7ts/context-values';
 import { mergeFunctions } from '@proc7ts/primitives';
-import { BootstrapWindow } from '../../boot/globals';
 import { ComponentContext, ComponentElement, ComponentSlot } from '../../component';
 import { DefinitionContext } from '../../component/definition';
+import { BootstrapWindow } from '../../globals';
 import { AttributeChangedCallback, AttributeDescriptor } from './attribute-descriptor';
 
 /**

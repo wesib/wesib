@@ -1,9 +1,8 @@
 import { amend } from '@proc7ts/amend';
 import { Class, elementOrArray, extendSetOfElements, setOfElements } from '@proc7ts/primitives';
 import { BootstrapSetup } from '../boot';
-import { MetaAccessor } from '../common';
+import { mergeInitMethods, MetaAccessor } from '../impl/util';
 import { FeatureContext } from './feature-context';
-import { mergeInitMethods } from './init-method.impl';
 
 /**
  * A key of a property holding a feature definition within its class constructor.

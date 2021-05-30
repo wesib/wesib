@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { valueProvider } from '@proc7ts/primitives';
 import { Component, ComponentContext, ComponentContext__symbol } from '../../component';
-import { MockObject } from '../../testing';
+import { MockObject } from '../../spec';
 import { Attribute } from './attribute.amendment';
 
 describe('feature/attributes', () => {

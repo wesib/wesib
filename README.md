@@ -142,9 +142,9 @@ export class MyComponent {
 }
 ```
 
-IoC container implementation is based on [context-values].
+IoC container implementation is based on [@proc7ts/context-values].
 
-[context-values]: https://npmjs.com/package/context-values
+[@proc7ts/context-values]: https://npmjs.com/package/@proc7ts/context-values
 
 
 Features

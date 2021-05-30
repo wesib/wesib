@@ -2,7 +2,7 @@ import { RenderScheduler } from '@frontmeans/render-scheduler';
 import { ContextValues, ContextValueSlot } from '@proc7ts/context-values';
 import { ContextUpKey } from '@proc7ts/context-values/updatable';
 import { AfterEvent, afterThe, digAfter } from '@proc7ts/fun-events';
-import { BootstrapContext } from '../bootstrap-context';
+import { BootstrapContext } from '../boot';
 import { BootstrapWindow } from './bootstrap-window';
 
 /**

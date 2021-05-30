@@ -1,7 +1,7 @@
 import { html__naming } from '@frontmeans/namespace-aliaser';
 import { ContextKey, SingleContextKey } from '@proc7ts/context-values';
 import { BootstrapContext, bootstrapDefault } from '../../boot';
-import { BootstrapWindow, DefaultNamespaceAliaser } from '../../boot/globals';
+import { BootstrapWindow, DefaultNamespaceAliaser } from '../../globals';
 import { ComponentDef } from '../component-def';
 import { ComponentClass } from './component-class';
 import { ElementDef } from './element-def';

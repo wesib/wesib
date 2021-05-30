@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { Class } from '@proc7ts/primitives';
 import { BootstrapContext } from '../../boot';
-import { bootstrapComponents } from '../../boot/bootstrap';
-import { ElementBuilder } from '../../boot/impl';
+import { bootstrapComponents } from '../../bootstrap-components';
 import { ComponentDef, ComponentDef__symbol } from '../../component';
 import { ComponentClass, CustomElements } from '../../component/definition';
-import { MockObject } from '../../testing';
+import { ElementBuilder } from '../../impl';
+import { MockObject } from '../../spec';
 import { Feature } from '../feature.amendment';
 
 describe('feature load', () => {

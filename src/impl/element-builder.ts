@@ -1,10 +1,9 @@
 import { SingleContextKey, SingleContextRef } from '@proc7ts/context-values';
 import { EventEmitter } from '@proc7ts/fun-events';
-import { ComponentContext } from '../../component';
-import { ComponentClass, DefinitionContext } from '../../component/definition';
-import { BootstrapContext } from '../bootstrap-context';
-import { bootstrapDefault } from '../bootstrap-default';
-import { DefinitionContext$ } from './definition-context.impl';
+import { BootstrapContext, bootstrapDefault } from '../boot';
+import { ComponentContext } from '../component';
+import { ComponentClass, DefinitionContext } from '../component/definition';
+import { DefinitionContext$ } from './definition-context';
 
 /**
  * @internal

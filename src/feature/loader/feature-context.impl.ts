@@ -4,15 +4,15 @@ import { onceOn, OnEvent, supplyOn, valueOn_ } from '@proc7ts/fun-events';
 import { Class } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
 import { BootstrapContext } from '../../boot';
+import { ComponentContext } from '../../component';
+import { ComponentClass, DefinitionContext, DefinitionSetup } from '../../component/definition';
 import {
   BootstrapContextRegistry,
   ElementBuilder,
   onPostDefSetup,
   PerComponentRegistry,
   PerDefinitionRegistry,
-} from '../../boot/impl';
-import { ComponentContext } from '../../component';
-import { ComponentClass, DefinitionContext, DefinitionSetup } from '../../component/definition';
+} from '../../impl';
 import { FeatureContext } from '../feature-context';
 import { ComponentRegistry } from './component-registry.impl';
 

@@ -1,8 +1,8 @@
 import { EventEmitter, onAny, OnEvent, onEventBy, supplyOn, trackValue, valueOn } from '@proc7ts/fun-events';
 import { AbstractClass, asis, hasOwnProperty, superClassOf } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
-import { ComponentDef__symbol } from '../../component';
-import { ComponentClass, DefinitionSetup } from '../../component/definition';
+import { ComponentDef__symbol } from '../component';
+import { ComponentClass, DefinitionSetup } from '../component/definition';
 
 /**
  * @internal

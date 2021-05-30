@@ -1,5 +1,5 @@
 import { AfterEvent, EventEmitter, mapAfter_, OnEvent, onEventBy, trackValue } from '@proc7ts/fun-events';
-import { ComponentContext } from '../../component';
+import { ComponentContext } from '../component';
 
 export class WhenComponent<T extends object> {
 

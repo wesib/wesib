@@ -5,13 +5,14 @@ import { ContextKey, SingleContextKey } from '@proc7ts/context-values';
 import { Class, noop } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
 import { Mock } from 'jest-mock';
-import { ComponentContext, ComponentDef, ComponentDef__symbol, ComponentSlot } from '../../component';
-import { ComponentClass, DefinitionContext } from '../../component/definition';
-import { MockElement, MockObject } from '../../testing';
-import { BootstrapContext } from '../bootstrap-context';
+import { BootstrapContext } from '../boot';
+import { ComponentContext, ComponentDef, ComponentDef__symbol, ComponentSlot } from '../component';
+import { ComponentClass, DefinitionContext } from '../component/definition';
 import { DefaultNamespaceAliaser } from '../globals';
-import { BootstrapContextRegistry } from './bootstrap-context-registry.impl';
-import { ElementBuilder } from './element-builder.impl';
+import { MockObject } from '../spec';
+import { MockElement } from '../testing';
+import { BootstrapContextRegistry } from './bootstrap-context-registry';
+import { ElementBuilder } from './element-builder';
 
 describe('boot', () => {
   describe('ElementBuilder', () => {

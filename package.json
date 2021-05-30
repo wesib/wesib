@@ -24,7 +24,6 @@
     "./testing": "./dist/wesib.testing.js"
   },
   "peerDependencies": {
-    "@frontmeans/namespace-aliaser": "^2.4.0",
     "@proc7ts/context-values": "^6.2.0",
     "@proc7ts/fun-events": "^10.5.0"
   },
@@ -33,6 +32,7 @@
     "@frontmeans/dom-primitives": "^1.1.0",
     "@frontmeans/drek": "^1.2.0",
     "@frontmeans/httongue": "^2.3.0",
+    "@frontmeans/namespace-aliaser": "^2.5.0",
     "@frontmeans/render-scheduler": "^1.7.0",
     "@proc7ts/amend": "^1.0.0",
     "@proc7ts/primitives": "^3.0.0",
@@ -41,8 +41,7 @@
     "@proc7ts/workbench": "^1.2.0"
   },
   "devDependencies": {
-    "@frontmeans/namespace-aliaser": "^2.4.0",
-    "@jest/globals": "^27.0.1",
+    "@jest/globals": "^27.0.3",
     "@proc7ts/context-values": "^6.2.0",
     "@proc7ts/fun-events": "^10.5.0",
     "@rollup/plugin-node-resolve": "^13.0.0",
@@ -54,14 +53,14 @@
     "eslint": "^7.27.0",
     "eslint-plugin-jest": "^24.3.6",
     "gh-pages": "^3.2.0",
-    "jest": "^27.0.1",
+    "jest": "^27.0.3",
     "jest-junit": "^12.1.0",
-    "jest-mock": "^27.0.1",
-    "rollup": "^2.50.2",
+    "jest-mock": "^27.0.3",
+    "rollup": "^2.50.4",
     "rollup-plugin-flat-dts": "^1.2.2",
     "rollup-plugin-sourcemaps": "^0.6.3",
     "rollup-plugin-typescript2": "^0.30.0",
-    "run-z": "^1.7.2",
+    "run-z": "^1.8.0",
     "shx": "^0.3.3",
     "ts-jest": "^27.0.1",
     "tslib": "^2.2.0",
@@ -76,7 +75,7 @@
     "doc": "run-z +z --then typedoc",
     "doc:publish": "run-z doc --then gh-pages --dist target/typedoc --dotfiles",
     "lint": "run-z +z --then eslint . --ext .js,.ts",
-    "test": "run-z +z --then jest",
-    "z": "run-z +build,+doc,+lint,+test"
+    "test": "run-z +z env:NODE_OPTIONS='--experimental-vm-modules --no-warnings' --then jest",
+    "z": "run-z +cmd:rollup,+cmd:typedoc,+cmd:eslint,+cmd:jest"
   }
 }
