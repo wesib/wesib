@@ -14,7 +14,7 @@
     "noEmitHelpers": true,
     "lib": [
       "DOM",
-      "ES2019",
+      "ES2019"
     ],
     "types": [],
     "outDir": "target/js",
