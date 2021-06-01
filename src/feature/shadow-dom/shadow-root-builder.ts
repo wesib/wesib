@@ -57,4 +57,3 @@ function shadowRootOf(element: Element, init: ShadowRootInit): ShadowRoot | unde
 
   return; // Unable to attach shadow root.
 }
-

@@ -31,4 +31,3 @@ export const featureInitStage = (/*#__PURE__*/ new WorkStage('feature init', { a
  * @internal
  */
 export const componentDefStage = (/*#__PURE__*/ new WorkStage('component definition', { after: featureInitStage }));
-
