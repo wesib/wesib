@@ -1,4 +1,4 @@
-import { ContextRegistry, ContextValues, ContextValueSpec } from '@proc7ts/context-values';
+import { ContextValues, ContextValueSpec } from '@proc7ts/context-values';
 import { mapOn_, onceOn, OnEvent, trackValue, translateOn, ValueTracker } from '@proc7ts/fun-events';
 import { Class, valueProvider } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
@@ -46,7 +46,7 @@ export class DefinitionContext$<T extends object> extends DefinitionContext<T> {
 
     this.get = definitionContextRegistry.newValues().get;
 
-    const parentPerComponentRegistry = new ContextRegistry(_bsContext.get(PerComponentRegistry).seeds());
+    const parentPerComponentRegistry = _bsContext.get(PerComponentRegistry).append(seedKey => this.get(seedKey));
     this._perComponentRegistry = new ComponentContextRegistry(parentPerComponentRegistry.seeds());
 
     this.whenReady = this._whenReady.do(mapOn_(valueProvider(this)), onceOn);
