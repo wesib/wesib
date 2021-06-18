@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Options | Wesib: Web Components Building Blocks</title>
+	<title>ComponentDef | Wesib: Web Components Building Blocks</title>
 	<meta name="description" content="Documentation for Wesib: Web Components Building Blocks">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -58,13 +58,10 @@
 					<a href="../modules/module__wesib_wesib.html">Module @wesib/wesib</a>
 				</li>
 				<li>
-					<a href="../modules/module__wesib_wesib.componentdef.html">ComponentDef</a>
-				</li>
-				<li>
-					<a href="module__wesib_wesib.componentdef.options.html">Options</a>
+					<a href="module__wesib_wesib.componentdef.html">ComponentDef</a>
 				</li>
 			</ul>
-			<h1>Interface Options&lt;T&gt;</h1>
+			<h1>Interface ComponentDef&lt;T&gt;</h1>
 		</div>
 	</div>
 </header>
@@ -74,8 +71,9 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Component definition options.</p>
+						<p>Component definition.</p>
 					</div>
+					<p>A custom element class will be created for each registered component in accordance to this definition.</p>
 				</div>
 			</section>
 			<section class="tsd-panel tsd-type-parameters">
@@ -83,6 +81,11 @@
 				<ul class="tsd-type-parameters">
 					<li>
 						<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span> = <span class="tsd-signature-type">any</span></h4>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>A type of component.</p>
+							</div>
+						</div>
 					</li>
 				</ul>
 			</section>
@@ -90,7 +93,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">Options</span>
+						<span class="target">ComponentDef</span>
 					</li>
 				</ul>
 			</section>
@@ -101,17 +104,16 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="module__wesib_wesib.componentdef.options.html#_componentdef__symbol_" class="tsd-kind-icon">[<wbr>Component<wbr>Def__symbol]</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="module__wesib_wesib.componentdef.options.html#extend" class="tsd-kind-icon">extend</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="module__wesib_wesib.componentdef.options.html#feature" class="tsd-kind-icon">feature</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="module__wesib_wesib.componentdef.options.html#name" class="tsd-kind-icon">name</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="module__wesib_wesib.componentdef.html#extend" class="tsd-kind-icon">extend</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="module__wesib_wesib.componentdef.html#feature" class="tsd-kind-icon">feature</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="module__wesib_wesib.componentdef.html#name" class="tsd-kind-icon">name</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="module__wesib_wesib.componentdef.options.html#define" class="tsd-kind-icon">define</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="module__wesib_wesib.componentdef.options.html#setup" class="tsd-kind-icon">setup</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="module__wesib_wesib.componentdef.html#define" class="tsd-kind-icon">define</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="module__wesib_wesib.componentdef.html#setup" class="tsd-kind-icon">setup</a></li>
 							</ul>
 						</section>
 					</div>
@@ -120,22 +122,12 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="_componentdef__symbol_" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> [<wbr>Component<wbr>Def__symbol]</h3>
-					<div class="tsd-signature tsd-kind-icon">[<wbr>Component<wbr>Def__symbol]<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/73979ba/src/component/component-def.ts#L48">wesib/wesib/src/component/component-def.ts:48</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="extend" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> extend</h3>
 					<div class="tsd-signature tsd-kind-icon">extend<span class="tsd-signature-symbol">:</span> <a href="module__wesib_wesib.elementdef.extend.html" class="tsd-signature-type" data-tsd-kind="Interface">Extend</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/73979ba/src/component/component-def.ts#L64">wesib/wesib/src/component/component-def.ts:64</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/683225b/src/component/component-def.ts#L39">wesib/wesib/src/component/component-def.ts:39</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -147,10 +139,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="feature" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> feature</h3>
-					<div class="tsd-signature tsd-kind-icon">feature<span class="tsd-signature-symbol">:</span> <a href="module__wesib_wesib.featuredef.options.html" class="tsd-signature-type" data-tsd-kind="Interface">Options</a></div>
+					<div class="tsd-signature tsd-kind-icon">feature<span class="tsd-signature-symbol">:</span> <a href="../modules/module__wesib_wesib.html#featuredef-1" class="tsd-signature-type" data-tsd-kind="Variable">FeatureDef</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/73979ba/src/component/component-def.ts#L69">wesib/wesib/src/component/component-def.ts:69</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/683225b/src/component/component-def.ts#L44">wesib/wesib/src/component/component-def.ts:44</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -165,7 +157,7 @@
 					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">QualifiedName</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/wesib/wesib/blob/73979ba/src/component/component-def.ts#L59">wesib/wesib/src/component/component-def.ts:59</a></li>
+							<li>Defined in <a href="https://github.com/wesib/wesib/blob/683225b/src/component/component-def.ts#L34">wesib/wesib/src/component/component-def.ts:34</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -191,7 +183,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/73979ba/src/component/component-def.ts#L87">wesib/wesib/src/component/component-def.ts:87</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/683225b/src/component/component-def.ts#L62">wesib/wesib/src/component/component-def.ts:62</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -223,7 +215,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/wesib/wesib/blob/73979ba/src/component/component-def.ts#L78">wesib/wesib/src/component/component-def.ts:78</a></li>
+									<li>Defined in <a href="https://github.com/wesib/wesib/blob/683225b/src/component/component-def.ts#L53">wesib/wesib/src/component/component-def.ts:53</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -253,38 +245,35 @@
 					<li class=" ">
 						<a href="../modules.html">Modules</a>
 					</li>
+					<li class="current tsd-kind-module">
+						<a href="../modules/module__wesib_wesib.html">Module @wesib/wesib</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/module__wesib_wesib_testing.html">Module @wesib/wesib/testing</a>
+					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-interface tsd-parent-kind-namespace tsd-has-type-parameter">
-						<a href="module__wesib_wesib.componentdef.factory.html" class="tsd-kind-icon">Factory</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-namespace tsd-has-type-parameter">
-						<a href="module__wesib_wesib.componentdef.holder.html" class="tsd-kind-icon">Holder</a>
-					</li>
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-namespace tsd-has-type-parameter">
-						<a href="module__wesib_wesib.componentdef.options.html" class="tsd-kind-icon">Options</a>
+					<li class="current tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter">
+						<a href="module__wesib_wesib.componentdef.html" class="tsd-kind-icon">Component<wbr>Def</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="module__wesib_wesib.componentdef.options.html#_componentdef__symbol_" class="tsd-kind-icon">[<wbr>Component<wbr>Def__symbol]</a>
+								<a href="module__wesib_wesib.componentdef.html#extend" class="tsd-kind-icon">extend</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="module__wesib_wesib.componentdef.options.html#extend" class="tsd-kind-icon">extend</a>
+								<a href="module__wesib_wesib.componentdef.html#feature" class="tsd-kind-icon">feature</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="module__wesib_wesib.componentdef.options.html#feature" class="tsd-kind-icon">feature</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="module__wesib_wesib.componentdef.options.html#name" class="tsd-kind-icon">name</a>
+								<a href="module__wesib_wesib.componentdef.html#name" class="tsd-kind-icon">name</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
-								<a href="module__wesib_wesib.componentdef.options.html#define" class="tsd-kind-icon">define</a>
+								<a href="module__wesib_wesib.componentdef.html#define" class="tsd-kind-icon">define</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
-								<a href="module__wesib_wesib.componentdef.options.html#setup" class="tsd-kind-icon">setup</a>
+								<a href="module__wesib_wesib.componentdef.html#setup" class="tsd-kind-icon">setup</a>
 							</li>
 						</ul>
 					</li>
