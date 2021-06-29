@@ -37,7 +37,7 @@ export const ShadowRootBuilder: CxEntry<ShadowRootBuilder> = {
       delegated = evaluated ? evaluated.asset : attachShadow;
     });
 
-    return delegated;
+    return (context, init) => delegated(context, init);
   })),
 };
 
