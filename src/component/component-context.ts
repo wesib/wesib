@@ -1,9 +1,7 @@
 import { OnDomEvent } from '@frontmeans/dom-events';
-import { ContextKey, ContextKey__symbol, ContextValues } from '@proc7ts/context-values';
-import { AfterEvent, OnEvent, StatePath } from '@proc7ts/fun-events';
+import { cxSingle, CxValues } from '@proc7ts/context-values';
+import { AfterEvent, OnEvent } from '@proc7ts/fun-events';
 import { Supply, SupplyPeer } from '@proc7ts/supply';
-import { ComponentContext__key } from './component-context.key.impl';
-import { ComponentEventDispatcher__key } from './component-event-dispatcher.key.impl';
 import { ContentRoot } from './content-root';
 import { ComponentClass } from './definition';
 import { StateUpdater } from './state-updater';
@@ -26,42 +24,19 @@ export const ComponentContext__symbol = (/*#__PURE__*/ Symbol('ComponentContext'
  * @category Core
  * @typeParam T - A type of component.
  */
-export abstract class ComponentContext<T extends object = any> extends ContextValues implements SupplyPeer {
-
-  /**
-   * A key of component context value containing the component context instance itself.
-   */
-  static get [ContextKey__symbol](): ContextKey<ComponentContext> {
-    return ComponentContext__key;
-  }
-
-  /**
-   * Extracts component context from the given component instance.
-   *
-   * @param component - Target component instance.
-   *
-   * @return Component context reference returned by {@link ComponentContext__symbol} method.
-   *
-   * @throws TypeError  When the given `component` does not contain component context reference.
-   */
-  static of<T extends object>(component: ComponentInstance<T>): ComponentContext<T> {
-    if (typeof component[ComponentContext__symbol] !== 'function') {
-      throw new TypeError(`No component context found in ${String(component)}`);
-    }
-    return component[ComponentContext__symbol]!();
-  }
+export interface ComponentContext<T extends object = any> extends CxValues, SupplyPeer {
 
   /**
    * Component class constructor.
    */
-  abstract readonly componentType: ComponentClass<T>;
+  readonly componentType: ComponentClass<T>;
 
   /**
    * Custom element constructed for the component according to its type.
    *
    * E.g. `HTMLElement` instance.
    */
-  abstract readonly element: any;
+  readonly element: any;
 
   /**
    * A component instance.
@@ -70,19 +45,19 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    * or {@link DefinitionContext.whenComponent component instantiation event} receiver. A {@link whenReady} callback
    * can be used to work this around.
    */
-  abstract readonly component: ComponentInstance<T>;
+  readonly component: ComponentInstance<T>;
 
   /**
    * Whether the component is {@link DefinitionContext.mountTo mounted} to element.
    */
-  abstract readonly mounted: boolean;
+  readonly mounted: boolean;
 
   /**
    * Whether the component is ready.
    *
    * Set to `true` when {@link component} is available.
    */
-  abstract readonly ready: boolean;
+  readonly ready: boolean;
 
   /**
    * An `OnEvent` sender of component readiness event.
@@ -93,7 +68,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    *
    * If the component is constructed already, the receiver will be notified immediately.
    */
-  abstract readonly onceReady: OnEvent<[this]>;
+  readonly onceReady: OnEvent<[this]>;
 
   /**
    * An `OnEvent` sender of single component readiness event.
@@ -106,7 +81,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    *
    * In contrast to {@link onceReady}, cuts off the event supply after sending the first event.
    */
-  abstract readonly whenReady: OnEvent<[this]>;
+  readonly whenReady: OnEvent<[this]>;
 
   /**
    * Whether the component is settled.
@@ -121,7 +96,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    *
    * This becomes `true` right before {@link whenSettled} event is sent.
    */
-  abstract readonly settled: boolean;
+  readonly settled: boolean;
 
   /**
    * An `OnEvent` sender of component settlement event.
@@ -129,7 +104,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    * The registered receiver is called when component is {@link settled}. If settled already the receiver is called
    * immediately.
    */
-  abstract readonly onceSettled: OnEvent<[this]>;
+  readonly onceSettled: OnEvent<[this]>;
 
   /**
    * An `OnEvent` sender of single component settlement event.
@@ -139,14 +114,14 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    *
    * In contrast to {@link onceSettled}, cuts off the event supply after sending the first event.
    */
-  abstract readonly whenSettled: OnEvent<[this]>;
+  readonly whenSettled: OnEvent<[this]>;
 
   /**
    * Whether the component's element is connected.
    *
    * This becomes `true` right before {@link whenConnected} event is sent.
    */
-  abstract readonly connected: boolean;
+  readonly connected: boolean;
 
   /**
    * An `OnEvent` sender of component's element connection event.
@@ -156,7 +131,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    *
    * If connected already the receiver is called immediately.
    */
-  abstract readonly onceConnected: OnEvent<[this]>;
+  readonly onceConnected: OnEvent<[this]>;
 
   /**
    * An `OnEvent` sender of single component's element connection event.
@@ -168,14 +143,14 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    *
    * In contrast to {@link onceConnected}, cuts off the event supply after sending the first event.
    */
-  abstract readonly whenConnected: OnEvent<[this]>;
+  readonly whenConnected: OnEvent<[this]>;
 
   /**
    * An `AfterEvent` keeper of component status.
    *
    * Sends this context instance each time the component status changes.
    */
-  abstract readonly readStatus: AfterEvent<[this]>;
+  readonly readStatus: AfterEvent<[this]>;
 
   /**
    * An event supply that disposes component and its context when cut off.
@@ -184,7 +159,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    *
    * For custom element the component may be reconstructed when element is connected to document or settled again.
    */
-  abstract readonly supply: Supply;
+  readonly supply: Supply;
 
   /**
    * Updates component's state.
@@ -198,21 +173,12 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    */
   readonly updateState: StateUpdater;
 
-  constructor() {
-    super();
-    this.updateState = <TValue>(key: StatePath, newValue: TValue, oldValue: TValue): void => {
-      this.get(StateUpdater)(key, newValue, oldValue);
-    };
-  }
-
   /**
    * Component content root.
    *
    * This is a shorthand for requesting a {@link ContentRoot content root} from component context.
    */
-  get contentRoot(): ContentRoot {
-    return this.get(ContentRoot);
-  }
+  readonly contentRoot: ContentRoot;
 
   /**
    * Settles component.
@@ -225,7 +191,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    *
    * This method is called automatically when {@link DefinitionContext.mountTo mounting} component to element.
    */
-  abstract settle(): void;
+  settle(): void;
 
   /**
    * Returns DOM event producer for the given event type.
@@ -238,9 +204,7 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    *
    * @returns A producer of DOM event events of the given type.
    */
-  on<TEvent extends Event>(type: string): OnDomEvent<TEvent> {
-    return this.get(ComponentEventDispatcher__key).on(type);
-  }
+  on<TEvent extends Event>(type: string): OnDomEvent<TEvent>;
 
   /**
    * Dispatches an event to component element.
@@ -249,11 +213,34 @@ export abstract class ComponentContext<T extends object = any> extends ContextVa
    *
    * @param event - An event to dispatch.
    */
-  dispatchEvent(event: Event): void {
-    this.get(ComponentEventDispatcher__key).dispatch(event);
-  }
+  dispatchEvent(event: Event): void;
 
 }
+
+/**
+ * Component context entry containing the context itself.
+ */
+export const ComponentContext = {
+
+  perContext: (/*#__PURE__*/ cxSingle<ComponentContext>()),
+
+  /**
+   * Extracts component context from the given component instance.
+   *
+   * @param component - Target component instance.
+   *
+   * @return Component context reference returned by {@link ComponentContext__symbol} method.
+   *
+   * @throws TypeError  When the given `component` does not contain component context reference.
+   */
+  of<T extends object>(this: void, component: ComponentInstance<T>): ComponentContext<T> {
+    if (typeof component[ComponentContext__symbol] !== 'function') {
+      throw new TypeError(`No component context found in ${String(component)}`);
+    }
+    return component[ComponentContext__symbol]!();
+  },
+
+};
 
 /**
  * A component instance.

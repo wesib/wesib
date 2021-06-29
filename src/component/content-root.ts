@@ -1,5 +1,5 @@
-import { SingleContextKey, SingleContextRef } from '@proc7ts/context-values';
-import { ComponentContext__key } from './component-context.key.impl';
+import { CxEntry, cxSingle } from '@proc7ts/context-values';
+import { ComponentContext } from './component-context';
 
 /**
  * Component content root node.
@@ -11,17 +11,16 @@ import { ComponentContext__key } from './component-context.key.impl';
 export type ContentRoot = Element | ShadowRoot;
 
 /**
- * A key of component context value containing a component root element.
+ * Component context entry containing a component root element.
  *
  * This is an element itself by default. But can be overridden e.g. by {@link AttachShadow @AttachShadow} decorator.
  *
  * @category Core
  */
-export const ContentRoot: SingleContextRef<ContentRoot> = (/*#__PURE__*/ new SingleContextKey<ContentRoot>(
-    'content-root',
-    {
-      byDefault(ctx): ContentRoot {
-        return ctx.get(ComponentContext__key).element as ContentRoot;
-      },
+export const ContentRoot: CxEntry<ContentRoot> = {
+  perContext: (/*#__PURE__*/ cxSingle({
+    byDefault(target): ContentRoot {
+      return target.get(ComponentContext).element as ContentRoot;
     },
-));
+  })),
+};

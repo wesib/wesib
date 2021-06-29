@@ -1,5 +1,5 @@
 import { NamespaceAliaser } from '@frontmeans/namespace-aliaser';
-import { SingleContextKey, SingleContextRef } from '@proc7ts/context-values';
+import { CxEntry, cxSingle } from '@proc7ts/context-values';
 
 /**
  * Namespace aliaser used by default.
@@ -11,10 +11,10 @@ import { SingleContextKey, SingleContextRef } from '@proc7ts/context-values';
 export type DefaultNamespaceAliaser = NamespaceAliaser;
 
 /**
- * A key of bootstrap context value containing the default namespace aliaser.
+ * Bootstrap context entry containing the default namespace aliaser as its value.
  *
  * @category Core
  */
-export const DefaultNamespaceAliaser: SingleContextRef<DefaultNamespaceAliaser> = (
-    /*#__PURE__*/ new SingleContextKey<DefaultNamespaceAliaser>('default-namespace-aliaser')
-);
+export const DefaultNamespaceAliaser: CxEntry<DefaultNamespaceAliaser> = {
+  perContext: (/*#__PURE__*/ cxSingle()),
+};

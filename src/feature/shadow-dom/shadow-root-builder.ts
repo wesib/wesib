@@ -1,4 +1,4 @@
-import { FnContextKey, FnContextRef } from '@proc7ts/context-values/updatable';
+import { CxEntry, cxEvaluated } from '@proc7ts/context-values';
 import { ComponentContext } from '../../component';
 import { ShadowContentDef } from './attach-shadow.amendment';
 
@@ -24,20 +24,22 @@ export type ShadowRootBuilder =
     (context: ComponentContext, init: ShadowContentDef) => ShadowRoot | null | undefined;
 
 /**
- * A key of component context value containing a shadow root builder instance.
+ * Context entry containing shadow root builder instance.
  *
  * @category Feature
  */
-export const ShadowRootBuilder: FnContextRef<Parameters<ShadowRootBuilder>, ReturnType<ShadowRootBuilder>> = (
-    /*#__PURE__*/ new FnContextKey<Parameters<ShadowRootBuilder>, ReturnType<ShadowRootBuilder>>(
-        'shadow-root-builder',
-        {
-          byDefault() {
-            return attachShadow;
-          },
-        },
-    )
-);
+export const ShadowRootBuilder: CxEntry<ShadowRootBuilder> = {
+  perContext: (/*#__PURE__*/ cxEvaluated(target => {
+
+    let delegated!: ShadowRootBuilder;
+
+    target.trackRecentAsset(evaluated => {
+      delegated = evaluated ? evaluated.asset : attachShadow;
+    });
+
+    return delegated;
+  })),
+};
 
 function attachShadow(context: ComponentContext, init: ShadowRootInit): ShadowRoot | undefined {
   return shadowRootOf(context.element as Element, init);

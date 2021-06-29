@@ -1,5 +1,5 @@
 import { RenderSchedule, RenderScheduleOptions, RenderShot } from '@frontmeans/render-scheduler';
-import { ContextRef, ContextValues, SingleContextKey } from '@proc7ts/context-values';
+import { CxEntry, cxSingle } from '@proc7ts/context-values';
 import { trackValue } from '@proc7ts/fun-events';
 import { noop } from '@proc7ts/primitives';
 import { ComponentRenderCtl } from './component-render-ctl';
@@ -54,11 +54,19 @@ export interface ComponentRenderScheduleOptions extends RenderScheduleOptions, R
 }
 
 /**
- * @internal
+ * Component context entry containing {@link ComponentRenderScheduler component render scheduler}.
+ *
+ * @category Feature
  */
-function ComponentRenderScheduler$create(context: ContextValues): ComponentRenderScheduler {
+export const ComponentRenderScheduler: CxEntry<ComponentRenderScheduler> = {
+  perContext: (/*#__PURE__*/ cxSingle({
+    byDefault: ComponentRenderScheduler$create,
+  })),
+};
 
-  const renderCtl = context.get(ComponentRenderCtl);
+function ComponentRenderScheduler$create(target: CxEntry.Target<ComponentRenderScheduler>): ComponentRenderScheduler {
+
+  const renderCtl = target.get(ComponentRenderCtl);
 
   return (opts = {}): RenderSchedule => {
 
@@ -74,17 +82,3 @@ function ComponentRenderScheduler$create(context: ContextValues): ComponentRende
     };
   };
 }
-
-/**
- * A key of component context value containing {@link ComponentRenderScheduler component render scheduler}.
- *
- * @category Feature
- */
-export const ComponentRenderScheduler: ContextRef<ComponentRenderScheduler> = (
-    /*#__PURE__*/ new SingleContextKey<ComponentRenderScheduler>(
-        'component-render-scheduler',
-        {
-          byDefault: ComponentRenderScheduler$create,
-        },
-    )
-);

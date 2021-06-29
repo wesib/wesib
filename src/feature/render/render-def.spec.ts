@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
-import { ContextRegistry } from '@proc7ts/context-values';
+import { CxBuilder, cxConstAsset } from '@proc7ts/context-builder';
 import { Supply } from '@proc7ts/supply';
 import { ComponentContext } from '../../component';
 import { ComponentState } from '../state';
@@ -15,14 +15,10 @@ describe('feature/render', () => {
       beforeEach(() => {
         state = new ComponentState();
 
-        const registry = new ContextRegistry();
+        const cxBuilder = new CxBuilder<ComponentContext>(get => ({ get, supply: new Supply() } as ComponentContext));
 
-        registry.provide({ a: ComponentState, is: state });
-
-        context = {
-          get: registry.newValues().get,
-          supply: new Supply(),
-        } as ComponentContext;
+        context = cxBuilder.context;
+        cxBuilder.provide(cxConstAsset(ComponentState, state));
       });
 
       it('is full state except render root by default', () => {

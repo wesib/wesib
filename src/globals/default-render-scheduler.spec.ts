@@ -6,6 +6,7 @@ import {
   setRenderScheduler,
 } from '@frontmeans/render-scheduler';
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
+import { cxConstAsset } from '@proc7ts/context-builder';
 import { Mock } from 'jest-mock';
 import { BootstrapContext } from '../boot';
 import { bootstrapComponents } from '../bootstrap-components';
@@ -40,24 +41,6 @@ describe('boot', () => {
 
       scheduler();
       expect(mockScheduler).toHaveBeenCalled();
-    });
-    it('utilizes default render scheduler with `null` fallback', async () => {
-
-      const bsContext = await bootstrapContext();
-      const scheduler = bsContext.get(DefaultRenderScheduler, { or: null })!;
-
-      scheduler();
-      expect(mockScheduler).toHaveBeenCalled();
-    });
-    it('respects fallback render scheduler', async () => {
-
-      const bsContext = await bootstrapContext();
-      const fallback = jest.fn<RenderSchedule, [RenderScheduleOptions?]>();
-      const scheduler = bsContext.get(DefaultRenderScheduler, { or: fallback })!;
-
-      scheduler();
-      expect(fallback).toHaveBeenCalled();
-      expect(mockScheduler).not.toHaveBeenCalled();
     });
     it('substitutes bootstrap window by default', async () => {
 
@@ -102,25 +85,6 @@ describe('boot', () => {
 
       expect(defContext.get(DefaultRenderScheduler)).toBe(bsContext.get(DefaultRenderScheduler));
     });
-    it('respects fallback render scheduler when requested indirectly', async () => {
-
-      const bsContext = await bootstrapContext();
-
-      @Component({ extend: { type: MockElement } })
-      class TestComponent {
-      }
-
-      await bsContext.load(TestComponent).whenReady;
-
-      const defContext = await bsContext.whenDefined(TestComponent);
-
-      const fallback = jest.fn<RenderSchedule, [RenderScheduleOptions?]>();
-      const scheduler = defContext.get(DefaultRenderScheduler, { or: fallback })!;
-
-      scheduler();
-      expect(fallback).toHaveBeenCalled();
-      expect(mockScheduler).not.toHaveBeenCalled();
-    });
 
     async function bootstrapContext(
         scheduler?: RenderScheduler,
@@ -129,9 +93,9 @@ describe('boot', () => {
       @Feature(
           {
             setup(setup) {
-              setup.provide({ a: BootstrapWindow, is: mockWindow });
+              setup.provide(cxConstAsset(BootstrapWindow, mockWindow));
               if (scheduler) {
-                setup.provide({ a: DefaultRenderScheduler, is: scheduler });
+                setup.provide(cxConstAsset(DefaultRenderScheduler, scheduler));
               }
             },
           },

@@ -1,4 +1,4 @@
-import { ContextRef, SingleContextKey } from '@proc7ts/context-values';
+import { CxEntry, cxSingle } from '@proc7ts/context-values';
 import { Supply } from '@proc7ts/supply';
 import { ComponentContext } from '../../component';
 import { ComponentPreRenderer } from './component-pre-renderer';
@@ -49,20 +49,12 @@ export interface ComponentRenderCtl {
 }
 
 /**
- * A key of component context value containing {@link ComponentRenderCtl component render control}.
+ * Component context entry containing {@link ComponentRenderCtl component render control}.
  *
  * @category Feature
  */
-export const ComponentRenderCtl: ContextRef<ComponentRenderCtl> = (
-    /*#__PURE__*/ new SingleContextKey<ComponentRenderCtl>(
-        'component-render-ctl',
-        {
-          byDefault(values) {
-
-            const context = values.get(ComponentContext);
-
-            return new ComponentRenderCtl$(context);
-          },
-        },
-    )
-);
+export const ComponentRenderCtl: CxEntry<ComponentRenderCtl> = {
+  perContext: (/*#__PURE__*/ cxSingle({
+    byDefault: target => new ComponentRenderCtl$(target.get(ComponentContext)),
+  })),
+};

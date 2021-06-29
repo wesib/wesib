@@ -6,6 +6,7 @@ import {
   RenderScheduler,
 } from '@frontmeans/render-scheduler';
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
+import { cxConstAsset } from '@proc7ts/context-builder';
 import { Mock } from 'jest-mock';
 import { Component, ComponentContext, ComponentSlot } from '../../component';
 import { DefaultRenderScheduler } from '../../globals';
@@ -102,7 +103,7 @@ describe('feature/render', () => {
         },
         feature: {
           setup(setup) {
-            setup.provide({ a: DefaultRenderScheduler, is: mockRenderScheduler });
+            setup.provide(cxConstAsset(DefaultRenderScheduler, mockRenderScheduler));
           },
         },
       })

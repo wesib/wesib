@@ -1,6 +1,6 @@
 import { html__naming } from '@frontmeans/namespace-aliaser';
-import { ContextKey, SingleContextKey } from '@proc7ts/context-values';
-import { BootstrapContext, bootstrapDefault } from '../../boot';
+import { CxEntry, cxScoped, cxSingle } from '@proc7ts/context-values';
+import { BootstrapContext } from '../../boot';
 import { BootstrapWindow, DefaultNamespaceAliaser } from '../../globals';
 import { ComponentDef } from '../component-def';
 import { ComponentClass } from './component-class';
@@ -8,6 +8,8 @@ import { ElementDef } from './element-def';
 
 /**
  * Component element naming service.
+ *
+ * @category Core
  */
 export interface ElementNaming {
 
@@ -23,19 +25,23 @@ export interface ElementNaming {
 }
 
 /**
- * A key of bootstrap context value containing an element naming service instance.
+ * Bootstrap context entry containing element naming service instance.
+ *
+ * @category Core
  */
-export const ElementNaming: ContextKey<ElementNaming> = (/*#__PURE__*/ new SingleContextKey<ElementNaming>(
-    'element-naming',
-    {
-      byDefault: bootstrapDefault(newElementNaming),
-    },
-));
+export const ElementNaming: CxEntry<ElementNaming> = {
+  perContext: (/*#__PURE__*/ cxScoped(
+      BootstrapContext,
+      (/*#__PURE__*/ cxSingle({
+        byDefault: ElementNaming$create,
+      })),
+  )),
+};
 
-function newElementNaming(bsContext: BootstrapContext): ElementNaming {
+function ElementNaming$create(target: CxEntry.Target<ElementNaming>): ElementNaming {
 
-  const bsWindow = bsContext.get(BootstrapWindow);
-  const nsAlias = bsContext.get(DefaultNamespaceAliaser);
+  const bsWindow = target.get(BootstrapWindow);
+  const nsAlias = target.get(DefaultNamespaceAliaser);
 
   return {
     elementOf(componentType: ComponentClass): ElementDef {

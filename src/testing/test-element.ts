@@ -1,3 +1,4 @@
+import { cxConstAsset } from '@proc7ts/context-builder';
 import { Class } from '@proc7ts/primitives';
 import { bootstrapComponents } from '../bootstrap-components';
 import { ComponentClass, CustomElements } from '../component/definition';
@@ -26,7 +27,7 @@ export async function testElement(componentType: ComponentClass): Promise<Class>
   const featureDef: FeatureDef = {
     needs: componentType,
     setup(setup) {
-      setup.provide({ a: CustomElements, is: customElements });
+      setup.provide(cxConstAsset(CustomElements, customElements));
     },
   };
 

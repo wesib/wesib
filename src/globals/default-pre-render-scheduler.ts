@@ -1,6 +1,7 @@
 import { asyncRenderScheduler, RenderScheduler } from '@frontmeans/render-scheduler';
-import { ContextUpRef } from '@proc7ts/context-values/updatable';
-import { RenderScheduler$Key } from './render-scheduler.key.impl';
+import { CxEntry, cxScoped } from '@proc7ts/context-values';
+import { BootstrapContext } from '../boot';
+import { RenderScheduler$definer } from './render-scheduler.entry.impl';
 
 /**
  * Default pre-rendering tasks scheduler.
@@ -10,12 +11,15 @@ import { RenderScheduler$Key } from './render-scheduler.key.impl';
 export type DefaultPreRenderScheduler = RenderScheduler;
 
 /**
- * A key of bootstrap context value containing {@link DefaultPreRenderScheduler} instance.
+ * Bootstrap context entry containing {@link DefaultPreRenderScheduler} instance.
  *
  * Uses asynchronous `RenderScheduler` (`asyncRenderScheduler`) for {@link BootstrapWindow bootstrap window} by default.
  *
  * @category Core
  */
-export const DefaultPreRenderScheduler: ContextUpRef<DefaultPreRenderScheduler, RenderScheduler> = (
-    /*#__PURE__*/ new RenderScheduler$Key('default-pre-render-scheduler', asyncRenderScheduler)
-);
+export const DefaultPreRenderScheduler: CxEntry<DefaultPreRenderScheduler> = {
+  perContext: (/*#__PURE__*/ cxScoped(
+      BootstrapContext,
+      RenderScheduler$definer(asyncRenderScheduler),
+  )),
+};

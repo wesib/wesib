@@ -1,4 +1,4 @@
-import { ContextValueSpec } from '@proc7ts/context-values';
+import { CxAsset } from '@proc7ts/context-values';
 import { OnEvent } from '@proc7ts/fun-events';
 import { Supply } from '@proc7ts/supply';
 import { ComponentContext } from '../component-context';
@@ -43,29 +43,25 @@ export interface DefinitionSetup<T extends object = any> {
   readonly whenComponent: OnEvent<[ComponentContext<T>]>;
 
   /**
-   * Provides a value available in component definition context.
+   * Provides asset for component definition context entry.
    *
-   * @typeParam TSrc - The type of context value sources.
-   * @typeParam TDeps - A type of dependencies.
-   * @param spec - Component context value specifier.
+   * @typeParam TValue - Context value type.
+   * @typeParam TAsset - Context value asset type.
+   * @param asset - Context entry asset.
    *
-   * @returns A value supply that removes the given context value specifier once cut off.
+   * @returns Asset supply. Revokes provided asset once cut off.
    */
-  perDefinition<TSrc, TDeps extends any[]>(
-      spec: ContextValueSpec<DefinitionContext, unknown, TSrc, TDeps>,
-  ): Supply;
+  perDefinition<TValue, TAsset = TValue>(asset: CxAsset<TValue, TAsset, DefinitionContext>): Supply;
 
   /**
-   * Provides a value available in the context of each component of the defined component type.
+   * Provides asset for entry available in contexts of each component of the defined component type.
    *
-   * @typeParam TSrc - The type of context value sources.
-   * @typeParam TDeps - A type of dependencies.
-   * @param spec - Component context value specifier.
+   * @typeParam TValue - Context value type.
+   * @typeParam TAsset - Context value asset type.
+   * @param asset - Context entry asset.
    *
-   * @returns A value supply that removes the given context value specifier once cut off.
+   * @returns Asset supply. Revokes provided asset once cut off.
    */
-  perComponent<TSrc, TDeps extends any[]>(
-      spec: ContextValueSpec<ComponentContext<T>, unknown, TSrc, TDeps>,
-  ): Supply;
+  perComponent<TValue, TAsset = TValue>(asset: CxAsset<TValue, TAsset, ComponentContext>): Supply;
 
 }

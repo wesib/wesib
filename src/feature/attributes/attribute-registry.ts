@@ -1,5 +1,5 @@
 import { CustomHTMLElementClass } from '@frontmeans/dom-primitives';
-import { ContextRef, SingleContextKey } from '@proc7ts/context-values';
+import { CxEntry, cxScoped, cxSingle } from '@proc7ts/context-values';
 import { mergeFunctions } from '@proc7ts/primitives';
 import { ComponentContext, ComponentElement, ComponentSlot } from '../../component';
 import { DefinitionContext } from '../../component/definition';
@@ -23,31 +23,26 @@ export interface AttributeRegistry {
 }
 
 /**
- * A key of component definition context value containing {@link AttributeRegistry attribute registry}.
+ * Component definition context entry containing {@link AttributeRegistry attribute registry}.
  *
  * @category Feature
  */
-export const AttributeRegistry: ContextRef<AttributeRegistry> = (
-    /*#__PURE__*/ new SingleContextKey<AttributeRegistry>(
-        'attribute-registry',
-        {
-          byDefault(context) {
-            return new AttributeRegistry$(context.get(DefinitionContext));
-          },
-        },
-    )
-);
+export const AttributeRegistry: CxEntry<AttributeRegistry> = {
+  perContext: (/*#__PURE__*/ cxScoped(
+      DefinitionContext,
+      (/*#__PURE__*/ cxSingle({
+        byDefault: target => new AttributeRegistry$(target.get(DefinitionContext)),
+      })),
+  )),
+};
 
-/**
- * @internal
- */
 class AttributeRegistry$ implements AttributeRegistry {
 
   private readonly attrs = new Map<string, AttributeChangedCallback<any>>();
 
-  constructor(private readonly _context: DefinitionContext) {
-    _context.whenReady(({ elementType }) => this.define(elementType as CustomHTMLElementClass));
-    _context.whenComponent(context => {
+  constructor(private readonly _defContext: DefinitionContext) {
+    _defContext.whenReady(({ elementType }) => this.define(elementType as CustomHTMLElementClass));
+    _defContext.whenComponent(context => {
       if (context.mounted) {
         // Mount element attributes
         this.mount(context);
@@ -89,7 +84,7 @@ class AttributeRegistry$ implements AttributeRegistry {
       return; // No attributes defined
     }
 
-    const MutationObserver = this._context.get(BootstrapWindow).MutationObserver;
+    const MutationObserver = this._defContext.get(BootstrapWindow).MutationObserver;
     const observer = new MutationObserver(
         records => records.forEach(
             record => {

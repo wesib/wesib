@@ -1,4 +1,4 @@
-import { ContextRef, SingleContextKey } from '@proc7ts/context-values';
+import { CxEntry, cxScoped, cxSingle } from '@proc7ts/context-values';
 import { Class } from '@proc7ts/primitives';
 import { ComponentContext } from '../../component';
 import { DefinitionContext } from '../../component/definition';
@@ -21,20 +21,18 @@ export interface DomPropertyRegistry {
 }
 
 /**
- * A key of component definition context value containing {@link DomPropertyRegistry DOM property registry}.
+ * Component definition context entry containing {@link DomPropertyRegistry DOM property registry}.
  *
  * @category Feature
  */
-export const DomPropertyRegistry: ContextRef<DomPropertyRegistry> = (
-    /*#__PURE__*/ new SingleContextKey<DomPropertyRegistry>(
-        'dom-property-registry',
-        {
-          byDefault(context) {
-            return new DomPropertyRegistry$(context.get(DefinitionContext));
-          },
-        },
-    )
-);
+export const DomPropertyRegistry: CxEntry<DomPropertyRegistry> = {
+  perContext: (/*#__PURE__*/ cxScoped(
+      DefinitionContext,
+      (/*#__PURE__*/ cxSingle({
+        byDefault: target => new DomPropertyRegistry$(target.get(DefinitionContext)),
+      })),
+  )),
+};
 
 /**
  * @internal

@@ -1,4 +1,4 @@
-import { SingleContextKey, SingleContextRef } from '@proc7ts/context-values';
+import { CxEntry, cxSingle } from '@proc7ts/context-values';
 
 /**
  * A window the components bootstrap is performed against.
@@ -8,17 +8,12 @@ import { SingleContextKey, SingleContextRef } from '@proc7ts/context-values';
 export type BootstrapWindow = Window & typeof globalThis;
 
 /**
- * A key of bootstrap context value containing a window instance the bootstrap is performed against.
+ * Bootstrap context entry containing a window instance the bootstrap is performed against.
  *
- * Target value defaults to current window.
+ * Defaults to current window.
  *
  * @category Core
  */
-export const BootstrapWindow: SingleContextRef<BootstrapWindow> = (/*#__PURE__*/ new SingleContextKey(
-    'window',
-    {
-      byDefault() {
-        return window;
-      },
-    },
-));
+export const BootstrapWindow: CxEntry<BootstrapWindow> = {
+  perContext: (/*#__PURE__*/ cxSingle({ byDefault: () => window })),
+};

@@ -1,9 +1,10 @@
 import { NamespaceDef, newNamespaceAliaser } from '@frontmeans/namespace-aliaser';
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
-import { ContextRegistry } from '@proc7ts/context-values';
+import { cxBuildAsset, cxConstAsset } from '@proc7ts/context-builder';
 import { Class } from '@proc7ts/primitives';
 import { BootstrapContext } from '../../boot';
 import { BootstrapWindow, DefaultNamespaceAliaser } from '../../globals';
+import { BootstrapContextBuilder } from '../../impl';
 import { DefinitionContext__symbol } from '../../impl/definition-context.symbol';
 import { MockObject } from '../../spec';
 import { ComponentClass } from './component-class';
@@ -21,8 +22,9 @@ describe('component', () => {
 
     beforeEach(() => {
 
-      const registry = new ContextRegistry<BootstrapContext>();
+      const bsBuilder = new BootstrapContextBuilder(get => ({ get }) as BootstrapContext);
 
+      context = bsBuilder.context;
       mockCustomElements = {
         define: jest.fn(),
         whenDefined: jest.fn(),
@@ -31,13 +33,8 @@ describe('component', () => {
         customElements: mockCustomElements,
       } as any;
 
-      context = {
-        get: registry.newValues().get,
-      } as any;
-
-      registry.provide({ a: BootstrapContext, is: context });
-      registry.provide({ a: BootstrapWindow, is: mockWindow });
-      registry.provide({ a: DefaultNamespaceAliaser, by: newNamespaceAliaser });
+      bsBuilder.provide(cxConstAsset(BootstrapWindow, mockWindow));
+      bsBuilder.provide(cxBuildAsset(DefaultNamespaceAliaser, _target => newNamespaceAliaser()));
     });
 
     beforeEach(() => {

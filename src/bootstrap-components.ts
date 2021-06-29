@@ -1,5 +1,7 @@
 import { newNamespaceAliaser } from '@frontmeans/namespace-aliaser';
-import { ContextModule } from '@proc7ts/context-values/updatable';
+import { cxBuildAsset } from '@proc7ts/context-builder';
+import { CxModule } from '@proc7ts/context-modules';
+import { CxEntry, CxRequest } from '@proc7ts/context-values';
 import { AfterEvent, AfterEvent__symbol, onceOn, OnEvent, trackValue, valueOn, valueOn_ } from '@proc7ts/fun-events';
 import { Class, valueProvider } from '@proc7ts/primitives';
 import { SupplyPeer } from '@proc7ts/supply';
@@ -8,7 +10,7 @@ import { ComponentClass, DefinitionContext } from './component/definition';
 import { FeatureDef, FeatureRef, FeatureStatus } from './feature';
 import { FeatureModule } from './feature/loader';
 import { DefaultNamespaceAliaser } from './globals';
-import { BootstrapContextRegistry } from './impl';
+import { BootstrapContextBuilder } from './impl';
 import { whenDefined } from './impl/when-defined';
 
 /**
@@ -23,11 +25,10 @@ import { whenDefined } from './impl/when-defined';
  */
 export function bootstrapComponents(...features: Class[]): BootstrapContext {
 
-  const bootstrapContextRegistry = BootstrapContextRegistry.create();
-  const { bootstrapContext, complete } = initBootstrap(bootstrapContextRegistry);
+  const { bsContext, complete } = initBootstrap();
   const feature = features.length === 1 ? features[0] : bootstrapFeature(features);
 
-  bootstrapContext.load(feature)
+  bsContext.load(feature)
       .read
       .do(
           valueOn_(({ ready }) => ready),
@@ -36,97 +37,92 @@ export function bootstrapComponents(...features: Class[]): BootstrapContext {
       .then(complete)
       .catch(console.error);
 
-  return bootstrapContext;
+  return bsContext;
 }
 
-/**
- * @internal
- */
 function bootstrapFeature(needs: Class[]): Class {
   return FeatureDef.define(class BootstrapFeature {}, { needs });
 }
 
-/**
- * @internal
- */
 const enum BootstrapStage {
   Init,
   Ready,
 }
 
-/**
- * @internal
- */
-function initBootstrap(
-    bootstrapContextRegistry: BootstrapContextRegistry,
-): {
-  bootstrapContext: BootstrapContext;
+function initBootstrap(): {
+  bsContext: BootstrapContext;
   complete(): void;
 } {
 
   const stage = trackValue<BootstrapStage>(BootstrapStage.Init);
-  const values = bootstrapContextRegistry.values;
+  const bsBuilder = new BootstrapContextBuilder(getValue => {
 
-  class BootstrapContext$ extends BootstrapContext {
+    class BootstrapContext$ implements BootstrapContext {
 
-    readonly whenReady: OnEvent<[BootstrapContext]>;
-    readonly get = values.get;
+      readonly whenReady: OnEvent<[BootstrapContext]>;
 
-    constructor() {
-      super();
-      this.whenReady = stage.read.do(
-          valueOn(bsStage => !!bsStage && this),
-          onceOn,
-      );
-      bootstrapContextRegistry.provide({ a: DefaultNamespaceAliaser, by: newNamespaceAliaser });
-      bootstrapContextRegistry.provide({ a: BootstrapContext, is: this });
-    }
-
-    whenDefined<T extends object>(componentType: ComponentClass<T>): OnEvent<[DefinitionContext<T>]> {
-      return whenDefined(this, componentType);
-    }
-
-    load(feature: Class, user?: SupplyPeer): FeatureRef {
-
-      const module = FeatureModule.of(feature);
-      const supply = bootstrapContextRegistry.provide(module);
-
-      if (user) {
-        supply.needs(user);
-      } else {
-        user = supply;
+      constructor() {
+        this.whenReady = stage.read.do(
+            valueOn(bsStage => !!bsStage && this),
+            onceOn,
+        );
       }
 
-      const use = this.get(module).use(user);
-      const read = FeatureRef$read(feature, use);
+      get<TValue>(entry: CxEntry<TValue, unknown>, request?: CxRequest.WithoutFallback<TValue>): TValue;
+      get<TValue>(entry: CxEntry<TValue, unknown>, request: CxRequest.WithFallback<TValue>): TValue;
+      get<TValue>(entry: CxEntry<TValue, unknown>, request?: CxRequest<TValue>): TValue | null;
+      get<TValue>(entry: CxEntry<TValue, unknown>, request?: CxRequest<TValue>): TValue | null {
+        return getValue(entry, request);
+      }
 
-      return {
-        read,
-        whenReady: read.do(
-            valueOn_(status => status.ready && status),
-            onceOn,
-        ),
-        [AfterEvent__symbol]: valueProvider(read),
-        supply,
-      };
+      whenDefined<T extends object>(componentType: ComponentClass<T>): OnEvent<[DefinitionContext<T>]> {
+        return whenDefined(this, componentType);
+      }
+
+      load(feature: Class, user?: SupplyPeer): FeatureRef {
+
+        const module = FeatureModule.of(feature);
+        const supply = bsBuilder.provide(module);
+
+        if (user) {
+          supply.needs(user);
+        } else {
+          user = supply;
+        }
+
+        const use = this.get(module).use(user);
+        const read = FeatureRef$read(feature, use);
+
+        return {
+          read,
+          whenReady: read.do(
+              valueOn_(status => status.ready && status),
+              onceOn,
+          ),
+          [AfterEvent__symbol]: valueProvider(read),
+          supply,
+        };
+      }
+
     }
 
-  }
+    return new BootstrapContext$();
+  });
 
-  const bootstrapContext = new BootstrapContext$();
+
+  const bsContext = bsBuilder.context;
+
+  bsBuilder.provide(cxBuildAsset(DefaultNamespaceAliaser, _target => newNamespaceAliaser()));
 
   return {
-    bootstrapContext,
+    bsContext,
     complete(): void {
       stage.it = BootstrapStage.Ready;
     },
   };
 }
 
-function FeatureRef$read(
-    feature: Class,
-    use: ContextModule.Use,
-): AfterEvent<[FeatureStatus]> {
+function FeatureRef$read(feature: Class, use: CxModule.Use): AfterEvent<[FeatureStatus]> {
 
   const status = trackValue<FeatureStatus>({ feature, ready: false });
 

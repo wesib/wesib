@@ -1,20 +1,10 @@
 import { html__naming, isQualifiedName, QualifiedName } from '@frontmeans/namespace-aliaser';
-import { ContextKey, ContextKey__symbol, SingleContextKey } from '@proc7ts/context-values';
+import { cxDefaultScoped, CxEntry, cxSingle } from '@proc7ts/context-values';
 import { Class, hasOwnProperty, newPromiseResolver, PromiseResolver } from '@proc7ts/primitives';
-import { BootstrapContext, bootstrapDefault } from '../../boot';
+import { BootstrapContext } from '../../boot';
 import { BootstrapWindow, DefaultNamespaceAliaser } from '../../globals';
 import { definitionContextOf } from '../../impl/definition-context.symbol';
 import { ComponentClass } from './component-class';
-
-/**
- * @internal
- */
-const CustomElements__key = (/*#__PURE__*/ new SingleContextKey<CustomElements>(
-    'custom-elements',
-    {
-      byDefault: bootstrapDefault(createCustomElements),
-    },
-));
 
 /**
  * Custom elements registry.
@@ -25,17 +15,7 @@ const CustomElements__key = (/*#__PURE__*/ new SingleContextKey<CustomElements>(
  *
  * @category Core
  */
-export abstract class CustomElements {
-
-  /**
-   * A key of bootstrap context value containing a `CustomElements` instance used to register custom
-   * elements.
-   *
-   * Target value defaults to `window.customElements` from the window provided under `[BootstrapWindow.key]`.
-   */
-  static get [ContextKey__symbol](): ContextKey<CustomElements> {
-    return CustomElements__key;
-  }
+export interface CustomElements {
 
   /**
    * Defines custom element.
@@ -44,7 +24,7 @@ export abstract class CustomElements {
    * namespace to avoid naming conflicts.
    * @param elementType - A constructor of custom element to define.
    */
-  abstract define(componentTypeOrName: ComponentClass | QualifiedName, elementType: Class): void;
+  define(componentTypeOrName: ComponentClass | QualifiedName, elementType: Class): void;
 
   /**
    * Allows to wait for component definition.
@@ -58,19 +38,33 @@ export abstract class CustomElements {
    *
    * @throws TypeError If `componentType` does not contain a component definition.
    */
-  abstract whenDefined(componentTypeOrName: ComponentClass | QualifiedName): Promise<void>;
+  whenDefined(componentTypeOrName: ComponentClass | QualifiedName): Promise<void>;
 
 }
 
 /**
+ * Context entry containing custom elements registry to use.
+ *
+ * @category Core
+ */
+export const CustomElements: CxEntry<CustomElements> = {
+  perContext: (/*#__PURE__*/ cxDefaultScoped(
+      BootstrapContext,
+      (/*#__PURE__*/ cxSingle({
+        byDefault: CustomElements$create,
+      })),
+  )),
+};
+
+/**
  * @internal
  */
-function createCustomElements(bsContext: BootstrapContext): CustomElements {
+function CustomElements$create(target: CxEntry.Target<CustomElements>): CustomElements {
 
-  const customElements: CustomElementRegistry = bsContext.get(BootstrapWindow).customElements;
-  const nsAlias = bsContext.get(DefaultNamespaceAliaser);
+  const customElements: CustomElementRegistry = target.get(BootstrapWindow).customElements;
+  const nsAlias = target.get(DefaultNamespaceAliaser);
 
-  class CustomElements$ extends CustomElements {
+  class CustomElements$ implements CustomElements {
 
     define(componentTypeOrName: ComponentClass | QualifiedName, elementType: Class): void {
       if (isQualifiedName(componentTypeOrName)) {

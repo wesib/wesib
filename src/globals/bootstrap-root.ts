@@ -1,4 +1,4 @@
-import { SingleContextKey, SingleContextRef } from '@proc7ts/context-values';
+import { CxEntry, cxSingle } from '@proc7ts/context-values';
 import { BootstrapWindow } from './bootstrap-window';
 
 /**
@@ -9,17 +9,14 @@ import { BootstrapWindow } from './bootstrap-window';
 export type BootstrapRoot = Element;
 
 /**
- * A key of bootstrap context value containing a bootstrap root.
+ * Bootstrap context entry containing bootstrap root as its value.
  *
  * Target value defaults to document body of {@link BootstrapWindow}.
  *
  * @category Core
  */
-export const BootstrapRoot: SingleContextRef<BootstrapRoot> = (/*#__PURE__*/ new SingleContextKey(
-    'bootstrap-root',
-    {
-      byDefault(ctx) {
-        return ctx.get(BootstrapWindow).document.body;
-      },
-    },
-));
+export const BootstrapRoot: CxEntry<BootstrapRoot> = {
+  perContext: (/*#__PURE__*/ cxSingle({
+    byDefault: target => target.get(BootstrapWindow).document.body,
+  })),
+};

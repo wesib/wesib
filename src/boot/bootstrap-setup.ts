@@ -1,4 +1,4 @@
-import { ContextValueSpec } from '@proc7ts/context-values';
+import { CxAsset } from '@proc7ts/context-values';
 import { OnEvent } from '@proc7ts/fun-events';
 import { Class } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
@@ -47,49 +47,43 @@ export interface BootstrapSetup {
   readonly onComponent: OnEvent<[ComponentContext]>;
 
   /**
-   * Provides bootstrap context value before context creation.
+   * Provides asset for bootstrap context entry before context creation.
    *
-   * @typeParam TSrc - Source value type.
-   * @typeParam TDeps - Dependencies tuple type.
-   * @param spec - Context value specifier.
+   * @typeParam TValue - Context value type.
+   * @typeParam TAsset - Context value asset type.
+   * @param asset - Context entry asset.
    *
-   * @returns A value supply that removes the given context value specifier once cut off.
+   * @returns Asset supply. Revokes provided asset once cut off.
    */
-  provide<TSrc, TDeps extends any[]>(
-      spec: ContextValueSpec<BootstrapContext, unknown, TSrc, TDeps>,
-  ): Supply;
+  provide<TValue, TAsset = TValue>(asset: CxAsset<TValue, TAsset, BootstrapContext>): Supply;
 
   /**
-   * Provides a value available in each component definition context.
+   * Provides asset for entry available in each component definition context.
    *
-   * @typeParam TSrc - The type of context value sources.
-   * @typeParam TDeps - A type of dependencies.
-   * @param spec - Component definition context value specifier.
+   * @typeParam TValue - Context value type.
+   * @typeParam TAsset - Context value asset type.
+   * @param asset - Context entry asset.
    *
-   * @returns A value supply that removes the given context value specifier once cut off.
+   * @returns Asset supply. Revokes provided asset once cut off.
    */
-  perDefinition<TSrc, TDeps extends any[]>(
-      spec: ContextValueSpec<DefinitionContext, unknown, TSrc, TDeps>,
-  ): Supply;
+  perDefinition<TValue, TAsset = TValue>(asset: CxAsset<TValue, TAsset, DefinitionContext>): Supply;
 
   /**
-   * Provides a value available in each component context.
+   * Provides asset for entry available in each component context.
    *
-   * @typeParam TSrc - The type of context value sources.
-   * @typeParam TDeps - A type of dependencies.
-   * @param spec - Component context value specifier.
+   * @typeParam TValue - Context value type.
+   * @typeParam TAsset - Context value asset type.
+   * @param asset - Context entry asset.
    *
-   * @returns A value supply that removes the given context value specifier once cut off.
+   * @returns Asset supply. Revokes provided asset once cut off.
    */
-  perComponent<TSrc, TDeps extends any[]>(
-      spec: ContextValueSpec<ComponentContext, unknown, TSrc, TDeps>,
-  ): Supply;
+  perComponent<TValue, TAsset = TValue>(asset: CxAsset<TValue, TAsset, ComponentContext>): Supply;
 
   /**
-   * Sets up the definition of component of the given type..
+   * Sets up the definition of component of the given type.
    *
    * Whenever the definition of component of the given type or any of its subtype starts, the returned `OnEvent` sender
-   * sends a {@link DefinitionSetup} instance, that can be used to set up the definition.
+   * sends a {@link DefinitionSetup} instance, that can be used to set up that definition.
    *
    * @param componentType - Target component type.
    *

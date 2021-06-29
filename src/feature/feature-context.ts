@@ -1,4 +1,4 @@
-import { ContextKey, ContextKey__symbol, ContextValueSpec, SingleContextKey } from '@proc7ts/context-values';
+import { CxAsset, CxEntry, CxRequest, cxSingle } from '@proc7ts/context-values';
 import { OnEvent } from '@proc7ts/fun-events';
 import { Class } from '@proc7ts/primitives';
 import { Supply, SupplyPeer } from '@proc7ts/supply';
@@ -7,25 +7,20 @@ import { ComponentContext } from '../component';
 import { ComponentClass, DefinitionContext, DefinitionSetup } from '../component/definition';
 import { FeatureRef } from './feature-ref';
 
-/**
- * @internal
- */
-const FeatureContext__key = (/*#__PURE__*/ new SingleContextKey<FeatureContext>('feature-context'));
+const FeatureContext$perContext: CxEntry.Definer<FeatureContext> = (/*#__PURE__*/ cxSingle());
 
 /**
  * Feature initialization context.
  *
  * @category Core
  */
-export abstract class FeatureContext
-    extends BootstrapContext
-    implements BootstrapSetup, SupplyPeer {
+export abstract class FeatureContext implements BootstrapContext, BootstrapSetup, SupplyPeer {
 
   /**
-   * A key of feature context value containing the feature context itself.
+   * Feature context entry containing the feature context itself.
    */
-  static get [ContextKey__symbol](): ContextKey<FeatureContext> {
-    return FeatureContext__key;
+  static perContext(target: CxEntry.Target<FeatureContext>): CxEntry.Definition<FeatureContext> {
+    return FeatureContext$perContext(target);
   }
 
   /**
@@ -64,29 +59,27 @@ export abstract class FeatureContext
    */
   abstract readonly supply: Supply;
 
+  abstract get<TValue>(entry: CxEntry<TValue, unknown>, request?: CxRequest.WithoutFallback<TValue>): TValue;
+  abstract get<TValue>(entry: CxEntry<TValue, unknown>, request: CxRequest.WithFallback<TValue>): TValue;
+  abstract get<TValue>(entry: CxEntry<TValue, unknown>, request?: CxRequest<TValue>): TValue | null;
+
   /**
-   * Provides bootstrap context value.
+   * Provides asset for bootstrap context entry
    *
    * Note that this happens when bootstrap context already exists. To provide a value before bootstrap context created
    * a {@link BootstrapSetup.provide} method can be used.
    *
-   * @typeParam TSrc - Source value type.
-   * @typeParam TDeps - Dependencies tuple type.
-   * @param spec - Context value specifier.
+   * @typeParam TValue - Context value type.
+   * @typeParam TAsset - Context value asset type.
+   * @param asset - Context entry asset.
    *
-   * @returns A value supply that removes the given context value specifier once cut off.
+   * @returns Asset supply. Revokes provided asset once cut off.
    */
-  abstract provide<TSrc, TDeps extends any[]>(
-      spec: ContextValueSpec<BootstrapContext, unknown, TSrc, TDeps>,
-  ): Supply;
+  abstract provide<TValue, TAsset = TValue>(asset: CxAsset<TValue, TAsset, BootstrapContext>): Supply;
 
-  abstract perDefinition<TSrc, TDeps extends any[]>(
-      spec: ContextValueSpec<DefinitionContext, unknown, TSrc, TDeps>,
-  ): Supply;
+  abstract perDefinition<TValue, TAsset = TValue>(asset: CxAsset<TValue, TAsset, DefinitionContext>): Supply;
 
-  abstract perComponent<TSrc, TDeps extends any[]>(
-      spec: ContextValueSpec<ComponentContext, unknown, TSrc, TDeps>,
-  ): Supply;
+  abstract perComponent<TValue, TAsset = TValue>(asset: CxAsset<TValue, TAsset, ComponentContext>): Supply;
 
   abstract setupDefinition<T extends object>(componentType: ComponentClass<T>): OnEvent<[DefinitionSetup]>;
 

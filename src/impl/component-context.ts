@@ -1,30 +1,43 @@
-import { AfterEvent, onceOn, OnEvent } from '@proc7ts/fun-events';
+import { OnDomEvent } from '@frontmeans/dom-events';
+import { CxPeerBuilder } from '@proc7ts/context-builder';
+import { CxEntry, cxEvaluated, CxGetter, cxScoped } from '@proc7ts/context-values';
+import { AfterEvent, onceOn, OnEvent, StatePath } from '@proc7ts/fun-events';
 import { valueProvider } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
-import { ComponentContext, ComponentContext__symbol, ComponentInstance } from '../component';
+import { BootstrapContext } from '../boot';
+import {
+  ComponentContext,
+  ComponentContext__symbol,
+  ComponentEventDispatcher,
+  ComponentInstance,
+  ContentRoot,
+  StateUpdater,
+} from '../component';
 import { ComponentClass } from '../component/definition';
 import { newComponent } from '../component/definition/component.impl';
 import { ComponentStatus } from './component-status';
 import { DefinitionContext$ } from './definition-context';
 
-/**
- * @internal
- */
-export abstract class ComponentContext$<T extends object> extends ComponentContext<T> {
+export const PerComponentCxPeer: CxEntry<CxPeerBuilder<ComponentContext>> = {
+  perContext: (/*#__PURE__*/ cxScoped(
+      BootstrapContext,
+      (/*#__PURE__*/ cxEvaluated(_target => new CxPeerBuilder())),
+  )),
+};
 
-  readonly get: ComponentContext<T>['get'];
+export abstract class ComponentContext$<T extends object> implements ComponentContext<T> {
+
+  readonly updateState: StateUpdater;
   private readonly _status: ComponentStatus<this>;
 
-  constructor(
-      readonly _definitionContext: DefinitionContext$<T>,
+  protected constructor(
+      readonly _defContext: DefinitionContext$<T>,
       readonly element: any,
+      readonly get: CxGetter,
   ) {
-    super();
-
-    const registry = _definitionContext._newComponentRegistry();
-
-    registry.provide({ a: ComponentContext, is: this });
-    this.get = registry.newValues().get;
+    this.updateState = <TValue>(key: StatePath, newValue: TValue, oldValue: TValue): void => {
+      this.get(StateUpdater)(key, newValue, oldValue);
+    };
     this._status = new ComponentStatus(this);
     this.supply.whenOff(() => {
       delete this.component[ComponentContext__symbol];
@@ -33,12 +46,14 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
   }
 
   get componentType(): ComponentClass<T> {
-    return this._definitionContext.componentType;
+    return this._defContext.componentType;
   }
 
   get component(): ComponentInstance<T> {
     return this._component();
   }
+
+  abstract mounted: boolean;
 
   get supply(): Supply {
     return this._status.supply;
@@ -84,6 +99,10 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
     return this._status.read();
   }
 
+  get contentRoot(): ContentRoot {
+    return this.get(ContentRoot);
+  }
+
   _component(): T {
     throw new TypeError('Component is not constructed yet. Consider to use a `whenReady()` callback');
   }
@@ -92,9 +111,17 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
     this._status.settle();
   }
 
+  on<TEvent extends Event>(type: string): OnDomEvent<TEvent> {
+    return this.get(ComponentEventDispatcher).on(type);
+  }
+
+  dispatchEvent(event: Event): void {
+    this.get(ComponentEventDispatcher).dispatch(event);
+  }
+
   _createComponent(): this {
 
-    const whenComponent = this._definitionContext._whenComponent;
+    const whenComponent = this._defContext._whenComponent;
 
     let lastRev = 0;
 
@@ -107,7 +134,7 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
         },
       });
     });
-    this._definitionContext._elementBuilder.components.send(this);
+    this._defContext._elementBuilder.components.send(this);
 
     const component = newComponent(this);
 
@@ -127,10 +154,16 @@ export abstract class ComponentContext$<T extends object> extends ComponentConte
 
 }
 
-/**
- * @internal
- */
 export class ComponentContext$Mounted<T extends object> extends ComponentContext$<T> {
+
+  static create<T extends object>(
+      defContext: DefinitionContext$<T>,
+      element: any,
+  ): ComponentContext$Mounted<T> {
+    return defContext._newComponentContext(
+        get => new ComponentContext$Mounted<T>(defContext, element, get),
+    );
+  }
 
   get mounted(): true {
     return true;
