@@ -29,7 +29,7 @@ function ComponentState$assign(
     const state = getState(target);
 
     if (state) {
-      target.provide(cxConstAsset(StateUpdater, state.update))
+      target.provide(cxConstAsset(StateUpdater, state.update));
     }
 
     return state;

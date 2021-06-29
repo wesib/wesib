@@ -145,9 +145,9 @@ describe('feature/shadow-dom', () => {
       const shadowDef: ShadowContentDef = {
         mode: 'closed',
       };
-      const attachShadow = jest.fn(({ element }: { element: Element }, init: ShadowRootInit): ShadowRoot => {
-        return element.attachShadow(init);
-      });
+      const attachShadow = jest.fn(
+          ({ element }: { element: Element }, init: ShadowRootInit): ShadowRoot => element.attachShadow(init),
+      );
 
       @AttachShadow(shadowDef)
       @Component({
