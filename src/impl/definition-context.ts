@@ -114,7 +114,7 @@ export class DefinitionContext$<T extends object> implements DefinitionContext<T
   }
 
   _newComponentContext<TContext extends ComponentContext<T>>(
-      createContext: (get: CxGetter) => TContext,
+      createContext: (get: CxGetter, builder: CxBuilder<TContext>) => TContext,
   ): TContext {
 
     const builder = new CxBuilder<TContext>(

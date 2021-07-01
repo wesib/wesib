@@ -19,10 +19,11 @@ export class ComponentStatus<TCtx extends ComponentContext> {
   private _canSettle: 0 | 1 = 0;
 
   constructor(private readonly _ctx: TCtx) {
+    this.supply.cuts(this._val);
   }
 
   get supply(): Supply {
-    return this._val.supply;
+    return this._ctx.supply;
   }
 
   read(): AfterEvent<[TCtx]> {

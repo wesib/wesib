@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { CxBuilder, cxConstAsset } from '@proc7ts/context-builder';
-import { Supply } from '@proc7ts/supply';
 import { ComponentContext } from '../../component';
 import { ComponentState } from '../state';
 import { RenderDef, RenderPath__root } from './render-def';
@@ -15,7 +14,7 @@ describe('feature/render', () => {
       beforeEach(() => {
         state = new ComponentState();
 
-        const cxBuilder = new CxBuilder<ComponentContext>(get => ({ get, supply: new Supply() } as ComponentContext));
+        const cxBuilder = new CxBuilder<ComponentContext>(get => ({ get } as ComponentContext));
 
         context = cxBuilder.context;
         cxBuilder.provide(cxConstAsset(ComponentState, state));

@@ -1,5 +1,5 @@
 import { OnDomEvent } from '@frontmeans/dom-events';
-import { CxPeerBuilder } from '@proc7ts/context-builder';
+import { CxBuilder, CxPeerBuilder } from '@proc7ts/context-builder';
 import { CxEntry, cxEvaluated, CxGetter, cxScoped } from '@proc7ts/context-values';
 import { AfterEvent, onceOn, OnEvent, StatePath } from '@proc7ts/fun-events';
 import { valueProvider } from '@proc7ts/primitives';
@@ -32,6 +32,7 @@ export abstract class ComponentContext$<T extends object> implements ComponentCo
 
   protected constructor(
       readonly _defContext: DefinitionContext$<T>,
+      readonly _builder: CxBuilder<ComponentContext<T>>,
       readonly element: any,
       readonly get: CxGetter,
   ) {
@@ -56,7 +57,7 @@ export abstract class ComponentContext$<T extends object> implements ComponentCo
   abstract mounted: boolean;
 
   get supply(): Supply {
-    return this._status.supply;
+    return this._builder.supply;
   }
 
   get ready(): boolean {
@@ -161,7 +162,12 @@ export class ComponentContext$Mounted<T extends object> extends ComponentContext
       element: any,
   ): ComponentContext$Mounted<T> {
     return defContext._newComponentContext(
-        get => new ComponentContext$Mounted<T>(defContext, element, get),
+        (get, builder) => new ComponentContext$Mounted<T>(
+            defContext,
+            builder,
+            element,
+            get,
+        ),
     );
   }
 

@@ -12,7 +12,12 @@ class ComponentContext$Custom<T extends object> extends ComponentContext$<T> {
       element: any,
   ): ComponentContext$Custom<T> {
     return defContext._newComponentContext(
-        get => new ComponentContext$Custom<T>(defContext, element, get),
+        (get, builder) => new ComponentContext$Custom<T>(
+            defContext,
+            builder,
+            element,
+            get,
+        ),
     );
   }
 

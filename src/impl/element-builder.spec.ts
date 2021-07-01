@@ -473,6 +473,14 @@ describe('boot', () => {
       });
 
       describe('supply', () => {
+
+        beforeEach(() => {
+          Supply.onUnexpectedAbort(noop);
+        });
+        afterEach(() => {
+          Supply.onUnexpectedAbort();
+        });
+
         it('is cut off by `disconnectedCallback()`', () => {
 
           const destroyed = jest.fn();

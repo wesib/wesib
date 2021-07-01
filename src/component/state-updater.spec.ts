@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
-import { CxBuilder, cxConstAsset, CxSupply } from '@proc7ts/context-builder';
+import { CxBuilder, cxConstAsset } from '@proc7ts/context-builder';
 import { CxValues } from '@proc7ts/context-values';
-import { Supply } from '@proc7ts/supply';
 import { StateUpdater } from './state-updater';
 
 describe('component', () => {
@@ -39,15 +38,13 @@ describe('component', () => {
       context = cxBuilder.context;
 
       const updater1 = jest.fn();
-      const contextSupply = new Supply();
 
       cxBuilder.provide(cxConstAsset(StateUpdater, updater1));
-      cxBuilder.provide(cxConstAsset(CxSupply, contextSupply));
       updater = context.get(StateUpdater);
 
       const reason = new Error('reason');
 
-      contextSupply.off(reason);
+      cxBuilder.supply.off(reason);
       updater('path', 'new', 'old');
       expect(updater1).not.toHaveBeenCalled();
     });
