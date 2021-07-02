@@ -58,4 +58,5 @@ export interface BootstrapContext extends CxValues {
  */
 export const BootstrapContext: CxEntry<BootstrapContext> = {
   perContext: (/*#__PURE__*/ cxSingle()),
+  toString: () => '[BootstrapContext]',
 };

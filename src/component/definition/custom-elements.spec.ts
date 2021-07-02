@@ -61,6 +61,12 @@ describe('component', () => {
       elementType = HTMLElement;
     });
 
+    describe('toString', () => {
+      it('provides string representation', () => {
+        expect(String(CustomElements)).toBe('[CustomElements]');
+      });
+    });
+
     describe('define', () => {
       it('defines custom element', () => {
         customElements.define(TestComponent, elementType);

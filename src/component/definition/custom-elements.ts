@@ -54,6 +54,7 @@ export const CustomElements: CxEntry<CustomElements> = {
         byDefault: CustomElements$create,
       })),
   )),
+  toString: () => `[CustomElements]`,
 };
 
 /**

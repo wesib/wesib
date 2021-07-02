@@ -17,6 +17,10 @@ export class ComponentState extends StateTracker {
     };
   }
 
+  static toString(): string {
+    return '[ComponentState]';
+  }
+
 }
 
 function ComponentState$assign(

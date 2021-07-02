@@ -47,6 +47,12 @@ describe('feature/state', () => {
 
       expect(onUpdate).not.toHaveBeenCalled();
     });
+
+    describe('toString', () => {
+      it('returns string representation', () => {
+        expect(String(ComponentState)).toBe('[ComponentState]');
+      });
+    });
   });
 
   async function bootstrap(): Promise<ComponentContext> {
