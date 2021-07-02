@@ -17,8 +17,9 @@ describe('feature/state', () => {
       component = {};
       state = new StateTracker();
 
-      const cxBuilder = new CxBuilder<ComponentContext>(get => ({
+      const cxBuilder = new CxBuilder<ComponentContext>((get, { supply }) => ({
         component,
+        supply,
         get,
       } as ComponentContext));
 

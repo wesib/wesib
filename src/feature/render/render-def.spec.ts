@@ -14,7 +14,9 @@ describe('feature/render', () => {
       beforeEach(() => {
         state = new ComponentState();
 
-        const cxBuilder = new CxBuilder<ComponentContext>(get => ({ get } as ComponentContext));
+        const cxBuilder = new CxBuilder<ComponentContext>(
+            (get, { supply }) => ({ supply, get } as ComponentContext),
+        );
 
         context = cxBuilder.context;
         cxBuilder.provide(cxConstAsset(ComponentState, state));

@@ -19,8 +19,9 @@ describe('feature/attributes', () => {
       element = document.createElement('div');
       state = new StateTracker();
 
-      const cxBuilder = new CxBuilder<ComponentContext>(get => ({
+      const cxBuilder = new CxBuilder<ComponentContext>((get, { supply }) => ({
         element,
+        supply,
         get,
       }) as ComponentContext);
 
