@@ -20,4 +20,5 @@ export const ShadowContentRoot: CxEntry<ShadowContentRoot> = {
       ComponentContext,
       (/*#__PURE__*/ cxSingle()),
   )),
+  toString: () => '[ShadowContentRoot]',
 };

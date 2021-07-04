@@ -57,4 +57,5 @@ export const ComponentRenderCtl: CxEntry<ComponentRenderCtl> = {
   perContext: (/*#__PURE__*/ cxSingle({
     byDefault: target => new ComponentRenderCtl$(target.get(ComponentContext)),
   })),
+  toString: () => '[ComponentRenderCtl]',
 };

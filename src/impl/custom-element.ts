@@ -63,12 +63,12 @@ export function customElementType<T extends object>(
       settle = () => slot.rebind()!.settle();
     }
 
-    connectedCallback(): void {
+    override connectedCallback(): void {
       super.connectedCallback?.();
       (ComponentSlot.of<T>(this).rebind() as ComponentContext$Custom<T>)._connect();
     }
 
-    disconnectedCallback(): void {
+    override disconnectedCallback(): void {
       (ComponentSlot.of<T>(this).context as ComponentContext$Custom<T>).supply.off();
       super.disconnectedCallback?.();
     }

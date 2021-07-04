@@ -32,11 +32,9 @@ export const DomPropertyRegistry: CxEntry<DomPropertyRegistry> = {
         byDefault: target => new DomPropertyRegistry$(target.get(DefinitionContext)),
       })),
   )),
+  toString: () => '[DomPropertyRegistry]',
 };
 
-/**
- * @internal
- */
 class DomPropertyRegistry$ implements DomPropertyRegistry {
 
   private readonly props = new Map<PropertyKey, PropertyDescriptor>();

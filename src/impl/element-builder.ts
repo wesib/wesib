@@ -18,6 +18,7 @@ export const ElementBuilder: CxEntry<ElementBuilder> = {
         byDefault: ElementBuilder$create,
       })),
   )),
+  toString: () => '[ElementBuilder]',
 };
 
 function ElementBuilder$create(target: CxEntry.Target<ElementBuilder>): ElementBuilder {

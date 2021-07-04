@@ -6,11 +6,11 @@ import { Component, ComponentSlot } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { MockElement } from '../../testing';
 import { attributePathTo } from './attribute-path';
+import { AttributeRegistry } from './attribute-registry';
 import { Attributes } from './attributes.amendment';
 
 describe('feature/attributes', () => {
   describe('AttributeRegistry', () => {
-
     it('declares `observedAttributes` static property', async () => {
 
       @Attributes('test-attr-1', 'test-attr-2')
@@ -77,7 +77,7 @@ describe('feature/attributes', () => {
 
         static observedAttributes = ['inherited-attr'];
 
-        attributeChangedCallback(
+        override attributeChangedCallback(
             _name: string,
             _newValue: string | null,
             _oldValue: string | null,
@@ -111,6 +111,12 @@ describe('feature/attributes', () => {
       element.attributeChangedCallback!('inherited-attr', 'old', 'new');
       expect(inheritedAttrChanged).toHaveBeenCalledWith('inherited-attr', 'old', 'new');
       expect(inheritedAttrChanged.mock.instances[0]).toBe(element);
+    });
+
+    describe('toString', () => {
+      it('returns string representation', () => {
+        expect(String(AttributeRegistry)).toBe('[AttributeRegistry]');
+      });
     });
   });
 

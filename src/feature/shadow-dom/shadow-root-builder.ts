@@ -1,4 +1,4 @@
-import { CxEntry, cxEvaluated } from '@proc7ts/context-values';
+import { CxEntry, cxRecent } from '@proc7ts/context-values';
 import { ComponentContext } from '../../component';
 import { ShadowContentDef } from './attach-shadow.amendment';
 
@@ -29,16 +29,15 @@ export type ShadowRootBuilder =
  * @category Feature
  */
 export const ShadowRootBuilder: CxEntry<ShadowRootBuilder> = {
-  perContext: (/*#__PURE__*/ cxEvaluated(target => {
-
-    let delegated!: ShadowRootBuilder;
-
-    target.trackRecentAsset(evaluated => {
-      delegated = evaluated ? evaluated.asset : attachShadow;
-    });
-
-    return (context, init) => delegated(context, init);
+  perContext: (/*#__PURE__*/ cxRecent<ShadowRootBuilder, ShadowRootBuilder, ShadowRootBuilder>({
+    create: (recent, _target) => recent,
+    byDefault: _target => attachShadow,
+    access: (get, _target) => () => (
+        context,
+        init,
+    ) => get()(context, init),
   })),
+  toString: () => '[ShadowRootBuilder]',
 };
 
 function attachShadow(context: ComponentContext, init: ShadowRootInit): ShadowRoot | undefined {

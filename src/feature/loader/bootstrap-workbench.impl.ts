@@ -11,6 +11,7 @@ export const BootstrapWorkbench: CxEntry<BootstrapWorkbench> = {
         byDefault: () => new Workbench(),
       })),
   )),
+  toString: () => '[BootstrapWorkbench]',
 };
 
 export const featureSetupStage = (/*#__PURE__*/ new WorkStage('feature setup'));

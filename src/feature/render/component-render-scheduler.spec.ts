@@ -94,6 +94,12 @@ describe('feature/render', () => {
       expect(logError).toHaveBeenCalledWith(error);
     });
 
+    describe('toString', () => {
+      it('returns string representation', () => {
+        expect(String(ComponentRenderScheduler)).toBe('[ComponentRenderScheduler]');
+      });
+    });
+
     async function bootstrap(): Promise<ComponentContext> {
 
       @Component({

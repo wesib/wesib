@@ -26,11 +26,15 @@ export class FeatureModule extends CxModule {
     super(feature.name, FeatureModule$options(feature));
   }
 
-  async setup(setup: CxModule.Setup): Promise<void> {
+  override async setup(setup: CxModule.Setup): Promise<void> {
 
     const workbench = setup.get(BootstrapWorkbench);
 
     await workbench.work(featureSetupStage).run(() => super.setup(setup));
+  }
+
+  override toString(): string {
+    return `[Feature ${this.name}]`;
   }
 
 }

@@ -17,7 +17,7 @@ export class ComponentState extends StateTracker {
     };
   }
 
-  static toString(): string {
+  static override toString(): string {
     return '[ComponentState]';
   }
 

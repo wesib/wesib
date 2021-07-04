@@ -25,5 +25,11 @@ describe('component', () => {
             .toThrow(new TypeError('No component context found in [object Object]'));
       });
     });
+
+    describe('toString', () => {
+      it('returns string representation', () => {
+        expect(String(ComponentContext)).toBe('[ComponentContext]');
+      });
+    });
   });
 });

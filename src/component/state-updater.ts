@@ -54,6 +54,7 @@ export namespace StateUpdater {
  */
 export const StateUpdater: CxEntry<StateUpdater, StateUpdater.Normalized> = {
   perContext: (/*#__PURE__*/ cxEvaluated(StateUpdater$create)),
+  toString: () => '[StateUpdater]',
 };
 
 function StateUpdater$create(target: CxEntry.Target<StateUpdater, StateUpdater.Normalized>): StateUpdater {

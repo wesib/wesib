@@ -48,6 +48,12 @@ describe('component', () => {
       updater('path', 'new', 'old');
       expect(updater1).not.toHaveBeenCalled();
     });
+
+    describe('toString', () => {
+      it('returns string representation', () => {
+        expect(String(StateUpdater)).toBe('[StateUpdater]');
+      });
+    });
   });
 
   function newBuilder(): CxBuilder {

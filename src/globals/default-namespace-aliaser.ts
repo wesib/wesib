@@ -17,4 +17,5 @@ export type DefaultNamespaceAliaser = NamespaceAliaser;
  */
 export const DefaultNamespaceAliaser: CxEntry<DefaultNamespaceAliaser> = {
   perContext: (/*#__PURE__*/ cxSingle()),
+  toString: () => '[DefaultNamespaceAliaser]',
 };

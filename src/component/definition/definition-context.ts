@@ -98,4 +98,5 @@ export interface DefinitionContext<T extends object = any> extends CxValues {
  */
 export const DefinitionContext: CxEntry<DefinitionContext> = {
   perContext: (/*#__PURE__*/ cxSingle()),
+  toString: () => '[DefinitionContext]',
 };

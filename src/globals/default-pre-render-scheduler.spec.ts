@@ -2,7 +2,7 @@ import { describe, expect, it, jest } from '@jest/globals';
 import { bootstrapComponents } from '../bootstrap-components';
 import { DefaultPreRenderScheduler } from './default-pre-render-scheduler';
 
-describe('boot', () => {
+describe('globals', () => {
   describe('DefaultPreRenderScheduler', () => {
     it('utilizes asynchronous render scheduler', async () => {
 
@@ -15,6 +15,12 @@ describe('boot', () => {
 
       await Promise.resolve();
       expect(shot).toHaveBeenCalled();
+    });
+
+    describe('toString', () => {
+      it('returns string representation', () => {
+        expect(String(DefaultPreRenderScheduler)).toBe('[DefaultPreRenderScheduler]');
+      });
     });
   });
 });

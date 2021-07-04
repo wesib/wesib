@@ -10,6 +10,10 @@ export class BootstrapContextBuilder extends CxBuilder<BootstrapContext> {
     return BootstrapContextBuilder$perContext(target);
   }
 
+  static override toString(): string {
+    return '[BootstrapContextBuilder]';
+  }
+
   constructor(
       createContext: (this: void, getValue: CxGetter) => BootstrapContext,
   ) {

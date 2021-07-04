@@ -16,7 +16,7 @@ import { MockElement } from '../testing';
 import { BootstrapWindow } from './bootstrap-window';
 import { DefaultRenderScheduler } from './default-render-scheduler';
 
-describe('boot', () => {
+describe('globals', () => {
   describe('DefaultRenderScheduler', () => {
 
     let mockScheduler: Mock<RenderSchedule, Parameters<RenderScheduler>>;
@@ -84,6 +84,12 @@ describe('boot', () => {
       const defContext = await bsContext.whenDefined(TestComponent);
 
       expect(defContext.get(DefaultRenderScheduler)).toBe(bsContext.get(DefaultRenderScheduler));
+    });
+
+    describe('toString', () => {
+      it('returns string representation', () => {
+        expect(String(DefaultRenderScheduler)).toBe('[DefaultRenderScheduler]');
+      });
     });
 
     async function bootstrapContext(

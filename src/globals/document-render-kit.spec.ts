@@ -9,7 +9,7 @@ import { DefaultNamespaceAliaser } from './default-namespace-aliaser';
 import { DefaultRenderScheduler } from './default-render-scheduler';
 import { DocumentRenderKit } from './document-render-kit';
 
-describe('boot', () => {
+describe('globals', () => {
   describe('DocumentRenderKit', () => {
 
     let doc: Document;
@@ -67,6 +67,12 @@ describe('boot', () => {
       drCtx.nsAlias(ns);
       expect(newNsAlias).toHaveBeenCalledWith(ns);
       expect(nsAlias).not.toHaveBeenCalled();
+    });
+
+    describe('toString', () => {
+      it('returns string representation', () => {
+        expect(String(DocumentRenderKit)).toBe('[DocumentRenderKit]');
+      });
     });
   });
 });

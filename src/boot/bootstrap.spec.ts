@@ -547,7 +547,7 @@ describe('boot', () => {
         }
 
         expect(() => context.define(TestComponent)).toThrow(new TypeError(
-            '[CxModule TestFeature] initialized already, and does not accept new initializers',
+            '[Feature TestFeature] initialized already, and does not accept new initializers',
         ));
       });
     });

@@ -690,5 +690,11 @@ describe('boot', () => {
         expect(disconnected).toHaveBeenCalledWith(reason);
       });
     });
+
+    describe('toString', () => {
+      it('returns string representation', () => {
+        expect(String(ElementBuilder)).toBe('[ElementBuilder]');
+      });
+    });
   });
 });

@@ -22,4 +22,5 @@ export const DefaultRenderScheduler: CxEntry<DefaultRenderScheduler, RenderSched
       BootstrapContext,
       (/*#__PURE__*/ RenderScheduler$definer(newRenderSchedule)),
   )),
+  toString: () => '[DefaultRenderScheduler]',
 };

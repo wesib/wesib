@@ -3,4 +3,3 @@ export * from './custom-elements';
 export * from './definition-context';
 export * from './definition-setup';
 export * from './element-def';
-export * from './element-naming';

@@ -42,6 +42,7 @@ export const DocumentRenderKit: CxEntry<DocumentRenderKit> = {
         byDefault: DocumentRenderKit$create,
       })),
   )),
+  toString: () => '[DocumentRenderKit]',
 };
 
 function DocumentRenderKit$create(target: CxEntry.Target<DocumentRenderKit>): DocumentRenderKit {

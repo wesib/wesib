@@ -23,6 +23,7 @@ export const PerComponentCxPeer: CxEntry<CxPeerBuilder<ComponentContext>> = {
       BootstrapContext,
       (/*#__PURE__*/ cxEvaluated(_target => new CxPeerBuilder())),
   )),
+  toString: () => '[PerComponentCxPeer]',
 };
 
 export abstract class ComponentContext$<T extends object> implements ComponentContext<T> {

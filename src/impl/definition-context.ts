@@ -5,8 +5,8 @@ import { Class, valueProvider } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
 import { BootstrapContext } from '../boot';
 import { ComponentContext, ComponentDef, ComponentElement, ComponentSlot } from '../component';
-import { DefinitionContext, DefinitionSetup, ElementDef, ElementNaming } from '../component/definition';
-import { DocumentRenderKit } from '../globals';
+import { DefinitionContext, DefinitionSetup, ElementDef } from '../component/definition';
+import { DocumentRenderKit, ElementNaming } from '../globals';
 import { BootstrapContextBuilder } from './bootstrap-context-builder';
 import { ComponentContext$Mounted, PerComponentCxPeer } from './component-context';
 import { customElementType } from './custom-element';
@@ -20,6 +20,7 @@ export const PerDefinitionCxPeer: CxEntry<CxPeerBuilder<DefinitionContext>> = {
       BootstrapContext,
       (/*#__PURE__*/ cxEvaluated(_target => new CxPeerBuilder())),
   )),
+  toString: () => '[PerDefinitionCxPeer]',
 };
 
 export class DefinitionContext$<T extends object> implements DefinitionContext<T> {

@@ -48,6 +48,7 @@ describe('component', () => {
         expect(dispatchEventSpy).toHaveBeenCalledWith(event);
       });
     });
+
     describe('on', () => {
       it('registers event listener', () => {
 
@@ -74,6 +75,12 @@ describe('component', () => {
 
         (addEventListenerSpy.mock.calls[0][1] as EventListener)(event);
         expect(mockListener).toHaveBeenCalledWith(event);
+      });
+    });
+
+    describe('toString', () => {
+      it('returns string representation', () => {
+        expect(String(ComponentEventDispatcher)).toBe('[ComponentEventDispatcher]');
       });
     });
   });

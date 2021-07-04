@@ -62,6 +62,7 @@ export const ComponentRenderScheduler: CxEntry<ComponentRenderScheduler> = {
   perContext: (/*#__PURE__*/ cxSingle({
     byDefault: ComponentRenderScheduler$create,
   })),
+  toString: () => '[ComponentRenderScheduler]',
 };
 
 function ComponentRenderScheduler$create(target: CxEntry.Target<ComponentRenderScheduler>): ComponentRenderScheduler {

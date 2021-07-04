@@ -23,4 +23,5 @@ export const ContentRoot: CxEntry<ContentRoot> = {
       return target.get(ComponentContext).element as ContentRoot;
     },
   })),
+  toString: () => '[ContentRoot]',
 };

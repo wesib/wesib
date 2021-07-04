@@ -16,4 +16,5 @@ export type BootstrapWindow = Window & typeof globalThis;
  */
 export const BootstrapWindow: CxEntry<BootstrapWindow> = {
   perContext: (/*#__PURE__*/ cxSingle({ byDefault: () => window })),
+  toString: () => '[BootstrapWindow]',
 };

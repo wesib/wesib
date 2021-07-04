@@ -34,6 +34,7 @@ export const AttributeRegistry: CxEntry<AttributeRegistry> = {
         byDefault: target => new AttributeRegistry$(target.get(DefinitionContext)),
       })),
   )),
+  toString: () => '[AttributeRegistry]',
 };
 
 class AttributeRegistry$ implements AttributeRegistry {

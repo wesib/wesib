@@ -59,4 +59,5 @@ export const ComponentEventDispatcher: CxEntry<ComponentEventDispatcher> = {
       };
     },
   })),
+  toString: () => '[ComponentEventDispatcher]',
 };

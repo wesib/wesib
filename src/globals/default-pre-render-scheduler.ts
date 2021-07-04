@@ -22,4 +22,5 @@ export const DefaultPreRenderScheduler: CxEntry<DefaultPreRenderScheduler> = {
       BootstrapContext,
       RenderScheduler$definer(asyncRenderScheduler),
   )),
+  toString: () => '[DefaultPreRenderScheduler]',
 };

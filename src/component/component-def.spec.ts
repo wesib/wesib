@@ -56,7 +56,7 @@ describe('component', () => {
         }
         class B extends A {
 
-          static [ComponentDef__symbol]: ComponentDef = {
+          static override [ComponentDef__symbol]: ComponentDef = {
             name: 'component-b',
             extend: {
               name: 'span',

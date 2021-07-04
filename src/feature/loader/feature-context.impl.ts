@@ -3,7 +3,7 @@ import { CxModule } from '@proc7ts/context-modules';
 import { CxAsset, CxGetter } from '@proc7ts/context-values';
 import { onceOn, OnEvent, supplyOn, valueOn_ } from '@proc7ts/fun-events';
 import { Class } from '@proc7ts/primitives';
-import { Supply } from '@proc7ts/supply';
+import { Supply, SupplyPeer } from '@proc7ts/supply';
 import { BootstrapContext } from '../../boot';
 import { ComponentContext } from '../../component';
 import { ComponentClass, DefinitionContext, DefinitionSetup } from '../../component/definition';
@@ -11,9 +11,10 @@ import { BootstrapContextBuilder, ElementBuilder, onPostDefSetup } from '../../i
 import { PerComponentCxPeer } from '../../impl/component-context';
 import { PerDefinitionCxPeer } from '../../impl/definition-context';
 import { FeatureContext } from '../feature-context';
+import { FeatureRef } from '../feature-ref';
 import { ComponentRegistry } from './component-registry.impl';
 
-export class FeatureContext$ extends FeatureContext {
+export class FeatureContext$ implements FeatureContext {
 
   static create(feature: Class, setup: CxModule.Setup): FeatureContext {
 
@@ -40,8 +41,6 @@ export class FeatureContext$ extends FeatureContext {
       readonly get: CxGetter,
       private readonly _setup: CxModule.Setup,
   ) {
-    super();
-
     this._bsContext = _setup.get(BootstrapContext);
 
     const handle = _setup.get(_setup.module);
@@ -95,6 +94,17 @@ export class FeatureContext$ extends FeatureContext {
 
   define<T extends object>(componentType: ComponentClass<T>): void {
     this._componentRegistry.define(componentType);
+  }
+
+  whenDefined<T extends object>(componentType: ComponentClass<T>): OnEvent<[DefinitionContext<T>]> {
+    return this.get(BootstrapContext).whenDefined(componentType);
+  }
+
+  load(feature: Class, user?: SupplyPeer): FeatureRef {
+    return this.get(BootstrapContext).load(
+        feature,
+        user ? new Supply().needs(this).needs(user) : this,
+    );
   }
 
 }
