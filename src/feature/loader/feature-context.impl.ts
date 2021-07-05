@@ -1,6 +1,6 @@
 import { CxBuilder, cxConstAsset } from '@proc7ts/context-builder';
 import { CxModule } from '@proc7ts/context-modules';
-import { CxAsset, CxGetter } from '@proc7ts/context-values';
+import { CxAccessor, CxAsset } from '@proc7ts/context-values';
 import { onceOn, OnEvent, supplyOn, valueOn_ } from '@proc7ts/fun-events';
 import { Class } from '@proc7ts/primitives';
 import { Supply, SupplyPeer } from '@proc7ts/supply';
@@ -38,7 +38,7 @@ export class FeatureContext$ implements FeatureContext {
 
   private constructor(
       readonly feature: Class,
-      readonly get: CxGetter,
+      readonly get: CxAccessor,
       private readonly _setup: CxModule.Setup,
   ) {
     this._bsContext = _setup.get(BootstrapContext);

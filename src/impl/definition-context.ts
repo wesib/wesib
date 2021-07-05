@@ -1,5 +1,5 @@
 import { CxBuilder, cxConstAsset, CxPeerBuilder } from '@proc7ts/context-builder';
-import { CxAsset, CxEntry, cxEvaluated, CxGetter, cxScoped } from '@proc7ts/context-values';
+import { CxAccessor, CxAsset, CxEntry, cxEvaluated, cxScoped } from '@proc7ts/context-values';
 import { mapOn_, onceOn, OnEvent, trackValue, translateOn, ValueTracker } from '@proc7ts/fun-events';
 import { Class, valueProvider } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
@@ -62,7 +62,7 @@ export class DefinitionContext$<T extends object> implements DefinitionContext<T
       readonly _elementBuilder: ElementBuilder,
       readonly componentType: ComponentDefinitionClass<T>,
       readonly _cxBuilder: CxBuilder<DefinitionContext>,
-      readonly get: CxGetter,
+      readonly get: CxAccessor,
   ) {
     this._ready = trackValue(false);
     this._whenReady = this._ready.read.do(translateOn((send, ready) => ready && send()));
@@ -115,7 +115,7 @@ export class DefinitionContext$<T extends object> implements DefinitionContext<T
   }
 
   _newComponentContext<TContext extends ComponentContext<T>>(
-      createContext: (get: CxGetter, builder: CxBuilder<TContext>) => TContext,
+      createContext: (get: CxAccessor, builder: CxBuilder<TContext>) => TContext,
   ): TContext {
 
     const builder = new CxBuilder<TContext>(

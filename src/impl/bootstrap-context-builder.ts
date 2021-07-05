@@ -1,5 +1,5 @@
 import { CxBuilder, cxConstAsset } from '@proc7ts/context-builder';
-import { CxEntry, CxGetter, cxSingle } from '@proc7ts/context-values';
+import { CxAccessor, CxEntry, cxSingle } from '@proc7ts/context-values';
 import { BootstrapContext } from '../boot';
 
 const BootstrapContextBuilder$perContext: CxEntry.Definer<BootstrapContextBuilder> = (/*#__PURE__*/ cxSingle());
@@ -15,7 +15,7 @@ export class BootstrapContextBuilder extends CxBuilder<BootstrapContext> {
   }
 
   constructor(
-      createContext: (this: void, getValue: CxGetter) => BootstrapContext,
+      createContext: (this: void, getValue: CxAccessor) => BootstrapContext,
   ) {
     super(createContext);
     this.provide(cxConstAsset(BootstrapContextBuilder, this));

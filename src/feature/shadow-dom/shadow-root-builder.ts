@@ -32,10 +32,9 @@ export const ShadowRootBuilder: CxEntry<ShadowRootBuilder> = {
   perContext: (/*#__PURE__*/ cxRecent<ShadowRootBuilder, ShadowRootBuilder, ShadowRootBuilder>({
     create: (recent, _target) => recent,
     byDefault: _target => attachShadow,
-    access: (get, _target) => () => (
-        context,
-        init,
-    ) => get()(context, init),
+    assign: ({ get }, _target) => receiver => receiver(
+        (context, init) => get()(context, init),
+    ),
   })),
   toString: () => '[ShadowRootBuilder]',
 };

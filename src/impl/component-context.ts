@@ -1,6 +1,6 @@
 import { OnDomEvent } from '@frontmeans/dom-events';
 import { CxBuilder, CxPeerBuilder } from '@proc7ts/context-builder';
-import { CxEntry, cxEvaluated, CxGetter, cxScoped } from '@proc7ts/context-values';
+import { CxAccessor, CxEntry, cxEvaluated, cxScoped } from '@proc7ts/context-values';
 import { AfterEvent, onceOn, OnEvent, StatePath } from '@proc7ts/fun-events';
 import { valueProvider } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
@@ -35,7 +35,7 @@ export abstract class ComponentContext$<T extends object> implements ComponentCo
       readonly _defContext: DefinitionContext$<T>,
       readonly _builder: CxBuilder<ComponentContext<T>>,
       readonly element: any,
-      readonly get: CxGetter,
+      readonly get: CxAccessor,
   ) {
     this.updateState = <TValue>(key: StatePath, newValue: TValue, oldValue: TValue): void => {
       this.get(StateUpdater)(key, newValue, oldValue);
