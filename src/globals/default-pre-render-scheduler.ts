@@ -1,7 +1,7 @@
 import { asyncRenderScheduler, RenderScheduler } from '@frontmeans/render-scheduler';
 import { CxEntry, cxScoped } from '@proc7ts/context-values';
 import { BootstrapContext } from '../boot';
-import { RenderScheduler$definer } from './render-scheduler.entry.impl';
+import { cxRenderScheduler } from './render-scheduler.entry.impl';
 
 /**
  * Default pre-rendering tasks scheduler.
@@ -20,7 +20,7 @@ export type DefaultPreRenderScheduler = RenderScheduler;
 export const DefaultPreRenderScheduler: CxEntry<DefaultPreRenderScheduler> = {
   perContext: (/*#__PURE__*/ cxScoped(
       BootstrapContext,
-      RenderScheduler$definer(asyncRenderScheduler),
+      cxRenderScheduler(asyncRenderScheduler),
   )),
   toString: () => '[DefaultPreRenderScheduler]',
 };
