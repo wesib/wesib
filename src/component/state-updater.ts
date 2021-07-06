@@ -1,5 +1,6 @@
-import { CxEntry, cxEvaluated } from '@proc7ts/context-values';
+import { cxDynamic, CxEntry } from '@proc7ts/context-values';
 import { statePath, StatePath } from '@proc7ts/fun-events';
+import { asis, valuesProvider } from '@proc7ts/primitives';
 
 /**
  * Component state updater signature.
@@ -53,33 +54,44 @@ export namespace StateUpdater {
  * @category Core
  */
 export const StateUpdater: CxEntry<StateUpdater, StateUpdater.Normalized> = {
-  perContext: (/*#__PURE__*/ cxEvaluated(StateUpdater$create)),
+  perContext: (/*#__PURE__*/ cxDynamic<StateUpdater, StateUpdater.Normalized, StateUpdater.Normalized[]>({
+    create: asis,
+    byDefault: valuesProvider(),
+    assign: ({ get, to }, { supply }) => {
+
+      let update: StateUpdater = (path, newValue, oldValue) => {
+        path = statePath(path);
+
+        const updaters = get();
+
+        for (let i = updaters.length - 1; i >= 0; --i) {
+          updaters[i](path, newValue, oldValue);
+        }
+      };
+      const updater: StateUpdater = (path, newValue, oldValue) => update(
+          path,
+          newValue,
+          oldValue,
+      );
+      let assigner: CxEntry.Assigner<StateUpdater> = receiver => to(
+          (_, by) => receiver(updater, by),
+      );
+
+      supply.whenOff(() => {
+        update = StateUpdater$noop;
+        assigner = StateUpdater$noop$assigner;
+      });
+
+      return receiver => assigner(receiver);
+    },
+  })),
   toString: () => '[StateUpdater]',
 };
 
-function StateUpdater$create(target: CxEntry.Target<StateUpdater, StateUpdater.Normalized>): StateUpdater {
+function StateUpdater$noop$assigner(receiver: CxEntry.Receiver<StateUpdater>): void {
+  receiver(StateUpdater$noop);
+}
 
-  let updaters: StateUpdater.Normalized[] = [];
-
-  target.trackAssetList(assets => {
-
-    const newUpdaters: StateUpdater.Normalized[] = [];
-
-    for (let i = assets.length - 1; i >= 0; --i) {
-      assets[i].eachRecentAsset(updater => {
-        newUpdaters.push(updater);
-      });
-    }
-
-    updaters = newUpdaters;
-  });
-
-  target.supply.whenOff(() => updaters = []);
-
-  return <TValue>(path: StatePath, newValue: TValue, oldValue: TValue) => {
-    path = statePath(path);
-    for (const updater of updaters) {
-      updater(path, newValue, oldValue);
-    }
-  };
+function StateUpdater$noop(_path: StatePath, _newValue: unknown, _oldValue: unknown): void {
+  // Do not update the state.
 }
