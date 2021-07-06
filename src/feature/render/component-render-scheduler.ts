@@ -60,12 +60,14 @@ export interface ComponentRenderScheduleOptions extends RenderScheduleOptions, R
  */
 export const ComponentRenderScheduler: CxEntry<ComponentRenderScheduler> = {
   perContext: (/*#__PURE__*/ cxSingle({
-    byDefault: ComponentRenderScheduler$create,
+    byDefault: ComponentRenderScheduler$byDefault,
   })),
   toString: () => '[ComponentRenderScheduler]',
 };
 
-function ComponentRenderScheduler$create(target: CxEntry.Target<ComponentRenderScheduler>): ComponentRenderScheduler {
+function ComponentRenderScheduler$byDefault(
+    target: CxEntry.Target<ComponentRenderScheduler>,
+): ComponentRenderScheduler {
 
   const renderCtl = target.get(ComponentRenderCtl);
 

@@ -20,7 +20,7 @@ export type DefaultPreRenderScheduler = RenderScheduler;
 export const DefaultPreRenderScheduler: CxEntry<DefaultPreRenderScheduler> = {
   perContext: (/*#__PURE__*/ cxScoped(
       BootstrapContext,
-      cxRenderScheduler(asyncRenderScheduler),
+      (/*#__PURE__*/ cxRenderScheduler(asyncRenderScheduler)),
   )),
   toString: () => '[DefaultPreRenderScheduler]',
 };

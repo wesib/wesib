@@ -15,13 +15,13 @@ export const ElementBuilder: CxEntry<ElementBuilder> = {
   perContext: (/*#__PURE__*/ cxDefaultScoped(
       BootstrapContext,
       (/*#__PURE__*/ cxSingle({
-        byDefault: ElementBuilder$create,
+        byDefault: ElementBuilder$byDefault,
       })),
   )),
   toString: () => '[ElementBuilder]',
 };
 
-function ElementBuilder$create(target: CxEntry.Target<ElementBuilder>): ElementBuilder {
+function ElementBuilder$byDefault(target: CxEntry.Target<ElementBuilder>): ElementBuilder {
   return {
     definitions: new EventEmitter<[DefinitionContext]>(),
     components: new EventEmitter<[ComponentContext]>(),

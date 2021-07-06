@@ -39,13 +39,13 @@ export const DocumentRenderKit: CxEntry<DocumentRenderKit> = {
   perContext: (/*#__PURE__*/ cxDefaultScoped(
       BootstrapContext,
       (/*#__PURE__*/ cxSingle({
-        byDefault: DocumentRenderKit$create,
+        byDefault: DocumentRenderKit$byDefault,
       })),
   )),
   toString: () => '[DocumentRenderKit]',
 };
 
-function DocumentRenderKit$create(target: CxEntry.Target<DocumentRenderKit>): DocumentRenderKit {
+function DocumentRenderKit$byDefault(target: CxEntry.Target<DocumentRenderKit>): DocumentRenderKit {
 
   const docs = new WeakMap<Document, 1>();
   const initDoc = (doc: Document): void => {

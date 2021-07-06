@@ -33,13 +33,13 @@ export const ElementNaming: CxEntry<ElementNaming> = {
   perContext: (/*#__PURE__*/ cxScoped(
       BootstrapContext,
       (/*#__PURE__*/ cxSingle({
-        byDefault: ElementNaming$create,
+        byDefault: ElementNaming$byDefault,
       })),
   )),
   toString: () => '[ElementNaming]',
 };
 
-function ElementNaming$create(target: CxEntry.Target<ElementNaming>): ElementNaming {
+function ElementNaming$byDefault(target: CxEntry.Target<ElementNaming>): ElementNaming {
 
   const bsWindow = target.get(BootstrapWindow);
   const nsAlias = target.get(DefaultNamespaceAliaser);

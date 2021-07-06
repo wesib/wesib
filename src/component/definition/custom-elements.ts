@@ -51,16 +51,13 @@ export const CustomElements: CxEntry<CustomElements> = {
   perContext: (/*#__PURE__*/ cxDefaultScoped(
       BootstrapContext,
       (/*#__PURE__*/ cxSingle({
-        byDefault: CustomElements$create,
+        byDefault: CustomElements$byDefault,
       })),
   )),
   toString: () => `[CustomElements]`,
 };
 
-/**
- * @internal
- */
-function CustomElements$create(target: CxEntry.Target<CustomElements>): CustomElements {
+function CustomElements$byDefault(target: CxEntry.Target<CustomElements>): CustomElements {
 
   const customElements: CustomElementRegistry = target.get(BootstrapWindow).customElements;
   const nsAlias = target.get(DefaultNamespaceAliaser);
@@ -77,7 +74,7 @@ function CustomElements$create(target: CxEntry.Target<CustomElements>): CustomEl
       const { tagName, extend } = defContext.elementDef;
 
       if (!tagName) {
-        componentResolver(componentTypeOrName).resolve(undefined);
+        CustomComponent$resolver(componentTypeOrName).resolve(undefined);
         return; // Anonymous component.
       }
       if (extend && extend.name) {
@@ -102,7 +99,7 @@ function CustomElements$create(target: CxEntry.Target<CustomElements>): CustomEl
       const { name } = defContext.elementDef;
 
       if (!name) {
-        return componentResolver(componentTypeOrName).promise();
+        return CustomComponent$resolver(componentTypeOrName).promise();
       }
 
       return customElements.whenDefined(html__naming.name(name, nsAlias));
@@ -113,24 +110,15 @@ function CustomElements$create(target: CxEntry.Target<CustomElements>): CustomEl
   return new CustomElements$();
 }
 
-/**
- * @internal
- */
-const ComponentResolver__symbol = (/*#__PURE__*/ Symbol('ComponentResolver'));
+const CustomComponent$resolver__symbol = (/*#__PURE__*/ Symbol('CustomComponent.resolver'));
 
-/**
- * @internal
- */
-interface CustomComponentClass<T extends object = any> extends ComponentClass<T> {
-  [ComponentResolver__symbol]?: PromiseResolver;
+interface CustomComponent$Class<T extends object = any> extends ComponentClass<T> {
+  [CustomComponent$resolver__symbol]?: PromiseResolver;
 }
 
-/**
- * @internal
- */
-function componentResolver(componentType: CustomComponentClass): PromiseResolver {
-  if (hasOwnProperty(componentType, ComponentResolver__symbol)) {
-    return componentType[ComponentResolver__symbol] as PromiseResolver;
+function CustomComponent$resolver(componentType: CustomComponent$Class): PromiseResolver {
+  if (hasOwnProperty(componentType, CustomComponent$resolver__symbol)) {
+    return componentType[CustomComponent$resolver__symbol] as PromiseResolver;
   }
-  return componentType[ComponentResolver__symbol] = newPromiseResolver();
+  return componentType[CustomComponent$resolver__symbol] = newPromiseResolver();
 }
