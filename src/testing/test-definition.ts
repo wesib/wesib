@@ -1,3 +1,4 @@
+import { cxConstAsset } from '@proc7ts/context-builder';
 import { OnEvent } from '@proc7ts/fun-events';
 import { Class } from '@proc7ts/primitives';
 import { bootstrapComponents } from '../bootstrap-components';
@@ -23,7 +24,7 @@ export function testDefinition<T extends object>(componentType: Class<T>): OnEve
   const featureDef: FeatureDef = {
     needs: componentType,
     setup(setup) {
-      setup.provide({ a: CustomElements, is: customElements });
+      setup.provide(cxConstAsset(CustomElements, customElements));
     },
   };
 

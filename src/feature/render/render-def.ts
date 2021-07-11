@@ -149,7 +149,8 @@ export const RenderDef = {
     const trigger = context
         .get(ComponentState)
         .track(on)
-        .onUpdate.do(
+        .onUpdate
+        .do(
             supplyOn(context),
         );
 

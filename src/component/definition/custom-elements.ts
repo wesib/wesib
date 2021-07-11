@@ -1,20 +1,10 @@
 import { html__naming, isQualifiedName, QualifiedName } from '@frontmeans/namespace-aliaser';
-import { ContextKey, ContextKey__symbol, SingleContextKey } from '@proc7ts/context-values';
+import { cxDefaultScoped, CxEntry, cxSingle } from '@proc7ts/context-values';
 import { Class, hasOwnProperty, newPromiseResolver, PromiseResolver } from '@proc7ts/primitives';
-import { BootstrapContext, bootstrapDefault } from '../../boot';
+import { BootstrapContext } from '../../boot';
 import { BootstrapWindow, DefaultNamespaceAliaser } from '../../globals';
 import { definitionContextOf } from '../../impl/definition-context.symbol';
 import { ComponentClass } from './component-class';
-
-/**
- * @internal
- */
-const CustomElements__key = (/*#__PURE__*/ new SingleContextKey<CustomElements>(
-    'custom-elements',
-    {
-      byDefault: bootstrapDefault(createCustomElements),
-    },
-));
 
 /**
  * Custom elements registry.
@@ -25,17 +15,7 @@ const CustomElements__key = (/*#__PURE__*/ new SingleContextKey<CustomElements>(
  *
  * @category Core
  */
-export abstract class CustomElements {
-
-  /**
-   * A key of bootstrap context value containing a `CustomElements` instance used to register custom
-   * elements.
-   *
-   * Target value defaults to `window.customElements` from the window provided under `[BootstrapWindow.key]`.
-   */
-  static get [ContextKey__symbol](): ContextKey<CustomElements> {
-    return CustomElements__key;
-  }
+export interface CustomElements {
 
   /**
    * Defines custom element.
@@ -44,7 +24,7 @@ export abstract class CustomElements {
    * namespace to avoid naming conflicts.
    * @param elementType - A constructor of custom element to define.
    */
-  abstract define(componentTypeOrName: ComponentClass | QualifiedName, elementType: Class): void;
+  define(componentTypeOrName: ComponentClass | QualifiedName, elementType: Class): void;
 
   /**
    * Allows to wait for component definition.
@@ -58,19 +38,31 @@ export abstract class CustomElements {
    *
    * @throws TypeError If `componentType` does not contain a component definition.
    */
-  abstract whenDefined(componentTypeOrName: ComponentClass | QualifiedName): Promise<void>;
+  whenDefined(componentTypeOrName: ComponentClass | QualifiedName): Promise<void>;
 
 }
 
 /**
- * @internal
+ * Context entry containing custom elements registry to use.
+ *
+ * @category Core
  */
-function createCustomElements(bsContext: BootstrapContext): CustomElements {
+export const CustomElements: CxEntry<CustomElements> = {
+  perContext: (/*#__PURE__*/ cxDefaultScoped(
+      BootstrapContext,
+      (/*#__PURE__*/ cxSingle({
+        byDefault: CustomElements$byDefault,
+      })),
+  )),
+  toString: () => `[CustomElements]`,
+};
 
-  const customElements: CustomElementRegistry = bsContext.get(BootstrapWindow).customElements;
-  const nsAlias = bsContext.get(DefaultNamespaceAliaser);
+function CustomElements$byDefault(target: CxEntry.Target<CustomElements>): CustomElements {
 
-  class CustomElements$ extends CustomElements {
+  const customElements: CustomElementRegistry = target.get(BootstrapWindow).customElements;
+  const nsAlias = target.get(DefaultNamespaceAliaser);
+
+  class CustomElements$ implements CustomElements {
 
     define(componentTypeOrName: ComponentClass | QualifiedName, elementType: Class): void {
       if (isQualifiedName(componentTypeOrName)) {
@@ -82,7 +74,7 @@ function createCustomElements(bsContext: BootstrapContext): CustomElements {
       const { tagName, extend } = defContext.elementDef;
 
       if (!tagName) {
-        componentResolver(componentTypeOrName).resolve(undefined);
+        CustomComponent$resolver(componentTypeOrName).resolve(undefined);
         return; // Anonymous component.
       }
       if (extend && extend.name) {
@@ -107,7 +99,7 @@ function createCustomElements(bsContext: BootstrapContext): CustomElements {
       const { name } = defContext.elementDef;
 
       if (!name) {
-        return componentResolver(componentTypeOrName).promise();
+        return CustomComponent$resolver(componentTypeOrName).promise();
       }
 
       return customElements.whenDefined(html__naming.name(name, nsAlias));
@@ -118,24 +110,15 @@ function createCustomElements(bsContext: BootstrapContext): CustomElements {
   return new CustomElements$();
 }
 
-/**
- * @internal
- */
-const ComponentResolver__symbol = (/*#__PURE__*/ Symbol('ComponentResolver'));
+const CustomComponent$resolver__symbol = (/*#__PURE__*/ Symbol('CustomComponent.resolver'));
 
-/**
- * @internal
- */
-interface CustomComponentClass<T extends object = any> extends ComponentClass<T> {
-  [ComponentResolver__symbol]?: PromiseResolver;
+interface CustomComponent$Class<T extends object = any> extends ComponentClass<T> {
+  [CustomComponent$resolver__symbol]?: PromiseResolver;
 }
 
-/**
- * @internal
- */
-function componentResolver(componentType: CustomComponentClass): PromiseResolver {
-  if (hasOwnProperty(componentType, ComponentResolver__symbol)) {
-    return componentType[ComponentResolver__symbol] as PromiseResolver;
+function CustomComponent$resolver(componentType: CustomComponent$Class): PromiseResolver {
+  if (hasOwnProperty(componentType, CustomComponent$resolver__symbol)) {
+    return componentType[CustomComponent$resolver__symbol] as PromiseResolver;
   }
-  return componentType[ComponentResolver__symbol] = newPromiseResolver();
+  return componentType[CustomComponent$resolver__symbol] = newPromiseResolver();
 }

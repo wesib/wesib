@@ -1,7 +1,8 @@
 import { drekAppender, drekContextOf, DrekFragment } from '@frontmeans/drek';
 import { newNamespaceAliaser } from '@frontmeans/namespace-aliaser';
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
-import { ContextKey, SingleContextKey } from '@proc7ts/context-values';
+import { cxBuildAsset, cxConstAsset } from '@proc7ts/context-builder';
+import { CxEntry, cxSingle } from '@proc7ts/context-values';
 import { Class, noop } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
 import { Mock } from 'jest-mock';
@@ -9,31 +10,27 @@ import { BootstrapContext } from '../boot';
 import { ComponentContext, ComponentDef, ComponentDef__symbol, ComponentSlot } from '../component';
 import { ComponentClass, DefinitionContext } from '../component/definition';
 import { DefaultNamespaceAliaser } from '../globals';
-import { MockObject } from '../spec';
 import { MockElement } from '../testing';
-import { BootstrapContextRegistry } from './bootstrap-context-registry';
+import { BootstrapContextBuilder } from './bootstrap-context-builder';
 import { ElementBuilder } from './element-builder';
 
 describe('boot', () => {
   describe('ElementBuilder', () => {
 
-    let bsContextRegistry: BootstrapContextRegistry;
-    let mockBootstrapContext: MockObject<BootstrapContext>;
+    let bsBuilder: BootstrapContextBuilder;
+    let bsContext: BootstrapContext;
 
     beforeEach(() => {
-      bsContextRegistry = BootstrapContextRegistry.create();
-      mockBootstrapContext = {
-        get: bsContextRegistry.values.get,
-      } as any;
-      bsContextRegistry.provide({ a: BootstrapContext, is: mockBootstrapContext });
-      bsContextRegistry.provide({ a: DefaultNamespaceAliaser, by: newNamespaceAliaser });
+      bsBuilder = new BootstrapContextBuilder(get => ({ get } as BootstrapContext));
+      bsContext = bsBuilder.context;
+      bsBuilder.provide(cxBuildAsset(DefaultNamespaceAliaser, _target => newNamespaceAliaser()));
     });
 
     let builder: ElementBuilder;
     let TestComponent: ComponentClass;
 
     beforeEach(() => {
-      builder = mockBootstrapContext.get(ElementBuilder);
+      builder = bsContext.get(ElementBuilder);
     });
 
     beforeEach(() => {
@@ -58,7 +55,7 @@ describe('boot', () => {
 
     describe('buildElement', () => {
       it('builds component definition context', () => {
-        expect(builder.buildElement(TestComponent)).toBeInstanceOf(DefinitionContext);
+        expect(builder.buildElement(TestComponent)).toBeDefined();
       });
       it('builds custom element', () => {
 
@@ -198,15 +195,15 @@ describe('boot', () => {
         });
       });
 
-      let key: ContextKey<string>;
+      let entry: CxEntry<string>;
 
       beforeEach(() => {
-        key = new SingleContextKey('definition-key');
+        entry = { perContext: cxSingle() };
         ComponentDef.define(
             TestComponent,
             {
               setup(setup) {
-                setup.perDefinition({ a: key, is: 'definition value' });
+                setup.perDefinition(cxConstAsset(entry, 'definition value'));
               },
             },
         );
@@ -228,15 +225,15 @@ describe('boot', () => {
         expect(definitionContext.get(DefinitionContext)).toBe(definitionContext);
       });
       it('contains definition context values', () => {
-        expect(definitionContext.get(key)).toBe('definition value');
+        expect(definitionContext.get(entry)).toBe('definition value');
       });
     });
 
     describe('constructed element', () => {
 
-      const key1 = new SingleContextKey<string>('test-key-1');
+      const entry1: CxEntry<string> = { perContext: cxSingle() };
       let value1: string;
-      const key2 = new SingleContextKey<string>('test-key-2');
+      const entry2: CxEntry<string> = { perContext: cxSingle() };
       let value2: string;
       let context: ComponentContext;
 
@@ -245,7 +242,7 @@ describe('boot', () => {
         value2 = 'other value';
         builder.definitions.on(ctx => {
           if (ctx.componentType === TestComponent) {
-            ctx.perComponent({ a: key1, is: value1 });
+            ctx.perComponent(cxConstAsset(entry1, value1));
           }
         });
       });
@@ -273,7 +270,7 @@ describe('boot', () => {
                 },
               },
               setup(setup) {
-                setup.perComponent({ a: key2, is: value2 });
+                setup.perComponent(cxConstAsset(entry2, value2));
               },
             },
         );
@@ -287,10 +284,10 @@ describe('boot', () => {
       });
 
       it('has access to definition context value', () => {
-        expect(context.get(key1)).toBe(value1);
+        expect(context.get(entry1)).toBe(value1);
       });
       it('has access to component context value', () => {
-        expect(context.get(key2)).toBe(value2);
+        expect(context.get(entry2)).toBe(value2);
       });
       it('is not mounted', () => {
         expect(context.mounted).toBe(false);
@@ -471,11 +468,19 @@ describe('boot', () => {
         const otherElement = new (builder.buildElement(AnotherComponent).elementType);
         const otherContext = await ComponentSlot.of(otherElement).whenReady;
 
-        expect(otherContext.get(key1, { or: null })).toBeNull();
-        expect(otherContext.get(key2, { or: null })).toBeNull();
+        expect(otherContext.get(entry1, { or: null })).toBeNull();
+        expect(otherContext.get(entry2, { or: null })).toBeNull();
       });
 
       describe('supply', () => {
+
+        beforeEach(() => {
+          Supply.onUnexpectedAbort(noop);
+        });
+        afterEach(() => {
+          Supply.onUnexpectedAbort();
+        });
+
         it('is cut off by `disconnectedCallback()`', () => {
 
           const destroyed = jest.fn();
@@ -683,6 +688,12 @@ describe('boot', () => {
         context.supply.off(reason);
         expect(context.connected).toBe(false);
         expect(disconnected).toHaveBeenCalledWith(reason);
+      });
+    });
+
+    describe('toString', () => {
+      it('returns string representation', () => {
+        expect(String(ElementBuilder)).toBe('[ElementBuilder]');
       });
     });
   });

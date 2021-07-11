@@ -2,13 +2,14 @@ import { drekContextOf } from '@frontmeans/drek';
 import { NamespaceAliaser, NamespaceDef, newNamespaceAliaser } from '@frontmeans/namespace-aliaser';
 import { immediateRenderScheduler } from '@frontmeans/render-scheduler';
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
+import { cxConstAsset } from '@proc7ts/context-builder';
 import { bootstrapComponents } from '../bootstrap-components';
 import { Feature } from '../feature';
 import { DefaultNamespaceAliaser } from './default-namespace-aliaser';
 import { DefaultRenderScheduler } from './default-render-scheduler';
 import { DocumentRenderKit } from './document-render-kit';
 
-describe('boot', () => {
+describe('globals', () => {
   describe('DocumentRenderKit', () => {
 
     let doc: Document;
@@ -27,8 +28,8 @@ describe('boot', () => {
 
       @Feature({
         setup(setup) {
-          setup.provide({ a: DefaultNamespaceAliaser, is: nsAlias });
-          setup.provide({ a: DefaultRenderScheduler, is: scheduler });
+          setup.provide(cxConstAsset(DefaultNamespaceAliaser, nsAlias));
+          setup.provide(cxConstAsset(DefaultRenderScheduler, scheduler));
         },
       })
       class TestFeature {}
@@ -66,6 +67,12 @@ describe('boot', () => {
       drCtx.nsAlias(ns);
       expect(newNsAlias).toHaveBeenCalledWith(ns);
       expect(nsAlias).not.toHaveBeenCalled();
+    });
+
+    describe('toString', () => {
+      it('returns string representation', () => {
+        expect(String(DocumentRenderKit)).toBe('[DocumentRenderKit]');
+      });
     });
   });
 });

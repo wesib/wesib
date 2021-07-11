@@ -1,6 +1,6 @@
-import { OnDomEvent } from '@frontmeans/dom-events';
-import { SingleContextRef } from '@proc7ts/context-values';
-import { ComponentEventDispatcher__key } from './component-event-dispatcher.key.impl';
+import { DomEventDispatcher, OnDomEvent } from '@frontmeans/dom-events';
+import { CxEntry, cxSingle } from '@proc7ts/context-values';
+import { ComponentContext } from './component-context';
 
 /**
  * Component event dispatcher is used to listen for and dispatch component events.
@@ -36,8 +36,28 @@ export interface ComponentEventDispatcher {
 }
 
 /**
- * A key of component context value containing component event dispatcher.
+ * Component context entry containing component event dispatcher.
  *
  * @category Core
  */
-export const ComponentEventDispatcher: SingleContextRef<ComponentEventDispatcher> = ComponentEventDispatcher__key;
+export const ComponentEventDispatcher: CxEntry<ComponentEventDispatcher> = {
+  perContext: (/*#__PURE__*/ cxSingle({
+    byDefault(values) {
+
+      const context = values.get(ComponentContext);
+      const dispatcher = new DomEventDispatcher(context.element);
+
+      dispatcher.supply.needs(context);
+
+      return {
+        dispatch(event: Event): boolean {
+          return dispatcher.dispatch(event);
+        },
+        on<TEvent extends Event>(type: string): OnDomEvent<TEvent> {
+          return dispatcher.on(type);
+        },
+      };
+    },
+  })),
+  toString: () => '[ComponentEventDispatcher]',
+};

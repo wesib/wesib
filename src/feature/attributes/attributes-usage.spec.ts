@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
+import { cxConstAsset } from '@proc7ts/context-builder';
 import { Mock } from 'jest-mock';
 import { Component, ComponentContext, ComponentElement, ComponentSlot } from '../../component';
 import { ComponentClass, DefinitionContext } from '../../component/definition';
@@ -37,7 +38,7 @@ describe('feature/attributes', () => {
 
       @Feature({
         setup(setup) {
-          setup.provide({ a: BootstrapWindow, is: { MutationObserver: Observer } as any });
+          setup.provide(cxConstAsset(BootstrapWindow, { MutationObserver: Observer } as any));
         },
       })
       class TestWindowFeature {}

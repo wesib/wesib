@@ -155,7 +155,7 @@ class ComponentPreRenderer$State extends ComponentRenderer$BaseState<ComponentPr
   private _nextRenderer: ComponentRenderer | null = null;
   private _preSupply!: Supply;
 
-  render(): Supply {
+  override render(): Supply {
     this._preSupply = new Supply();
 
     super.render().needs(this._preSupply).whenOff(reason => {
@@ -172,14 +172,14 @@ class ComponentPreRenderer$State extends ComponentRenderer$BaseState<ComponentPr
     return this._preSupply;
   }
 
-  protected _createSchedule(): RenderSchedule {
+  protected override _createSchedule(): RenderSchedule {
 
     const preScheduler = this._ctl._context.get(DefaultPreRenderScheduler);
 
     return this._scheduleBy(preScheduler);
   }
 
-  protected _over(): void {
+  protected override _over(): void {
     if (this._nextRenderer) {
       // Signal the pre-rendering is over.
       this._supply.off(ComponentPreRenderer$done);

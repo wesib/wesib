@@ -1,43 +1,49 @@
-import { ContextRegistry, ContextValueSpec } from '@proc7ts/context-values';
-import { ContextModule } from '@proc7ts/context-values/updatable';
+import { CxBuilder, cxConstAsset } from '@proc7ts/context-builder';
+import { CxModule } from '@proc7ts/context-modules';
+import { CxAccessor, CxAsset } from '@proc7ts/context-values';
 import { onceOn, OnEvent, supplyOn, valueOn_ } from '@proc7ts/fun-events';
 import { Class } from '@proc7ts/primitives';
-import { Supply } from '@proc7ts/supply';
+import { Supply, SupplyPeer } from '@proc7ts/supply';
 import { BootstrapContext } from '../../boot';
 import { ComponentContext } from '../../component';
 import { ComponentClass, DefinitionContext, DefinitionSetup } from '../../component/definition';
-import {
-  BootstrapContextRegistry,
-  ElementBuilder,
-  onPostDefSetup,
-  PerComponentRegistry,
-  PerDefinitionRegistry,
-} from '../../impl';
+import { BootstrapContextBuilder, ElementBuilder, onPostDefSetup } from '../../impl';
+import { PerComponentCxPeer } from '../../impl/component-context';
+import { PerDefinitionCxPeer } from '../../impl/definition-context';
 import { FeatureContext } from '../feature-context';
+import { FeatureRef } from '../feature-ref';
 import { ComponentRegistry } from './component-registry.impl';
 
-/**
- * @internal
- */
-export class FeatureContext$ extends FeatureContext {
+export class FeatureContext$ implements FeatureContext {
+
+  static create(feature: Class, setup: CxModule.Setup): FeatureContext {
+
+    const bsBuilder = setup.get(BootstrapContextBuilder);
+    const builder = new CxBuilder<FeatureContext>(
+        get => new FeatureContext$(feature, get, setup),
+        bsBuilder.boundPeer,
+    );
+    const context = builder.context;
+
+    builder.provide(cxConstAsset(FeatureContext, context));
+
+    return context;
+  }
 
   readonly whenReady: OnEvent<[FeatureContext]>;
   private _onDefinition?: OnEvent<[DefinitionContext]>;
   private _onComponent?: OnEvent<[ComponentContext]>;
-  readonly get: FeatureContext['get'];
   private readonly _bsContext: BootstrapContext;
   private readonly _componentRegistry: ComponentRegistry;
 
-  constructor(readonly feature: Class, private readonly _setup: ContextModule.Setup) {
-    super();
-
+  private constructor(
+      readonly feature: Class,
+      readonly get: CxAccessor,
+      private readonly _setup: CxModule.Setup,
+  ) {
     this._bsContext = _setup.get(BootstrapContext);
 
     const handle = _setup.get(_setup.module);
-    const registry = new ContextRegistry<FeatureContext>(this._bsContext);
-
-    registry.provide({ a: FeatureContext, is: this });
-    this.get = registry.newValues().get;
 
     this.whenReady = handle.read.do(
         valueOn_(({ ready }) => ready && this),
@@ -61,22 +67,25 @@ export class FeatureContext$ extends FeatureContext {
         || (this._onComponent = this._setup.get(ElementBuilder).components.on.do(supplyOn(this)));
   }
 
-  provide<TSrc, TDeps extends any[]>(
-      spec: ContextValueSpec<BootstrapContext, unknown, TSrc, TDeps>,
-  ): Supply {
-    return this._bsContext.get(BootstrapContextRegistry).provide(spec).needs(this);
+  provide<TValue, TAsset = TValue>(asset: CxAsset<TValue, TAsset, BootstrapContext>): Supply {
+    return this._bsContext
+        .get(BootstrapContextBuilder)
+        .provide(asset)
+        .needs(this);
   }
 
-  perDefinition<TSrc, TDeps extends any[]>(
-      spec: ContextValueSpec<DefinitionContext, unknown, TSrc, TDeps>,
-  ): Supply {
-    return this._bsContext.get(PerDefinitionRegistry).provide(spec).needs(this);
+  perDefinition<TValue, TAsset = TValue>(asset: CxAsset<TValue, TAsset, DefinitionContext>): Supply {
+    return this._bsContext
+        .get(PerDefinitionCxPeer)
+        .provide(asset)
+        .needs(this);
   }
 
-  perComponent<TSrc, TDeps extends any[]>(
-      spec: ContextValueSpec<ComponentContext, unknown, TSrc, TDeps>,
-  ): Supply {
-    return this._bsContext.get(PerComponentRegistry).provide(spec).needs(this);
+  perComponent<TValue, TAsset = TValue>(asset: CxAsset<TValue, TAsset, ComponentContext>): Supply {
+    return this._bsContext
+        .get(PerComponentCxPeer)
+        .provide(asset)
+        .needs(this);
   }
 
   setupDefinition<T extends object>(componentType: ComponentClass<T>): OnEvent<[DefinitionSetup]> {
@@ -85,6 +94,17 @@ export class FeatureContext$ extends FeatureContext {
 
   define<T extends object>(componentType: ComponentClass<T>): void {
     this._componentRegistry.define(componentType);
+  }
+
+  whenDefined<T extends object>(componentType: ComponentClass<T>): OnEvent<[DefinitionContext<T>]> {
+    return this.get(BootstrapContext).whenDefined(componentType);
+  }
+
+  load(feature: Class, user?: SupplyPeer): FeatureRef {
+    return this.get(BootstrapContext).load(
+        feature,
+        user ? new Supply().needs(this).needs(user) : this,
+    );
   }
 
 }

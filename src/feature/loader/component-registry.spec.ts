@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
+import { cxConstAsset } from '@proc7ts/context-builder';
 import { Class } from '@proc7ts/primitives';
 import { BootstrapContext } from '../../boot';
 import { bootstrapComponents } from '../../bootstrap-components';
@@ -43,8 +44,8 @@ describe('feature load', () => {
 
       @Feature({
         setup(setup) {
-          setup.provide({ a: CustomElements, is: mockCustomElements });
-          setup.provide({ a: ElementBuilder, is: mockBuilder });
+          setup.provide(cxConstAsset(CustomElements, mockCustomElements));
+          setup.provide(cxConstAsset(ElementBuilder, mockBuilder));
         },
       })
       class TestFeature {

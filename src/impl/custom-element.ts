@@ -7,15 +7,26 @@ import { DefinitionContext$ } from './definition-context';
 
 class ComponentContext$Custom<T extends object> extends ComponentContext$<T> {
 
+  static create<T extends object>(
+      defContext: DefinitionContext$<T>,
+      element: any,
+  ): ComponentContext$Custom<T> {
+    return defContext._newComponentContext(
+        (get, builder) => new ComponentContext$Custom<T>(
+            defContext,
+            builder,
+            element,
+            get,
+        ),
+    );
+  }
+
   get mounted(): false {
     return false;
   }
 
 }
 
-/**
- * @internal
- */
 export function customElementType<T extends object>(
     defContext: DefinitionContext$<T>,
 ): Class {
@@ -35,7 +46,7 @@ export function customElementType<T extends object>(
 
       slot.bindBy(({ bind }) => {
 
-        const context = new ComponentContext$Custom(defContext, this);
+        const context = ComponentContext$Custom.create(defContext, this);
         const supply = bind(context);
 
         context._createComponent();
@@ -52,12 +63,12 @@ export function customElementType<T extends object>(
       settle = () => slot.rebind()!.settle();
     }
 
-    connectedCallback(): void {
+    override connectedCallback(): void {
       super.connectedCallback?.();
       (ComponentSlot.of<T>(this).rebind() as ComponentContext$Custom<T>)._connect();
     }
 
-    disconnectedCallback(): void {
+    override disconnectedCallback(): void {
       (ComponentSlot.of<T>(this).context as ComponentContext$Custom<T>).supply.off();
       super.disconnectedCallback?.();
     }

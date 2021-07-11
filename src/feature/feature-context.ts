@@ -1,37 +1,21 @@
-import { ContextKey, ContextKey__symbol, ContextValueSpec, SingleContextKey } from '@proc7ts/context-values';
+import { CxAsset, CxEntry, cxSingle } from '@proc7ts/context-values';
 import { OnEvent } from '@proc7ts/fun-events';
 import { Class } from '@proc7ts/primitives';
 import { Supply, SupplyPeer } from '@proc7ts/supply';
 import { BootstrapContext, BootstrapSetup } from '../boot';
-import { ComponentContext } from '../component';
-import { ComponentClass, DefinitionContext, DefinitionSetup } from '../component/definition';
-import { FeatureRef } from './feature-ref';
-
-/**
- * @internal
- */
-const FeatureContext__key = (/*#__PURE__*/ new SingleContextKey<FeatureContext>('feature-context'));
+import { ComponentClass } from '../component/definition';
 
 /**
  * Feature initialization context.
  *
  * @category Core
  */
-export abstract class FeatureContext
-    extends BootstrapContext
-    implements BootstrapSetup, SupplyPeer {
-
-  /**
-   * A key of feature context value containing the feature context itself.
-   */
-  static get [ContextKey__symbol](): ContextKey<FeatureContext> {
-    return FeatureContext__key;
-  }
+export interface FeatureContext extends BootstrapContext, BootstrapSetup, SupplyPeer {
 
   /**
    * Feature class this context is created for.
    */
-  abstract readonly feature: Class;
+  readonly feature: Class;
 
   /**
    * An `OnEvent` sender of feature readiness event.
@@ -40,55 +24,28 @@ export abstract class FeatureContext
    *
    * If the above conditions satisfied already, the receiver will be notified immediately.
    */
-  abstract readonly whenReady: OnEvent<[FeatureContext]>;
-
-  /**
-   * An `OnEvent` sender of component definition events.
-   *
-   * The registered receiver will be notified when new component class is defined, but before its custom element class
-   * constructed.
-   */
-  abstract readonly onDefinition: OnEvent<[DefinitionContext]>;
-
-  /**
-   * An `OnEvent` sender of component construction events.
-   *
-   * The registered receiver will be notified right before component is constructed.
-   */
-  abstract readonly onComponent: OnEvent<[ComponentContext]>;
+  readonly whenReady: OnEvent<[FeatureContext]>;
 
   /**
    * Feature supply.
    *
    * Cut off once feature unloaded.
    */
-  abstract readonly supply: Supply;
+  readonly supply: Supply;
 
   /**
-   * Provides bootstrap context value.
+   * Provides asset for bootstrap context entry
    *
    * Note that this happens when bootstrap context already exists. To provide a value before bootstrap context created
    * a {@link BootstrapSetup.provide} method can be used.
    *
-   * @typeParam TSrc - Source value type.
-   * @typeParam TDeps - Dependencies tuple type.
-   * @param spec - Context value specifier.
+   * @typeParam TValue - Context value type.
+   * @typeParam TAsset - Context value asset type.
+   * @param asset - Context entry asset.
    *
-   * @returns A value supply that removes the given context value specifier once cut off.
+   * @returns Asset supply. Revokes provided asset once cut off.
    */
-  abstract provide<TSrc, TDeps extends any[]>(
-      spec: ContextValueSpec<BootstrapContext, unknown, TSrc, TDeps>,
-  ): Supply;
-
-  abstract perDefinition<TSrc, TDeps extends any[]>(
-      spec: ContextValueSpec<DefinitionContext, unknown, TSrc, TDeps>,
-  ): Supply;
-
-  abstract perComponent<TSrc, TDeps extends any[]>(
-      spec: ContextValueSpec<ComponentContext, unknown, TSrc, TDeps>,
-  ): Supply;
-
-  abstract setupDefinition<T extends object>(componentType: ComponentClass<T>): OnEvent<[DefinitionSetup]>;
+  provide<TValue, TAsset = TValue>(asset: CxAsset<TValue, TAsset, BootstrapContext>): Supply;
 
   /**
    * Defines a component.
@@ -104,17 +61,14 @@ export abstract class FeatureContext
    *
    * @throws TypeError  If `componentType` does not contain a component definition.
    */
-  abstract define<T extends object>(componentType: ComponentClass<T>): void;
-
-  whenDefined<T extends object>(componentType: ComponentClass<T>): OnEvent<[DefinitionContext<T>]> {
-    return this.get(BootstrapContext).whenDefined(componentType);
-  }
-
-  load(feature: Class, user?: SupplyPeer): FeatureRef {
-    return this.get(BootstrapContext).load(
-        feature,
-        user ? new Supply().needs(this).needs(user) : this,
-    );
-  }
+  define<T extends object>(componentType: ComponentClass<T>): void;
 
 }
+
+/**
+ * Feature context entry containing the feature context itself.
+ */
+export const FeatureContext: CxEntry<FeatureContext> = {
+  perContext: (/*#__PURE__*/ cxSingle()),
+  toString: () => '[FeatureContext]',
+};

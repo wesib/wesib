@@ -4,9 +4,6 @@ import { Supply } from '@proc7ts/supply';
 import { ComponentDef__symbol } from '../component';
 import { ComponentClass, DefinitionSetup } from '../component/definition';
 
-/**
- * @internal
- */
 export function onPostDefSetup(
     componentType: ComponentClass,
     supply: Supply,
@@ -32,11 +29,11 @@ export function onPostDefSetup(
           get whenComponent() {
             return whenComponent;
           },
-          perDefinition(spec) {
-            return setup.perDefinition(spec).needs(supply);
+          perDefinition(asset) {
+            return setup.perDefinition(asset).needs(supply);
           },
-          perComponent(spec) {
-            return setup.perComponent(spec).needs(supply);
+          perComponent(asset) {
+            return setup.perComponent(asset).needs(supply);
           },
         });
       },
@@ -44,10 +41,7 @@ export function onPostDefSetup(
   });
 }
 
-/**
- * @internal
- */
-export interface PostDefSetup<T extends object = any> {
+interface PostDefSetup<T extends object = any> {
   readonly on: OnEvent<[DefinitionSetup<T>]>;
   send(setup: DefinitionSetup): void;
   setup(setup: DefinitionSetup<T>): void;
@@ -59,9 +53,6 @@ interface PostDefComponentClass<T extends object> extends AbstractClass<T> {
   [PostDefSetup__symbol]?: PostDefSetup<T>;
 }
 
-/**
- * @internal
- */
 export function postDefSetup<T extends object>(componentType: PostDefComponentClass<T>): PostDefSetup<T> {
   if (hasOwnProperty(componentType, PostDefSetup__symbol)) {
     return componentType[PostDefSetup__symbol] as PostDefSetup<T>;

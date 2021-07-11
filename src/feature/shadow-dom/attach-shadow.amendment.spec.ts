@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
+import { cxConstAsset } from '@proc7ts/context-builder';
 import { Mock } from 'jest-mock';
 import { BootstrapContext } from '../../boot';
 import { Component, ComponentContext, ComponentSlot, ContentRoot } from '../../component';
@@ -138,6 +139,41 @@ describe('feature/shadow-dom', () => {
 
       expect(context.get(ShadowContentRoot, { or: null })).toBeNull();
       expect(context.get(ContentRoot)).toBe(element);
+    });
+    it('utilizes custom shadow root builder', async () => {
+
+      const shadowDef: ShadowContentDef = {
+        mode: 'closed',
+      };
+      const attachShadow = jest.fn(
+          ({ element }: { element: Element }, init: ShadowRootInit): ShadowRoot => element.attachShadow(init),
+      );
+
+      @AttachShadow(shadowDef)
+      @Component({
+        name: 'other-component',
+        extend: {
+          type: class extends MockElement {
+
+            attachShadow = attachShadowSpy;
+
+          },
+        },
+        feature: {
+          setup(setup) {
+            setup.provide(cxConstAsset(ShadowRootBuilder, attachShadow));
+          },
+        },
+      })
+      class OtherComponent {
+      }
+
+      element = new (await testElement(OtherComponent))();
+
+      const context = await ComponentSlot.of(element).whenReady;
+
+      context.get(ShadowContentRoot);
+      expect(attachShadow).toHaveBeenCalledWith(context, shadowDef);
     });
   });
 });

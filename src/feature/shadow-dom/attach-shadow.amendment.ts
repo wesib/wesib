@@ -1,3 +1,4 @@
+import { cxBuildAsset } from '@proc7ts/context-builder';
 import { Class } from '@proc7ts/primitives';
 import { AeComponent, Component, ComponentAmendment, ComponentContext, ContentRoot } from '../../component';
 import { ComponentClass } from '../../component/definition';
@@ -35,20 +36,14 @@ export function AttachShadow<
 ): ComponentAmendment<TClass, TAmended> {
   return Component({
     setup(setup) {
-      setup.perComponent(
-          {
-            a: ShadowContentRoot,
-            by(ctx: ComponentContext<InstanceType<TClass>>) {
-              return ctx.get(ShadowRootBuilder)(ctx, def);
-            },
-          },
-      );
-      setup.perComponent({ // Content root is an alias of shadow root when present.
-        a: ContentRoot,
-        by(context: ComponentContext<InstanceType<TClass>>) {
-          return context.get(ShadowContentRoot, { or: null });
-        },
-      });
+      setup.perComponent(cxBuildAsset(
+          ShadowContentRoot,
+          target => target.get(ShadowRootBuilder)(target.get(ComponentContext), def),
+      ));
+      setup.perComponent(cxBuildAsset( // Content root is an alias of shadow root when present.
+        ContentRoot,
+        target => target.get(ShadowContentRoot, { or: null }),
+      ));
     },
   });
 }

@@ -1,21 +1,22 @@
-import { ContextValueSlot } from '@proc7ts/context-values';
-import { ContextUpKey, ContextUpRef } from '@proc7ts/context-values/updatable';
-import { AfterEvent, afterThe, digAfter, statePath, StatePath } from '@proc7ts/fun-events';
-import { mergeFunctions, noop } from '@proc7ts/primitives';
+import { cxDynamic, CxEntry } from '@proc7ts/context-values';
+import { statePath, StatePath } from '@proc7ts/fun-events';
+import { asis, valuesProvider } from '@proc7ts/primitives';
 
 /**
  * Component state updater signature.
  *
  * @category Core
- */
-export type StateUpdater =
-/**
  * @typeParam TValue - Updated value type
  * @param path - Updated state node path.
  * @param newValue - New value.
  * @param oldValue - Replaced value.
  */
-    <TValue>(this: void, path: StatePath, newValue: TValue, oldValue: TValue) => void;
+export type StateUpdater = <TValue>(
+    this: void,
+    path: StatePath,
+    newValue: TValue,
+    oldValue: TValue,
+) => void;
 
 /**
  * @category Core
@@ -26,78 +27,25 @@ export namespace StateUpdater {
    * Normalized component state updater signature.
    *
    * Accepts normalized state path.
-   */
-  export type Normalized =
-  /**
+   *
    * @typeParam TValue - Updated value type
    * @param path - Normalized path of updated state node.
    * @param newValue - New value.
    * @param oldValue - Replaced value.
    */
-      <TValue>(this: void, path: StatePath.Normalized, newValue: TValue, oldValue: TValue) => void;
+  export type Normalized = <TValue>(
+      this: void,
+      path: StatePath.Normalized,
+      newValue: TValue,
+      oldValue: TValue,
+  ) => void;
 
 }
 
 /**
- * @internal
- */
-class StateUpdaterKey extends ContextUpKey<StateUpdater, StateUpdater.Normalized> {
-
-  readonly upKey: ContextUpKey.UpKey<StateUpdater, StateUpdater.Normalized>;
-
-  constructor() {
-    super('state-updater');
-    this.upKey = this.createUpKey(
-        slot => slot.insert(slot.seed.do(digAfter(
-            (...fns) => {
-              if (fns.length) {
-
-                const combined: StateUpdater.Normalized = fns.reduce(
-                    (prev, fn) => mergeFunctions(fn, prev),
-                    noop,
-                );
-
-                return afterThe((path, newValue, oldValue) => combined(statePath(path), newValue, oldValue));
-              }
-
-              if (slot.hasFallback && slot.or) {
-                return slot.or;
-              }
-
-              return afterThe(noop);
-            },
-        ))),
-    );
-  }
-
-  grow(
-      slot: ContextValueSlot<
-          StateUpdater,
-          ContextUpKey.Source<StateUpdater.Normalized>,
-          AfterEvent<StateUpdater.Normalized[]>>,
-  ): void {
-
-    let delegated: StateUpdater;
-
-    slot.context.get(
-        this.upKey,
-        slot.hasFallback ? { or: slot.or != null ? afterThe(slot.or) : slot.or } : undefined,
-    )!(
-        fn => delegated = fn,
-    ).whenOff(
-        () => delegated = noop,
-    );
-
-    slot.insert((path, newValue, oldValue) => delegated(path, newValue, oldValue));
-  }
-
-}
-
-/**
- * A key of component context value containing a component {@link StateUpdater state updater} function.
+ * Component context entry containing a component {@link StateUpdater state updater} function.
  *
- * Features are calling this function by default when component state changes, e.g. attribute value or DOM property
- * modified.
+ * This function is called by default when component state changes, e.g. attribute value or DOM property modified.
  *
  * Does nothing by default and after component destruction.
  *
@@ -105,4 +53,45 @@ class StateUpdaterKey extends ContextUpKey<StateUpdater, StateUpdater.Normalized
  *
  * @category Core
  */
-export const StateUpdater: ContextUpRef<StateUpdater, StateUpdater.Normalized> = (/*#__PURE__*/ new StateUpdaterKey());
+export const StateUpdater: CxEntry<StateUpdater, StateUpdater.Normalized> = {
+  perContext: (/*#__PURE__*/ cxDynamic<StateUpdater, StateUpdater.Normalized, StateUpdater.Normalized[]>({
+    create: asis,
+    byDefault: valuesProvider(),
+    assign: ({ get, to }, { supply }) => {
+
+      let update: StateUpdater = (path, newValue, oldValue) => {
+        path = statePath(path);
+
+        const updaters = get();
+
+        for (let i = updaters.length - 1; i >= 0; --i) {
+          updaters[i](path, newValue, oldValue);
+        }
+      };
+      const updater: StateUpdater = (path, newValue, oldValue) => update(
+          path,
+          newValue,
+          oldValue,
+      );
+      let assigner: CxEntry.Assigner<StateUpdater> = receiver => to(
+          (_, by) => receiver(updater, by),
+      );
+
+      supply.whenOff(() => {
+        update = StateUpdater$noop;
+        assigner = StateUpdater$noop$assigner;
+      });
+
+      return receiver => assigner(receiver);
+    },
+  })),
+  toString: () => '[StateUpdater]',
+};
+
+function StateUpdater$noop$assigner(receiver: CxEntry.Receiver<StateUpdater>): void {
+  receiver(StateUpdater$noop);
+}
+
+function StateUpdater$noop(_path: StatePath, _newValue: unknown, _oldValue: unknown): void {
+  // Do not update the state.
+}

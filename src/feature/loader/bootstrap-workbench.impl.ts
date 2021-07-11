@@ -1,33 +1,21 @@
-import { ContextRef, SingleContextKey } from '@proc7ts/context-values';
+import { cxDefaultScoped, CxEntry, cxSingle } from '@proc7ts/context-values';
 import { Workbench, WorkStage } from '@proc7ts/workbench';
-import { bootstrapDefault } from '../../boot';
+import { BootstrapContext } from '../../boot';
 
-/**
- * @internal
- */
 export type BootstrapWorkbench = Workbench;
 
-/**
- * @internal
- */
-export const BootstrapWorkbench: ContextRef<BootstrapWorkbench> = (/*#__PURE__*/ new SingleContextKey(
-    'bootstrap-workbench',
-    {
-      byDefault: bootstrapDefault(() => new Workbench()),
-    },
-));
+export const BootstrapWorkbench: CxEntry<BootstrapWorkbench> = {
+  perContext: (/*#__PURE__*/ cxDefaultScoped(
+      BootstrapContext,
+      (/*#__PURE__*/ cxSingle({
+        byDefault: () => new Workbench(),
+      })),
+  )),
+  toString: () => '[BootstrapWorkbench]',
+};
 
-/**
- * @internal
- */
 export const featureSetupStage = (/*#__PURE__*/ new WorkStage('feature setup'));
 
-/**
- * @internal
- */
 export const featureInitStage = (/*#__PURE__*/ new WorkStage('feature init', { after: featureSetupStage }));
 
-/**
- * @internal
- */
 export const componentDefStage = (/*#__PURE__*/ new WorkStage('component definition', { after: featureInitStage }));

@@ -1,7 +1,7 @@
 import { nodeDocument } from '@frontmeans/dom-primitives';
 import { DrekContext, drekContextOf } from '@frontmeans/drek';
-import { ContextRef, SingleContextKey } from '@proc7ts/context-values';
-import { BootstrapContext, bootstrapDefault } from '../boot';
+import { cxDefaultScoped, CxEntry, cxSingle } from '@proc7ts/context-values';
+import { BootstrapContext } from '../boot';
 import { DefaultNamespaceAliaser } from './default-namespace-aliaser';
 import { DefaultRenderScheduler } from './default-render-scheduler';
 
@@ -31,28 +31,29 @@ export interface DocumentRenderKit {
 }
 
 /**
- * A key of bootstrap context value containing {@link DocumentRenderKit} instance.
+ * Bootstrap context entry containing {@link DocumentRenderKit} instance.
  *
  * @category Core
  */
-export const DocumentRenderKit: ContextRef<DocumentRenderKit> = (
-    /*#__PURE__*/ new SingleContextKey<DocumentRenderKit>(
-        'document-render-kit',
-        {
-          byDefault: bootstrapDefault(DocumentRenderKit$create),
-        },
-    )
-);
+export const DocumentRenderKit: CxEntry<DocumentRenderKit> = {
+  perContext: (/*#__PURE__*/ cxDefaultScoped(
+      BootstrapContext,
+      (/*#__PURE__*/ cxSingle({
+        byDefault: DocumentRenderKit$byDefault,
+      })),
+  )),
+  toString: () => '[DocumentRenderKit]',
+};
 
-function DocumentRenderKit$create(bsContext: BootstrapContext): DocumentRenderKit {
+function DocumentRenderKit$byDefault(target: CxEntry.Target<DocumentRenderKit>): DocumentRenderKit {
 
   const docs = new WeakMap<Document, 1>();
   const initDoc = (doc: Document): void => {
     if (!docs.get(doc)) {
       docs.set(doc, 1);
       drekContextOf(doc).update({
-        nsAlias: bsContext.get(DefaultNamespaceAliaser),
-        scheduler: bsContext.get(DefaultRenderScheduler),
+        nsAlias: target.get(DefaultNamespaceAliaser),
+        scheduler: target.get(DefaultRenderScheduler),
       });
     }
   };

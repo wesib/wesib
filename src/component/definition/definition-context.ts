@@ -1,11 +1,10 @@
-import { ContextKey, ContextKey__symbol, ContextValues, ContextValueSpec } from '@proc7ts/context-values';
+import { CxAsset, CxEntry, cxSingle, CxValues } from '@proc7ts/context-values';
 import { OnEvent } from '@proc7ts/fun-events';
 import { Class } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
 import { ComponentContext } from '../component-context';
 import { ComponentElement } from '../component-slot';
 import { ComponentClass } from './component-class';
-import { DefinitionContext__key } from './definition.context.key.impl';
 import { ElementDef } from './element-def';
 
 /**
@@ -18,19 +17,12 @@ import { ElementDef } from './element-def';
  * @category Core
  * @typeParam T - A type of component.
  */
-export abstract class DefinitionContext<T extends object = any> extends ContextValues {
-
-  /**
-   * A key of definition context value containing the definition context itself.
-   */
-  static get [ContextKey__symbol](): ContextKey<DefinitionContext> {
-    return DefinitionContext__key;
-  }
+export interface DefinitionContext<T extends object = any> extends CxValues {
 
   /**
    * Component class constructor.
    */
-  abstract readonly componentType: ComponentClass<T>;
+  readonly componentType: ComponentClass<T>;
 
   /**
    * Custom element class constructor.
@@ -38,12 +30,12 @@ export abstract class DefinitionContext<T extends object = any> extends ContextV
    * It is an error accessing this property before the element class is created, e.g. from inside of
    * {@link ComponentDef.define} function. In such case you may wish to add a `whenReady()` callback.
    */
-  abstract readonly elementType: Class;
+  readonly elementType: Class;
 
   /**
    * Custom element definition.
    */
-  abstract readonly elementDef: ElementDef;
+  readonly elementDef: ElementDef;
 
   /**
    * An `OnEvent` sender of component definition context upon its readiness.
@@ -53,7 +45,7 @@ export abstract class DefinitionContext<T extends object = any> extends ContextV
    *
    * If the custom element class is constructed already, the receiver will be notified immediately.
    */
-  abstract readonly whenReady: OnEvent<[this]>;
+  readonly whenReady: OnEvent<[this]>;
 
   /**
    * An `OnEvent` sender of component context upon its instantiation.
@@ -65,7 +57,7 @@ export abstract class DefinitionContext<T extends object = any> extends ContextV
    * context only when/if component is {@link ComponentContext.whenConnected connected}. This is to prevent resource
    * leaks on destroyed components.
    */
-  abstract readonly whenComponent: OnEvent<[ComponentContext<T>]>;
+  readonly whenComponent: OnEvent<[ComponentContext<T>]>;
 
   /**
    * Mounts a component to arbitrary element.
@@ -84,19 +76,27 @@ export abstract class DefinitionContext<T extends object = any> extends ContextV
    *
    * @throws Error If target element is already bound to some component.
    */
-  abstract mountTo(element: ComponentElement<T>): ComponentContext<T>;
+  mountTo(element: ComponentElement<T>): ComponentContext<T>;
 
   /**
-   * Provides a value available in the context of each component of the defined component type.
+   * Provides asset for entry available in contexts of each component of the defined component type.
    *
-   * @typeParam TSrc - The type of context value sources.
-   * @typeParam TDeps - A type of dependencies.
-   * @param spec - Component context value specifier.
+   * @typeParam TValue - Context value type.
+   * @typeParam TAsset - Context value asset type.
+   * @param asset - Context entry asset.
    *
-   * @returns A value supply that removes the given context value specifier once cut off.
+   * @returns Asset supply. Revokes provided asset once cut off.
    */
-  abstract perComponent<TSrc, TDeps extends any[]>(
-      spec: ContextValueSpec<ComponentContext<T>, unknown, TSrc, TDeps>,
-  ): Supply;
+  perComponent<TValue, TAsset = TValue>(asset: CxAsset<TValue, TAsset, ComponentContext>): Supply;
 
 }
+
+/**
+ * Context entry containing definition context as its value.
+ *
+ * @category Core
+ */
+export const DefinitionContext: CxEntry<DefinitionContext> = {
+  perContext: (/*#__PURE__*/ cxSingle()),
+  toString: () => '[DefinitionContext]',
+};

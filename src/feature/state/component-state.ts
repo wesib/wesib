@@ -1,42 +1,7 @@
-import { ContextKey, ContextKey__symbol, ContextValueSlot, SimpleContextKey } from '@proc7ts/context-values';
+import { cxConstAsset } from '@proc7ts/context-builder';
+import { CxEntry } from '@proc7ts/context-values';
 import { StateTracker } from '@proc7ts/fun-events';
-import { ComponentContext, StateUpdater } from '../../component';
-
-class ComponentStateKey extends SimpleContextKey<ComponentState> {
-
-  constructor() {
-    super('component-state');
-  }
-
-  grow(
-      slot: ContextValueSlot<ComponentState, ComponentState, SimpleContextKey.Seed<ComponentState>>,
-  ): void {
-
-    const provided = slot.seed();
-    let state: ComponentState;
-
-    if (provided != null) {
-      state = provided;
-      slot.insert(state);
-    } else if (slot.hasFallback) {
-      return;
-    } else {
-      state = new ComponentState();
-      slot.context.get(ComponentContext).supply.whenOff(reason => state.done(reason));
-      slot.insert(state);
-    }
-
-    slot.setup(({ registry }) => {
-      registry.provide({ a: StateUpdater, is: state.update });
-    });
-  }
-
-}
-
-/**
- * @internal
- */
-const ComponentState__key = (/*#__PURE__*/ new ComponentStateKey());
+import { StateUpdater } from '../../component';
 
 /**
  * Component state tracker.
@@ -45,8 +10,44 @@ const ComponentState__key = (/*#__PURE__*/ new ComponentStateKey());
  */
 export class ComponentState extends StateTracker {
 
-  static get [ContextKey__symbol](): ContextKey<ComponentState> {
-    return ComponentState__key;
+  static perContext(target: CxEntry.Target<ComponentState>): CxEntry.Definition<ComponentState> {
+    return {
+      assign: ComponentState$assign(target, target => target.recentAsset),
+      assignDefault: ComponentState$assign(target, _target => new ComponentState()),
+    };
   }
 
+  static override toString(): string {
+    return '[ComponentState]';
+  }
+
+}
+
+function ComponentState$assign(
+    target: CxEntry.Target<ComponentState>,
+    getState: (target: CxEntry.Target<ComponentState>) => ComponentState | null | undefined,
+): CxEntry.Assigner<ComponentState> {
+
+  const get = target.lazy(target => {
+
+    const state = getState(target);
+
+    if (state) {
+      target.provide(cxConstAsset(StateUpdater, state.update));
+    }
+
+    return state;
+  });
+
+  return receiver => {
+
+    const state = get();
+
+    if (state) {
+      target.supply.whenOff(reason => state.done(reason));
+      receiver(state);
+    }
+
+    return state;
+  };
 }

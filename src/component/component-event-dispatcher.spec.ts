@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
-import { ContextRegistry } from '@proc7ts/context-values';
+import { CxRequestMethod } from '@proc7ts/context-values';
 import { MockElement, testElement } from '../testing';
 import { ComponentContext } from './component-context';
 import { ComponentEventDispatcher } from './component-event-dispatcher';
@@ -25,11 +25,7 @@ describe('component', () => {
     let dispatcher: ComponentEventDispatcher;
 
     beforeEach(() => {
-
-      const registry = new ContextRegistry<ComponentContext>();
-
-      registry.provide({ a: ComponentContext, is: context });
-      dispatcher = registry.newValues().get(ComponentEventDispatcher);
+      dispatcher = context.get(ComponentEventDispatcher, { by: CxRequestMethod.Defaults });
     });
 
     describe('dispatch', () => {
@@ -52,6 +48,7 @@ describe('component', () => {
         expect(dispatchEventSpy).toHaveBeenCalledWith(event);
       });
     });
+
     describe('on', () => {
       it('registers event listener', () => {
 
@@ -78,6 +75,12 @@ describe('component', () => {
 
         (addEventListenerSpy.mock.calls[0][1] as EventListener)(event);
         expect(mockListener).toHaveBeenCalledWith(event);
+      });
+    });
+
+    describe('toString', () => {
+      it('returns string representation', () => {
+        expect(String(ComponentEventDispatcher)).toBe('[ComponentEventDispatcher]');
       });
     });
   });

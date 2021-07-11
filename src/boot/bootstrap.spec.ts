@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
-import { SingleContextUpKey } from '@proc7ts/context-values/updatable';
-import { afterSupplied, afterThe } from '@proc7ts/fun-events';
+import { cxConstAsset } from '@proc7ts/context-builder';
+import { CxEntry, cxRecent } from '@proc7ts/context-values';
+import { afterSupplied } from '@proc7ts/fun-events';
 import { Class, noop } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
 import { Mock } from 'jest-mock';
@@ -25,7 +26,7 @@ describe('boot', () => {
 
     @Feature({
       setup(setup) {
-        setup.provide({ a: CustomElements, is: mockCustomElements });
+        setup.provide(cxConstAsset(CustomElements, mockCustomElements));
       },
     })
     class TestBootstrapFeature {}
@@ -33,51 +34,46 @@ describe('boot', () => {
     bsContext = await bootstrapComponents(TestBootstrapFeature).whenReady;
   });
 
-  let key: SingleContextUpKey<string>;
-  let receiver: Mock<void, [string]>;
+  let entry: CxEntry<string>;
 
   beforeEach(() => {
-    key = new SingleContextUpKey<string>('test-key', { byDefault: () => 'default' });
-    receiver = jest.fn();
+    entry = { perContext: cxRecent({ byDefault: () => 'default' }) };
   });
 
   describe('context values', () => {
     it('sets up bootstrap context values', async () => {
-      bsContext.get(key)(receiver);
 
       @Feature({
         setup(setup) {
-          setup.provide({ a: key, is: 'provided' });
+          setup.provide(cxConstAsset(entry, 'provided'));
         },
       })
       class TestFeature {}
 
       const featureRef = await loadFeature(TestFeature);
 
-      expect(receiver).toHaveBeenLastCalledWith('provided');
+      expect(bsContext.get(entry)).toBe('provided');
 
       featureRef.supply.off();
-      expect(receiver).toHaveBeenLastCalledWith('default');
+      expect(bsContext.get(entry)).toBe('default');
     });
     it('provides bootstrap context values', async () => {
-      bsContext.get(key)(receiver);
 
       @Feature({
         init(ctx) {
-          ctx.provide({ a: key, is: 'provided' });
+          ctx.provide(cxConstAsset(entry, 'provided'));
         },
       })
       class TestFeature {}
 
       const featureRef = await loadFeature(TestFeature);
 
-      expect(receiver).toHaveBeenLastCalledWith('provided');
+      expect(bsContext.get(entry)).toBe('provided');
 
       featureRef.supply.off();
-      expect(receiver).toHaveBeenLastCalledWith('default');
+      expect(bsContext.get(entry)).toBe('default');
     });
     it('does not set up bootstrap context values when feature unloaded already', async () => {
-      bsContext.get(key)(receiver);
 
       let bsSetup!: BootstrapSetup;
 
@@ -91,20 +87,19 @@ describe('boot', () => {
       const featureRef = await loadFeature(TestFeature);
 
       featureRef.supply.off();
-      bsSetup.provide({ a: key, is: 'provided' });
-      expect(receiver).toHaveBeenLastCalledWith('default');
+      bsSetup.provide(cxConstAsset(entry, 'provided'));
+      expect(bsContext.get(entry)).toBe('default');
     });
   });
 
   describe('component used as feature', () => {
     it('applies feature options', async () => {
-      bsContext.get(key)(receiver);
 
       @Component({
         name: 'test-component',
         feature: {
           setup(setup) {
-            setup.provide({ a: key, is: 'component feature value' });
+            setup.provide(cxConstAsset(entry, 'component feature value'));
           },
         },
       })
@@ -112,16 +107,15 @@ describe('boot', () => {
 
       await loadFeature(TestComponent);
 
-      expect(receiver).toHaveBeenLastCalledWith('component feature value');
+      expect(bsContext.get(entry)).toBe('component feature value');
     });
     it('applies feature options when used as dependency', async () => {
-      bsContext.get(key)(receiver);
 
       @Component({
         name: 'test-component',
         feature: {
           setup(setup) {
-            setup.provide({ a: key, is: 'component feature value' });
+            setup.provide(cxConstAsset(entry, 'component feature value'));
           },
         },
       })
@@ -132,7 +126,7 @@ describe('boot', () => {
 
       await loadFeature(TestFeature);
 
-      expect(receiver).toHaveBeenLastCalledWith('component feature value');
+      expect(bsContext.get(entry)).toBe('component feature value');
     });
     it('registers the component', async () => {
       @Component('test-component')
@@ -185,18 +179,13 @@ describe('boot', () => {
   describe('component definition setup', () => {
     it('sets up definition context value', async () => {
 
-      @Component({
-        name: 'test-component',
-        define(context) {
-          context.get(key)(receiver);
-        },
-      })
+      @Component('test-component')
       class TestComponent {}
 
       @Feature({
         setup(setup) {
           setup.setupDefinition(TestComponent)(defSetup => {
-            defSetup.perDefinition({ a: key, is: 'provided' });
+            defSetup.perDefinition(cxConstAsset(entry, 'provided'));
           });
         },
       })
@@ -204,49 +193,41 @@ describe('boot', () => {
 
       const featureRef = await loadFeature(TestFeature);
       await loadFeature(TestComponent);
-      await bsContext.whenDefined(TestComponent);
+      const defContext = await bsContext.whenDefined(TestComponent);
 
-      expect(receiver).toHaveBeenCalledWith('provided');
+      expect(defContext.get(entry)).toBe('provided');
 
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       featureRef.supply.off();
-      expect(receiver).toHaveBeenCalledWith('default');
+      expect(defContext.get(entry)).toBe('default');
 
       await loadFeature(TestFeature);
-      expect(receiver).toHaveBeenCalledWith('provided');
+      expect(defContext.get(entry)).toBe('provided');
     });
     it('sets up definition context value when component is defined already', async () => {
 
-      @Component({
-        name: 'test-component',
-        define(context) {
-          context.get(key)(receiver);
-        },
-      })
+      @Component('test-component')
       class TestComponent {}
 
       @Feature({
         setup(setup) {
           setup.setupDefinition(TestComponent)(defSetup => {
-            defSetup.perDefinition({ a: key, is: 'provided' });
+            defSetup.perDefinition(cxConstAsset(entry, 'provided'));
           });
         },
       })
       class TestFeature {}
 
       await loadFeature(TestComponent);
-      await bsContext.whenDefined(TestComponent);
-
+      const defContext = await bsContext.whenDefined(TestComponent);
       const featureRef = await loadFeature(TestFeature);
 
-      expect(receiver).toHaveBeenCalledWith('provided');
+      expect(defContext.get(entry)).toBe('provided');
 
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       featureRef.supply.off();
-      expect(receiver).toHaveBeenCalledWith('default');
+      expect(defContext.get(entry)).toBe('default');
 
       await loadFeature(TestFeature);
-      expect(receiver).toHaveBeenCalledWith('provided');
+      expect(defContext.get(entry)).toBe('provided');
     });
     it('sets up component context value', async () => {
 
@@ -257,17 +238,12 @@ describe('boot', () => {
         },
       })
       class TestComponent {
-
-        constructor(context: ComponentContext) {
-          context.get(key)(receiver);
-        }
-
       }
 
       @Feature({
         setup(setup) {
           setup.setupDefinition(TestComponent)(defSetup => {
-            defSetup.perComponent({ a: key, is: 'provided' });
+            defSetup.perComponent(cxConstAsset(entry, 'provided'));
           });
         },
       })
@@ -277,15 +253,15 @@ describe('boot', () => {
       await loadFeature(TestComponent);
 
       const element = await bsContext.whenDefined(TestComponent).then(({ elementType }) => new elementType());
+      const context = await ComponentSlot.of(element).whenReady;
 
-      await ComponentSlot.of(element).whenReady;
-      expect(receiver).toHaveBeenCalledWith('provided');
+      expect(context.get(entry)).toBe('provided');
 
       featureRef.supply.off();
-      expect(receiver).toHaveBeenCalledWith('default');
+      expect(context.get(entry)).toBe('default');
 
       await loadFeature(TestFeature);
-      expect(receiver).toHaveBeenCalledWith('provided');
+      expect(context.get(entry)).toBe('provided');
     });
 
     it('sets up component subtype', async () => {
@@ -293,18 +269,13 @@ describe('boot', () => {
       @Component('test-component')
       class TestComponent {}
 
-      @Component({
-        name: 'sub-type-component',
-        define(context) {
-          context.get(key)(receiver);
-        },
-      })
+      @Component('sub-type-component')
       class SubTypeComponent extends TestComponent {}
 
       @Feature({
         setup(setup) {
           setup.setupDefinition(TestComponent)(defSetup => {
-            defSetup.perDefinition({ a: key, is: 'provided' });
+            defSetup.perDefinition(cxConstAsset(entry, 'provided'));
           });
         },
       })
@@ -312,15 +283,16 @@ describe('boot', () => {
 
       const featureRef = await loadFeature(TestFeature);
       await loadFeature(SubTypeComponent);
-      await bsContext.whenDefined(SubTypeComponent);
+      const defContext = await bsContext.whenDefined(SubTypeComponent);
 
-      expect(receiver).toHaveBeenCalledWith('provided');
+      expect(defContext.get(entry)).toBe('provided');
 
       featureRef.supply.off();
-      expect(receiver).toHaveBeenCalledWith('default');
+      expect(defContext.get(entry)).toBe('default');
 
-      await loadFeature(TestFeature);
-      expect(receiver).toHaveBeenCalledWith('provided');
+      // FIXME Set up when component definition completed already
+      // await loadFeature(TestFeature);
+      // expect(defContext.get(entry)).toBe('provided');
     });
 
     describe('whenReady', () => {
@@ -487,17 +459,17 @@ describe('boot', () => {
 
     describe('load', () => {
 
-      let key: SingleContextUpKey<string>;
+      let entry: CxEntry<string>;
 
       beforeEach(() => {
-        key = new SingleContextUpKey('test', { byDefault: () => 'default' });
+        entry = { perContext: cxRecent({ byDefault: () => 'default' }) };
       });
 
       it('loads another feature', async () => {
 
         @Feature({
           setup(setup) {
-            setup.provide({ a: key, is: 'loaded' });
+            setup.provide(cxConstAsset(entry, 'loaded'));
           },
         })
         class OtherFeature {
@@ -505,13 +477,13 @@ describe('boot', () => {
 
         await context.load(OtherFeature).whenReady;
 
-        expect(await bsContext.get(key)).toBe('loaded');
+        expect(bsContext.get(entry)).toBe('loaded');
       });
       it('unloads another feature when unloaded', async () => {
 
         @Feature({
           setup(setup) {
-            setup.provide({ a: key, is: 'loaded' });
+            setup.provide(cxConstAsset(entry, 'loaded'));
           },
         })
         class OtherFeature {
@@ -523,13 +495,13 @@ describe('boot', () => {
         featureRef.supply.off();
 
         expect(otherRef.supply.isOff).toBe(true);
-        expect(await bsContext.get(key)).toBe('default');
+        expect(bsContext.get(entry)).toBe('default');
       });
       it('unloads another feature when user supply cut off', async () => {
 
         @Feature({
           setup(setup) {
-            setup.provide({ a: key, is: 'loaded' });
+            setup.provide(cxConstAsset(entry, 'loaded'));
           },
         })
         class OtherFeature {
@@ -542,7 +514,7 @@ describe('boot', () => {
         user.supply.off();
 
         expect(otherRef.supply.isOff).toBe(true);
-        expect(await bsContext.get(key)).toBe('default');
+        expect(bsContext.get(entry)).toBe('default');
       });
     });
 
@@ -575,7 +547,7 @@ describe('boot', () => {
         }
 
         expect(() => context.define(TestComponent)).toThrow(new TypeError(
-            'ContextModule(TestFeature) initialized already, and does not accept new initializers',
+            '[Feature TestFeature] initialized already, and does not accept new initializers',
         ));
       });
     });
@@ -695,19 +667,16 @@ describe('boot', () => {
               testFeature,
               {
                 setup(setup) {
-                  setup.provide({ a: key, is: 'provided' });
+                  setup.provide(cxConstAsset(entry, 'provided'));
                 },
               },
           );
           const featureRef = await loadFeatureStatus();
 
-          let value: string | undefined;
-
-          bsContext.get(key, { or: afterThe<[string?]>() })(v => value = v);
-          expect(value).toBe('provided');
+          expect(bsContext.get(entry)).toBe('provided');
 
           featureRef.supply.off();
-          expect(value).toBeUndefined();
+          expect(bsContext.get(entry)).toBe('default');
         });
       });
     });

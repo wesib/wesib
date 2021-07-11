@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
-import { ContextRegistry } from '@proc7ts/context-values';
+import { CxBuilder, cxConstAsset } from '@proc7ts/context-builder';
 import { StatePath, StateTracker, ValueTracker } from '@proc7ts/fun-events';
 import { noop } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
@@ -17,16 +17,14 @@ describe('feature/state', () => {
       component = {};
       state = new StateTracker();
 
-      const registry = new ContextRegistry<ComponentContext>();
-
-      registry.provide({ a: ComponentState, is: state });
-
-      const values = registry.newValues();
-
-      context = {
+      const cxBuilder = new CxBuilder<ComponentContext>((get, { supply }) => ({
         component,
-        get: values.get,
-      } as ComponentContext;
+        supply,
+        get,
+      } as ComponentContext));
+
+      context = cxBuilder.context;
+      cxBuilder.provide(cxConstAsset(ComponentState, state));
     });
 
     let tracker: ValueTracker<string | null>;

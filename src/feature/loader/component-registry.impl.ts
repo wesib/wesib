@@ -1,4 +1,4 @@
-import { ContextModule } from '@proc7ts/context-values/updatable';
+import { CxModule } from '@proc7ts/context-modules';
 import { valueProvider } from '@proc7ts/primitives';
 import { ComponentClass, CustomElements } from '../../component/definition';
 import { ElementBuilder } from '../../impl';
@@ -11,7 +11,7 @@ export class ComponentRegistry {
 
   private _components?: ComponentClass[] = undefined;
 
-  constructor(private readonly _setup: ContextModule.Setup) {
+  constructor(private readonly _setup: CxModule.Setup) {
   }
 
   define<T extends object>(componentType: ComponentClass<T>): void {

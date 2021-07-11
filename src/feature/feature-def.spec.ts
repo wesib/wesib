@@ -53,7 +53,7 @@ describe('feature', () => {
 
         class B extends A {
 
-          static [FeatureDef__symbol]: FeatureDef = {
+          static override [FeatureDef__symbol]: FeatureDef = {
             needs: Feature2,
           };
 
@@ -76,7 +76,7 @@ describe('feature', () => {
 
         class C extends B {
 
-          static [FeatureDef__symbol]: FeatureDef = {
+          static override [FeatureDef__symbol]: FeatureDef = {
             needs: Feature2,
           };
 

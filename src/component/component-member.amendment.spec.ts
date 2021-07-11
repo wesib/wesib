@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from '@jest/globals';
-import { SingleContextKey } from '@proc7ts/context-values';
+import { cxConstAsset } from '@proc7ts/context-builder';
+import { CxEntry, cxSingle } from '@proc7ts/context-values';
 import { noop } from '@proc7ts/primitives';
 import { bootstrapComponents } from '../bootstrap-components';
 import { ComponentContext } from './component-context';
@@ -8,7 +9,7 @@ import { ComponentClass, DefinitionContext } from './definition';
 
 describe('component', () => {
 
-  const testKey = new SingleContextKey<string>('test-key');
+  const testEntry: CxEntry<string> = { perContext: cxSingle() };
 
   let element: Element;
 
@@ -149,7 +150,7 @@ describe('component', () => {
         @ComponentMember(({ amend }) => amend({
           componentDef: {
             setup(setup) {
-              setup.perComponent({ a: testKey, is: 'test-value' });
+              setup.perComponent(cxConstAsset(testEntry, 'test-value'));
             },
           },
         }))
@@ -159,7 +160,7 @@ describe('component', () => {
 
       const context = await bootstrap(TestComponent);
 
-      expect(context.get(testKey)).toBe('test-value');
+      expect(context.get(testEntry)).toBe('test-value');
     });
   });
 

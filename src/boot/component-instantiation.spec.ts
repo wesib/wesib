@@ -131,7 +131,7 @@ describe('component instantiation', () => {
 
         class BaseElement extends MockElement {
 
-          getRootNode(): Node {
+          override getRootNode(): Node {
             return root;
           }
 

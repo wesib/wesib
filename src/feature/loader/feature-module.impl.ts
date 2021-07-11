@@ -1,4 +1,4 @@
-import { ContextModule } from '@proc7ts/context-values/updatable';
+import { CxModule } from '@proc7ts/context-modules';
 import { Class, hasOwnProperty, setOfElements, valueProvider } from '@proc7ts/primitives';
 import { ComponentDef, ComponentDef__symbol } from '../../component';
 import { FeatureDef } from '../feature-def';
@@ -13,10 +13,7 @@ interface FeatureClass extends Class {
 
 }
 
-/**
- * @internal
- */
-export class FeatureModule extends ContextModule {
+export class FeatureModule extends CxModule {
 
   static of(feature: FeatureClass): FeatureModule {
     if (hasOwnProperty(feature, FeatureModule__symbol)) {
@@ -29,16 +26,20 @@ export class FeatureModule extends ContextModule {
     super(feature.name, FeatureModule$options(feature));
   }
 
-  async setup(setup: ContextModule.Setup): Promise<void> {
+  override async setup(setup: CxModule.Setup): Promise<void> {
 
     const workbench = setup.get(BootstrapWorkbench);
 
     await workbench.work(featureSetupStage).run(() => super.setup(setup));
   }
 
+  override toString(): string {
+    return `[Feature ${this.name}]`;
+  }
+
 }
 
-function FeatureModule$options(feature: Class): ContextModule.Options {
+function FeatureModule$options(feature: Class): CxModule.Options {
 
   const def = featureDef(feature);
   const has: FeatureModule[] = [];
@@ -57,7 +58,7 @@ function FeatureModule$options(feature: Class): ContextModule.Options {
     async setup(setup) {
 
       const workbench = setup.get(BootstrapWorkbench);
-      const featureContext = new FeatureContext$(feature, setup);
+      const featureContext = FeatureContext$.create(feature, setup);
 
       if (def.init) {
 

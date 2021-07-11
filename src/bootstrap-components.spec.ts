@@ -1,6 +1,7 @@
 import { QualifiedName } from '@frontmeans/namespace-aliaser';
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
-import { SingleContextKey } from '@proc7ts/context-values';
+import { cxBuildAsset, CxPeerBuilder } from '@proc7ts/context-builder';
+import { CxEntry, cxSingle } from '@proc7ts/context-values';
 import { asis, Class, noop } from '@proc7ts/primitives';
 import { Mock, SpyInstance } from 'jest-mock';
 import { BootstrapContext } from './boot';
@@ -9,51 +10,30 @@ import { Component, ComponentDef, ComponentDef__symbol } from './component';
 import { ComponentClass, CustomElements, DefinitionContext } from './component/definition';
 import { FeatureContext, FeatureDef } from './feature';
 import { DefaultNamespaceAliaser } from './globals';
-import {
-  BootstrapContextRegistry,
-  ComponentContextRegistry,
-  DefinitionContextRegistry,
-  ElementBuilder,
-  PerComponentRegistry,
-  PerDefinitionRegistry,
-} from './impl';
+import { ElementBuilder } from './impl';
+import { PerComponentCxPeer } from './impl/component-context';
+import { PerDefinitionCxPeer } from './impl/definition-context';
 import { DefinitionContext__symbol } from './impl/definition-context.symbol';
 
 describe('boot', () => {
 
-  let createBootstrapContextRegistrySpy: SpyInstance<BootstrapContextRegistry, []>;
-
-  beforeEach(() => {
-    createBootstrapContextRegistrySpy = jest.spyOn(BootstrapContextRegistry, 'create');
-  });
-
   describe('bootstrapComponents', () => {
-    it('constructs bootstrap value registry', () => {
-      bootstrapComponents();
-      expect(createBootstrapContextRegistrySpy).toHaveBeenCalledWith();
-    });
     it('provides per-definition context registry', () => {
-      expect(bootstrapComponents().get(PerDefinitionRegistry)).toBeInstanceOf(DefinitionContextRegistry);
+      expect(bootstrapComponents().get(PerDefinitionCxPeer)).toBeInstanceOf(CxPeerBuilder);
     });
     it('provides per-component context registry', () => {
-      expect(bootstrapComponents().get(PerComponentRegistry)).toBeInstanceOf(ComponentContextRegistry);
+      expect(bootstrapComponents().get(PerComponentCxPeer)).toBeInstanceOf(CxPeerBuilder);
     });
     it('provides element builder', () => {
       expect(bootstrapComponents().get(ElementBuilder)).toBeDefined();
     });
     it('constructs default namespace aliaser', () => {
-      bootstrapComponents();
-
-      const bootstrapValues = (
-          createBootstrapContextRegistrySpy.mock.results[0].value as BootstrapContextRegistry
-      ).values;
-
-      expect(bootstrapValues.get(DefaultNamespaceAliaser)).toBeInstanceOf(Function);
+      expect(bootstrapComponents().get(DefaultNamespaceAliaser)).toBeInstanceOf(Function);
     });
 
     describe('BootstrapContext', () => {
       it('is constructed', () => {
-        expect(bootstrapComponents()).toBeInstanceOf(BootstrapContext);
+        expect(bootstrapComponents()).toBeDefined();
       });
       it('proxies `whenDefined()` method', async () => {
 
@@ -85,7 +65,6 @@ describe('boot', () => {
 
       beforeEach(async () => {
         whenReady = jest.fn();
-        createBootstrapContextRegistrySpy.mockRestore();
 
         class TestFeature {}
 
@@ -156,27 +135,29 @@ describe('boot', () => {
       });
       it('proxies `perDefinition()`', () => {
 
-        const perDefinitionRegistry = bsContext.get(PerDefinitionRegistry);
-        const spy = jest.spyOn(perDefinitionRegistry, 'provide');
+        const perDefinitionPeer = bsContext.get(PerDefinitionCxPeer);
+        const spy = jest.spyOn(perDefinitionPeer, 'provide');
 
-        const key = new SingleContextKey<string>('test-value-key');
+        const entry: CxEntry<string> = { perContext: cxSingle() };
         const provider = (): string => 'test-value';
+        const asset = cxBuildAsset(entry, provider);
 
-        featureContext.perDefinition({ a: key, by: provider });
+        featureContext.perDefinition(asset);
 
-        expect(spy).toHaveBeenCalledWith({ a: key, by: provider });
+        expect(spy).toHaveBeenCalledWith(asset);
       });
       it('proxies `perComponent()`', () => {
 
-        const perComponentRegistry = bsContext.get(PerComponentRegistry);
-        const spy = jest.spyOn(perComponentRegistry, 'provide');
+        const perComponentPeer = bsContext.get(PerComponentCxPeer);
+        const spy = jest.spyOn(perComponentPeer, 'provide');
 
-        const key = new SingleContextKey<string>('test-value-key');
+        const entry: CxEntry<string> = { perContext: cxSingle() };
         const provider = (): string => 'test-value';
+        const asset = cxBuildAsset(entry, provider);
 
-        featureContext.perComponent({ a: key, by: provider });
+        featureContext.perComponent(asset);
 
-        expect(spy).toHaveBeenCalledWith({ a: key, by: provider });
+        expect(spy).toHaveBeenCalledWith(asset);
       });
 
       describe('whenReady', () => {
