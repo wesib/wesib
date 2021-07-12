@@ -13,7 +13,7 @@ describe('globals', () => {
 
     describe('toString', () => {
       it('returns string representation', () => {
-        expect(String(BootstrapWindow)).toBe('[BootstrapWindow]');
+        expect(String(BootstrapWindow)).toBe('[CxWindow]');
       });
     });
   });

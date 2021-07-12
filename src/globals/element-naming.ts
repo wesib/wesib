@@ -1,10 +1,9 @@
-import { html__naming } from '@frontmeans/namespace-aliaser';
+import { html__naming, NamespaceAliaser } from '@frontmeans/namespace-aliaser';
 import { CxEntry, cxScoped, cxSingle } from '@proc7ts/context-values';
 import { BootstrapContext } from '../boot';
 import { ComponentDef } from '../component';
 import { ComponentClass, ElementDef } from '../component/definition';
 import { BootstrapWindow } from './bootstrap-window';
-import { DefaultNamespaceAliaser } from './default-namespace-aliaser';
 
 /**
  * Component element naming service.
@@ -42,7 +41,7 @@ export const ElementNaming: CxEntry<ElementNaming> = {
 function ElementNaming$byDefault(target: CxEntry.Target<ElementNaming>): ElementNaming {
 
   const bsWindow = target.get(BootstrapWindow);
-  const nsAlias = target.get(DefaultNamespaceAliaser);
+  const nsAlias = target.get(NamespaceAliaser);
 
   return {
     elementOf(componentType: ComponentClass): ElementDef {

@@ -1,8 +1,8 @@
-import { html__naming, isQualifiedName, QualifiedName } from '@frontmeans/namespace-aliaser';
+import { html__naming, isQualifiedName, NamespaceAliaser, QualifiedName } from '@frontmeans/namespace-aliaser';
 import { cxDefaultScoped, CxEntry, cxSingle } from '@proc7ts/context-values';
 import { Class, hasOwnProperty, newPromiseResolver, PromiseResolver } from '@proc7ts/primitives';
 import { BootstrapContext } from '../../boot';
-import { BootstrapWindow, DefaultNamespaceAliaser } from '../../globals';
+import { BootstrapWindow } from '../../globals';
 import { definitionContextOf } from '../../impl/definition-context.symbol';
 import { ComponentClass } from './component-class';
 
@@ -60,7 +60,7 @@ export const CustomElements: CxEntry<CustomElements> = {
 function CustomElements$byDefault(target: CxEntry.Target<CustomElements>): CustomElements {
 
   const customElements: CustomElementRegistry = target.get(BootstrapWindow).customElements;
-  const nsAlias = target.get(DefaultNamespaceAliaser);
+  const nsAlias = target.get(NamespaceAliaser);
 
   class CustomElements$ implements CustomElements {
 

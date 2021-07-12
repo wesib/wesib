@@ -1,6 +1,7 @@
 import { drekContextOf } from '@frontmeans/drek';
 import {
   immediateRenderScheduler,
+  PreRenderScheduler,
   RenderSchedule,
   RenderScheduleOptions,
   RenderScheduler,
@@ -9,7 +10,6 @@ import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { cxConstAsset } from '@proc7ts/context-builder';
 import { Mock } from 'jest-mock';
 import { Component, ComponentContext, ComponentSlot } from '../../component';
-import { DefaultPreRenderScheduler, DefaultRenderScheduler } from '../../globals';
 import { MockElement, testElement } from '../../testing';
 import { DomProperty } from '../dom-properties';
 import { ComponentPreRendererExecution } from './component-pre-renderer-execution';
@@ -265,8 +265,8 @@ describe('feature/render', () => {
         },
         feature: {
           setup(setup) {
-            setup.provide(cxConstAsset(DefaultRenderScheduler, mockRenderScheduler));
-            setup.provide(cxConstAsset(DefaultPreRenderScheduler, mockPreRenderScheduler));
+            setup.provide(cxConstAsset(RenderScheduler, mockRenderScheduler));
+            setup.provide(cxConstAsset(PreRenderScheduler, mockPreRenderScheduler));
           },
         },
       })

@@ -1,7 +1,7 @@
 import { CustomHTMLElementClass } from '@frontmeans/dom-primitives';
+import { DocumentRenderKit } from '@frontmeans/drek';
 import { Class, noop } from '@proc7ts/primitives';
 import { ComponentElement, ComponentSlot } from '../component';
-import { DocumentRenderKit } from '../globals';
 import { ComponentContext$ } from './component-context';
 import { DefinitionContext$ } from './definition-context';
 

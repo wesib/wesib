@@ -1,9 +1,14 @@
-import { drekBuild } from '@frontmeans/drek';
-import { RenderExecution, RenderSchedule, RenderScheduler, RenderShot } from '@frontmeans/render-scheduler';
+import { DocumentRenderKit, drekBuild } from '@frontmeans/drek';
+import {
+  PreRenderScheduler,
+  RenderExecution,
+  RenderSchedule,
+  RenderScheduler,
+  RenderShot,
+} from '@frontmeans/render-scheduler';
 import { noop, valueByRecipe } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
 import { ComponentContext } from '../../component';
-import { DefaultPreRenderScheduler, DocumentRenderKit } from '../../globals';
 import { ComponentPreRenderer } from './component-pre-renderer';
 import { ComponentPreRendererExecution } from './component-pre-renderer-execution';
 import { ComponentRenderCtl } from './component-render-ctl';
@@ -11,9 +16,6 @@ import { ComponentRenderer } from './component-renderer';
 import { ComponentRendererExecution } from './component-renderer-execution';
 import { RenderDef } from './render-def';
 
-/**
- * @internal
- */
 export class ComponentRenderCtl$ implements ComponentRenderCtl {
 
   readonly _scheduler: RenderScheduler;
@@ -174,7 +176,7 @@ class ComponentPreRenderer$State extends ComponentRenderer$BaseState<ComponentPr
 
   protected override _createSchedule(): RenderSchedule {
 
-    const preScheduler = this._ctl._context.get(DefaultPreRenderScheduler);
+    const preScheduler = this._ctl._context.get(PreRenderScheduler);
 
     return this._scheduleBy(preScheduler);
   }

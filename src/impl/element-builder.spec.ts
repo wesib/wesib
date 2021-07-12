@@ -1,7 +1,6 @@
 import { drekAppender, drekContextOf, DrekFragment } from '@frontmeans/drek';
-import { newNamespaceAliaser } from '@frontmeans/namespace-aliaser';
 import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
-import { cxBuildAsset, cxConstAsset } from '@proc7ts/context-builder';
+import { cxConstAsset } from '@proc7ts/context-builder';
 import { CxEntry, cxSingle } from '@proc7ts/context-values';
 import { Class, noop } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
@@ -9,7 +8,6 @@ import { Mock } from 'jest-mock';
 import { BootstrapContext } from '../boot';
 import { ComponentContext, ComponentDef, ComponentDef__symbol, ComponentSlot } from '../component';
 import { ComponentClass, DefinitionContext } from '../component/definition';
-import { DefaultNamespaceAliaser } from '../globals';
 import { MockElement } from '../testing';
 import { BootstrapContextBuilder } from './bootstrap-context-builder';
 import { ElementBuilder } from './element-builder';
@@ -23,7 +21,6 @@ describe('boot', () => {
     beforeEach(() => {
       bsBuilder = new BootstrapContextBuilder(get => ({ get } as BootstrapContext));
       bsContext = bsBuilder.context;
-      bsBuilder.provide(cxBuildAsset(DefaultNamespaceAliaser, _target => newNamespaceAliaser()));
     });
 
     let builder: ElementBuilder;

@@ -1,5 +1,3 @@
-import { newNamespaceAliaser } from '@frontmeans/namespace-aliaser';
-import { cxBuildAsset } from '@proc7ts/context-builder';
 import { CxModule } from '@proc7ts/context-modules';
 import { CxEntry, CxRequest } from '@proc7ts/context-values';
 import { AfterEvent, AfterEvent__symbol, onceOn, OnEvent, trackValue, valueOn, valueOn_ } from '@proc7ts/fun-events';
@@ -9,7 +7,6 @@ import { BootstrapContext } from './boot';
 import { ComponentClass, DefinitionContext } from './component/definition';
 import { FeatureDef, FeatureRef, FeatureStatus } from './feature';
 import { FeatureModule } from './feature/loader';
-import { DefaultNamespaceAliaser } from './globals';
 import { BootstrapContextBuilder } from './impl';
 import { whenDefined } from './impl/when-defined';
 
@@ -109,10 +106,7 @@ function initBootstrap(): {
     return new BootstrapContext$();
   });
 
-
   const bsContext = bsBuilder.context;
-
-  bsBuilder.provide(cxBuildAsset(DefaultNamespaceAliaser, _target => newNamespaceAliaser()));
 
   return {
     bsContext,

@@ -34,8 +34,7 @@ export interface ComponentRenderCtl {
   /**
    * Enables component pre-rendering by the given pre-renderer.
    *
-   * A pre-renderer call will be scheduled by {@link DefaultPreRenderScheduler default pre-render scheduler} once
-   * component state updated.
+   * A pre-renderer call will be scheduled by global `PreRenderScheduler` once component state updated.
    *
    * The unrooted rendering contexts created during the pre-renderer execution are lifted when execution completes.
    *
