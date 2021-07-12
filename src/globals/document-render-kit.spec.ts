@@ -5,7 +5,6 @@ import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { cxConstAsset } from '@proc7ts/context-builder';
 import { bootstrapComponents } from '../bootstrap-components';
 import { Feature } from '../feature';
-import { DefaultNamespaceAliaser } from './default-namespace-aliaser';
 import { DefaultRenderScheduler } from './default-render-scheduler';
 import { DocumentRenderKit } from './document-render-kit';
 
@@ -28,7 +27,7 @@ describe('globals', () => {
 
       @Feature({
         setup(setup) {
-          setup.provide(cxConstAsset(DefaultNamespaceAliaser, nsAlias));
+          setup.provide(cxConstAsset(NamespaceAliaser, nsAlias));
           setup.provide(cxConstAsset(DefaultRenderScheduler, scheduler));
         },
       })
@@ -39,7 +38,7 @@ describe('globals', () => {
       renderKit = bsContext.get(DocumentRenderKit);
     });
 
-    it('initializes document rendering context with `DefaultNamespaceAliaser`', () => {
+    it('initializes document rendering context with `NamespaceAliaser`', () => {
 
       const drCtx = renderKit.contextOf(doc.createElement('div'));
       const ns = new NamespaceDef('uri:test:ns');

@@ -1,7 +1,7 @@
-import { QualifiedName } from '@frontmeans/namespace-aliaser';
+import { NamespaceAliaser, QualifiedName } from '@frontmeans/namespace-aliaser';
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { cxBuildAsset, CxPeerBuilder } from '@proc7ts/context-builder';
-import { CxEntry, cxSingle } from '@proc7ts/context-values';
+import { CxEntry, CxGlobals, cxSingle } from '@proc7ts/context-values';
 import { asis, Class, noop } from '@proc7ts/primitives';
 import { Mock, SpyInstance } from 'jest-mock';
 import { BootstrapContext } from './boot';
@@ -9,7 +9,6 @@ import { bootstrapComponents } from './bootstrap-components';
 import { Component, ComponentDef, ComponentDef__symbol } from './component';
 import { ComponentClass, CustomElements, DefinitionContext } from './component/definition';
 import { FeatureContext, FeatureDef } from './feature';
-import { DefaultNamespaceAliaser } from './globals';
 import { ElementBuilder } from './impl';
 import { PerComponentCxPeer } from './impl/component-context';
 import { PerDefinitionCxPeer } from './impl/definition-context';
@@ -27,8 +26,14 @@ describe('boot', () => {
     it('provides element builder', () => {
       expect(bootstrapComponents().get(ElementBuilder)).toBeDefined();
     });
-    it('constructs default namespace aliaser', () => {
-      expect(bootstrapComponents().get(DefaultNamespaceAliaser)).toBeInstanceOf(Function);
+    it('provides itself as `CxGlobals`', () => {
+
+      const bsContext = bootstrapComponents();
+
+      expect(bsContext.get(CxGlobals)).toBe(bsContext);
+    });
+    it('provides namespace aliaser', () => {
+      expect(bootstrapComponents().get(NamespaceAliaser)).toBeInstanceOf(Function);
     });
 
     describe('BootstrapContext', () => {

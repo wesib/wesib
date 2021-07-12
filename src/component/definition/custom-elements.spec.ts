@@ -1,9 +1,9 @@
-import { NamespaceDef, newNamespaceAliaser } from '@frontmeans/namespace-aliaser';
+import { NamespaceDef } from '@frontmeans/namespace-aliaser';
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
-import { cxBuildAsset, cxConstAsset } from '@proc7ts/context-builder';
+import { cxConstAsset } from '@proc7ts/context-builder';
 import { Class } from '@proc7ts/primitives';
 import { BootstrapContext } from '../../boot';
-import { BootstrapWindow, DefaultNamespaceAliaser } from '../../globals';
+import { BootstrapWindow } from '../../globals';
 import { BootstrapContextBuilder } from '../../impl';
 import { DefinitionContext__symbol } from '../../impl/definition-context.symbol';
 import { MockObject } from '../../spec';
@@ -34,7 +34,6 @@ describe('component', () => {
       } as any;
 
       bsBuilder.provide(cxConstAsset(BootstrapWindow, mockWindow));
-      bsBuilder.provide(cxBuildAsset(DefaultNamespaceAliaser, _target => newNamespaceAliaser()));
     });
 
     beforeEach(() => {
