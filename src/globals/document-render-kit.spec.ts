@@ -1,11 +1,10 @@
 import { drekContextOf } from '@frontmeans/drek';
 import { NamespaceAliaser, NamespaceDef, newNamespaceAliaser } from '@frontmeans/namespace-aliaser';
-import { immediateRenderScheduler } from '@frontmeans/render-scheduler';
+import { immediateRenderScheduler, RenderScheduler } from '@frontmeans/render-scheduler';
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { cxConstAsset } from '@proc7ts/context-builder';
 import { bootstrapComponents } from '../bootstrap-components';
 import { Feature } from '../feature';
-import { DefaultRenderScheduler } from './default-render-scheduler';
 import { DocumentRenderKit } from './document-render-kit';
 
 describe('globals', () => {
@@ -18,7 +17,7 @@ describe('globals', () => {
     });
 
     let nsAlias: NamespaceAliaser;
-    let scheduler: DefaultRenderScheduler;
+    let scheduler: RenderScheduler;
     let renderKit: DocumentRenderKit;
 
     beforeEach(async () => {
@@ -28,7 +27,7 @@ describe('globals', () => {
       @Feature({
         setup(setup) {
           setup.provide(cxConstAsset(NamespaceAliaser, nsAlias));
-          setup.provide(cxConstAsset(DefaultRenderScheduler, scheduler));
+          setup.provide(cxConstAsset(RenderScheduler, scheduler));
         },
       })
       class TestFeature {}
@@ -46,7 +45,7 @@ describe('globals', () => {
       drCtx.nsAlias(ns);
       expect(nsAlias).toHaveBeenCalledWith(ns);
     });
-    it('initializes document rendering context with `DefaultRenderScheduler`', () => {
+    it('initializes document rendering context with global `RenderScheduler`', () => {
 
       const drCtx = renderKit.contextOf(doc.createElement('div'));
 

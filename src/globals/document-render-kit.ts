@@ -1,9 +1,9 @@
 import { nodeDocument } from '@frontmeans/dom-primitives';
 import { DrekContext, drekContextOf } from '@frontmeans/drek';
 import { NamespaceAliaser } from '@frontmeans/namespace-aliaser';
+import { RenderScheduler } from '@frontmeans/render-scheduler';
 import { cxDefaultScoped, CxEntry, cxSingle } from '@proc7ts/context-values';
 import { BootstrapContext } from '../boot';
-import { DefaultRenderScheduler } from './default-render-scheduler';
 
 /**
  * A document render kit instance.
@@ -20,7 +20,7 @@ export interface DocumentRenderKit {
    * Obtains a rendering context of the given DOM node.
    *
    * Does the same as `drekContextOf()` function, and also makes sure that the rendering context for the document
-   * is initialized with {@link DefaultRenderScheduler} and `NamespaceAliaser`.
+   * is initialized with global `RenderScheduler` and `NamespaceAliaser`.
    *
    * @param node - Target DOM node.
    *
@@ -53,7 +53,7 @@ function DocumentRenderKit$byDefault(target: CxEntry.Target<DocumentRenderKit>):
       docs.set(doc, 1);
       drekContextOf(doc).update({
         nsAlias: target.get(NamespaceAliaser),
-        scheduler: target.get(DefaultRenderScheduler),
+        scheduler: target.get(RenderScheduler),
       });
     }
   };
