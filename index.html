@@ -74,7 +74,7 @@
 				features that can involve in component definition process and thus alter the resulting components in very flexible way.</p>
 				<p>This package provides a core API.</p>
 				<p>The <a href="https://github.com/wesib/generic">@wesib/generic</a> package provides generic web components and features.</p>
-				<p>The examples can be found in <a href="https://github.com/wesib/examples">@wesib/examples</a>.  </p>
+				<p>The examples can be found in <a href="https://github.com/wesib/examples">@wesib/examples</a>.</p>
 				<a href="#components" id="components" style="color: inherit; text-decoration: none;">
 					<h2>Components</h2>
 				</a>
@@ -107,8 +107,8 @@
 
 <span style="color: #000000">@</span><span style="color: #795E26">Component</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;my-component&#039;</span><span style="color: #000000">) </span><span style="color: #008000">// Custom element name</span>
 <span style="color: #000000">@</span><span style="color: #795E26">Attributes</span><span style="color: #000000">(</span>
-<span style="color: #000000">  </span><span style="color: #A31515">&#039;attribute-one&#039;</span><span style="color: #000000">,</span>
-<span style="color: #000000">  </span><span style="color: #A31515">&#039;another-attribute&#039;</span><span style="color: #000000">,   </span>
+<span style="color: #000000">    </span><span style="color: #A31515">&#039;attribute-one&#039;</span><span style="color: #000000">,</span>
+<span style="color: #000000">    </span><span style="color: #A31515">&#039;another-attribute&#039;</span><span style="color: #000000">,</span>
 <span style="color: #000000">)</span>
 <span style="color: #AF00DB">export</span><span style="color: #000000"> </span><span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">MyComponent</span><span style="color: #000000"> {</span>
 
@@ -119,20 +119,20 @@
 <span style="color: #000000">  </span><span style="color: #795E26">setAttribute3</span><span style="color: #000000">(</span><span style="color: #001080">newValue</span><span style="color: #000000">: </span><span style="color: #267F99">string</span><span style="color: #000000">, </span><span style="color: #001080">oldValue</span><span style="color: #000000">: </span><span style="color: #267F99">string</span><span style="color: #000000"> | </span><span style="color: #267F99">null</span><span style="color: #000000">) {</span>
 <span style="color: #000000">    </span><span style="color: #008000">// This is called on attribute value modification with new and old values</span>
 <span style="color: #000000">  }</span>
-<span style="color: #000000">  </span>
+
 <span style="color: #000000">}</span>
 </code></pre>
 				<pre><code class="language-HTML"><span style="color: #800000">&lt;my-component</span>
-<span style="color: #000000">  </span><span style="color: #FF0000">attribute-one</span><span style="color: #000000">=</span><span style="color: #0000FF">&quot;1&quot;</span><span style="color: #000000">  </span><span style="color: #CD3131">&lt;!--</span><span style="color: #000000"> </span><span style="color: #FF0000">Can</span><span style="color: #000000"> </span><span style="color: #FF0000">be</span><span style="color: #000000"> </span><span style="color: #FF0000">accessed</span><span style="color: #000000"> </span><span style="color: #FF0000">with</span><span style="color: #000000"> </span><span style="color: #FF0000">element</span><span style="color: #CD3131">&#039;s</span><span style="color: #000000"> </span><span style="color: #FF0000">`element.getAttribute(</span><span style="color: #CD3131">&quot;attribute-one&quot;)`</span><span style="color: #000000"> </span><span style="color: #FF0000">--</span><span style="color: #800000">&gt;</span>
-<span style="color: #000000">  attribute-two=&quot;2&quot;  </span><span style="color: #008000">&lt;!-- Can be accessed as `attribute2` property of `MyComponent` --&gt;</span>
-<span style="color: #000000">  attribute-three&quot;3&quot; </span><span style="color: #008000">&lt;!-- Triggers `setAttribute3()` method call --&gt;</span>
+<span style="color: #000000">    </span><span style="color: #FF0000">attribute-one</span><span style="color: #000000">=</span><span style="color: #0000FF">&quot;1&quot;</span><span style="color: #000000">  </span><span style="color: #CD3131">&lt;!--</span><span style="color: #000000"> </span><span style="color: #FF0000">Can</span><span style="color: #000000"> </span><span style="color: #FF0000">be</span><span style="color: #000000"> </span><span style="color: #FF0000">accessed</span><span style="color: #000000"> </span><span style="color: #FF0000">with</span><span style="color: #000000"> </span><span style="color: #FF0000">element</span><span style="color: #CD3131">&#039;s</span><span style="color: #000000"> </span><span style="color: #FF0000">`element.getAttribute(</span><span style="color: #CD3131">&quot;attribute-one&quot;)`</span><span style="color: #000000"> </span><span style="color: #FF0000">--</span><span style="color: #800000">&gt;</span>
+<span style="color: #000000">attribute-two=&quot;2&quot;  </span><span style="color: #008000">&lt;!-- Can be accessed as `attribute2` property of `MyComponent` --&gt;</span>
+<span style="color: #000000">attribute-three&quot;3&quot; </span><span style="color: #008000">&lt;!-- Triggers `setAttribute3()` method call --&gt;</span>
 <span style="color: #000000">&gt;</span><span style="color: #800000">&lt;/my-component&gt;</span>
 </code></pre>
 				<a href="#element-properties" id="element-properties" style="color: inherit; text-decoration: none;">
 					<h2>Element Properties</h2>
 				</a>
 				<p>To define the properties of custom element use a <code>@DomProperty</code> component property decorator.</p>
-				<pre><code class="language-typescript"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">DomProperty</span><span style="color: #000000">, </span><span style="color: #001080">Component</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@wesib/wesib&#039;</span><span style="color: #000000">;</span>
+				<pre><code class="language-typescript"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">Component</span><span style="color: #000000">, </span><span style="color: #001080">DomProperty</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@wesib/wesib&#039;</span><span style="color: #000000">;</span>
 
 <span style="color: #000000">@</span><span style="color: #795E26">Component</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;my-component&#039;</span><span style="color: #000000">) </span><span style="color: #008000">// Custom element name</span>
 <span style="color: #AF00DB">export</span><span style="color: #000000"> </span><span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">MyComponent</span><span style="color: #000000"> {</span>
@@ -149,13 +149,13 @@
 				</a>
 				<p>Wesib provides contexts for each component and feature (see below). This context can be used to access provided values.</p>
 				<p>For example, each component class constructor accepts a <code>ComponentContext</code> instance as its only argument.</p>
-				<pre><code class="language-typescript"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">ComponentContext</span><span style="color: #000000">, </span><span style="color: #001080">Component</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@wesib/wesib&#039;</span><span style="color: #000000">;</span>
+				<pre><code class="language-typescript"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">Component</span><span style="color: #000000">, </span><span style="color: #001080">ComponentContext</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@wesib/wesib&#039;</span><span style="color: #000000">;</span>
 
 <span style="color: #000000">@</span><span style="color: #795E26">Component</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;my-component&#039;</span><span style="color: #000000">) </span><span style="color: #008000">// Custom element name</span>
 <span style="color: #AF00DB">export</span><span style="color: #000000"> </span><span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">MyComponent</span><span style="color: #000000"> {</span>
 
 <span style="color: #000000">  </span><span style="color: #0000FF">private</span><span style="color: #000000"> </span><span style="color: #0000FF">readonly</span><span style="color: #000000"> </span><span style="color: #001080">_service</span><span style="color: #000000">: </span><span style="color: #267F99">MyService</span><span style="color: #000000">;</span>
-<span style="color: #000000">  </span>
+
 <span style="color: #000000">  </span><span style="color: #0000FF">constructor</span><span style="color: #000000">(</span><span style="color: #001080">context</span><span style="color: #000000">: </span><span style="color: #267F99">ComponentContext</span><span style="color: #000000">) {</span>
 <span style="color: #000000">    </span><span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #001080">_service</span><span style="color: #000000"> = </span><span style="color: #001080">context</span><span style="color: #000000">.</span><span style="color: #795E26">get</span><span style="color: #000000">(</span><span style="color: #001080">MyService</span><span style="color: #000000">); </span><span style="color: #008000">// Obtain a `MyService` instance provided by some feature elsewhere.</span>
 <span style="color: #000000">  }</span>
@@ -170,43 +170,38 @@
 				<p>It is possible to define custom features to extend Wesib. E.g. to define or augment existing components, extend custom
 				elements (like <code>@Attribute</code> or <code>@DomProperty</code> decorators do), or provide some context values.</p>
 				<p>The feature is a class decorated with <code>@Feature</code> decorator:</p>
-				<pre><code class="language-typescript"><span style="color: #AF00DB">import</span><span style="color: #000000"> {</span>
-<span style="color: #000000">  </span><span style="color: #001080">ComponentContext</span><span style="color: #000000">,</span>
-<span style="color: #000000">  </span><span style="color: #001080">DefinitionContext</span><span style="color: #000000">,</span>
-<span style="color: #000000">  </span><span style="color: #001080">Feature</span><span style="color: #000000">,</span>
-<span style="color: #000000">  </span><span style="color: #001080">FeatureContext</span><span style="color: #000000">,</span>
-<span style="color: #000000">  </span><span style="color: #001080">FeatureSetup</span><span style="color: #000000">,</span>
-<span style="color: #000000">} </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@wesib/wesib&#039;</span><span style="color: #000000">;</span>
+				<pre><code class="language-typescript"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">cxBuildAsset</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@proc7ts/context-builder&#039;</span><span style="color: #000000">;</span>
+<span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">ComponentContext</span><span style="color: #000000">, </span><span style="color: #001080">DefinitionContext</span><span style="color: #000000">, </span><span style="color: #001080">Feature</span><span style="color: #000000">, </span><span style="color: #001080">FeatureContext</span><span style="color: #000000">, </span><span style="color: #001080">FeatureSetup</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@wesib/wesib&#039;</span><span style="color: #000000">;</span>
 
 <span style="color: #000000">@</span><span style="color: #795E26">Feature</span><span style="color: #000000">({</span>
 <span style="color: #000000">  </span><span style="color: #001080">needs:</span><span style="color: #000000"> [</span>
 <span style="color: #000000">    </span><span style="color: #001080">OtherFeature1</span><span style="color: #000000">, </span><span style="color: #008000">// Requires other features to be enabled.</span>
 <span style="color: #000000">    </span><span style="color: #001080">MyComponent</span><span style="color: #000000">, </span><span style="color: #008000">// The required component will be defined too.  </span>
 <span style="color: #000000">  ],</span>
-<span style="color: #000000">  </span><span style="color: #795E26">setup</span><span style="color: #000000">(</span><span style="color: #001080">setup</span><span style="color: #000000">: </span><span style="color: #267F99">FeatureSetup</span><span style="color: #000000">) { </span>
-<span style="color: #000000">    </span><span style="color: #001080">setup</span><span style="color: #000000">.</span><span style="color: #795E26">provide</span><span style="color: #000000">({ </span>
-<span style="color: #000000">      </span><span style="color: #001080">a:</span><span style="color: #000000"> </span><span style="color: #001080">GlobalService</span><span style="color: #000000">,              </span><span style="color: #008000">// Provide a `GlobalService` available globally</span>
-<span style="color: #000000">      </span><span style="color: #795E26">as</span><span style="color: #001080">:</span><span style="color: #000000"> () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">GlobalService</span><span style="color: #000000">(), </span><span style="color: #008000">// in all IoC contexts</span>
-<span style="color: #000000">    }); </span>
-<span style="color: #000000">    </span><span style="color: #001080">setup</span><span style="color: #000000">.</span><span style="color: #795E26">perDefinition</span><span style="color: #000000">({</span>
-<span style="color: #000000">      </span><span style="color: #001080">a:</span><span style="color: #000000"> </span><span style="color: #001080">DefinitionService</span><span style="color: #000000">,</span>
-<span style="color: #000000">      </span><span style="color: #795E26">by</span><span style="color: #001080">:</span><span style="color: #000000"> (</span><span style="color: #001080">definitionContext</span><span style="color: #000000">: </span><span style="color: #267F99">DefinitionContext</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">        </span><span style="color: #008000">// Provide a `DefinitionService` available during component definition.</span>
-<span style="color: #000000">        </span><span style="color: #008000">// Such service will be provided per component class</span>
-<span style="color: #000000">        </span><span style="color: #008000">// and will be available during custom element construction,</span>
-<span style="color: #000000">        </span><span style="color: #008000">// e.g. to `onDefinition()` listeners.</span>
-<span style="color: #000000">        </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">DefinitionService</span><span style="color: #000000">(</span><span style="color: #001080">definitionContext</span><span style="color: #000000">);</span>
-<span style="color: #000000">      },</span>
-<span style="color: #000000">    });</span>
-<span style="color: #000000">    </span><span style="color: #001080">setup</span><span style="color: #000000">.</span><span style="color: #795E26">perComponent</span><span style="color: #000000">({</span>
-<span style="color: #000000">      </span><span style="color: #001080">a:</span><span style="color: #000000"> </span><span style="color: #001080">MyService</span><span style="color: #000000">,</span>
-<span style="color: #000000">      </span><span style="color: #795E26">by</span><span style="color: #001080">:</span><span style="color: #000000"> (</span><span style="color: #001080">componentContext</span><span style="color: #000000">: </span><span style="color: #267F99">ComponentContext</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">        </span><span style="color: #008000">// Provide a `MyService` available to components.</span>
-<span style="color: #000000">        </span><span style="color: #008000">// Such service will be provided per component instance</span>
-<span style="color: #000000">        </span><span style="color: #008000">// and will be available to component instance and `onComponent()` listeners.</span>
-<span style="color: #000000">        </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">MyService</span><span style="color: #000000">(</span><span style="color: #001080">componentContext</span><span style="color: #000000">.</span><span style="color: #001080">component</span><span style="color: #000000">);</span>
-<span style="color: #000000">      },</span>
-<span style="color: #000000">    });</span>
+<span style="color: #000000">  </span><span style="color: #795E26">setup</span><span style="color: #000000">(</span><span style="color: #001080">setup</span><span style="color: #000000">: </span><span style="color: #267F99">FeatureSetup</span><span style="color: #000000">) {</span>
+<span style="color: #000000">    </span><span style="color: #001080">setup</span><span style="color: #000000">.</span><span style="color: #795E26">provide</span><span style="color: #000000">(</span><span style="color: #795E26">cxBuildAsset</span><span style="color: #000000">(</span>
+<span style="color: #000000">        </span><span style="color: #001080">GlobalService</span><span style="color: #000000">,              </span><span style="color: #008000">// Provide a `GlobalService` available globally</span>
+<span style="color: #000000">        () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">GlobalService</span><span style="color: #000000">(),  </span><span style="color: #008000">// in all IoC contexts</span>
+<span style="color: #000000">    ));</span>
+<span style="color: #000000">    </span><span style="color: #001080">setup</span><span style="color: #000000">.</span><span style="color: #795E26">perDefinition</span><span style="color: #000000">(</span><span style="color: #795E26">cxBuildAsset</span><span style="color: #000000">(</span>
+<span style="color: #000000">        </span><span style="color: #001080">DefinitionService</span><span style="color: #000000">,</span>
+<span style="color: #000000">        ({ </span><span style="color: #001080">context</span><span style="color: #000000">: </span><span style="color: #001080">definitionContext</span><span style="color: #000000"> }) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">          </span><span style="color: #008000">// Provide a `DefinitionService` available during component definition.</span>
+<span style="color: #000000">          </span><span style="color: #008000">// Such service will be provided per component class</span>
+<span style="color: #000000">          </span><span style="color: #008000">// and will be available during custom element construction,</span>
+<span style="color: #000000">          </span><span style="color: #008000">// e.g. to `onDefinition()` listeners.</span>
+<span style="color: #000000">          </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">DefinitionService</span><span style="color: #000000">(</span><span style="color: #001080">definitionContext</span><span style="color: #000000">);</span>
+<span style="color: #000000">        },</span>
+<span style="color: #000000">    ));</span>
+<span style="color: #000000">    </span><span style="color: #001080">setup</span><span style="color: #000000">.</span><span style="color: #795E26">perComponent</span><span style="color: #000000">(</span><span style="color: #795E26">cxBuildAsset</span><span style="color: #000000">(</span>
+<span style="color: #000000">        </span><span style="color: #001080">MyService</span><span style="color: #000000">,</span>
+<span style="color: #000000">        ({ </span><span style="color: #001080">context</span><span style="color: #000000">: </span><span style="color: #001080">componentContext</span><span style="color: #000000"> }) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">          </span><span style="color: #008000">// Provide a `MyService` available to components.</span>
+<span style="color: #000000">          </span><span style="color: #008000">// Such service will be provided per component instance</span>
+<span style="color: #000000">          </span><span style="color: #008000">// and will be available to component instance and `onComponent()` listeners.</span>
+<span style="color: #000000">          </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">MyService</span><span style="color: #000000">(</span><span style="color: #001080">componentContext</span><span style="color: #000000">.</span><span style="color: #001080">component</span><span style="color: #000000">);</span>
+<span style="color: #000000">        },</span>
+<span style="color: #000000">    ));</span>
 <span style="color: #000000">  },</span>
 <span style="color: #000000">  </span><span style="color: #795E26">init</span><span style="color: #000000">(</span><span style="color: #001080">context</span><span style="color: #000000">: </span><span style="color: #267F99">FeatureContext</span><span style="color: #000000">) {</span>
 <span style="color: #000000">    </span><span style="color: #008000">// Bootstrap the feature by calling methods of provided context.</span>
@@ -216,29 +211,30 @@
 
 <span style="color: #000000">      </span><span style="color: #008000">// The service provided with `perDefinition()` method above is available here      </span>
 <span style="color: #000000">      </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">definitionService</span><span style="color: #000000"> = </span><span style="color: #001080">definitionContext</span><span style="color: #000000">.</span><span style="color: #795E26">get</span><span style="color: #000000">(</span><span style="color: #001080">DefinitionService</span><span style="color: #000000">);</span>
-<span style="color: #000000">      </span>
+
 <span style="color: #000000">      </span><span style="color: #001080">definitionContext</span><span style="color: #000000">.</span><span style="color: #795E26">whenReady</span><span style="color: #000000">(() </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
 <span style="color: #000000">        </span><span style="color: #008000">// This is called when element class is defined.</span>
 <span style="color: #000000">        </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span>
-<span style="color: #000000">          </span><span style="color: #A31515">`Define element class </span><span style="color: #0000FF">${</span><span style="color: #001080">definitionContext</span><span style="color: #000000FF">.</span><span style="color: #001080">elementType</span><span style="color: #000000FF">.</span><span style="color: #001080">name</span><span style="color: #0000FF">}</span><span style="color: #A31515">`</span>
-<span style="color: #000000">          + </span><span style="color: #A31515">` for component of </span><span style="color: #0000FF">${</span><span style="color: #001080">definitionContext</span><span style="color: #000000FF">.</span><span style="color: #001080">componentType</span><span style="color: #000000FF">.</span><span style="color: #001080">name</span><span style="color: #0000FF">}</span><span style="color: #A31515"> type`</span><span style="color: #000000">)        </span>
+<span style="color: #000000">            </span><span style="color: #A31515">`Define element class </span><span style="color: #0000FF">${</span><span style="color: #001080">definitionContext</span><span style="color: #000000FF">.</span><span style="color: #001080">elementType</span><span style="color: #000000FF">.</span><span style="color: #001080">name</span><span style="color: #0000FF">}</span><span style="color: #A31515">`</span>
+<span style="color: #000000">            + </span><span style="color: #A31515">` for component of </span><span style="color: #0000FF">${</span><span style="color: #001080">definitionContext</span><span style="color: #000000FF">.</span><span style="color: #001080">componentType</span><span style="color: #000000FF">.</span><span style="color: #001080">name</span><span style="color: #0000FF">}</span><span style="color: #A31515"> type`</span><span style="color: #000000">)</span>
 <span style="color: #000000">      });</span>
 <span style="color: #000000">    });</span>
 <span style="color: #000000">    </span><span style="color: #001080">context</span><span style="color: #000000">.</span><span style="color: #795E26">onComponent</span><span style="color: #000000">((</span><span style="color: #001080">componentContext</span><span style="color: #000000">: </span><span style="color: #267F99">ComponentContext</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
 <span style="color: #000000">      </span><span style="color: #008000">// Notified on each component instantiation.</span>
-<span style="color: #000000">      </span>
+
 <span style="color: #000000">      </span><span style="color: #008000">// The service provided with `perComponent()` method above is available here      </span>
 <span style="color: #000000">      </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">myService</span><span style="color: #000000"> = </span><span style="color: #001080">componentContext</span><span style="color: #000000">.</span><span style="color: #795E26">get</span><span style="color: #000000">(</span><span style="color: #001080">MyService</span><span style="color: #000000">);</span>
-<span style="color: #000000">      </span>
+
 <span style="color: #000000">      </span><span style="color: #001080">componentContext</span><span style="color: #000000">.</span><span style="color: #795E26">whenReady</span><span style="color: #000000">(() </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
 <span style="color: #000000">        </span><span style="color: #008000">// This is called when component is instantiated,</span>
 <span style="color: #000000">        </span><span style="color: #008000">// which happens right after custom element instantiation.</span>
 <span style="color: #000000">        </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">componentContext</span><span style="color: #000000">.</span><span style="color: #001080">element</span><span style="color: #000000">, </span><span style="color: #A31515">` is instantiated for`</span><span style="color: #000000">, </span><span style="color: #001080">componentContext</span><span style="color: #000000">.</span><span style="color: #001080">component</span><span style="color: #000000">);</span>
 <span style="color: #000000">      });</span>
 <span style="color: #000000">    });</span>
-<span style="color: #000000">  }  </span>
+<span style="color: #000000">  }</span>
 <span style="color: #000000">})</span>
-<span style="color: #AF00DB">export</span><span style="color: #000000"> </span><span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">MyFeature</span><span style="color: #000000"> {} </span>
+<span style="color: #AF00DB">export</span><span style="color: #000000"> </span><span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">MyFeature</span><span style="color: #000000"> {</span>
+<span style="color: #000000">} </span>
 </code></pre>
 				<p>To enable a custom feature just pass it to <code>bootstrapComponents()</code> like this:</p>
 				<pre><code class="language-typescript"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">bootstrapComponents</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@wesib/wesib&#039;</span><span style="color: #000000">;</span>
@@ -251,7 +247,7 @@
 					<h2>Component State</h2>
 				</a>
 				<p>Whenever a component state changes, e.g. when element attribute or property value changes, a state update notification
-				is issued.</p>
+				issued.</p>
 				<p>A state update notification can also be issued by calling a <code>ComponentContext.updateState()</code> method:</p>
 				<pre><code class="language-typescript"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">Component</span><span style="color: #000000">, </span><span style="color: #001080">ComponentContext</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@wesib/wesib&#039;</span><span style="color: #000000">;</span>
 
@@ -262,12 +258,12 @@
 
 <span style="color: #000000">  </span><span style="color: #0000FF">constructor</span><span style="color: #000000">(</span><span style="color: #0000FF">private</span><span style="color: #000000"> </span><span style="color: #0000FF">readonly</span><span style="color: #000000"> </span><span style="color: #001080">_context</span><span style="color: #000000">: </span><span style="color: #267F99">ComponentContext</span><span style="color: #000000">) {</span>
 <span style="color: #000000">  }</span>
-<span style="color: #000000">  </span>
+
 <span style="color: #000000">  </span><span style="color: #0000FF">async</span><span style="color: #000000"> </span><span style="color: #795E26">loadData</span><span style="color: #000000">() {</span>
-<span style="color: #000000">    </span>
+
 <span style="color: #000000">    </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">newData</span><span style="color: #000000"> = </span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #795E26">fetch</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;/api/data&#039;</span><span style="color: #000000">).</span><span style="color: #795E26">then</span><span style="color: #000000">(</span><span style="color: #001080">response</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">response</span><span style="color: #000000">.</span><span style="color: #795E26">json</span><span style="color: #000000">());</span>
 <span style="color: #000000">    </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">oldData</span><span style="color: #000000"> = </span><span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #001080">data</span><span style="color: #000000">;</span>
-<span style="color: #000000">    </span>
+
 <span style="color: #000000">    </span><span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #001080">data</span><span style="color: #000000"> = </span><span style="color: #001080">newData</span><span style="color: #000000">;</span>
 <span style="color: #000000">    </span><span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #001080">_context</span><span style="color: #000000">.</span><span style="color: #795E26">updateState</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;data&#039;</span><span style="color: #000000">, </span><span style="color: #001080">newData</span><span style="color: #000000">, </span><span style="color: #001080">oldData</span><span style="color: #000000">); </span><span style="color: #008000">// Update the state</span>
 <span style="color: #000000">  }</span>
@@ -319,10 +315,10 @@
 						<a href="modules.html">Modules</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/module__wesib_wesib.html">Module @wesib/wesib</a>
+						<a href="modules/Module__wesib_wesib.html">Module @wesib/wesib</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/module__wesib_wesib_testing.html">Module @wesib/wesib/testing</a>
+						<a href="modules/Module__wesib_wesib_testing.html">Module @wesib/wesib/testing</a>
 					</li>
 				</ul>
 			</nav>
@@ -351,7 +347,6 @@
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
-				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
 			</ul>
 		</div>
 	</div>
