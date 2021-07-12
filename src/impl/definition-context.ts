@@ -1,3 +1,4 @@
+import { DocumentRenderKit } from '@frontmeans/drek';
 import { CxBuilder, cxConstAsset, CxPeerBuilder } from '@proc7ts/context-builder';
 import { CxAccessor, CxAsset, CxEntry, cxEvaluated, cxScoped } from '@proc7ts/context-values';
 import { mapOn_, onceOn, OnEvent, trackValue, translateOn, ValueTracker } from '@proc7ts/fun-events';
@@ -6,7 +7,7 @@ import { Supply } from '@proc7ts/supply';
 import { BootstrapContext } from '../boot';
 import { ComponentContext, ComponentDef, ComponentElement, ComponentSlot } from '../component';
 import { DefinitionContext, DefinitionSetup, ElementDef } from '../component/definition';
-import { DocumentRenderKit, ElementNaming } from '../globals';
+import { ElementNaming } from '../globals';
 import { BootstrapContextBuilder } from './bootstrap-context-builder';
 import { ComponentContext$Mounted, PerComponentCxPeer } from './component-context';
 import { customElementType } from './custom-element';

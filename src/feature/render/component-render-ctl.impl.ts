@@ -1,4 +1,4 @@
-import { drekBuild } from '@frontmeans/drek';
+import { DocumentRenderKit, drekBuild } from '@frontmeans/drek';
 import {
   PreRenderScheduler,
   RenderExecution,
@@ -9,7 +9,6 @@ import {
 import { noop, valueByRecipe } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
 import { ComponentContext } from '../../component';
-import { DocumentRenderKit } from '../../globals';
 import { ComponentPreRenderer } from './component-pre-renderer';
 import { ComponentPreRendererExecution } from './component-pre-renderer-execution';
 import { ComponentRenderCtl } from './component-render-ctl';
@@ -17,9 +16,6 @@ import { ComponentRenderer } from './component-renderer';
 import { ComponentRendererExecution } from './component-renderer-execution';
 import { RenderDef } from './render-def';
 
-/**
- * @internal
- */
 export class ComponentRenderCtl$ implements ComponentRenderCtl {
 
   readonly _scheduler: RenderScheduler;
