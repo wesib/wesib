@@ -92,7 +92,7 @@ function CustomElements$byDefault(target: CxEntry.Target<CustomElements>): Custo
 
     whenDefined(componentTypeOrName: ComponentClass | string): Promise<void> {
       if (isQualifiedName(componentTypeOrName)) {
-        return customElements.whenDefined(html__naming.name(componentTypeOrName, nsAlias));
+        return customElements.whenDefined(html__naming.name(componentTypeOrName, nsAlias)) as Promise<any>;
       }
 
       const defContext = definitionContextOf(componentTypeOrName);
@@ -102,7 +102,7 @@ function CustomElements$byDefault(target: CxEntry.Target<CustomElements>): Custo
         return CustomComponent$resolver(componentTypeOrName).promise();
       }
 
-      return customElements.whenDefined(html__naming.name(name, nsAlias));
+      return customElements.whenDefined(html__naming.name(name, nsAlias)) as Promise<any>;
     }
 
   }
