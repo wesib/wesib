@@ -53,7 +53,7 @@ export namespace ElementDef {
      *
      * This is to support `as` attribute of standard HTML element. Note that this is not supported by polyfills.
      */
-    readonly name?: string;
+    readonly name?: string | undefined;
 
   }
 

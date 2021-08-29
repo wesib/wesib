@@ -31,17 +31,17 @@ export interface ComponentDef<T extends object = any> {
    * When omitted an anonymous component will be registered. Such component is not bound to custom element, but it
    * still can be mounted.
    */
-  readonly name?: QualifiedName;
+  readonly name?: QualifiedName | undefined;
 
   /**
    * Existing element to extend by custom one.
    */
-  readonly extend?: ElementDef.Extend;
+  readonly extend?: ElementDef.Extend | undefined;
 
   /**
    * Additional feature definition options.
    */
-  readonly feature?: FeatureDef;
+  readonly feature?: FeatureDef | undefined;
 
   /**
    * Sets up component definition.

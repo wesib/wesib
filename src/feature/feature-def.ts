@@ -21,14 +21,14 @@ export interface FeatureDef {
   /**
    * Features this one requires.
    */
-  readonly needs?: Class | readonly Class[];
+  readonly needs?: Class | readonly Class[] | undefined;
 
   /**
    * Features this one provides.
    *
    * The feature always provides itself.
    */
-  readonly has?: Class | readonly Class[];
+  readonly has?: Class | readonly Class[] | undefined;
 
   /**
    * Sets up bootstrap.

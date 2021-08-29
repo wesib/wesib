@@ -9,7 +9,7 @@ const FeatureModule__symbol = (/*#__PURE__*/ Symbol('FeatureModule'));
 
 interface FeatureClass extends Class {
 
-  [FeatureModule__symbol]?: FeatureModule;
+  [FeatureModule__symbol]?: FeatureModule | undefined;
 
 }
 

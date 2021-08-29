@@ -16,21 +16,21 @@ export interface DomPropertyDef<T extends object = any> {
    *
    * Decorated property key is used by default.
    */
-  readonly propertyKey?: PropertyKey;
+  readonly propertyKey?: PropertyKey | undefined;
 
   /**
    * Whether the declared property should be configurable.
    *
    * Defaults to `configurable` attribute of decorated property.
    */
-  readonly configurable?: boolean;
+  readonly configurable?: boolean | undefined;
 
   /**
    * Whether the declared property should be enumerable.
    *
    * Defaults to `enumerable` attribute of decorated property.
    */
-  readonly enumerable?: boolean;
+  readonly enumerable?: boolean | undefined;
 
   /**
    * Whether the declared property should accept new values.
@@ -39,7 +39,7 @@ export interface DomPropertyDef<T extends object = any> {
    *
    * Defaults to `writable` attribute of decorated property.
    */
-  readonly writable?: boolean;
+  readonly writable?: boolean | undefined;
 
   /**
    * Whether to update the component state after this property changed.
@@ -50,7 +50,7 @@ export interface DomPropertyDef<T extends object = any> {
    * - a state value key to update, or
    * - an DOM property update receiver function with custom state update logic.
    */
-  readonly updateState?: boolean | StatePath | DomPropertyUpdateReceiver<T>;
+  readonly updateState?: boolean | StatePath | DomPropertyUpdateReceiver<T> | undefined;
 
 }
 

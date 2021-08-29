@@ -113,7 +113,7 @@ function CustomElements$byDefault(target: CxEntry.Target<CustomElements>): Custo
 const CustomComponent$resolver__symbol = (/*#__PURE__*/ Symbol('CustomComponent.resolver'));
 
 interface CustomComponent$Class<T extends object = any> extends ComponentClass<T> {
-  [CustomComponent$resolver__symbol]?: PromiseResolver;
+  [CustomComponent$resolver__symbol]?: PromiseResolver | undefined;
 }
 
 function CustomComponent$resolver(componentType: CustomComponent$Class): PromiseResolver {

@@ -9,7 +9,7 @@ import { BootstrapWorkbench, componentDefStage } from './bootstrap-workbench.imp
  */
 export class ComponentRegistry {
 
-  private _components?: ComponentClass[] = undefined;
+  private _components?: ComponentClass[] | undefined = undefined;
 
   constructor(private readonly _setup: CxModule.Setup) {
   }

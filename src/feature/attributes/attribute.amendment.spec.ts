@@ -50,7 +50,7 @@ describe('feature/attributes', () => {
 
         [ComponentContext__symbol] = valueProvider(mockContext);
 
-        _testAttr?: string | null;
+        _testAttr?: string | null | undefined;
 
         @Attribute()
         get testAttr(): string | null | undefined {

@@ -67,7 +67,7 @@ export interface StatePropertyDef<T extends object = any> {
    *
    * By default does not update component state if property value didn't change.
    */
-  readonly updateState?: boolean | StatePath | StatePropertyUpdateReceiver<T>;
+  readonly updateState?: boolean | StatePath | StatePropertyUpdateReceiver<T> | undefined;
 
 }
 

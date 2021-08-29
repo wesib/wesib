@@ -17,7 +17,7 @@ export interface AttributeDef<T extends object> {
    * This is required if annotated property's key is not a string (i.e. a symbol). Otherwise,
    * the attribute name is equal to the property name converted to _dash-style_ by default.
    */
-  readonly name?: string;
+  readonly name?: string | undefined;
 
   /**
    * Whether to update the component state after attribute change.
@@ -28,7 +28,7 @@ export interface AttributeDef<T extends object> {
    * - a state value key to update, or
    * - an attribute update receiver function with custom state update logic.
    */
-  readonly updateState?: boolean | StatePath | AttributeUpdateReceiver<T>;
+  readonly updateState?: boolean | StatePath | AttributeUpdateReceiver<T> | undefined;
 
 }
 

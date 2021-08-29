@@ -7,7 +7,7 @@ type ComponentConstructor<T extends object> = (this: ComponentType<T>, context: 
 
 interface ComponentType<T extends object> extends ComponentClass<T> {
 
-  [ComponentConstructor__symbol]?: ComponentConstructor<T>;
+  [ComponentConstructor__symbol]?: ComponentConstructor<T> | undefined;
 
 }
 
@@ -31,7 +31,7 @@ function newComponentConstructor<T extends object>(componentType: ComponentType<
   const context__symbol = Symbol('ComponentContext');
 
   type ComponentInstance = T & {
-    [context__symbol]?: ComponentContext<T>;
+    [context__symbol]?: ComponentContext<T> | undefined;
   };
 
   let defaultContext: ComponentContext<T> | undefined;

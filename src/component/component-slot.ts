@@ -88,7 +88,7 @@ export interface ComponentElement<T extends object = any> extends Element {
    *
    * A {@link ComponentSlot.of} function may be used to access the slot instance, or construct it when necessary.
    */
-  [ComponentSlot__symbol]?: ComponentSlot<T>;
+  [ComponentSlot__symbol]?: ComponentSlot<T> | undefined;
 
 }
 

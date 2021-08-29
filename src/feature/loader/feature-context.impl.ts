@@ -31,8 +31,8 @@ export class FeatureContext$ implements FeatureContext {
   }
 
   readonly whenReady: OnEvent<[FeatureContext]>;
-  private _onDefinition?: OnEvent<[DefinitionContext]>;
-  private _onComponent?: OnEvent<[ComponentContext]>;
+  private _onDefinition?: OnEvent<[DefinitionContext]> | undefined;
+  private _onComponent?: OnEvent<[ComponentContext]> | undefined;
   private readonly _bsContext: BootstrapContext;
   private readonly _componentRegistry: ComponentRegistry;
 

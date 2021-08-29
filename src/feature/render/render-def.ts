@@ -59,7 +59,7 @@ export namespace RenderDef {
      * - `connected` - start rendering when component's element is {@link ComponentContext.connected connected}
      *   to document.
      */
-    readonly when?: 'settled' | 'connected';
+    readonly when?: 'settled' | 'connected' | undefined;
 
     /**
      * Reports rendering error. E.g. a render shot execution failure.
@@ -90,7 +90,7 @@ export namespace RenderDef {
      * When trigger is a root path (the default value), then the rendering will be triggered by any state update.
      * Except for updates of sub-states inside {@link RenderPath__root}.
      */
-    readonly on?: StatePath | EventSender<[]>;
+    readonly on?: StatePath | EventSender<[]> | undefined;
 
   }
 

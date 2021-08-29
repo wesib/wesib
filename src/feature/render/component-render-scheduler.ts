@@ -42,7 +42,7 @@ export interface ComponentRenderScheduleOptions extends RenderScheduleOptions, R
    * - `connected` (the default) - start rendering when component's element is {@link ComponentContext.connected
    *   connected} to document.
    */
-  readonly when?: 'settled' | 'connected';
+  readonly when?: 'settled' | 'connected' | undefined;
 
   /**
    * Reports rendering error. E.g. a render shot execution failure.

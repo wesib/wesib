@@ -50,7 +50,7 @@ interface PostDefSetup<T extends object = any> {
 const PostDefSetup__symbol = (/*#__PURE__*/ Symbol('PostDefSetup'));
 
 interface PostDefComponentClass<T extends object> extends AbstractClass<T> {
-  [PostDefSetup__symbol]?: PostDefSetup<T>;
+  [PostDefSetup__symbol]?: PostDefSetup<T> | undefined;
 }
 
 export function postDefSetup<T extends object>(componentType: PostDefComponentClass<T>): PostDefSetup<T> {

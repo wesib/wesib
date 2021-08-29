@@ -4,7 +4,7 @@ import { ComponentClass, DefinitionContext } from '../component/definition';
 export const DefinitionContext__symbol = (/*#__PURE__*/ Symbol('DefinitionContext'));
 
 export interface ComponentDefinitionClass<T extends object> extends ComponentClass<T> {
-  [DefinitionContext__symbol]?: DefinitionContext<T>;
+  [DefinitionContext__symbol]?: DefinitionContext<T> | undefined;
 }
 
 export function definitionContextOf<T extends object>(
