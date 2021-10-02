@@ -27,6 +27,7 @@ export default defineConfig({
     if (id.startsWith(path.resolve('src', 'testing') + path.sep)) {
       return 'wesib.testing';
     }
+
     return 'wesib';
   },
   output: {

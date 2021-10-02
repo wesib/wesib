@@ -13,5 +13,6 @@ export function definitionContextOf<T extends object>(
   if (!hasOwnProperty(componentType, DefinitionContext__symbol)) {
     throw new TypeError(`Component is not defined: ${componentType}`);
   }
+
   return componentType[DefinitionContext__symbol] as DefinitionContext<T>;
 }

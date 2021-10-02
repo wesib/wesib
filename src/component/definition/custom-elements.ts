@@ -67,6 +67,7 @@ function CustomElements$byDefault(target: CxEntry.Target<CustomElements>): Custo
     define(componentTypeOrName: ComponentClass | QualifiedName, elementType: Class): void {
       if (isQualifiedName(componentTypeOrName)) {
         customElements.define(html__naming.name(componentTypeOrName, nsAlias), elementType);
+
         return;
       }
 
@@ -75,6 +76,7 @@ function CustomElements$byDefault(target: CxEntry.Target<CustomElements>): Custo
 
       if (!tagName) {
         CustomComponent$resolver(componentTypeOrName).resolve(undefined);
+
         return; // Anonymous component.
       }
       if (extend && extend.name) {
@@ -120,5 +122,6 @@ function CustomComponent$resolver(componentType: CustomComponent$Class): Promise
   if (hasOwnProperty(componentType, CustomComponent$resolver__symbol)) {
     return componentType[CustomComponent$resolver__symbol] as PromiseResolver;
   }
+
   return componentType[CustomComponent$resolver__symbol] = newPromiseResolver();
 }

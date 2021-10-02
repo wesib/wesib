@@ -19,6 +19,7 @@ export class FeatureModule extends CxModule {
     if (hasOwnProperty(feature, FeatureModule__symbol)) {
       return feature[FeatureModule__symbol]!;
     }
+
     return feature[FeatureModule__symbol] = new FeatureModule(feature);
   }
 

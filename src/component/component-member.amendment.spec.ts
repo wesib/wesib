@@ -139,6 +139,7 @@ describe('component', () => {
       }
 
       const { component } = await bootstrap(TestComponent);
+
       expect(() => (component as any).property).toThrow(new TypeError(
           'Property TestComponent.property is not readable',
       ));

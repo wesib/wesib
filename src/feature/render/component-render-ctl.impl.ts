@@ -72,6 +72,7 @@ abstract class ComponentRenderer$BaseState<TExecution extends RenderExecution> {
     const onUpdate = whenConnected
         ? () => context.connected && this._scheduleRenderer(schedule)
         : () => context.settled && this._scheduleRenderer(schedule);
+
     this._supply = trigger(onUpdate)
         .needs(context)
         .whenOff(() => this._cancel(schedule));
@@ -110,6 +111,7 @@ abstract class ComponentRenderer$BaseState<TExecution extends RenderExecution> {
       currentRenderer(rendererExecution);
       if (this._renderer === currentRenderer) {
         this._over();
+
         break; // The renderer is not updated. Current renderer execution is over.
       }
     } while (this._status >= 0); // The rendering could be cancelled by the renderer itself.

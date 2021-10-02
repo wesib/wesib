@@ -96,6 +96,7 @@ class ComponentMeta extends MetaAccessor<ComponentDef, ComponentDef | QualifiedN
     if (isQualifiedName(source)) {
       return { name: source };
     }
+
     return source;
   }
 

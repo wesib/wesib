@@ -192,7 +192,9 @@ describe('boot', () => {
       class TestFeature {}
 
       const featureRef = await loadFeature(TestFeature);
+
       await loadFeature(TestComponent);
+
       const defContext = await bsContext.whenDefined(TestComponent);
 
       expect(defContext.get(entry)).toBe('provided');
@@ -218,6 +220,7 @@ describe('boot', () => {
       class TestFeature {}
 
       await loadFeature(TestComponent);
+
       const defContext = await bsContext.whenDefined(TestComponent);
       const featureRef = await loadFeature(TestFeature);
 
@@ -250,6 +253,7 @@ describe('boot', () => {
       class TestFeature {}
 
       const featureRef = await loadFeature(TestFeature);
+
       await loadFeature(TestComponent);
 
       const element = await bsContext.whenDefined(TestComponent).then(({ elementType }) => new elementType());
@@ -282,7 +286,9 @@ describe('boot', () => {
       class TestFeature {}
 
       const featureRef = await loadFeature(TestFeature);
+
       await loadFeature(SubTypeComponent);
+
       const defContext = await bsContext.whenDefined(SubTypeComponent);
 
       expect(defContext.get(entry)).toBe('provided');
@@ -625,6 +631,7 @@ describe('boot', () => {
       statusReceiver.mockClear();
 
       class Replacement {}
+
       FeatureDef.define(Replacement, { init: initSpy, has: testFeature });
       await new Promise<void>(resolve => {
         bsContext.load(Replacement).read(({ ready }) => ready && resolve());
@@ -638,6 +645,7 @@ describe('boot', () => {
       statusReceiver.mockClear();
 
       class Replacement {}
+
       FeatureDef.define(Replacement, { has: testFeature });
       await new Promise<void>(resolve => {
         bsContext.load(Replacement).read(({ ready }) => {
@@ -671,6 +679,7 @@ describe('boot', () => {
                 },
               },
           );
+
           const featureRef = await loadFeatureStatus();
 
           expect(bsContext.get(entry)).toBe('provided');

@@ -29,6 +29,7 @@ describe('component', () => {
         define: jest.fn(),
         whenDefined: jest.fn(),
       };
+
       const mockWindow: MockObject<BootstrapWindow> = {
         customElements: mockCustomElements,
       } as any;
@@ -75,6 +76,7 @@ describe('component', () => {
       it('defines custom element in namespace', () => {
 
         const ns = new NamespaceDef('test/url', 'test');
+
         class NsComponent {
 
           static [DefinitionContext__symbol]: Partial<DefinitionContext> = {
@@ -193,6 +195,7 @@ describe('component', () => {
       it('waits for component definition in namespace', async () => {
 
         const ns = new NamespaceDef('test/url', 'test');
+
         class NsComponent {
 
           static [DefinitionContext__symbol]: Partial<DefinitionContext> = {

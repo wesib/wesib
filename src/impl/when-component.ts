@@ -38,6 +38,7 @@ export class WhenComponent<T extends object> {
         mapAfter_(
             rev => (context, notifiedRev) => {
               created.send(context, notifiedRev);
+
               return rev;
             },
         ),

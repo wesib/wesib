@@ -30,6 +30,7 @@ describe('feature/attributes', () => {
       } as any;
       Observer = jest.fn((listener: (records: MutationRecord[]) => void) => {
         observe = listener;
+
         return observer;
       });
 

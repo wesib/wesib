@@ -237,6 +237,7 @@ export const ComponentContext = {
     if (typeof component[ComponentContext__symbol] !== 'function') {
       throw new TypeError(`No component context found in ${String(component)}`);
     }
+
     return component[ComponentContext__symbol]!();
   },
 

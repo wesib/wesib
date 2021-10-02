@@ -7,6 +7,7 @@ import { FeatureDef, FeatureDef__symbol } from './feature-def';
 describe('feature', () => {
 
   class Feature1 {}
+
   class Feature2 {}
 
   describe('FeatureDef', () => {

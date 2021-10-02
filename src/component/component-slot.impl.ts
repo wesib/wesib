@@ -105,6 +105,7 @@ function ComponentSlot$bound<T extends object>(
         slot.unbind();
       }
     });
+
     return newSupply();
   };
   const drop = (): void => {
@@ -138,6 +139,7 @@ function ComponentSlot$bound<T extends object>(
         rebind, // eslint-disable-line @typescript-eslint/no-use-before-define
         drop,
       };
+
       return newSupply();
     };
 
@@ -146,6 +148,7 @@ function ComponentSlot$bound<T extends object>(
 
   const rebind = (): ComponentContext<T> | undefined => {
     bindContext();
+
     return getContext();
   };
 

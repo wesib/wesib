@@ -35,6 +35,7 @@ describe('component', () => {
           };
 
         }
+
         class B extends A {}
 
         expect(ComponentDef.of(B)).toEqual(A[ComponentDef__symbol]);
@@ -42,7 +43,9 @@ describe('component', () => {
       it('merges with inherited definition', () => {
 
         class BaseA {}
+
         class BaseB {}
+
         class A {
 
           static [ComponentDef__symbol]: ComponentDef = {
@@ -54,6 +57,7 @@ describe('component', () => {
           };
 
         }
+
         class B extends A {
 
           static override [ComponentDef__symbol]: ComponentDef = {
@@ -81,6 +85,7 @@ describe('component', () => {
       it('merges `extend`', () => {
 
         class Base1 {}
+
         class Base2 {}
 
         expect(ComponentDef.merge(
@@ -140,6 +145,7 @@ describe('component', () => {
         ).feature;
 
         class TestFeature {}
+
         const setup = { name: 'setup' } as any;
 
         await mergedFeature?.setup?.call(TestFeature, setup);

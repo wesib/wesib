@@ -27,6 +27,7 @@ export function domPropertyUpdate<T extends object>(
 
     return (component, newValue, oldValue) => update(component, path, newValue, oldValue);
   }
+
   return (component, newValue, oldValue) => {
     if (newValue !== oldValue) {
       ComponentContext.of(component).updateState(updateState, newValue, oldValue);

@@ -51,6 +51,7 @@ describe('boot', () => {
         class TestComponent {}
 
         class Element {}
+
         const defContext = { elementType: Element, componentType: TestComponent };
 
         (TestComponent as any)[DefinitionContext__symbol] = defContext;
@@ -130,9 +131,11 @@ describe('boot', () => {
 
         @Component({ name: 'test-component', extend: { name: 'div', type: Base } })
         class TestComponent {}
+
         class Element {}
 
         const defContext = { elementType: Element, componentType: TestComponent };
+
         (TestComponent as any)[DefinitionContext__symbol] = defContext;
 
         expect(await featureContext.whenDefined(TestComponent)).toBe(defContext);
