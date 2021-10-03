@@ -1,6 +1,6 @@
 /**
  * @packageDocumentation
- * @module Module @wesib/wesib/testing
+ * @module @wesib/wesib/testing
  */
 export * from './mock-element';
 export * from './test-definition';
