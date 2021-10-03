@@ -67,6 +67,8 @@ export interface FeatureContext extends BootstrapContext, BootstrapSetup, Supply
 
 /**
  * Feature context entry containing the feature context itself.
+ *
+ * @category Core
  */
 export const FeatureContext: CxEntry<FeatureContext> = {
   perContext: (/*#__PURE__*/ cxSingle()),

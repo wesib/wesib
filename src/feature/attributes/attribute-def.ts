@@ -32,6 +32,9 @@ export interface AttributeDef<T extends object> {
 
 }
 
+/**
+ * @category Feature
+ */
 export namespace AttributeDef {
 
   /**

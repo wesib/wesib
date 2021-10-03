@@ -219,6 +219,8 @@ export interface ComponentContext<T extends object = any> extends CxValues, Supp
 
 /**
  * Component context entry containing the context itself.
+ *
+ * @category Core
  */
 export const ComponentContext = {
 
