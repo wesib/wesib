@@ -32,7 +32,7 @@ export type AeComponentMemberTarget<
     TClass extends ComponentClass = Class,
     TUpdate = TValue,
     TAmended extends AeComponentMember<TValue, TClass, TUpdate> =
-        AeComponentMember<TValue, TClass, TUpdate>
+        AeComponentMember<TValue, TClass, TUpdate>,
     > = AmendTarget<TAmended>;
 
 /**

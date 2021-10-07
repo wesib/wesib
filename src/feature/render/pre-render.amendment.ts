@@ -20,7 +20,7 @@ import { RenderDef } from './render-def';
  */
 export function PreRender<
     TClass extends ComponentClass,
-    TAmended extends AeComponentMember<RenderDef.PreMethod, TClass> = AeComponentMember<RenderDef.PreMethod, TClass>
+    TAmended extends AeComponentMember<RenderDef.PreMethod, TClass> = AeComponentMember<RenderDef.PreMethod, TClass>,
     >(
     def?: RenderDef,
 ): ComponentMemberAmendment<RenderDef.PreMethod, TClass, RenderDef.PreMethod, TAmended> {

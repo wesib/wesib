@@ -36,7 +36,7 @@ export interface AeFeature<TClass extends Class = Class> extends AeClass<TClass>
  */
 export type AeFeatureTarget<
     TClass extends Class = Class,
-    TAmended extends AeFeature<TClass> = AeFeature<TClass>
+    TAmended extends AeFeature<TClass> = AeFeature<TClass>,
     > = AmendTarget<TAmended>;
 
 /**

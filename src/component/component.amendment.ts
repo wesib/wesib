@@ -38,7 +38,7 @@ export interface AeComponent<TClass extends ComponentClass = Class> extends AeFe
  */
 export type AeComponentTarget<
     TClass extends ComponentClass = Class,
-    TAmended extends AeComponent<TClass> = AeComponent<TClass>
+    TAmended extends AeComponent<TClass> = AeComponent<TClass>,
     > = AmendTarget<TAmended>;
 
 /**
