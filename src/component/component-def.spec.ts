@@ -1,5 +1,6 @@
 import { NamespaceDef, QualifiedName } from '@frontmeans/namespace-aliaser';
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
+import { BootstrapSetup } from '../boot';
 import { FeatureContext, FeatureDef } from '../feature';
 import { ComponentDef, ComponentDef__symbol } from './component-def';
 import { ComponentClass, DefinitionContext, DefinitionSetup } from './definition';
@@ -109,7 +110,9 @@ describe('component', () => {
             { setup: setup1 },
             { setup: setup2 },
         ).setup!;
-        const setup: DefinitionSetup = { name: 'definition setup' } as any;
+        const setup = {
+          name: 'definition setup',
+        } as Partial<DefinitionSetup<object>> as DefinitionSetup<object>;
 
         merged(setup);
 
@@ -124,7 +127,9 @@ describe('component', () => {
             { define: define1 },
             { define: define2 },
         ).define!;
-        const context: DefinitionContext = { name: 'definition context' } as any;
+        const context = {
+          name: 'definition context',
+        } as Partial<DefinitionContext<object>> as DefinitionContext<object>;
 
         class Component {}
 
@@ -146,7 +151,7 @@ describe('component', () => {
 
         class TestFeature {}
 
-        const setup = { name: 'setup' } as any;
+        const setup = { name: 'setup' } as Partial<BootstrapSetup> as BootstrapSetup;
 
         await mergedFeature?.setup?.call(TestFeature, setup);
 

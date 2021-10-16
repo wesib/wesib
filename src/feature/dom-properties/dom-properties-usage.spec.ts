@@ -1,3 +1,4 @@
+import { CustomHTMLElement } from '@frontmeans/dom-primitives';
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { StatePath } from '@proc7ts/fun-events';
 import { Component, ComponentContext, ComponentSlot } from '../../component';
@@ -11,9 +12,19 @@ import { DomMethod, DomProperty } from './dom-property.amendment';
 describe('feature/dom-properties', () => {
   describe('DOM properties usage', () => {
 
+    type TestElement = CustomHTMLElement & {
+      field?: string;
+      readonly readonlyProperty?: string;
+      writableProperty?: number;
+      nonStateUpdating?: number[];
+      customStateUpdatingField?: number;
+      customStatePathField?: number;
+      elementMethod?: (...args: string[]) => string;
+    };
+
     let testComponent: ComponentClass;
     let context: ComponentContext;
-    let element: any;
+    let element: TestElement;
     let propertyValue: number;
     let customUpdateStateSpy: MockFn<DomPropertyUpdateReceiver<any>>;
     let customUpdateStatePath: StatePath;
@@ -82,7 +93,7 @@ describe('feature/dom-properties', () => {
       tests();
       it('re-binds component on property access after disconnection', () => {
         jest.spyOn(element, 'getRootNode').mockImplementation(() => element);
-        element.disconnectedCallback();
+        element.disconnectedCallback?.();
 
         element.field = 'other';
         expect(ComponentSlot.of(element).context).toBeUndefined();
@@ -101,7 +112,7 @@ describe('feature/dom-properties', () => {
 
       beforeEach(async () => {
         defContext = await testDefinition(testComponent);
-        element = document.createElement('test-element');
+        element = document.createElement('test-element') as TestElement;
         context = defContext.mountTo(element);
       });
 
@@ -171,7 +182,7 @@ describe('feature/dom-properties', () => {
 
         element.customStateUpdatingField = 19;
 
-        expect(element.customStateUpdatingField).toEqual(19);
+        expect(element.customStateUpdatingField).toBe(19);
         expect(updateStateSpy).not.toHaveBeenCalled();
         expect(customUpdateStateSpy).toHaveBeenCalledWith(
             context.component,
@@ -186,7 +197,7 @@ describe('feature/dom-properties', () => {
 
         element.customStatePathField = 119;
 
-        expect(element.customStatePathField).toEqual(119);
+        expect(element.customStatePathField).toBe(119);
         expect(updateStateSpy).toHaveBeenCalledWith(customUpdateStatePath, 119, 911);
       });
       it('does not update the component state with custom path when value did not change', () => {
@@ -195,17 +206,17 @@ describe('feature/dom-properties', () => {
 
         element.customStatePathField = 911;
 
-        expect(element.customStatePathField).toEqual(911);
+        expect(element.customStatePathField).toBe(911);
         expect(updateStateSpy).not.toHaveBeenCalled();
       });
       it('calls component method', () => {
-        expect(element.elementMethod('1', '2', '3')).toBe(`${propertyValue}: 1, 2, 3`);
+        expect(element.elementMethod!('1', '2', '3')).toBe(`${propertyValue}: 1, 2, 3`);
       });
       it('does not update the component state on method call', () => {
 
         const updateStateSpy = jest.spyOn(context, 'updateState');
 
-        element.elementMethod('1', '2', '3');
+        element.elementMethod!('1', '2', '3');
 
         expect(updateStateSpy).not.toHaveBeenCalled();
       });

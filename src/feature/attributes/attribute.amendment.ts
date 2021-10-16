@@ -42,14 +42,14 @@ export function Attribute<
       }: AeComponentMemberTarget<string | null | undefined, TClass>,
   ) => {
 
-    const { name, change } = parseAttributeDescriptor(amendedClass.prototype, key, def);
+    const { name, change } = parseAttributeDescriptor(amendedClass.prototype as InstanceType<TClass>, key, def);
 
     amend({
       componentDef: {
         define(defContext) {
           defContext.get(AttributeRegistry).declareAttribute({
             name,
-            change(component, newValue, oldValue) {
+            change(component: InstanceType<TClass>, newValue, oldValue) {
               setValue(component, newValue);
               change(component, newValue, oldValue);
             },

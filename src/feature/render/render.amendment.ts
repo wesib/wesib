@@ -1,5 +1,5 @@
 import { AeComponentMember, AeComponentMemberTarget, ComponentMember, ComponentMemberAmendment } from '../../component';
-import { ComponentClass } from '../../component/definition';
+import { ComponentClass, DefinitionContext } from '../../component/definition';
 import { ComponentRenderCtl } from './component-render-ctl';
 import { RenderDef } from './render-def';
 
@@ -31,7 +31,7 @@ export function Render<
       { get, amend }: AeComponentMemberTarget<RenderDef.Method, TClass>,
   ) => amend({
     componentDef: {
-      define(defContext) {
+      define(defContext: DefinitionContext<InstanceType<TClass>>) {
         defContext.whenComponent(context => {
           context.whenReady(() => {
 

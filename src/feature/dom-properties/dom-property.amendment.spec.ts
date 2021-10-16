@@ -1,5 +1,6 @@
 import { describe, expect, it } from '@jest/globals';
-import { Component, ComponentSlot } from '../../component';
+import { Class } from '@proc7ts/primitives';
+import { Component, ComponentElement, ComponentSlot } from '../../component';
 import { MockElement, testElement } from '../../testing';
 import { DomProperty } from './dom-property.amendment';
 
@@ -20,7 +21,7 @@ describe('feature/dom-properties', () => {
 
       }
 
-      const element = new (await testElement(TestComponent));
+      const element: ComponentElement & { customProperty: string } = new (await testElement(TestComponent));
       const component = ComponentSlot.of<TestComponent>(element).context!.component;
 
       expect(element.customProperty).toBe('value');
@@ -44,7 +45,7 @@ describe('feature/dom-properties', () => {
 
       }
 
-      const element = new (await testElement(TestComponent));
+      const element: ComponentElement & { otherProperty: string } = new (await testElement(TestComponent));
       const component = ComponentSlot.of<TestComponent>(element).context!.component;
 
       expect(element.otherProperty).toBe('value');
@@ -70,7 +71,7 @@ describe('feature/dom-properties', () => {
 
         }
 
-        const elementType = await testElement(TestComponent);
+        const elementType: Class<ComponentElement> = await testElement(TestComponent);
 
         expect(Reflect.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: true,
@@ -94,7 +95,7 @@ describe('feature/dom-properties', () => {
 
         }
 
-        const elementType = await testElement(TestComponent);
+        const elementType: Class<ComponentElement> = await testElement(TestComponent);
 
         expect(Reflect.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: true,
@@ -122,7 +123,7 @@ describe('feature/dom-properties', () => {
 
         }
 
-        const elementType = await testElement(TestComponent);
+        const elementType: Class<ComponentElement> = await testElement(TestComponent);
 
         expect(Reflect.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: false,
@@ -151,7 +152,7 @@ describe('feature/dom-properties', () => {
 
         }
 
-        const elementType = await testElement(TestComponent);
+        const elementType: Class<ComponentElement> = await testElement(TestComponent);
 
         expect(Reflect.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: false,
@@ -180,7 +181,7 @@ describe('feature/dom-properties', () => {
 
         }
 
-        const elementType = await testElement(TestComponent);
+        const elementType: Class<ComponentElement> = await testElement(TestComponent);
 
         expect(Reflect.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: true,
@@ -210,7 +211,7 @@ describe('feature/dom-properties', () => {
 
         }
 
-        const elementType = await testElement(TestComponent);
+        const elementType: Class<ComponentElement> = await testElement(TestComponent);
 
         expect(Reflect.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: false,
@@ -242,7 +243,7 @@ describe('feature/dom-properties', () => {
 
         }
 
-        const elementType = await testElement(TestComponent);
+        const elementType: Class<ComponentElement> = await testElement(TestComponent);
 
         expect(Reflect.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: true,
@@ -278,7 +279,7 @@ describe('feature/dom-properties', () => {
 
         }
 
-        const elementType = await testElement(TestComponent);
+        const elementType: Class<ComponentElement> = await testElement(TestComponent);
 
         expect(Reflect.getOwnPropertyDescriptor(elementType.prototype, 'customProperty')).toEqual({
           configurable: false,

@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { onSupplied } from '@proc7ts/fun-events';
 import { Class } from '@proc7ts/primitives';
 import { Mock } from 'jest-mock';
-import { Component, ComponentContext, ComponentSlot } from '../component';
+import { Component, ComponentContext, ComponentElement, ComponentSlot } from '../component';
 import { ComponentClass, DefinitionContext } from '../component/definition';
 import { Feature } from '../feature';
 import { MockElement, testElement } from '../testing';
@@ -16,7 +16,7 @@ describe('component instantiation', () => {
     let mockConstructor: Mock<any, any[]>;
     let context: ComponentContext;
     let onComponent: Mock<void, [ComponentContext]>;
-    let element: any;
+    let element: ComponentElement;
 
     beforeEach(() => {
       context = undefined!;
@@ -36,7 +36,7 @@ describe('component instantiation', () => {
       })
       class TestComponent {
 
-        constructor(...args: any[]) {
+        constructor(...args: unknown[]) {
           mockConstructor(...args);
         }
 
@@ -107,7 +107,7 @@ describe('component instantiation', () => {
 
           testElement(TestComponent)
               .then(cls => new cls())
-              .then(element => ComponentSlot.of(element).whenReady)
+              .then((element: ComponentElement) => ComponentSlot.of(element).whenReady)
               .then(context => context.component)
               .catch(reject);
         });

@@ -66,7 +66,7 @@ class DomPropertyRegistry$ implements DomPropertyRegistry {
 
   private mount<T extends object>({ element }: ComponentContext<T>): void {
     this.props.forEach((desc, key) => {
-      Reflect.defineProperty(element, key, desc);
+      Reflect.defineProperty(element as object, key, desc);
     });
   }
 

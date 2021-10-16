@@ -1,3 +1,4 @@
+import { CustomHTMLElement } from '@frontmeans/dom-primitives';
 import { describe, expect, it, jest } from '@jest/globals';
 import { Component, ComponentSlot } from '../../component';
 import { MockElement, testElement } from '../../testing';
@@ -20,11 +21,11 @@ describe('feature/attributes', () => {
       class TestComponent {
       }
 
-      const element = new (await testElement(TestComponent));
+      const element: CustomHTMLElement = new (await testElement(TestComponent));
       const context = await ComponentSlot.of(element).whenReady;
       const updateStateSpy = jest.spyOn(context, 'updateState');
 
-      element.attributeChangedCallback('test-attr', 'old', 'new');
+      element.attributeChangedCallback!('test-attr', 'old', 'new');
 
       expect(updateStateSpy).toHaveBeenCalledWith([AttributePath__root, 'test-attr'], 'new', 'old');
     });
@@ -40,11 +41,11 @@ describe('feature/attributes', () => {
       class TestComponent {
       }
 
-      const element = new (await testElement(TestComponent));
+      const element: CustomHTMLElement = new (await testElement(TestComponent));
       const context = await ComponentSlot.of(element).whenReady;
       const updateStateSpy = jest.spyOn(context, 'updateState');
 
-      element.attributeChangedCallback('test-attr', 'old', 'new');
+      element.attributeChangedCallback!('test-attr', 'old', 'new');
 
       expect(updateStateSpy).toHaveBeenCalledWith([AttributePath__root, 'test-attr'], 'new', 'old');
     });
@@ -60,11 +61,11 @@ describe('feature/attributes', () => {
       class TestComponent {
       }
 
-      const element = new (await testElement(TestComponent));
+      const element: CustomHTMLElement = new (await testElement(TestComponent));
       const context = await ComponentSlot.of(element).whenReady;
       const updateStateSpy = jest.spyOn(context, 'updateState');
 
-      element.attributeChangedCallback('test-attr', 'old', 'new');
+      element.attributeChangedCallback!('test-attr', 'old', 'new');
 
       expect(updateStateSpy).toHaveBeenCalledWith([AttributePath__root, 'test-attr'], 'new', 'old');
     });
@@ -84,11 +85,11 @@ describe('feature/attributes', () => {
       class TestComponent {
       }
 
-      const element = new (await testElement(TestComponent));
+      const element: CustomHTMLElement = new (await testElement(TestComponent));
       const context = await ComponentSlot.of(element).whenReady;
       const updateStateSpy = jest.spyOn(context, 'updateState');
 
-      element.attributeChangedCallback('test-attr', 'old', 'new');
+      element.attributeChangedCallback!('test-attr', 'old', 'new');
 
       expect(updateStateSpy).not.toHaveBeenCalled();
       expect(updateSpy).toHaveBeenCalledWith(context.component, [AttributePath__root, 'test-attr'], 'new', 'old');
@@ -109,11 +110,11 @@ describe('feature/attributes', () => {
       class TestComponent {
       }
 
-      const element = new (await testElement(TestComponent));
+      const element: CustomHTMLElement = new (await testElement(TestComponent));
       const context = await ComponentSlot.of(element).whenReady;
       const updateStateSpy = jest.spyOn(context, 'updateState');
 
-      element.attributeChangedCallback('test-attr', 'old', 'new');
+      element.attributeChangedCallback!('test-attr', 'old', 'new');
 
       expect(updateStateSpy).toHaveBeenCalledWith(key, 'new', 'old');
     });
@@ -131,11 +132,11 @@ describe('feature/attributes', () => {
       class TestComponent {
       }
 
-      const element = new (await testElement(TestComponent));
+      const element: CustomHTMLElement = new (await testElement(TestComponent));
       const context = await ComponentSlot.of(element).whenReady;
       const updateStateSpy = jest.spyOn(context, 'updateState');
 
-      element.attributeChangedCallback('attr', 'old', 'new');
+      element.attributeChangedCallback!('attr', 'old', 'new');
 
       expect(updateStateSpy).not.toHaveBeenCalled();
     });

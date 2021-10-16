@@ -4,7 +4,7 @@ import { Class } from '@proc7ts/primitives';
 import { BootstrapContext } from '../../boot';
 import { bootstrapComponents } from '../../bootstrap-components';
 import { ComponentDef, ComponentDef__symbol } from '../../component';
-import { ComponentClass, CustomElements } from '../../component/definition';
+import { ComponentClass, CustomElements, DefinitionContext } from '../../component/definition';
 import { ElementBuilder } from '../../impl';
 import { MockObject } from '../../spec';
 import { Feature } from '../feature.amendment';
@@ -30,7 +30,7 @@ describe('feature load', () => {
       };
 
       ElementSpy = { name: 'Element' } as any;
-      mockBuilder.buildElement.mockReturnValue({ elementType: ElementSpy } as any);
+      mockBuilder.buildElement.mockReturnValue({ elementType: ElementSpy } as DefinitionContext<object>);
     });
 
     let bsContext: BootstrapContext;

@@ -20,7 +20,7 @@ describe('feature/attributes', () => {
     let observer: MockObject<MutationObserver>;
     let observe: (records: MutationRecord[]) => void;
     let testComponent: ComponentClass;
-    let element: any;
+    let element: ComponentElement;
     let attrChangedSpy: MockFn<AttributeDef.ChangeMethod>;
     let attr2ChangedSpy: MockFn<AttributeDef.ChangeMethod>;
 
@@ -116,12 +116,13 @@ describe('feature/attributes', () => {
         class NoAttrComponent {
         }
 
-        const noAttrElement = new (await testElement(NoAttrComponent))();
+        const noAttrElement: Element = new (await testElement(NoAttrComponent))();
 
         expect(noAttrElement.constructor).not.toEqual(expect.objectContaining({
           observedAttributes: expect.anything(),
         }));
-        expect(Reflect.ownKeys(noAttrElement.constructor.prototype)).not.toContain('attributeChangedCallback');
+        expect(Reflect.ownKeys(noAttrElement.constructor.prototype as object))
+            .not.toContain('attributeChangedCallback');
       });
       it('accesses attribute value', () => {
 
@@ -157,7 +158,7 @@ describe('feature/attributes', () => {
 
       beforeEach(async () => {
         defContext = await testDefinition(testComponent);
-        element = new MockElement();
+        element = new MockElement() as unknown as ComponentElement;
         defContext.mountTo(element);
       });
 

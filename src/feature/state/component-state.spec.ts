@@ -1,5 +1,5 @@
 import { describe, expect, it, jest } from '@jest/globals';
-import { Component, ComponentContext, ComponentSlot } from '../../component';
+import { Component, ComponentContext, ComponentElement, ComponentSlot } from '../../component';
 import { MockElement, testElement } from '../../testing';
 import { ComponentState } from './component-state';
 
@@ -67,6 +67,6 @@ describe('feature/state', () => {
 
     const element = new (await testElement(TestComponent))();
 
-    return await ComponentSlot.of(element).whenReady;
+    return await ComponentSlot.of(element as ComponentElement).whenReady;
   }
 });

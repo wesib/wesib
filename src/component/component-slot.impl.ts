@@ -23,7 +23,7 @@ const ComponentSlot$empty: ComponentSlot$Provider<any> = {
  */
 export class ComponentSlot$<T extends object> implements ComponentSlot<T> {
 
-  readonly _provider = trackValue<ComponentSlot$Provider<T>>(ComponentSlot$empty);
+  readonly _provider = trackValue<ComponentSlot$Provider<T>>(ComponentSlot$empty as ComponentSlot$Provider<T>);
   readonly read: AfterEvent<[ComponentContext<T>?]>;
   readonly whenReady: OnEvent<[ComponentContext<T>]>;
 

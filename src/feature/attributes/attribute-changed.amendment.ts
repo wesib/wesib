@@ -37,7 +37,7 @@ export function AttributeChanged<
       { amendedClass, get, key, amend }: AeComponentMemberTarget<AttributeDef.ChangeMethod, TClass>,
   ) => {
 
-    const { name, change } = parseAttributeDescriptor(amendedClass.prototype, key, def);
+    const { name, change } = parseAttributeDescriptor(amendedClass.prototype as InstanceType<TClass>, key, def);
 
     amend({
       componentDef: {

@@ -58,5 +58,5 @@ export function trackStateProperty<T = any>(
     key: PropertyKey,
     path: StatePath = statePropertyPathTo(key),
 ): ValueTracker<T> {
-  return new StatePropertyTracker(context, key, path);
+  return new StatePropertyTracker(context as ComponentContext<ComponentWithProperty<T>>, key, path);
 }

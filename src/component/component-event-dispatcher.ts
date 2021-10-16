@@ -45,7 +45,7 @@ export const ComponentEventDispatcher: CxEntry<ComponentEventDispatcher> = {
     byDefault(values) {
 
       const context = values.get(ComponentContext);
-      const dispatcher = new DomEventDispatcher(context.element);
+      const dispatcher = new DomEventDispatcher(context.element as EventTarget);
 
       dispatcher.supply.needs(context);
 

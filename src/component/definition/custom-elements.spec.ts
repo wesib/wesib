@@ -185,9 +185,9 @@ describe('component', () => {
     describe('whenDefined', () => {
       it('awaits for component definition', async () => {
 
-        const promise = Promise.resolve<any>('defined');
+        const promise = Promise.resolve('defined');
 
-        mockCustomElements.whenDefined.mockReturnValue(promise);
+        mockCustomElements.whenDefined.mockReturnValue(promise as Promise<unknown> as Promise<void>);
 
         expect(await customElements.whenDefined(TestComponent)).toBe('defined');
         expect(mockCustomElements.whenDefined).toHaveBeenCalledWith('test-component');
@@ -225,7 +225,7 @@ describe('component', () => {
 
         const promise = Promise.resolve<any>('defined');
 
-        mockCustomElements.whenDefined.mockReturnValue(promise);
+        mockCustomElements.whenDefined.mockReturnValue(promise as Promise<unknown> as Promise<void>);
 
         expect(await customElements.whenDefined('test-component')).toBe('defined');
         expect(mockCustomElements.whenDefined).toHaveBeenCalledWith('test-component');
@@ -235,7 +235,7 @@ describe('component', () => {
         const ns = new NamespaceDef('test/url', 'test');
         const promise = Promise.resolve<any>('defined');
 
-        mockCustomElements.whenDefined.mockReturnValue(promise);
+        mockCustomElements.whenDefined.mockReturnValue(promise as Promise<unknown> as Promise<void>);
 
         expect(await customElements.whenDefined(['other', ns])).toBe('defined');
         expect(mockCustomElements.whenDefined).toHaveBeenCalledWith('test-other');

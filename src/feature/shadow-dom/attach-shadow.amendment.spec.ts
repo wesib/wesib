@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { cxConstAsset } from '@proc7ts/context-builder';
 import { Mock } from 'jest-mock';
 import { BootstrapContext } from '../../boot';
-import { Component, ComponentContext, ComponentSlot, ContentRoot } from '../../component';
+import { Component, ComponentContext, ComponentElement, ComponentSlot, ContentRoot } from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { MockElement, testElement } from '../../testing';
 import { AttachShadow, ShadowContentDef } from './attach-shadow.amendment';
@@ -15,7 +15,7 @@ describe('feature/shadow-dom', () => {
     let testComponent: ComponentClass;
     let attachShadowSpy: Mock<ShadowContentRoot, []>;
     let shadowRoot: ShadowContentRoot;
-    let element: any;
+    let element: ComponentElement;
     let context: ComponentContext;
 
     beforeEach(() => {

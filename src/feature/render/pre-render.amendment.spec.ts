@@ -9,7 +9,7 @@ import {
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { cxConstAsset } from '@proc7ts/context-builder';
 import { Mock } from 'jest-mock';
-import { Component, ComponentContext, ComponentSlot } from '../../component';
+import { Component, ComponentContext, ComponentElement, ComponentSlot } from '../../component';
 import { MockElement, testElement } from '../../testing';
 import { DomProperty } from '../dom-properties';
 import { ComponentPreRendererExecution } from './component-pre-renderer-execution';
@@ -283,7 +283,7 @@ describe('feature/render', () => {
 
       }
 
-      const element = new (await testElement(TestComponent))();
+      const element: ComponentElement = new (await testElement(TestComponent))();
 
       return ComponentSlot.of(element).whenReady;
     }

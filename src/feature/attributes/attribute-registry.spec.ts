@@ -97,7 +97,7 @@ describe('feature/attributes', () => {
       class TestComponent {}
 
       const elementType = await bootstrap(TestComponent);
-      const element = new elementType();
+      const element: CustomHTMLElement = new elementType();
       const context = await ComponentSlot.of(element).whenReady;
 
       element.attributeChangedCallback!('test-attr', 'old', 'new');

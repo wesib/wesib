@@ -6,7 +6,7 @@ import { Class, noop } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
 import { Mock } from 'jest-mock';
 import { BootstrapContext } from '../boot';
-import { ComponentContext, ComponentDef, ComponentDef__symbol, ComponentSlot } from '../component';
+import { ComponentContext, ComponentDef, ComponentDef__symbol, ComponentElement, ComponentSlot } from '../component';
 import { ComponentClass, DefinitionContext } from '../component/definition';
 import { MockElement } from '../testing';
 import { BootstrapContextBuilder } from './bootstrap-context-builder';
@@ -96,8 +96,8 @@ describe('boot', () => {
         });
 
         const { elementType } = builder.buildElement(TestComponent);
-        const element1 = new elementType();
-        const element2 = new elementType();
+        const element1: ComponentElement = new elementType();
+        const element2: ComponentElement = new elementType();
         const ctx1 = ComponentSlot.of(element1).context!;
         const ctx2 = ComponentSlot.of(element2).context!;
 
@@ -275,7 +275,7 @@ describe('boot', () => {
 
       beforeEach(async () => {
 
-        const element = new (builder.buildElement(TestComponent).elementType);
+        const element: ComponentElement = new (builder.buildElement(TestComponent).elementType);
 
         context = await ComponentSlot.of(element).whenReady;
       });
@@ -462,7 +462,7 @@ describe('boot', () => {
 
         }
 
-        const otherElement = new (builder.buildElement(AnotherComponent).elementType);
+        const otherElement: ComponentElement = new (builder.buildElement(AnotherComponent).elementType);
         const otherContext = await ComponentSlot.of(otherElement).whenReady;
 
         expect(otherContext.get(entry1, { or: null })).toBeNull();
@@ -526,7 +526,7 @@ describe('boot', () => {
       });
 
       let defContext: DefinitionContext;
-      let element: any;
+      let element: ComponentElement;
       let context: ComponentContext;
 
       beforeEach(() => {
@@ -660,14 +660,14 @@ describe('boot', () => {
     describe('connected element', () => {
 
       let defContext: DefinitionContext;
-      let element: any;
+      let element: MockElement;
       let context: ComponentContext;
 
       beforeEach(() => {
         defContext = builder.buildElement(TestComponent);
 
         element = new MockElement();
-        context = defContext.mountTo(element);
+        context = defContext.mountTo(element as unknown as ComponentElement);
       });
 
       it('is connected by default', () => {

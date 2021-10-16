@@ -6,7 +6,7 @@ import { Class, noop } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
 import { Mock } from 'jest-mock';
 import { bootstrapComponents } from '../bootstrap-components';
-import { Component, ComponentContext, ComponentSlot } from '../component';
+import { Component, ComponentContext, ComponentElement, ComponentSlot } from '../component';
 import { CustomElements, DefinitionContext } from '../component/definition';
 import { Feature, FeatureContext, FeatureDef, FeatureRef, FeatureStatus } from '../feature';
 import { MockObject } from '../spec';
@@ -256,7 +256,9 @@ describe('boot', () => {
 
       await loadFeature(TestComponent);
 
-      const element = await bsContext.whenDefined(TestComponent).then(({ elementType }) => new elementType());
+      const element: ComponentElement = await bsContext
+          .whenDefined(TestComponent)
+          .then(({ elementType }) => new elementType());
       const context = await ComponentSlot.of(element).whenReady;
 
       expect(context.get(entry)).toBe('provided');
