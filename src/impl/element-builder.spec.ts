@@ -416,7 +416,7 @@ describe('boot', () => {
         });
         it('calls `connectedCallback()` of original element', () => {
           context.element.connectedCallback();
-          expect(connectedCallback).toHaveBeenCalledWith();
+          expect(connectedCallback).toHaveBeenCalled();
         });
 
         describe('after settlement', () => {
@@ -445,7 +445,7 @@ describe('boot', () => {
       describe('disconnectedCallback', () => {
         it('calls `disconnectedCallback()` of original element when disconnected', () => {
           context.element.disconnectedCallback();
-          expect(disconnectedCallback).toHaveBeenCalledWith();
+          expect(disconnectedCallback).toHaveBeenCalled();
         });
       });
 
