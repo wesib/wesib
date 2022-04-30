@@ -91,11 +91,11 @@ export class MyComponent {
 }
 ```
 
-```HTML
+```html
 <my-component
     attribute-one="1"  <!-- Can be accessed with element's `element.getAttribute("attribute-one")` -->
-attribute-two="2"  <!-- Can be accessed as `attribute2` property of `MyComponent` -->
-attribute-three"3" <!-- Triggers `setAttribute3()` method call -->
+    attribute-two="2"  <!-- Can be accessed as `attribute2` property of `MyComponent` -->
+    attribute-three"3" <!-- Triggers `setAttribute3()` method call -->
 ></my-component>
 ```
 
