@@ -1,15 +1,7 @@
 {
   "categorizeByGroup": false,
-  "categoryOrder": [
-    "Core",
-    "Feature",
-    "Utility",
-    "*"
-  ],
-  "entryPoints": [
-    "src/index.ts",
-    "src/testing/index.ts"
-  ],
+  "categoryOrder": ["Core", "Feature", "Utility", "*"],
+  "entryPoints": ["src/index.ts", "src/testing/index.ts"],
   "name": "Wesib: Web Components Building Blocks",
   "out": "./target/typedoc",
   "tsconfig": "tsconfig.main.json"
