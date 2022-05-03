@@ -26,8 +26,8 @@ describe('component', () => {
 
       context = bsBuilder.context;
       mockCustomElements = {
-        define: jest.fn(),
-        whenDefined: jest.fn(),
+        define: jest.fn<CustomElements['define']>(),
+        whenDefined: jest.fn<CustomElements['whenDefined']>(),
       };
 
       const mockWindow: MockObject<BootstrapWindow> = {

@@ -13,7 +13,7 @@ describe('feature/shadow-dom', () => {
   describe('@AttachShadow', () => {
 
     let testComponent: ComponentClass;
-    let attachShadowSpy: Mock<ShadowContentRoot, []>;
+    let attachShadowSpy: Mock<Element['attachShadow']>;
     let shadowRoot: ShadowContentRoot;
     let element: ComponentElement;
     let context: ComponentContext;

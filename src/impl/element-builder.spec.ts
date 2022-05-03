@@ -111,7 +111,7 @@ describe('boot', () => {
 
     describe('component definition listener', () => {
 
-      let onDefinition: Mock<void, [DefinitionContext]>;
+      let onDefinition: Mock<(context: DefinitionContext) => void>;
 
       beforeEach(() => {
         onDefinition = jest.fn();
@@ -244,8 +244,8 @@ describe('boot', () => {
         });
       });
 
-      let connectedCallback: Mock<void, []>;
-      let disconnectedCallback: Mock<void, []>;
+      let connectedCallback: Mock<() => void>;
+      let disconnectedCallback: Mock<() => void>;
 
       beforeEach(() => {
         connectedCallback = jest.fn();

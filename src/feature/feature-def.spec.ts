@@ -105,9 +105,9 @@ describe('feature', () => {
       });
       it('merges `setup`', async () => {
 
-        const mockSetup1 = jest.fn<void, [BootstrapSetup]>();
+        const mockSetup1 = jest.fn<(setup: BootstrapSetup) => void>();
         const def1: FeatureDef = { setup: mockSetup1 };
-        const mockSetup2 = jest.fn<void, [BootstrapSetup]>();
+        const mockSetup2 = jest.fn<(setup: BootstrapSetup) => void>();
         const def2: FeatureDef = { setup: mockSetup2 };
         const merged = FeatureDef.merge(def1, def2);
         const context: FeatureContext = { name: 'feature context' } as any;
@@ -121,9 +121,9 @@ describe('feature', () => {
       });
       it('merges `init`', async () => {
 
-        const mockInit1 = jest.fn<void, [FeatureContext]>();
+        const mockInit1 = jest.fn<(context: FeatureContext) => void>();
         const def1: FeatureDef = { init: mockInit1 };
-        const mockInit2 = jest.fn<void, [FeatureContext]>();
+        const mockInit2 = jest.fn<(context: FeatureContext) => void>();
         const def2: FeatureDef = { init: mockInit2 };
         const merged = FeatureDef.merge(def1, def2);
         const context: FeatureContext = { name: 'feature context' } as any;

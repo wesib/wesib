@@ -7,7 +7,7 @@ describe('feature', () => {
   describe('@Feature', () => {
     it('assigns feature definition', async () => {
 
-      const init = jest.fn<void, [FeatureContext]>();
+      const init = jest.fn<(context: FeatureContext) => void>();
       const def: FeatureDef = { init };
 
       @Feature(def)
@@ -22,7 +22,7 @@ describe('feature', () => {
     });
     it('accepts an amendment as parameter', async () => {
 
-      const init = jest.fn<void, [FeatureContext]>();
+      const init = jest.fn<(context: FeatureContext) => void>();
       const def: FeatureDef = { init };
 
       @Feature(({ amend }) => {
@@ -39,7 +39,7 @@ describe('feature', () => {
     });
     it('can be used for auto-amendment', async () => {
 
-      const init = jest.fn<void, [FeatureContext]>();
+      const init = jest.fn<(context: FeatureContext) => void>();
       const def: FeatureDef = { init };
 
       class TestFeature {

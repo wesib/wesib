@@ -7,11 +7,11 @@ import { definitionContextOf } from '../../impl/definition-context.symbol';
 import { ComponentClass } from './component-class';
 
 /**
- * Custom elements registry.
+ * Custom elements' registry.
  *
  * This is used to register custom elements.
  *
- * Typically implemented by `window.customElements`.
+ * Typically, implemented by `window.customElements`.
  *
  * @category Core
  */

@@ -16,7 +16,7 @@ describe('feature/state', () => {
       element = document.createElement('test-component');
     });
 
-    let onUpdate: Mock<void, [StatePath, any, any]>;
+    let onUpdate: Mock<(path: StatePath, newValue: unknown, oldValue: unknown) => void>;
 
     beforeEach(() => {
       onUpdate = jest.fn();

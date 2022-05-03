@@ -46,7 +46,7 @@ describe('component', () => {
   });
   it('declares a feature', async () => {
 
-    const init = jest.fn<void, [FeatureContext]>();
+    const init = jest.fn<(context: FeatureContext) => void>();
     const def: FeatureDef = { init };
 
     @Component(({ amend }) => {
@@ -86,7 +86,7 @@ describe('component', () => {
   });
   it('can be used for feature auto-amendment', async () => {
 
-    const init = jest.fn<void, [FeatureContext]>();
+    const init = jest.fn<(context: FeatureContext) => void>();
     const def: FeatureDef = { init };
 
     class TestFeature {

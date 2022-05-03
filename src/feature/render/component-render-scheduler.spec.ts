@@ -15,8 +15,8 @@ import { ComponentRenderScheduler } from './component-render-scheduler';
 describe('feature/render', () => {
   describe('ComponentRenderScheduler', () => {
 
-    let mockRenderScheduler: Mock<RenderSchedule, Parameters<RenderScheduler>>;
-    let mockRenderSchedule: Mock<void, Parameters<RenderSchedule>>;
+    let mockRenderScheduler: Mock<RenderScheduler>;
+    let mockRenderSchedule: Mock<RenderSchedule>;
 
     beforeEach(() => {
       mockRenderSchedule = jest.fn(immediateRenderScheduler());

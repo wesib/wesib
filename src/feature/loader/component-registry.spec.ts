@@ -38,8 +38,8 @@ describe('feature load', () => {
 
     beforeEach(async () => {
       mockCustomElements = {
-        define: jest.fn(),
-        whenDefined: jest.fn(),
+        define: jest.fn<CustomElements['define']>(),
+        whenDefined: jest.fn<CustomElements['whenDefined']>(),
       };
 
       @Feature({

@@ -20,15 +20,15 @@ import { Render } from './render.amendment';
 describe('feature/render', () => {
   describe('@Render', () => {
 
-    let mockRenderScheduler: Mock<RenderSchedule, Parameters<RenderScheduler>>;
-    let mockRenderSchedule: Mock<void, Parameters<RenderSchedule>>;
+    let mockRenderScheduler: Mock<RenderScheduler>;
+    let mockRenderSchedule: Mock<RenderSchedule>;
 
     beforeEach(() => {
       mockRenderSchedule = jest.fn(immediateRenderScheduler());
       mockRenderScheduler = jest.fn((_options?: RenderScheduleOptions) => mockRenderSchedule);
     });
 
-    let mockRenderer: Mock<void, [ComponentRendererExecution]>;
+    let mockRenderer: Mock<(execution: ComponentRendererExecution) => void>;
 
     beforeEach(() => {
       mockRenderer = jest.fn();
@@ -280,7 +280,7 @@ describe('feature/render', () => {
 
     describe('Delegate', () => {
 
-      let delegate: Mock<void, [ComponentRendererExecution]>;
+      let delegate: Mock<(execution: ComponentRendererExecution) => void>;
 
       beforeEach(() => {
         delegate = jest.fn();

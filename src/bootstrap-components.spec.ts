@@ -66,7 +66,7 @@ describe('boot', () => {
       class Base {}
 
       let featureContext: FeatureContext;
-      let whenReady: Mock<void, [FeatureContext]>;
+      let whenReady: Mock<(context: FeatureContext) => void>;
       let bsContext: BootstrapContext;
 
       beforeEach(async () => {
@@ -99,7 +99,7 @@ describe('boot', () => {
       });
       it('proxies `define()`', async () => {
 
-        let defineSpy!: SpyInstance<void, [componentTypeOrName: ComponentClass | QualifiedName, elementType: Class]>;
+        let defineSpy!: SpyInstance<(componentTypeOrName: ComponentClass | QualifiedName, elementType: Class) => void>;
 
         @Component({ name: 'test-component', extend: { name: 'div', type: Base } })
         class TestComponent {}
@@ -196,7 +196,7 @@ describe('boot', () => {
             };
           });
 
-          let whenDefinedSpy: SpyInstance<Promise<void>, [componentTypeOrName: ComponentClass | QualifiedName]>;
+          let whenDefinedSpy: SpyInstance<(componentTypeOrName: ComponentClass | QualifiedName) => Promise<void>>;
 
           beforeEach(() => {
 

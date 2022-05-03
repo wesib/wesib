@@ -142,8 +142,8 @@ describe('component', () => {
       });
       it('merges `feature`', async () => {
 
-        const setup1 = jest.fn<void, [FeatureContext]>();
-        const setup2 = jest.fn<void, [FeatureContext]>();
+        const setup1 = jest.fn<(context: FeatureContext) => void>();
+        const setup2 = jest.fn<(context: FeatureContext) => void>();
         const mergedFeature = ComponentDef.merge(
             { feature: { setup: setup1 } },
             { feature: { setup: setup2 } },
@@ -160,7 +160,7 @@ describe('component', () => {
       });
       it('retains `feature` when another one is absent', () => {
 
-        const setup1 = jest.fn<void, [FeatureContext]>();
+        const setup1 = jest.fn<(context: FeatureContext) => void>();
         const feature1: FeatureDef = { setup: setup1 };
 
         expect(ComponentDef.merge({ feature: feature1 }, {})).toEqual({ feature: feature1 });

@@ -375,9 +375,9 @@ describe('boot', () => {
         element3.remove();
       });
 
-      let whenComponent11: Mock<void, [ComponentContext]>;
-      let whenComponent12: Mock<void, [ComponentContext]>;
-      let whenComponent21: Mock<void, [ComponentContext]>;
+      let whenComponent11: Mock<(context: ComponentContext) => void>;
+      let whenComponent12: Mock<(context: ComponentContext) => void>;
+      let whenComponent21: Mock<(context: ComponentContext) => void>;
       let defContext1: DefinitionContext;
       let defContext2: DefinitionContext;
       let context1: ComponentContext;
@@ -564,7 +564,7 @@ describe('boot', () => {
   describe('feature load', () => {
 
     let testFeature: Class;
-    let statusReceiver: Mock<void, [FeatureStatus]>;
+    let statusReceiver: Mock<(status: FeatureStatus) => void>;
 
     beforeEach(() => {
       testFeature = class TestFeature {};
@@ -601,7 +601,7 @@ describe('boot', () => {
       await loadFeatureStatus();
       statusReceiver.mockClear();
 
-      const receiver2 = jest.fn<void, [FeatureStatus]>();
+      const receiver2 = jest.fn<(status: FeatureStatus) => void>();
 
       await loadFeatureStatus(receiver2);
       expect(statusReceiver).not.toHaveBeenCalled();
@@ -627,7 +627,7 @@ describe('boot', () => {
     });
     it('replaces the loaded feature', async () => {
 
-      const initSpy = jest.fn<void, [FeatureContext]>();
+      const initSpy = jest.fn<(context: FeatureContext) => void>();
 
       await loadFeatureStatus();
       statusReceiver.mockClear();
@@ -692,7 +692,7 @@ describe('boot', () => {
       });
     });
 
-    function loadFeatureStatus(receive: Mock<void, [FeatureStatus]> = statusReceiver): Promise<FeatureRef> {
+    function loadFeatureStatus(receive: Mock<(status: FeatureStatus) => void> = statusReceiver): Promise<FeatureRef> {
       return new Promise<FeatureRef>(resolve => {
 
         const featureRef = bsContext.load(testFeature);

@@ -1,9 +1,9 @@
 import { CustomHTMLElement } from '@frontmeans/dom-primitives';
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { StatePath } from '@proc7ts/fun-events';
+import { Mock } from 'jest-mock';
 import { Component, ComponentContext, ComponentSlot } from '../../component';
 import { ComponentClass, DefinitionContext } from '../../component/definition';
-import { MockFn } from '../../spec';
 import { MockElement, testDefinition, testElement } from '../../testing';
 import { DomPropertyUpdateReceiver } from './dom-property-def';
 import { DomPropertyPath__root } from './dom-property-path';
@@ -26,7 +26,7 @@ describe('feature/dom-properties', () => {
     let context: ComponentContext;
     let element: TestElement;
     let propertyValue: number;
-    let customUpdateStateSpy: MockFn<DomPropertyUpdateReceiver<any>>;
+    let customUpdateStateSpy: Mock<DomPropertyUpdateReceiver<any>>;
     let customUpdateStatePath: StatePath;
 
     beforeEach(() => {

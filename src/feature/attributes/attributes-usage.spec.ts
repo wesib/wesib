@@ -4,7 +4,7 @@ import { Mock } from 'jest-mock';
 import { Component, ComponentContext, ComponentElement, ComponentSlot } from '../../component';
 import { ComponentClass, DefinitionContext } from '../../component/definition';
 import { BootstrapWindow } from '../../globals';
-import { MockFn, MockObject } from '../../spec';
+import { MockObject } from '../../spec';
 import { MockElement, testDefinition, testElement } from '../../testing';
 import { Feature } from '../feature.amendment';
 import { AttributeChanged } from './attribute-changed.amendment';
@@ -16,13 +16,13 @@ import { Attribute } from './attribute.amendment';
 describe('feature/attributes', () => {
   describe('Attributes usage', () => {
 
-    let Observer: Mock<MutationObserver, [listener: (records: MutationRecord[]) => void]>;
+    let Observer: Mock<(listener: (records: MutationRecord[]) => void) => MutationObserver>;
     let observer: MockObject<MutationObserver>;
     let observe: (records: MutationRecord[]) => void;
     let testComponent: ComponentClass;
     let element: ComponentElement;
-    let attrChangedSpy: MockFn<AttributeDef.ChangeMethod>;
-    let attr2ChangedSpy: MockFn<AttributeDef.ChangeMethod>;
+    let attrChangedSpy: Mock<AttributeDef.ChangeMethod>;
+    let attr2ChangedSpy: Mock<AttributeDef.ChangeMethod>;
 
     beforeEach(() => {
       observer = {

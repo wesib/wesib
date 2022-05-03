@@ -13,9 +13,9 @@ describe('component instantiation', () => {
   describe('Life cycle', () => {
 
     let testComponent: ComponentClass;
-    let mockConstructor: Mock<any, any[]>;
+    let mockConstructor: Mock<(context: ComponentContext) => unknown>;
     let context: ComponentContext;
-    let onComponent: Mock<void, [ComponentContext]>;
+    let onComponent: Mock<(context: ComponentContext) => void>;
     let element: ComponentElement;
 
     beforeEach(() => {
@@ -36,8 +36,8 @@ describe('component instantiation', () => {
       })
       class TestComponent {
 
-        constructor(...args: unknown[]) {
-          mockConstructor(...args);
+        constructor(context: ComponentContext) {
+          mockConstructor(context);
         }
 
       }
