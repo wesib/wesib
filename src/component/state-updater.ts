@@ -1,6 +1,6 @@
 import { cxDynamic, CxEntry } from '@proc7ts/context-values';
 import { statePath, StatePath } from '@proc7ts/fun-events';
-import { asis, valuesProvider } from '@proc7ts/primitives';
+import { asis } from '@proc7ts/primitives';
 
 /**
  * Component state updater signature.
@@ -56,7 +56,7 @@ export namespace StateUpdater {
 export const StateUpdater: CxEntry<StateUpdater, StateUpdater.Normalized> = {
   perContext: (/*#__PURE__*/ cxDynamic<StateUpdater, StateUpdater.Normalized, StateUpdater.Normalized[]>({
     create: asis,
-    byDefault: valuesProvider(),
+    byDefault: () => [],
     assign: ({ get, to }, { supply }) => {
 
       let update: StateUpdater = (path, newValue, oldValue) => {
