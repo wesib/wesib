@@ -9,7 +9,7 @@ class ComponentContext$Custom<T extends object> extends ComponentContext$<T> {
 
   static create<T extends object>(
       defContext: DefinitionContext$<T>,
-      element: any,
+      element: unknown,
   ): ComponentContext$Custom<T> {
     return defContext._newComponentContext(
         (get, builder) => new ComponentContext$Custom<T>(

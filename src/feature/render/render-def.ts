@@ -66,7 +66,7 @@ export namespace RenderDef {
      *
      * @param messages - Error messages to report.
      */
-    error?(this: void, ...messages: any[]): void;
+    error?(this: void, ...messages: unknown[]): void;
 
   }
 

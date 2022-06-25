@@ -49,7 +49,7 @@ export interface ComponentRenderScheduleOptions extends RenderScheduleOptions, R
    *
    * @param messages - Error messages to report.
    */
-  error?(...messages: any[]): void;
+  error?(...messages: unknown[]): void;
 
 }
 

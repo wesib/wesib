@@ -187,7 +187,7 @@ describe('component instantiation', () => {
 
         }
 
-        const element: any = new (await testElement(TestComponent))();
+        const element = new (await testElement(TestComponent))();
 
         element.connectedCallback();
 
