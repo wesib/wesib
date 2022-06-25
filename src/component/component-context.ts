@@ -243,7 +243,9 @@ export const ComponentContext = {
     return component[ComponentContext__symbol]!();
   },
 
-  toString: () => '[ComponentContext]',
+  toString(): string {
+    return '[ComponentContext]';
+  },
 
 };
 

@@ -23,7 +23,7 @@ export const PerComponentCxPeer: CxEntry<CxPeerBuilder<ComponentContext>> = {
       BootstrapContext,
       (/*#__PURE__*/ cxEvaluated(_target => new CxPeerBuilder())),
   )),
-  toString: () => '[PerComponentCxPeer]',
+  toString: (): string => '[PerComponentCxPeer]',
 };
 
 export abstract class ComponentContext$<T extends object> implements ComponentContext<T> {
@@ -34,7 +34,7 @@ export abstract class ComponentContext$<T extends object> implements ComponentCo
   protected constructor(
       readonly _defContext: DefinitionContext$<T>,
       readonly _builder: CxBuilder<ComponentContext<T>>,
-      readonly element: any,
+      readonly element: unknown,
       readonly get: CxAccessor,
   ) {
     this.updateState = <TValue>(key: StatePath, newValue: TValue, oldValue: TValue): void => {
@@ -160,7 +160,7 @@ export class ComponentContext$Mounted<T extends object> extends ComponentContext
 
   static create<T extends object>(
       defContext: DefinitionContext$<T>,
-      element: any,
+      element: unknown,
   ): ComponentContext$Mounted<T> {
     return defContext._newComponentContext(
         (get, builder) => new ComponentContext$Mounted<T>(
