@@ -117,7 +117,7 @@ function ComponentSlot$bound<T extends object>(
     slot._provider.it = {
       get,
       unbind,
-      rebind, // eslint-disable-line @typescript-eslint/no-use-before-define
+      rebind,
       drop,
     };
   };
@@ -136,7 +136,7 @@ function ComponentSlot$bound<T extends object>(
       slot._provider.it = {
         get,
         unbind,
-        rebind, // eslint-disable-line @typescript-eslint/no-use-before-define
+        rebind,
         drop,
       };
 
