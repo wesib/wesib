@@ -19,38 +19,34 @@ import { ComponentRendererExecution } from './component-renderer-execution';
  *
  * @category Feature
  */
-export type RenderDef =
-    | RenderDef.Spec
-    | RenderDef.Provider;
+export type RenderDef = RenderDef.Spec | RenderDef.Provider;
 
 /**
  * @category Feature
  */
 export namespace RenderDef {
-
   /**
    * Component render method signature.
    */
   export type Method =
-  /**
-   * @param execution - Component renderer execution context.
-   */
-      (execution: ComponentRendererExecution) => void;
+    /**
+     * @param execution - Component renderer execution context.
+     */
+    (execution: ComponentRendererExecution) => void;
 
   /**
    * Component pre-render method signature.
    */
   export type PreMethod =
-  /**
-   * @param execution - Component pre-renderer execution context.
-   */
-      (execution: ComponentPreRendererExecution) => void;
+    /**
+     * @param execution - Component pre-renderer execution context.
+     */
+    (execution: ComponentPreRendererExecution) => void;
 
   /**
    * Rendering options.
    */
   export interface Options {
-
     /**
      * When to start the rendering.
      *
@@ -67,14 +63,12 @@ export namespace RenderDef {
      * @param messages - Error messages to report.
      */
     error?(this: void, ...messages: unknown[]): void;
-
   }
 
   /**
    * Component rendering specifier.
    */
   export interface Spec extends Options {
-
     /**
      * A trigger that issues rendering.
      *
@@ -91,7 +85,6 @@ export namespace RenderDef {
      * Except for updates of sub-states inside {@link RenderPath__root}.
      */
     readonly on?: StatePath | EventSender<[]> | undefined;
-
   }
 
   /**
@@ -100,16 +93,12 @@ export namespace RenderDef {
    * @typeParam TSpec - Provided rendering specifier type.
    */
   export type Provider<TSpec extends Spec = Spec> =
-  /**
-   * @param context - A context of component to render.
-   *
-   * @returns Rendering specifier.
-   */
-      (
-          this: void,
-          context: ComponentContext,
-      ) => TSpec;
-
+    /**
+     * @param context - A context of component to render.
+     *
+     * @returns Rendering specifier.
+     */
+    (this: void, context: ComponentContext) => TSpec;
 }
 
 /**
@@ -119,13 +108,12 @@ export namespace RenderDef {
  *
  * @category Feature
  */
-export const RenderPath__root = (/*#__PURE__*/ Symbol('render'));
+export const RenderPath__root = /*#__PURE__*/ Symbol('render');
 
 /**
  * @category Feature
  */
 export const RenderDef = {
-
   /**
    * Builds a trigger issuing rendering updates.
    *
@@ -134,33 +122,21 @@ export const RenderDef = {
    *
    * @returns `OnEvent` sender that sends an event each time the rendering required.
    */
-  trigger(
-      this: void,
-      context: ComponentContext,
-      spec: RenderDef.Spec = {},
-  ): OnEvent<[]> {
-
+  trigger(this: void, context: ComponentContext, spec: RenderDef.Spec = {}): OnEvent<[]> {
     const { on = [] } = spec;
 
     if ((typeof on === 'object' || typeof on === 'function') && isEventSender(on)) {
       return onSupplied(on).do(supplyOn(context));
     }
 
-    const trigger = context
-        .get(ComponentState)
-        .track(on)
-        .onUpdate
-        .do(
-            supplyOn(context),
-        );
+    const trigger = context.get(ComponentState).track(on).onUpdate.do(supplyOn(context));
 
     if (Array.isArray(on) && !on.length) {
-      return trigger.do(translateOn_(
-          (send, path: StatePath.Normalized) => path[0] !== RenderPath__root && send(),
-      ));
+      return trigger.do(
+        translateOn_((send, path: StatePath.Normalized) => path[0] !== RenderPath__root && send()),
+      );
     }
 
     return trigger;
   },
-
 };

@@ -7,21 +7,20 @@ import { DomPropertyPath, domPropertyPathTo } from './dom-property-path';
  * @internal
  */
 export type DomPropertyUpdateCallback<T extends object> = <TKey extends keyof T>(
-    this: void,
-    component: T,
-    newValue: T[TKey],
-    oldValue: T[TKey],
+  this: void,
+  component: T,
+  newValue: T[TKey],
+  oldValue: T[TKey],
 ) => void;
 
 /**
  * @internal
  */
 export function domPropertyUpdate<T extends object>(
-    propertyKey: PropertyKey,
-    updateState: true | DomPropertyUpdateReceiver<T> | StatePath = true,
+  propertyKey: PropertyKey,
+  updateState: true | DomPropertyUpdateReceiver<T> | StatePath = true,
 ): DomPropertyUpdateCallback<T> {
   if (updateState === true || typeof updateState === 'function') {
-
     const path = domPropertyPathTo(propertyKey as keyof T);
     const update = updateState === true ? updateDomPropertyState : updateState;
 
@@ -36,10 +35,10 @@ export function domPropertyUpdate<T extends object>(
 }
 
 function updateDomPropertyState<T extends object, TKey extends keyof T>(
-    component: T,
-    path: DomPropertyPath<TKey>,
-    newValue: T[TKey],
-    oldValue: T[TKey],
+  component: T,
+  path: DomPropertyPath<TKey>,
+  newValue: T[TKey],
+  oldValue: T[TKey],
 ): void {
   if (newValue !== oldValue) {
     ComponentContext.of(component).updateState(path, newValue, oldValue);

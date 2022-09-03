@@ -10,7 +10,6 @@ import { AttributePath } from './attribute-path';
  * @typeParam T - A type of component.
  */
 export interface AttributeDef<T extends object> {
-
   /**
    * Attribute name, either _camelCase_ or _dash-style_.
    *
@@ -29,24 +28,21 @@ export interface AttributeDef<T extends object> {
    * - an attribute update receiver function with custom state update logic.
    */
   readonly updateState?: boolean | StatePath | AttributeUpdateReceiver<T> | undefined;
-
 }
 
 /**
  * @category Feature
  */
 export namespace AttributeDef {
-
   /**
    * Signature of attribute updates receiver method.
    */
   export type ChangeMethod =
-  /**
-   * @param newValue - New attribute value, or `null` when attribute removed.
-   * @param oldValue - Previous attribute value, or `null` if attribute did not exist.
-   */
-      (newValue: string | null, oldValue: string | null) => void;
-
+    /**
+     * @param newValue - New attribute value, or `null` when attribute removed.
+     * @param oldValue - Previous attribute value, or `null` if attribute did not exist.
+     */
+    (newValue: string | null, oldValue: string | null) => void;
 }
 
 /**
@@ -56,16 +52,16 @@ export namespace AttributeDef {
  * @typeParam T - A type of component.
  */
 export type AttributeUpdateReceiver<T extends object> =
-/**
- * @param component - Component instance.
- * @param path - The changed attribute state path in the form of `[AttributePath__root, attributeName]`.
- * @param newValue - New attribute value, or `null` when attribute removed.
- * @param oldValue - Previous attribute value, or `null` if attribute did not exist.
- */
-    (
-        this: void,
-        component: T,
-        path: AttributePath,
-        newValue: string | null,
-        oldValue: string | null,
-    ) => void;
+  /**
+   * @param component - Component instance.
+   * @param path - The changed attribute state path in the form of `[AttributePath__root, attributeName]`.
+   * @param newValue - New attribute value, or `null` when attribute removed.
+   * @param oldValue - Previous attribute value, or `null` if attribute did not exist.
+   */
+  (
+    this: void,
+    component: T,
+    path: AttributePath,
+    newValue: string | null,
+    oldValue: string | null,
+  ) => void;

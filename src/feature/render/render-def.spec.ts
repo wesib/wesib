@@ -7,7 +7,6 @@ import { RenderDef, RenderPath__root } from './render-def';
 describe('feature/render', () => {
   describe('RenderDef', () => {
     describe('trigger', () => {
-
       let context: ComponentContext;
       let state: ComponentState;
 
@@ -15,7 +14,7 @@ describe('feature/render', () => {
         state = new ComponentState();
 
         const cxBuilder = new CxBuilder<ComponentContext>(
-            (get, { supply }) => ({ supply, get } as ComponentContext),
+          (get, { supply }) => ({ supply, get } as ComponentContext),
         );
 
         context = cxBuilder.context;
@@ -23,7 +22,6 @@ describe('feature/render', () => {
       });
 
       it('is full state except render root by default', () => {
-
         const receiver = jest.fn();
 
         RenderDef.trigger(context)(receiver);

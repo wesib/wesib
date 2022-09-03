@@ -9,16 +9,17 @@ import { FeatureDef, FeatureDef__symbol } from '../feature';
  * @category Testing
  * @experimental
  */
-export function testDefinition<T extends object>(componentType: Class<T>): OnEvent<[DefinitionContext<T>]> {
-
+export function testDefinition<T extends object>(
+  componentType: Class<T>,
+): OnEvent<[DefinitionContext<T>]> {
   const customElements: CustomElements = {
-
-    define(): void {/* do not register element */},
+    define(): void {
+      /* do not register element */
+    },
 
     whenDefined(): Promise<void> {
       return Promise.resolve();
     },
-
   };
 
   const featureDef: FeatureDef = {
@@ -34,7 +35,7 @@ export function testDefinition<T extends object>(componentType: Class<T>): OnEve
       return featureDef;
     }
 
-  }
+}
 
   return bootstrapComponents(TestFeature).whenDefined(componentType);
 }

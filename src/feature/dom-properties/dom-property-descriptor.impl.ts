@@ -6,16 +6,19 @@ import { DomPropertyDescriptor } from './dom-property-descriptor';
 /**
  * @internal
  */
-export function domPropertyDescriptor<TValue extends TUpdate, TClass extends ComponentClass, TUpdate>(
-    amended: AeComponentMember<TValue, TClass, TUpdate>,
-    {
-      propertyKey: key = amended.key,
-      configurable = amended.configurable,
-      enumerable = amended.enumerable,
-      writable = amended.writable,
-    }: DomPropertyDef,
+export function domPropertyDescriptor<
+  TValue extends TUpdate,
+  TClass extends ComponentClass,
+  TUpdate,
+>(
+  amended: AeComponentMember<TValue, TClass, TUpdate>,
+  {
+    propertyKey: key = amended.key,
+    configurable = amended.configurable,
+    enumerable = amended.enumerable,
+    writable = amended.writable,
+  }: DomPropertyDef,
 ): DomPropertyDescriptor {
-
   type ComponentType = { [K in AeComponentMember<TValue, TClass, TUpdate>['key']]: TValue };
 
   const componentMemberKey = amended.key as string;
@@ -26,12 +29,12 @@ export function domPropertyDescriptor<TValue extends TUpdate, TClass extends Com
       return ComponentSlot.of(this).rebind()?.component[componentMemberKey] as TValue;
     },
     set: writable
-        ? function (this: ComponentElement<ComponentType>, value: TValue) {
-          ComponentSlot.of(this).whenReady(({
-            component,
-          }) => component[componentMemberKey] = value);
+      ? function (this: ComponentElement<ComponentType>, value: TValue) {
+          ComponentSlot.of(this).whenReady(
+            ({ component }) => (component[componentMemberKey] = value),
+          );
         }
-        : undefined,
+      : undefined,
   };
 
   return { key, descriptor };

@@ -6,7 +6,6 @@ import { AeFeatureTarget, Feature } from './feature.amendment';
 describe('feature', () => {
   describe('@Feature', () => {
     it('assigns feature definition', async () => {
-
       const init = jest.fn<(context: FeatureContext) => void>();
       const def: FeatureDef = { init };
 
@@ -21,7 +20,6 @@ describe('feature', () => {
       expect(init.mock.instances[0]).toBe(def);
     });
     it('accepts an amendment as parameter', async () => {
-
       const init = jest.fn<(context: FeatureContext) => void>();
       const def: FeatureDef = { init };
 
@@ -38,7 +36,6 @@ describe('feature', () => {
       expect(init.mock.instances[0]).toBe(def);
     });
     it('can be used for auto-amendment', async () => {
-
       const init = jest.fn<(context: FeatureContext) => void>();
       const def: FeatureDef = { init };
 
@@ -48,7 +45,7 @@ describe('feature', () => {
           Feature(def).applyAmendment(target);
         }
 
-      }
+}
 
       const context: FeatureContext = { name: 'feature context' } as unknown as FeatureContext;
 

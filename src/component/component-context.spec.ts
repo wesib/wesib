@@ -5,7 +5,6 @@ import { ComponentContext, ComponentContext__symbol, ComponentInstance } from '.
 describe('component', () => {
   describe('ComponentContext', () => {
     describe('of', () => {
-
       let component: ComponentInstance;
       let context: ComponentContext;
 
@@ -21,8 +20,9 @@ describe('component', () => {
       it('fails when there is no context defined', () => {
         delete component[ComponentContext__symbol];
 
-        expect(() => ComponentContext.of(component))
-            .toThrow(new TypeError('No component context found in [object Object]'));
+        expect(() => ComponentContext.of(component)).toThrow(
+          new TypeError('No component context found in [object Object]'),
+        );
       });
     });
 

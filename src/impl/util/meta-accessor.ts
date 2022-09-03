@@ -12,13 +12,10 @@ export abstract class MetaAccessor<TMeta, TSrc = TMeta> {
   }
 
   own(type: AbstractClass, receiver?: AbstractClass): TMeta | undefined {
-    return hasOwnProperty(type, this.symbol)
-        ? Reflect.get(type, this.symbol, receiver)
-        : undefined;
+    return hasOwnProperty(type, this.symbol) ? Reflect.get(type, this.symbol, receiver) : undefined;
   }
 
   of(type: AbstractClass, receiver: AbstractClass = type): TMeta | undefined {
-
     const ownDef: TMeta | undefined = this.own(type, receiver);
     const superType = superClassOf(type);
     const superDef = superType && this.of(superType, receiver);
@@ -27,18 +24,13 @@ export abstract class MetaAccessor<TMeta, TSrc = TMeta> {
   }
 
   define<TClass extends Class>(type: TClass, metas: readonly (TMeta | TSrc)[]): TClass {
-
     const prevMeta = this.own(type);
     const newMeta: TMeta = this.merge(prevMeta ? [prevMeta, ...metas] : metas);
 
-    Reflect.defineProperty(
-        type,
-        this.symbol,
-        {
-          configurable: true,
-          value: newMeta,
-        },
-    );
+    Reflect.defineProperty(type, this.symbol, {
+      configurable: true,
+      value: newMeta,
+    });
 
     return type;
   }

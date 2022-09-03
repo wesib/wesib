@@ -1,4 +1,9 @@
-import { AeComponentMember, AeComponentMemberTarget, ComponentMember, ComponentMemberAmendment } from '../../component';
+import {
+  AeComponentMember,
+  AeComponentMemberTarget,
+  ComponentMember,
+  ComponentMemberAmendment,
+} from '../../component';
 import { ComponentClass, DefinitionContext } from '../../component/definition';
 import { ComponentRenderCtl } from './component-render-ctl';
 import { RenderDef } from './render-def';
@@ -18,30 +23,26 @@ import { RenderDef } from './render-def';
  * @returns New component method amendment.
  */
 export function Render<
-    TClass extends ComponentClass,
-    TAmended extends AeComponentMember<RenderDef.Method, TClass> = AeComponentMember<RenderDef.Method, TClass>,
-    >(
-    def?: RenderDef,
-): ComponentMemberAmendment<RenderDef.Method, TClass, RenderDef.Method, TAmended> {
-  return ComponentMember<
-      RenderDef.Method,
-      TClass,
-      RenderDef.Method,
-      TAmended>((
-      { get, amend }: AeComponentMemberTarget<RenderDef.Method, TClass>,
-  ) => amend({
-    componentDef: {
-      define(defContext: DefinitionContext<InstanceType<TClass>>) {
-        defContext.whenComponent(context => {
-          context.whenReady(() => {
+  TClass extends ComponentClass,
+  TAmended extends AeComponentMember<RenderDef.Method, TClass> = AeComponentMember<
+    RenderDef.Method,
+    TClass
+  >,
+>(def?: RenderDef): ComponentMemberAmendment<RenderDef.Method, TClass, RenderDef.Method, TAmended> {
+  return ComponentMember<RenderDef.Method, TClass, RenderDef.Method, TAmended>(
+    ({ get, amend }: AeComponentMemberTarget<RenderDef.Method, TClass>) => amend({
+        componentDef: {
+          define(defContext: DefinitionContext<InstanceType<TClass>>) {
+            defContext.whenComponent(context => {
+              context.whenReady(() => {
+                const { component } = context;
+                const renderer = get(component).bind(component);
 
-            const { component } = context;
-            const renderer = get(component).bind(component);
-
-            context.get(ComponentRenderCtl).renderBy(renderer, def);
-          });
-        });
-      },
-    },
-  }));
+                context.get(ComponentRenderCtl).renderBy(renderer, def);
+              });
+            });
+          },
+        },
+      }),
+  );
 }

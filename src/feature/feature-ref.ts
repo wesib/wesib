@@ -12,7 +12,6 @@ import { FeatureStatus } from './feature-status';
  * @category Core
  */
 export interface FeatureRef extends EventKeeper<[FeatureStatus]>, SupplyPeer {
-
   /**
    * An `AfterEvent` keeper of feature load status.
    *
@@ -34,5 +33,4 @@ export interface FeatureRef extends EventKeeper<[FeatureStatus]>, SupplyPeer {
    * feature via {@link BootstrapSetup} and {@link DefinitionSetup}.
    */
   readonly supply: Supply;
-
 }

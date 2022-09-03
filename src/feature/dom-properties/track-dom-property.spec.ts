@@ -10,7 +10,6 @@ import { trackDomProperty } from './track-dom-property';
 
 describe('feature/dom-properties', () => {
   describe('trackDomProperty', () => {
-
     let element: any;
     let context: ComponentContext;
     let state: StateTracker;
@@ -19,10 +18,12 @@ describe('feature/dom-properties', () => {
       element = {};
       state = new StateTracker();
 
-      const cxBuilder = new CxBuilder<ComponentContext>(get => ({
-        element,
-        get,
-      } as ComponentContext));
+      const cxBuilder = new CxBuilder<ComponentContext>(
+        get => ({
+            element,
+            get,
+          } as ComponentContext),
+      );
 
       context = cxBuilder.context;
       cxBuilder.provide(cxConstAsset(ComponentState, state));
@@ -51,7 +52,6 @@ describe('feature/dom-properties', () => {
 
     describe('on', () => {
       it('reflects property value updates', () => {
-
         const onUpdate = jest.fn();
         const read = jest.fn();
 
@@ -62,7 +62,6 @@ describe('feature/dom-properties', () => {
         expect(read).toHaveBeenCalledWith('new value');
       });
       it('reflects property value updates with custom path', () => {
-
         const path: StatePath = ['test', 'path'];
 
         tracker = trackDomProperty(context, 'test', path);
@@ -80,7 +79,6 @@ describe('feature/dom-properties', () => {
 
     describe('done', () => {
       it('cuts off property updates supply', () => {
-
         const updatesOff = jest.fn();
 
         tracker.on(noop).whenOff(updatesOff);

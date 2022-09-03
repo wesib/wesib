@@ -10,15 +10,18 @@ class AttributeTracker extends ValueTracker<string | null> {
   readonly supply = new Supply();
 
   constructor(
-      private readonly _context: ComponentContext,
-      private readonly _name: string,
-      path: StatePath,
+    private readonly _context: ComponentContext,
+    private readonly _name: string,
+    path: StatePath,
   ) {
     super();
-    this.on = this._context.get(ComponentState).track(path).onUpdate.do(
+    this.on = this._context
+      .get(ComponentState)
+      .track(path)
+      .onUpdate.do(
         translateOn((send, _path, newValue, oldValue) => send(newValue, oldValue)),
         supplyOn(this),
-    );
+      );
   }
 
   get it(): string | null {
@@ -51,9 +54,9 @@ class AttributeTracker extends ValueTracker<string | null> {
  * @returns New attribute value tracker.
  */
 export function trackAttribute(
-    context: ComponentContext,
-    name: string,
-    path: StatePath = attributePathTo(name),
+  context: ComponentContext,
+  name: string,
+  path: StatePath = attributePathTo(name),
 ): ValueTracker<string | null> {
   return new AttributeTracker(context, name, path);
 }

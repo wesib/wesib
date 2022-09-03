@@ -8,7 +8,6 @@ import { Class } from '@proc7ts/primitives';
  * @category Core
  */
 export interface FeatureStatus {
-
   /**
    * Loaded feature class.
    *
@@ -21,5 +20,4 @@ export interface FeatureStatus {
    * Whether the feature is loaded.
    */
   readonly ready: boolean;
-
 }

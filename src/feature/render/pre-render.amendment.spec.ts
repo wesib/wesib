@@ -19,7 +19,6 @@ import { RenderDef } from './render-def';
 
 describe('feature/render', () => {
   describe('@PreRender', () => {
-
     let mockRenderScheduler: Mock<RenderScheduler>;
     let mockRenderSchedule: Mock<RenderSchedule>;
 
@@ -47,13 +46,11 @@ describe('feature/render', () => {
       expect(mockPreRenderer).not.toHaveBeenCalled();
     });
     it('lifts unrooted rendering contexts', async () => {
-
       const doc = document.implementation.createHTMLDocument('test');
       const whenConnected1 = jest.fn();
       const whenConnected2 = jest.fn();
 
       mockPreRenderer.mockImplementation(() => {
-
         const element1 = doc.createElement('test-element-1');
         const element2 = doc.createElement('test-element-2');
 
@@ -73,7 +70,6 @@ describe('feature/render', () => {
 
     describe('connected', () => {
       it('is scheduled on state update', async () => {
-
         const { component, element } = await bootstrap();
 
         element.connectedCallback();
@@ -102,7 +98,6 @@ describe('feature/render', () => {
 
     describe('disconnected', () => {
       it('is scheduled on state update', async () => {
-
         const context = await bootstrap();
         const { component } = context;
 
@@ -119,7 +114,6 @@ describe('feature/render', () => {
         expect(mockRenderScheduler).not.toHaveBeenCalled();
       });
       it('is re-scheduled in pre-render scheduler when connected', async () => {
-
         const context = await bootstrap();
         const { component, element } = context;
 
@@ -139,7 +133,6 @@ describe('feature/render', () => {
 
     describe('Postponed', () => {
       it('is executed', async () => {
-
         const postponed = jest.fn();
 
         mockPreRenderer.mockImplementation(({ postpone }) => postpone(postponed));
@@ -151,7 +144,6 @@ describe('feature/render', () => {
         expect(postponed).toHaveBeenCalledTimes(1);
       });
       it('able to delegate to another pre-renderer', async () => {
-
         const delegate = jest.fn();
         const postponed = jest.fn(({ preRenderBy }: ComponentPreRendererExecution): void => {
           preRenderBy(delegate);
@@ -173,7 +165,6 @@ describe('feature/render', () => {
         expect(delegate).toHaveBeenCalledTimes(2);
       });
       it('able to delegate to another renderer', async () => {
-
         const delegate = jest.fn();
         const postponed = jest.fn(({ renderBy }: ComponentPreRendererExecution): void => {
           renderBy(delegate);
@@ -192,7 +183,6 @@ describe('feature/render', () => {
     });
 
     describe('Delegate pre-renderer', () => {
-
       let delegate: Mock<(execution: ComponentPreRendererExecution) => void>;
 
       beforeEach(() => {
@@ -201,7 +191,6 @@ describe('feature/render', () => {
       });
 
       it('is scheduled', async () => {
-
         const { element } = await bootstrap();
 
         element.connectedCallback();
@@ -209,7 +198,6 @@ describe('feature/render', () => {
         expect(delegate).toHaveBeenCalledTimes(1);
       });
       it('is re-scheduled on state update', async () => {
-
         const { element, component } = await bootstrap();
 
         element.connectedCallback();
@@ -218,7 +206,6 @@ describe('feature/render', () => {
         expect(delegate).toHaveBeenCalledTimes(2);
       });
       it('does not re-create schedule on state update', async () => {
-
         const { component, element } = await bootstrap();
 
         element.connectedCallback();
@@ -229,7 +216,6 @@ describe('feature/render', () => {
     });
 
     describe('Delegate renderer', () => {
-
       let delegate: Mock<(execution: ComponentRendererExecution) => void>;
 
       beforeEach(() => {
@@ -238,7 +224,6 @@ describe('feature/render', () => {
       });
 
       it('is scheduled', async () => {
-
         const { element } = await bootstrap();
 
         element.connectedCallback();
@@ -246,7 +231,6 @@ describe('feature/render', () => {
         expect(delegate).toHaveBeenCalledTimes(2);
       });
       it('is re-scheduled on state update', async () => {
-
         const { element, component } = await bootstrap();
 
         element.connectedCallback();
@@ -257,7 +241,6 @@ describe('feature/render', () => {
     });
 
     async function bootstrap(def?: RenderDef): Promise<ComponentContext> {
-
       @Component({
         name: 'test-component',
         extend: {
@@ -281,12 +264,11 @@ describe('feature/render', () => {
         @DomProperty()
         property2 = 'value';
 
-      }
+}
 
       const element: ComponentElement = new (await testElement(TestComponent))();
 
       return ComponentSlot.of(element).whenReady;
     }
   });
-
 });

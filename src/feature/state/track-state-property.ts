@@ -18,16 +18,19 @@ class StatePropertyTracker<T> extends ValueTracker<T> {
   private readonly _key: string;
 
   constructor(
-      private readonly _context: ComponentContext<ComponentWithProperty<T>>,
-      key: PropertyKey,
-      path: StatePath,
+    private readonly _context: ComponentContext<ComponentWithProperty<T>>,
+    key: PropertyKey,
+    path: StatePath,
   ) {
     super();
     this._key = key as string;
-    this.on = _context.get(ComponentState).track(path).onUpdate.do(
+    this.on = _context
+      .get(ComponentState)
+      .track(path)
+      .onUpdate.do(
         translateOn((send, _path, newValue, oldValue) => send(newValue, oldValue)),
         supplyOn(this),
-    );
+      );
   }
 
   get it(): T {
@@ -54,9 +57,9 @@ class StatePropertyTracker<T> extends ValueTracker<T> {
  * @returns New state property value tracker.
  */
 export function trackStateProperty<T = any>(
-    context: ComponentContext,
-    key: PropertyKey,
-    path: StatePath = statePropertyPathTo(key),
+  context: ComponentContext,
+  key: PropertyKey,
+  path: StatePath = statePropertyPathTo(key),
 ): ValueTracker<T> {
   return new StatePropertyTracker(context as ComponentContext<ComponentWithProperty<T>>, key, path);
 }

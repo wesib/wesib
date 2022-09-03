@@ -17,11 +17,10 @@ import { ComponentRegistry } from './component-registry.impl';
 export class FeatureContext$ implements FeatureContext {
 
   static create(feature: Class, setup: CxModule.Setup): FeatureContext {
-
     const bsBuilder = setup.get(BootstrapContextBuilder);
     const builder = new CxBuilder<FeatureContext>(
-        get => new FeatureContext$(feature, get, setup),
-        bsBuilder.boundPeer,
+      get => new FeatureContext$(feature, get, setup),
+      bsBuilder.boundPeer,
     );
     const context = builder.context;
 
@@ -37,17 +36,17 @@ export class FeatureContext$ implements FeatureContext {
   private readonly _componentRegistry: ComponentRegistry;
 
   private constructor(
-      readonly feature: Class,
-      readonly get: CxAccessor,
-      private readonly _setup: CxModule.Setup,
+    readonly feature: Class,
+    readonly get: CxAccessor,
+    private readonly _setup: CxModule.Setup,
   ) {
     this._bsContext = _setup.get(BootstrapContext);
 
     const handle = _setup.get(_setup.module);
 
     this.whenReady = handle.read.do(
-        valueOn_(({ ready }) => ready && this),
-        onceOn,
+      valueOn_(({ ready }) => ready && this),
+      onceOn,
     );
 
     this._componentRegistry = new ComponentRegistry(this._setup);
@@ -58,34 +57,31 @@ export class FeatureContext$ implements FeatureContext {
   }
 
   get onDefinition(): OnEvent<[DefinitionContext]> {
-    return this._onDefinition
-        || (this._onDefinition = this._setup.get(ElementBuilder).definitions.on.do(supplyOn(this)));
+    return (
+      this._onDefinition
+      || (this._onDefinition = this._setup.get(ElementBuilder).definitions.on.do(supplyOn(this)))
+    );
   }
 
   get onComponent(): OnEvent<[ComponentContext]> {
-    return this._onComponent
-        || (this._onComponent = this._setup.get(ElementBuilder).components.on.do(supplyOn(this)));
+    return (
+      this._onComponent
+      || (this._onComponent = this._setup.get(ElementBuilder).components.on.do(supplyOn(this)))
+    );
   }
 
   provide<TValue, TAsset = TValue>(asset: CxAsset<TValue, TAsset, BootstrapContext>): Supply {
-    return this._bsContext
-        .get(BootstrapContextBuilder)
-        .provide(asset)
-        .needs(this);
+    return this._bsContext.get(BootstrapContextBuilder).provide(asset).needs(this);
   }
 
-  perDefinition<TValue, TAsset = TValue>(asset: CxAsset<TValue, TAsset, DefinitionContext>): Supply {
-    return this._bsContext
-        .get(PerDefinitionCxPeer)
-        .provide(asset)
-        .needs(this);
+  perDefinition<TValue, TAsset = TValue>(
+    asset: CxAsset<TValue, TAsset, DefinitionContext>,
+  ): Supply {
+    return this._bsContext.get(PerDefinitionCxPeer).provide(asset).needs(this);
   }
 
   perComponent<TValue, TAsset = TValue>(asset: CxAsset<TValue, TAsset, ComponentContext>): Supply {
-    return this._bsContext
-        .get(PerComponentCxPeer)
-        .provide(asset)
-        .needs(this);
+    return this._bsContext.get(PerComponentCxPeer).provide(asset).needs(this);
   }
 
   setupDefinition<T extends object>(componentType: ComponentClass<T>): OnEvent<[DefinitionSetup]> {
@@ -102,8 +98,8 @@ export class FeatureContext$ implements FeatureContext {
 
   load(feature: Class, user?: SupplyPeer): FeatureRef {
     return this.get(BootstrapContext).load(
-        feature,
-        user ? new Supply().needs(this).needs(user) : this,
+      feature,
+      user ? new Supply().needs(this).needs(user) : this,
     );
   }
 

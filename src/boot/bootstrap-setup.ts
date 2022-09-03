@@ -16,7 +16,6 @@ import { BootstrapContext } from './bootstrap-context';
  * @category Core
  */
 export interface BootstrapSetup {
-
   /**
    * Feature class performing bootstrap setup.
    */
@@ -90,5 +89,4 @@ export interface BootstrapSetup {
    * @returns An `OnEvent` sender of component definition setup instances.
    */
   setupDefinition<T extends object>(componentType: ComponentClass<T>): OnEvent<[DefinitionSetup]>;
-
 }

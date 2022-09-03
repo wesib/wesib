@@ -18,10 +18,10 @@ export type ContentRoot = Element | ShadowRoot;
  * @category Core
  */
 export const ContentRoot: CxEntry<ContentRoot> = {
-  perContext: (/*#__PURE__*/ cxSingle({
+  perContext: /*#__PURE__*/ cxSingle({
     byDefault(target): ContentRoot {
       return target.get(ComponentContext).element as ContentRoot;
     },
-  })),
+  }),
   toString: () => '[ContentRoot]',
 };

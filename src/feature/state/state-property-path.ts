@@ -5,7 +5,7 @@
  *
  * @category Feature
  */
-export const StatePropertyPath__root = (/*#__PURE__*/ Symbol('StateProperty'));
+export const StatePropertyPath__root = /*#__PURE__*/ Symbol('StateProperty');
 
 /**
  * A path to the named component property state.
@@ -27,7 +27,9 @@ export type StatePropertyPath<TKey extends PropertyKey = PropertyKey> = readonly
  *
  * @return DOM property state path.
  */
-export function statePropertyPathTo<TKey extends PropertyKey = PropertyKey>(key: TKey): StatePropertyPath<TKey> {
+export function statePropertyPathTo<TKey extends PropertyKey = PropertyKey>(
+  key: TKey,
+): StatePropertyPath<TKey> {
   return [StatePropertyPath__root, key];
 }
 

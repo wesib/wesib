@@ -2,15 +2,17 @@ import { CxModule } from '@proc7ts/context-modules';
 import { Class, hasOwnProperty, setOfElements, valueProvider } from '@proc7ts/primitives';
 import { ComponentDef, ComponentDef__symbol } from '../../component';
 import { FeatureDef } from '../feature-def';
-import { BootstrapWorkbench, featureInitStage, featureSetupStage } from './bootstrap-workbench.impl';
+import {
+  BootstrapWorkbench,
+  featureInitStage,
+  featureSetupStage,
+} from './bootstrap-workbench.impl';
 import { FeatureContext$ } from './feature-context.impl';
 
-const FeatureModule__symbol = (/*#__PURE__*/ Symbol('FeatureModule'));
+const FeatureModule__symbol = /*#__PURE__*/ Symbol('FeatureModule');
 
 interface FeatureClass extends Class {
-
   [FeatureModule__symbol]?: FeatureModule | undefined;
-
 }
 
 export class FeatureModule extends CxModule {
@@ -20,7 +22,7 @@ export class FeatureModule extends CxModule {
       return feature[FeatureModule__symbol]!;
     }
 
-    return feature[FeatureModule__symbol] = new FeatureModule(feature);
+    return (feature[FeatureModule__symbol] = new FeatureModule(feature));
   }
 
   private constructor(readonly feature: Class) {
@@ -28,7 +30,6 @@ export class FeatureModule extends CxModule {
   }
 
   override async setup(setup: CxModule.Setup): Promise<void> {
-
     const workbench = setup.get(BootstrapWorkbench);
 
     await workbench.work(featureSetupStage).run(() => super.setup(setup));
@@ -41,7 +42,6 @@ export class FeatureModule extends CxModule {
 }
 
 function FeatureModule$options(feature: Class): CxModule.Options {
-
   const def = featureDef(feature);
   const has: FeatureModule[] = [];
   const needs: FeatureModule[] = [];
@@ -57,12 +57,10 @@ function FeatureModule$options(feature: Class): CxModule.Options {
     needs,
     has,
     async setup(setup) {
-
       const workbench = setup.get(BootstrapWorkbench);
       const featureContext = FeatureContext$.create(feature, setup);
 
       if (def.init) {
-
         const whenInit = workbench.work(featureInitStage).run(async () => {
           await def.init!(featureContext);
         });
@@ -76,25 +74,20 @@ function FeatureModule$options(feature: Class): CxModule.Options {
 }
 
 function featureDef(featureType: Class): FeatureDef {
-
   let def = FeatureDef.of(featureType);
 
   if (ComponentDef__symbol in featureType) {
-    def = FeatureDef.merge(
-        def,
-        {
-          init(context) {
-            context.define(featureType);
-          },
-        },
-    );
+    def = FeatureDef.merge(def, {
+      init(context) {
+        context.define(featureType);
+      },
+    });
 
     const { feature } = ComponentDef.of(featureType);
 
     if (feature) {
       def = FeatureDef.merge(def, feature);
     }
-
   }
 
   return def;

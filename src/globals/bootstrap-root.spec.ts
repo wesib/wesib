@@ -5,7 +5,6 @@ import { BootstrapRoot } from './bootstrap-root';
 describe('globals', () => {
   describe('BootstrapRoot', () => {
     it('defaults to document body', () => {
-
       const context = new CxBuilder(get => ({ get })).context;
 
       expect(context.get(BootstrapRoot)).toBe(window.document.body);

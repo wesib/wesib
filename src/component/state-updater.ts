@@ -12,17 +12,16 @@ import { asis } from '@proc7ts/primitives';
  * @param oldValue - Replaced value.
  */
 export type StateUpdater = <TValue>(
-    this: void,
-    path: StatePath,
-    newValue: TValue,
-    oldValue: TValue,
+  this: void,
+  path: StatePath,
+  newValue: TValue,
+  oldValue: TValue,
 ) => void;
 
 /**
  * @category Core
  */
 export namespace StateUpdater {
-
   /**
    * Normalized component state updater signature.
    *
@@ -34,12 +33,11 @@ export namespace StateUpdater {
    * @param oldValue - Replaced value.
    */
   export type Normalized = <TValue>(
-      this: void,
-      path: StatePath.Normalized,
-      newValue: TValue,
-      oldValue: TValue,
+    this: void,
+    path: StatePath.Normalized,
+    newValue: TValue,
+    oldValue: TValue,
   ) => void;
-
 }
 
 /**
@@ -54,11 +52,14 @@ export namespace StateUpdater {
  * @category Core
  */
 export const StateUpdater: CxEntry<StateUpdater, StateUpdater.Normalized> = {
-  perContext: (/*#__PURE__*/ cxDynamic<StateUpdater, StateUpdater.Normalized, StateUpdater.Normalized[]>({
+  perContext: /*#__PURE__*/ cxDynamic<
+    StateUpdater,
+    StateUpdater.Normalized,
+    StateUpdater.Normalized[]
+  >({
     create: asis,
     byDefault: () => [],
     assign: ({ get, to }, { supply }) => {
-
       let update: StateUpdater = (path, newValue, oldValue) => {
         path = statePath(path);
 
@@ -68,14 +69,8 @@ export const StateUpdater: CxEntry<StateUpdater, StateUpdater.Normalized> = {
           updaters[i](path, newValue, oldValue);
         }
       };
-      const updater: StateUpdater = (path, newValue, oldValue) => update(
-          path,
-          newValue,
-          oldValue,
-      );
-      let assigner: CxEntry.Assigner<StateUpdater> = receiver => to(
-          (_, by) => receiver(updater, by),
-      );
+      const updater: StateUpdater = (path, newValue, oldValue) => update(path, newValue, oldValue);
+      let assigner: CxEntry.Assigner<StateUpdater> = receiver => to((_, by) => receiver(updater, by));
 
       supply.whenOff(() => {
         update = StateUpdater$noop;
@@ -84,7 +79,7 @@ export const StateUpdater: CxEntry<StateUpdater, StateUpdater.Normalized> = {
 
       return receiver => assigner(receiver);
     },
-  })),
+  }),
   toString: () => '[StateUpdater]',
 };
 

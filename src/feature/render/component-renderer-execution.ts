@@ -10,7 +10,6 @@ import { ComponentRenderer } from './component-renderer';
  * @category Feature
  */
 export interface ComponentRendererExecution extends RenderExecution {
-
   /**
    * Renderer supply. The rendering would stop once this supply is cut off.
    *
@@ -29,5 +28,4 @@ export interface ComponentRendererExecution extends RenderExecution {
    * @param renderer - A renderer to delegate component rendering to.
    */
   renderBy(this: void, renderer: ComponentRenderer): void;
-
 }

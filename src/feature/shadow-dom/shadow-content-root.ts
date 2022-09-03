@@ -16,9 +16,6 @@ export type ShadowContentRoot = ShadowRoot;
  * @category Feature
  */
 export const ShadowContentRoot: CxEntry<ShadowContentRoot> = {
-  perContext: (/*#__PURE__*/ cxScoped(
-      ComponentContext,
-      (/*#__PURE__*/ cxSingle()),
-  )),
+  perContext: /*#__PURE__*/ cxScoped(ComponentContext, /*#__PURE__*/ cxSingle()),
   toString: () => '[ShadowContentRoot]',
 };

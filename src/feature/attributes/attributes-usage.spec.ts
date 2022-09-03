@@ -15,7 +15,6 @@ import { Attribute } from './attribute.amendment';
 
 describe('feature/attributes', () => {
   describe('Attributes usage', () => {
-
     let Observer: Mock<(listener: (records: MutationRecord[]) => void) => MutationObserver>;
     let observer: MockObject<MutationObserver>;
     let observe: (records: MutationRecord[]) => void;
@@ -72,13 +71,12 @@ describe('feature/attributes', () => {
           this._attr3 = value;
         }
 
-      }
+}
 
       testComponent = TestComponent;
     });
 
     describe('defined attribute', () => {
-
       let context: ComponentContext;
 
       beforeEach(async () => {
@@ -106,26 +104,26 @@ describe('feature/attributes', () => {
         expect(attr2ChangedSpy).not.toHaveBeenCalled();
       });
       it('does not define attributes when not defined', async () => {
-
         @Component({
           extend: {
             type: MockElement,
           },
           name: 'no-attr-component',
         })
-        class NoAttrComponent {
-        }
+        class NoAttrComponent {}
 
         const noAttrElement: Element = new (await testElement(NoAttrComponent))();
 
-        expect(noAttrElement.constructor).not.toEqual(expect.objectContaining({
-          observedAttributes: expect.anything(),
-        }));
-        expect(Reflect.ownKeys(noAttrElement.constructor.prototype as object))
-            .not.toContain('attributeChangedCallback');
+        expect(noAttrElement.constructor).not.toEqual(
+          expect.objectContaining({
+            observedAttributes: expect.anything(),
+          }),
+        );
+        expect(Reflect.ownKeys(noAttrElement.constructor.prototype as object)).not.toContain(
+          'attributeChangedCallback',
+        );
       });
       it('accesses attribute value', () => {
-
         const value = 'new value';
 
         element.setAttribute('attr3', value);
@@ -134,7 +132,6 @@ describe('feature/attributes', () => {
         expect(context.component.attr3).toBe(value);
       });
       it('updates attribute value', () => {
-
         const value = 'new value';
 
         context.component.attr3 = value;
@@ -142,7 +139,6 @@ describe('feature/attributes', () => {
         expect(element.getAttribute('attr3')).toBe(value);
       });
       it('notifies on attribute update', () => {
-
         const updateStateSpy = jest.spyOn(context, 'updateState');
         const value = 'new value';
 
@@ -153,7 +149,6 @@ describe('feature/attributes', () => {
     });
 
     describe('mounted attribute', () => {
-
       let defContext: DefinitionContext;
 
       beforeEach(async () => {
@@ -166,14 +161,15 @@ describe('feature/attributes', () => {
         expect(Observer).toHaveBeenCalledWith(observe);
       });
       it('observes attribute mutations', () => {
-        expect(observer.observe).toHaveBeenCalledWith(
-            element,
-            {
-              attributes: true,
-              attributeFilter: expect.arrayContaining(['custom-attribute', 'custom-attribute-2', 'attr3']),
-              attributeOldValue: true,
-            },
-        );
+        expect(observer.observe).toHaveBeenCalledWith(element, {
+          attributes: true,
+          attributeFilter: expect.arrayContaining([
+            'custom-attribute',
+            'custom-attribute-2',
+            'attr3',
+          ]),
+          attributeOldValue: true,
+        });
       });
       it('updates attribute', () => {
         element.setAttribute('custom-attribute', 'value1');
@@ -213,8 +209,7 @@ describe('feature/attributes', () => {
             defContext.get(AttributeRegistry); // Ensure `AttributeRegistry` created without attributes.
           },
         })
-        class NoAttrComponent {
-        }
+        class NoAttrComponent {}
 
         const noAttrElement = new MockElement() as unknown as ComponentElement<NoAttrComponent>;
         const noAttrDefContext = await testDefinition(NoAttrComponent);

@@ -11,8 +11,7 @@ export class ComponentRegistry {
 
   private _components?: ComponentClass[] | undefined = undefined;
 
-  constructor(private readonly _setup: CxModule.Setup) {
-  }
+  constructor(private readonly _setup: CxModule.Setup) {}
 
   define<T extends object>(componentType: ComponentClass<T>): void {
     if (this._components) {
@@ -24,15 +23,12 @@ export class ComponentRegistry {
   }
 
   private _defineAll(components: readonly ComponentClass[]): void {
-
     const workbench = this._setup.get(BootstrapWorkbench);
     const whenDefined = workbench.work(componentDefStage).run(() => {
-
       const customElements = this._setup.get(CustomElements);
       const elementBuilder = this._setup.get(ElementBuilder);
 
       components.forEach(componentType => {
-
         const defContext = elementBuilder.buildElement(componentType);
 
         customElements.define(componentType, defContext.elementType);

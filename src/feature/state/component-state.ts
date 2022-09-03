@@ -24,12 +24,10 @@ export class ComponentState extends StateTracker {
 }
 
 function ComponentState$assign(
-    target: CxEntry.Target<ComponentState>,
-    getState: (target: CxEntry.Target<ComponentState>) => ComponentState | null | undefined,
+  target: CxEntry.Target<ComponentState>,
+  getState: (target: CxEntry.Target<ComponentState>) => ComponentState | null | undefined,
 ): CxEntry.Assigner<ComponentState> {
-
   const get = target.lazy(target => {
-
     const state = getState(target);
 
     if (state) {
@@ -40,7 +38,6 @@ function ComponentState$assign(
   });
 
   return receiver => {
-
     const state = get();
 
     if (state) {

@@ -2,7 +2,13 @@ import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { cxConstAsset } from '@proc7ts/context-builder';
 import { Mock } from 'jest-mock';
 import { BootstrapContext } from '../../boot';
-import { Component, ComponentContext, ComponentElement, ComponentSlot, ContentRoot } from '../../component';
+import {
+  Component,
+  ComponentContext,
+  ComponentElement,
+  ComponentSlot,
+  ContentRoot,
+} from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { MockElement, testElement } from '../../testing';
 import { AttachShadow, ShadowContentDef } from './attach-shadow.amendment';
@@ -11,7 +17,6 @@ import { ShadowRootBuilder } from './shadow-root-builder';
 
 describe('feature/shadow-dom', () => {
   describe('@AttachShadow', () => {
-
     let testComponent: ComponentClass;
     let attachShadowSpy: Mock<Element['attachShadow']>;
     let shadowRoot: ShadowContentRoot;
@@ -30,11 +35,10 @@ describe('feature/shadow-dom', () => {
 
             attachShadow = attachShadowSpy;
 
-          },
+},
         },
       })
-      class TestComponent {
-      }
+      class TestComponent {}
 
       testComponent = TestComponent;
     });
@@ -60,7 +64,6 @@ describe('feature/shadow-dom', () => {
       expect(attachShadowSpy).toHaveBeenCalledWith({ mode: 'open' });
     });
     it('attaches shadow root', async () => {
-
       const shadowDef: ShadowContentDef = {
         mode: 'closed',
       };
@@ -73,11 +76,10 @@ describe('feature/shadow-dom', () => {
 
             attachShadow = attachShadowSpy;
 
-          },
+},
         },
       })
-      class OtherComponent {
-      }
+      class OtherComponent {}
 
       element = new (await testElement(OtherComponent))();
 
@@ -99,7 +101,7 @@ describe('feature/shadow-dom', () => {
 
             attachShadow = attachShadowSpy;
 
-          },
+},
         },
       })
       class OtherComponent {
@@ -108,7 +110,7 @@ describe('feature/shadow-dom', () => {
           ctx.element.shadowRoot = mockShadowRoot;
         }
 
-      }
+}
 
       element = new (await testElement(OtherComponent))();
 
@@ -131,8 +133,7 @@ describe('feature/shadow-dom', () => {
           type: MockElement,
         },
       })
-      class OtherComponent {
-      }
+      class OtherComponent {}
 
       element = new (await testElement(OtherComponent))();
       context = await ComponentSlot.of(element).whenReady;
@@ -141,12 +142,11 @@ describe('feature/shadow-dom', () => {
       expect(context.get(ContentRoot)).toBe(element);
     });
     it('utilizes custom shadow root builder', async () => {
-
       const shadowDef: ShadowContentDef = {
         mode: 'closed',
       };
       const attachShadow = jest.fn(
-          ({ element }: { element: Element }, init: ShadowRootInit): ShadowRoot => element.attachShadow(init),
+        ({ element }: { element: Element }, init: ShadowRootInit): ShadowRoot => element.attachShadow(init),
       );
 
       @AttachShadow(shadowDef)
@@ -157,7 +157,7 @@ describe('feature/shadow-dom', () => {
 
             attachShadow = attachShadowSpy;
 
-          },
+},
         },
         feature: {
           setup(setup) {
@@ -165,8 +165,7 @@ describe('feature/shadow-dom', () => {
           },
         },
       })
-      class OtherComponent {
-      }
+      class OtherComponent {}
 
       element = new (await testElement(OtherComponent))();
 

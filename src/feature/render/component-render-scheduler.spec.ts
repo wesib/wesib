@@ -14,7 +14,6 @@ import { ComponentRenderScheduler } from './component-render-scheduler';
 
 describe('feature/render', () => {
   describe('ComponentRenderScheduler', () => {
-
     let mockRenderScheduler: Mock<RenderScheduler>;
     let mockRenderSchedule: Mock<RenderSchedule>;
 
@@ -24,7 +23,6 @@ describe('feature/render', () => {
     });
 
     it('schedules render shot', async () => {
-
       const context = await bootstrap();
 
       context.element.connectedCallback();
@@ -37,7 +35,6 @@ describe('feature/render', () => {
       expect(shot).toHaveBeenCalledTimes(1);
     });
     it('schedules render shot only when component connected', async () => {
-
       const context = await bootstrap();
       const scheduler = context.get(ComponentRenderScheduler);
       const schedule = scheduler();
@@ -50,7 +47,6 @@ describe('feature/render', () => {
       expect(shot).toHaveBeenCalledTimes(1);
     });
     it('renders the latest shot', async () => {
-
       const manual = newManualRenderScheduler();
 
       mockRenderScheduler.mockImplementation(manual);
@@ -100,7 +96,6 @@ describe('feature/render', () => {
     });
 
     async function bootstrap(): Promise<ComponentContext> {
-
       @Component({
         name: 'test-component',
         extend: {
@@ -112,8 +107,7 @@ describe('feature/render', () => {
           },
         },
       })
-      class TestComponent {
-      }
+      class TestComponent {}
 
       const element: ComponentElement = new (await testElement(TestComponent))();
 

@@ -16,8 +16,8 @@ export type BootstrapRoot = Element;
  * @category Core
  */
 export const BootstrapRoot: CxEntry<BootstrapRoot> = {
-  perContext: (/*#__PURE__*/ cxSingle({
+  perContext: /*#__PURE__*/ cxSingle({
     byDefault: target => target.get(BootstrapWindow).document.body,
-  })),
+  }),
   toString: () => '[BootstrapRoot]',
 };

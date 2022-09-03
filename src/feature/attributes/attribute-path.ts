@@ -5,7 +5,7 @@
  *
  * @category Feature
  */
-export const AttributePath__root = (/*#__PURE__*/ Symbol('attribute'));
+export const AttributePath__root = /*#__PURE__*/ Symbol('attribute');
 
 /**
  * A path to the named attribute state.

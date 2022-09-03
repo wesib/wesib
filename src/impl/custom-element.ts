@@ -8,16 +8,11 @@ import { DefinitionContext$ } from './definition-context';
 class ComponentContext$Custom<T extends object> extends ComponentContext$<T> {
 
   static create<T extends object>(
-      defContext: DefinitionContext$<T>,
-      element: unknown,
+    defContext: DefinitionContext$<T>,
+    element: unknown,
   ): ComponentContext$Custom<T> {
     return defContext._newComponentContext(
-        (get, builder) => new ComponentContext$Custom<T>(
-            defContext,
-            builder,
-            element,
-            get,
-        ),
+      (get, builder) => new ComponentContext$Custom<T>(defContext, builder, element, get),
     );
   }
 
@@ -27,14 +22,13 @@ class ComponentContext$Custom<T extends object> extends ComponentContext$<T> {
 
 }
 
-export function customElementType<T extends object>(
-    defContext: DefinitionContext$<T>,
-): Class {
-
+export function customElementType<T extends object>(defContext: DefinitionContext$<T>): Class {
   const { elementDef } = defContext;
   const renderKit = defContext.get(DocumentRenderKit);
 
-  class CustomElement$ extends (elementDef.extend.type as CustomHTMLElementClass) implements ComponentElement {
+  class CustomElement$
+    extends (elementDef.extend.type as CustomHTMLElementClass)
+    implements ComponentElement {
 
     constructor() {
       super();
@@ -45,7 +39,6 @@ export function customElementType<T extends object>(
       let settle: () => unknown = noop;
 
       slot.bindBy(({ bind }) => {
-
         const context = ComponentContext$Custom.create(defContext, this);
         const supply = bind(context);
 
@@ -73,7 +66,7 @@ export function customElementType<T extends object>(
       super.disconnectedCallback?.();
     }
 
-  }
+}
 
   return CustomElement$;
 }

@@ -1,4 +1,9 @@
-import { html__naming, isQualifiedName, NamespaceAliaser, QualifiedName } from '@frontmeans/namespace-aliaser';
+import {
+  html__naming,
+  isQualifiedName,
+  NamespaceAliaser,
+  QualifiedName,
+} from '@frontmeans/namespace-aliaser';
 import { cxDefaultScoped, CxEntry, cxSingle } from '@proc7ts/context-values';
 import { Class, hasOwnProperty, newPromiseResolver, PromiseResolver } from '@proc7ts/primitives';
 import { BootstrapContext } from '../../boot';
@@ -16,7 +21,6 @@ import { ComponentClass } from './component-class';
  * @category Core
  */
 export interface CustomElements {
-
   /**
    * Defines custom element.
    *
@@ -39,7 +43,6 @@ export interface CustomElements {
    * @throws TypeError If `componentType` does not contain a component definition.
    */
   whenDefined(componentTypeOrName: ComponentClass | QualifiedName): Promise<void>;
-
 }
 
 /**
@@ -48,17 +51,16 @@ export interface CustomElements {
  * @category Core
  */
 export const CustomElements: CxEntry<CustomElements> = {
-  perContext: (/*#__PURE__*/ cxDefaultScoped(
-      BootstrapContext,
-      (/*#__PURE__*/ cxSingle({
-        byDefault: CustomElements$byDefault,
-      })),
-  )),
+  perContext: /*#__PURE__*/ cxDefaultScoped(
+    BootstrapContext,
+    /*#__PURE__*/ cxSingle({
+      byDefault: CustomElements$byDefault,
+    }),
+  ),
   toString: () => `[CustomElements]`,
 };
 
 function CustomElements$byDefault(target: CxEntry.Target<CustomElements>): CustomElements {
-
   const customElements: CustomElementRegistry = target.get(BootstrapWindow).customElements;
   const nsAlias = target.get(NamespaceAliaser);
 
@@ -80,13 +82,9 @@ function CustomElements$byDefault(target: CxEntry.Target<CustomElements>): Custo
         return; // Anonymous component.
       }
       if (extend && extend.name) {
-        customElements.define(
-            tagName,
-            elementType,
-            {
-              extends: extend.name,
-            },
-        );
+        customElements.define(tagName, elementType, {
+          extends: extend.name,
+        });
       } else {
         customElements.define(tagName, elementType);
       }
@@ -94,7 +92,9 @@ function CustomElements$byDefault(target: CxEntry.Target<CustomElements>): Custo
 
     whenDefined(componentTypeOrName: ComponentClass | string): Promise<void> {
       if (isQualifiedName(componentTypeOrName)) {
-        return customElements.whenDefined(html__naming.name(componentTypeOrName, nsAlias)) as Promise<any>;
+        return customElements.whenDefined(
+          html__naming.name(componentTypeOrName, nsAlias),
+        ) as Promise<any>;
       }
 
       const defContext = definitionContextOf(componentTypeOrName);
@@ -107,12 +107,12 @@ function CustomElements$byDefault(target: CxEntry.Target<CustomElements>): Custo
       return customElements.whenDefined(html__naming.name(name, nsAlias)) as Promise<any>;
     }
 
-  }
+}
 
   return new CustomElements$();
 }
 
-const CustomComponent$resolver__symbol = (/*#__PURE__*/ Symbol('CustomComponent.resolver'));
+const CustomComponent$resolver__symbol = /*#__PURE__*/ Symbol('CustomComponent.resolver');
 
 interface CustomComponent$Class<T extends object = any> extends ComponentClass<T> {
   [CustomComponent$resolver__symbol]?: PromiseResolver | undefined;
@@ -123,5 +123,5 @@ function CustomComponent$resolver(componentType: CustomComponent$Class): Promise
     return componentType[CustomComponent$resolver__symbol] as PromiseResolver;
   }
 
-  return componentType[CustomComponent$resolver__symbol] = newPromiseResolver();
+  return (componentType[CustomComponent$resolver__symbol] = newPromiseResolver());
 }

@@ -11,7 +11,6 @@ import { ComponentClass } from '../component/definition';
  * @category Core
  */
 export interface FeatureContext extends BootstrapContext, BootstrapSetup, SupplyPeer {
-
   /**
    * Feature class this context is created for.
    */
@@ -62,7 +61,6 @@ export interface FeatureContext extends BootstrapContext, BootstrapSetup, Supply
    * @throws TypeError  If `componentType` does not contain a component definition.
    */
   define<T extends object>(componentType: ComponentClass<T>): void;
-
 }
 
 /**
@@ -71,6 +69,6 @@ export interface FeatureContext extends BootstrapContext, BootstrapSetup, Supply
  * @category Core
  */
 export const FeatureContext: CxEntry<FeatureContext> = {
-  perContext: (/*#__PURE__*/ cxSingle()),
+  perContext: /*#__PURE__*/ cxSingle(),
   toString: () => '[FeatureContext]',
 };

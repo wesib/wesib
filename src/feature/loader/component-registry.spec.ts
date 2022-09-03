@@ -11,7 +11,6 @@ import { Feature } from '../feature.amendment';
 
 describe('feature load', () => {
   describe('ComponentRegistry', () => {
-
     let TestComponent: ComponentClass;
     let ElementSpy: Class;
     let mockBuilder: MockObject<ElementBuilder>;
@@ -27,10 +26,12 @@ describe('feature load', () => {
           name: 'test-component',
         };
 
-      };
+};
 
       ElementSpy = { name: 'Element' } as any;
-      mockBuilder.buildElement.mockReturnValue({ elementType: ElementSpy } as DefinitionContext<object>);
+      mockBuilder.buildElement.mockReturnValue({
+        elementType: ElementSpy,
+      } as DefinitionContext<object>);
     });
 
     let bsContext: BootstrapContext;
@@ -48,8 +49,7 @@ describe('feature load', () => {
           setup.provide(cxConstAsset(ElementBuilder, mockBuilder));
         },
       })
-      class TestFeature {
-      }
+      class TestFeature {}
 
       bsContext = await bootstrapComponents(TestFeature).whenReady;
     });
@@ -73,8 +73,7 @@ describe('feature load', () => {
           context.define(TestComponent);
         },
       })
-      class ComponentFeature {
-      }
+      class ComponentFeature {}
 
       await bsContext.load(ComponentFeature).whenReady;
     }

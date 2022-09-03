@@ -1,5 +1,10 @@
 import { Class } from '@proc7ts/primitives';
-import { AeComponentMember, AeComponentMemberTarget, ComponentMember, ComponentMemberAmendment } from '../../component';
+import {
+  AeComponentMember,
+  AeComponentMemberTarget,
+  ComponentMember,
+  ComponentMemberAmendment,
+} from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { DomPropertyDef } from './dom-property-def';
 import { domPropertyDescriptor } from './dom-property-descriptor.impl';
@@ -23,44 +28,46 @@ import { domPropertyUpdate } from './dom-property-update.impl';
  * @returns New component member decorator.
  */
 export function DomProperty<
-    TValue extends TUpdate,
-    TClass extends ComponentClass = Class,
-    TUpdate = TValue,
-    TAmended extends AeComponentMember<TValue, TClass, TUpdate> = AeComponentMember<TValue, TClass, TUpdate>>(
-    def: DomPropertyDef<InstanceType<TClass>> = {},
+  TValue extends TUpdate,
+  TClass extends ComponentClass = Class,
+  TUpdate = TValue,
+  TAmended extends AeComponentMember<TValue, TClass, TUpdate> = AeComponentMember<
+    TValue,
+    TClass,
+    TUpdate
+  >,
+>(
+  def: DomPropertyDef<InstanceType<TClass>> = {},
 ): ComponentMemberAmendment<TValue, TClass, TUpdate, TAmended> {
-  return ComponentMember<TValue, TClass, TUpdate, TAmended>((
-      target: AeComponentMemberTarget<TValue, TClass, TUpdate>,
-  ) => {
+  return ComponentMember<TValue, TClass, TUpdate, TAmended>(
+    (target: AeComponentMemberTarget<TValue, TClass, TUpdate>) => {
+      const { key, get, amend } = target;
+      let { set } = target;
+      const domDescriptor = domPropertyDescriptor(target, def);
 
-    const { key, get, amend } = target;
-    let { set } = target;
-    const domDescriptor = domPropertyDescriptor(target, def);
+      if (def.updateState !== false) {
+        const updateState = domPropertyUpdate<InstanceType<TClass>>(key, def.updateState);
+        const setValue = set;
 
-    if (def.updateState !== false) {
+        set = (component, newValue) => {
+          const oldValue = get(component);
 
-      const updateState = domPropertyUpdate<InstanceType<TClass>>(key, def.updateState);
-      const setValue = set;
+          setValue(component, newValue);
+          updateState(component, newValue, oldValue);
+        };
+      }
 
-      set = (component, newValue) => {
-
-        const oldValue = get(component);
-
-        setValue(component, newValue);
-        updateState(component, newValue, oldValue);
-      };
-    }
-
-    amend({
-      componentDef: {
-        define(defContext) {
-          defContext.get(DomPropertyRegistry).declareDomProperty(domDescriptor);
+      amend({
+        componentDef: {
+          define(defContext) {
+            defContext.get(DomPropertyRegistry).declareDomProperty(domDescriptor);
+          },
         },
-      },
-      get,
-      set,
-    });
-  });
+        get,
+        set,
+      });
+    },
+  );
 }
 
 /**

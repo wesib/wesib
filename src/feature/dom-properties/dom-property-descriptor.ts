@@ -7,7 +7,6 @@
  * @category Feature
  */
 export interface DomPropertyDescriptor {
-
   /**
    * Custom element property key.
    */
@@ -17,5 +16,4 @@ export interface DomPropertyDescriptor {
    * Custom element property descriptor.
    */
   readonly descriptor: PropertyDescriptor;
-
 }

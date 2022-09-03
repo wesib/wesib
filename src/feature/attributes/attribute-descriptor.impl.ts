@@ -7,11 +7,10 @@ import { attributeStateUpdate } from './attribute-state-update.impl';
  * @internal
  */
 export function parseAttributeDescriptor<T extends object>(
-    target: T,
-    propertyKey: string | symbol,
-    def?: AttributeDef<T> | string,
+  target: T,
+  propertyKey: string | symbol,
+  def?: AttributeDef<T> | string,
 ): AttributeDescriptor<T> {
-
   let name: string;
   let change: AttributeChangedCallback<T>;
 
@@ -23,7 +22,7 @@ export function parseAttributeDescriptor<T extends object>(
       name = hyphenateDecapName(def.name);
     } else if (typeof propertyKey !== 'string') {
       throw new TypeError(
-          'Attribute name is required as property key is not a string: '
+        'Attribute name is required as property key is not a string: '
           + `${target.constructor.name}.prototype.${String(propertyKey)}`,
       );
     } else {

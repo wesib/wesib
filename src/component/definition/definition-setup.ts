@@ -14,7 +14,6 @@ import { DefinitionContext } from './definition-context';
  * @category Core
  */
 export interface DefinitionSetup<T extends object = any> {
-
   /**
    * Component class constructor.
    */
@@ -63,5 +62,4 @@ export interface DefinitionSetup<T extends object = any> {
    * @returns Asset supply. Revokes provided asset once cut off.
    */
   perComponent<TValue, TAsset = TValue>(asset: CxAsset<TValue, TAsset, ComponentContext>): Supply;
-
 }

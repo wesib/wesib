@@ -6,7 +6,13 @@ import { Class, noop } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
 import { Mock } from 'jest-mock';
 import { BootstrapContext } from '../boot';
-import { ComponentContext, ComponentDef, ComponentDef__symbol, ComponentElement, ComponentSlot } from '../component';
+import {
+  ComponentContext,
+  ComponentDef,
+  ComponentDef__symbol,
+  ComponentElement,
+  ComponentSlot,
+} from '../component';
 import { ComponentClass, DefinitionContext } from '../component/definition';
 import { MockElement } from '../testing';
 import { BootstrapContextBuilder } from './bootstrap-context-builder';
@@ -14,7 +20,6 @@ import { ElementBuilder } from './element-builder';
 
 describe('boot', () => {
   describe('ElementBuilder', () => {
-
     let bsBuilder: BootstrapContextBuilder;
     let bsContext: BootstrapContext;
 
@@ -43,7 +48,7 @@ describe('boot', () => {
           expect(ctx.settled).toBe(false);
         }
 
-      };
+};
     });
 
     afterEach(() => {
@@ -55,7 +60,6 @@ describe('boot', () => {
         expect(builder.buildElement(TestComponent)).toBeDefined();
       });
       it('builds custom element', () => {
-
         const defContext = builder.buildElement(TestComponent);
 
         expect(defContext.elementType.prototype).toBeInstanceOf(HTMLElement);
@@ -110,7 +114,6 @@ describe('boot', () => {
     });
 
     describe('component definition listener', () => {
-
       let onDefinition: Mock<(context: DefinitionContext) => void>;
 
       beforeEach(() => {
@@ -121,7 +124,9 @@ describe('boot', () => {
       it('is notified on component definition', () => {
         builder.buildElement(TestComponent);
 
-        expect(onDefinition).toHaveBeenCalledWith(expect.objectContaining({ componentType: TestComponent }));
+        expect(onDefinition).toHaveBeenCalledWith(
+          expect.objectContaining({ componentType: TestComponent }),
+        );
       });
 
       describe('element type', () => {
@@ -133,7 +138,6 @@ describe('boot', () => {
           builder.buildElement(TestComponent);
         });
         it('is reported when ready', async () => {
-
           const promise = new Promise<DefinitionContext>(resolve => {
             onDefinition.mockImplementation((defContext: DefinitionContext) => defContext.whenReady(resolve));
           });
@@ -158,24 +162,22 @@ describe('boot', () => {
 
           let elementType: Class | undefined;
 
-          defContext.whenReady(ctx => elementType = ctx.elementType);
+          defContext.whenReady(ctx => (elementType = ctx.elementType));
 
           expect(elementType).toBe(defContext.elementType);
         });
         it('is reported for setup when element built', () => {
-
           const whenReady = jest.fn();
 
-          builder.buildElement(ComponentDef.define(
-              TestComponent,
-              {
-                setup(setup) {
-                  expect(setup.componentType).toBe(TestComponent);
-                  setup.whenReady(whenReady);
-                  expect(whenReady).not.toHaveBeenCalled();
-                },
+          builder.buildElement(
+            ComponentDef.define(TestComponent, {
+              setup(setup) {
+                expect(setup.componentType).toBe(TestComponent);
+                setup.whenReady(whenReady);
+                expect(whenReady).not.toHaveBeenCalled();
               },
-          ));
+            }),
+          );
 
           expect(whenReady).toHaveBeenCalledWith(onDefinition.mock.calls[0][0]);
         });
@@ -183,7 +185,6 @@ describe('boot', () => {
     });
 
     describe('definition context', () => {
-
       let definitionContext: DefinitionContext;
 
       beforeEach(() => {
@@ -196,14 +197,11 @@ describe('boot', () => {
 
       beforeEach(() => {
         entry = { perContext: cxSingle() };
-        ComponentDef.define(
-            TestComponent,
-            {
-              setup(setup) {
-                setup.perDefinition(cxConstAsset(entry, 'definition value'));
-              },
-            },
-        );
+        ComponentDef.define(TestComponent, {
+          setup(setup) {
+            setup.perDefinition(cxConstAsset(entry, 'definition value'));
+          },
+        });
       });
 
       let defContext: DefinitionContext;
@@ -227,7 +225,6 @@ describe('boot', () => {
     });
 
     describe('constructed element', () => {
-
       const entry1: CxEntry<string> = { perContext: cxSingle() };
       let value1: string;
       const entry2: CxEntry<string> = { perContext: cxSingle() };
@@ -250,32 +247,28 @@ describe('boot', () => {
       beforeEach(() => {
         connectedCallback = jest.fn();
         disconnectedCallback = jest.fn();
-        ComponentDef.define(
-            TestComponent,
-            {
-              extend: {
-                type: class extends MockElement {
+        ComponentDef.define(TestComponent, {
+          extend: {
+            type: class extends MockElement {
 
-                  connectedCallback(): void {
-                    connectedCallback();
-                  }
+              connectedCallback(): void {
+                connectedCallback();
+              }
 
-                  disconnectedCallback(): void {
-                    disconnectedCallback();
-                  }
+              disconnectedCallback(): void {
+                disconnectedCallback();
+              }
 
-                },
-              },
-              setup(setup) {
-                setup.perComponent(cxConstAsset(entry2, value2));
-              },
-            },
-        );
+},
+          },
+          setup(setup) {
+            setup.perComponent(cxConstAsset(entry2, value2));
+          },
+        });
       });
 
       beforeEach(async () => {
-
-        const element: ComponentElement = new (builder.buildElement(TestComponent).elementType);
+        const element: ComponentElement = new (builder.buildElement(TestComponent).elementType)();
 
         context = await ComponentSlot.of(element).whenReady;
       });
@@ -298,7 +291,6 @@ describe('boot', () => {
 
       describe('readiness', () => {
         it('is reported', () => {
-
           const onceReady = jest.fn();
           const whenReady = jest.fn();
           const statusReceiver = jest.fn();
@@ -312,14 +304,15 @@ describe('boot', () => {
           expect(onceSupply.isOff).toBe(false);
           expect(whenReady).toHaveBeenCalledWith(context);
           expect(whenSupply.isOff).toBe(true);
-          expect(statusReceiver).toHaveBeenLastCalledWith(expect.objectContaining({ ready: true, settled: false }));
+          expect(statusReceiver).toHaveBeenLastCalledWith(
+            expect.objectContaining({ ready: true, settled: false }),
+          );
           expect(statusReceiver).toHaveBeenCalledTimes(1);
         });
       });
 
       describe('settle', () => {
         it('settles component', () => {
-
           const onceSettled = jest.fn();
           const whenSettled = jest.fn();
           const statusReceiver = jest.fn();
@@ -331,7 +324,9 @@ describe('boot', () => {
           expect(context.settled).toBe(false);
           expect(onceSettled).not.toHaveBeenCalled();
           expect(whenSettled).not.toHaveBeenCalled();
-          expect(statusReceiver).toHaveBeenLastCalledWith(expect.objectContaining({ ready: true, settled: false }));
+          expect(statusReceiver).toHaveBeenLastCalledWith(
+            expect.objectContaining({ ready: true, settled: false }),
+          );
           expect(statusReceiver).toHaveBeenCalledTimes(1);
 
           context.settle();
@@ -341,7 +336,9 @@ describe('boot', () => {
           expect(onceSupply.isOff).toBe(false);
           expect(whenSettled).toHaveBeenCalledWith(context);
           expect(whenSupply.isOff).toBe(true);
-          expect(statusReceiver).toHaveBeenLastCalledWith(expect.objectContaining({ ready: true, settled: true }));
+          expect(statusReceiver).toHaveBeenLastCalledWith(
+            expect.objectContaining({ ready: true, settled: true }),
+          );
           expect(statusReceiver).toHaveBeenCalledTimes(2);
         });
         it('does nothing when connected already', () => {
@@ -351,7 +348,6 @@ describe('boot', () => {
           expect(context.connected).toBe(true);
         });
         it('reports readiness only once', () => {
-
           const onceReady = jest.fn();
           const whenReady = jest.fn();
           const onceSupply = context.onceReady(onceReady);
@@ -372,7 +368,6 @@ describe('boot', () => {
 
       describe('connectedCallback', () => {
         it('makes component settled', () => {
-
           const whenSettled = jest.fn();
           const supply = context.whenSettled(whenSettled);
 
@@ -384,7 +379,6 @@ describe('boot', () => {
           expect(supply.isOff).toBe(true);
         });
         it('makes component connected', () => {
-
           const onceConnected = jest.fn();
           const whenConnected = jest.fn();
           const statusReceiver = jest.fn();
@@ -394,11 +388,13 @@ describe('boot', () => {
           context.readStatus(statusReceiver);
 
           expect(whenConnected).not.toHaveBeenCalled();
-          expect(statusReceiver).toHaveBeenLastCalledWith(expect.objectContaining({
-            ready: true,
-            settled: false,
-            connected: false,
-          }));
+          expect(statusReceiver).toHaveBeenLastCalledWith(
+            expect.objectContaining({
+              ready: true,
+              settled: false,
+              connected: false,
+            }),
+          );
           expect(statusReceiver).toHaveBeenCalledTimes(1);
 
           context.element.connectedCallback();
@@ -407,11 +403,13 @@ describe('boot', () => {
           expect(onceSupply.isOff).toBe(false);
           expect(whenConnected).toHaveBeenCalledWith(context);
           expect(whenSupply.isOff).toBe(true);
-          expect(statusReceiver).toHaveBeenLastCalledWith(expect.objectContaining({
-            ready: true,
-            settled: true,
-            connected: true,
-          }));
+          expect(statusReceiver).toHaveBeenLastCalledWith(
+            expect.objectContaining({
+              ready: true,
+              settled: true,
+              connected: true,
+            }),
+          );
           expect(statusReceiver).toHaveBeenCalledTimes(2);
         });
         it('calls `connectedCallback()` of original element', () => {
@@ -421,7 +419,6 @@ describe('boot', () => {
 
         describe('after settlement', () => {
           it('reports settlement only once', () => {
-
             const onceSettled = jest.fn();
             const whenSettled = jest.fn();
             const onceSupply = context.onceSettled(onceSettled);
@@ -450,7 +447,6 @@ describe('boot', () => {
       });
 
       it('can not access values of another component type', async () => {
-
         class AnotherComponent {
 
           static [ComponentDef__symbol]: ComponentDef = {
@@ -460,9 +456,11 @@ describe('boot', () => {
             },
           };
 
-        }
+}
 
-        const otherElement: ComponentElement = new (builder.buildElement(AnotherComponent).elementType);
+        const otherElement: ComponentElement = new (builder.buildElement(
+          AnotherComponent,
+        ).elementType)();
         const otherContext = await ComponentSlot.of(otherElement).whenReady;
 
         expect(otherContext.get(entry1, { or: null })).toBeNull();
@@ -470,7 +468,6 @@ describe('boot', () => {
       });
 
       describe('supply', () => {
-
         beforeEach(() => {
           Supply.onUnexpectedAbort(noop);
         });
@@ -479,7 +476,6 @@ describe('boot', () => {
         });
 
         it('is cut off by `disconnectedCallback()`', () => {
-
           const destroyed = jest.fn();
 
           context.supply.whenOff(destroyed);
@@ -488,7 +484,6 @@ describe('boot', () => {
           expect(destroyed).toHaveBeenCalledWith(undefined);
         });
         it('cuts off connection events supply', () => {
-
           const whenOff = jest.fn();
           const whenConnected = jest.fn();
           const reason = 'Destruction reason';
@@ -500,7 +495,6 @@ describe('boot', () => {
           expect(whenOff).toHaveBeenCalledWith(reason);
         });
         it('makes component unavailable', () => {
-
           const { element, component } = context;
 
           context.supply.off();
@@ -518,7 +512,6 @@ describe('boot', () => {
     });
 
     describe('mounted element', () => {
-
       let doc: Document;
 
       beforeEach(() => {
@@ -582,7 +575,6 @@ describe('boot', () => {
           const fragment = new DrekFragment(drekAppender(doc.body));
 
           fragment.innerContext.scheduler()(({ content }) => {
-
             const drekCtx = drekContextOf(element);
 
             content.appendChild(element);
@@ -658,7 +650,6 @@ describe('boot', () => {
     });
 
     describe('connected element', () => {
-
       let defContext: DefinitionContext;
       let element: MockElement;
       let context: ComponentContext;

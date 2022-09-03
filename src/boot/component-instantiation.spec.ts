@@ -11,7 +11,6 @@ import { MockElement, testElement } from '../testing';
 
 describe('component instantiation', () => {
   describe('Life cycle', () => {
-
     let testComponent: ComponentClass;
     let mockConstructor: Mock<(context: ComponentContext) => unknown>;
     let context: ComponentContext;
@@ -20,7 +19,7 @@ describe('component instantiation', () => {
 
     beforeEach(() => {
       context = undefined!;
-      mockConstructor = jest.fn((ctx: ComponentContext) => context = ctx);
+      mockConstructor = jest.fn((ctx: ComponentContext) => (context = ctx));
       onComponent = jest.fn();
 
       @Component({
@@ -40,7 +39,7 @@ describe('component instantiation', () => {
           mockConstructor(context);
         }
 
-      }
+}
 
       testComponent = TestComponent;
     });
@@ -59,7 +58,6 @@ describe('component instantiation', () => {
       expect(ComponentContext.of(context.component)).toBe(context);
     });
     it('passes context to component', () => {
-
       const expectedContext: Partial<ComponentContext> = {
         element,
       };
@@ -83,10 +81,8 @@ describe('component instantiation', () => {
   describe('context callbacks', () => {
     describe('component', () => {
       it('is resolved on component instantiation', async () => {
-
         let context!: ComponentContext;
         const component = await new Promise((resolve, reject) => {
-
           @Component({
             name: 'test-component',
             extend: {
@@ -102,14 +98,13 @@ describe('component instantiation', () => {
               });
             },
           })
-          class TestComponent {
-          }
+          class TestComponent {}
 
           testElement(TestComponent)
-              .then(cls => new cls())
-              .then((element: ComponentElement) => ComponentSlot.of(element).whenReady)
-              .then(context => context.component)
-              .catch(reject);
+            .then(cls => new cls())
+            .then((element: ComponentElement) => ComponentSlot.of(element).whenReady)
+            .then(context => context.component)
+            .catch(reject);
         });
 
         expect(component).toBeDefined();
@@ -125,7 +120,6 @@ describe('component instantiation', () => {
 
     describe('whenSettled receiver', () => {
       it('is notified when render context is settled', async () => {
-
         const whenSettled = jest.fn();
         let root: Element;
 
@@ -135,7 +129,7 @@ describe('component instantiation', () => {
             return root;
           }
 
-        }
+}
 
         @Component({
           name: 'test-component',
@@ -150,7 +144,7 @@ describe('component instantiation', () => {
             ctx.whenSettled(() => expect(ctx.settled).toBe(true));
           }
 
-        }
+}
 
         const elementType: Class<Element> = await testElement(TestComponent);
         const fragment = new DrekFragment(drekAppender(document.body));
@@ -169,7 +163,6 @@ describe('component instantiation', () => {
 
     describe('whenConnected receiver', () => {
       it('is notified when custom element connected', async () => {
-
         const whenConnected = jest.fn();
 
         @Component({
@@ -185,7 +178,7 @@ describe('component instantiation', () => {
             ctx.whenConnected(() => expect(ctx.connected).toBe(true));
           }
 
-        }
+}
 
         const element = new (await testElement(TestComponent))();
 
@@ -197,15 +190,13 @@ describe('component instantiation', () => {
 
     describe('replacement', () => {
       it('can be replaced by mounted component', async () => {
-
         @Component({
           name: 'test-component',
           extend: {
             type: MockElement,
           },
         })
-        class TestComponent {
-        }
+        class TestComponent {}
 
         const element: CustomHTMLElement = new (await testElement(TestComponent))();
         const slot = ComponentSlot.of(element);
@@ -222,7 +213,6 @@ describe('component instantiation', () => {
 
     describe('disconnection', () => {
       it('destroys component', async () => {
-
         const whenDestroyed = jest.fn();
 
         @Component({
@@ -234,12 +224,10 @@ describe('component instantiation', () => {
         class TestComponent {
 
           constructor(ctx: ComponentContext) {
-            ctx.supply
-                .whenOff(whenDestroyed)
-                .whenOff(() => expect(ctx.connected).toBe(false));
+            ctx.supply.whenOff(whenDestroyed).whenOff(() => expect(ctx.connected).toBe(false));
           }
 
-        }
+}
 
         const element: CustomHTMLElement = new (await testElement(TestComponent))();
 
@@ -270,15 +258,13 @@ describe('component instantiation', () => {
         expect(supply3.isOff).toBe(false);
       });
       it('allows to re-bind component', async () => {
-
         @Component({
           name: 'test-component',
           extend: {
             type: MockElement,
           },
         })
-        class TestComponent {
-        }
+        class TestComponent {}
 
         const element: CustomHTMLElement = new (await testElement(TestComponent))();
         const slot = ComponentSlot.of(element);
@@ -300,15 +286,13 @@ describe('component instantiation', () => {
         expect(context2.settled).toBe(false);
       });
       it('allows to recreate component on settlement', async () => {
-
         @Component({
           name: 'test-component',
           extend: {
             type: MockElement,
           },
         })
-        class TestComponent {
-        }
+        class TestComponent {}
 
         const element: CustomHTMLElement = new (await testElement(TestComponent))();
         const slot = ComponentSlot.of(element);
@@ -343,8 +327,7 @@ describe('component instantiation', () => {
             type: MockElement,
           },
         })
-        class TestComponent {
-        }
+        class TestComponent {}
 
         const element: CustomHTMLElement = new (await testElement(TestComponent))();
         const slot = ComponentSlot.of(element);

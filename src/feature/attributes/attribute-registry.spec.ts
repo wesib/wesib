@@ -12,7 +12,6 @@ import { Attributes } from './attributes.amendment';
 describe('feature/attributes', () => {
   describe('AttributeRegistry', () => {
     it('declares `observedAttributes` static property', async () => {
-
       @Attributes('test-attr-1', 'test-attr-2')
       class TestComponent {}
 
@@ -21,12 +20,11 @@ describe('feature/attributes', () => {
       expect(elementType).toHaveProperty('observedAttributes', ['test-attr-1', 'test-attr-2']);
     });
     it('inherits observed attributes', async () => {
-
       class BaseElement {
 
         static observedAttributes = ['inherited-attr'];
 
-      }
+}
 
       @Component({
         extend: {
@@ -38,20 +36,20 @@ describe('feature/attributes', () => {
 
       const elementType = await bootstrap(TestComponent);
 
-      expect(elementType).toHaveProperty(
-          'observedAttributes',
-          ['inherited-attr', 'first-test-attr', 'second-test-attr'],
-      );
+      expect(elementType).toHaveProperty('observedAttributes', [
+        'inherited-attr',
+        'first-test-attr',
+        'second-test-attr',
+      ]);
     });
     it('declares `attributeChangedCallback` method', async () => {
-
       class BaseElement {
 
         getRootNode(): Node {
           return document;
         }
 
-      }
+}
 
       const attrChanged = jest.fn();
 
@@ -65,25 +63,26 @@ describe('feature/attributes', () => {
 
       element.attributeChangedCallback!('test-attr', 'old', 'new');
       expect(attrChanged).toHaveBeenCalledWith(
-          context.component,
-          attributePathTo('test-attr'),
-          'new',
-          'old',
+        context.component,
+        attributePathTo('test-attr'),
+        'new',
+        'old',
       );
     });
     it('inherits attribute change callback', async () => {
-
       class BaseElement extends MockElement {
 
         static observedAttributes = ['inherited-attr'];
 
         override attributeChangedCallback(
-            _name: string,
-            _newValue: string | null,
-            _oldValue: string | null,
-        ): void {/* attribute changed */}
+          _name: string,
+          _newValue: string | null,
+          _oldValue: string | null,
+        ): void {
+          /* attribute changed */
+        }
 
-      }
+}
 
       const inheritedAttrChanged = jest.spyOn(BaseElement.prototype, 'attributeChangedCallback');
       const attrChanged = jest.fn();
@@ -102,10 +101,10 @@ describe('feature/attributes', () => {
 
       element.attributeChangedCallback!('test-attr', 'old', 'new');
       expect(attrChanged).toHaveBeenCalledWith(
-          context.component,
-          attributePathTo('test-attr'),
-          'new',
-          'old',
+        context.component,
+        attributePathTo('test-attr'),
+        'new',
+        'old',
       );
 
       element.attributeChangedCallback!('inherited-attr', 'old', 'new');
@@ -121,7 +120,6 @@ describe('feature/attributes', () => {
   });
 
   async function bootstrap(component: ComponentClass): Promise<Class> {
-
     const bsContext = await bootstrapComponents(component).whenReady;
     const defContext = await bsContext.whenDefined(component);
 

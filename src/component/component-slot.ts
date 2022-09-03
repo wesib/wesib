@@ -14,7 +14,6 @@ import { ComponentSlot$ } from './component-slot.impl';
  * @typeParam T - A type of component.
  */
 export interface ComponentSlot<T extends object = any> extends EventKeeper<[ComponentContext<T>?]> {
-
   /**
    * A context of the bound component.
    */
@@ -63,7 +62,6 @@ export interface ComponentSlot<T extends object = any> extends EventKeeper<[Comp
    * @returns Either a bound component context, or `undefined` if component can not be bound.
    */
   rebind(): ComponentContext<T> | undefined;
-
 }
 
 /**
@@ -71,7 +69,7 @@ export interface ComponentSlot<T extends object = any> extends EventKeeper<[Comp
  *
  * @category Core
  */
-export const ComponentSlot__symbol = (/*#__PURE__*/ Symbol('ComponentSlot'));
+export const ComponentSlot__symbol = /*#__PURE__*/ Symbol('ComponentSlot');
 
 /**
  * An element the component can be bound to.
@@ -82,21 +80,18 @@ export const ComponentSlot__symbol = (/*#__PURE__*/ Symbol('ComponentSlot'));
  * @typeParam T - A type of the bound component.
  */
 export interface ComponentElement<T extends object = any> extends Element {
-
   /**
    * A component slot instance.
    *
    * A {@link ComponentSlot.of} function may be used to access the slot instance, or construct it when necessary.
    */
   [ComponentSlot__symbol]?: ComponentSlot<T> | undefined;
-
 }
 
 /**
  * @category Core
  */
 export namespace ComponentSlot {
-
   /**
    * A binding of component to element.
    *
@@ -105,7 +100,6 @@ export namespace ComponentSlot {
    * @typeParam T - A type of component.
    */
   export interface Binding<T extends object> {
-
     /**
      * Assigns a context of the component bound to target element.
      *
@@ -114,7 +108,6 @@ export namespace ComponentSlot {
      * @returns Binding supply. Cut off once the component {@link ComponentSlot.unbind unbound}.
      */
     bind(this: void, context: ComponentContext<T>): Supply;
-
   }
 
   /**
@@ -125,18 +118,16 @@ export namespace ComponentSlot {
    * @typeParam T - A type of component.
    */
   export type Binder<T extends object> =
-  /**
-   * @param binding - Component binding to element.
-   */
-      (this: void, binding: Binding<T>) => void;
-
+    /**
+     * @param binding - Component binding to element.
+     */
+    (this: void, binding: Binding<T>) => void;
 }
 
 /**
  * @category Core
  */
 export const ComponentSlot = {
-
   /**
    * Accesses a component slot of the given element. Attaches a new slot if necessary.
    *
@@ -145,14 +136,12 @@ export const ComponentSlot = {
    * @returns A component slot instance attached to the element.
    */
   of<T extends object>(this: void, element: ComponentElement<T>): ComponentSlot<T> {
-
     const found = element[ComponentSlot__symbol];
 
     if (found) {
       return found;
     }
 
-    return element[ComponentSlot__symbol] = new ComponentSlot$();
+    return (element[ComponentSlot__symbol] = new ComponentSlot$());
   },
-
 };

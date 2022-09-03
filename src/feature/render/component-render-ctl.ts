@@ -16,7 +16,6 @@ import { RenderDef } from './render-def';
  * @category Feature
  */
 export interface ComponentRenderCtl {
-
   /**
    * Enables component rendering by the given `renderer`.
    *
@@ -44,7 +43,6 @@ export interface ComponentRenderCtl {
    * @returns Pre-renderer supply. Pre-rendering would stop once this supply is cut off.
    */
   preRenderBy(preRenderer: ComponentPreRenderer, def?: RenderDef): Supply;
-
 }
 
 /**
@@ -53,8 +51,8 @@ export interface ComponentRenderCtl {
  * @category Feature
  */
 export const ComponentRenderCtl: CxEntry<ComponentRenderCtl> = {
-  perContext: (/*#__PURE__*/ cxSingle({
+  perContext: /*#__PURE__*/ cxSingle({
     byDefault: target => new ComponentRenderCtl$(target.get(ComponentContext)),
-  })),
+  }),
   toString: () => '[ComponentRenderCtl]',
 };

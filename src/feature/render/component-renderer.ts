@@ -9,5 +9,6 @@ import { ComponentRendererExecution } from './component-renderer-execution';
  * @category Feature
  * @typeParam TExecution - A type of supported component render execution context.
  */
-export type ComponentRenderer<TExecution extends ComponentRendererExecution = ComponentRendererExecution> =
-    RenderShot<TExecution>;
+export type ComponentRenderer<
+  TExecution extends ComponentRendererExecution = ComponentRendererExecution,
+> = RenderShot<TExecution>;

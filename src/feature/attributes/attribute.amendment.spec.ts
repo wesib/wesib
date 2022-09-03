@@ -6,7 +6,6 @@ import { Attribute } from './attribute.amendment';
 
 describe('feature/attributes', () => {
   describe('@Attribute', () => {
-
     let mockContext: ComponentContext;
     let mockElement: MockObject<HTMLElement>;
 
@@ -23,7 +22,6 @@ describe('feature/attributes', () => {
     });
 
     it('declares attribute field', () => {
-
       @Component('test-component')
       class TestComponent {
 
@@ -32,7 +30,7 @@ describe('feature/attributes', () => {
         @Attribute()
         testURL!: string;
 
-      }
+}
 
       const component = new TestComponent();
 
@@ -44,7 +42,6 @@ describe('feature/attributes', () => {
       expect(mockElement.setAttribute).toHaveBeenCalledWith('test-url', '/url2');
     });
     it('declares attribute property', () => {
-
       @Component('test-component')
       class TestComponent {
 
@@ -61,7 +58,7 @@ describe('feature/attributes', () => {
           this._testAttr = value;
         }
 
-      }
+}
 
       const component = new TestComponent();
 

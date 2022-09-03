@@ -1,7 +1,14 @@
 import { DocumentRenderKit } from '@frontmeans/drek';
 import { CxBuilder, cxConstAsset, CxPeerBuilder } from '@proc7ts/context-builder';
 import { CxAccessor, CxAsset, CxEntry, cxEvaluated, cxScoped } from '@proc7ts/context-values';
-import { mapOn_, onceOn, OnEvent, trackValue, translateOn, ValueTracker } from '@proc7ts/fun-events';
+import {
+  mapOn_,
+  onceOn,
+  OnEvent,
+  trackValue,
+  translateOn,
+  ValueTracker,
+} from '@proc7ts/fun-events';
 import { Class, valueProvider } from '@proc7ts/primitives';
 import { Supply } from '@proc7ts/supply';
 import { BootstrapContext } from '../boot';
@@ -17,31 +24,24 @@ import { postDefSetup } from './post-def-setup';
 import { WhenComponent } from './when-component';
 
 export const PerDefinitionCxPeer: CxEntry<CxPeerBuilder<DefinitionContext>> = {
-  perContext: (/*#__PURE__*/ cxScoped(
-      BootstrapContext,
-      (/*#__PURE__*/ cxEvaluated(_target => new CxPeerBuilder())),
-  )),
+  perContext: /*#__PURE__*/ cxScoped(
+    BootstrapContext,
+    /*#__PURE__*/ cxEvaluated(_target => new CxPeerBuilder()),
+  ),
   toString: () => '[PerDefinitionCxPeer]',
 };
 
 export class DefinitionContext$<T extends object> implements DefinitionContext<T> {
 
   static create<T extends object>(
-      bsContext: BootstrapContext,
-      elementBuilder: ElementBuilder,
-      componentType: ComponentDefinitionClass<T>,
+    bsContext: BootstrapContext,
+    elementBuilder: ElementBuilder,
+    componentType: ComponentDefinitionClass<T>,
   ): DefinitionContext$<T> {
-
     const cxBuilder = new CxBuilder<DefinitionContext$<T>>(
-        (get, builder) => new DefinitionContext$(
-            bsContext,
-            elementBuilder,
-            componentType,
-            builder,
-            get,
-        ),
-        bsContext.get(BootstrapContextBuilder).boundPeer,
-        bsContext.get(PerDefinitionCxPeer),
+      (get, builder) => new DefinitionContext$(bsContext, elementBuilder, componentType, builder, get),
+      bsContext.get(BootstrapContextBuilder).boundPeer,
+      bsContext.get(PerDefinitionCxPeer),
     );
     const context = cxBuilder.context;
 
@@ -59,11 +59,11 @@ export class DefinitionContext$<T extends object> implements DefinitionContext<T
   private readonly _perComponentCxPeer: CxPeerBuilder<ComponentContext>;
 
   private constructor(
-      readonly _bsContext: BootstrapContext,
-      readonly _elementBuilder: ElementBuilder,
-      readonly componentType: ComponentDefinitionClass<T>,
-      readonly _cxBuilder: CxBuilder<DefinitionContext>,
-      readonly get: CxAccessor,
+    readonly _bsContext: BootstrapContext,
+    readonly _elementBuilder: ElementBuilder,
+    readonly componentType: ComponentDefinitionClass<T>,
+    readonly _cxBuilder: CxBuilder<DefinitionContext>,
+    readonly get: CxAccessor,
   ) {
     this._ready = trackValue(false);
     this._whenReady = this._ready.read.do(translateOn((send, ready) => ready && send()));
@@ -96,7 +96,6 @@ export class DefinitionContext$<T extends object> implements DefinitionContext<T
   }
 
   mountTo(element: ComponentElement<T>): ComponentContext<T> {
-
     const context = ComponentContext$Mounted.create(this, element);
 
     ComponentSlot.of<T>(element).bind(context);
@@ -116,13 +115,12 @@ export class DefinitionContext$<T extends object> implements DefinitionContext<T
   }
 
   _newComponentContext<TContext extends ComponentContext<T>>(
-      createContext: (get: CxAccessor, builder: CxBuilder<TContext>) => TContext,
+    createContext: (get: CxAccessor, builder: CxBuilder<TContext>) => TContext,
   ): TContext {
-
     const builder = new CxBuilder<TContext>(
-        createContext,
-        this._cxBuilder.boundPeer,
-        this._perComponentCxPeer,
+      createContext,
+      this._cxBuilder.boundPeer,
+      this._perComponentCxPeer,
     );
     const context = builder.context;
 
@@ -132,7 +130,9 @@ export class DefinitionContext$<T extends object> implements DefinitionContext<T
   }
 
   _elementType(): Class {
-    throw new TypeError('Custom element class is not constructed yet. Consider to use a `whenReady()` callback');
+    throw new TypeError(
+      'Custom element class is not constructed yet. Consider to use a `whenReady()` callback',
+    );
   }
 
   _define(): void {

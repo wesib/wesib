@@ -5,7 +5,6 @@ import { StateUpdater } from './state-updater';
 
 describe('component', () => {
   describe('StateUpdater', () => {
-
     let cxBuilder: CxBuilder;
     let context: CxValues;
     let updater: StateUpdater;
@@ -20,7 +19,6 @@ describe('component', () => {
       expect(updater('path', 'new', 'old')).toBeUndefined();
     });
     it('calls provided updaters in reverse order', () => {
-
       const calls: number[] = [];
       const updater1 = jest.fn().mockImplementation(() => calls.push(1));
       const updater2 = jest.fn().mockImplementation(() => calls.push(2));

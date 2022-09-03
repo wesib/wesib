@@ -9,11 +9,9 @@ import { FeatureDef, FeatureDef__symbol } from '../feature';
  * @experimental
  */
 export async function testElement(componentType: ComponentClass): Promise<Class> {
-
   let result!: Class;
 
   const customElements: CustomElements = {
-
     define(_compType: ComponentClass, elementType: Class): void {
       result = elementType;
     },
@@ -21,7 +19,6 @@ export async function testElement(componentType: ComponentClass): Promise<Class>
     whenDefined(): Promise<void> {
       return Promise.resolve();
     },
-
   };
 
   const featureDef: FeatureDef = {
@@ -37,7 +34,7 @@ export async function testElement(componentType: ComponentClass): Promise<Class>
       return featureDef;
     }
 
-  }
+}
 
   await bootstrapComponents(TestFeature).whenDefined(componentType);
 

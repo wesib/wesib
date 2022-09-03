@@ -8,16 +8,19 @@ import { DefinitionContext$ } from './definition-context';
 export interface ElementBuilder {
   readonly definitions: EventEmitter<[DefinitionContext]>;
   readonly components: EventEmitter<[ComponentContext]>;
-  buildElement<T extends object>(this: void, componentType: ComponentClass<T>): DefinitionContext<T>;
+  buildElement<T extends object>(
+    this: void,
+    componentType: ComponentClass<T>,
+  ): DefinitionContext<T>;
 }
 
 export const ElementBuilder: CxEntry<ElementBuilder> = {
-  perContext: (/*#__PURE__*/ cxDefaultScoped(
-      BootstrapContext,
-      (/*#__PURE__*/ cxSingle({
-        byDefault: ElementBuilder$byDefault,
-      })),
-  )),
+  perContext: /*#__PURE__*/ cxDefaultScoped(
+    BootstrapContext,
+    /*#__PURE__*/ cxSingle({
+      byDefault: ElementBuilder$byDefault,
+    }),
+  ),
   toString: () => '[ElementBuilder]',
 };
 
@@ -26,13 +29,15 @@ function ElementBuilder$byDefault(target: CxEntry.Target<ElementBuilder>): Eleme
     definitions: new EventEmitter<[DefinitionContext]>(),
     components: new EventEmitter<[ComponentContext]>(),
     buildElement<T extends object>(componentType: ComponentClass<T>) {
-
-      const definitionContext = DefinitionContext$.create(target.get(BootstrapContext), this, componentType);
+      const definitionContext = DefinitionContext$.create(
+        target.get(BootstrapContext),
+        this,
+        componentType,
+      );
 
       definitionContext._define();
 
       return definitionContext;
     },
   };
-
 }

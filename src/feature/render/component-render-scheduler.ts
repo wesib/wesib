@@ -16,12 +16,12 @@ import { RenderDef } from './render-def';
  * @category Feature
  */
 export type ComponentRenderScheduler =
-/**
- * @param options - Options of constructed component render schedule.
- *
- * @returns New render schedule.
- */
-    (this: void, options?: ComponentRenderScheduleOptions) => RenderSchedule;
+  /**
+   * @param options - Options of constructed component render schedule.
+   *
+   * @returns New render schedule.
+   */
+  (this: void, options?: ComponentRenderScheduleOptions) => RenderSchedule;
 
 /**
  * Options for render schedule.
@@ -33,7 +33,6 @@ export type ComponentRenderScheduler =
  * @category Feature
  */
 export interface ComponentRenderScheduleOptions extends RenderScheduleOptions, RenderDef.Options {
-
   /**
    * When to start the rendering.
    *
@@ -50,7 +49,6 @@ export interface ComponentRenderScheduleOptions extends RenderScheduleOptions, R
    * @param messages - Error messages to report.
    */
   error?(...messages: unknown[]): void;
-
 }
 
 /**
@@ -59,20 +57,18 @@ export interface ComponentRenderScheduleOptions extends RenderScheduleOptions, R
  * @category Feature
  */
 export const ComponentRenderScheduler: CxEntry<ComponentRenderScheduler> = {
-  perContext: (/*#__PURE__*/ cxSingle({
+  perContext: /*#__PURE__*/ cxSingle({
     byDefault: ComponentRenderScheduler$byDefault,
-  })),
+  }),
   toString: () => '[ComponentRenderScheduler]',
 };
 
 function ComponentRenderScheduler$byDefault(
-    target: CxEntry.Target<ComponentRenderScheduler>,
+  target: CxEntry.Target<ComponentRenderScheduler>,
 ): ComponentRenderScheduler {
-
   const renderCtl = target.get(ComponentRenderCtl);
 
   return (opts = {}): RenderSchedule => {
-
     const recentShot = trackValue<RenderShot>(noop);
     const renderer: ComponentRenderer = execution => {
       recentShot.it(execution);

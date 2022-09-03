@@ -7,7 +7,6 @@ import { Class } from '@proc7ts/primitives';
  * @category Core
  */
 export interface ElementDef {
-
   /**
    * Custom element name.
    *
@@ -30,19 +29,16 @@ export interface ElementDef {
    * Existing element to extend by custom one.
    */
   readonly extend: ElementDef.Extend;
-
 }
 
 /**
  * @category Core
  */
 export namespace ElementDef {
-
   /**
    * The definition of element to extend by custom one.
    */
   export interface Extend {
-
     /**
      * The class constructor of element to extend.
      */
@@ -54,7 +50,5 @@ export namespace ElementDef {
      * This is to support `as` attribute of standard HTML element. Note that this is not supported by polyfills.
      */
     readonly name?: string | undefined;
-
   }
-
 }

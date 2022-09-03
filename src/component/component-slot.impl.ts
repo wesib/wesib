@@ -1,4 +1,12 @@
-import { AfterEvent, AfterEvent__symbol, digOn_, mapAfter, onceOn, OnEvent, trackValue } from '@proc7ts/fun-events';
+import {
+  AfterEvent,
+  AfterEvent__symbol,
+  digOn_,
+  mapAfter,
+  onceOn,
+  OnEvent,
+  trackValue,
+} from '@proc7ts/fun-events';
 import { noop, valueProvider } from '@proc7ts/primitives';
 import { neverSupply, Supply } from '@proc7ts/supply';
 import { ComponentContext } from './component-context';
@@ -23,17 +31,18 @@ const ComponentSlot$empty: ComponentSlot$Provider<any> = {
  */
 export class ComponentSlot$<T extends object> implements ComponentSlot<T> {
 
-  readonly _provider = trackValue<ComponentSlot$Provider<T>>(ComponentSlot$empty as ComponentSlot$Provider<T>);
+  readonly _provider = trackValue<ComponentSlot$Provider<T>>(
+    ComponentSlot$empty as ComponentSlot$Provider<T>,
+  );
+
   readonly read: AfterEvent<[ComponentContext<T>?]>;
   readonly whenReady: OnEvent<[ComponentContext<T>]>;
 
   constructor() {
-    this.read = this._provider.read.do(
-        mapAfter(provider => provider.get()),
-    );
+    this.read = this._provider.read.do(mapAfter(provider => provider.get()));
     this.whenReady = this.read.do(
-        digOn_(ctx => ctx && ctx.whenReady),
-        onceOn,
+      digOn_(ctx => ctx && ctx.whenReady),
+      onceOn,
     );
   }
 
@@ -66,8 +75,8 @@ export class ComponentSlot$<T extends object> implements ComponentSlot<T> {
 }
 
 function ComponentSlot$known<T extends object>(
-    slot: ComponentSlot$<T>,
-    context: ComponentContext<T>,
+  slot: ComponentSlot$<T>,
+  context: ComponentContext<T>,
 ): ComponentSlot$Provider<T> {
   context.supply.whenOff(() => {
     if (slot.context === context) {
@@ -88,16 +97,15 @@ function ComponentSlot$known<T extends object>(
 }
 
 function ComponentSlot$bound<T extends object>(
-    slot: ComponentSlot$<T>,
-    binder: ComponentSlot.Binder<T>,
+  slot: ComponentSlot$<T>,
+  binder: ComponentSlot.Binder<T>,
 ): ComponentSlot$Provider<T> {
-
   let supply = neverSupply();
   let getContext: () => ComponentContext<T> | undefined = noop;
   const get = (): ComponentContext<T> | undefined => getContext();
-  const newSupply = (): Supply => supply = new Supply(() => {
-    getContext = noop;
-  });
+  const newSupply = (): Supply => (supply = new Supply(() => {
+      getContext = noop;
+    }));
   let bind = (context: ComponentContext<T>): Supply => {
     getContext = valueProvider(context);
     context.supply.whenOff(() => {
@@ -123,8 +131,8 @@ function ComponentSlot$bound<T extends object>(
   };
 
   const bindContext = (): void => binder({
-    bind: context => bind(context),
-  });
+      bind: context => bind(context),
+    });
 
   getContext = () => {
     bindContext();

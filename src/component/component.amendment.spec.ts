@@ -6,9 +6,7 @@ import { AeComponentTarget, Component } from './component.amendment';
 describe('component', () => {
   describe('@Component', () => {
     it('assigns component definition', () => {
-
-      class BaseElement {
-      }
+      class BaseElement {}
 
       const def: ComponentDef = {
         name: 'test-component',
@@ -19,14 +17,12 @@ describe('component', () => {
       };
 
       @Component(def)
-      class TestComponent {
-      }
+      class TestComponent {}
 
       expect(ComponentDef.of(TestComponent)).toEqual(def);
     });
   });
   it('accepts an amendment as parameter', () => {
-
     class BaseElement {}
 
     const def: ComponentDef = {
@@ -45,7 +41,6 @@ describe('component', () => {
     expect(ComponentDef.of(TestComponent)).toEqual(def);
   });
   it('declares a feature', async () => {
-
     const init = jest.fn<(context: FeatureContext) => void>();
     const def: FeatureDef = { init };
 
@@ -62,9 +57,7 @@ describe('component', () => {
     expect(init.mock.instances[0]).toBe(def);
   });
   it('can be used for auto-amendment', () => {
-
-    class BaseElement {
-    }
+    class BaseElement {}
 
     const def: ComponentDef = {
       name: 'test-component',
@@ -80,12 +73,11 @@ describe('component', () => {
         Component(def).applyAmendment(target);
       }
 
-    }
+}
 
     expect(ComponentDef.of(TestComponent)).toEqual(def);
   });
   it('can be used for feature auto-amendment', async () => {
-
     const init = jest.fn<(context: FeatureContext) => void>();
     const def: FeatureDef = { init };
 
@@ -97,7 +89,7 @@ describe('component', () => {
         }).applyAmendment(target);
       }
 
-    }
+}
 
     const context: FeatureContext = { name: 'feature context' } as unknown as FeatureContext;
 
@@ -109,7 +101,6 @@ describe('component', () => {
 
   describe('ComponentAmendment', () => {
     it('serves as component definition itself', () => {
-
       class BaseElement {}
 
       const def: ComponentDef = {
@@ -120,9 +111,7 @@ describe('component', () => {
         },
       };
 
-      @Component<typeof TestComponent>(
-          Component(def),
-      )
+      @Component<typeof TestComponent>(Component(def))
       class TestComponent {}
 
       expect(ComponentDef.of(TestComponent)).toEqual(def);

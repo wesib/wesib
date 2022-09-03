@@ -13,7 +13,6 @@ import { DefinitionContext } from './definition-context';
 
 describe('component', () => {
   describe('CustomElements', () => {
-
     let context: BootstrapContext;
     let mockCustomElements: MockObject<CustomElements>;
     let customElements: CustomElements;
@@ -21,8 +20,7 @@ describe('component', () => {
     let elementType: Class;
 
     beforeEach(() => {
-
-      const bsBuilder = new BootstrapContextBuilder(get => ({ get }) as BootstrapContext);
+      const bsBuilder = new BootstrapContextBuilder(get => ({ get } as BootstrapContext));
 
       context = bsBuilder.context;
       mockCustomElements = {
@@ -56,7 +54,7 @@ describe('component', () => {
           },
         };
 
-      };
+};
 
       elementType = HTMLElement;
     });
@@ -74,7 +72,6 @@ describe('component', () => {
         expect(mockCustomElements.define).toHaveBeenCalledWith('test-component', elementType);
       });
       it('defines custom element in namespace', () => {
-
         const ns = new NamespaceDef('test/url', 'test');
 
         class NsComponent {
@@ -91,7 +88,7 @@ describe('component', () => {
             },
           };
 
-        }
+}
 
         customElements.define(NsComponent, elementType);
 
@@ -103,7 +100,6 @@ describe('component', () => {
         expect(mockCustomElements.define).toHaveBeenCalledWith('test-component', elementType);
       });
       it('does not define custom element for anonymous component', () => {
-
         class AnonymousComponent {
 
           static [DefinitionContext__symbol]: Partial<DefinitionContext> = {
@@ -118,14 +114,13 @@ describe('component', () => {
             },
           };
 
-        }
+}
 
         customElements.define(AnonymousComponent, elementType);
 
         expect(mockCustomElements.define).not.toHaveBeenCalled();
       });
       it('defines custom element extending another one', () => {
-
         class BaseElement {
 
           static [DefinitionContext__symbol]: Partial<DefinitionContext> = {
@@ -138,7 +133,7 @@ describe('component', () => {
             },
           };
 
-        }
+}
 
         (TestComponent as any)[DefinitionContext__symbol] = {
           elementDef: {
@@ -155,9 +150,7 @@ describe('component', () => {
         expect(mockCustomElements.define).toHaveBeenCalledWith('test-component', elementType);
       });
       it('defines custom element extending standard one', () => {
-
-        class BaseElement {
-        }
+        class BaseElement {}
 
         (TestComponent as any)[DefinitionContext__symbol] = {
           elementDef: {
@@ -172,28 +165,24 @@ describe('component', () => {
 
         customElements.define(TestComponent, elementType);
 
-        expect(mockCustomElements.define).toHaveBeenCalledWith(
-            'test-component',
-            elementType,
-            {
-              extends: 'input',
-            },
-        );
+        expect(mockCustomElements.define).toHaveBeenCalledWith('test-component', elementType, {
+          extends: 'input',
+        });
       });
     });
 
     describe('whenDefined', () => {
       it('awaits for component definition', async () => {
-
         const promise = Promise.resolve('defined');
 
-        mockCustomElements.whenDefined.mockReturnValue(promise as Promise<unknown> as Promise<void>);
+        mockCustomElements.whenDefined.mockReturnValue(
+          promise as Promise<unknown> as Promise<void>,
+        );
 
         expect(await customElements.whenDefined(TestComponent)).toBe('defined');
         expect(mockCustomElements.whenDefined).toHaveBeenCalledWith('test-component');
       });
       it('waits for component definition in namespace', async () => {
-
         const ns = new NamespaceDef('test/url', 'test');
 
         class NsComponent {
@@ -210,10 +199,9 @@ describe('component', () => {
             },
           };
 
-        }
+}
 
-        class Element {
-        }
+        class Element {}
 
         customElements.define(NsComponent, Element);
 
@@ -222,26 +210,27 @@ describe('component', () => {
         expect(mockCustomElements.whenDefined).toHaveBeenCalledWith('test-other');
       });
       it('awaits for non-component element definition', async () => {
-
         const promise = Promise.resolve<any>('defined');
 
-        mockCustomElements.whenDefined.mockReturnValue(promise as Promise<unknown> as Promise<void>);
+        mockCustomElements.whenDefined.mockReturnValue(
+          promise as Promise<unknown> as Promise<void>,
+        );
 
         expect(await customElements.whenDefined('test-component')).toBe('defined');
         expect(mockCustomElements.whenDefined).toHaveBeenCalledWith('test-component');
       });
       it('awaits for non-component element definition in namespace', async () => {
-
         const ns = new NamespaceDef('test/url', 'test');
         const promise = Promise.resolve<any>('defined');
 
-        mockCustomElements.whenDefined.mockReturnValue(promise as Promise<unknown> as Promise<void>);
+        mockCustomElements.whenDefined.mockReturnValue(
+          promise as Promise<unknown> as Promise<void>,
+        );
 
         expect(await customElements.whenDefined(['other', ns])).toBe('defined');
         expect(mockCustomElements.whenDefined).toHaveBeenCalledWith('test-other');
       });
       it('waits for anonymous component definition', async () => {
-
         class AnonymousComponent {
 
           static [DefinitionContext__symbol]: Partial<DefinitionContext> = {
@@ -256,10 +245,9 @@ describe('component', () => {
             },
           };
 
-        }
+}
 
-        class Element {
-        }
+        class Element {}
 
         customElements.define(AnonymousComponent, Element);
 

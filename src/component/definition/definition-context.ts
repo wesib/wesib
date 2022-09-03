@@ -18,7 +18,6 @@ import { ElementDef } from './element-def';
  * @typeParam T - A type of component.
  */
 export interface DefinitionContext<T extends object = any> extends CxValues {
-
   /**
    * Component class constructor.
    */
@@ -88,7 +87,6 @@ export interface DefinitionContext<T extends object = any> extends CxValues {
    * @returns Asset supply. Revokes provided asset once cut off.
    */
   perComponent<TValue, TAsset = TValue>(asset: CxAsset<TValue, TAsset, ComponentContext>): Supply;
-
 }
 
 /**
@@ -97,6 +95,6 @@ export interface DefinitionContext<T extends object = any> extends CxValues {
  * @category Core
  */
 export const DefinitionContext: CxEntry<DefinitionContext> = {
-  perContext: (/*#__PURE__*/ cxSingle()),
+  perContext: /*#__PURE__*/ cxSingle(),
   toString: () => '[DefinitionContext]',
 };

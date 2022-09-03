@@ -8,7 +8,6 @@ import { ComponentState, statePropertyPathTo, trackStateProperty } from '../stat
 
 describe('feature/state', () => {
   describe('trackStateProperty', () => {
-
     let component: any;
     let context: ComponentContext;
     let state: StateTracker;
@@ -17,11 +16,13 @@ describe('feature/state', () => {
       component = {};
       state = new StateTracker();
 
-      const cxBuilder = new CxBuilder<ComponentContext>((get, { supply }) => ({
-        component,
-        supply,
-        get,
-      } as ComponentContext));
+      const cxBuilder = new CxBuilder<ComponentContext>(
+        (get, { supply }) => ({
+            component,
+            supply,
+            get,
+          } as ComponentContext),
+      );
 
       context = cxBuilder.context;
       cxBuilder.provide(cxConstAsset(ComponentState, state));
@@ -50,7 +51,6 @@ describe('feature/state', () => {
 
     describe('on', () => {
       it('reflects property value updates', () => {
-
         const onUpdate = jest.fn();
         const read = jest.fn();
 
@@ -61,7 +61,6 @@ describe('feature/state', () => {
         expect(read).toHaveBeenCalledWith('new value');
       });
       it('reflects property value updates with custom path', () => {
-
         const path: StatePath = ['test', 'path'];
 
         tracker = trackStateProperty(context, 'test', path);
@@ -79,7 +78,6 @@ describe('feature/state', () => {
 
     describe('done', () => {
       it('cuts off property updates supply', () => {
-
         const updatesOff = jest.fn();
 
         tracker.on(noop).whenOff(updatesOff);

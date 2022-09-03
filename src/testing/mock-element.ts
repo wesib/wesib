@@ -20,7 +20,6 @@ export class MockElement {
   }
 
   getAttribute(name: string): string | null {
-
     const value = this._attributes[name];
 
     return value ?? null;
@@ -31,7 +30,6 @@ export class MockElement {
   }
 
   setAttribute(name: string, value: string): void {
-
     const oldValue = this.getAttribute(name);
 
     this._attributes[name] = value;
@@ -44,7 +42,6 @@ export class MockElement {
   }
 
   removeAttribute(name: string): void {
-
     const oldValue = this.getAttribute(name);
 
     delete this._attributes[name];
@@ -56,7 +53,11 @@ export class MockElement {
     }
   }
 
-  attributeChangedCallback(_name: string, _oldValue: string | null, _newValue: string | null): void {
+  attributeChangedCallback(
+    _name: string,
+    _oldValue: string | null,
+    _newValue: string | null,
+  ): void {
     /* no callback */
   }
 

@@ -1,4 +1,9 @@
-import { AeComponentMember, AeComponentMemberTarget, ComponentMember, ComponentMemberAmendment } from '../../component';
+import {
+  AeComponentMember,
+  AeComponentMemberTarget,
+  ComponentMember,
+  ComponentMemberAmendment,
+} from '../../component';
 import { ComponentClass, DefinitionContext } from '../../component/definition';
 import { ComponentRenderCtl } from './component-render-ctl';
 import { RenderDef } from './render-def';
@@ -19,31 +24,28 @@ import { RenderDef } from './render-def';
  * @returns New component method amendment.
  */
 export function PreRender<
-    TClass extends ComponentClass,
-    TAmended extends AeComponentMember<RenderDef.PreMethod, TClass> = AeComponentMember<RenderDef.PreMethod, TClass>,
-    >(
-    def?: RenderDef,
+  TClass extends ComponentClass,
+  TAmended extends AeComponentMember<RenderDef.PreMethod, TClass> = AeComponentMember<
+    RenderDef.PreMethod,
+    TClass
+  >,
+>(
+  def?: RenderDef,
 ): ComponentMemberAmendment<RenderDef.PreMethod, TClass, RenderDef.PreMethod, TAmended> {
-  return ComponentMember<
-      RenderDef.PreMethod,
-      TClass,
-      RenderDef.PreMethod,
-      TAmended>((
-      { get, amend }: AeComponentMemberTarget<RenderDef.PreMethod, TClass>,
-  ) => amend({
-    componentDef: {
-      define(defContext: DefinitionContext<InstanceType<TClass>>) {
-        defContext.whenComponent(context => {
-          context.whenReady(() => {
+  return ComponentMember<RenderDef.PreMethod, TClass, RenderDef.PreMethod, TAmended>(
+    ({ get, amend }: AeComponentMemberTarget<RenderDef.PreMethod, TClass>) => amend({
+        componentDef: {
+          define(defContext: DefinitionContext<InstanceType<TClass>>) {
+            defContext.whenComponent(context => {
+              context.whenReady(() => {
+                const { component } = context;
+                const preRenderer = get(component).bind(component);
 
-            const { component } = context;
-            const preRenderer = get(component).bind(component);
-
-            context.get(ComponentRenderCtl).preRenderBy(preRenderer, def);
-          });
-        });
-      },
-    },
-  }));
-
+                context.get(ComponentRenderCtl).preRenderBy(preRenderer, def);
+              });
+            });
+          },
+        },
+      }),
+  );
 }

@@ -5,7 +5,6 @@ import { BootstrapWindow } from './bootstrap-window';
 describe('globals', () => {
   describe('BootstrapWindow', () => {
     it('defaults to window object', () => {
-
       const context = new CxBuilder(get => ({ get })).context;
 
       expect(context.get(BootstrapWindow)).toBe(window);

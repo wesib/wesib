@@ -12,7 +12,6 @@ import { ComponentContext } from './component-context';
  * @category Core
  */
 export interface ComponentEventDispatcher {
-
   /**
    * Dispatches the DOM event for the given component.
    *
@@ -32,7 +31,6 @@ export interface ComponentEventDispatcher {
    * @returns A producer of DOM event events of the given type.
    */
   on<TEvent extends Event>(type: string): OnDomEvent<TEvent>;
-
 }
 
 /**
@@ -41,9 +39,8 @@ export interface ComponentEventDispatcher {
  * @category Core
  */
 export const ComponentEventDispatcher: CxEntry<ComponentEventDispatcher> = {
-  perContext: (/*#__PURE__*/ cxSingle({
+  perContext: /*#__PURE__*/ cxSingle({
     byDefault(values) {
-
       const context = values.get(ComponentContext);
       const dispatcher = new DomEventDispatcher(context.element as EventTarget);
 
@@ -58,6 +55,6 @@ export const ComponentEventDispatcher: CxEntry<ComponentEventDispatcher> = {
         },
       };
     },
-  })),
+  }),
   toString: () => '[ComponentEventDispatcher]',
 };

@@ -14,7 +14,6 @@ import { MockElement } from '../testing';
 import { BootstrapContext, BootstrapSetup } from './index';
 
 describe('boot', () => {
-
   let bsContext: BootstrapContext;
   let mockCustomElements: MockObject<CustomElements>;
 
@@ -42,7 +41,6 @@ describe('boot', () => {
 
   describe('context values', () => {
     it('sets up bootstrap context values', async () => {
-
       @Feature({
         setup(setup) {
           setup.provide(cxConstAsset(entry, 'provided'));
@@ -58,7 +56,6 @@ describe('boot', () => {
       expect(bsContext.get(entry)).toBe('default');
     });
     it('provides bootstrap context values', async () => {
-
       @Feature({
         init(ctx) {
           ctx.provide(cxConstAsset(entry, 'provided'));
@@ -74,7 +71,6 @@ describe('boot', () => {
       expect(bsContext.get(entry)).toBe('default');
     });
     it('does not set up bootstrap context values when feature unloaded already', async () => {
-
       let bsSetup!: BootstrapSetup;
 
       @Feature({
@@ -94,7 +90,6 @@ describe('boot', () => {
 
   describe('component used as feature', () => {
     it('applies feature options', async () => {
-
       @Component({
         name: 'test-component',
         feature: {
@@ -110,7 +105,6 @@ describe('boot', () => {
       expect(bsContext.get(entry)).toBe('component feature value');
     });
     it('applies feature options when used as dependency', async () => {
-
       @Component({
         name: 'test-component',
         feature: {
@@ -136,7 +130,6 @@ describe('boot', () => {
       expect(mockCustomElements.define).toHaveBeenCalledWith(TestComponent, expect.any(Function));
     });
     it('notifies on component definition', async () => {
-
       const onDefinition = jest.fn();
 
       @Component({
@@ -150,7 +143,9 @@ describe('boot', () => {
       class TestComponent {}
 
       await loadFeature(TestComponent);
-      expect(onDefinition).toHaveBeenCalledWith(expect.objectContaining({ componentType: TestComponent }));
+      expect(onDefinition).toHaveBeenCalledWith(
+        expect.objectContaining({ componentType: TestComponent }),
+      );
     });
     it('registers the component when used as dependency', async () => {
       @Component('test-component')
@@ -163,7 +158,6 @@ describe('boot', () => {
       expect(mockCustomElements.define).toHaveBeenCalledWith(TestComponent, expect.any(Function));
     });
     it('does not register the base component', async () => {
-
       @Component('base-component')
       class BaseComponent {}
 
@@ -178,7 +172,6 @@ describe('boot', () => {
 
   describe('component definition setup', () => {
     it('sets up definition context value', async () => {
-
       @Component('test-component')
       class TestComponent {}
 
@@ -206,7 +199,6 @@ describe('boot', () => {
       expect(defContext.get(entry)).toBe('provided');
     });
     it('sets up definition context value when component is defined already', async () => {
-
       @Component('test-component')
       class TestComponent {}
 
@@ -233,15 +225,13 @@ describe('boot', () => {
       expect(defContext.get(entry)).toBe('provided');
     });
     it('sets up component context value', async () => {
-
       @Component({
         name: 'test-component',
         extend: {
           type: MockElement,
         },
       })
-      class TestComponent {
-      }
+      class TestComponent {}
 
       @Feature({
         setup(setup) {
@@ -257,8 +247,8 @@ describe('boot', () => {
       await loadFeature(TestComponent);
 
       const element: ComponentElement = await bsContext
-          .whenDefined(TestComponent)
-          .then(({ elementType }) => new elementType());
+        .whenDefined(TestComponent)
+        .then(({ elementType }) => new elementType());
       const context = await ComponentSlot.of(element).whenReady;
 
       expect(context.get(entry)).toBe('provided');
@@ -271,7 +261,6 @@ describe('boot', () => {
     });
 
     it('sets up component subtype', async () => {
-
       @Component('test-component')
       class TestComponent {}
 
@@ -305,12 +294,10 @@ describe('boot', () => {
 
     describe('whenReady', () => {
       it('is notified on component definition readiness', async () => {
-
         const whenReady = jest.fn();
 
         @Component('test-component')
-        class TestComponent {
-        }
+        class TestComponent {}
 
         @Feature({
           setup(setup) {
@@ -320,8 +307,7 @@ describe('boot', () => {
             });
           },
         })
-        class TestFeature {
-        }
+        class TestFeature {}
 
         await loadFeature(TestFeature);
         await loadFeature(TestComponent);
@@ -330,12 +316,10 @@ describe('boot', () => {
         expect(whenReady).toHaveBeenCalled();
       });
       it('is not notified on component definition readiness after feature unloaded', async () => {
-
         const whenReady = jest.fn();
 
         @Component('test-component')
-        class TestComponent {
-        }
+        class TestComponent {}
 
         @Feature({
           setup(setup) {
@@ -344,8 +328,7 @@ describe('boot', () => {
             });
           },
         })
-        class TestFeature {
-        }
+        class TestFeature {}
 
         const featureRef = await loadFeature(TestFeature);
 
@@ -358,7 +341,6 @@ describe('boot', () => {
     });
 
     describe('whenComponent', () => {
-
       let element1: Element;
       let element2: Element;
       let element3: Element;
@@ -427,7 +409,6 @@ describe('boot', () => {
         expect(whenComponent21).toHaveBeenCalledTimes(1);
       });
       it('notifies new receiver immediately on already instantiated component', () => {
-
         const whenComponent13 = jest.fn();
 
         context1.get(DefinitionContext).whenComponent(whenComponent13);
@@ -447,7 +428,6 @@ describe('boot', () => {
   });
 
   describe('FeatureContext', () => {
-
     let featureRef: FeatureRef;
     let context: FeatureContext;
 
@@ -457,8 +437,7 @@ describe('boot', () => {
           context = ctx;
         },
       })
-      class TestFeature {
-      }
+      class TestFeature {}
 
       featureRef = bsContext.load(TestFeature);
 
@@ -466,7 +445,6 @@ describe('boot', () => {
     });
 
     describe('load', () => {
-
       let entry: CxEntry<string>;
 
       beforeEach(() => {
@@ -474,28 +452,24 @@ describe('boot', () => {
       });
 
       it('loads another feature', async () => {
-
         @Feature({
           setup(setup) {
             setup.provide(cxConstAsset(entry, 'loaded'));
           },
         })
-        class OtherFeature {
-        }
+        class OtherFeature {}
 
         await context.load(OtherFeature).whenReady;
 
         expect(bsContext.get(entry)).toBe('loaded');
       });
       it('unloads another feature when unloaded', async () => {
-
         @Feature({
           setup(setup) {
             setup.provide(cxConstAsset(entry, 'loaded'));
           },
         })
-        class OtherFeature {
-        }
+        class OtherFeature {}
 
         const otherRef = context.load(OtherFeature);
 
@@ -506,14 +480,12 @@ describe('boot', () => {
         expect(bsContext.get(entry)).toBe('default');
       });
       it('unloads another feature when user supply cut off', async () => {
-
         @Feature({
           setup(setup) {
             setup.provide(cxConstAsset(entry, 'loaded'));
           },
         })
-        class OtherFeature {
-        }
+        class OtherFeature {}
 
         const user = new Supply();
         const otherRef = context.load(OtherFeature, user);
@@ -528,41 +500,42 @@ describe('boot', () => {
 
     describe('define', () => {
       it('defines components', async () => {
-
         @Component('test-component-1')
-        class TestComponent1 {
-        }
+        class TestComponent1 {}
         @Component('test-component-2')
-        class TestComponent2 {
-        }
+        class TestComponent2 {}
         @Feature({
           init(context) {
             context.define(TestComponent1);
             context.define(TestComponent2);
           },
         })
-        class TestComponentsFeature {
-        }
+        class TestComponentsFeature {}
 
         await bsContext.load(TestComponentsFeature).whenReady;
-        expect(mockCustomElements.define).toHaveBeenCalledWith(TestComponent1, expect.any(Function));
-        expect(mockCustomElements.define).toHaveBeenCalledWith(TestComponent2, expect.any(Function));
+        expect(mockCustomElements.define).toHaveBeenCalledWith(
+          TestComponent1,
+          expect.any(Function),
+        );
+        expect(mockCustomElements.define).toHaveBeenCalledWith(
+          TestComponent2,
+          expect.any(Function),
+        );
       });
       it('does not allow to define components after initialization', () => {
-
         @Component('test-component')
-        class TestComponent {
-        }
+        class TestComponent {}
 
-        expect(() => context.define(TestComponent)).toThrow(new TypeError(
+        expect(() => context.define(TestComponent)).toThrow(
+          new TypeError(
             '[Feature TestFeature] initialized already, and does not accept new initializers',
-        ));
+          ),
+        );
       });
     });
   });
 
   describe('feature load', () => {
-
     let testFeature: Class;
     let statusReceiver: Mock<(status: FeatureStatus) => void>;
 
@@ -572,21 +545,19 @@ describe('boot', () => {
     });
 
     it('configures feature', async () => {
-
       let setupFeature!: Class;
       let loadedFeature!: Class;
 
-      await loadFeature(FeatureDef.define(
-          testFeature,
-          {
-            setup(setup) {
-              setupFeature = setup.feature;
-            },
-            init(context) {
-              loadedFeature = context.feature;
-            },
+      await loadFeature(
+        FeatureDef.define(testFeature, {
+          setup(setup) {
+            setupFeature = setup.feature;
           },
-      ));
+          init(context) {
+            loadedFeature = context.feature;
+          },
+        }),
+      );
 
       expect(setupFeature).toBe(testFeature);
       expect(loadedFeature).toBe(testFeature);
@@ -609,24 +580,19 @@ describe('boot', () => {
       expect(receiver2).toHaveBeenCalledTimes(1);
     });
     it('readies the feature only when it is loaded', async () => {
-
       const readySpy = jest.fn();
 
-      FeatureDef.define(
-          testFeature,
-          {
-            init(ctx) {
-              ctx.whenReady(readySpy);
-              expect(readySpy).not.toHaveBeenCalled();
-            },
-          },
-      );
+      FeatureDef.define(testFeature, {
+        init(ctx) {
+          ctx.whenReady(readySpy);
+          expect(readySpy).not.toHaveBeenCalled();
+        },
+      });
 
       await loadFeatureStatus();
       expect(readySpy).toHaveBeenCalledTimes(1);
     });
     it('replaces the loaded feature', async () => {
-
       const initSpy = jest.fn<(context: FeatureContext) => void>();
 
       await loadFeatureStatus();
@@ -665,7 +631,6 @@ describe('boot', () => {
     describe('FeatureRef', () => {
       describe('[AfterEvent__symbol]', () => {
         it('is an alias of `read`', async () => {
-
           const featureRef = await loadFeatureStatus();
 
           void expect(afterSupplied(featureRef)).toBe(featureRef.read);
@@ -673,14 +638,11 @@ describe('boot', () => {
       });
       describe('supply.off', () => {
         it('unloads the feature', async () => {
-          FeatureDef.define(
-              testFeature,
-              {
-                setup(setup) {
-                  setup.provide(cxConstAsset(entry, 'provided'));
-                },
-              },
-          );
+          FeatureDef.define(testFeature, {
+            setup(setup) {
+              setup.provide(cxConstAsset(entry, 'provided'));
+            },
+          });
 
           const featureRef = await loadFeatureStatus();
 
@@ -692,9 +654,10 @@ describe('boot', () => {
       });
     });
 
-    function loadFeatureStatus(receive: Mock<(status: FeatureStatus) => void> = statusReceiver): Promise<FeatureRef> {
+    function loadFeatureStatus(
+      receive: Mock<(status: FeatureStatus) => void> = statusReceiver,
+    ): Promise<FeatureRef> {
       return new Promise<FeatureRef>(resolve => {
-
         const featureRef = bsContext.load(testFeature);
 
         featureRef.read(receive.mockImplementation(({ ready }) => ready && resolve(featureRef)));
@@ -704,7 +667,6 @@ describe('boot', () => {
 
   function loadFeature(feature: Class): Promise<FeatureRef> {
     return new Promise<FeatureRef>(resolve => {
-
       const ref = bsContext.load(feature);
 
       ref.read(({ ready }) => ready && resolve(ref));

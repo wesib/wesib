@@ -11,7 +11,7 @@ import { StateUpdater } from './state-updater';
  *
  * @category Core
  */
-export const ComponentContext__symbol = (/*#__PURE__*/ Symbol('ComponentContext'));
+export const ComponentContext__symbol = /*#__PURE__*/ Symbol('ComponentContext');
 
 /**
  * Component context.
@@ -25,7 +25,6 @@ export const ComponentContext__symbol = (/*#__PURE__*/ Symbol('ComponentContext'
  * @typeParam T - A type of component.
  */
 export interface ComponentContext<T extends object = any> extends CxValues, SupplyPeer {
-
   /**
    * Component class constructor.
    */
@@ -214,7 +213,6 @@ export interface ComponentContext<T extends object = any> extends CxValues, Supp
    * @param event - An event to dispatch.
    */
   dispatchEvent(event: Event): void;
-
 }
 
 /**
@@ -223,8 +221,7 @@ export interface ComponentContext<T extends object = any> extends CxValues, Supp
  * @category Core
  */
 export const ComponentContext = {
-
-  perContext: (/*#__PURE__*/ cxSingle<ComponentContext>()),
+  perContext: /*#__PURE__*/ cxSingle<ComponentContext>(),
 
   /**
    * Extracts component context from the given component instance.
@@ -246,7 +243,6 @@ export const ComponentContext = {
   toString(): string {
     return '[ComponentContext]';
   },
-
 };
 
 /**
@@ -255,10 +251,8 @@ export const ComponentContext = {
  * @category Core
  */
 export type ComponentInstance<T extends object = any> = T & {
-
   /**
    * @returns Component context.
    */
   [ComponentContext__symbol]?(): ComponentContext<T>;
-
 };

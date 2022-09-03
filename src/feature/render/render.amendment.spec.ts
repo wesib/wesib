@@ -19,7 +19,6 @@ import { Render } from './render.amendment';
 
 describe('feature/render', () => {
   describe('@Render', () => {
-
     let mockRenderScheduler: Mock<RenderScheduler>;
     let mockRenderSchedule: Mock<RenderSchedule>;
 
@@ -35,7 +34,6 @@ describe('feature/render', () => {
     });
 
     it('enables component state', async () => {
-
       const context = await bootstrap();
 
       expect(context.get(ComponentState, { or: null })).toBeDefined();
@@ -45,7 +43,6 @@ describe('feature/render', () => {
       expect(mockRenderer).not.toHaveBeenCalled();
     });
     it('is scheduled on state update', async () => {
-
       const { component, element } = await bootstrap();
 
       element.connectedCallback();
@@ -55,7 +52,6 @@ describe('feature/render', () => {
       expect(mockRenderer).toHaveBeenCalledTimes(2);
     });
     it('is scheduled on state part update', async () => {
-
       const { element, component } = await bootstrap({ on: domPropertyPathTo('property2') });
 
       element.connectedCallback();
@@ -65,7 +61,6 @@ describe('feature/render', () => {
       expect(mockRenderer).toHaveBeenCalledTimes(2);
     });
     it('is scheduled on specified state part update', async () => {
-
       const { element, component } = await bootstrap({ on: domPropertyPathTo('property2') });
 
       element.connectedCallback();
@@ -78,7 +73,6 @@ describe('feature/render', () => {
       expect(mockRenderer).toHaveBeenCalledTimes(2);
     });
     it('is not scheduled on ignored sub-state update', async () => {
-
       const context = await bootstrap();
       const { element, component } = context;
 
@@ -108,42 +102,36 @@ describe('feature/render', () => {
       expect(logError).toHaveBeenCalledWith(error);
     });
     it('is not scheduled on state update when not settled', async () => {
-
       const { component } = await bootstrap();
 
       component.property = 'other';
       expect(mockRenderer).not.toHaveBeenCalled();
     });
     it('is scheduled when settled', async () => {
-
       const context = await bootstrap();
 
       context.settle();
       expect(mockRenderer).toHaveBeenCalled();
     });
     it('is scheduled when connected', async () => {
-
       const { element } = await bootstrap();
 
       element.connectedCallback();
       expect(mockRenderer).toHaveBeenCalled();
     });
     it('(when: connected) is scheduled when connected', async () => {
-
       const { element } = await bootstrap({ when: 'connected' });
 
       element.connectedCallback();
       expect(mockRenderer).toHaveBeenCalled();
     });
     it('(when: connected) is not scheduled on settle', async () => {
-
       const context = await bootstrap({ when: 'connected' });
 
       context.settle();
       expect(mockRenderer).not.toHaveBeenCalled();
     });
     it('is re-scheduled after when settled after state update', async () => {
-
       const context = await bootstrap();
 
       context.settle();
@@ -153,7 +141,6 @@ describe('feature/render', () => {
       expect(mockRenderer).toHaveBeenCalledTimes(2);
     });
     it('(when: connected) is re-scheduled when connected after state update', async () => {
-
       const { component, element } = await bootstrap({ when: 'connected' });
 
       element.connectedCallback();
@@ -172,7 +159,6 @@ describe('feature/render', () => {
       expect(mockRenderer).toHaveBeenCalledTimes(1);
     });
     it('is not re-scheduled after component disconnection', async () => {
-
       const context = await bootstrap();
       const { element } = context;
 
@@ -186,7 +172,6 @@ describe('feature/render', () => {
       expect(mockRenderer).toHaveBeenCalledTimes(1);
     });
     it('is not rendered after component disconnection', async () => {
-
       const scheduler = newManualRenderScheduler();
 
       mockRenderSchedule.mockImplementation(scheduler());
@@ -204,26 +189,25 @@ describe('feature/render', () => {
       expect(mockRenderer).not.toHaveBeenCalled();
     });
     it('uses decorated method', async () => {
-
       const { component, element } = await bootstrap();
 
       element.connectedCallback();
-      expect(mockRenderer).toHaveBeenCalledWith(expect.objectContaining({
-        config: expect.objectContaining({
-          error: expect.any(Function),
+      expect(mockRenderer).toHaveBeenCalledWith(
+        expect.objectContaining({
+          config: expect.objectContaining({
+            error: expect.any(Function),
+          }),
+          postpone: expect.any(Function),
         }),
-        postpone: expect.any(Function),
-      }));
+      );
       expect(mockRenderer.mock.instances[0]).toBe(component);
     });
     it('lifts unrooted rendering contexts', async () => {
-
       const doc = document.implementation.createHTMLDocument('test');
       const whenConnected1 = jest.fn();
       const whenConnected2 = jest.fn();
 
       mockRenderer.mockImplementation(() => {
-
         const element1 = doc.createElement('test-element-1');
         const element2 = doc.createElement('test-element-2');
 
@@ -243,7 +227,6 @@ describe('feature/render', () => {
 
     describe('Postponed', () => {
       it('is executed', async () => {
-
         const postponed = jest.fn();
 
         mockRenderer.mockImplementation(({ postpone }) => postpone(postponed));
@@ -255,7 +238,6 @@ describe('feature/render', () => {
         expect(postponed).toHaveBeenCalledTimes(1);
       });
       it('able to delegate to another renderer', async () => {
-
         const delegate = jest.fn();
         const postponed = jest.fn(({ renderBy }: ComponentRendererExecution): void => {
           renderBy(delegate);
@@ -279,7 +261,6 @@ describe('feature/render', () => {
     });
 
     describe('Delegate', () => {
-
       let delegate: Mock<(execution: ComponentRendererExecution) => void>;
 
       beforeEach(() => {
@@ -288,7 +269,6 @@ describe('feature/render', () => {
       });
 
       it('is scheduled', async () => {
-
         const { element } = await bootstrap();
 
         element.connectedCallback();
@@ -296,7 +276,6 @@ describe('feature/render', () => {
         expect(delegate).toHaveBeenCalledTimes(1);
       });
       it('is re-scheduled on state update', async () => {
-
         const { element, component } = await bootstrap();
 
         element.connectedCallback();
@@ -305,7 +284,6 @@ describe('feature/render', () => {
         expect(delegate).toHaveBeenCalledTimes(2);
       });
       it('does not re-create schedule on state update', async () => {
-
         const { component, element } = await bootstrap();
 
         element.connectedCallback();
@@ -316,7 +294,6 @@ describe('feature/render', () => {
     });
 
     async function bootstrap(def?: RenderDef): Promise<ComponentContext> {
-
       @Component({
         name: 'test-component',
         extend: {
@@ -339,7 +316,7 @@ describe('feature/render', () => {
         @DomProperty()
         property2 = 'value';
 
-      }
+}
 
       const element: ComponentElement = new (await testElement(TestComponent))();
 

@@ -10,7 +10,6 @@ import { trackAttribute } from './track-attribute';
 
 describe('feature/attributes', () => {
   describe('trackAttribute', () => {
-
     let element: Element;
     let context: ComponentContext;
     let state: StateTracker;
@@ -19,11 +18,13 @@ describe('feature/attributes', () => {
       element = document.createElement('div');
       state = new StateTracker();
 
-      const cxBuilder = new CxBuilder<ComponentContext>((get, { supply }) => ({
-        element,
-        supply,
-        get,
-      }) as ComponentContext);
+      const cxBuilder = new CxBuilder<ComponentContext>(
+        (get, { supply }) => ({
+            element,
+            supply,
+            get,
+          } as ComponentContext),
+      );
 
       context = cxBuilder.context;
 
@@ -65,7 +66,6 @@ describe('feature/attributes', () => {
 
     describe('on', () => {
       it('reflects attribute value updates', () => {
-
         const onUpdate = jest.fn();
         const read = jest.fn();
 
@@ -76,7 +76,6 @@ describe('feature/attributes', () => {
         expect(read).toHaveBeenCalledWith('new value');
       });
       it('reflects attribute value updates with custom path', () => {
-
         const path: StatePath = ['test', 'path'];
 
         tracker = trackAttribute(context, 'test', path);
@@ -94,7 +93,6 @@ describe('feature/attributes', () => {
 
     describe('done', () => {
       it('cuts off attribute updates supply', () => {
-
         const updatesOff = jest.fn();
 
         tracker.on(noop).whenOff(updatesOff);

@@ -17,7 +17,6 @@ import { FeatureRef } from '../feature';
  * @category Core
  */
 export interface BootstrapContext extends CxValues {
-
   /**
    * An `OnEvent` sender of bootstrap readiness event.
    *
@@ -48,7 +47,6 @@ export interface BootstrapContext extends CxValues {
    * @returns  Loaded feature reference.
    */
   load(feature: Class, user?: SupplyPeer): FeatureRef;
-
 }
 
 /**
@@ -57,6 +55,6 @@ export interface BootstrapContext extends CxValues {
  * @category Core
  */
 export const BootstrapContext: CxEntry<BootstrapContext> = {
-  perContext: (/*#__PURE__*/ cxSingle()),
+  perContext: /*#__PURE__*/ cxSingle(),
   toString: () => '[BootstrapContext]',
 };

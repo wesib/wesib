@@ -7,7 +7,6 @@ import { DomProperty } from './dom-property.amendment';
 describe('feature/dom-properties', () => {
   describe('@DomProperty', () => {
     it('declares DOM property', async () => {
-
       @Component({
         name: 'test-component',
         extend: {
@@ -19,9 +18,11 @@ describe('feature/dom-properties', () => {
         @DomProperty()
         customProperty = 'value';
 
-      }
+}
 
-      const element: ComponentElement & { customProperty: string } = new (await testElement(TestComponent));
+      const element: ComponentElement & { customProperty: string } = new (await testElement(
+        TestComponent,
+      ))();
       const component = ComponentSlot.of<TestComponent>(element).context!.component;
 
       expect(element.customProperty).toBe('value');
@@ -31,7 +32,6 @@ describe('feature/dom-properties', () => {
       expect(component.customProperty).toBe('other');
     });
     it('declares DOM property with specified name', async () => {
-
       @Component({
         name: 'test-component',
         extend: {
@@ -43,9 +43,11 @@ describe('feature/dom-properties', () => {
         @DomProperty({ propertyKey: 'otherProperty' })
         customProperty = 'value';
 
-      }
+}
 
-      const element: ComponentElement & { otherProperty: string } = new (await testElement(TestComponent));
+      const element: ComponentElement & { otherProperty: string } = new (await testElement(
+        TestComponent,
+      ))();
       const component = ComponentSlot.of<TestComponent>(element).context!.component;
 
       expect(element.otherProperty).toBe('value');
@@ -57,7 +59,6 @@ describe('feature/dom-properties', () => {
 
     describe('for object property', () => {
       it('applies defaults', async () => {
-
         @Component({
           name: 'test-component',
           extend: {
@@ -69,7 +70,7 @@ describe('feature/dom-properties', () => {
           @DomProperty()
           customProperty = 'value';
 
-        }
+}
 
         const elementType: Class<ComponentElement> = await testElement(TestComponent);
 
@@ -81,7 +82,6 @@ describe('feature/dom-properties', () => {
         });
       });
       it('applies defaults to non-state-updating field', async () => {
-
         @Component({
           name: 'test-component',
           extend: {
@@ -93,7 +93,7 @@ describe('feature/dom-properties', () => {
           @DomProperty({ updateState: false })
           customProperty = 'value';
 
-        }
+}
 
         const elementType: Class<ComponentElement> = await testElement(TestComponent);
 
@@ -105,7 +105,6 @@ describe('feature/dom-properties', () => {
         });
       });
       it('applies custom property attributes', async () => {
-
         @Component({
           name: 'test-component',
           extend: {
@@ -121,7 +120,7 @@ describe('feature/dom-properties', () => {
           })
           customProperty = 'value';
 
-        }
+}
 
         const elementType: Class<ComponentElement> = await testElement(TestComponent);
 
@@ -133,7 +132,6 @@ describe('feature/dom-properties', () => {
         });
       });
       it('applies custom property attributes to non-state-updating field', async () => {
-
         @Component({
           name: 'test-component',
           extend: {
@@ -150,7 +148,7 @@ describe('feature/dom-properties', () => {
           })
           customProperty = 'value';
 
-        }
+}
 
         const elementType: Class<ComponentElement> = await testElement(TestComponent);
 
@@ -165,7 +163,6 @@ describe('feature/dom-properties', () => {
 
     describe('for property accessor', () => {
       it('applies read-only property defaults', async () => {
-
         @Component({
           name: 'test-component',
           extend: {
@@ -179,7 +176,7 @@ describe('feature/dom-properties', () => {
             return 'value';
           }
 
-        }
+}
 
         const elementType: Class<ComponentElement> = await testElement(TestComponent);
 
@@ -191,7 +188,6 @@ describe('feature/dom-properties', () => {
         });
       });
       it('applies custom read-only property attributes', async () => {
-
         @Component({
           name: 'test-component',
           extend: {
@@ -209,7 +205,7 @@ describe('feature/dom-properties', () => {
             return 'value';
           }
 
-        }
+}
 
         const elementType: Class<ComponentElement> = await testElement(TestComponent);
 
@@ -221,7 +217,6 @@ describe('feature/dom-properties', () => {
         });
       });
       it('applies writable property defaults', async () => {
-
         @Component({
           name: 'test-component',
           extend: {
@@ -241,7 +236,7 @@ describe('feature/dom-properties', () => {
             this._value = value;
           }
 
-        }
+}
 
         const elementType: Class<ComponentElement> = await testElement(TestComponent);
 
@@ -253,7 +248,6 @@ describe('feature/dom-properties', () => {
         });
       });
       it('applies custom writable property attributes', async () => {
-
         @Component({
           name: 'test-component',
           extend: {
@@ -277,7 +271,7 @@ describe('feature/dom-properties', () => {
             this._value = value;
           }
 
-        }
+}
 
         const elementType: Class<ComponentElement> = await testElement(TestComponent);
 

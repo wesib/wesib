@@ -19,12 +19,10 @@ import { FeatureDef } from './feature-def';
  * @typeParam TClass - Amended feature class type.
  */
 export interface AeFeature<TClass extends Class = Class> extends AeClass<TClass> {
-
   /**
    * Amended feature definition options.
    */
   readonly featureDef: FeatureDef;
-
 }
 
 /**
@@ -35,9 +33,9 @@ export interface AeFeature<TClass extends Class = Class> extends AeClass<TClass>
  * @typeParam TAmended - Amended feature entity type.
  */
 export type AeFeatureTarget<
-    TClass extends Class = Class,
-    TAmended extends AeFeature<TClass> = AeFeature<TClass>,
-    > = AmendTarget<TAmended>;
+  TClass extends Class = Class,
+  TAmended extends AeFeature<TClass> = AeFeature<TClass>,
+> = AmendTarget<TAmended>;
 
 /**
  * Feature amendment.
@@ -48,8 +46,10 @@ export type AeFeatureTarget<
  * @typeParam TClass - Amended feature class type.
  * @typeParam TAmended - Amended feature entity type.
  */
-export type FeatureAmendment<TClass extends Class, TAmended extends AeFeature<TClass>> =
-    ClassAmendment.ForBase<AeFeature<TClass>, TClass, TAmended>;
+export type FeatureAmendment<
+  TClass extends Class,
+  TAmended extends AeFeature<TClass>,
+> = ClassAmendment.ForBase<AeFeature<TClass>, TClass, TAmended>;
 
 /**
  * Creates a feature class amendment (and decorator).
@@ -73,45 +73,44 @@ export type FeatureAmendment<TClass extends Class, TAmended extends AeFeature<TC
  *
  * @returns Feature class amendment and decorator.
  */
-export function Feature<TClass extends Class = Class, TAmended extends AeFeature<TClass> = AeFeature<TClass>>(
-    ...amendments: (FeatureDef | Amendment<TAmended>)[]
-): FeatureAmendment<TClass, TAmended> {
-
+export function Feature<
+  TClass extends Class = Class,
+  TAmended extends AeFeature<TClass> = AeFeature<TClass>,
+>(...amendments: (FeatureDef | Amendment<TAmended>)[]): FeatureAmendment<TClass, TAmended> {
   const amender = Feature$toAmender(amendments);
 
   return AeClass<TClass, TAmended>(baseTarget => {
-
     let result: FeatureDef = {};
 
-    amender(newAmendTarget({
-      base: {
-        ...baseTarget as unknown as TAmended,
-        featureDef: {},
-      },
-      amend<TBase extends TAmended, TExt>(
+    amender(
+      newAmendTarget({
+        base: {
+          ...(baseTarget as unknown as TAmended),
+          featureDef: {},
+        },
+        amend<TBase extends TAmended, TExt>(
           _base: TBase,
           request = {} as AmendRequest<TBase, TExt>,
-      ): () => AmendTarget.Draft<TBase & TExt> {
+        ): () => AmendTarget.Draft<TBase & TExt> {
+          const { featureDef: defRequest = {}, ...baseRequest } = request;
+          const createBaseTarget = baseTarget.amend(baseRequest as AmendRequest<any>);
+          const featureDef = (result = FeatureDef.merge(result, defRequest));
 
-        const { featureDef: defRequest = {}, ...baseRequest } = request;
-        const createBaseTarget = baseTarget.amend(baseRequest as AmendRequest<any>);
-        const featureDef = result = FeatureDef.merge(result, defRequest);
-
-        return () => ({
-          ...createBaseTarget(),
-          featureDef,
-        } as AmendTarget.Draft<TBase & TExt>);
-      },
-    }));
+          return () => ({
+              ...createBaseTarget(),
+              featureDef,
+            } as AmendTarget.Draft<TBase & TExt>);
+        },
+      }),
+    );
 
     FeatureDef.define(baseTarget.amendedClass, result);
   }) as FeatureAmendment<TClass, TAmended>;
 }
 
 function Feature$toAmender<TClass extends Class, TAmended extends AeFeature<TClass>>(
-    amendments: (FeatureDef | Amendment<TAmended>)[],
+  amendments: (FeatureDef | Amendment<TAmended>)[],
 ): Amender<TAmended> {
-
   const featureDefs: FeatureDef[] = [];
   const featureAmendments: Amendment<TAmended>[] = [];
 
@@ -131,15 +130,15 @@ function Feature$toAmender<TClass extends Class, TAmended extends AeFeature<TCla
 }
 
 function isFeatureAmendment<TClass extends Class, TAmended extends AeFeature<TClass>>(
-    amendment: FeatureDef | Amendment<TAmended>,
+  amendment: FeatureDef | Amendment<TAmended>,
 ): amendment is Amendment<TAmended> {
   return typeof amendment === 'function' || isAmendatory(amendment);
 }
 
 function FeatureDef$toAmender<TClass extends Class, TAmended extends AeFeature<TClass>>(
-    defs: FeatureDef[],
+  defs: FeatureDef[],
 ): Amender<TAmended> {
   return ({ amend }: AeFeatureTarget<TClass>) => amend({
-    featureDef: FeatureDef.merge(...defs),
-  });
+      featureDef: FeatureDef.merge(...defs),
+    });
 }

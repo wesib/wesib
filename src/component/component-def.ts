@@ -10,7 +10,7 @@ import { ComponentClass, DefinitionContext, DefinitionSetup, ElementDef } from '
  *
  * @category Core
  */
-export const ComponentDef__symbol = (/*#__PURE__*/ Symbol('ComponentDef'));
+export const ComponentDef__symbol = /*#__PURE__*/ Symbol('ComponentDef');
 
 /**
  * Component definition.
@@ -21,7 +21,6 @@ export const ComponentDef__symbol = (/*#__PURE__*/ Symbol('ComponentDef'));
  * @typeParam T - A type of component.
  */
 export interface ComponentDef<T extends object = any> {
-
   /**
    * Custom element name.
    *
@@ -60,7 +59,6 @@ export interface ComponentDef<T extends object = any> {
    * @param defContext - Component definition context.
    */
   define?(defContext: DefinitionContext<T>): void;
-
 }
 
 /**
@@ -73,23 +71,21 @@ class ComponentMeta extends MetaAccessor<ComponentDef, ComponentDef | QualifiedN
   }
 
   merge<T extends object>(defs: readonly (ComponentDef<T> | QualifiedName)[]): ComponentDef<T> {
-    return defs.reduce<ComponentDef>(
-        (prev, meta) => {
+    return defs.reduce<ComponentDef>((prev, meta) => {
+      const def = this.meta(meta);
 
-          const def = this.meta(meta);
-
-          return ({
-            ...prev,
-            ...def,
-            setup: mergeFunctions(prev.setup, def.setup),
-            define: mergeFunctions(prev.define, def.define),
-            feature: prev.feature
-                ? def.feature ? FeatureDef.merge(prev.feature, def.feature) : prev.feature
-                : def.feature,
-          });
-        },
-        {},
-    );
+      return {
+        ...prev,
+        ...def,
+        setup: mergeFunctions(prev.setup, def.setup),
+        define: mergeFunctions(prev.define, def.define),
+        feature: prev.feature
+          ? def.feature
+            ? FeatureDef.merge(prev.feature, def.feature)
+            : prev.feature
+          : def.feature,
+      };
+    }, {});
   }
 
   meta<T extends object>(source: ComponentDef<T> | QualifiedName): ComponentDef<T> {
@@ -105,13 +101,12 @@ class ComponentMeta extends MetaAccessor<ComponentDef, ComponentDef | QualifiedN
 /**
  * @internal
  */
-const componentMeta = (/*#__PURE__*/ new ComponentMeta());
+const componentMeta = /*#__PURE__*/ new ComponentMeta();
 
 /**
  * @category Core
  */
 export const ComponentDef = {
-
   /**
    * Extracts component definition options from its type.
    *
@@ -132,7 +127,10 @@ export const ComponentDef = {
    *
    * @returns Merged component definition options.
    */
-  merge<T extends object>(this: void, ...defs: (ComponentDef<T> | QualifiedName)[]): ComponentDef<T> {
+  merge<T extends object>(
+    this: void,
+    ...defs: (ComponentDef<T> | QualifiedName)[]
+  ): ComponentDef<T> {
     return componentMeta.merge(defs);
   },
 
@@ -151,11 +149,10 @@ export const ComponentDef = {
    * @returns The `type` instance.
    */
   define<TClass extends ComponentClass>(
-      this: void,
-      componentType: TClass,
-      ...defs: (ComponentDef<InstanceType<TClass>> | QualifiedName)[]
+    this: void,
+    componentType: TClass,
+    ...defs: (ComponentDef<InstanceType<TClass>> | QualifiedName)[]
   ): TClass {
     return componentMeta.define(componentType, defs);
   },
-
 };

@@ -18,18 +18,17 @@ import { attributeStateUpdate } from './attribute-state-update.impl';
  * @returns New component amendment and decorator.
  */
 export function Attributes<
-    TClass extends ComponentClass = Class,
-    TAmended extends AeComponent<TClass> = AeComponent<TClass>>(
-    ...items: readonly Attributes.Item<InstanceType<TClass>>[]
+  TClass extends ComponentClass = Class,
+  TAmended extends AeComponent<TClass> = AeComponent<TClass>,
+>(
+  ...items: readonly Attributes.Item<InstanceType<TClass>>[]
 ): ComponentAmendment<TClass, TAmended> {
   return Component({
     define(defContext) {
-
       const registry = defContext.get(AttributeRegistry);
 
       for (const item of items) {
         if (typeof item === 'string') {
-
           const name = hyphenateDecapName(item);
 
           registry.declareAttribute({
@@ -38,7 +37,6 @@ export function Attributes<
           });
         } else {
           for (const [key, updateState] of Object.entries(item)) {
-
             const name = hyphenateDecapName(key);
 
             registry.declareAttribute({
@@ -56,7 +54,6 @@ export function Attributes<
  * @category Feature
  */
 export namespace Attributes {
-
   /**
    * Attribute definition item.
    *
@@ -83,5 +80,4 @@ export namespace Attributes {
   export interface Map<T extends object> {
     readonly [name: string]: boolean | StatePath | AttributeUpdateReceiver<T>;
   }
-
 }

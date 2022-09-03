@@ -9,7 +9,7 @@ import { FeatureContext } from './feature-context';
  *
  * @category Core
  */
-export const FeatureDef__symbol = (/*#__PURE__*/ Symbol('FeatureDef'));
+export const FeatureDef__symbol = /*#__PURE__*/ Symbol('FeatureDef');
 
 /**
  * Feature definition.
@@ -17,7 +17,6 @@ export const FeatureDef__symbol = (/*#__PURE__*/ Symbol('FeatureDef'));
  * @category Core
  */
 export interface FeatureDef {
-
   /**
    * Features this one requires.
    */
@@ -51,7 +50,6 @@ export interface FeatureDef {
    * initialization completed asynchronously.
    */
   init?(context: FeatureContext): void | PromiseLike<unknown>;
-
 }
 
 /**
@@ -65,13 +63,13 @@ class FeatureMeta extends MetaAccessor<FeatureDef, FeatureDef> {
 
   merge(defs: readonly FeatureDef[]): FeatureDef {
     return defs.reduce<FeatureDef>(
-        (prev, def) => ({
-          needs: elementOrArray(extendSetOfElements(setOfElements(prev.needs), def.needs)),
-          has: elementOrArray(extendSetOfElements(setOfElements(prev.has), def.has)),
-          setup: mergeInitMethods(prev, prev.setup, def, def.setup),
-          init: mergeInitMethods(prev, prev.init, def, def.init),
-        }),
-        {},
+      (prev, def) => ({
+        needs: elementOrArray(extendSetOfElements(setOfElements(prev.needs), def.needs)),
+        has: elementOrArray(extendSetOfElements(setOfElements(prev.has), def.has)),
+        setup: mergeInitMethods(prev, prev.setup, def, def.setup),
+        init: mergeInitMethods(prev, prev.init, def, def.init),
+      }),
+      {},
     );
   }
 
@@ -80,13 +78,12 @@ class FeatureMeta extends MetaAccessor<FeatureDef, FeatureDef> {
 /**
  * @internal
  */
-const featureMeta = (/*#__PURE__*/ new FeatureMeta());
+const featureMeta = /*#__PURE__*/ new FeatureMeta();
 
 /**
  * @category Core
  */
 export const FeatureDef = {
-
   /**
    * Extracts feature definition options from its type.
    *
@@ -121,8 +118,11 @@ export const FeatureDef = {
    *
    * @returns The `type` instance.
    */
-  define<TClass extends Class>(this: void, featureType: TClass, ...defs: readonly FeatureDef[]): TClass {
+  define<TClass extends Class>(
+    this: void,
+    featureType: TClass,
+    ...defs: readonly FeatureDef[]
+  ): TClass {
     return featureMeta.define(featureType, defs);
   },
-
 };

@@ -1,6 +1,11 @@
 import { StatePath } from '@proc7ts/fun-events';
 import { Class } from '@proc7ts/primitives';
-import { AeComponentMember, AeComponentMemberTarget, ComponentMember, ComponentMemberAmendment } from '../../component';
+import {
+  AeComponentMember,
+  AeComponentMemberTarget,
+  ComponentMember,
+  ComponentMemberAmendment,
+} from '../../component';
 import { ComponentClass } from '../../component/definition';
 import { StatePropertyPath } from './state-property-path';
 import { statePropertyUpdate } from './state-property-update.impl';
@@ -20,31 +25,37 @@ import { statePropertyUpdate } from './state-property-update.impl';
  * @returns New component member decorator.
  */
 export function StateProperty<
-    TValue extends TUpdate,
-    TClass extends ComponentClass = Class,
-    TUpdate = TValue,
-    TAmended extends AeComponentMember<TValue, TClass, TUpdate> = AeComponentMember<TValue, TClass, TUpdate>>(
-    { updateState }: StatePropertyDef<InstanceType<TClass>> = {},
-): ComponentMemberAmendment<TValue, TClass, TUpdate, TAmended> {
-  return ComponentMember<TValue, TClass, TUpdate, TAmended>((
-      { key, get, set, amend }: AeComponentMemberTarget<TValue, TClass, TUpdate>,
-  ) => {
-    if (updateState !== false) {
+  TValue extends TUpdate,
+  TClass extends ComponentClass = Class,
+  TUpdate = TValue,
+  TAmended extends AeComponentMember<TValue, TClass, TUpdate> = AeComponentMember<
+    TValue,
+    TClass,
+    TUpdate
+  >,
+>({ updateState }: StatePropertyDef<InstanceType<TClass>> = {}): ComponentMemberAmendment<
+  TValue,
+  TClass,
+  TUpdate,
+  TAmended
+> {
+  return ComponentMember<TValue, TClass, TUpdate, TAmended>(
+    ({ key, get, set, amend }: AeComponentMemberTarget<TValue, TClass, TUpdate>) => {
+      if (updateState !== false) {
+        const update = statePropertyUpdate(key, updateState);
 
-      const update = statePropertyUpdate(key, updateState);
+        amend({
+          get,
+          set(component, newValue) {
+            const oldValue = get(component);
 
-      amend({
-        get,
-        set(component, newValue) {
-
-          const oldValue = get(component);
-
-          set(component, newValue);
-          update(component, newValue, oldValue);
-        },
-      });
-    }
-  });
+            set(component, newValue);
+            update(component, newValue, oldValue);
+          },
+        });
+      }
+    },
+  );
 }
 
 /**
@@ -55,7 +66,6 @@ export function StateProperty<
  * @category Feature
  */
 export interface StatePropertyDef<T extends object = any> {
-
   /**
    * Whether to update the component state after this property changed.
    *
@@ -68,7 +78,6 @@ export interface StatePropertyDef<T extends object = any> {
    * By default does not update component state if property value didn't change.
    */
   readonly updateState?: boolean | StatePath | StatePropertyUpdateReceiver<T> | undefined;
-
 }
 
 /**
@@ -78,17 +87,17 @@ export interface StatePropertyDef<T extends object = any> {
  * @typeParam T - A type of component.
  */
 export type StatePropertyUpdateReceiver<T extends object> =
-/**
- * @typeParam TKey - A type of component property keys.
- * @param component - Component instance.
- * @param path - The changed property state path in the form of `[StatePropertyPath__root, propertyKey]`.
- * @param newValue - New property value.
- * @param oldValue - Previous property value.
- */
-    <TKey extends keyof T>(
-        this: void,
-        component: T,
-        path: StatePropertyPath<TKey>,
-        newValue: T[TKey],
-        oldValue: T[TKey],
-    ) => void;
+  /**
+   * @typeParam TKey - A type of component property keys.
+   * @param component - Component instance.
+   * @param path - The changed property state path in the form of `[StatePropertyPath__root, propertyKey]`.
+   * @param newValue - New property value.
+   * @param oldValue - Previous property value.
+   */
+  <TKey extends keyof T>(
+    this: void,
+    component: T,
+    path: StatePropertyPath<TKey>,
+    newValue: T[TKey],
+    oldValue: T[TKey],
+  ) => void;

@@ -5,15 +5,12 @@ import { ComponentState } from './component-state';
 
 describe('feature/state', () => {
   describe('ComponentState', () => {
-
     it('is not provided if there is a fallback', async () => {
-
       const context = await bootstrap();
 
       expect(context.get(ComponentState, { or: null })).toBeNull();
     });
     it('notifies on state update', async () => {
-
       const context = await bootstrap();
       const componentState = context.get(ComponentState);
       const onUpdate = jest.fn();
@@ -31,7 +28,6 @@ describe('feature/state', () => {
       expect(onUpdate).not.toHaveBeenCalled();
     });
     it('notifies on state update with `updateState()` method', async () => {
-
       const context = await bootstrap();
       const componentState = context.get(ComponentState);
       const onUpdate = jest.fn();
@@ -62,8 +58,7 @@ describe('feature/state', () => {
         type: MockElement,
       },
     })
-    class TestComponent {
-    }
+    class TestComponent {}
 
     const element = new (await testElement(TestComponent))();
 

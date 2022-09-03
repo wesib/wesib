@@ -15,13 +15,13 @@ import { ShadowContentDef } from './attach-shadow.amendment';
  * @category Feature
  */
 export type ShadowRootBuilder =
-/**
- * @param context - Target component context.
- * @param init - Shadow root initialization options.
- *
- * @returns A shadow root instance for target component, or `null`/`undefined` if one can not be attached.
- */
-    (context: ComponentContext, init: ShadowContentDef) => ShadowRoot | null | undefined;
+  /**
+   * @param context - Target component context.
+   * @param init - Shadow root initialization options.
+   *
+   * @returns A shadow root instance for target component, or `null`/`undefined` if one can not be attached.
+   */
+  (context: ComponentContext, init: ShadowContentDef) => ShadowRoot | null | undefined;
 
 /**
  * Context entry containing shadow root builder instance.
@@ -29,16 +29,15 @@ export type ShadowRootBuilder =
  * @category Feature
  */
 export const ShadowRootBuilder: CxEntry<ShadowRootBuilder> = {
-  perContext: (/*#__PURE__*/ cxRecent<ShadowRootBuilder, ShadowRootBuilder, ShadowRootBuilder>({
+  perContext: /*#__PURE__*/ cxRecent<ShadowRootBuilder, ShadowRootBuilder, ShadowRootBuilder>({
     create: (recent, _target) => recent,
     byDefault: _target => attachShadow,
     assign({ get, to }, _target) {
-
       const builder: ShadowRootBuilder = (context, init) => get()(context, init);
 
       return receiver => to((_, by) => receiver(builder, by));
     },
-  })),
+  }),
   toString: () => '[ShadowRootBuilder]',
 };
 
@@ -47,7 +46,6 @@ function attachShadow(context: ComponentContext, init: ShadowRootInit): ShadowRo
 }
 
 function shadowRootOf(element: Element, init: ShadowRootInit): ShadowRoot | undefined {
-
   const existing = element.shadowRoot;
 
   if (existing) {

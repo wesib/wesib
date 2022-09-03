@@ -7,12 +7,12 @@
  * @typeParam T - A type of component.
  */
 export type AttributeChangedCallback<T extends object> =
-/**
- * @param component - Component instance.
- * @param newValue - New attribute value, or `null` when attribute removed.
- * @param oldValue - Previous attribute value, or `null` if attribute did not exist.
- */
-    (this: void, component: T, newValue: string | null, oldValue: string | null) => void;
+  /**
+   * @param component - Component instance.
+   * @param newValue - New attribute value, or `null` when attribute removed.
+   * @param oldValue - Previous attribute value, or `null` if attribute did not exist.
+   */
+  (this: void, component: T, newValue: string | null, oldValue: string | null) => void;
 
 /**
  * Component's element attribute descriptor.
@@ -24,7 +24,6 @@ export type AttributeChangedCallback<T extends object> =
  * @category Feature
  */
 export interface AttributeDescriptor<T extends object = any> {
-
   /**
    * Attribute name.
    */
@@ -34,5 +33,4 @@ export interface AttributeDescriptor<T extends object = any> {
    * Attribute change callback that will be called each time attribute value changes.
    */
   readonly change: AttributeChangedCallback<T>;
-
 }

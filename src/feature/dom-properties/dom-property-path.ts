@@ -5,7 +5,7 @@
  *
  * @category Feature
  */
-export const DomPropertyPath__root = (/*#__PURE__*/ Symbol('DomProperty'));
+export const DomPropertyPath__root = /*#__PURE__*/ Symbol('DomProperty');
 
 /**
  * A path to the named DOM property state.
@@ -13,7 +13,10 @@ export const DomPropertyPath__root = (/*#__PURE__*/ Symbol('DomProperty'));
  * @category Feature
  * @typeParam TKey - Property key type.
  */
-export type DomPropertyPath<TKey extends PropertyKey = PropertyKey> = readonly [keyof DomPropertyPath.RootKeys, TKey];
+export type DomPropertyPath<TKey extends PropertyKey = PropertyKey> = readonly [
+  keyof DomPropertyPath.RootKeys,
+  TKey,
+];
 
 /**
  * Constructs a named DOM property state path.
@@ -24,7 +27,9 @@ export type DomPropertyPath<TKey extends PropertyKey = PropertyKey> = readonly [
  *
  * @return DOM property state path.
  */
-export function domPropertyPathTo<TKey extends PropertyKey = PropertyKey>(key: TKey): DomPropertyPath<TKey> {
+export function domPropertyPathTo<TKey extends PropertyKey = PropertyKey>(
+  key: TKey,
+): DomPropertyPath<TKey> {
   return [DomPropertyPath__root, key];
 }
 

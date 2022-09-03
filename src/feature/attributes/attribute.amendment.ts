@@ -24,53 +24,59 @@ import { AttributeRegistry } from './attribute-registry';
  * @return New component property amendment.
  */
 export function Attribute<
-    TClass extends ComponentClass,
-    TAmended extends AeComponentMember<string | null | undefined, TClass> =
-        AeComponentMember<string | null | undefined, TClass>>(
-    def?: AttributeDef<InstanceType<TClass>> | string,
-): ComponentMemberAmendment<string | null | undefined, TClass, string | null | undefined, TAmended> {
-  return ComponentMember<
-      string | null | undefined,
-      TClass,
-      string | null | undefined,
-      TAmended>((
-      {
-        amendedClass,
+  TClass extends ComponentClass,
+  TAmended extends AeComponentMember<string | null | undefined, TClass> = AeComponentMember<
+    string | null | undefined,
+    TClass
+  >,
+>(
+  def?: AttributeDef<InstanceType<TClass>> | string,
+): ComponentMemberAmendment<
+  string | null | undefined,
+  TClass,
+  string | null | undefined,
+  TAmended
+> {
+  return ComponentMember<string | null | undefined, TClass, string | null | undefined, TAmended>(
+    ({
+      amendedClass,
+      key,
+      set: setValue,
+      amend,
+    }: AeComponentMemberTarget<string | null | undefined, TClass>) => {
+      const { name, change } = parseAttributeDescriptor(
+        amendedClass.prototype as InstanceType<TClass>,
         key,
-        set: setValue,
-        amend,
-      }: AeComponentMemberTarget<string | null | undefined, TClass>,
-  ) => {
+        def,
+      );
 
-    const { name, change } = parseAttributeDescriptor(amendedClass.prototype as InstanceType<TClass>, key, def);
-
-    amend({
-      componentDef: {
-        define(defContext) {
-          defContext.get(AttributeRegistry).declareAttribute({
-            name,
-            change(component: InstanceType<TClass>, newValue, oldValue) {
-              setValue(component, newValue);
-              change(component, newValue, oldValue);
-            },
-          });
+      amend({
+        componentDef: {
+          define(defContext) {
+            defContext.get(AttributeRegistry).declareAttribute({
+              name,
+              change(component: InstanceType<TClass>, newValue, oldValue) {
+                setValue(component, newValue);
+                change(component, newValue, oldValue);
+              },
+            });
+          },
         },
-      },
-      get(component: InstanceType<TClass>): string | null {
-        return (ComponentContext.of(component).element as Element).getAttribute(name);
-      },
-      set(component: InstanceType<TClass>, newValue: string | null) {
+        get(component: InstanceType<TClass>): string | null {
+          return (ComponentContext.of(component).element as Element).getAttribute(name);
+        },
+        set(component: InstanceType<TClass>, newValue: string | null) {
+          const { element } = ComponentContext.of(component) as { element: Element };
 
-        const { element } = ComponentContext.of(component) as { element: Element };
+          if (newValue != null) {
+            element.setAttribute(name, newValue);
+          } else {
+            element.removeAttribute(name);
+          }
 
-        if (newValue != null) {
-          element.setAttribute(name, newValue);
-        } else {
-          element.removeAttribute(name);
-        }
-
-        setValue(component, newValue);
-      },
-    });
-  });
+          setValue(component, newValue);
+        },
+      });
+    },
+  );
 }

@@ -8,15 +8,12 @@ import { Component } from './component.amendment';
 
 describe('component', () => {
   describe('ComponentEventDispatcher', () => {
-
     let element: Element;
     let context: ComponentContext;
 
     beforeEach(async () => {
-
       @Component({ extend: { type: MockElement } })
-      class TestComponent {
-      }
+      class TestComponent {}
 
       element = new (await testElement(TestComponent))();
       context = await ComponentSlot.of(element).whenReady;
@@ -30,7 +27,6 @@ describe('component', () => {
 
     describe('dispatch', () => {
       it('dispatches DOM event', () => {
-
         const dispatchEventSpy = jest.spyOn(element, 'dispatchEvent');
         const event = new KeyboardEvent('click');
 
@@ -39,7 +35,6 @@ describe('component', () => {
         expect(dispatchEventSpy).toHaveBeenCalledWith(event);
       });
       it('dispatches DOM event via component context', () => {
-
         const dispatchEventSpy = jest.spyOn(element, 'dispatchEvent');
         const event = new KeyboardEvent('click');
 
@@ -51,7 +46,6 @@ describe('component', () => {
 
     describe('on', () => {
       it('registers event listener', () => {
-
         const addEventListenerSpy = jest.spyOn(element, 'addEventListener');
         const mockListener = jest.fn();
 
@@ -64,7 +58,6 @@ describe('component', () => {
         expect(mockListener).toHaveBeenCalledWith(event);
       });
       it('registers event listener via component context', () => {
-
         const addEventListenerSpy = jest.spyOn(element, 'addEventListener');
         const mockListener = jest.fn();
 

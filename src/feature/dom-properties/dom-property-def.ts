@@ -10,7 +10,6 @@ import { DomPropertyPath } from './dom-property-path';
  * @typeParam T - A type of component.
  */
 export interface DomPropertyDef<T extends object = any> {
-
   /**
    * Property key.
    *
@@ -51,7 +50,6 @@ export interface DomPropertyDef<T extends object = any> {
    * - an DOM property update receiver function with custom state update logic.
    */
   readonly updateState?: boolean | StatePath | DomPropertyUpdateReceiver<T> | undefined;
-
 }
 
 /**
@@ -61,17 +59,17 @@ export interface DomPropertyDef<T extends object = any> {
  * @typeParam T - A type of component.
  */
 export type DomPropertyUpdateReceiver<T extends object> =
-/**
- * @typeParam TKey - A type of component property keys.
- * @param component - Component instance.
- * @param path - The changed property state path in the form of `[DomPropertyPath__root, propertyKey]`.
- * @param newValue - New property value.
- * @param oldValue - Previous property value.
- */
-    <TKey extends keyof T>(
-        this: void,
-        component: T,
-        path: DomPropertyPath<TKey>,
-        newValue: T[TKey],
-        oldValue: T[TKey],
-    ) => void;
+  /**
+   * @typeParam TKey - A type of component property keys.
+   * @param component - Component instance.
+   * @param path - The changed property state path in the form of `[DomPropertyPath__root, propertyKey]`.
+   * @param newValue - New property value.
+   * @param oldValue - Previous property value.
+   */
+  <TKey extends keyof T>(
+    this: void,
+    component: T,
+    path: DomPropertyPath<TKey>,
+    newValue: T[TKey],
+    oldValue: T[TKey],
+  ) => void;

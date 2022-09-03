@@ -19,10 +19,10 @@ import { ComponentStatus } from './component-status';
 import { DefinitionContext$ } from './definition-context';
 
 export const PerComponentCxPeer: CxEntry<CxPeerBuilder<ComponentContext>> = {
-  perContext: (/*#__PURE__*/ cxScoped(
-      BootstrapContext,
-      (/*#__PURE__*/ cxEvaluated(_target => new CxPeerBuilder())),
-  )),
+  perContext: /*#__PURE__*/ cxScoped(
+    BootstrapContext,
+    /*#__PURE__*/ cxEvaluated(_target => new CxPeerBuilder()),
+  ),
   toString: (): string => '[PerComponentCxPeer]',
 };
 
@@ -32,10 +32,10 @@ export abstract class ComponentContext$<T extends object> implements ComponentCo
   private readonly _status: ComponentStatus<this>;
 
   protected constructor(
-      readonly _defContext: DefinitionContext$<T>,
-      readonly _builder: CxBuilder<ComponentContext<T>>,
-      readonly element: unknown,
-      readonly get: CxAccessor,
+    readonly _defContext: DefinitionContext$<T>,
+    readonly _builder: CxBuilder<ComponentContext<T>>,
+    readonly element: unknown,
+    readonly get: CxAccessor,
   ) {
     this.updateState = <TValue>(key: StatePath, newValue: TValue, oldValue: TValue): void => {
       this.get(StateUpdater)(key, newValue, oldValue);
@@ -106,7 +106,9 @@ export abstract class ComponentContext$<T extends object> implements ComponentCo
   }
 
   _component(): T {
-    throw new TypeError('Component is not constructed yet. Consider to use a `whenReady()` callback');
+    throw new TypeError(
+      'Component is not constructed yet. Consider to use a `whenReady()` callback',
+    );
   }
 
   settle(): void {
@@ -122,12 +124,11 @@ export abstract class ComponentContext$<T extends object> implements ComponentCo
   }
 
   _createComponent(): this {
-
     const whenComponent = this._defContext._whenComponent;
 
     let lastRev = 0;
 
-    whenComponent.readNotifier.do(onceOn)(notifier => lastRev = notifier(this, lastRev));
+    whenComponent.readNotifier.do(onceOn)(notifier => (lastRev = notifier(this, lastRev)));
     this.whenConnected(() => {
       whenComponent.readNotifier({
         supply: new Supply().needs(this),
@@ -159,16 +160,11 @@ export abstract class ComponentContext$<T extends object> implements ComponentCo
 export class ComponentContext$Mounted<T extends object> extends ComponentContext$<T> {
 
   static create<T extends object>(
-      defContext: DefinitionContext$<T>,
-      element: unknown,
+    defContext: DefinitionContext$<T>,
+    element: unknown,
   ): ComponentContext$Mounted<T> {
     return defContext._newComponentContext(
-        (get, builder) => new ComponentContext$Mounted<T>(
-            defContext,
-            builder,
-            element,
-            get,
-        ),
+      (get, builder) => new ComponentContext$Mounted<T>(defContext, builder, element, get),
     );
   }
 

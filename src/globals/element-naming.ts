@@ -11,7 +11,6 @@ import { BootstrapWindow } from './bootstrap-window';
  * @category Core
  */
 export interface ElementNaming {
-
   /**
    * Obtains element definition of the given component.
    *
@@ -20,7 +19,6 @@ export interface ElementNaming {
    * @returns Element definition meta.
    */
   elementOf(componentType: ComponentClass): ElementDef;
-
 }
 
 /**
@@ -29,29 +27,27 @@ export interface ElementNaming {
  * @category Core
  */
 export const ElementNaming: CxEntry<ElementNaming> = {
-  perContext: (/*#__PURE__*/ cxScoped(
-      BootstrapContext,
-      (/*#__PURE__*/ cxSingle({
-        byDefault: ElementNaming$byDefault,
-      })),
-  )),
+  perContext: /*#__PURE__*/ cxScoped(
+    BootstrapContext,
+    /*#__PURE__*/ cxSingle({
+      byDefault: ElementNaming$byDefault,
+    }),
+  ),
   toString: () => '[ElementNaming]',
 };
 
 function ElementNaming$byDefault(target: CxEntry.Target<ElementNaming>): ElementNaming {
-
   const bsWindow = target.get(BootstrapWindow);
   const nsAlias = target.get(NamespaceAliaser);
 
   return {
     elementOf(componentType: ComponentClass): ElementDef {
-
       const { name, extend } = ComponentDef.of(componentType);
       let tagName: string | undefined;
 
       const elementExtend: ElementDef.Extend = {
         get type() {
-          return extend && extend.type || bsWindow.HTMLElement;
+          return (extend && extend.type) || bsWindow.HTMLElement;
         },
         get name() {
           return extend && extend.name;

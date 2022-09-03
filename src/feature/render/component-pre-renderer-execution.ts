@@ -11,7 +11,6 @@ import { ComponentRenderer } from './component-renderer';
  * @category Feature
  */
 export interface ComponentPreRendererExecution extends RenderExecution {
-
   /**
    * Pre-renderer supply. Pre-rendering would stop once this supply is cut off.
    *
@@ -37,5 +36,4 @@ export interface ComponentPreRendererExecution extends RenderExecution {
    * @param preRenderer - A pre-renderer to delegate component pre-rendering to.
    */
   preRenderBy(this: void, preRenderer: ComponentPreRenderer): void;
-
 }

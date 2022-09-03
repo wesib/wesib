@@ -21,16 +21,19 @@ class DomPropertyTracker<T> extends ValueTracker<T> {
   private readonly _key: string;
 
   constructor(
-      private readonly _context: ComponentContext,
-      key: PropertyKey,
-      private readonly _path: StatePath,
+    private readonly _context: ComponentContext,
+    key: PropertyKey,
+    private readonly _path: StatePath,
   ) {
     super();
     this._key = key as string;
-    this.on = this._context.get(ComponentState).track(this._path).onUpdate.do(
+    this.on = this._context
+      .get(ComponentState)
+      .track(this._path)
+      .onUpdate.do(
         translateOn((send, _path, newValue, oldValue) => send(newValue, oldValue)),
         supplyOn(this),
-    );
+      );
   }
 
   get it(): T {
@@ -59,9 +62,9 @@ class DomPropertyTracker<T> extends ValueTracker<T> {
  * @returns New DOM property value tracker.
  */
 export function trackDomProperty<T = any>(
-    context: ComponentContext,
-    key: PropertyKey,
-    path: StatePath = domPropertyPathTo(key),
+  context: ComponentContext,
+  key: PropertyKey,
+  path: StatePath = domPropertyPathTo(key),
 ): ValueTracker<T> {
   return new DomPropertyTracker(context, key, path);
 }

@@ -15,5 +15,6 @@ import { ComponentPreRendererExecution } from './component-pre-renderer-executio
  * @category Feature
  * @typeParam TExecution - A type of supported component pre-renderer execution context.
  */
-export type ComponentPreRenderer<TExecution extends ComponentPreRendererExecution = ComponentPreRendererExecution> =
-    RenderShot<TExecution>;
+export type ComponentPreRenderer<
+  TExecution extends ComponentPreRendererExecution = ComponentPreRendererExecution,
+> = RenderShot<TExecution>;

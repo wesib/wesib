@@ -21,7 +21,6 @@ export class ComponentRenderCtl$ implements ComponentRenderCtl {
   readonly _scheduler: RenderScheduler;
 
   constructor(readonly _context: ComponentContext) {
-
     const { element }: { element: Element } = _context;
 
     this._scheduler = _context.get(DocumentRenderKit).contextOf(element).scheduler;
@@ -51,15 +50,14 @@ abstract class ComponentRenderer$BaseState<TExecution extends RenderExecution> {
   protected _spec: RenderDef.Spec;
 
   constructor(
-      protected readonly _ctl: ComponentRenderCtl$,
-      protected _renderer: RenderShot<TExecution>,
-      def: RenderDef = {},
+    protected readonly _ctl: ComponentRenderCtl$,
+    protected _renderer: RenderShot<TExecution>,
+    def: RenderDef = {},
   ) {
     this._spec = valueByRecipe(def, _ctl._context);
   }
 
   render(): Supply {
-
     const context = this._ctl._context;
     const trigger = RenderDef.trigger(context, this._spec);
     let schedule: RenderSchedule = shot => {
@@ -67,15 +65,14 @@ abstract class ComponentRenderer$BaseState<TExecution extends RenderExecution> {
       schedule(shot);
     };
     const whenConnected = this._spec.when === 'connected';
-    const startRendering = (): 0 | void => this._status /* there is an update to render */
-        && this._scheduleRenderer(schedule);
+    const startRendering = (): 0 | void => this._status /* has update */ && this._scheduleRenderer(schedule);
     const onUpdate = whenConnected
-        ? () => context.connected && this._scheduleRenderer(schedule)
-        : () => context.settled && this._scheduleRenderer(schedule);
+      ? () => context.connected && this._scheduleRenderer(schedule)
+      : () => context.settled && this._scheduleRenderer(schedule);
 
     this._supply = trigger(onUpdate)
-        .needs(context)
-        .whenOff(() => this._cancel(schedule));
+      .needs(context)
+      .whenOff(() => this._cancel(schedule));
 
     (whenConnected ? context.whenConnected : context.whenSettled)(startRendering);
 
@@ -92,7 +89,6 @@ abstract class ComponentRenderer$BaseState<TExecution extends RenderExecution> {
   }
 
   protected _scheduleBy(scheduler: RenderScheduler): RenderSchedule {
-
     const node: Element = this._ctl._context.element;
     const schedule = scheduler({ ...this._spec, node });
 
@@ -100,12 +96,10 @@ abstract class ComponentRenderer$BaseState<TExecution extends RenderExecution> {
   }
 
   private _render(execution: RenderExecution): void {
-
     const rendererExecution = this._createExecution(execution);
 
     this._status = RenderStatus.Complete;
     do {
-
       const currentRenderer = this._renderer;
 
       currentRenderer(rendererExecution);
@@ -122,7 +116,8 @@ abstract class ComponentRenderer$BaseState<TExecution extends RenderExecution> {
   }
 
   private _cancel(schedule: RenderSchedule): void {
-    if (this._status === RenderStatus.Scheduled) { // Scheduled, but not rendered yet.
+    if (this._status === RenderStatus.Scheduled) {
+      // Scheduled, but not rendered yet.
       schedule(noop);
     }
     this._status = RenderStatus.Cancelled;
@@ -135,7 +130,6 @@ abstract class ComponentRenderer$BaseState<TExecution extends RenderExecution> {
 class ComponentRenderer$State extends ComponentRenderer$BaseState<ComponentRendererExecution> {
 
   protected _createExecution(execution: RenderExecution): ComponentRendererExecution {
-
     const rendererExecution: ComponentRendererExecution = {
       ...execution,
       postpone(postponed) {
@@ -162,22 +156,24 @@ class ComponentPreRenderer$State extends ComponentRenderer$BaseState<ComponentPr
   override render(): Supply {
     this._preSupply = new Supply();
 
-    super.render().needs(this._preSupply).whenOff(reason => {
-      if (reason === ComponentPreRenderer$done) {
-        // Pre-rendering is over.
-        // Delegate to component renderer.
-        this._preSupply.as(this._ctl.renderBy(this._nextRenderer!));
-      } else {
-        // Pre-rendering aborted.
-        this._preSupply.off(reason);
-      }
-    });
+    super
+      .render()
+      .needs(this._preSupply)
+      .whenOff(reason => {
+        if (reason === ComponentPreRenderer$done) {
+          // Pre-rendering is over.
+          // Delegate to component renderer.
+          this._preSupply.as(this._ctl.renderBy(this._nextRenderer!));
+        } else {
+          // Pre-rendering aborted.
+          this._preSupply.off(reason);
+        }
+      });
 
     return this._preSupply;
   }
 
   protected override _createSchedule(): RenderSchedule {
-
     const preScheduler = this._ctl._context.get(PreRenderScheduler);
 
     return this._scheduleBy(preScheduler);
@@ -191,7 +187,6 @@ class ComponentPreRenderer$State extends ComponentRenderer$BaseState<ComponentPr
   }
 
   protected _createExecution(execution: RenderExecution): ComponentPreRendererExecution {
-
     const preRendererExecution: ComponentPreRendererExecution = {
       ...execution,
       postpone: postponed => {
