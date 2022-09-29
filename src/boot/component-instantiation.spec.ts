@@ -62,7 +62,9 @@ describe('component instantiation', () => {
         element,
       };
 
-      expect(mockConstructor).toHaveBeenCalledWith(expect.objectContaining(expectedContext));
+      expect(mockConstructor).toHaveBeenCalledWith(
+        expect.objectContaining(expectedContext) as unknown as ComponentContext,
+      );
     });
     it('uses custom element as content root', () => {
       expect(context.contentRoot).toBe(element);

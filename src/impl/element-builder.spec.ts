@@ -125,7 +125,7 @@ describe('boot', () => {
         builder.buildElement(TestComponent);
 
         expect(onDefinition).toHaveBeenCalledWith(
-          expect.objectContaining({ componentType: TestComponent }),
+          expect.objectContaining({ componentType: TestComponent }) as unknown as DefinitionContext,
         );
       });
 

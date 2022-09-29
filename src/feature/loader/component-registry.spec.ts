@@ -11,14 +11,14 @@ import { Feature } from '../feature.amendment';
 
 describe('feature load', () => {
   describe('ComponentRegistry', () => {
-    let TestComponent: ComponentClass;
+    let TestComponent: ComponentClass<object>;
     let ElementSpy: Class;
     let mockBuilder: MockObject<ElementBuilder>;
 
     beforeEach(() => {
       mockBuilder = {
         buildElement: jest.fn(),
-      } as any;
+      } as unknown as MockObject<ElementBuilder>;
 
       TestComponent = class {
 

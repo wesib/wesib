@@ -198,7 +198,7 @@ describe('feature/render', () => {
             error: expect.any(Function),
           }),
           postpone: expect.any(Function),
-        }),
+        }) as unknown as ComponentRendererExecution,
       );
       expect(mockRenderer.mock.instances[0]).toBe(component);
     });

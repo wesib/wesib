@@ -27,8 +27,13 @@ export interface CustomElements {
    * @param componentTypeOrName - A component class constructor or custom element name. The latter may belong to
    * namespace to avoid naming conflicts.
    * @param elementType - A constructor of custom element to define.
+   * @param options - Custom element definition options.
    */
-  define(componentTypeOrName: ComponentClass | QualifiedName, elementType: Class): void;
+  define(
+    componentTypeOrName: ComponentClass | QualifiedName,
+    elementType: Class,
+    options?: ElementDefinitionOptions,
+  ): void;
 
   /**
    * Allows to wait for component definition.

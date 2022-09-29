@@ -134,7 +134,9 @@ describe('feature/dom-properties', () => {
       });
 
       it('updates the component state on property update', () => {
-        const updateStateSpy = jest.spyOn(context, 'updateState');
+        const updateStateSpy = jest.spyOn(context, 'updateState') as Mock<
+          ComponentContext['updateState']
+        >;
 
         element.writableProperty = 1;
 
@@ -152,7 +154,9 @@ describe('feature/dom-properties', () => {
         expect(element.field).toBe('new');
       });
       it('updates the component state on value update', () => {
-        const updateStateSpy = jest.spyOn(context, 'updateState');
+        const updateStateSpy = jest.spyOn(context, 'updateState') as Mock<
+          ComponentContext['updateState']
+        >;
 
         element.field = 'new';
 
@@ -192,7 +196,9 @@ describe('feature/dom-properties', () => {
         );
       });
       it('updates the component state with custom path', () => {
-        const updateStateSpy = jest.spyOn(context, 'updateState');
+        const updateStateSpy = jest.spyOn(context, 'updateState') as Mock<
+          ComponentContext['updateState']
+        >;
 
         element.customStatePathField = 119;
 

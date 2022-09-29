@@ -1,6 +1,7 @@
 import { CustomHTMLElement } from '@frontmeans/dom-primitives';
 import { describe, expect, it, jest } from '@jest/globals';
-import { Component, ComponentSlot } from '../../component';
+import { Mock } from 'jest-mock';
+import { Component, ComponentContext, ComponentSlot } from '../../component';
 import { MockElement, testElement } from '../../testing';
 import { AttributePath__root } from './attribute-path';
 import { Attributes } from './attributes.amendment';
@@ -21,7 +22,9 @@ describe('feature/attributes', () => {
 
       const element: CustomHTMLElement = new (await testElement(TestComponent))();
       const context = await ComponentSlot.of(element).whenReady;
-      const updateStateSpy = jest.spyOn(context, 'updateState');
+      const updateStateSpy = jest.spyOn(context, 'updateState') as Mock<
+        ComponentContext['updateState']
+      >;
 
       element.attributeChangedCallback!('test-attr', 'old', 'new');
 
@@ -39,7 +42,9 @@ describe('feature/attributes', () => {
 
       const element: CustomHTMLElement = new (await testElement(TestComponent))();
       const context = await ComponentSlot.of(element).whenReady;
-      const updateStateSpy = jest.spyOn(context, 'updateState');
+      const updateStateSpy = jest.spyOn(context, 'updateState') as Mock<
+        ComponentContext['updateState']
+      >;
 
       element.attributeChangedCallback!('test-attr', 'old', 'new');
 
@@ -57,7 +62,9 @@ describe('feature/attributes', () => {
 
       const element: CustomHTMLElement = new (await testElement(TestComponent))();
       const context = await ComponentSlot.of(element).whenReady;
-      const updateStateSpy = jest.spyOn(context, 'updateState');
+      const updateStateSpy = jest.spyOn(context, 'updateState') as Mock<
+        ComponentContext['updateState']
+      >;
 
       element.attributeChangedCallback!('test-attr', 'old', 'new');
 
@@ -107,7 +114,9 @@ describe('feature/attributes', () => {
 
       const element: CustomHTMLElement = new (await testElement(TestComponent))();
       const context = await ComponentSlot.of(element).whenReady;
-      const updateStateSpy = jest.spyOn(context, 'updateState');
+      const updateStateSpy = jest.spyOn(context, 'updateState') as Mock<
+        ComponentContext['updateState']
+      >;
 
       element.attributeChangedCallback!('test-attr', 'old', 'new');
 

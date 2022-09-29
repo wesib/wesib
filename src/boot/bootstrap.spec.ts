@@ -127,7 +127,10 @@ describe('boot', () => {
       class TestComponent {}
 
       await loadFeature(TestComponent);
-      expect(mockCustomElements.define).toHaveBeenCalledWith(TestComponent, expect.any(Function));
+      expect(mockCustomElements.define).toHaveBeenCalledWith(
+        TestComponent,
+        expect.any(Function) as unknown as Class,
+      );
     });
     it('notifies on component definition', async () => {
       const onDefinition = jest.fn();
@@ -155,7 +158,10 @@ describe('boot', () => {
       class TestFeature {}
 
       await loadFeature(TestFeature);
-      expect(mockCustomElements.define).toHaveBeenCalledWith(TestComponent, expect.any(Function));
+      expect(mockCustomElements.define).toHaveBeenCalledWith(
+        TestComponent,
+        expect.any(Function) as unknown as Class,
+      );
     });
     it('does not register the base component', async () => {
       @Component('base-component')
@@ -165,8 +171,14 @@ describe('boot', () => {
       class TestComponent extends BaseComponent {}
 
       await loadFeature(TestComponent);
-      expect(mockCustomElements.define).toHaveBeenCalledWith(TestComponent, expect.any(Function));
-      expect(mockCustomElements.define).not.toHaveBeenCalledWith(BaseComponent, expect.anything());
+      expect(mockCustomElements.define).toHaveBeenCalledWith(
+        TestComponent,
+        expect.any(Function) as unknown as Class,
+      );
+      expect(mockCustomElements.define).not.toHaveBeenCalledWith(
+        BaseComponent,
+        expect.any(Function) as unknown as Class,
+      );
     });
   });
 
@@ -515,11 +527,11 @@ describe('boot', () => {
         await bsContext.load(TestComponentsFeature).whenReady;
         expect(mockCustomElements.define).toHaveBeenCalledWith(
           TestComponent1,
-          expect.any(Function),
+          expect.any(Function) as unknown as Class,
         );
         expect(mockCustomElements.define).toHaveBeenCalledWith(
           TestComponent2,
-          expect.any(Function),
+          expect.any(Function) as unknown as Class,
         );
       });
       it('does not allow to define components after initialization', () => {

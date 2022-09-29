@@ -3,16 +3,19 @@ import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { cxBuildAsset, CxPeerBuilder } from '@proc7ts/context-builder';
 import { CxEntry, CxGlobals, cxSingle } from '@proc7ts/context-values';
 import { asis, Class, noop } from '@proc7ts/primitives';
-import { Mock, SpyInstance } from 'jest-mock';
+import { Mock } from 'jest-mock';
 import { BootstrapContext } from './boot';
 import { bootstrapComponents } from './bootstrap-components';
-import { Component, ComponentDef, ComponentDef__symbol } from './component';
+import { Component, ComponentContext, ComponentDef, ComponentDef__symbol } from './component';
 import { ComponentClass, CustomElements, DefinitionContext } from './component/definition';
 import { FeatureContext, FeatureDef } from './feature';
 import { ElementBuilder } from './impl';
 import { PerComponentCxPeer } from './impl/component-context';
 import { PerDefinitionCxPeer } from './impl/definition-context';
-import { DefinitionContext__symbol } from './impl/definition-context.symbol';
+import {
+  ComponentDefinitionClass,
+  DefinitionContext__symbol,
+} from './impl/definition-context.symbol';
 
 describe('boot', () => {
   describe('bootstrapComponents', () => {
@@ -43,16 +46,19 @@ describe('boot', () => {
         const customElements = bsContext.get(CustomElements);
         const whenDefinedSpy = jest
           .spyOn(customElements, 'whenDefined')
-          .mockImplementation(() => Promise.resolve());
+          .mockImplementation(() => Promise.resolve()) as Mock<CustomElements['whenDefined']>;
 
         @Component('test-component')
         class TestComponent {}
 
         class Element {}
 
-        const defContext = { elementType: Element, componentType: TestComponent };
+        const defContext = { elementType: Element, componentType: TestComponent } as Partial<
+          DefinitionContext<TestComponent>
+        > as DefinitionContext<TestComponent>;
 
-        (TestComponent as any)[DefinitionContext__symbol] = defContext;
+        (TestComponent as ComponentDefinitionClass<TestComponent>)[DefinitionContext__symbol] =
+          defContext;
 
         expect(await bsContext.whenDefined(TestComponent)).toBe(defContext);
         expect(whenDefinedSpy).toHaveBeenCalledWith(TestComponent);
@@ -92,7 +98,7 @@ describe('boot', () => {
         expect(featureContext.get(FeatureContext)).toBe(featureContext);
       });
       it('proxies `define()`', async () => {
-        let defineSpy!: SpyInstance<
+        let defineSpy!: Mock<
           (componentTypeOrName: ComponentClass | QualifiedName, elementType: Class) => void
         >;
 
@@ -104,7 +110,9 @@ describe('boot', () => {
             init(ctx) {
               const customElements = ctx.get(CustomElements);
 
-              defineSpy = jest.spyOn(customElements, 'define').mockImplementation(noop);
+              defineSpy = jest
+                .spyOn(customElements, 'define')
+                .mockImplementation(noop) as typeof defineSpy;
               ctx.define(TestComponent);
             },
           }),
@@ -112,13 +120,16 @@ describe('boot', () => {
 
         await bsContext.whenReady;
 
-        expect(defineSpy).toHaveBeenCalledWith(TestComponent, expect.any(Function));
+        expect(defineSpy).toHaveBeenCalledWith(
+          TestComponent,
+          expect.any(Function) as unknown as Class,
+        );
       });
       it('proxies `whenDefined()`', async () => {
         const customElements = bsContext.get(CustomElements);
         const whenDefinedSpy = jest
           .spyOn(customElements, 'whenDefined')
-          .mockImplementation(() => Promise.resolve());
+          .mockImplementation(() => Promise.resolve()) as Mock<CustomElements['whenDefined']>;
 
         @Component({ name: 'test-component', extend: { name: 'div', type: Base } })
         class TestComponent {}
@@ -134,7 +145,9 @@ describe('boot', () => {
       });
       it('proxies `perDefinition()`', () => {
         const perDefinitionPeer = bsContext.get(PerDefinitionCxPeer);
-        const spy = jest.spyOn(perDefinitionPeer, 'provide');
+        const spy = jest.spyOn(perDefinitionPeer, 'provide') as Mock<
+          CxPeerBuilder<DefinitionContext>['provide']
+        >;
 
         const entry: CxEntry<string> = { perContext: cxSingle() };
         const provider = (): string => 'test-value';
@@ -146,7 +159,9 @@ describe('boot', () => {
       });
       it('proxies `perComponent()`', () => {
         const perComponentPeer = bsContext.get(PerComponentCxPeer);
-        const spy = jest.spyOn(perComponentPeer, 'provide');
+        const spy = jest.spyOn(perComponentPeer, 'provide') as Mock<
+          CxPeerBuilder<ComponentContext>['provide']
+        >;
 
         const entry: CxEntry<string> = { perContext: cxSingle() };
         const provider = (): string => 'test-value';
@@ -183,7 +198,7 @@ describe('boot', () => {
 };
           });
 
-          let whenDefinedSpy: SpyInstance<
+          let whenDefinedSpy: Mock<
             (componentTypeOrName: ComponentClass | QualifiedName) => Promise<void>
           >;
 
@@ -192,7 +207,7 @@ describe('boot', () => {
 
             whenDefinedSpy = jest
               .spyOn(customElements, 'whenDefined')
-              .mockImplementation(() => Promise.resolve());
+              .mockImplementation(() => Promise.resolve()) as Mock<CustomElements['whenDefined']>;
           });
 
           it('awaits for component definition', async () => {

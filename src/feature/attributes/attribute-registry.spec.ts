@@ -1,6 +1,7 @@
 import { CustomHTMLElement } from '@frontmeans/dom-primitives';
 import { describe, expect, it, jest } from '@jest/globals';
 import { Class } from '@proc7ts/primitives';
+import { Mock } from 'jest-mock';
 import { bootstrapComponents } from '../../bootstrap-components';
 import { Component, ComponentSlot } from '../../component';
 import { ComponentClass } from '../../component/definition';
@@ -84,7 +85,10 @@ describe('feature/attributes', () => {
 
 }
 
-      const inheritedAttrChanged = jest.spyOn(BaseElement.prototype, 'attributeChangedCallback');
+      const inheritedAttrChanged = jest.spyOn(
+        BaseElement.prototype,
+        'attributeChangedCallback',
+      ) as Mock<BaseElement['attributeChangedCallback']>;
       const attrChanged = jest.fn();
 
       @Component({

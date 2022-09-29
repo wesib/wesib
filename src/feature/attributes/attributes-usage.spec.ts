@@ -139,7 +139,9 @@ describe('feature/attributes', () => {
         expect(element.getAttribute('attr3')).toBe(value);
       });
       it('notifies on attribute update', () => {
-        const updateStateSpy = jest.spyOn(context, 'updateState');
+        const updateStateSpy = jest.spyOn(context, 'updateState') as Mock<
+          ComponentContext['updateState']
+        >;
         const value = 'new value';
 
         context.component.attr3 = value;
@@ -167,7 +169,7 @@ describe('feature/attributes', () => {
             'custom-attribute',
             'custom-attribute-2',
             'attr3',
-          ]),
+          ]) as unknown as string[],
           attributeOldValue: true,
         });
       });

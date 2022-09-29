@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { CxRequestMethod } from '@proc7ts/context-values';
+import { Mock } from 'jest-mock';
 import { MockElement, testElement } from '../testing';
 import { ComponentContext } from './component-context';
 import { ComponentEventDispatcher } from './component-event-dispatcher';
@@ -27,7 +28,9 @@ describe('component', () => {
 
     describe('dispatch', () => {
       it('dispatches DOM event', () => {
-        const dispatchEventSpy = jest.spyOn(element, 'dispatchEvent');
+        const dispatchEventSpy = jest.spyOn(element, 'dispatchEvent') as Mock<
+          Element['dispatchEvent']
+        >;
         const event = new KeyboardEvent('click');
 
         dispatcher.dispatch(event);
@@ -35,7 +38,9 @@ describe('component', () => {
         expect(dispatchEventSpy).toHaveBeenCalledWith(event);
       });
       it('dispatches DOM event via component context', () => {
-        const dispatchEventSpy = jest.spyOn(element, 'dispatchEvent');
+        const dispatchEventSpy = jest.spyOn(element, 'dispatchEvent') as Mock<
+          Element['dispatchEvent']
+        >;
         const event = new KeyboardEvent('click');
 
         context.dispatchEvent(event);
@@ -46,11 +51,17 @@ describe('component', () => {
 
     describe('on', () => {
       it('registers event listener', () => {
-        const addEventListenerSpy = jest.spyOn(element, 'addEventListener');
+        const addEventListenerSpy = jest.spyOn(element, 'addEventListener') as Mock<
+          Element['addEventListener']
+        >;
         const mockListener = jest.fn();
 
         dispatcher.on('click')(mockListener);
-        expect(addEventListenerSpy).toHaveBeenCalledWith('click', expect.any(Function), undefined);
+        expect(addEventListenerSpy).toHaveBeenCalledWith(
+          'click',
+          expect.any(Function) as unknown as EventListener,
+          undefined,
+        );
 
         const event = new KeyboardEvent('click');
 
@@ -58,11 +69,17 @@ describe('component', () => {
         expect(mockListener).toHaveBeenCalledWith(event);
       });
       it('registers event listener via component context', () => {
-        const addEventListenerSpy = jest.spyOn(element, 'addEventListener');
+        const addEventListenerSpy = jest.spyOn(element, 'addEventListener') as Mock<
+          Element['addEventListener']
+        >;
         const mockListener = jest.fn();
 
         context.on('click')(mockListener);
-        expect(addEventListenerSpy).toHaveBeenCalledWith('click', expect.any(Function), undefined);
+        expect(addEventListenerSpy).toHaveBeenCalledWith(
+          'click',
+          expect.any(Function) as unknown as EventListener,
+          undefined,
+        );
 
         const event = new KeyboardEvent('click');
 

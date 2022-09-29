@@ -1,7 +1,8 @@
 import { CustomHTMLElement } from '@frontmeans/dom-primitives';
 import { describe, expect, it, jest } from '@jest/globals';
 import { noop } from '@proc7ts/primitives';
-import { Component, ComponentSlot } from '../../component';
+import { Mock } from 'jest-mock';
+import { Component, ComponentContext, ComponentSlot } from '../../component';
 import { MockElement, testElement } from '../../testing';
 import { AttributeChanged } from './attribute-changed.amendment';
 import { attributePathTo } from './attribute-path';
@@ -9,7 +10,7 @@ import { attributePathTo } from './attribute-path';
 describe('feature/attributes', () => {
   describe('@AttributeChanged', () => {
     it('declares attribute change callback', async () => {
-      const attrSpy = jest.fn();
+      const attrSpy = jest.fn<(newValue: string, oldValue: string) => void>();
 
       @Component({
         name: 'test-component',
@@ -49,7 +50,9 @@ describe('feature/attributes', () => {
 
       const element: CustomHTMLElement = new (await testElement(TestComponent))();
       const context = await ComponentSlot.of(element).whenReady;
-      const updateStateSpy = jest.spyOn(context, 'updateState');
+      const updateStateSpy = jest.spyOn(context, 'updateState') as Mock<
+        ComponentContext['updateState']
+      >;
 
       element.attributeChangedCallback!('test-attr', 'old', 'new');
 
@@ -103,7 +106,9 @@ describe('feature/attributes', () => {
 
       const element: CustomHTMLElement = new (await testElement(TestComponent))();
       const context = await ComponentSlot.of(element).whenReady;
-      const updateStateSpy = jest.spyOn(context, 'updateState');
+      const updateStateSpy = jest.spyOn(context, 'updateState') as Mock<
+        ComponentContext['updateState']
+      >;
 
       element.attributeChangedCallback!('my-attr', 'old', 'new');
 

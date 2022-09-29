@@ -133,8 +133,8 @@ describe('component', () => {
         expect(define2.mock.instances[0]).toBe(Component);
       });
       it('merges `feature`', async () => {
-        const setup1 = jest.fn<(context: FeatureContext) => void>();
-        const setup2 = jest.fn<(context: FeatureContext) => void>();
+        const setup1 = jest.fn<(context: BootstrapSetup) => void>();
+        const setup2 = jest.fn<(context: BootstrapSetup) => void>();
         const mergedFeature = ComponentDef.merge(
           { feature: { setup: setup1 } },
           { feature: { setup: setup2 } },
