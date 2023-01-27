@@ -1,6 +1,6 @@
-export default {
-  preset: 'ts-jest/presets/default-esm',
-  collectCoverage: true,
+import { configureJest } from '@run-z/project-config';
+
+export default await configureJest({
   collectCoverageFrom: [
     'src/**/*.ts',
     '!src/spec/**/*.ts',
@@ -9,39 +9,6 @@ export default {
     '!src/**/index.ts',
     '!**/node_modules/**',
   ],
-  coverageDirectory: 'target/coverage',
-  coverageThreshold: {
-    global: {
-      statements: 100,
-      branches: 100,
-      functions: 100,
-      lines: 100,
-    },
-  },
-  extensionsToTreatAsEsm: ['.ts'],
-  reporters: [
-    'default',
-    [
-      'jest-junit',
-      {
-        suiteName: '@wesib/wesib',
-        outputDirectory: './target/test-results',
-        classNameTemplate: '{classname}: {title}',
-        titleTemplate: '{classname}: {title}',
-        ancestorSeparator: ' › ',
-        usePathForSuiteName: 'true',
-      },
-    ],
-  ],
   restoreMocks: true,
   testEnvironment: 'jsdom',
-  transform: {
-    '^.+\\.tsx?$': [
-      'ts-jest',
-      {
-        tsconfig: 'tsconfig.spec.json',
-        useESM: true,
-      },
-    ],
-  },
-};
+});
