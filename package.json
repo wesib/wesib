@@ -36,7 +36,7 @@
     }
   },
   "peerDependencies": {
-    "@proc7ts/fun-events": "^10.5.1"
+    "@proc7ts/fun-events": "^10.5.2"
   },
   "dependencies": {
     "@frontmeans/dom-events": "^1.2.0",
