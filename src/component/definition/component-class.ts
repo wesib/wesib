@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import { ComponentContext, ComponentInstance } from '../component-context';
 
 /**
